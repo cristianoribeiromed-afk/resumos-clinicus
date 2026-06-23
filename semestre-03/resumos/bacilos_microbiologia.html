@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Bacilos Gram+ / Gram- / Micobacterias | Microbiología</title>
+<style>
+:root{
+  --bg:#0b0f0e; --panel:#121917; --panel2:#161f1c;
+  --green:#1fb86a; --green-dark:#0e6e3f; --green-light:#7fe6b0;
+  --text:#e8efec; --muted:#9bb0a8; --border:#22302a;
+  --warn:#e8b34a; --bad:#e84a4a; --gp:#1fb86a; --gn:#4aa3e8; --myc:#b97fe6;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+::-webkit-scrollbar{width:8px;} ::-webkit-scrollbar-thumb{background:var(--green-dark);border-radius:4px;}
+#sidebar{width:290px;background:var(--panel);border-right:1px solid var(--border);padding:18px 12px;position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0;}
+#sidebar h1{font-size:16px;color:var(--green-light);margin:0 0 4px;}
+#sidebar .sub{color:var(--muted);font-size:12px;margin-bottom:16px;}
+.xp-box{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:16px;}
+.xp-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;}
+.xp-bar{height:8px;background:#0d1413;border-radius:5px;overflow:hidden;}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--green-dark),var(--green));width:0%;transition:.4s;}
+.group-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 6px 6px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text);margin-bottom:2px;border-left:3px solid transparent;}
+.nav-item:hover{background:var(--panel2);}
+.nav-item.active{background:var(--panel2);border-left-color:var(--green);color:var(--green-light);font-weight:600;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot.gp{background:var(--gp);} .dot.gn{background:var(--gn);} .dot.myc{background:var(--myc);}
+.nav-check{margin-left:auto;font-size:11px;color:var(--green);opacity:0;}
+.nav-item.done .nav-check{opacity:1;}
+#main{flex:1;padding:28px 36px;max-width:980px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.topbar h2{margin:0;font-size:23px;}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:.03em;}
+.badge.gp{background:rgba(31,184,106,.15);color:var(--green-light);border:1px solid var(--green-dark);}
+.badge.gn{background:rgba(74,163,232,.15);color:#9fd0f5;border:1px solid #2a6ea3;}
+.badge.myc{background:rgba(185,127,230,.15);color:#d8b9f0;border:1px solid #7a4aa3;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:18px;}
+.card h3{margin:0 0 12px;font-size:14px;color:var(--green-light);text-transform:uppercase;letter-spacing:.04em;}
+.card p,.card li{font-size:14.5px;line-height:1.55;color:var(--text);}
+.card ul{margin:0;padding-left:20px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:760px){.grid2{grid-template-columns:1fr;} #sidebar{display:none;} #main{padding:18px;}}
+.pill{display:inline-block;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:12px;color:var(--green-light);margin:2px 4px 2px 0;}
+.tx-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px;}
+.tx-table th,.tx-table td{border:1px solid var(--border);padding:7px 9px;text-align:left;}
+.tx-table th{background:var(--panel2);color:var(--green-light);font-size:11.5px;text-transform:uppercase;}
+.tx-table tr:nth-child(even){background:rgba(255,255,255,.02);}
+.intro-table-wrap{overflow-x:auto;}
+.flash-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.flashcard{width:100%;max-width:520px;min-height:140px;background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:16px;cursor:pointer;}
+.flash-controls{display:flex;gap:10px;}
+.btn{background:var(--green-dark);color:#fff;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600;}
+.btn.secondary{background:var(--panel2);border:1px solid var(--border);color:var(--text);}
+.btn:hover{opacity:.88;}
+.qcard{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+.qcard .qtext{font-size:14.5px;margin-bottom:10px;font-weight:600;}
+.opt{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;margin-bottom:7px;cursor:pointer;font-size:13.5px;}
+.opt:hover{border-color:var(--green);}
+.opt.correct{background:rgba(31,184,106,.18);border-color:var(--green);}
+.opt.wrong{background:rgba(232,74,74,.18);border-color:var(--bad);}
+.feedback{font-size:13px;margin-top:6px;color:var(--muted);}
+.feedback.ok{color:var(--green-light);} .feedback.bad{color:#f0a0a0;}
+.quiz-summary{text-align:center;padding:24px;}
+.quiz-summary .score{font-size:42px;font-weight:700;color:var(--green-light);}
+.toast{position:fixed;top:18px;right:18px;background:var(--green-dark);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transform:translateY(-10px);transition:.3s;z-index:99;}
+.toast.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+<div id="toast" class="toast">+10 XP</div>
+<div id="sidebar">
+  <h1>🦠 Bacilos & Micobacterias</h1>
+  <div class="sub">Gram+ · Gram- · M. tuberculosis</div>
+  <div class="xp-box">
+    <div class="xp-row"><span>Nivel <span id="lvl">1</span></span><span id="xpval">0 XP</span></div>
+    <div class="xp-bar"><div class="xp-fill" id="xpfill"></div></div>
+  </div>
+  <div class="group-title">Inicio</div>
+  <div class="nav-item active" data-page="home"><span class="dot" style="background:var(--muted)"></span>Tabla comparativa</div>
+
+  <div class="group-title">Bacilos Gram+</div>
+  <div class="nav-item" data-page="listeria"><span class="dot gp"></span>Listeria monocytogenes</div>
+  <div class="nav-item" data-page="ctetani"><span class="dot gp"></span>Clostridium tetani</div>
+  <div class="nav-item" data-page="cbotulinum"><span class="dot gp"></span>Clostridium botulinum</div>
+  <div class="nav-item" data-page="cdifficile"><span class="dot gp"></span>Clostridium difficile</div>
+  <div class="nav-item" data-page="cperfringens"><span class="dot gp"></span>Clostridium perfringens</div>
+  <div class="nav-item" data-page="bcereus"><span class="dot gp"></span>Bacillus cereus</div>
+  <div class="nav-item" data-page="banthracis"><span class="dot gp"></span>Bacillus anthracis</div>
+
+  <div class="group-title">Bacilos Gram-</div>
+  <div class="nav-item" data-page="kgranulomatis"><span class="dot gn"></span>Klebsiella granulomatis</div>
+  <div class="nav-item" data-page="kpneumoniae"><span class="dot gn"></span>Klebsiella pneumoniae</div>
+  <div class="nav-item" data-page="paeruginosa"><span class="dot gn"></span>Pseudomonas aeruginosa</div>
+  <div class="nav-item" data-page="ecoli"><span class="dot gn"></span>Escherichia coli</div>
+  <div class="nav-item" data-page="salmonella"><span class="dot gn"></span>Salmonella spp.</div>
+  <div class="nav-item" data-page="shigella"><span class="dot gn"></span>Shigella spp.</div>
+  <div class="nav-item" data-page="hinfluenzae"><span class="dot gn"></span>Haemophilus influenzae</div>
+  <div class="nav-item" data-page="hducreyi"><span class="dot gn"></span>Haemophilus ducreyi</div>
+  <div class="nav-item" data-page="hpylori"><span class="dot gn"></span>Helicobacter pylori</div>
+  <div class="nav-item" data-page="cjejuni"><span class="dot gn"></span>Campylobacter jejuni</div>
+
+  <div class="group-title">Micobacterias</div>
+  <div class="nav-item" data-page="mtuberculosis"><span class="dot myc"></span>Mycobacterium tuberculosis</div>
+
+  <div class="group-title">Práctica</div>
+  <div class="nav-item" data-page="flashcards"><span class="dot" style="background:var(--warn)"></span>Flashcards</div>
+  <div class="nav-item" data-page="quiz"><span class="dot" style="background:var(--bad)"></span>Quiz final (18)</div>
+</div>
+<div id="main"></div>
+
+<script>
+const DATA = {
+listeria:{gram:"gp",name:"Listeria monocytogenes",
+morfo:"Bacilo Gram positivo pequeño, catalasa positiva, móvil (flagelos perítricos a 20-25°C), beta-hemolítico, intracelular facultativo, crece a 4°C (psicrófilo) - clave para contaminación de refrigerados.",
+virulencia:["Internalinas (invasión de células epiteliales/placenta)","Listeriolisina O (escape del fagosoma)","ActA (motilidad intracelular, propulsión por actina)","Capacidad de crecer a temperaturas de refrigeración"],
+enfermedades:["Gastroenteritis febril (alimentos contaminados: lácteos no pasteurizados, embutidos, vegetales)","Meningitis/meningoencefalitis en neonatos, ancianos e inmunocomprometidos","Sepsis neonatal","Listeriosis perinatal: aborto, parto prematuro, sepsis neonatal de inicio precoz (granulomatosis infantiséptica)"],
+epidem:"Transmisión por alimentos contaminados (lácteos no pasteurizados, fiambres, vegetales crudos). Alto riesgo en embarazadas, neonatos, ancianos e inmunocomprometidos.",
+dx_clinico:"Embarazada con fiebre y síntomas gripales inespecíficos (riesgo de transmisión vertical); neonato o anciano con meningitis atípica.",
+dx_lab:["Cultivo en agar sangre: beta-hemólisis, móvil a temperatura ambiente (no a 37°C) - 'tumbling motility'","Crece en frío (4°C) a diferencia de otros patógenos","Catalasa positiva (distingue de Streptococcus)","Hemocultivo/cultivo de LCR en sospecha de meningitis"],
+dx_diff:"Móvil con motilidad característica 'tumbling' a temperatura ambiente + crecimiento a 4°C = clave diagnóstica que la distingue de Streptococcus (catalasa-) y otros bacilos Gram+.",
+tto:"Ampicilina (de elección) ± gentamicina (sinergismo) en meningitis/sepsis. Resistente intrínsecamente a cefalosporinas (importante: NO cubre Listeria el tratamiento empírico estándar de meningitis con ceftriaxona).",
+prevencion:"Evitar lácteos no pasteurizados y fiambres mal cocidos durante el embarazo; no hay vacuna."},
+
+ctetani:{gram:"gp",name:"Clostridium tetani",
+morfo:"Bacilo Gram positivo, anaerobio estricto, esporulado (espora terminal 'en palillo de tambor'), móvil.",
+virulencia:["Tetanoespasmina (neurotoxina, bloquea liberación de GABA/glicina en neuronas inhibitorias de médula espinal → espasmo muscular sostenido)","Tetanolisina (hemolisina, menor relevancia clínica)"],
+enfermedades:["Tétanos generalizado: trismo ('risa sardónica'), opistótonos, espasmos musculares dolorosos, puede afectar músculos respiratorios","Tétanos neonatal (vía cordón umbilical contaminado)","Tétanos localizado (raro)"],
+epidem:"Esporas presentes en tierra y heces de animales, ingresan por heridas profundas/punzantes contaminadas con tierra. Prevenible por vacuna (no inmunidad natural duradera).",
+dx_clinico:"Trismo progresivo, rigidez muscular generalizada, espasmos desencadenados por estímulos mínimos, consciencia conservada (diagnóstico esencialmente clínico).",
+dx_lab:["Diagnóstico CLÍNICO - el cultivo casi nunca se realiza ni es útil","Anaerobio estricto, difícil de cultivar","No hay prueba de laboratorio rápida confirmatoria de rutina"],
+dx_diff:"No hay prueba diferencial práctica relevante - el diagnóstico es clínico por el cuadro neuromuscular característico tras herida contaminada.",
+tto:"Inmunoglobulina antitetánica (neutraliza toxina circulante) + metronidazol (antibiótico de elección, penicilina G es alternativa) + desbridamiento de la herida + control de espasmos (benzodiacepinas) + soporte ventilatorio si es necesario.",
+prevencion:"Vacunación (toxoide tetánico, esquema DTaP/Tdap, refuerzo cada 10 años); profilaxis post-exposición según estado vacunal y tipo de herida."},
+
+cbotulinum:{gram:"gp",name:"Clostridium botulinum",
+morfo:"Bacilo Gram positivo, anaerobio estricto, esporulado, productor de la toxina más potente conocida.",
+virulencia:["Toxina botulínica (neurotoxina termolábil, bloquea liberación de acetilcolina en la unión neuromuscular → parálisis flácida descendente)"],
+enfermedades:["Botulismo alimentario (toxina preformada en alimentos mal conservados, ej. enlatados, conservas caseras, miel - vector clásico en lactantes)","Botulismo del lactante (ingestión de esporas que colonizan el intestino inmaduro y producen toxina in situ - asociado a miel)","Botulismo de heridas (esporas contaminan herida, especialmente en usuarios de drogas inyectables)"],
+epidem:"Alimentos enlatados/conservas mal procesadas con anaerobiosis; miel contraindicada en menores de 1 año por riesgo de botulismo del lactante.",
+dx_clinico:"Parálisis flácida DESCENDENTE bilateral simétrica (inicia en pares craneales: diplopía, disfagia, disartria, luego debilidad descendente), SIN fiebre, consciencia conservada, pupilas dilatadas.",
+dx_lab:["Diagnóstico clínico + detección de toxina en suero/heces/alimento (bioensayo en ratón o ELISA)","EMG puede mostrar patrón compatible","Cultivo anaerobio del alimento sospechoso si se requiere confirmación epidemiológica"],
+dx_diff:"Parálisis DESCENDENTE (de arriba hacia abajo, inicia en cara/pares craneales) distingue de Guillain-Barré (ascendente). No hay fiebre, lo que ayuda a distinguir de otras causas infecciosas.",
+tto:"Antitoxina botulínica equina (neutraliza toxina circulante, debe administrarse precozmente) + soporte ventilatorio si hay compromiso respiratorio. NO usar aminoglucósidos (pueden potenciar el bloqueo neuromuscular).",
+prevencion:"No dar miel a menores de 1 año; correcto procesamiento de conservas/enlatados caseros (calor adecuado destruye esporas)."},
+
+cdifficile:{gram:"gp",name:"Clostridium difficile",
+morfo:"Bacilo Gram positivo, anaerobio estricto, esporulado, productor de toxinas A y B.",
+virulencia:["Toxina A (enterotoxina)","Toxina B (citotoxina, principal responsable del daño)","Esporas resistentes a alcohol y muchos desinfectantes (transmisión nosocomial)"],
+enfermedades:["Diarrea asociada a antibióticos","Colitis pseudomembranosa (casos graves: pseudomembranas en colonoscopia)","Megacolon tóxico (complicación grave)"],
+epidem:"Causa principal de diarrea nosocomial, fuertemente asociada a uso previo de antibióticos de amplio espectro (clindamicina, fluoroquinolonas, cefalosporinas) que alteran la flora intestinal normal.",
+dx_clinico:"Diarrea acuosa o con sangre, dolor abdominal, fiebre, en paciente con antecedente de uso reciente de antibióticos (días a semanas previas).",
+dx_lab:["Detección de toxinas A/B en heces (EIA) o PCR para gen de toxina (más sensible)","Glutamato deshidrogenasa (GDH) como prueba de cribado inicial","Colonoscopia: pseudomembranas amarillentas en casos graves (no de rutina)"],
+dx_diff:"Contexto de uso reciente de antibióticos + detección de toxina en heces (no se diagnostica por cultivo simple, ya que C. difficile puede colonizar sin enfermedad).",
+tto:"Suspender el antibiótico causal si es posible. Vancomicina oral o fidaxomicina (de elección); metronidazol como alternativa en casos leves. Trasplante de microbiota fecal en casos recurrentes refractarios.",
+prevencion:"Uso racional de antibióticos, higiene de manos (las esporas resisten alcohol-gel, requiere agua y jabón), aislamiento de contacto en hospitalizados."},
+
+cperfringens:{gram:"gp",name:"Clostridium perfringens",
+morfo:"Bacilo Gram positivo, anaerobio, esporulado, inmóvil, doble zona de hemólisis en agar sangre.",
+virulencia:["Toxina alfa (lecitinasa/fosfolipasa C, destruye membranas celulares, clave en mionecrosis)","Enterotoxina (intoxicación alimentaria)","Produce gas en tejidos (CO2/H2 por fermentación)"],
+enfermedades:["Gangrena gaseosa (mionecrosis clostridial) - infección de heridas traumáticas/quirúrgicas con necrosis muscular rápida, crepitación por gas","Intoxicación alimentaria (carnes mal recalentadas, inicio rápido con diarrea acuosa sin fiebre alta, autolimitada)","Celulitis y enteritis necrotizante (raro)"],
+epidem:"Heridas traumáticas profundas contaminadas con tierra (gangrena gaseosa); carnes contaminadas recalentadas insuficientemente (intoxicación alimentaria).",
+dx_clinico:"Gangrena gaseosa: dolor intenso desproporcionado, crepitación a la palpación (gas subcutáneo), edema, secreción fétida, toxicidad sistémica rápida.",
+dx_lab:["Tinción de Gram del tejido/secreción: bacilos Gram+ gruesos, ausencia relativa de leucocitos (destruidos por toxinas)","Cultivo anaerobio: doble hemólisis en agar sangre","Imagenología: gas en tejidos blandos (Rx o TC)"],
+dx_diff:"Crepitación por gas + dolor desproporcionado + Gram+ esporulado en herida traumática orienta fuertemente a gangrena gaseosa por C. perfringens.",
+tto:"Desbridamiento quirúrgico URGENTE y extenso (la cirugía es el pilar) + penicilina G altas dosis + clindamicina (inhibe síntesis de toxina) + oxígeno hiperbárico como adjuvante en algunos centros.",
+prevencion:"Manejo adecuado de heridas traumáticas, profilaxis antibiótica en cirugía contaminada, correcta refrigeración/recalentamiento de alimentos."},
+
+bcereus:{gram:"gp",name:"Bacillus cereus",
+morfo:"Bacilo Gram positivo grande, aerobio/anaerobio facultativo, esporulado, móvil, beta-hemolítico.",
+virulencia:["Toxina emética (termoestable, preformada en el alimento - síndrome emético)","Enterotoxina diarreica (termolábil, se forma in vivo - síndrome diarreico)"],
+enfermedades:["Intoxicación alimentaria tipo emético (arroz frito recalentado - inicio rápido 1-6h, vómito predominante, similar a S. aureus)","Intoxicación alimentaria tipo diarreico (carnes/vegetales - inicio más tardío 8-16h, diarrea acuosa, similar a C. perfringens)","Endoftalmitis postraumática (raro, asociado a heridas oculares penetrantes)"],
+epidem:"Clásicamente asociado a arroz frito recalentado de forma inadecuada (restaurantes chinos - 'síndrome del arroz frito').",
+dx_clinico:"Inicio súbito de vómito (forma emética) o diarrea acuosa (forma diarreica) tras ingesta de arroz recalentado u otros alimentos, autolimitado.",
+dx_lab:["Diagnóstico clínico-epidemiológico (cuadro autolimitado, raramente se cultiva)","Cultivo del alimento sospechoso si se requiere confirmación en brote"],
+dx_diff:"Vómito rápido tras arroz frito recalentado = forma emética (parecida a S. aureus); diarrea más tardía tras carnes/vegetales = forma diarreica (parecida a C. perfringens).",
+tto:"Manejo de soporte (hidratación), autolimitado en la mayoría de los casos; antibióticos no indicados en intoxicación alimentaria simple.",
+prevencion:"Refrigeración adecuada y rápida de arroz cocido; evitar recalentamiento prolongado a temperatura ambiente."},
+
+banthracis:{gram:"gp",name:"Bacillus anthracis",
+morfo:"Bacilo Gram positivo grande 'en cadena de bambú', aerobio/anaerobio facultativo, esporulado (esporas muy resistentes, persisten años en el suelo), encapsulado (cápsula de ácido poli-D-glutámico, único caso de cápsula proteica).",
+virulencia:["Cápsula antifagocítica (poli-D-glutámico)","Toxina del ántrax: factor letal + factor edema + antígeno protector (forman toxinas A-B que causan necrosis y edema)","Esporas extremadamente resistentes (relevancia en bioterrorismo)"],
+enfermedades:["Ántrax cutáneo (forma más común, 95%): pápula que evoluciona a úlcera con escara negra indolora ('pústula maligna') con edema circundante","Ántrax por inhalación (forma más letal, relevante en bioterrorismo): mediastinitis hemorrágica, alta mortalidad","Ántrax gastrointestinal (raro, por ingestión de carne contaminada)"],
+epidem:"Zoonosis: contacto con animales infectados o productos animales (lana, cuero, carne). Esporas usadas históricamente como arma biológica.",
+dx_clinico:"Lesión cutánea con escara negra indolora y edema importante en trabajador expuesto a animales/productos animales; o cuadro respiratorio grave con ensanchamiento mediastínico en sospecha de bioterrorismo.",
+dx_lab:["Tinción de Gram: bacilos grandes en cadena ('bambú')","Cultivo en agar sangre: colonias no hemolíticas, aspecto 'cabeza de medusa'","Inmunohistoquímica o PCR para confirmación en casos sospechosos de bioterrorismo","Notificación obligatoria a autoridades de salud pública"],
+dx_diff:"Escara negra indolora con edema masivo + antecedente de exposición animal/productos animales es muy característico del ántrax cutáneo.",
+tto:"Ciprofloxacino o doxiciclina (formas no complicadas); ántrax por inhalación requiere combinación de antibióticos (ej. ciprofloxacino + clindamicina + linezolid) + antitoxina si disponible.",
+prevencion:"Vacuna disponible para personal de riesgo ocupacional/militar; control veterinario de animales infectados; notificación obligatoria por riesgo de bioterrorismo."}
+};
+
+const DATA2 = {
+kgranulomatis:{gram:"gn",name:"Klebsiella granulomatis",
+morfo:"Bacilo Gram negativo, intracelular, encapsulado, difícil de cultivar (requiere medios especiales).",
+virulencia:["Cápsula","Cuerpos de Donovan (forma intracelular característica observada en macrófagos)"],
+enfermedades:["Granuloma inguinal (Donovanosis): ITS crónica con úlceras genitales indoloras, progresivas, friables, sin adenopatía significativa"],
+epidem:"ITS poco común, más frecuente en regiones tropicales/subtropicales (incluye zonas de Sudamérica), transmisión sexual.",
+dx_clinico:"Úlcera genital indolora, de bordes elevados, sangrante fácilmente, progresiva, sin adenopatía inguinal dolorosa (a diferencia de otras ITS ulcerativas).",
+dx_lab:["Visualización de Cuerpos de Donovan en frotis con tinción de Giemsa o Wright (bacilos intracelulares dentro de macrófagos, aspecto 'en alfiler de gancho')","Cultivo difícil, no se realiza de rutina","Biopsia de la lesión si hay duda diagnóstica"],
+dx_diff:"Cuerpos de Donovan en macrófagos al Giemsa es patognomónico, diferenciándolo de sífilis (chancro duro indoloro pero sin cuerpos de Donovan) y de H. ducreyi (úlcera dolorosa).",
+tto:"Azitromicina (de elección); alternativas: doxiciclina, ciprofloxacino, eritromicina. Tratamiento prolongado (mínimo 3 semanas o hasta resolución completa).",
+prevencion:"Uso de preservativo, diagnóstico y tratamiento de parejas sexuales."},
+
+kpneumoniae:{gram:"gn",name:"Klebsiella pneumoniae",
+morfo:"Bacilo Gram negativo, encapsulado (cápsula prominente, mucoide), inmóvil, fermentador de lactosa, oxidasa negativa, parte de la familia Enterobacteriaceae.",
+virulencia:["Cápsula gruesa (antifagocítica, da aspecto mucoide a las colonias)","Fimbrias (adherencia)","Sideróforos (captación de hierro)"],
+enfermedades:["Neumonía (clásicamente en alcohólicos y diabéticos: esputo 'en jalea de grosella', afecta lóbulos superiores, tendencia a formar abscesos)","Infecciones del tracto urinario","Infecciones asociadas a catéteres, bacteriemia nosocomial","Abscesos hepáticos (cepas hipervirulentas)"],
+epidem:"Flora intestinal normal, patógeno oportunista importante intrahospitalario; cepas productoras de carbapenemasas (KPC) son un problema creciente de resistencia.",
+dx_clinico:"Neumonía grave en paciente alcohólico/diabético con esputo espeso, sanguinolento ('jalea de grosella'), curso fulminante.",
+dx_lab:["Cultivo en agar MacConkey: fermentador de lactosa (rosado), colonias mucoides grandes","Oxidasa negativa (distingue de Pseudomonas)","Prueba de motilidad: inmóvil (distingue de E. coli que es móvil)","Hemocultivo/urocultivo según foco"],
+dx_diff:"Inmóvil + colonias mucoides + fermentador de lactosa distingue de E. coli (móvil) dentro de las enterobacterias fermentadoras de lactosa.",
+tto:"Cefalosporinas de 3ra generación o carbapenémicos según sensibilidad; vigilar resistencia (BLEE, KPC) - puede requerir colistina en cepas multirresistentes.",
+prevencion:"Control de infecciones nosocomiales, uso racional de antibióticos, higiene de manos."},
+
+paeruginosa:{gram:"gn",name:"Pseudomonas aeruginosa",
+morfo:"Bacilo Gram negativo, aerobio estricto, móvil (flagelo polar), oxidasa POSITIVA, no fermentador, produce pigmentos (piocianina-azul, pioverdina-verde), olor característico 'a uva'.",
+virulencia:["Exotoxina A (inhibe síntesis proteica, similar a toxina diftérica)","Pioverdina/piocianina (pigmentos con actividad tóxica)","Biofilm (relevante en fibrosis quística y dispositivos)","Elastasas y proteasas","Resistencia intrínseca a múltiples antibióticos"],
+enfermedades:["Infecciones en pacientes con fibrosis quística (colonización crónica pulmonar)","Foliculitis del 'jacuzzi' (piscinas/bañeras contaminadas)","Otitis externa maligna (especialmente en diabéticos)","Infecciones de quemaduras y heridas (pus verdoso característico)","Osteomielitis en usuarios de drogas IV o tras trauma penetrante en pie (especialmente diabéticos - 'punción a través del zapato')","Neumonía nosocomial/asociada a ventilador","Ectima gangrenoso (en neutropénicos/inmunocomprometidos)"],
+epidem:"Ubicuo en ambientes húmedos (agua, suelo, equipos hospitalarios). Patógeno oportunista grave en inmunocomprometidos, fibrosis quística, quemados, neutropénicos.",
+dx_clinico:"Quemadura o herida con secreción verdosa y olor a uva; otitis externa que no mejora en diabético (sospechar otitis maligna); osteomielitis tras herida punzante en pie.",
+dx_lab:["Cultivo: oxidasa positiva, no fermentador de lactosa (colonias incoloras en MacConkey)","Producción de pigmento verde-azulado (piocianina) visible en placa","Olor característico a uva/tortilla","Crece a 42°C (ayuda diferencial)"],
+dx_diff:"Oxidasa POSITIVA + no fermentador + pigmento verde-azulado distingue claramente de las enterobacterias (Klebsiella, E. coli, Salmonella, Shigella) que son oxidasa negativas.",
+tto:"Piperacilina-tazobactam, ceftazidima, cefepima, carbapenémicos (excepto ertapenem) o fluoroquinolonas; con frecuencia se usa terapia combinada (beta-lactámico + aminoglucósido) en infecciones graves por riesgo de resistencia.",
+prevencion:"Control estricto de infecciones hospitalarias, manejo de equipos respiratorios, cuidado de pacientes con fibrosis quística."},
+
+ecoli:{gram:"gn",name:"Escherichia coli",
+morfo:"Bacilo Gram negativo, móvil (flagelos perítricos), fermentador de lactosa, oxidasa negativa, parte de la flora intestinal normal.",
+virulencia:["Fimbrias P (pielonefritis), fimbrias tipo 1","Toxina Shiga-like (cepas STEC/EHEC O157:H7 - causa síndrome hemolítico-urémico)","Toxinas termolábil y termoestable (ETEC - diarrea del viajero)","Cápsula K1 (meningitis neonatal)"],
+enfermedades:["ITU (causa #1 de cistitis y pielonefritis no complicada)","Diarrea del viajero (ETEC)","Síndrome hemolítico-urémico (EHEC O157:H7, asociado a carne molida mal cocida)","Sepsis neonatal y meningitis neonatal (cepas con cápsula K1)","Sepsis de origen urinario/abdominal en general"],
+epidem:"Flora intestinal normal predominante; transmisión fecal-oral en cepas patógenas (alimentos/agua contaminados); EHEC asociado a carne de res mal cocida.",
+dx_clinico:"Disuria/polaquiuria/dolor lumbar (ITU/pielonefritis); diarrea acuosa o sanguinolenta tras ingesta de carne mal cocida (sospechar SHU si hay palidez, oliguria, petequias).",
+dx_lab:["Cultivo en agar MacConkey: fermentador de lactosa (rosado), colonias con brillo metálico verde en agar EMB","Oxidasa negativa","Móvil (a diferencia de Klebsiella)","Urocultivo con >100,000 UFC/mL es diagnóstico de ITU","Cultivo en agar MacConkey-sorbitol para O157:H7 (no fermenta sorbitol, a diferencia de otras E. coli)"],
+dx_diff:"Móvil + fermentador de lactosa distingue de Klebsiella (inmóvil). Para O157:H7: no fermenta sorbitol (prueba específica en agar MacConkey-sorbitol).",
+tto:"ITU no complicada: nitrofurantoína, fosfomicina o TMP-SMX. Pielonefritis: fluoroquinolonas o ceftriaxona. EHEC: NO usar antibióticos (pueden aumentar liberación de toxina y riesgo de SHU) - solo soporte.",
+prevencion:"Higiene de manos, cocción adecuada de carnes, tratamiento de agua; profilaxis en ITU recurrente."},
+
+salmonella:{gram:"gn",name:"Salmonella spp.",
+morfo:"Bacilo Gram negativo, móvil (flagelos perítricos), NO fermentador de lactosa, productor de H2S, oxidasa negativa.",
+virulencia:["Sistemas de secreción tipo III (invasión de células intestinales)","Cápsula Vi (S. Typhi, antifagocítica)","Resistencia a la lisis intracelular en macrófagos (S. Typhi)"],
+enfermedades:["Gastroenteritis no tifoidea (diarrea inflamatoria, fiebre, dolor abdominal - huevos/aves de corral)","Fiebre tifoidea (S. Typhi): fiebre prolongada en escalera, dolor abdominal, roséola, bradicardia relativa, hepatoesplenomegalia, posible perforación intestinal","Estado de portador crónico (vesícula biliar, especialmente en colelitiasis)"],
+epidem:"Transmisión fecal-oral, alimentos contaminados (huevos, aves, lácteos), agua contaminada (fiebre tifoidea en zonas de saneamiento deficiente).",
+dx_clinico:"Gastroenteritis no tifoidea con fiebre tras ingesta de huevos/pollo; fiebre tifoidea con fiebre prolongada en escalera y bradicardia relativa en viajero a zona endémica.",
+dx_lab:["Cultivo en agar MacConkey/agar SS: NO fermentador de lactosa (colonias incoloras), productor de H2S (colonias negras en agar SS o XLD)","Hemocultivo (más sensible en fiebre tifoidea, especialmente primera semana) y coprocultivo","Serología (reacción de Widal) - poco específica, uso limitado actualmente"],
+dx_diff:"NO fermenta lactosa + produce H2S (colonias negras) distingue de E. coli/Klebsiella (fermentadores) y la diferencia de Shigella (que no produce H2S).",
+tto:"Gastroenteritis no tifoidea no complicada: generalmente autolimitada, sin antibióticos (excepto en inmunocomprometidos/extremos de edad). Fiebre tifoidea: ceftriaxona o ciprofloxacino (azitromicina como alternativa).",
+prevencion:"Vacuna contra fiebre tifoidea (oral o inyectable) para viajeros a zonas endémicas; saneamiento de agua, higiene alimentaria."},
+
+shigella:{gram:"gn",name:"Shigella spp.",
+morfo:"Bacilo Gram negativo, INMÓVIL (a diferencia de Salmonella), no fermentador de lactosa, NO productor de H2S, oxidasa negativa.",
+virulencia:["Toxina Shiga (S. dysenteriae, inhibe síntesis proteica, daño epitelial)","Invasión de células epiteliales del colon (sistema de secreción tipo III)","Dosis infectante muy baja (basta pocas bacterias para causar enfermedad)"],
+enfermedades:["Shigelosis (disentería bacilar): diarrea inflamatoria con sangre y moco, fiebre, dolor abdominal tipo cólico, pujo y tenesmo"],
+epidem:"Transmisión fecal-oral directa (persona a persona, dosis infectante muy baja facilita brotes en guarderías, hacinamiento), también por agua/alimentos contaminados.",
+dx_clinico:"Diarrea con sangre y moco, fiebre, pujo y tenesmo (deseo doloroso de defecar), especialmente en contexto de brote o hacinamiento.",
+dx_lab:["Cultivo en agar MacConkey/SS: NO fermentador de lactosa, NO produce H2S (a diferencia de Salmonella)","INMÓVIL (prueba de motilidad negativa, distingue de Salmonella que es móvil)","Coprocultivo con leucocitos fecales abundantes"],
+dx_diff:"Inmóvil + no produce H2S distingue claramente de Salmonella (móvil y productora de H2S), aunque ambas no fermentan lactosa.",
+tto:"Casos moderados/graves: azitromicina o ciprofloxacino (acortan duración y transmisión). Casos leves autolimitados pueden no requerir antibiótico. Evitar antidiarreicos antimotilidad (pueden prolongar el cuadro).",
+prevencion:"Higiene de manos rigurosa, saneamiento de agua, aislamiento de casos en brotes (guarderías, instituciones)."},
+
+hinfluenzae:{gram:"gn",name:"Haemophilus influenzae",
+morfo:"Cocobacilo Gram negativo pequeño, pleomórfico, requiere factores X (hemina) y V (NAD) para crecer (agar chocolate), encapsulado (tipo b - Hib - el más virulento).",
+virulencia:["Cápsula polisacárida (tipo b es la más virulenta, antifagocítica)","IgA proteasa","Pili (adherencia a mucosa respiratoria)","Endotoxina (LPS)"],
+enfermedades:["Meningitis bacteriana en niños no vacunados (históricamente causa #1 antes de la vacuna Hib)","Epiglotitis aguda (emergencia, 'thumb sign' en Rx lateral de cuello)","Otitis media aguda y sinusitis (cepas no encapsuladas)","Neumonía (especialmente en EPOC/fumadores)","Celulitis facial en niños pequeños"],
+epidem:"Coloniza nasofaringe; transmisión por gotas respiratorias. La vacuna Hib redujo drásticamente la incidencia de enfermedad invasiva en niños.",
+dx_clinico:"Niño no vacunado con fiebre alta, estridor, posición en trípode, babeo (sospecha de epiglotitis - NO examinar la garganta para evitar laringoespasmo); meningitis en niño no vacunado.",
+dx_lab:["Cultivo en agar chocolate (requiere factores X y V) - NO crece en agar sangre simple","Prueba de requerimiento de factores X/V para identificación","Tinción de Gram de LCR: cocobacilos Gram negativos pleomórficos","Detección de antígeno capsular (tipo b)"],
+dx_diff:"Requerimiento obligatorio de factores X y V (no crece en agar sangre común, solo en agar chocolate) es la clave diagnóstica de laboratorio que lo distingue de otras bacterias Gram negativas.",
+tto:"Ceftriaxona o cefotaxima (meningitis/epiglotitis); amoxicilina-clavulánico para otitis/sinusitis no complicada. Epiglotitis requiere manejo urgente de vía aérea.",
+prevencion:"Vacuna conjugada Hib (esquema infantil rutinario) - ha sido muy eficaz reduciendo meningitis/epiglotitis por tipo b."},
+
+hducreyi:{gram:"gn",name:"Haemophilus ducreyi",
+morfo:"Cocobacilo Gram negativo, requiere factor X (no V), dispuesto en 'cardumen de peces' ('school of fish') en tinción.",
+virulencia:["Toxina citoletal distensiva (daño celular)","Adhesinas"],
+enfermedades:["Chancroide (úlcera genital DOLOROSA, de bordes irregulares, base purulenta, con adenopatía inguinal dolorosa que puede fistulizar - bubón)"],
+epidem:"ITS más frecuente en algunas regiones tropicales/en desarrollo, fuertemente asociada a mayor riesgo de transmisión de VIH.",
+dx_clinico:"Úlcera genital DOLOROSA (a diferencia de sífilis y donovanosis que son indoloras) con adenopatía inguinal dolorosa unilateral, posible supuración del ganglio.",
+dx_lab:["Tinción de Gram de la base de la úlcera: cocobacilos Gram negativos en patrón 'cardumen de peces'","Cultivo difícil (requiere medios especiales enriquecidos), poco disponible en la práctica","PCR cuando disponible (más sensible)","Diagnóstico frecuentemente clínico-epidemiológico por exclusión de sífilis/herpes"],
+dx_diff:"Úlcera DOLOROSA + adenopatía dolorosa distingue de sífilis (chancro duro indoloro) y de granuloma inguinal (úlcera indolora con Cuerpos de Donovan).",
+tto:"Azitromicina dosis única o ceftriaxona dosis única (de elección); alternativa ciprofloxacino o eritromicina.",
+prevencion:"Uso de preservativo; tratamiento de parejas sexuales; control de ITS asociadas (VIH)."},
+
+hpylori:{gram:"gn",name:"Helicobacter pylori",
+morfo:"Bacilo Gram negativo espiralado/curvo, microaerófilo, móvil (flagelos múltiples), ureasa POSITIVA (clave diagnóstica), coloniza el moco gástrico.",
+virulencia:["Ureasa (neutraliza ácido gástrico local, produce amoníaco, daño epitelial)","Citotoxina vacuolizante (VacA)","Proteína CagA (asociada a mayor virulencia, riesgo de cáncer gástrico)","Flagelos (motilidad a través del moco gástrico)","Adhesinas"],
+enfermedades:["Gastritis crónica (la mayoría de los infectados son asintomáticos)","Úlcera peptídica (gástrica y duodenal) - causa principal junto con AINEs","Adenocarcinoma gástrico (factor de riesgo establecido, clasificado como carcinógeno tipo I)","Linfoma MALT gástrico (asociación causal bien establecida, puede regresar con erradicación)"],
+epidem:"Infección muy prevalente a nivel mundial, transmisión fecal-oral u oral-oral, adquisición típicamente en la infancia, persiste de forma crónica sin tratamiento.",
+dx_clinico:"Dolor epigástrico, dispepsia, síntomas de úlcera peptídica (dolor que mejora o empeora con la comida según localización gástrica/duodenal).",
+dx_lab:["Prueba del aliento con urea marcada (13C) - no invasiva, alta sensibilidad/especificidad","Antígeno fecal (alternativa no invasiva)","Biopsia endoscópica con test rápido de ureasa, histología o cultivo","Serología (solo indica exposición previa, no diferencia infección activa de pasada)"],
+dx_diff:"Ureasa POSITIVA es la clave bioquímica central - tanto para el diagnóstico (prueba de aliento, test rápido de ureasa en biopsia) como para la patogenia (neutraliza ácido local).",
+tto:"Terapia de erradicación: inhibidor de bomba de protones + amoxicilina + claritromicina (triple terapia clásica, considerar resistencia local a claritromicina) o terapia cuádruple con bismuto.",
+prevencion:"No hay vacuna; mejora del saneamiento reduce transmisión; erradicación reduce riesgo de cáncer gástrico y recurrencia de úlcera."},
+
+cjejuni:{gram:"gn",name:"Campylobacter jejuni",
+morfo:"Bacilo Gram negativo curvo/espiralado ('en forma de S' o 'ala de gaviota'), microaerófilo, móvil (flagelo único polar), oxidasa positiva, crece a 42°C (termofílico).",
+virulencia:["Toxina similar a Shiga (menor relevancia)","Lipooligosacárido (mimetismo molecular con gangliósidos - relevante en Guillain-Barré post-infeccioso)","Motilidad/invasión de la mucosa intestinal"],
+enfermedades:["Gastroenteritis bacteriana (una de las causas más comunes a nivel mundial): diarrea (a veces sanguinolenta), fiebre, dolor abdominal tipo cólico","Síndrome de Guillain-Barré (complicación post-infecciosa por mimetismo molecular - la causa infecciosa más asociada a GB)","Artritis reactiva post-infecciosa"],
+epidem:"Transmisión por aves de corral mal cocidas (pollo es el reservorio/vehículo más común), leche no pasteurizada, agua contaminada; zoonosis muy frecuente.",
+dx_clinico:"Diarrea (posiblemente sanguinolenta) tras ingesta de pollo mal cocido; debilidad ascendente progresiva semanas después de un cuadro diarreico sugiere Guillain-Barré post-Campylobacter.",
+dx_lab:["Cultivo en medios selectivos (agar Campy/Skirrow), incubación microaerófila a 42°C (termofílico - ventaja diagnóstica)","Tinción de Gram: bacilos curvos en 'ala de gaviota'","Coprocultivo con condiciones especiales (no crece en medios estándar de rutina)"],
+dx_diff:"Crecimiento a 42°C en microaerofilia + morfología curva característica distingue de las enterobacterias estándar (Salmonella, Shigella, E. coli) que no comparten estos requerimientos.",
+tto:"Generalmente autolimitado (soporte e hidratación); azitromicina o ciprofloxacino en casos graves/prolongados o inmunocomprometidos (hay resistencia creciente a fluoroquinolonas).",
+prevencion:"Cocción adecuada de aves de corral, pasteurización de lácteos, manejo higiénico de alimentos."},
+
+mtuberculosis:{gram:"myc",name:"Mycobacterium tuberculosis",
+morfo:"Bacilo ácido-alcohol resistente (BAAR), pared rica en ácidos micólicos (no se tiñe bien con Gram - requiere tinción de Ziehl-Neelsen o Kinyoun), aerobio estricto, crecimiento lento (semanas).",
+virulencia:["Pared celular rica en lípidos (ácidos micólicos) - resistencia a degradación, ácido-alcohol resistencia","Capacidad de sobrevivir dentro de macrófagos (inhibe fusión fagosoma-lisosoma)","Factor cordón (cord factor) - asociado a virulencia e inducción de granulomas","Inducción de respuesta inmune granulomatosa (el daño es principalmente inmunomediado)"],
+enfermedades:["Tuberculosis pulmonar primaria (puede ser asintomática o autolimitada, foco de Ghon)","Tuberculosis pulmonar secundaria/reactivación (afecta clásicamente lóbulos superiores, cavitación, tos crónica, hemoptisis, fiebre vespertina, sudoración nocturna, pérdida de peso)","Tuberculosis miliar (diseminación hematógena, afecta múltiples órganos)","Tuberculosis extrapulmonar: meningitis TB, mal de Pott (espondilitis), TB ganglionar (escrófula), TB renal, TB pleural/pericárdica"],
+epidem:"Transmisión por vía aérea (gotas respiratorias/aerosoles), reservorio humano. Factores de riesgo: hacinamiento, inmunosupresión (VIH es el principal), desnutrición, contacto cercano con caso bacilífero.",
+dx_clinico:"Tos crónica (>2-3 semanas), fiebre vespertina, sudoración nocturna, pérdida de peso, hemoptisis en enfermedad avanzada, antecedente de contacto con caso de TB.",
+dx_lab:["Baciloscopia de esputo con tinción de Ziehl-Neelsen (BAAR) - prueba inicial rápida","Cultivo en medio de Löwenstein-Jensen (estándar de oro, pero lento: semanas)","PCR/pruebas moleculares rápidas (ej. Xpert MTB/RIF) - detectan también resistencia a rifampicina","PPD (prueba de tuberculina) o IGRA (ej. Quantiferon) - indican infección, no necesariamente enfermedad activa","Radiografía de tórax: cavitación en lóbulos superiores en reactivación"],
+dx_diff:"Bacilo ÁCIDO-ALCOHOL RESISTENTE (no se tiñe con Gram de forma confiable) - se requiere Ziehl-Neelsen específicamente, a diferencia de todas las bacterias anteriores que sí se clasifican por Gram.",
+tto:"Esquema RIPE (Rifampicina + Isoniazida + Pirazinamida + Etambutol) por 2 meses, seguido de Rifampicina + Isoniazida por 4 meses más (esquema estándar de 6 meses); ajustar según resistencia (TB multirresistente requiere esquemas prolongados de segunda línea).",
+prevencion:"Vacuna BCG (protege principalmente contra formas graves en niños, eficacia variable en adultos contra TB pulmonar); detección y tratamiento de casos activos; profilaxis con isoniazida en contactos/infección latente seleccionada."}
+};
+
+Object.assign(DATA, DATA2);
+
+const ORDER = ["listeria","ctetani","cbotulinum","cdifficile","cperfringens","bcereus","banthracis",
+"kgranulomatis","kpneumoniae","paeruginosa","ecoli","salmonella","shigella","hinfluenzae","hducreyi","hpylori","cjejuni",
+"mtuberculosis"];
+
+const QUIZ = [
+{q:"Bacilo Gram+ con esporas que causa parálisis flácida DESCENDENTE bilateral sin fiebre:",opts:["Clostridium tetani","Clostridium botulinum","Clostridium perfringens","Listeria monocytogenes"],a:1},
+{q:"Bacilo Gram+ que causa trismo y opistótonos por bloqueo de GABA/glicina:",opts:["Clostridium tetani","Clostridium botulinum","Bacillus anthracis","Clostridium difficile"],a:0},
+{q:"Causa principal de diarrea nosocomial asociada al uso reciente de antibióticos:",opts:["Clostridium perfringens","Clostridium difficile","Bacillus cereus","Campylobacter jejuni"],a:1},
+{q:"Bacilo Gram+ asociado a gangrena gaseosa con crepitación por gas en heridas traumáticas:",opts:["Clostridium perfringens","Clostridium tetani","Bacillus anthracis","Listeria monocytogenes"],a:0},
+{q:"Intoxicación alimentaria por arroz frito recalentado (forma emética de inicio rápido):",opts:["Bacillus cereus","Clostridium botulinum","Salmonella spp.","Shigella spp."],a:0},
+{q:"Bacilo Gram+ encapsulado 'en cadena de bambú' que causa escara negra indolora:",opts:["Bacillus anthracis","Bacillus cereus","Clostridium perfringens","Listeria monocytogenes"],a:0},
+{q:"Bacilo Gram+ que crece a 4°C, causa meningitis neonatal y motilidad 'tumbling':",opts:["Listeria monocytogenes","Bacillus cereus","Clostridium tetani","Haemophilus influenzae"],a:0},
+{q:"Bacilo Gram- inmóvil, mucoide, causa neumonía con esputo 'en jalea de grosella':",opts:["Klebsiella pneumoniae","Escherichia coli","Pseudomonas aeruginosa","Salmonella spp."],a:0},
+{q:"Bacilo Gram- oxidasa POSITIVA, no fermentador, produce pigmento verde y olor a uva:",opts:["Pseudomonas aeruginosa","Klebsiella pneumoniae","Escherichia coli","Haemophilus influenzae"],a:0},
+{q:"Enterobacteria móvil, fermentadora de lactosa, causa #1 de ITU no complicada:",opts:["Escherichia coli","Klebsiella pneumoniae","Salmonella spp.","Shigella spp."],a:0},
+{q:"Bacilo Gram- que NO fermenta lactosa, produce H2S (colonias negras), causa fiebre tifoidea:",opts:["Salmonella spp.","Shigella spp.","Klebsiella pneumoniae","Campylobacter jejuni"],a:0},
+{q:"Bacilo Gram- INMÓVIL, no produce H2S, causa disentería con pujo y tenesmo:",opts:["Shigella spp.","Salmonella spp.","Escherichia coli","Campylobacter jejuni"],a:0},
+{q:"Cocobacilo Gram- que requiere factores X y V, causa epiglotitis y meningitis en no vacunados:",opts:["Haemophilus influenzae","Haemophilus ducreyi","Klebsiella pneumoniae","Neisseria meningitidis"],a:0},
+{q:"Causa de úlcera genital DOLOROSA con adenopatía dolorosa (chancroide):",opts:["Haemophilus ducreyi","Klebsiella granulomatis","Treponema pallidum","Haemophilus influenzae"],a:0},
+{q:"Bacilo Gram- espiralado, ureasa positiva, asociado a úlcera peptídica y cáncer gástrico:",opts:["Helicobacter pylori","Campylobacter jejuni","Klebsiella pneumoniae","Escherichia coli"],a:0},
+{q:"Bacilo Gram- curvo 'ala de gaviota', crece a 42°C, asociado a Síndrome de Guillain-Barré post-infeccioso:",opts:["Campylobacter jejuni","Helicobacter pylori","Vibrio cholerae","Shigella spp."],a:0},
+{q:"Causa Granuloma inguinal con Cuerpos de Donovan visibles en macrófagos (Giemsa):",opts:["Klebsiella granulomatis","Haemophilus ducreyi","Treponema pallidum","Calymmatobacterium"],a:0},
+{q:"Bacilo ácido-alcohol resistente (no se tiñe por Gram), requiere Ziehl-Neelsen, causa cavitación en lóbulos superiores:",opts:["Mycobacterium tuberculosis","Nocardia spp.","Actinomyces israelii","Legionella pneumophila"],a:0}
+];
+
+let state = {xp:0, done:new Set(), quizIdx:0, quizScore:0, quizAnswered:false, flashIdx:0, flashFlipped:false};
+
+function addXP(n){
+  state.xp += n;
+  document.getElementById('xpval').textContent = state.xp+" XP";
+  document.getElementById('lvl').textContent = Math.floor(state.xp/50)+1;
+  let pct = (state.xp % 50)/50*100;
+  document.getElementById('xpfill').style.width = pct+"%";
+  let t=document.getElementById('toast');
+  t.textContent="+"+n+" XP"; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1200);
+}
+function markDone(page){
+  if(!state.done.has(page)){
+    state.done.add(page); addXP(10);
+    let el=document.querySelector('.nav-item[data-page="'+page+'"]');
+    if(el) el.classList.add('done');
+  }
+}
+function render(page){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.page===page));
+  const main = document.getElementById('main');
+  if(page==='home'){ renderHome(main); return; }
+  if(page==='flashcards'){ renderFlash(main); return; }
+  if(page==='quiz'){ renderQuiz(main); return; }
+  renderBacteria(main, page);
+}
+function renderHome(main){
+  main.innerHTML = `
+  <div class="topbar"><h2>Tabla comparativa rápida — Bacilos</h2></div>
+  <div class="card"><h3>🔬 Pruebas clave de diferenciación</h3>
+  <div class="intro-table-wrap"><table class="tx-table">
+    <tr><th>Bacteria</th><th>Gram</th><th>Esporulado</th><th>Móvil</th><th>Prueba clave</th></tr>
+    <tr><td>Listeria monocytogenes</td><td>+</td><td>No</td><td>Sí</td><td>Crece a 4°C, motilidad 'tumbling'</td></tr>
+    <tr><td>C. tetani</td><td>+</td><td>Sí</td><td>Sí</td><td>Espora terminal, dx clínico</td></tr>
+    <tr><td>C. botulinum</td><td>+</td><td>Sí</td><td>Variable</td><td>Parálisis descendente, toxina en suero</td></tr>
+    <tr><td>C. difficile</td><td>+</td><td>Sí</td><td>No</td><td>Toxina A/B en heces, post-ATB</td></tr>
+    <tr><td>C. perfringens</td><td>+</td><td>Sí</td><td>No</td><td>Doble hemólisis, gas en tejidos</td></tr>
+    <tr><td>Bacillus cereus</td><td>+</td><td>Sí</td><td>Sí</td><td>Arroz recalentado</td></tr>
+    <tr><td>Bacillus anthracis</td><td>+</td><td>Sí</td><td>No</td><td>Encapsulado, cadena de bambú</td></tr>
+    <tr><td>Klebsiella pneumoniae</td><td>−</td><td>—</td><td>No</td><td>Mucoide, fermenta lactosa</td></tr>
+    <tr><td>Pseudomonas aeruginosa</td><td>−</td><td>—</td><td>Sí</td><td>Oxidasa +, pigmento verde</td></tr>
+    <tr><td>Escherichia coli</td><td>−</td><td>—</td><td>Sí</td><td>Fermenta lactosa, móvil</td></tr>
+    <tr><td>Salmonella spp.</td><td>−</td><td>—</td><td>Sí</td><td>No fermenta lactosa, produce H2S</td></tr>
+    <tr><td>Shigella spp.</td><td>−</td><td>—</td><td>No</td><td>No fermenta lactosa, sin H2S</td></tr>
+    <tr><td>H. influenzae</td><td>−</td><td>—</td><td>No</td><td>Requiere factores X y V</td></tr>
+    <tr><td>H. ducreyi</td><td>−</td><td>—</td><td>No</td><td>'Cardumen de peces', úlcera dolorosa</td></tr>
+    <tr><td>Helicobacter pylori</td><td>−</td><td>—</td><td>Sí</td><td>Ureasa +, prueba del aliento</td></tr>
+    <tr><td>Campylobacter jejuni</td><td>−</td><td>—</td><td>Sí</td><td>Crece a 42°C, 'ala de gaviota'</td></tr>
+    <tr><td>M. tuberculosis</td><td>BAAR</td><td>No</td><td>No</td><td>Ziehl-Neelsen, no se tiñe por Gram</td></tr>
+  </table></div></div>
+  <div class="card"><h3>🧭 Algoritmo mental rápido</h3>
+  <ul>
+    <li><b>Bacilo Gram+ esporulado anaerobio</b> → Clostridium. Neurotoxina (tétanos/botulismo) vs. enterotoxina/citotoxina (difficile/perfringens).</li>
+    <li><b>Bacilo Gram+ aerobio esporulado</b> → Bacillus. Cereus (alimentario) vs. anthracis (encapsulado, zoonosis).</li>
+    <li><b>Bacilo Gram- fermentador de lactosa</b> → Enterobacteria común (E. coli móvil / Klebsiella inmóvil mucoide).</li>
+    <li><b>Bacilo Gram- NO fermentador de lactosa</b> → Salmonella (H2S+, móvil) vs. Shigella (H2S−, inmóvil) vs. Pseudomonas (oxidasa+, pigmento).</li>
+    <li><b>Cocobacilo Gram- exigente</b> → Haemophilus (factores X/V) — influenzae (vacuna Hib) vs. ducreyi (úlcera dolorosa).</li>
+    <li><b>Bacilo Gram- espiralado/curvo</b> → Helicobacter (ureasa+, gástrico) vs. Campylobacter (42°C, diarrea/Guillain-Barré).</li>
+    <li><b>No se tiñe por Gram, BAAR</b> → Mycobacterium tuberculosis (Ziehl-Neelsen).</li>
+  </ul></div>`;
+}
+function renderBacteria(main, key){
+  const d = DATA[key];
+  const badgeClass = d.gram==='gp' ? 'gp': d.gram==='gn' ? 'gn':'myc';
+  const badgeText = d.gram==='gp' ? 'GRAM POSITIVO': d.gram==='gn' ? 'GRAM NEGATIVO':'BAAR (no Gram)';
+  main.innerHTML = `
+  <div class="topbar"><h2>${d.name}</h2><span class="badge ${badgeClass}">${badgeText}</span></div>
+  <div class="card"><h3>🧫 Clasificación y morfología</h3><p>${d.morfo}</p></div>
+  <div class="card"><h3>⚔️ Factores de virulencia</h3>${d.virulencia.map(v=>'<span class="pill">'+v+'</span>').join(' ')}</div>
+  <div class="grid2">
+    <div class="card"><h3>🩺 Enfermedades / cuadros clínicos</h3><ul>${d.enfermedades.map(e=>'<li>'+e+'</li>').join('')}</ul></div>
+    <div class="card"><h3>🌍 Epidemiología / transmisión</h3><p>${d.epidem}</p></div>
+  </div>
+  <div class="card"><h3>🔎 Diagnóstico clínico</h3><p>${d.dx_clinico}</p></div>
+  <div class="card"><h3>🧪 Diagnóstico de laboratorio</h3><ul>${d.dx_lab.map(e=>'<li>'+e+'</li>').join('')}</ul></div>
+  <div class="card" style="border-color:var(--green-dark);"><h3>✅ Clave práctica — diagnóstico diferencial</h3><p>${d.dx_diff}</p></div>
+  <div class="card"><h3>💊 Tratamiento de elección</h3><p>${d.tto}</p></div>
+  <div class="card"><h3>🛡️ Prevención</h3><p>${d.prevencion}</p></div>`;
+  markDone(key);
+}
+function renderFlash(main){
+  const keys = ORDER;
+  const key = keys[state.flashIdx];
+  const d = DATA[key];
+  main.innerHTML = `
+  <div class="topbar"><h2>Flashcards</h2><span class="badge ${d.gram}">${state.flashIdx+1}/${keys.length}</span></div>
+  <div class="flash-wrap">
+    <div class="flashcard" id="fc">${state.flashFlipped ? d.dx_diff : '<b>'+d.name+'</b><br><br>¿Cuál es la prueba clave que la diferencia en el laboratorio? <br><br><i>(click para ver respuesta)</i>'}</div>
+    <div class="flash-controls">
+      <button class="btn secondary" id="prevFc">← Anterior</button>
+      <button class="btn" id="flipFc">Girar tarjeta</button>
+      <button class="btn secondary" id="nextFc">Siguiente →</button>
+    </div>
+  </div>`;
+  document.getElementById('fc').onclick = ()=>{state.flashFlipped=!state.flashFlipped; renderFlash(main);};
+  document.getElementById('flipFc').onclick = ()=>{state.flashFlipped=!state.flashFlipped; renderFlash(main);};
+  document.getElementById('prevFc').onclick = ()=>{state.flashIdx=(state.flashIdx-1+keys.length)%keys.length; state.flashFlipped=false; renderFlash(main);};
+  document.getElementById('nextFc').onclick = ()=>{state.flashIdx=(state.flashIdx+1)%keys.length; state.flashFlipped=false; addXP(2); renderFlash(main);};
+  markDone('flashcards');
+}
+function renderQuiz(main){
+  if(state.quizIdx >= QUIZ.length){
+    main.innerHTML = `<div class="card quiz-summary"><h3>Quiz finalizado</h3><div class="score">${state.quizScore} / ${QUIZ.length}</div>
+    <p>${state.quizScore>=15?'¡Excelente dominio, Dr. Cristiano!':state.quizScore>=11?'Buen resultado, repasá los puntos flojos.':'Conviene repasar las tablas comparativas de nuevo.'}</p>
+    <button class="btn" id="restartQ">Repetir quiz</button></div>`;
+    document.getElementById('restartQ').onclick=()=>{state.quizIdx=0;state.quizScore=0;renderQuiz(main);};
+    return;
+  }
+  const q = QUIZ[state.quizIdx];
+  state.quizAnswered=false;
+  main.innerHTML = `
+  <div class="topbar"><h2>Quiz final</h2><span class="badge gp">${state.quizIdx+1}/${QUIZ.length}</span></div>
+  <div class="qcard"><div class="qtext">${q.q}</div>
+    ${q.opts.map((o,i)=>'<button class="opt" data-i="'+i+'">'+o+'</button>').join('')}
+    <div class="feedback" id="fb"></div></div>`;
+  document.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.quizAnswered) return;
+      state.quizAnswered = true;
+      const i = parseInt(btn.dataset.i);
+      document.querySelectorAll('.opt').forEach(b=>{
+        if(parseInt(b.dataset.i)===q.a) b.classList.add('correct');
+        else if(parseInt(b.dataset.i)===i && i!==q.a) b.classList.add('wrong');
+      });
+      const fb = document.getElementById('fb');
+      if(i===q.a){ state.quizScore++; fb.textContent='✅ ¡Correcto!'; fb.className='feedback ok'; addXP(5);}
+      else { fb.textContent='❌ Incorrecto. Respuesta correcta: '+q.opts[q.a]; fb.className='feedback bad'; }
+      setTimeout(()=>{ state.quizIdx++; renderQuiz(document.getElementById('main')); }, 1400);
+    };
+  });
+}
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click', ()=> render(item.dataset.page));
+});
+render('home');
+</script>
+</body>
+</html>
