@@ -229,6 +229,25 @@ footer b{color:var(--green-light);}
 
 <footer>Conteúdo produzido por <b>Dr. Cristiano Ribeiro da Silva</b> · Já pagou? Use o botão "Já comprei" no topo da página.</footer>
 
+<div class="modal-bg" id="pixModalBg">
+  <div class="modal" style="max-width:420px;">
+    <h3 id="pixItemNome">Pagamento via PIX</h3>
+    <p id="pixValor" style="color:var(--green-light);font-size:20px;font-weight:700;font-family:'DM Mono',monospace;"></p>
+    <div style="text-align:center;margin-bottom:14px;">
+      <img id="pixQrImg" src="" alt="QR Code PIX" style="width:200px;height:200px;border-radius:8px;background:#fff;padding:8px;">
+    </div>
+    <p style="font-size:12.5px;">Ou copie o código Pix abaixo (Pix Copia e Cola):</p>
+    <textarea id="pixPayload" readonly style="width:100%;height:64px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;padding:8px;margin-bottom:10px;"></textarea>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn-sec" id="pixCopyBtn">Copiar código</button>
+      <button class="btn-comprar" id="pixWhatsBtn">Já paguei → Avisar no WhatsApp</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn-sec" id="pixCloseBtn" style="background:none;border:none;color:var(--muted);">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3>Ver meu acesso</h3>
@@ -244,6 +263,54 @@ footer b{color:var(--green-light);}
 
 <script src="config.js"></script>
 <script>
+/* ---------- GERADOR PIX (BR Code / EMV) ---------- */
+function tlv(id, value){
+  const len = String(value.length).padStart(2,'0');
+  return id + len + value;
+}
+function crc16(payload){
+  let crc = 0xFFFF;
+  for(let i=0;i<payload.length;i++){
+    crc ^= payload.charCodeAt(i) << 8;
+    for(let j=0;j<8;j++){
+      if((crc & 0x8000) !== 0){ crc = ((crc << 1) ^ 0x1021) & 0xFFFF; }
+      else { crc = (crc << 1) & 0xFFFF; }
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4,'0');
+}
+function buildPixPayload(chave, nome, cidade, valor, txid){
+  const merchantInfo = tlv('00','br.gov.bcb.pix') + tlv('01', chave);
+  const field26 = tlv('26', merchantInfo);
+  const field52 = tlv('52','0000');
+  const field53 = tlv('53','986');
+  const field54 = valor ? tlv('54', Number(valor).toFixed(2)) : '';
+  const field58 = tlv('58','BR');
+  const field59 = tlv('59', (nome||'RESUMOS CLINICUS').substring(0,25));
+  const field60 = tlv('60', (cidade||'BLUMENAU').substring(0,15));
+  const field62 = tlv('62', tlv('05', (txid||'RESCLIN').substring(0,25)));
+  let semCrc = tlv('00','01') + field26 + field52 + field53 + field54 + field58 + field59 + field60 + field62 + '6304';
+  return semCrc + crc16(semCrc);
+}
+
+/* ---------- MODAL DE PAGAMENTO ---------- */
+function abrirPagamentoPix(itemNome, preco){
+  const payload = buildPixPayload(CONFIG.pixChave, CONFIG.pixNome, CONFIG.pixCidade, preco, "RESCLIN");
+  document.getElementById('pixItemNome').textContent = itemNome;
+  document.getElementById('pixValor').textContent = preco ? "R$ "+Number(preco).toFixed(2).replace('.',',') : "Valor a combinar";
+  document.getElementById('pixPayload').value = payload;
+  document.getElementById('pixQrImg').src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data="+encodeURIComponent(payload);
+  document.getElementById('pixWhatsBtn').onclick = ()=> window.open(gerarLinkWhatsapp(itemNome, preco), '_blank');
+  document.getElementById('pixModalBg').classList.add('show');
+}
+document.getElementById('pixCloseBtn').onclick = ()=>document.getElementById('pixModalBg').classList.remove('show');
+document.getElementById('pixCopyBtn').onclick = ()=>{
+  const ta = document.getElementById('pixPayload');
+  ta.select(); document.execCommand('copy');
+  const btn = document.getElementById('pixCopyBtn');
+  const old = btn.textContent; btn.textContent="Copiado!"; setTimeout(()=>btn.textContent=old,1500);
+};
+
 function pulseSVG(){
   return `<svg viewBox="0 0 600 36" preserveAspectRatio="none">
     <path d="M0,18 L160,18 L180,18 L190,2 L205,34 L215,18 L230,18 L245,10 L255,26 L265,18 L600,18"/>
@@ -278,27 +345,32 @@ function renderCatalogo(data){
     if(sem.combo.disponivel){
       html += `<div class="combo-banner">
         <div class="ctext"><b>Combo completo · ${sem.semestre}º Semestre</b><span>Todas as matérias do semestre (resumos + simulados)</span></div>
-        <button class="btn-comprar" onclick="window.open('${gerarLinkWhatsapp('Combo '+sem.semestre+'º Semestre', sem.combo.preco)}','_blank')">Comprar combo${sem.combo.preco? ' — Gs. '+sem.combo.preco:''}</button>
+        <button class="btn-comprar" onclick="abrirPagamentoPix('Combo ${sem.semestre}º Semestre', ${sem.combo.preco})">Comprar combo${sem.combo.preco? ' — R$ '+sem.combo.preco:''}</button>
       </div>`;
     }
 
     html += `<div class="materias-grid">`;
     sem.materias.forEach(m=>{
       const algumDisponivel = m.resumo.disponivel || m.simulado.disponivel;
+      const ambosDisponiveis = m.resumo.disponivel && m.simulado.disponivel;
       html += `<div class="materia-card ${algumDisponivel?'':'embreve'}">
         <p class="materia-nome">${m.nome}</p>
         <div class="produto-row">
           <span class="produto-label"><span class="tagdot"></span>Resumo</span>
           ${m.resumo.disponivel
-            ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">Gs. ${m.resumo.preco??'--'}</span><button class="btn-comprar" onclick="window.open('${gerarLinkWhatsapp('Resumo - '+m.nome, m.resumo.preco)}','_blank')">Comprar</button></span>`
+            ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Resumo - ${m.nome.replace(/'/g,"\\'")}', ${m.resumo.preco})">Comprar</button></span>`
             : `<span class="embreve-tag">em breve</span>`}
         </div>
         <div class="produto-row">
           <span class="produto-label simulado"><span class="tagdot simulado"></span>Simulado</span>
           ${m.simulado.disponivel
-            ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">Gs. ${m.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="window.open('${gerarLinkWhatsapp('Simulado - '+m.nome, m.simulado.preco)}','_blank')">Comprar</button></span>`
+            ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirPagamentoPix('Simulado - ${m.nome.replace(/'/g,"\\'")}', ${m.simulado.preco})">Comprar</button></span>`
             : `<span class="embreve-tag">em breve</span>`}
         </div>
+        ${ambosDisponiveis ? `<div class="produto-row" style="border-top:1px dashed var(--border);">
+          <span class="produto-label" style="color:var(--green-light)">⭐ Combo (resumo + simulado)</span>
+          <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Combo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)})">Comprar</button></span>
+        </div>` : ``}
       </div>`;
     });
     html += `</div></div>`;
