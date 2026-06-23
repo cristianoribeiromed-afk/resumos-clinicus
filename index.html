@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumos Clinicus — Resumos e Simulados por Semestre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f0e;
+  --panel:#121917;
+  --panel2:#161f1c;
+  --border:#22302a;
+  --green:#1fb86a;
+  --green-dark:#0e6e3f;
+  --green-light:#7fe6b0;
+  --gold:#e8b34a;
+  --gold-dark:#a87a23;
+  --text:#e8efec;
+  --muted:#8fa39a;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{font-family:'Lora',serif;}
+.mono{font-family:'DM Mono',monospace;}
+a{color:inherit;}
+
+/* HERO */
+.hero{
+  padding:64px 24px 40px;
+  max-width:1000px;
+  margin:0 auto;
+  text-align:center;
+}
+.hero .eyebrow{
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--green-light);
+  margin-bottom:14px;
+}
+.hero h1{
+  font-size:clamp(28px,5vw,46px);
+  line-height:1.15;
+  margin:0 0 16px;
+  color:#fff;
+}
+.hero h1 em{color:var(--green-light);font-style:normal;}
+.hero p.lead{
+  color:var(--muted);
+  font-size:16px;
+  max-width:560px;
+  margin:0 auto 28px;
+  line-height:1.6;
+}
+.hero-badges{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.hero-badge{
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:30px;
+  padding:7px 16px;
+  font-size:13px;
+  color:var(--text);
+}
+.hero-badge b{color:var(--gold);}
+
+/* PULSE DIVIDER — elemento de assinatura: linha de ECG marcando a progressão entre semestres */
+.pulse-divider{width:100%;max-width:1000px;margin:36px auto;padding:0 24px;}
+.pulse-divider svg{width:100%;height:36px;display:block;}
+.pulse-divider path{
+  fill:none;
+  stroke:var(--green-dark);
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* CONTAINER */
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px 80px;}
+
+/* SEMESTER BLOCK */
+.semestre{margin-bottom:30px;}
+.semestre-head{
+  display:flex;
+  align-items:baseline;
+  gap:14px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.semestre-num{
+  font-family:'DM Mono',monospace;
+  font-size:13px;
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:3px 9px;
+}
+.semestre-head h2{font-size:21px;margin:0;color:#fff;}
+.semestre-status{
+  margin-left:auto;
+  font-size:12px;
+  font-family:'DM Mono',monospace;
+  padding:3px 10px;
+  border-radius:20px;
+}
+.status-disponivel{background:rgba(31,184,106,.15);color:var(--green-light);border:1px solid var(--green-dark);}
+.status-parcial{background:rgba(232,179,74,.12);color:var(--gold);border:1px solid var(--gold-dark);}
+.status-embreve{background:var(--panel2);color:var(--muted);border:1px solid var(--border);}
+
+.combo-banner{
+  background:linear-gradient(135deg, rgba(31,184,106,.12), rgba(232,179,74,.08));
+  border:1px solid var(--green-dark);
+  border-radius:12px;
+  padding:14px 18px;
+  margin-bottom:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.combo-banner .ctext b{color:var(--green-light);}
+.combo-banner .ctext span{display:block;color:var(--muted);font-size:13px;margin-top:2px;}
+
+.materias-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:12px;
+}
+.materia-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 16px 14px;
+}
+.materia-card.embreve{opacity:.55;}
+.materia-nome{font-size:14.5px;font-weight:600;margin:0 0 10px;color:#fff;}
+.produto-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:7px 0;
+  border-top:1px solid var(--border);
+}
+.produto-row:first-of-type{border-top:none;}
+.produto-label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.produto-label.simulado{color:var(--gold);}
+.tagdot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.tagdot.simulado{background:var(--gold);}
+.preco{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);}
+.btn-comprar{
+  background:var(--green-dark);
+  color:#fff;
+  border:none;
+  font-size:12px;
+  font-weight:700;
+  padding:6px 12px;
+  border-radius:7px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-comprar.simulado{background:var(--gold-dark);}
+.btn-comprar:hover{opacity:.85;}
+.embreve-tag{font-size:11.5px;color:var(--muted);font-family:'DM Mono',monospace;}
+
+footer{
+  text-align:center;
+  padding:30px 24px 50px;
+  color:var(--muted);
+  font-size:12.5px;
+}
+footer b{color:var(--green-light);}
+
+/* MODAL acesso */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  display:none;align-items:center;justify-content:center;z-index:50;padding:20px;
+}
+.modal-bg.show{display:flex;}
+.modal{
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  padding:24px;max-width:380px;width:100%;
+}
+.modal h3{margin:0 0 8px;font-size:17px;color:#fff;}
+.modal p{color:var(--muted);font-size:13px;margin:0 0 14px;}
+.modal input{
+  width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--panel2);color:var(--text);font-size:14px;margin-bottom:10px;
+}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+.btn-sec{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;}
+
+#accessBar{
+  position:fixed;top:0;left:0;right:0;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:10px 20px;display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;z-index:40;
+}
+#accessBar button{background:none;border:none;color:var(--green-light);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;}
+</style>
+</head>
+<body>
+
+<div id="accessBar">
+  <span class="mono" style="color:var(--muted)">Resumos Clinicus</span>
+  <button id="acessoBtn">Já comprei — ver meu acesso</button>
+</div>
+
+<div class="hero" style="margin-top:40px">
+  <div class="eyebrow">Universidad Interamericana · Carrera de Medicina</div>
+  <h1>Resumos objetivos. <em>Simulados que cobram de verdade.</em></h1>
+  <p class="lead">Material organizado por semestre, direto da sua malla curricular. O resumo te dá a base — o simulado é onde você descobre se realmente sabe, antes da prova te perguntar.</p>
+  <div class="hero-badges">
+    <span class="hero-badge">10 semestres mapeados</span>
+    <span class="hero-badge"><b>Simulados</b> com correção imediata</span>
+    <span class="hero-badge">Liberação via WhatsApp</span>
+  </div>
+</div>
+
+<div id="catalogo" class="wrap"></div>
+
+<footer>Conteúdo produzido por <b>Dr. Cristiano Ribeiro da Silva</b> · Já pagou? Use o botão "Já comprei" no topo da página.</footer>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>Ver meu acesso</h3>
+    <p>Digite o email que você usou para fazer o pagamento.</p>
+    <input type="email" id="emailInput" placeholder="seuemail@exemplo.com">
+    <div id="modalMsg" style="font-size:13px;margin-bottom:8px;"></div>
+    <div class="modal-actions">
+      <button class="btn-sec" id="modalClose">Cancelar</button>
+      <button class="btn-comprar" id="modalCheck">Verificar</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+function pulseSVG(){
+  return `<svg viewBox="0 0 600 36" preserveAspectRatio="none">
+    <path d="M0,18 L160,18 L180,18 L190,2 L205,34 L215,18 L230,18 L245,10 L255,26 L265,18 L600,18"/>
+  </svg>`;
+}
+
+function statusSemestre(sem){
+  const todas = sem.materias.length;
+  const prontas = sem.materias.filter(m=>m.resumo.disponivel || m.simulado.disponivel).length;
+  if(prontas===0) return {label:"Em breve", cls:"status-embreve"};
+  if(prontas===todas) return {label:"Disponível completo", cls:"status-disponivel"};
+  return {label:prontas+" de "+todas+" matérias prontas", cls:"status-parcial"};
+}
+
+function gerarLinkWhatsapp(itemNome, preco){
+  const msg = CONFIG.mensagemWhatsappTemplate("", itemNome, preco);
+  return "https://wa.me/"+CONFIG.whatsappNumero+"?text="+encodeURIComponent(msg);
+}
+
+function renderCatalogo(data){
+  const root = document.getElementById('catalogo');
+  let html = "";
+  data.semestres.forEach((sem, idx)=>{
+    const st = statusSemestre(sem);
+    html += `<div class="semestre">
+      <div class="semestre-head">
+        <span class="semestre-num">SEM ${String(sem.semestre).padStart(2,'0')}</span>
+        <h2>${sem.semestre}º Semestre</h2>
+        <span class="semestre-status ${st.cls}">${st.label}</span>
+      </div>`;
+
+    if(sem.combo.disponivel){
+      html += `<div class="combo-banner">
+        <div class="ctext"><b>Combo completo · ${sem.semestre}º Semestre</b><span>Todas as matérias do semestre (resumos + simulados)</span></div>
+        <button class="btn-comprar" onclick="window.open('${gerarLinkWhatsapp('Combo '+sem.semestre+'º Semestre', sem.combo.preco)}','_blank')">Comprar combo${sem.combo.preco? ' — Gs. '+sem.combo.preco:''}</button>
+      </div>`;
+    }
+
+    html += `<div class="materias-grid">`;
+    sem.materias.forEach(m=>{
+      const algumDisponivel = m.resumo.disponivel || m.simulado.disponivel;
+      html += `<div class="materia-card ${algumDisponivel?'':'embreve'}">
+        <p class="materia-nome">${m.nome}</p>
+        <div class="produto-row">
+          <span class="produto-label"><span class="tagdot"></span>Resumo</span>
+          ${m.resumo.disponivel
+            ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">Gs. ${m.resumo.preco??'--'}</span><button class="btn-comprar" onclick="window.open('${gerarLinkWhatsapp('Resumo - '+m.nome, m.resumo.preco)}','_blank')">Comprar</button></span>`
+            : `<span class="embreve-tag">em breve</span>`}
+        </div>
+        <div class="produto-row">
+          <span class="produto-label simulado"><span class="tagdot simulado"></span>Simulado</span>
+          ${m.simulado.disponivel
+            ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">Gs. ${m.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="window.open('${gerarLinkWhatsapp('Simulado - '+m.nome, m.simulado.preco)}','_blank')">Comprar</button></span>`
+            : `<span class="embreve-tag">em breve</span>`}
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+
+    if(idx < data.semestres.length-1){
+      html += `<div class="pulse-divider">${pulseSVG()}</div>`;
+    }
+  });
+  root.innerHTML = html;
+}
+
+fetch('./catalogo.json')
+  .then(r=>r.json())
+  .then(renderCatalogo)
+  .catch(()=>{
+    document.getElementById('catalogo').innerHTML = '<p style="text-align:center;color:var(--muted)">Não foi possível carregar o catálogo. Verifique se o catalogo.json está no mesmo diretório.</p>';
+  });
+
+/* MODAL DE ACESSO — checagem por email contra a planilha publicada como CSV.
+   Troque ACESSOS_CSV_URL pela URL de "Publicar na web" (formato CSV) da sua planilha "Acessos". */
+const ACESSOS_CSV_URL = ""; // <-- cole aqui a URL .csv publicada da planilha quando estiver pronta
+
+document.getElementById('acessoBtn').onclick = ()=>document.getElementById('modalBg').classList.add('show');
+document.getElementById('modalClose').onclick = ()=>document.getElementById('modalBg').classList.remove('show');
+document.getElementById('modalCheck').onclick = async ()=>{
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  const msg = document.getElementById('modalMsg');
+  if(!email){ msg.textContent="Digite um email."; msg.style.color="var(--gold)"; return; }
+  if(!ACESSOS_CSV_URL){ msg.textContent="Verificação ainda não configurada. Fale com o suporte no WhatsApp."; msg.style.color="var(--muted)"; return; }
+  msg.textContent="Verificando..."; msg.style.color="var(--muted)";
+  try{
+    const res = await fetch(ACESSOS_CSV_URL);
+    const csv = await res.text();
+    const linhas = csv.split("\n").map(l=>l.split(","));
+    const header = linhas[0].map(h=>h.trim().toLowerCase());
+    const iEmail = header.indexOf("email");
+    const iPlano = header.indexOf("plano");
+    const iAtivo = header.indexOf("ativo");
+    const encontrada = linhas.slice(1).find(l=> (l[iEmail]||"").trim().toLowerCase()===email && (l[iAtivo]||"").trim().toUpperCase()==="TRUE");
+    if(encontrada){
+      msg.textContent = "Acesso liberado: "+encontrada[iPlano]+". (Em breve: redirecionamento automático para o conteúdo.)";
+      msg.style.color="var(--green-light)";
+    } else {
+      msg.textContent = "Não encontramos esse email ativo ainda. Se você já pagou, aguarde a confirmação ou fale no WhatsApp.";
+      msg.style.color="var(--gold)";
+    }
+  }catch(e){
+    msg.textContent = "Erro ao verificar. Tente de novo em alguns instantes.";
+    msg.style.color="var(--gold)";
+  }
+};
+</script>
+</body>
+</html>
