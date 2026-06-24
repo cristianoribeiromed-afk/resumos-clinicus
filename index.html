@@ -311,6 +311,51 @@ document.getElementById('pixCopyBtn').onclick = ()=>{
   const old = btn.textContent; btn.textContent="Copiado!"; setTimeout(()=>btn.textContent=old,1500);
 };
 
+let CATALOGO_DATA = null;
+function slugify(str){
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+}
+function buildAccessIndex(data){
+  const idx = {};
+  const todosArquivos = [];
+  data.semestres.forEach(sem=>{
+    sem.materias.forEach(m=>{
+      const slugM = slugify(m.nome);
+      const base = sem.slug+'-'+slugM;
+      const itens = [];
+      if(m.resumo.disponivel && m.resumo.arquivo){
+        m.resumo.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
+          itens.push({nome:'Resumo - '+m.nome+(i>0?' (parte '+(i+1)+')':''), url:arq});
+        });
+      }
+      if(m.simulado.disponivel && m.simulado.arquivo){
+        itens.push({nome:'Simulado - '+m.nome, url:m.simulado.arquivo});
+      }
+      if(itens.length){
+        idx[base+'-resumo'] = itens.filter(it=>it.nome.startsWith('Resumo'));
+        idx[base+'-simulado'] = itens.filter(it=>it.nome.startsWith('Simulado'));
+        idx[base+'-combo'] = itens;
+        todosArquivos.push(...itens);
+      }
+    });
+    const itensSemestre = (idx[sem.slug+'-combo']) ? [] : [];
+  });
+  // combo por semestre = soma de tudo disponivel daquele semestre
+  data.semestres.forEach(sem=>{
+    let itens = [];
+    sem.materias.forEach(m=>{
+      const slugM = slugify(m.nome);
+      const base = sem.slug+'-'+slugM+'-combo';
+      if(idx[base]) itens.push(...idx[base]);
+    });
+    if(itens.length) idx[sem.slug+'-combo'] = itens;
+  });
+  idx['pacote'] = todosArquivos;
+  return idx;
+}
+
 function pulseSVG(){
   return `<svg viewBox="0 0 600 36" preserveAspectRatio="none">
     <path d="M0,18 L160,18 L180,18 L190,2 L205,34 L215,18 L230,18 L245,10 L255,26 L265,18 L600,18"/>
@@ -384,7 +429,7 @@ function renderCatalogo(data){
 
 fetch('./catalogo.json')
   .then(r=>r.json())
-  .then(renderCatalogo)
+  .then(data=>{ CATALOGO_DATA = data; renderCatalogo(data); })
   .catch(()=>{
     document.getElementById('catalogo').innerHTML = '<p style="text-align:center;color:var(--muted)">Não foi possível carregar o catálogo. Verifique se o catalogo.json está no mesmo diretório.</p>';
   });
@@ -400,7 +445,7 @@ document.getElementById('modalCheck').onclick = async ()=>{
   const msg = document.getElementById('modalMsg');
   if(!email){ msg.textContent="Digite um email."; msg.style.color="var(--gold)"; return; }
   if(!ACESSOS_CSV_URL){ msg.textContent="Verificação ainda não configurada. Fale com o suporte no WhatsApp."; msg.style.color="var(--muted)"; return; }
-  msg.textContent="Verificando..."; msg.style.color="var(--muted)";
+  msg.textContent="Verificando..."; msg.style.color="var(--muted)"; msg.innerHTML="Verificando...";
   try{
     const res = await fetch(ACESSOS_CSV_URL);
     const csv = await res.text();
@@ -411,8 +456,16 @@ document.getElementById('modalCheck').onclick = async ()=>{
     const iAtivo = header.indexOf("ativo");
     const encontrada = linhas.slice(1).find(l=> (l[iEmail]||"").trim().toLowerCase()===email && (l[iAtivo]||"").trim().toUpperCase()==="TRUE");
     if(encontrada){
-      msg.textContent = "Acesso liberado: "+encontrada[iPlano]+". (Em breve: redirecionamento automático para o conteúdo.)";
-      msg.style.color="var(--green-light)";
+      const planoKey = (encontrada[iPlano]||"").trim().toLowerCase();
+      const idx = CATALOGO_DATA ? buildAccessIndex(CATALOGO_DATA) : {};
+      const itens = idx[planoKey] || [];
+      if(itens.length){
+        msg.innerHTML = `<span style="color:var(--green-light)">Acesso liberado: <b>${encontrada[iPlano]}</b></span><div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">`+
+          itens.map(it=>`<a href="${it.url}" target="_blank" style="background:var(--green-dark);color:#fff;text-align:center;padding:8px 10px;border-radius:8px;text-decoration:none;font-size:13px;">📂 ${it.nome}</a>`).join('')+
+          `</div>`;
+      } else {
+        msg.innerHTML = `<span style="color:var(--gold)">Acesso confirmado (plano: ${encontrada[iPlano]}), mas não encontramos os arquivos vinculados a esse plano. Fale com o suporte no WhatsApp.</span>`;
+      }
     } else {
       msg.textContent = "Não encontramos esse email ativo ainda. Se você já pagou, aguarde a confirmação ou fale no WhatsApp.";
       msg.style.color="var(--gold)";
