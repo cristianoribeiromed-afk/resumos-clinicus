@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado — Fisiologia Cardíaca | Guyton Caps. 9–15</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #171b26;
+    --card: #1e2333;
+    --border: #2a3050;
+    --accent: #e8c97e;
+    --accent2: #7eb8e8;
+    --accent3: #e87e9a;
+    --accent4: #7ee8b8;
+    --text: #e8e4d9;
+    --muted: #8890aa;
+    --correct: #4caf8a;
+    --wrong: #e05c7a;
+    --neutral: #7eb8e8;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* ── COVER ── */
+  #cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    background: radial-gradient(ellipse at 30% 20%, #1a2040 0%, #0f1117 60%),
+                radial-gradient(ellipse at 70% 80%, #1a1530 0%, transparent 60%);
+    position: relative;
+    overflow: hidden;
+  }
+  #cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, #ffffff06 39px, #ffffff06 40px),
+                      repeating-linear-gradient(90deg, transparent, transparent 39px, #ffffff06 39px, #ffffff06 40px);
+  }
+  .cover-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text);
+    position: relative;
+    max-width: 700px;
+  }
+  .cover-title span { color: var(--accent); }
+  .cover-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-top: 14px;
+    max-width: 520px;
+    position: relative;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .meta-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .meta-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .btn-start {
+    margin-top: 44px;
+    padding: 16px 52px;
+    background: var(--accent);
+    color: #0f1117;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: transform .15s, box-shadow .15s;
+    letter-spacing: 1px;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 28px #e8c97e55; }
+
+  /* ── QUIZ SHELL ── */
+  #quiz { display: none; max-width: 820px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  .quiz-header {
+    position: sticky;
+    top: 0;
+    background: #0f1117ee;
+    backdrop-filter: blur(10px);
+    padding: 14px 0;
+    z-index: 99;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .quiz-progress-wrap { flex: 1; min-width: 200px; }
+  .quiz-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .progress-bar-bg {
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width .4s ease;
+  }
+  #timer-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 72px;
+    text-align: right;
+  }
+  #timer-display.warn { color: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .section-icon.mc { background: #e8c97e22; color: var(--accent); }
+  .section-icon.vf { background: #7eb8e822; color: var(--accent2); }
+  .section-icon.rc { background: #7ee8b822; color: var(--accent4); }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .section-count {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .q-card:hover { border-color: #3a4570; }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .q-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 18px;
+    line-height: 1.6;
+  }
+  .q-text sub, .q-text sup { font-size: .75em; }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s;
+    background: var(--surface);
+    user-select: none;
+  }
+  .opt:hover:not(.locked) { border-color: var(--accent); background: #e8c97e0a; }
+  .opt.selected { border-color: var(--accent2); background: #7eb8e810; }
+  .opt.correct { border-color: var(--correct); background: #4caf8a18; }
+  .opt.wrong { border-color: var(--wrong); background: #e05c7a18; }
+  .opt-letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background .15s;
+  }
+  .opt.correct .opt-letter { background: var(--correct); color: #fff; }
+  .opt.wrong .opt-letter { background: var(--wrong); color: #fff; }
+  .opt.selected:not(.correct):not(.wrong) .opt-letter { background: var(--accent2); color: #0f1117; }
+
+  /* ── V/F ── */
+  .vf-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    margin-bottom: 10px;
+  }
+  .vf-text { flex: 1; font-size: .95rem; line-height: 1.5; }
+  .vf-btns { display: flex; gap: 8px; flex-shrink: 0; }
+  .vf-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--muted);
+    transition: all .15s;
+  }
+  .vf-btn:hover:not(.locked) { border-color: var(--accent); color: var(--accent); }
+  .vf-btn.selected-v { background: #4caf8a22; border-color: var(--correct); color: var(--correct); }
+  .vf-btn.selected-f { background: #e05c7a22; border-color: var(--wrong); color: var(--wrong); }
+  .vf-btn.reveal-correct { background: #4caf8a44; border-color: var(--correct); color: var(--correct); }
+  .vf-btn.reveal-wrong { background: #e05c7a44; border-color: var(--wrong); color: var(--wrong); }
+  .vf-row.correct-row { border-color: var(--correct); }
+  .vf-row.wrong-row { border-color: var(--wrong); }
+
+  /* ── MATCH ── */
+  .match-container { display: flex; gap: 16px; flex-wrap: wrap; }
+  .match-col { flex: 1; min-width: 200px; }
+  .match-col-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .match-item {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    margin-bottom: 8px;
+    font-size: .9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .match-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: .95rem;
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .match-select {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-family: 'Source Serif 4', serif;
+    font-size: .85rem;
+    flex: 1;
+    cursor: pointer;
+    outline: none;
+  }
+  .match-select:focus { border-color: var(--accent); }
+  .match-select.correct { border-color: var(--correct); background: #4caf8a18; }
+  .match-select.wrong { border-color: var(--wrong); background: #e05c7a18; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: .9rem;
+    line-height: 1.6;
+    border-left: 3px solid;
+  }
+  .feedback.correct { background: #4caf8a12; border-color: var(--correct); color: #a8e6cf; }
+  .feedback.wrong { background: #e05c7a12; border-color: var(--wrong); color: #f4a8b8; }
+
+  /* ── SUBMIT BTN ── */
+  .btn-submit {
+    display: block;
+    margin: 40px auto 0;
+    padding: 16px 60px;
+    background: var(--accent);
+    color: #0f1117;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    letter-spacing: 1px;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px #e8c97e55; }
+
+  /* ── RESULTS ── */
+  #results { display: none; max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  .result-header {
+    text-align: center;
+    padding: 48px 20px;
+    background: radial-gradient(ellipse at center, #1a2040 0%, #0f1117 70%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 32px;
+  }
+  .result-grade {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .result-grade.A { color: var(--correct); }
+  .result-grade.B { color: var(--accent); }
+  .result-grade.C { color: #f0a030; }
+  .result-grade.D { color: var(--wrong); }
+  .result-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .result-sub { font-size: .9rem; color: var(--muted); }
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .stat-lbl { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .guidance-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .guidance-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .guidance-body { font-size: .95rem; color: #c8c4b9; line-height: 1.8; }
+  .guidance-body li { margin-left: 20px; margin-bottom: 6px; }
+  .mistakes-list { margin-top: 12px; }
+  .mistake-item {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: .88rem;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+  }
+  .mistake-q { color: var(--text); font-weight: 600; }
+  .btn-retry {
+    display: block;
+    margin: 32px auto 0;
+    padding: 14px 48px;
+    background: transparent;
+    color: var(--accent);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: 1px;
+  }
+  .btn-retry:hover { background: var(--accent); color: #0f1117; }
+
+  @media(max-width:600px){
+    .match-container { flex-direction: column; }
+    .vf-row { flex-direction: column; }
+    .vf-btns { flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<div id="cover">
+  <div class="cover-badge">Guyton &amp; Hall · Caps. 9–15</div>
+  <h1 class="cover-title">Simulado de<br><span>Fisiologia Cardíaca</span></h1>
+  <p class="cover-sub">Dinâmica do Ciclo Cardíaco · Potenciais de Ação · EKG · Hemodinâmica Vascular</p>
+  <div class="cover-meta">
+    <div class="meta-item"><span class="meta-num">30</span><span class="meta-label">Questões</span></div>
+    <div class="meta-item"><span class="meta-num">60</span><span class="meta-label">Minutos</span></div>
+    <div class="meta-item"><span class="meta-num">3</span><span class="meta-label">Formatos</span></div>
+  </div>
+  <button class="btn-start" onclick="startQuiz()">Iniciar Simulado →</button>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div id="quiz">
+  <div class="quiz-header">
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-label" id="progress-label">Questão 0 / 30</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div id="timer-display">60:00</div>
+  </div>
+
+  <!-- ── SEÇÃO 1: Múltipla Escolha ── -->
+  <div class="section-header">
+    <div class="section-icon mc">☰</div>
+    <div>
+      <div class="section-title">Múltipla Escolha</div>
+      <div style="font-size:.82rem;color:var(--muted)">Marque apenas uma alternativa correta</div>
+    </div>
+    <div class="section-count">01 – 20</div>
+  </div>
+  <div id="mc-container"></div>
+
+  <!-- ── SEÇÃO 2: Verdadeiro ou Falso ── -->
+  <div class="section-header">
+    <div class="section-icon vf">V/F</div>
+    <div>
+      <div class="section-title">Verdadeiro ou Falso</div>
+      <div style="font-size:.82rem;color:var(--muted)">Classifique cada afirmativa</div>
+    </div>
+    <div class="section-count">21 – 25</div>
+  </div>
+  <div id="vf-container"></div>
+
+  <!-- ── SEÇÃO 3: Relacionar Colunas ── -->
+  <div class="section-header">
+    <div class="section-icon rc">↔</div>
+    <div>
+      <div class="section-title">Relacionar Colunas</div>
+      <div style="font-size:.82rem;color:var(--muted)">Associe o conceito da Coluna A à definição da Coluna B</div>
+    </div>
+    <div class="section-count">26 – 30</div>
+  </div>
+  <div id="rc-container"></div>
+
+  <button class="btn-submit" onclick="submitQuiz()">Finalizar e Ver Resultado →</button>
+</div>
+
+<!-- ══════════════ RESULTS ══════════════ -->
+<div id="results"></div>
+
+<script>
+/* ══════════════════════════════════════
+   DATA
+══════════════════════════════════════ */
+const MC = [
+  {
+    q: "Qual é a principal diferença entre o potencial de ação ventricular e o potencial de ação do músculo esquelético?",
+    opts: [
+      "O potencial de ação ventricular é mais curto e não apresenta fase de platô",
+      "O potencial de ação ventricular possui uma fase de platô (Fase 2) mediada pela entrada de Ca²⁺, durando cerca de 15 vezes mais",
+      "O músculo esquelético depende de Ca²⁺ para a despolarização inicial",
+      "Ambos têm duração e fases idênticas, diferenciando-se apenas na velocidade de condução",
+      "O potencial ventricular é mediado exclusivamente por K⁺ em todas as fases"
+    ],
+    ans: 1,
+    fb: "O potencial de ação ventricular dura ~200–300 ms, 15 vezes mais que o esquelético (~5 ms). A Fase 2 (platô) é sustentada pela entrada lenta de Ca²⁺ pelos canais L, impedindo tetania cardíaca — fisiologicamente essencial."
+  },
+  {
+    q: "Na Fase 0 do potencial de ação ventricular, qual íon é responsável pela rápida despolarização?",
+    opts: ["Ca²⁺", "K⁺", "Na⁺", "Cl⁻", "Mg²⁺"],
+    ans: 2,
+    fb: "Na Fase 0, os canais rápidos de Na⁺ se abrem abruptamente ao atingir o potencial limiar (~−70 mV), causando a despolarização rápida. É diferente do nodo sinusal, onde esse papel é do Ca²⁺."
+  },
+  {
+    q: "O nodo sinusal atua como marcapasso primário do coração. Qual é sua frequência intrínseca e por que depende do Ca²⁺ para despolarizar?",
+    opts: [
+      "40–60 bpm; porque o Na⁺ não consegue cruzar a membrana do nodo sinusal",
+      "70–80 bpm; porque os canais rápidos de Na⁺ estão inativados nessas células (limiar −40 mV) e a despolarização é mediada pelos canais lentos de Ca²⁺",
+      "100–120 bpm; porque o Ca²⁺ tem valência 2+, gerando maior corrente",
+      "60–100 bpm; porque o K⁺ e o Ca²⁺ atuam em conjunto na fase 0",
+      "50–70 bpm; porque o retículo sarcoplasmático libera Ca²⁺ espontaneamente no nodo"
+    ],
+    ans: 1,
+    fb: "No nodo sinusal, o potencial de repouso (~−55 mV) inativa os canais rápidos de Na⁺ (que precisam de ~−90 mV para se recuperar). O limiar de disparo é −40 mV e é atingido pela corrente de Ca²⁺ através dos canais do tipo L."
+  },
+  {
+    q: "Qual é a função fisiológica do retardo no Nodo AV (0,09 s)?",
+    opts: [
+      "Acelerar a condução para que ventrículos contraiam antes das aurículas",
+      "Permitir o llenado ventricular completo antes da contração ventricular, otimizando o volume sistólico",
+      "Prevenir a propagação de impulsos retrógrados dos ventrículos para as aurículas",
+      "Aumentar a refratariedade das fibras de Purkinje",
+      "Sincronia entre a respiração e o ciclo cardíaco"
+    ],
+    ans: 1,
+    fb: "O atraso de 0,09 s no Nodo AV garante que a sístole auricular preceda a ventricular, completando o enchimento ventricular (~20–30% do volume final). Sem esse retardo, o volume telediastólico seria reduzido e o débito cardíaco, prejudicado."
+  },
+  {
+    q: "Qual das afirmativas sobre as Fibras de Purkinje está correta?",
+    opts: [
+      "São as fibras mais lentas do sistema de condução (0,5 m/s)",
+      "Conduzem o impulso a 4 m/s graças à abundância de discos intercalados e baixa resistência",
+      "Iniciam o potencial de ação cardíaco espontaneamente com frequência de 70–80 bpm",
+      "Localizam-se no Nodo AV e produzem o retardo de condução",
+      "Dependem exclusivamente de Na⁺ para sua condução rápida"
+    ],
+    ans: 1,
+    fb: "As fibras de Purkinje são as mais rápidas (4 m/s) devido à sua grande quantidade de discos intercalados (gap junctions), garantindo ativação sincronizada e quase simultânea de toda a parede ventricular."
+  },
+  {
+    q: "Durante o ciclo cardíaco, o que representa a contração isovolumétrica?",
+    opts: [
+      "Fase em que o volume ventricular aumenta sem variação de pressão",
+      "Fase imediatamente após o fechamento das válvulas semilunares",
+      "Fase em que a pressão ventricular aumenta bruscamente enquanto o volume permanece constante, com todas as válvulas fechadas",
+      "Período de ejeção máxima de sangue para a aorta",
+      "Fase de enchimento ventricular rápido no início da diástole"
+    ],
+    ans: 2,
+    fb: "Na contração isovolumétrica (após R1, fechamento das AV), a pressão ventricular sobe rapidamente com volume constante (~120 ml) porque todas as válvulas estão fechadas. Termina quando a pressão supera a aórtica e as semilunares abrem."
+  },
+  {
+    q: "O Volume Sistólico (VS) é calculado pela diferença entre qual volumes cardíacos?",
+    opts: [
+      "Volume residual e volume corrente",
+      "Volume telediastólico (120 ml) e volume telesistólico (50 ml), resultando ~70 ml",
+      "Volume de ejeção e volume residual funcional",
+      "Volume telessistólico e volume de enchimento rápido",
+      "Débito cardíaco dividido pela frequência cardíaca"
+    ],
+    ans: 1,
+    fb: "VS = VTD − VTS = 120 − 50 = 70 ml. A Fração de Ejeção (FE) = 70/120 ≈ 58%, valor normal. Quedas da FE abaixo de 40% indicam disfunção sistólica."
+  },
+  {
+    q: "Segundo o Princípio de Frank-Starling, o que acontece com a força de contração cardíaca quando o retorno venoso aumenta?",
+    opts: [
+      "A força diminui para proteger o miocárdio de sobredistensão",
+      "A força permanece constante independente do volume de retorno",
+      "A força aumenta proporcionalmente ao estiramento das fibras (pré-carga), aumentando o débito cardíaco",
+      "A frequência cardíaca diminui reflexamente para compensar",
+      "O volume telessistólico aumenta para absorver o excesso de volume"
+    ],
+    ans: 2,
+    fb: "Frank-Starling: quanto mais as fibras são estiradas pelo retorno venoso (pré-carga), maior a sobreposição actina-miosina e maior a força de contração. É o mecanismo que equilibra os débitos dos dois ventrículos."
+  },
+  {
+    q: "No ECG, a Onda T representa:",
+    opts: [
+      "A repolarização auricular",
+      "A despolarização do septo interventricular",
+      "A repolarização ventricular",
+      "A despolarização da base dos ventrículos",
+      "O fechamento das válvulas atrioventriculares"
+    ],
+    ans: 2,
+    fb: "A Onda T representa a repolarização ventricular. É positiva nas derivações D1, D2 e precordiais de V1–V6 (exceto V1). Inversão da Onda T pode indicar isquemia, sobrecarga ventricular ou distúrbios eletrolíticos."
+  },
+  {
+    q: "Em um ECG com velocidade padrão de 25 mm/s, quanto tempo corresponde a 5 pequenos quadrados (5 mm)?",
+    opts: ["0,04 s", "0,12 s", "0,20 s", "0,40 s", "1,00 s"],
+    ans: 2,
+    fb: "Cada mm horizontal = 0,04 s. Então 5 mm = 5 × 0,04 = 0,20 s. Isso equivale a 1 quadrado grande. O intervalo PR normal (3–5 quadrados grandes) = 0,12–0,20 s."
+  },
+  {
+    q: "Qual é a definição de Ritmo Sinusal Normal no ECG?",
+    opts: [
+      "FC entre 60–100 bpm, com ondas P antes de cada QRS, P positiva em D2 e aVF, negativa em aVR, PR entre 0,12–0,20 s",
+      "FC entre 60–100 bpm, ausência de onda P, QRS largo > 0,12 s",
+      "FC acima de 100 bpm com onda P invertida em D2",
+      "Qualquer ritmo regular com QRS estreito e FC entre 50–110 bpm",
+      "FC entre 60–100 bpm com PR fixo > 0,20 s e ondas P ausentes em algumas derivações"
+    ],
+    ans: 0,
+    fb: "O checklist do Ritmo Sinusal Normal exige todos os critérios: (1) P antes de cada QRS; (2) P+ em D2/aVF, P− em aVR; (3) PR 0,12–0,20 s; (4) FC 60–100 bpm. A onda P positiva em D2 confirma origem sinusal (impulso desce de cima para baixo)."
+  },
+  {
+    q: "Como calcular a frequência cardíaca em ritmo REGULAR pelo ECG?",
+    opts: [
+      "Contar os complexos QRS em 6 segundos e multiplicar por 10",
+      "1500 ÷ número de milímetros entre dois picos R consecutivos",
+      "300 ÷ número de quadrados grandes entre dois picos R",
+      "Ambas B e C estão corretas para ritmo regular",
+      "Medir o intervalo QT e dividir por 0,04 s"
+    ],
+    ans: 3,
+    fb: "Para ritmo regular: 1500 ÷ mm(R-R) ou 300 ÷ quadrados grandes(R-R) — ambos equivalentes. Para ritmo irregular: contar R em 6 s × 10. Exemplo: R-R = 20 mm → 1500/20 = 75 bpm ou 20 mm = 4 quad grandes → 300/4 = 75 bpm."
+  },
+  {
+    q: "No método rápido de determinação do eixo elétrico, o que indica D1(+) e aVF(+)?",
+    opts: [
+      "Desvio do eixo para a esquerda",
+      "Desvio do eixo para a direita",
+      "Eixo elétrico normal (−30° a +110°)",
+      "Bloqueio completo do ramo esquerdo",
+      "Hipertrofia ventricular direita"
+    ],
+    ans: 2,
+    fb: "D1(+)/aVF(+) = eixo normal. D1(+)/aVF(−) = desvio para esquerda (sugestivo de HBAE ou HVE). D1(−)/aVF(+) = desvio para direita (sobrecarga direita, TEP). D1(−)/aVF(−) = desvio extremo (incomum)."
+  },
+  {
+    q: "A Lei de Poiseuille estabelece que o fluxo sanguíneo varia com o raio do vaso elevado à 4ª potência. O que acontece ao fluxo se o raio de uma arteríola dobrar?",
+    opts: [
+      "O fluxo dobra (×2)",
+      "O fluxo quadruplica (×4)",
+      "O fluxo aumenta 8 vezes (×8)",
+      "O fluxo aumenta 16 vezes (×16)",
+      "O fluxo aumenta 256 vezes (×256)"
+    ],
+    ans: 3,
+    fb: "Fluxo ∝ r⁴. Se r → 2r: fluxo = 2⁴ = 16× maior. Isso explica por que pequenas variações no raio arteriolar têm enorme impacto na resistência periférica e na distribuição do fluxo nos órgãos."
+  },
+  {
+    q: "Segundo a Lei de Ohm aplicada à hemodinâmica, qual é a relação entre fluxo, pressão e resistência?",
+    opts: [
+      "Fluxo = Resistência × ΔP",
+      "Fluxo = ΔP / Resistência",
+      "Resistência = Fluxo × ΔP",
+      "ΔP = Fluxo / Resistência",
+      "Fluxo = ΔP² / Resistência"
+    ],
+    ans: 1,
+    fb: "Fluxo (Q) = ΔP / R. Análogo à Lei de Ohm elétrica (I = V/R). Implica que o fluxo é diretamente proporcional ao gradiente de pressão e inversamente proporcional à resistência — base da hemodinâmica cardiovascular."
+  },
+  {
+    q: "As veias são descritas como 'reservatórios de sangue'. Qual percentual do volume sanguíneo total elas contêm e como se compara sua complacência às artérias?",
+    opts: [
+      "~15% do volume total; complacência igual às artérias",
+      "~64% do volume total; complacência ~24 vezes maior que as artérias",
+      "~50% do volume total; complacência ~10 vezes maior que as artérias",
+      "~30% do volume total; complacência 5 vezes menor que as artérias",
+      "~80% do volume total; complacência semelhante aos capilares"
+    ],
+    ans: 1,
+    fb: "As veias contêm ~64% do volume sanguíneo total e têm complacência 24× maior que as artérias. Essa reserva é mobilizável pelo sistema nervoso simpático (venoconstrição), aumentando retorno venoso e pré-carga em situações de esforço ou hemorragia."
+  },
+  {
+    q: "O que é Complacência Diferida (stress relaxation) vascular?",
+    opts: [
+      "Capacidade do coração de aumentar o débito quando a pré-carga sobe",
+      "Capacidade do vaso de ajustar progressivamente sua pressão interna após uma mudança de volume, através do tempo",
+      "Redução da resistência vascular após administração de vasodilatadores",
+      "Aumento da rigidez arterial com a idade (arteriosclerose)",
+      "Resposta reflexa dos barorreceptores a mudanças agudas de pressão"
+    ],
+    ans: 1,
+    fb: "Complacência diferida: quando o volume aumenta abruptamente, a pressão sobe inicialmente, mas o vaso se adapta ao longo de minutos/horas (reorganização do músculo liso e colágeno), reduzindo a pressão. Importante na fisiopatologia da hipertensão crônica."
+  },
+  {
+    q: "Qual é o valor normal do hematócrito e como seu aumento afeta a viscosidade sanguínea e a resistência ao fluxo?",
+    opts: [
+      "Normal ~40%; aumento do Ht diminui viscosidade por hemodiluição",
+      "Normal ~40%; aumento do Ht aumenta viscosidade e resistência ao fluxo",
+      "Normal ~55%; aumento do Ht não altera significativamente a resistência",
+      "Normal ~25%; qualquer alteração é compensada pelo diâmetro capilar",
+      "Normal ~60%; aumento do Ht diminui resistência por efeito Fåhraeus-Lindqvist"
+    ],
+    ans: 1,
+    fb: "Hematócrito normal ≈ 40%. Aumento (policitemia) eleva a viscosidade sanguínea → maior resistência vascular → maior trabalho cardíaco. Na anemia grave (Ht baixo), a viscosidade cai e o débito cardíaco eleva-se compensatoriamente."
+  },
+  {
+    q: "O 1º Ruído de Korotkoff na aferição da PA com esfigmomanômetro corresponde a:",
+    opts: [
+      "Pressão diastólica — momento em que o fluxo turbulento cessa",
+      "Pressão sistólica — primeiro som ouvido ao desinflar o manguito, quando a pressão do manguito iguala a sistólica",
+      "Pressão de pulso — diferença entre sistólica e diastólica",
+      "Pressão média — calculada como diastólica + 1/3 da pressão de pulso",
+      "Pressão venosa central — medida indireta pela veia jugular"
+    ],
+    ans: 1,
+    fb: "Ao desinflar o manguito, quando sua pressão iguala a pressão sistólica, o sangue começa a passar turbulentamente → 1º Ruído de Korotkoff = Pressão Sistólica. O 5º ruído (desaparecimento) = Pressão Diastólica."
+  },
+  {
+    q: "A Pressão de Pulso é definida como:",
+    opts: [
+      "Pressão média arterial × Frequência cardíaca",
+      "Pressão Sistólica − Pressão Diastólica",
+      "Pressão Diastólica + 1/3 (PS − PD)",
+      "Volume Sistólico ÷ Complacência Arterial",
+      "Pressão Sistólica + Pressão Diastólica ÷ 2"
+    ],
+    ans: 1,
+    fb: "Pressão de Pulso = PS − PD. Exemplo: 120 − 80 = 40 mmHg. Pressão de pulso ampliada (>60 mmHg) sugere rigidez aórtica ou insuficiência aórtica. Pressão de pulso estreita (<25 mmHg) sugere tamponamento ou estenose aórtica grave."
+  }
+];
+
+const VF = [
+  {
+    stmt: "No nodo sinusal, o potencial de ação é gerado principalmente pela abertura de canais rápidos de Na⁺, assim como no miocárdio ventricular.",
+    ans: false,
+    fb: "FALSO. No nodo sinusal, os canais rápidos de Na⁺ estão inativados (potencial de repouso ~−55 mV, muito acima do −90 mV necessário para sua ativação). A despolarização ocorre via canais lentos de Ca²⁺, com limiar de −40 mV."
+  },
+  {
+    stmt: "O intervalo PR normal no ECG corresponde a 3 a 5 pequenos quadrados (0,12 a 0,20 s) e representa a condução do impulso desde as aurículas até os ventrículos, incluindo o retardo no Nodo AV.",
+    ans: true,
+    fb: "VERDADEIRO. O intervalo PR (de início de P ao início de QRS) inclui despolarização auricular + retardo no Nodo AV (0,09 s) + tempo de condução no His-Purkinje. PR > 0,20 s indica Bloqueio AV de 1º grau."
+  },
+  {
+    stmt: "Segundo a Lei de Poiseuille, se o raio de um vaso for reduzido à metade, o fluxo sanguíneo nele será reduzido pela metade (50%).",
+    ans: false,
+    fb: "FALSO. O fluxo ∝ r⁴. Se r → r/2: fluxo cai para (1/2)⁴ = 1/16 do valor original (redução de 93,75%). Isso é fundamental para entender como a vasoconstrição arteriolar tem efeito desproporcional sobre a resistência."
+  },
+  {
+    stmt: "A Onda Q no ECG representa a despolarização do septo interventricular, enquanto a Onda R representa a despolarização do ápice cardíaco.",
+    ans: true,
+    fb: "VERDADEIRO. A sequência de despolarização ventricular segue: Q (septo, da esquerda para direita) → R (ápice/parede lateral, de baixo para cima) → S (base dos ventrículos, de baixo para cima). Esta sequência é conduzida pelas fibras de Purkinje."
+  },
+  {
+    stmt: "O volume telesistólico é o volume de sangue que permanece no ventrículo após a ejeção e, em condições normais pelo Guyton, equivale a 120 ml.",
+    ans: false,
+    fb: "FALSO. O volume TELEsistólico normal é ~50 ml (sangue que fica após a ejeção). O volume TELEdiAstólico é ~120 ml (antes da ejeção). Volume Sistólico = 120 − 50 = 70 ml. Não confundir os termos!"
+  }
+];
+
+const RC_ITEMS = [
+  { key: "A", term: "Fase 2 do PA ventricular (Platô)" },
+  { key: "B", term: "Fibras de Purkinje" },
+  { key: "C", term: "R1 (1º Bulha Cardíaca)" },
+  { key: "D", term: "Eixo elétrico D1(+) / aVF(−)" },
+  { key: "E", term: "Complacência vascular das veias" },
+];
+const RC_DEFS = [
+  { key: "1", def: "Fechamento das válvulas atrioventriculares; marca o início da sístole" },
+  { key: "2", def: "Desvio do eixo para a esquerda no ECG" },
+  { key: "3", def: "Mantida pela entrada de Ca²⁺ pelos canais tipo L (~0,2–0,3 s)" },
+  { key: "4", def: "Sistema de condução mais rápido (4 m/s); ativa os ventrículos de forma sincronizada" },
+  { key: "5", def: "~24 vezes maior que a das artérias; permite armazenamento de ~64% do volume sanguíneo" },
+];
+const RC_ANS = { A: "3", B: "4", C: "1", D: "2", E: "5" };
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let timerInterval = null;
+let secondsLeft = 3600;
+let userMC = new Array(MC.length).fill(null);
+let userVF = new Array(VF.length).fill(null);
+let userRC = {};
+
+/* ══════════════════════════════════════
+   TIMER
+══════════════════════════════════════ */
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    updateTimerDisplay();
+    if (secondsLeft <= 0) { clearInterval(timerInterval); submitQuiz(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+  const s = String(secondsLeft % 60).padStart(2, '0');
+  const el = document.getElementById('timer-display');
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle('warn', secondsLeft < 300);
+}
+
+/* ══════════════════════════════════════
+   RENDER
+══════════════════════════════════════ */
+function startQuiz() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderMC();
+  renderVF();
+  renderRC();
+  startTimer();
+}
+
+function renderMC() {
+  const c = document.getElementById('mc-container');
+  c.innerHTML = MC.map((q, qi) => `
+    <div class="q-card" id="mc-card-${qi}">
+      <div class="q-num">QUESTÃO ${String(qi+1).padStart(2,'0')} · MÚLTIPLA ESCOLHA</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((o,oi)=>`
+          <div class="opt" id="mc-opt-${qi}-${oi}" onclick="selectMC(${qi},${oi})">
+            <div class="opt-letter">${String.fromCharCode(65+oi)}</div>
+            <div>${o}</div>
+          </div>`).join('')}
+      </div>
+      <div class="feedback" id="mc-fb-${qi}"></div>
+    </div>`).join('');
+}
+
+function renderVF() {
+  const c = document.getElementById('vf-container');
+  c.innerHTML = VF.map((item, i) => `
+    <div class="q-card" id="vf-card-${i}">
+      <div class="q-num">QUESTÃO ${String(i+21).padStart(2,'0')} · VERDADEIRO OU FALSO</div>
+      <div class="vf-row" id="vf-row-${i}">
+        <div class="vf-text">${item.stmt}</div>
+        <div class="vf-btns">
+          <button class="vf-btn" id="vf-v-${i}" onclick="selectVF(${i},true)">V</button>
+          <button class="vf-btn" id="vf-f-${i}" onclick="selectVF(${i},false)">F</button>
+        </div>
+      </div>
+      <div class="feedback" id="vf-fb-${i}"></div>
+    </div>`).join('');
+}
+
+function renderRC() {
+  const c = document.getElementById('rc-container');
+  const optionsHTML = `<option value="">— Selecione —</option>` +
+    RC_DEFS.map(d => `<option value="${d.key}">${d.key}. ${d.def}</option>`).join('');
+
+  c.innerHTML = `
+    <div class="q-card">
+      <div class="q-num">QUESTÕES 26–30 · RELACIONAR COLUNAS</div>
+      <div class="q-text" style="margin-bottom:20px">Associe cada conceito da <strong>Coluna A</strong> à definição correspondente na <strong>Coluna B</strong></div>
+      <div id="rc-items">
+        ${RC_ITEMS.map(item => `
+          <div class="match-item" id="rc-item-${item.key}">
+            <div class="match-key">${item.key}.</div>
+            <div style="flex:1;font-size:.9rem">${item.term}</div>
+            <select class="match-select" id="rc-sel-${item.key}" onchange="selectRC('${item.key}', this.value)">
+              ${optionsHTML}
+            </select>
+          </div>`).join('')}
+      </div>
+      <div class="feedback" id="rc-fb" style="margin-top:14px"></div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════
+   SELECTION HANDLERS
+══════════════════════════════════════ */
+function selectMC(qi, oi) {
+  if (document.getElementById(`mc-opt-${qi}-0`).classList.contains('locked')) return;
+  userMC[qi] = oi;
+  MC[qi].opts.forEach((_,j) => {
+    const el = document.getElementById(`mc-opt-${qi}-${j}`);
+    el.classList.toggle('selected', j === oi);
+  });
+  updateProgress();
+}
+
+function selectVF(i, val) {
+  if (document.getElementById(`vf-v-${i}`).classList.contains('locked')) return;
+  userVF[i] = val;
+  const vBtn = document.getElementById(`vf-v-${i}`);
+  const fBtn = document.getElementById(`vf-f-${i}`);
+  vBtn.className = `vf-btn${val ? ' selected-v' : ''}`;
+  fBtn.className = `vf-btn${!val ? ' selected-f' : ''}`;
+  updateProgress();
+}
+
+function selectRC(key, val) {
+  userRC[key] = val;
+  updateProgress();
+}
+
+function updateProgress() {
+  const mcDone = userMC.filter(v => v !== null).length;
+  const vfDone = userVF.filter(v => v !== null).length;
+  const rcDone = Object.keys(userRC).filter(k => userRC[k]).length;
+  const total = MC.length + VF.length + RC_ITEMS.length;
+  const done = mcDone + vfDone + rcDone;
+  document.getElementById('progress-label').textContent = `Respondidas: ${done} / ${total}`;
+  document.getElementById('progress-fill').style.width = `${(done/total)*100}%`;
+}
+
+/* ══════════════════════════════════════
+   SUBMIT & SCORE
+══════════════════════════════════════ */
+function submitQuiz() {
+  clearInterval(timerInterval);
+  const timeTaken = 3600 - secondsLeft;
+
+  // Score MC
+  let mcRight = 0, mcWrong = [];
+  MC.forEach((q,qi) => {
+    const opts = document.querySelectorAll(`[id^="mc-opt-${qi}-"]`);
+    opts.forEach(o => o.classList.add('locked'));
+    if (userMC[qi] === q.ans) {
+      mcRight++;
+      document.getElementById(`mc-opt-${qi}-${q.ans}`).classList.add('correct');
+    } else {
+      if (userMC[qi] !== null) {
+        document.getElementById(`mc-opt-${qi}-${userMC[qi]}`).classList.add('wrong');
+        mcWrong.push(qi);
+      } else {
+        mcWrong.push(qi);
+      }
+      document.getElementById(`mc-opt-${qi}-${q.ans}`).classList.add('correct');
+    }
+    const fb = document.getElementById(`mc-fb-${qi}`);
+    fb.className = `feedback ${userMC[qi] === q.ans ? 'correct' : 'wrong'}`;
+    fb.innerHTML = `<strong>${userMC[qi] === q.ans ? '✓ Correto.' : '✗ Incorreto.'}</strong> ${q.fb}`;
+    fb.style.display = 'block';
+  });
+
+  // Score VF
+  let vfRight = 0, vfWrong = [];
+  VF.forEach((item,i) => {
+    document.getElementById(`vf-v-${i}`).classList.add('locked');
+    document.getElementById(`vf-f-${i}`).classList.add('locked');
+    const correct = (userVF[i] === item.ans);
+    if (correct) {
+      vfRight++;
+      document.getElementById(`vf-row-${i}`).classList.add('correct-row');
+    } else {
+      vfWrong.push(i);
+      document.getElementById(`vf-row-${i}`).classList.add('wrong-row');
+    }
+    // Reveal correct on buttons
+    const vBtn = document.getElementById(`vf-v-${i}`);
+    const fBtn = document.getElementById(`vf-f-${i}`);
+    if (item.ans === true) vBtn.classList.add('reveal-correct');
+    else fBtn.classList.add('reveal-correct');
+    if (userVF[i] !== null && userVF[i] !== item.ans) {
+      if (userVF[i] === true) vBtn.classList.add('reveal-wrong');
+      else fBtn.classList.add('reveal-wrong');
+    }
+    const fb = document.getElementById(`vf-fb-${i}`);
+    fb.className = `feedback ${correct ? 'correct' : 'wrong'}`;
+    fb.innerHTML = `<strong>${correct ? '✓ Correto.' : '✗ Incorreto.'}</strong> ${item.fb}`;
+    fb.style.display = 'block';
+  });
+
+  // Score RC
+  let rcRight = 0, rcWrong = [];
+  RC_ITEMS.forEach(item => {
+    const sel = document.getElementById(`rc-sel-${item.key}`);
+    sel.disabled = true;
+    const correct = userRC[item.key] === RC_ANS[item.key];
+    if (correct) { rcRight++; sel.classList.add('correct'); }
+    else { rcWrong.push(item.key); sel.classList.add('wrong'); }
+  });
+  const rcFb = document.getElementById('rc-fb');
+  const rcGabarito = RC_ITEMS.map(i => `${i.key}→${RC_ANS[i.key]}`).join(' | ');
+  rcFb.className = `feedback ${rcRight === RC_ITEMS.length ? 'correct' : 'wrong'}`;
+  rcFb.innerHTML = `<strong>Gabarito:</strong> ${rcGabarito}`;
+  rcFb.style.display = 'block';
+
+  // Totals
+  const total = MC.length + VF.length + RC_ITEMS.length;
+  const right = mcRight + vfRight + rcRight;
+  const pct = Math.round((right / total) * 100);
+
+  showResults({
+    right, total, pct, timeTaken,
+    mcRight, vfRight, rcRight,
+    mcWrong, vfWrong, rcWrong
+  });
+}
+
+/* ══════════════════════════════════════
+   RESULTS
+══════════════════════════════════════ */
+function showResults(s) {
+  document.getElementById('quiz').style.display = 'none';
+  const r = document.getElementById('results');
+  r.style.display = 'block';
+
+  const grade = s.pct >= 90 ? 'A' : s.pct >= 75 ? 'B' : s.pct >= 60 ? 'C' : 'D';
+  const gradeLabel = { A: 'Excelente — Domínio do conteúdo', B: 'Bom — Pequenos ajustes necessários', C: 'Regular — Revisão recomendada', D: 'Insuficiente — Estudo aprofundado necessário' }[grade];
+
+  const mm = String(Math.floor(s.timeTaken/60)).padStart(2,'0');
+  const ss = String(s.timeTaken%60).padStart(2,'0');
+
+  // Guidance text
+  const weakTopics = [];
+  if (s.mcWrong.some(qi => qi <= 4)) weakTopics.push("Potenciais de Ação e Sistema de Condução (Cap. 9–10)");
+  if (s.mcWrong.some(qi => qi >= 5 && qi <= 7)) weakTopics.push("Ciclo Cardíaco e Frank-Starling (Cap. 9)");
+  if (s.mcWrong.some(qi => qi >= 8 && qi <= 12)) weakTopics.push("ECG — Morfologia e Cálculo de Ritmo (Cap. 11–12)");
+  if (s.mcWrong.some(qi => qi >= 13 && qi <= 19)) weakTopics.push("Hemodinâmica e Vasculatura (Cap. 14–15)");
+  if (s.vfWrong.length > 0) weakTopics.push("Conceitos fundamentais (revisão geral das afirmativas)");
+  if (s.rcWrong.length > 0) weakTopics.push("Associação de termos e definições (praticar glossário)");
+
+  const hasWeak = weakTopics.length > 0;
+
+  r.innerHTML = `
+    <div class="result-header">
+      <div class="result-grade ${grade}">${s.pct}%</div>
+      <div class="result-label">${gradeLabel}</div>
+      <div class="result-sub">${s.right} de ${s.total} questões corretas · Tempo: ${mm}:${ss}</div>
+    </div>
+
+    <div class="result-stats">
+      <div class="stat-card">
+        <span class="stat-num" style="color:var(--correct)">${s.mcRight}/20</span>
+        <span class="stat-lbl">Múltipla Escolha</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" style="color:var(--accent2)">${s.vfRight}/5</span>
+        <span class="stat-lbl">Verdadeiro/Falso</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" style="color:var(--accent4)">${s.rcRight}/5</span>
+        <span class="stat-lbl">Relacionar Colunas</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" style="color:var(--accent)">${mm}:${ss}</span>
+        <span class="stat-lbl">Tempo Utilizado</span>
+      </div>
+    </div>
+
+    <div class="guidance-card">
+      <div class="guidance-title">📊 Análise do Orientador</div>
+      <div class="guidance-body">
+        ${s.pct >= 90 ? `
+          <p>Resultado <strong>excelente</strong>! Você demonstra domínio sólido dos conteúdos de Fisiologia Cardíaca do Guyton (Caps. 9–15). O seu desempenho está alinhado com o nível exigido pelo <strong>Revalida</strong> e pela preparação para a <strong>Approbation</strong> alemã.</p>
+          <ul>
+            <li>Continue revisando os feedbacks das questões erradas para eliminar qualquer lacuna residual.</li>
+            <li>Avance para os capítulos seguintes com confiança.</li>
+            <li>Experimente resolver o simulado em menos de 45 min para treinar velocidade de prova.</li>
+          </ul>` :
+        s.pct >= 75 ? `
+          <p>Bom desempenho! Você consolidou a maior parte do conteúdo, mas algumas áreas merecem atenção antes da prova.</p>
+          <ul>
+            <li>Releia os feedbacks de todas as questões erradas — eles trazem a explicação completa.</li>
+            <li>Foque na revisão dos tópicos fracos identificados abaixo.</li>
+            <li>Refaça o simulado em 3–5 dias para consolidar a memória de longo prazo.</li>
+          </ul>` :
+        s.pct >= 60 ? `
+          <p>Resultado <strong>regular</strong>. O conteúdo está parcialmente assimilado, mas há brechas que podem custar pontos na prova. Revisão estruturada é necessária.</p>
+          <ul>
+            <li>Retorne ao Guyton nos capítulos indicados e leia com atenção as seções sublinhadas nos seus feedbacks.</li>
+            <li>Use o método Cornell (já que suas notas estão nesse formato!) para resumir cada capítulo.</li>
+            <li>Resolva o simulado novamente após 48 horas de revisão.</li>
+          </ul>` : `
+          <p>Resultado <strong>abaixo do esperado</strong>. Não se desanime — esses tópicos são desafiadores e a primeira exposição é sempre a mais difícil.</p>
+          <ul>
+            <li>Comece pelos capítulos 9–10 (Potenciais de Ação) — são a base de tudo.</li>
+            <li>Estude os feedbacks de cada questão como se fossem aulas resumidas.</li>
+            <li>Dedique 1–2 dias por capítulo antes de refazer o simulado.</li>
+            <li>Converse com sua esposa Ivana sobre os conceitos fisiológicos — ensinar é uma das melhores formas de aprender!</li>
+          </ul>`}
+      </div>
+    </div>
+
+    ${hasWeak ? `
+    <div class="guidance-card">
+      <div class="guidance-title">🎯 Tópicos para Reforço</div>
+      <div class="guidance-body">
+        <ul>${weakTopics.map(t => `<li>${t}</li>`).join('')}</ul>
+      </div>
+    </div>` : ''}
+
+    <div class="guidance-card">
+      <div class="guidance-title">📚 Gabarito Completo — Múltipla Escolha</div>
+      <div class="guidance-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:4px">
+          ${MC.map((q,i)=>`
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.85rem">
+              <div style="color:var(--muted);font-size:.7rem;margin-bottom:2px">Q${String(i+1).padStart(2,'0')}</div>
+              <div style="color:${userMC[i]===q.ans?'var(--correct)':'var(--wrong)'}">
+                ${String.fromCharCode(65+q.ans)}
+              </div>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:16px"><strong>V/F:</strong> ${VF.map((v,i)=>`Q${i+21}: ${v.ans?'V':'F'}`).join(' · ')}</div>
+        <div style="margin-top:8px"><strong>Colunas:</strong> ${RC_ITEMS.map(item=>`${item.key}→${RC_ANS[item.key]}`).join(' · ')}</div>
+      </div>
+    </div>
+
+    <button class="btn-retry" onclick="location.reload()">↺ Refazer Simulado</button>
+  `;
+
+  r.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

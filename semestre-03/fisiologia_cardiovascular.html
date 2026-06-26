@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fisiologia Cardiovascular — Guyton & Hall</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #222733;
+    --accent: #e8c56d;
+    --accent2: #5b9bd5;
+    --accent3: #6dd5a8;
+    --accent4: #d56d6d;
+    --text: #e8eaf0;
+    --text-muted: #7a8299;
+    --text-dim: #3d4459;
+    --font-display: 'Playfair Display', serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-body: 'Lato', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,197,109,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,197,109,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .sidebar-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-family: var(--font-mono);
+  }
+
+  .sidebar-nav {
+    padding: 16px 0;
+    flex: 1;
+  }
+
+  .nav-section-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    padding: 10px 20px 6px;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .nav-item:hover {
+    background: var(--surface2);
+    color: var(--text);
+    border-left-color: var(--border);
+  }
+
+  .nav-item.active {
+    background: rgba(232,197,109,0.07);
+    color: var(--accent);
+    border-left-color: var(--accent);
+    font-weight: 700;
+  }
+
+  .nav-item .nav-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+
+  .nav-item.active .nav-badge {
+    background: rgba(232,197,109,0.2);
+    color: var(--accent);
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(10,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 5;
+  }
+
+  .topbar-breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .topbar-breadcrumb span {
+    color: var(--accent);
+  }
+
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .progress-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .progress-track {
+    width: 120px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.4s;
+  }
+
+  /* PAGE */
+  .page {
+    display: none;
+    padding: 40px 40px 80px;
+    max-width: 900px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEADER */
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .section-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 36px;
+    max-width: 620px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--text-dim); }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title .pill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .pill-gold { background: rgba(232,197,109,0.15); color: var(--accent); }
+  .pill-blue { background: rgba(91,155,213,0.15); color: var(--accent2); }
+  .pill-green { background: rgba(109,213,168,0.15); color: var(--accent3); }
+  .pill-red { background: rgba(213,109,109,0.15); color: var(--accent4); }
+
+  /* LIST */
+  .info-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 6px;
+    border-left: 3px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .info-list li:hover { border-left-color: var(--accent); color: var(--text); }
+
+  .info-list li strong {
+    color: var(--text);
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* TABLES */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: var(--surface2);
+  }
+
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  tbody td {
+    padding: 12px 16px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    vertical-align: top;
+  }
+
+  tbody td:first-child {
+    color: var(--text);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  /* PHASE BADGE */
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0a0c10;
+    font-weight: 900;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  .flow-node {
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    background: var(--border);
+    color: var(--text);
+    white-space: nowrap;
+    border: 1px solid var(--text-dim);
+    transition: all 0.2s;
+  }
+
+  .flow-node:hover {
+    background: rgba(232,197,109,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .flow-node.highlight {
+    background: rgba(232,197,109,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .flow-arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--accent2); }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* FLASHCARDS */
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .flashcard {
+    perspective: 1000px;
+    height: 160px;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+  }
+
+  .flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid var(--border);
+  }
+
+  .flashcard-front {
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  .flashcard-back {
+    background: rgba(232,197,109,0.06);
+    border-color: rgba(232,197,109,0.3);
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-q {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .flashcard-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .flashcard-hint {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
+  /* CONCEPT MAP */
+  .concept-map {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .concept-root {
+    text-align: center;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: #0a0c10;
+    font-weight: 900;
+    font-family: var(--font-display);
+    font-size: 16px;
+    border-radius: 30px;
+    display: inline-block;
+    margin: 0 auto 20px;
+  }
+
+  .concept-children {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .concept-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .concept-node-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent2);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .concept-node-body {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .concept-center {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  /* ECG VISUAL */
+  .ecg-strip {
+    background: #0a1a0a;
+    border: 1px solid #1a3a1a;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ecg-strip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,0,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,0,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .ecg-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #4a8a4a;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .wave-labels {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .wave-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .wave-name {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 500;
+    color: #5afa5a;
+  }
+
+  .wave-desc {
+    font-size: 11px;
+    color: #4a8a4a;
+    max-width: 120px;
+    line-height: 1.4;
+  }
+
+  /* CALLOUT */
+  .callout {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .callout-gold {
+    background: rgba(232,197,109,0.08);
+    border: 1px solid rgba(232,197,109,0.2);
+    color: #c4a85a;
+  }
+
+  .callout-blue {
+    background: rgba(91,155,213,0.08);
+    border: 1px solid rgba(91,155,213,0.2);
+    color: #5b9bd5;
+  }
+
+  .callout-red {
+    background: rgba(213,109,109,0.08);
+    border: 1px solid rgba(213,109,109,0.2);
+    color: #d56d6d;
+  }
+
+  .callout-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* HOME */
+  .home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .chapter-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .chapter-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .chapter-card:hover::after { transform: scaleX(1); }
+
+  .chapter-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .chapter-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .chapter-topics {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .chapter-status {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  .status-available {
+    background: rgba(109,213,168,0.15);
+    color: var(--accent3);
+  }
+
+  .status-soon {
+    background: rgba(61,68,89,0.5);
+    color: var(--text-dim);
+  }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--accent2);
+    margin: 12px 0;
+    letter-spacing: 0.5px;
+  }
+
+  .formula-name {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  /* TAGS */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Guyton & Hall</div>
+    <div class="sidebar-title">Fisiologia<br>Cardiovascular</div>
+    <div class="sidebar-subtitle">Caps. 09–15 · Prova Teórica</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Navegação</div>
+    <div class="nav-item active" onclick="showPage('home')">
+      <span class="nav-icon">🏠</span> Início
+    </div>
+    <div class="nav-section-label">Capítulos</div>
+    <div class="nav-item" onclick="showPage('cap9')">
+      <span class="nav-icon">⚡</span> Cap. 09 — Potencial de Ação
+      <span class="nav-badge">P.A.</span>
+    </div>
+    <div class="nav-item" onclick="showPage('ciclo')">
+      <span class="nav-icon">🔄</span> Ciclo Cardíaco
+      <span class="nav-badge">CC</span>
+    </div>
+    <div class="nav-item" onclick="showPage('ecg')">
+      <span class="nav-icon">📈</span> ECG
+      <span class="nav-badge">ECG</span>
+    </div>
+    <div class="nav-item" onclick="showPage('hemo')">
+      <span class="nav-icon">🩸</span> Hemodinâmica
+      <span class="nav-badge">HD</span>
+    </div>
+    <div class="nav-item" onclick="showPage('conducao')">
+      <span class="nav-icon">🔌</span> Sistema de Condução
+      <span class="nav-badge">SC</span>
+    </div>
+    <div class="nav-section-label">Revisão</div>
+    <div class="nav-item" onclick="showPage('flash')">
+      <span class="nav-icon">🃏</span> Flashcards
+    </div>
+    <div class="nav-item" onclick="showPage('mapa')">
+      <span class="nav-icon">🗺️</span> Mapa Conceitual
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-breadcrumb">Fisiologia · <span id="breadcrumb">Início</span></div>
+    <div class="progress-bar-wrap">
+      <span class="progress-label">Cap. 9 disponível</span>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: 14%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="section-eyebrow">Guyton & Hall · 14ª Edição</div>
+    <h1 class="section-title">Fisiologia<br>Cardiovascular</h1>
+    <p class="section-desc">Material de estudo interativo para prova teórica. Resumos estruturados, tabelas comparativas e mapas conceituais dos capítulos 9 a 15.</p>
+
+    <div class="home-grid">
+      <div class="chapter-card" onclick="showPage('cap9')">
+        <div class="chapter-num">CAP. 09</div>
+        <div class="chapter-name">Ritmicidade & Potencial de Ação Cardíaco</div>
+        <div class="chapter-topics">Fases 0–4 · Períodos refratários · Nódulo sinusal · Fibras de Purkinje</div>
+        <div class="chapter-status status-available">✓ Disponível</div>
+      </div>
+      <div class="chapter-card" onclick="showPage('ciclo')">
+        <div class="chapter-num">CICLO</div>
+        <div class="chapter-name">Dinâmica do Ciclo Cardíaco</div>
+        <div class="chapter-topics">Sístole · Diástole · Volumes · Ruídos · Cálcio</div>
+        <div class="chapter-status status-available">✓ Disponível</div>
+      </div>
+      <div class="chapter-card" onclick="showPage('ecg')">
+        <div class="chapter-num">ECG</div>
+        <div class="chapter-name">Eletrocardiografia</div>
+        <div class="chapter-topics">Ondas P·Q·R·S·T · Derivações · Eixo cardíaco · Ritmo sinusal</div>
+        <div class="chapter-status status-available">✓ Disponível</div>
+      </div>
+      <div class="chapter-card" onclick="showPage('hemo')">
+        <div class="chapter-num">HD</div>
+        <div class="chapter-name">Hemodinâmica Vascular</div>
+        <div class="chapter-topics">Lei de Ohm · Fluxo laminar/turbulento · Compliância · PAM</div>
+        <div class="chapter-status status-available">✓ Disponível</div>
+      </div>
+      <div class="chapter-card" onclick="showPage('conducao')">
+        <div class="chapter-num">SC</div>
+        <div class="chapter-name">Sistema de Condução</div>
+        <div class="chapter-topics">Nódulo SA → AV → His → Purkinje · Tempos de condução</div>
+        <div class="chapter-status status-available">✓ Disponível</div>
+      </div>
+      <div class="chapter-card" style="opacity:0.4; cursor:default;">
+        <div class="chapter-num">10–15</div>
+        <div class="chapter-name">Próximos Capítulos</div>
+        <div class="chapter-topics">Aguardando conteúdo das próximas aulas</div>
+        <div class="chapter-status status-soon">Em breve</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="callout callout-gold">
+      <span class="callout-icon">💡</span>
+      <div><strong>Como usar:</strong> Navegue pelos capítulos na barra lateral. Revise com os flashcards e confira os mapas conceituais ao final. À medida que você enviar o conteúdo dos demais capítulos, o material será expandido aqui.</div>
+    </div>
+  </div>
+
+  <!-- CAP 9 -->
+  <div class="page" id="page-cap9">
+    <div class="section-eyebrow">Capítulo 09</div>
+    <h1 class="section-title">Potencial de Ação<br>Cardíaco</h1>
+    <p class="section-desc">Ritmicidade, fases do potencial de ação e períodos refratários do músculo cardíaco.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-value">15×</span>
+        <span class="stat-label">mais longo que o músculo esquelético</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">4 m/s</span>
+        <span class="stat-label">Velocidade fibras de Purkinje</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">0,25 s</span>
+        <span class="stat-label">Duração da meseta (plateau)</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">5</span>
+        <span class="stat-label">Fases do potencial de ação</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fases do Potencial de Ação <span class="pill pill-gold">PROVA</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Nome</th>
+              <th>Evento Iônico</th>
+              <th>Íon Principal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0</td>
+              <td>Despolarização rápida</td>
+              <td>Entrada maciça pelos canais rápidos</td>
+              <td style="color:var(--accent4)">Na⁺ entra ↓</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Repolarização inicial</td>
+              <td>Canais de Na⁺ se fecham; K⁺ começa a sair</td>
+              <td style="color:var(--accent2)">K⁺ sai ↑</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Meseta (Plateau)</td>
+              <td>Entrada lenta de Ca²⁺ equilibra saída de K⁺</td>
+              <td style="color:var(--accent)">Ca²⁺ entra ↓</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Repolarização rápida</td>
+              <td>Ca²⁺ fecha; K⁺ sai rapidamente</td>
+              <td style="color:var(--accent2)">K⁺ sai ↑↑</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Repouso</td>
+              <td>Potencial de membrana estabilizado</td>
+              <td style="color:var(--text-muted)">Estável</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Períodos Refratários <span class="pill pill-red">CRÍTICO</span></div>
+      <ul class="info-list">
+        <li>
+          <strong>Absoluto</strong>
+          Canal de Na⁺ inativo — impossível gerar novo potencial de ação, independentemente da intensidade do estímulo. Protege contra tétano cardíaco.
+        </li>
+        <li>
+          <strong>Relativo</strong>
+          Novo potencial possível apenas com estímulo supralimiar (acima do umbral habitual). Canais parcialmente recuperados.
+        </li>
+      </ul>
+    </div>
+
+    <div class="callout callout-blue">
+      <span class="callout-icon">🔬</span>
+      <div><strong>Por que o coração não tetaniza?</strong> O período refratário absoluto tem duração quase igual à contração muscular (~0,25 s), tornando impossível uma segunda estimulação eficaz durante a sístole.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Unidades Especializadas do Sistema</div>
+      <ul class="info-list">
+        <li>
+          <strong>Unidades em Hendidura</strong>
+          Presentes nos discos intercalados. Permitem condução rápida entre células. Quanto maior a densidade → maior a velocidade de condução.
+        </li>
+        <li>
+          <strong>Fibras de Purkinje</strong>
+          Maior densidade de discos intercalados → velocidade de 4 m/s (mais rápidas do coração).
+        </li>
+        <li>
+          <strong>Nódulo AV</strong>
+          Baixa densidade de discos → condução lenta → atraso fisiológico que permite enchimento ventricular.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CICLO CARDÍACO -->
+  <div class="page" id="page-ciclo">
+    <div class="section-eyebrow">Dinâmica Cardíaca</div>
+    <h1 class="section-title">Ciclo<br>Cardíaco</h1>
+    <p class="section-desc">Todos os eventos mecânicos e de volume desde o início de um batimento até o próximo (intervalo R-R).</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-value">120 ml</span>
+        <span class="stat-label">Vol. Telediastólico (VTD)</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">70 ml</span>
+        <span class="stat-label">Vol. Sistólico (VS)</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">50 ml</span>
+        <span class="stat-label">Vol. Telesistólico (VTS)</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">5 L/min</span>
+        <span class="stat-label">Débito Cardíaco Normal</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fases do Ciclo <span class="pill pill-gold">SEQUÊNCIA</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Subfase</th>
+              <th>Válvulas</th>
+              <th>Volume ventricular</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Diástole</td>
+              <td>Relaxamento isovolumétrico</td>
+              <td>Todas fechadas</td>
+              <td>↔ Constante (~50 ml)</td>
+            </tr>
+            <tr>
+              <td>Diástole</td>
+              <td>Enchimento passivo + ativo</td>
+              <td>AV abertas</td>
+              <td>↑ Sobe até ~120 ml</td>
+            </tr>
+            <tr>
+              <td>Sístole</td>
+              <td>Contração isovolumétrica</td>
+              <td>Todas fechadas</td>
+              <td>↔ Constante; pressão ↑↑</td>
+            </tr>
+            <tr>
+              <td>Sístole</td>
+              <td>Ejeção</td>
+              <td>Semilunares abertas</td>
+              <td>↓ Cai até ~50 ml</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ruídos Cardíacos <span class="pill pill-blue">B1 e B2</span></div>
+      <ul class="info-list">
+        <li>
+          <strong>B1 (1º Ruido)</strong>
+          Fechamento das válvulas auriculoventriculares (Mitral + Tricúspide). Marca o <em style="color:var(--accent)">início da sístole</em> durante a contração isovolumétrica.
+        </li>
+        <li>
+          <strong>B2 (2º Ruido)</strong>
+          Fechamento das válvulas semilunares (Aórtica + Pulmonar). Marca o <em style="color:var(--accent)">início da diástole</em> durante o relaxamento isovolumétrico.
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Curvas de Pressão Auricular</div>
+      <ul class="info-list">
+        <li><strong>Onda A</strong> Causada pela contração auricular (sístole atrial).</li>
+        <li><strong>Onda C</strong> Produzida pela contração ventricular (abaulamento das válvulas AV).</li>
+        <li><strong>Onda B (V)</strong> Enchimento passivo da aurícula quando as válvulas AV estão fechadas.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Manejo do Cálcio no Miocárdio <span class="pill pill-green">TRANSPORTE</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Movimento</th><th>Mecanismo</th><th>Tipo de transporte</th></tr></thead>
+          <tbody>
+            <tr><td>Entrada na célula</td><td>Canais voltagem-dependentes (fase 2)</td><td>Difusão facilitada</td></tr>
+            <tr><td>Saída da célula</td><td>Contratransporte Ca²⁺/Na⁺</td><td>Transporte ativo secundário</td></tr>
+            <tr><td>Retorno ao retículo</td><td>Bomba Ca²⁺-ATPase</td><td>Transporte ativo primário</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Frank-Starling & Regulação Autonômica</div>
+      <ul class="info-list">
+        <li><strong>Pré-carga</strong> Tensão da fibra antes da contração = pressão telediastólica. Depende do retorno venoso.</li>
+        <li><strong>Pós-carga</strong> Pressão aórtica que o ventrículo deve superar para ejetar sangue.</li>
+        <li><strong>Frank-Starling</strong> Maior estiramento das fibras → maior força de contração. Bomba toda a sangue que chega.</li>
+        <li><strong>Simpático (NA)</strong> ↑ força de contração + ↑ frequência cardíaca (inotropismo + cronotropismo +)</li>
+        <li><strong>Parassimpático (ACh)</strong> ↓ frequência cardíaca (cronotropismo −)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ECG -->
+  <div class="page" id="page-ecg">
+    <div class="section-eyebrow">Eletrocardiografia</div>
+    <h1 class="section-title">ECG —<br>Interpretação</h1>
+    <p class="section-desc">Papel milimetrado, ondas, critérios de ritmo sinusal, derivações e eixo cardíaco.</p>
+
+    <div class="card">
+      <div class="card-title">O Papel Milimetrado <span class="pill pill-gold">MEDIDAS</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Direção</th><th>Grandeza</th><th>1 quadrado pequeno</th><th>5 quadrados</th></tr></thead>
+          <tbody>
+            <tr><td>Horizontal</td><td>Tempo</td><td>0,04 s</td><td>0,20 s</td></tr>
+            <tr><td>Vertical</td><td>Voltagem</td><td>0,1 mV</td><td>0,5 mV</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ecg-strip">
+      <div class="ecg-label">COMPONENTES DO ECG</div>
+      <div class="wave-labels">
+        <div class="wave-item">
+          <div class="wave-name">P</div>
+          <div class="wave-desc">Despolarização auricular</div>
+        </div>
+        <div class="wave-item">
+          <div class="wave-name">Q</div>
+          <div class="wave-desc">Despolariz. septo interventricular</div>
+        </div>
+        <div class="wave-item">
+          <div class="wave-name">R</div>
+          <div class="wave-desc">Despolariz. ponta do coração</div>
+        </div>
+        <div class="wave-item">
+          <div class="wave-name">S</div>
+          <div class="wave-desc">Despolariz. base dos ventrículos</div>
+        </div>
+        <div class="wave-item">
+          <div class="wave-name">T</div>
+          <div class="wave-desc">Repolarização ventricular</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Critérios de Ritmo Sinusal <span class="pill pill-red">TODOS OS 4</span></div>
+      <ul class="info-list">
+        <li><span class="phase-badge">1</span> Onda P precedendo cada complexo QRS.</li>
+        <li><span class="phase-badge">2</span> Morfologia da onda P normal, simétrica e constante.</li>
+        <li><span class="phase-badge">3</span> Onda P positiva em D2 e aVF; negativa em aVR.</li>
+        <li><span class="phase-badge">4</span> Intervalo PR constante entre <strong>0,12 s e 0,20 s</strong> (3 a 5 quadradinhos).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Cálculo da Frequência Cardíaca</div>
+      <div class="formula-box">
+        <div class="formula-name">RITMO REGULAR</div>
+        FC = 1500 ÷ nº de quadradinhos entre 2 ondas R
+      </div>
+      <div class="formula-box">
+        <div class="formula-name">RITMO IRREGULAR</div>
+        FC = nº de ondas R em 6 segundos × 10
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Derivações e Eixo Cardíaco <span class="pill pill-blue">PLANO FRONTAL</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>D1</th><th>aVF</th><th>Eixo</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--accent3)">+ Positivo</td><td style="color:var(--accent3)">+ Positivo</td><td>Normal (−30° a +110°)</td></tr>
+            <tr><td style="color:var(--accent3)">+ Positivo</td><td style="color:var(--accent4)">− Negativo</td><td>Desvio à esquerda</td></tr>
+            <tr><td style="color:var(--accent4)">− Negativo</td><td style="color:var(--accent3)">+ Positivo</td><td>Desvio à direita</td></tr>
+            <tr><td style="color:var(--accent4)">− Negativo</td><td style="color:var(--accent4)">− Negativo</td><td>Indeterminado</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="divider" style="margin:16px 0">
+      <ul class="info-list">
+        <li><strong>D1, aVL</strong> Face lateral alta</li>
+        <li><strong>D2, D3, aVF</strong> Face inferior</li>
+        <li><strong>Bipolares (D1,D2,D3)</strong> Triângulo de Einthoven. Perna esquerda sempre positiva.</li>
+        <li><strong>Unipolares (aVR, aVL, aVF)</strong> Um único polo positivo aumentado.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HEMODINÂMICA -->
+  <div class="page" id="page-hemo">
+    <div class="section-eyebrow">Hemodinâmica</div>
+    <h1 class="section-title">Função<br>Vascular</h1>
+    <p class="section-desc">Leis do fluxo sanguíneo, propriedades dos vasos e medição da pressão arterial.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-value">84%</span>
+        <span class="stat-label">Sangue na circulação sistêmica</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">64%</span>
+        <span class="stat-label">Sangue nas veias</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">24×</span>
+        <span class="stat-label">Veias mais compliantes que artérias</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">r⁴</span>
+        <span class="stat-label">Fluxo proporcional ao raio</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Lei de Ohm & Fluxo Sanguíneo <span class="pill pill-gold">FÓRMULA</span></div>
+      <div class="formula-box">
+        <div class="formula-name">LEI DE OHM CARDIOVASCULAR</div>
+        Fluxo (F) = ΔP / R
+      </div>
+      <div class="formula-box" style="border-left-color: var(--accent)">
+        <div class="formula-name">EFEITO DO RAIO (Lei de Poiseuille)</div>
+        F ∝ r⁴  →  Dobrar o raio = aumentar o fluxo 16×  |  Quadruplicar o raio = 256×
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tipos de Fluxo</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tipo</th><th>Característica</th><th>Som</th><th>Ocorre quando</th></tr></thead>
+          <tbody>
+            <tr><td>Laminar</td><td>Perfil parabólico; camadas paralelas</td><td>Silencioso</td><td>Número de Reynolds baixo</td></tr>
+            <tr><td>Turbulento</td><td>Redemoinhos; mistura de camadas</td><td>Ruído / sopro</td><td>Número de Reynolds elevado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Propriedades dos Vasos</div>
+      <ul class="info-list">
+        <li><strong>Distensibilidade</strong> Capacidade de aumentar o diâmetro do vaso sob pressão.</li>
+        <li><strong>Compliância (Capacitância)</strong> Capacidade de aumentar o volume. Veias = 24× mais compliantes que artérias.</li>
+        <li><strong>Compliância Diferida</strong> Ajuste lento da pressão ante variações de volume ao longo do tempo (importante em hipertensão crônica).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Pressão Arterial — Ruídos de Korotkoff</div>
+      <ul class="info-list">
+        <li><strong>1º ruído</strong> Pressão sistólica (máxima).</li>
+        <li><strong>5º ruído</strong> Pressão diastólica (mínima).</li>
+      </ul>
+      <div class="formula-box" style="margin-top:14px">
+        <div class="formula-name">PRESSÃO ARTERIAL MÉDIA (PAM)</div>
+        PAM = [Sistólica + 2 × Diastólica] / 3
+      </div>
+    </div>
+
+    <div class="callout callout-gold">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Ponto crítico para prova:</strong> O raio do vaso afeta o fluxo na 4ª potência — mesmo pequenas alterações no calibre vascular (como em vasoconstrição) têm efeito enorme no fluxo e na resistência periférica.</div>
+    </div>
+  </div>
+
+  <!-- CONDUÇÃO -->
+  <div class="page" id="page-conducao">
+    <div class="section-eyebrow">Sistema Elétrico</div>
+    <h1 class="section-title">Sistema de<br>Condução</h1>
+    <p class="section-desc">Sequência de condução, tempos fisiológicos e o nódulo sinusal como marcapasso natural.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-value">70–80</span>
+        <span class="stat-label">bpm nódulo sinusal</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">−40 mV</span>
+        <span class="stat-label">Umbral nódulo SA</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">0,22 s</span>
+        <span class="stat-label">Tempo total até última fibra</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">Ca²⁺</span>
+        <span class="stat-label">Ion da despolarização do SA</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Sequência de Condução <span class="pill pill-gold">ORDEM</span></div>
+      <div class="flow">
+        <div class="flow-node highlight">Nódulo SA</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Vias internodulares</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Nódulo AV</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Feixe de His</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node highlight">Fibras de Purkinje</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Miocárdio ventricular</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tempos de Condução <span class="pill pill-red">DECORAR</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Trecho</th><th>Tempo</th></tr></thead>
+          <tbody>
+            <tr><td>SA → Nódulo AV</td><td>0,03 s</td></tr>
+            <tr><td>Atraso no nódulo AV</td><td>0,09 s</td></tr>
+            <tr><td>Porção penetrante (tecido fibroso)</td><td>0,04 s</td></tr>
+            <tr><td style="color:var(--accent)">Total aurículas → ventrículos</td><td style="color:var(--accent)">0,16 s</td></tr>
+            <tr><td style="color:var(--accent)">Total até última fibra ventricular</td><td style="color:var(--accent)">0,22 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout callout-blue">
+      <span class="callout-icon">🎯</span>
+      <div><strong>Por que o nódulo AV atrasa?</strong> Baixa densidade de discos intercalados → condução lenta (~0,09 s). Isso garante que as aurículas terminem de ejetar sangue nos ventrículos <em>antes</em> da contração ventricular.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Eletrólitos e Efeitos Cardíacos</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Fator</th><th>Agente</th><th>Efeito</th></tr></thead>
+          <tbody>
+            <tr><td>Sistema Simpático</td><td>Noradrenalina</td><td>↑ Força + ↑ Frequência</td></tr>
+            <tr><td>Sistema Parassimpático</td><td>Acetilcolina</td><td>↓ Frequência (vagal)</td></tr>
+            <tr><td>Hipercalemia (K⁺ ↑)</td><td>—</td><td>Depressão cardíaca; risco de parada</td></tr>
+            <tr><td>Hipercalcemia (Ca²⁺ ↑)</td><td>—</td><td>↑ Atividade e força de contração</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="page" id="page-flash">
+    <div class="section-eyebrow">Revisão Ativa</div>
+    <h1 class="section-title">Flashcards</h1>
+    <p class="section-desc">Clique em cada cartão para revelar a resposta. Ideal para revisão rápida antes da prova.</p>
+
+    <div class="flashcard-grid">
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">Qual íon é responsável pela meseta (fase 2) do potencial de ação cardíaco?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text"><strong>Ca²⁺ (Cálcio)</strong> — entra pela difusão facilitada voltagem-dependente, sustentando o plateau por 0,2–0,3 s.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">O que causa o 1º ruído cardíaco (B1)?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text">Fechamento das válvulas <strong>AV (mitral + tricúspide)</strong> — marca o início da sístole.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">Qual é a fórmula da Pressão Arterial Média (PAM)?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text"><strong>PAM = [Sistólica + 2 × Diastólica] / 3</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">Quantas vezes mais compliantes são as veias em relação às artérias?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text"><strong>24 vezes</strong>. Por isso as veias funcionam como reservatórios, armazenando 64% do volume sanguíneo total.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">Quais são os 4 critérios para definir ritmo sinusal?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text">1. P antes de QRS · 2. Morfologia P normal e constante · 3. P+ em D2/aVF; P− em aVR · 4. PR entre 0,12–0,20 s</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">O que é o mecanismo de Frank-Starling?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text">Quanto <strong>maior o estiramento</strong> das fibras cardíacas (↑ pré-carga), <strong>maior a força de contração</strong>. O coração bombeia toda a sangue que recebe.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">Por que o nódulo AV atrasa a condução?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text">Baixa densidade de <strong>discos intercalados</strong> → condução mais lenta. O atraso (~0,09 s) permite que as aurículas ejetem sangue antes da contração ventricular.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="flashcard-q">Pergunta</div>
+            <div class="flashcard-text">Se dobrarmos o raio de um vaso, quanto aumenta o fluxo?</div>
+            <div class="flashcard-hint">Clique para revelar ↻</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="flashcard-q">Resposta</div>
+            <div class="flashcard-text"><strong>16 vezes</strong> (2⁴ = 16). O fluxo é proporcional à 4ª potência do raio (Lei de Poiseuille).</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAPA CONCEITUAL -->
+  <div class="page" id="page-mapa">
+    <div class="section-eyebrow">Visão Integrada</div>
+    <h1 class="section-title">Mapa<br>Conceitual</h1>
+    <p class="section-desc">Relações entre os principais temas da Fisiologia Cardiovascular.</p>
+
+    <div class="concept-map">
+      <div class="concept-center">
+        <div class="concept-root">CORAÇÃO</div>
+      </div>
+      <div class="concept-children">
+        <div class="concept-node">
+          <div class="concept-node-title">⚡ Potencial de Ação</div>
+          <div class="concept-node-body">5 fases · Meseta por Ca²⁺ · Refratariedade absoluta (sem tétano)</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">🔌 Sistema de Condução</div>
+          <div class="concept-node-body">SA → AV → His → Purkinje · Atraso AV = 0,09 s · Total = 0,22 s</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">🔄 Ciclo Cardíaco</div>
+          <div class="concept-node-body">VTD 120 ml · VS 70 ml · VTS 50 ml · B1 e B2</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">📈 ECG</div>
+          <div class="concept-node-body">P–QRS–T · Ritmo sinusal (4 critérios) · Eixo: D1 + aVF</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">🩸 Hemodinâmica</div>
+          <div class="concept-node-body">F = ΔP/R · Fluxo ∝ r⁴ · PAM = [S+2D]/3</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">🧠 Regulação Autonômica</div>
+          <div class="concept-node-body">Simpático: ↑FC, ↑força (NA) · Parassimpático: ↓FC (ACh)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concept-map">
+      <div class="concept-center">
+        <div class="concept-root" style="background: var(--accent2); color:#fff">POTENCIAL DE AÇÃO — FASES</div>
+      </div>
+      <div class="concept-children">
+        <div class="concept-node">
+          <div class="concept-node-title">Fase 0</div>
+          <div class="concept-node-body">Na⁺ entra massivamente → despolarização rápida</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">Fase 1</div>
+          <div class="concept-node-body">K⁺ começa a sair → repolarização inicial</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">Fase 2</div>
+          <div class="concept-node-body">Ca²⁺ entra → PLATEAU (0,2–0,3 s)</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">Fase 3</div>
+          <div class="concept-node-body">K⁺ sai rapidamente → repolarização final</div>
+        </div>
+        <div class="concept-node">
+          <div class="concept-node-title">Fase 4</div>
+          <div class="concept-node-body">Repouso → potencial estabilizado</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-gold">
+      <span class="callout-icon">📝</span>
+      <div><strong>Dica de prova:</strong> A maioria das questões sobre hemodinâmica explora o r⁴. Sobre ECG, os critérios de ritmo sinusal e o cálculo de FC. Sobre potencial de ação, a fase da meseta e o que impede o tétano cardíaco.</div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const pages = {
+    'home': { id: 'page-home', label: 'Início' },
+    'cap9': { id: 'page-cap9', label: 'Cap. 09 — Potencial de Ação' },
+    'ciclo': { id: 'page-ciclo', label: 'Ciclo Cardíaco' },
+    'ecg': { id: 'page-ecg', label: 'ECG' },
+    'hemo': { id: 'page-hemo', label: 'Hemodinâmica' },
+    'conducao': { id: 'page-conducao', label: 'Sistema de Condução' },
+    'flash': { id: 'page-flash', label: 'Flashcards' },
+    'mapa': { id: 'page-mapa', label: 'Mapa Conceitual' },
+  };
+
+  function showPage(key) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    // Show target
+    const page = pages[key];
+    if (!page) return;
+    document.getElementById(page.id).classList.add('active');
+    document.getElementById('breadcrumb').textContent = page.label;
+
+    // Highlight nav
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(`'${key}'`)) {
+        item.classList.add('active');
+      }
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

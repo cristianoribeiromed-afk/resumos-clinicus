@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro — Fisiología Cardíaca</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap');
+  :root {
+    --bg:#0d1117;--surface:#161b22;--surface2:#1c2330;--border:#30363d;
+    --red:#e63946;--red-dim:#7d1d24;--green:#2ea043;--green-dim:#1a5c2a;
+    --gold:#d4a843;--text:#e6edf3;--text-muted:#8b949e;--blue:#4a9eff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+  .screen{display:none;min-height:100vh;}
+  .screen.active{display:flex;flex-direction:column;}
+
+  /* INTRO */
+  #intro{align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 20% 50%,#1a0a0a 0%,var(--bg) 60%);position:relative;overflow:hidden;}
+  #intro::before{content:'♥';position:absolute;font-size:40vw;color:rgba(230,57,70,0.04);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;animation:pulse-bg 3s ease-in-out infinite;}
+  @keyframes pulse-bg{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.04;}50%{transform:translate(-50%,-50%) scale(1.05);opacity:0.07;}}
+  .intro-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--red);border-radius:12px;padding:3rem;max-width:680px;width:100%;position:relative;z-index:1;animation:slideUp .6s ease;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+  .badge{display:inline-block;background:var(--red-dim);color:var(--red);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .8rem;border-radius:20px;margin-bottom:1.2rem;}
+  .intro-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1.15;margin-bottom:.5rem;}
+  .intro-title span{color:var(--red);}
+  .intro-sub{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;line-height:1.5;}
+  .meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+  .meta-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;}
+  .meta-val{font-size:1.8rem;font-weight:700;color:var(--red);display:block;}
+  .meta-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+  .topics-list{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem;}
+  .topic-tag{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.3rem .7rem;font-size:.8rem;color:var(--text-muted);}
+  .btn-start{width:100%;background:var(--red);color:white;border:none;padding:1rem;font-size:1rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .2s;font-family:'Source Sans 3',sans-serif;}
+  .btn-start:hover{background:#c1121f;transform:translateY(-1px);box-shadow:0 4px 20px rgba(230,57,70,.4);}
+
+  /* QUIZ */
+  #quiz{padding:0;}
+  .quiz-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;position:sticky;top:0;z-index:10;}
+  .q-counter{font-size:.85rem;color:var(--text-muted);white-space:nowrap;}
+  .q-counter strong{color:var(--text);}
+  .progress-wrap{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--red),#ff6b6b);border-radius:3px;transition:width .4s ease;}
+  .timer-box{display:flex;align-items:center;gap:.4rem;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.4rem .8rem;white-space:nowrap;}
+  .timer-val{font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums;}
+  .timer-val.warning{color:var(--red);animation:blink .5s infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .quiz-body{flex:1;padding:2rem 1.5rem;max-width:740px;margin:0 auto;width:100%;}
+  .section-label{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.8rem;}
+  .question-text{font-size:1.15rem;font-weight:600;line-height:1.55;margin-bottom:1.5rem;}
+  .case-box{background:var(--surface2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:.92rem;color:var(--text-muted);line-height:1.6;}
+  .case-box strong{color:var(--gold);}
+  .options-list{display:flex;flex-direction:column;gap:.6rem;}
+  .option-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;font-size:.95rem;color:var(--text);cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:flex-start;gap:.8rem;font-family:'Source Sans 3',sans-serif;line-height:1.4;}
+  .option-btn:hover:not(:disabled){border-color:var(--blue);background:rgba(74,158,255,.08);transform:translateX(3px);}
+  .option-key{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;font-size:.75rem;font-weight:700;color:var(--text-muted);flex-shrink:0;margin-top:1px;}
+  .option-btn.correct{border-color:var(--green);background:rgba(46,160,67,.15);}
+  .option-btn.correct .option-key{background:var(--green);color:white;border-color:var(--green);}
+  .option-btn.wrong{border-color:var(--red);background:rgba(230,57,70,.12);}
+  .option-btn.wrong .option-key{background:var(--red);color:white;border-color:var(--red);}
+  .option-btn:disabled{cursor:default;}
+  .feedback-box{margin-top:1.2rem;padding:1rem 1.2rem;border-radius:8px;font-size:.92rem;line-height:1.6;display:none;animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+  .feedback-box.correct{background:rgba(46,160,67,.12);border:1px solid var(--green);color:#7ee787;}
+  .feedback-box.wrong{background:rgba(230,57,70,.1);border:1px solid var(--red-dim);color:#ff9999;}
+  .feedback-title{font-weight:700;margin-bottom:.3rem;}
+  .btn-next{margin-top:1.5rem;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.8rem 2rem;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;display:none;font-family:'Source Sans 3',sans-serif;}
+  .btn-next:hover{border-color:var(--red);color:var(--red);}
+
+  /* RESULT */
+  #result{align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 80% 20%,#0a1a0a 0%,var(--bg) 60%);}
+  .result-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2.5rem;max-width:700px;width:100%;animation:slideUp .5s ease;}
+  .score-ring{display:flex;flex-direction:column;align-items:center;margin-bottom:2rem;}
+  .score-num{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;line-height:1;margin-bottom:.3rem;}
+  .score-label{color:var(--text-muted);font-size:.9rem;}
+  .perf-bar-wrap{background:var(--surface2);border-radius:8px;height:12px;overflow:hidden;margin-top:1rem;width:100%;}
+  .perf-bar{height:100%;border-radius:8px;transition:width 1s ease;width:0%;}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;}
+  .stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;}
+  .stat-num{font-size:1.6rem;font-weight:700;display:block;}
+  .stat-label{font-size:.75rem;color:var(--text-muted);}
+  .review-title{font-size:.8rem;font-weight:700;margin-bottom:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+  .review-list{display:flex;flex-direction:column;gap:.5rem;max-height:300px;overflow-y:auto;margin-bottom:1.5rem;}
+  .review-item{display:flex;align-items:flex-start;gap:.7rem;font-size:.88rem;padding:.6rem .8rem;border-radius:6px;background:var(--surface2);color:var(--text-muted);line-height:1.4;}
+  .review-item.ok{border-left:3px solid var(--green);}
+  .review-item.err{border-left:3px solid var(--red);}
+  .btn-retry{width:100%;background:var(--red);color:white;border:none;padding:1rem;font-size:1rem;font-weight:700;border-radius:8px;cursor:pointer;font-family:'Source Sans 3',sans-serif;transition:all .2s;text-transform:uppercase;letter-spacing:.05em;}
+  .btn-retry:hover{background:#c1121f;}
+  .medal{font-size:3rem;display:block;margin-bottom:.5rem;}
+  ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--surface);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div id="intro" class="screen active">
+  <div class="intro-card">
+    <div class="badge">🫀 Simulacro Interactivo</div>
+    <h1 class="intro-title">Fisiología<br><span>Cardíaca</span></h1>
+    <p class="intro-sub">Basado en Guyton & Hall, 14ª ed. — Capítulos 8 al 15.<br>Preguntas con casos clínicos, feedback inmediato y revisión final.</p>
+    <div class="meta-grid">
+      <div class="meta-item"><span class="meta-val">25</span><span class="meta-label">Preguntas</span></div>
+      <div class="meta-item"><span class="meta-val">30</span><span class="meta-label">Minutos</span></div>
+      <div class="meta-item"><span class="meta-val">5</span><span class="meta-label">Temas</span></div>
+    </div>
+    <div class="topics-list">
+      <span class="topic-tag">🔬 Músculo Liso</span>
+      <span class="topic-tag">⚡ Potencial Cardíaco</span>
+      <span class="topic-tag">🔄 Ciclo Cardíaco</span>
+      <span class="topic-tag">📈 ECG</span>
+      <span class="topic-tag">💉 Hemodinámica</span>
+      <span class="topic-tag">🏥 Casos Clínicos</span>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">▶ INICIAR SIMULACRO</button>
+  </div>
+</div>
+
+<div id="quiz" class="screen">
+  <div class="quiz-header">
+    <div class="q-counter">Pregunta <strong id="qNum">1</strong> de <strong>25</strong></div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="timer-box">⏱ <span class="timer-val" id="timerVal">30:00</span></div>
+  </div>
+  <div class="quiz-body">
+    <div class="section-label" id="sectionLabel"></div>
+    <div id="caseBox" class="case-box" style="display:none"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options-list" id="optionsList"></div>
+    <div class="feedback-box" id="feedbackBox">
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div id="feedbackText"></div>
+    </div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">Siguiente →</button>
+  </div>
+</div>
+
+<div id="result" class="screen">
+  <div class="result-card">
+    <div class="score-ring">
+      <span class="medal" id="medalEmoji"></span>
+      <div class="score-num" id="scoreNum"></div>
+      <div class="score-label" id="scoreLabel"></div>
+      <div class="perf-bar-wrap"><div class="perf-bar" id="perfBar"></div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><span class="stat-num" id="statCorrect" style="color:var(--green)"></span><span class="stat-label">✅ Correctas</span></div>
+      <div class="stat-box"><span class="stat-num" id="statWrong" style="color:var(--red)"></span><span class="stat-label">❌ Incorrectas</span></div>
+      <div class="stat-box"><span class="stat-num" id="statTime" style="color:var(--gold)"></span><span class="stat-label">⏱ Tiempo</span></div>
+    </div>
+    <div class="review-title">Revisión de respuestas</div>
+    <div class="review-list" id="reviewList"></div>
+    <button class="btn-retry" onclick="restart()">↺ REINTENTAR</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS=[
+  {section:"🔬 Músculo Liso",q:"¿Cuál es la principal diferencia regulatoria entre músculo liso y músculo esquelético?",opts:["El liso usa troponina para regular la contracción","El liso usa calmodulina/miosina quinasa en lugar de troponina","El liso no necesita calcio para contraerse","El liso tiene más filamentos de miosina que actina"],ans:1,fb:"El músculo liso carece de troponina. La regulación ocurre vía Ca²⁺ → calmodulina → miosina quinasa → fosforilación de la miosina. Este es el punto diferencial más importante en prova."},
+  {section:"🔬 Músculo Liso",q:"¿Qué tipo de músculo liso contrae como sincitio gracias a las gap junctions?",opts:["Multiunitario","Unitario (visceral)","Cardíaco","Esquelético"],ans:1,fb:"El músculo liso unitario (visceral) presenta gap junctions que permiten la propagación del impulso de célula a célula. Ejemplos: GI, uréteres, útero. El multiunitario tiene fibras independientes (iris, músculo ciliar)."},
+  {section:"🔬 Músculo Liso",q:"El mecanismo de 'latch' (cerrojo) en el músculo liso permite:",opts:["Contracción tetánica de alta energía","Mantener contracción prolongada con mínimo gasto de ATP","Relajación rápida por salida de calcio","Inhibición total del potencial de acción"],ans:1,fb:"El latch permite que el músculo liso mantenga tensión prolongada (tono vascular, vejiga) con muy bajo consumo de ATP. La miosina fosfatasa desfosforila lentamente, y los puentes permanecen unidos sin ciclar."},
+  {section:"🔬 Músculo Liso",q:"La fuerza máxima de contracción del músculo liso comparada con el esquelético es:",opts:["Menor (1–2 kg/cm²)","Igual","Mayor (4–6 kg/cm²)","Insignificante"],ans:2,fb:"El músculo liso genera 4–6 kg/cm², superando al esquelético. Sus puentes cruzados lateropolares permiten acortamiento de hasta 80%, compensando la menor velocidad con mayor eficiencia mecánica."},
+  {section:"🔬 Músculo Liso",q:"¿Cuál es la proporción de filamentos de actina respecto a miosina en el músculo liso?",opts:["1:1","2:1","5–10x más actina que miosina","Igual cantidad"],ans:2,fb:"En el músculo liso hay 5–10x más actina que miosina (vs esquelético: ~2:1). Los filamentos de miosina son 2x más gruesos que los de actina. Esta arquitectura permite el gran acortamiento (80%)."},
+  {section:"⚡ Potencial de Acción Cardíaco",q:"La característica más importante del potencial de acción ventricular es:",opts:["Duración muy corta","Ausencia de calcio","Meseta (platô) prolongada mantenida por Ca²⁺","Igual al músculo esquelético"],ans:2,fb:"La meseta (Fase 2) dura 0,2–0,3s, mantenida por canales lentos de Ca²⁺. Prolonga el período refractario absoluto, impidiendo la tetania — esencial para el bombeo rítmico cardíaco."},
+  {section:"⚡ Potencial de Acción Cardíaco",q:"El período refractario absoluto del corazón tiene como función principal:",opts:["Aumentar la velocidad de conducción","Impedir la tetania, garantizando el llenado ventricular","Facilitar la entrada de potasio","Reducir el gasto energético"],ans:1,fb:"El período refractario absoluto (~0,25s) protege al corazón de la tetania. A diferencia del músculo esquelético, el corazón no puede estimularse durante este período, garantizando la alternancia sístole-diástole."},
+  {section:"⚡ Potencial de Acción Cardíaco",q:"El potencial de reposo del nodo sinusal es aproximadamente:",opts:["-90 mV","-70 mV","-55 a -60 mV","-40 mV"],ans:2,fb:"El nodo sinusal tiene potencial de reposo de -55 a -60 mV, menos negativo que ventrículos (-90 mV). Esto facilita la despolarización espontánea mediante la corriente 'funny' (If) de entrada de Na⁺."},
+  {section:"⚡ Potencial de Acción Cardíaco",q:"La 'corriente funny' (If) del nodo sinusal consiste en:",opts:["Salida lenta de potasio","Entrada lenta de sodio que produce despolarización espontánea","Entrada rápida de calcio","Bloqueo de canales de cloro"],ans:1,fb:"La corriente If es una entrada lenta de Na⁺ que ocurre espontáneamente tras la repolarización del nodo SA. Es el mecanismo del automatismo cardíaco — el marcapasos se 'autodispara' sin estímulo externo."},
+  {section:"🔄 Ciclo Cardíaco",q:"¿Cuál es la secuencia correcta de las fases del ciclo cardíaco?",opts:["Eyección → Contracción isovolumétrica → Llenado → Relajación isovolumétrica","Contracción isovolumétrica → Eyección → Relajación isovolumétrica → Llenado","Llenado → Eyección → Relajación → Contracción","Relajación → Contracción isovolumétrica → Llenado → Eyección"],ans:1,fb:"(1) Contracción isovolumétrica — válvulas cerradas, ↑ presión; (2) Eyección — abren semilunares; (3) Relajación isovolumétrica — cerradas, ↓ presión; (4) Llenado — abren AV. La fase isovolumétrica = TODAS válvulas cerradas."},
+  {section:"🔄 Ciclo Cardíaco",q:"El volumen sistólico (VS) normal es de 70 mL. ¿Cómo se calcula?",opts:["VS = VTD + VTS","VS = VTD × FE","VS = VTD − VTS","VS = VTS / VTD"],ans:2,fb:"VS = VTD − VTS → 120 − 50 = 70 mL. FE = VS/VTD = 70/120 ≈ 58%. FE < 40% = disfunción sistólica (insuficiencia cardíaca). Este cálculo es básico para el Revalida."},
+  {section:"🔄 Ciclo Cardíaco",q:"¿Qué porcentaje del llenado ventricular ocurre en la fase pasiva rápida?",opts:["20%","50%","60%","80%"],ans:3,fb:"80% del llenado es pasivo (gradiente aurícula → ventrículo con apertura de AV). El 20% restante es por contracción auricular. Por eso en fibrilación auricular (sin contracción auricular), el gasto cardíaco cae ~20%."},
+  {section:"🔄 Ciclo Cardíaco",q:"El ruido cardíaco R2 (B2) corresponde a:",opts:["Cierre de válvulas AV — inicio de sístole","Apertura de válvulas semilunares","Cierre de válvulas semilunares — inicio de diástole","Contracción auricular"],ans:2,fb:"R1 = cierre de AV (inicio sístole). R2 = cierre de semilunares (inicio diástole). Mnemotecnia: R1 = AV = sístole; R2 = semilunar = diástole. Desdoblamiento de R2 en inspiración es fisiológico."},
+  {section:"🔄 Ciclo Cardíaco",q:"La Ley de Frank-Starling establece que:",opts:["A mayor precarga, menor contracción ventricular","A mayor llenado ventricular, mayor la fuerza de contracción — dentro de límites","El corazón bombea siempre el mismo volumen","La poscarga determina el volumen de eyección"],ans:1,fb:"Frank-Starling: mayor estiramiento → mayor fuerza. IMPORTANTE: tiene límite — en IC descompensada la curva cae y el corazón no responde al aumento de precarga. 'Más entra, más sale' — pero solo hasta cierto punto."},
+  {section:"📈 ECG",q:"¿Qué evento electrofisiológico representa el complejo QRS?",opts:["Despolarización auricular","Repolarización ventricular","Despolarización ventricular","Repolarización auricular"],ans:2,fb:"P = despolarización auricular; QRS = despolarización ventricular (< 0,12s normal); T = repolarización ventricular. La repolarización auricular no es visible pues queda 'tapada' por el QRS de mayor amplitud."},
+  {section:"📈 ECG",q:"En ritmo regular, el intervalo R-R mide 4 cuadros grandes. ¿Cuál es la FC?",opts:["50 lpm","75 lpm","100 lpm","300 lpm"],ans:1,fb:"FC = 300 / cuadros grandes → 300/4 = 75 lpm. Truco: 1→300, 2→150, 3→100, 4→75, 5→60, 6→50. Para ritmos irregulares: contar QRS en 6 segundos × 10. Este método es el más usado en exámenes."},
+  {section:"📈 ECG",q:"Un paciente presenta DI positivo y aVF negativo. El eje cardíaco es:",opts:["Normal","Desviado a la derecha","Desviado a la izquierda","Indeterminado"],ans:2,fb:"DI(+) y aVF(-) = desvío a la IZQUIERDA (eje entre -30° y -90°). Causas: HVI, bloqueo de rama izquierda anterior. DI(+)/aVF(+) = normal (-30° a +90°). DI(-)/aVF(+) = derecha."},
+  {section:"📈 ECG",q:"El intervalo PR normal (0,12–0,20s) representa:",opts:["Conducción intraventricular","Repolarización auricular","Conducción a través del nodo AV (retardo fisiológico)","Tiempo de eyección ventricular"],ans:2,fb:"PR = tiempo de conducción auriculoventricular. PR > 0,20s = Bloqueo AV 1er grado. PR < 0,12s = preexcitación (WPW). El retardo del nodo AV (~0,16s) permite el llenado ventricular antes de la sístole."},
+  {section:"💉 Hemodinámica",q:"Según la Ley de Poiseuille, si el radio de una arteria se duplica, el flujo:",opts:["Se duplica (×2)","Se cuadruplica (×4)","Aumenta 8 veces","Aumenta 16 veces (×16)"],ans:3,fb:"Flujo ∝ r⁴. Si r×2: 2⁴=16. Si r×4: 4⁴=256. Esto explica por qué mínimas variaciones del diámetro vascular tienen enorme impacto en el flujo — base de la vasoconstricción patológica y terapéutica vasodilatadora."},
+  {section:"💉 Hemodinámica",q:"¿Cuál es el principal vaso de resistencia en la circulación sistémica?",opts:["Aorta","Venas cava","Arteríolas","Capilares"],ans:2,fb:"Las arteríolas son los principales vasos de resistencia (~70% de la resistencia periférica total). Regulan el flujo hacia los capilares. La aorta tiene alta presión pero baja resistencia. Las venas son reservorios (64% del volumen)."},
+  {section:"💉 Hemodinámica",q:"La precarga cardíaca se define como:",opts:["Presión aórtica contra la que el ventrículo bombea","Grado de estiramiento ventricular al final de la diástole (retorno venoso)","Resistencia vascular periférica total","Frecuencia cardíaca basal"],ans:1,fb:"Precarga = VTD = estiramiento de fibras al final de la diástole. Depende del retorno venoso. Poscarga = resistencia que el VI debe vencer = presión aórtica. 'Pre = antes de contraer (volumen) / Pos = presión de salida'."},
+  {section:"🏥 Caso Clínico",caseText:"Paciente masculino, 68 años, presenta episodios bruscos de pérdida de consciencia de 5 segundos con recuperación espontánea. ECG: ausencia de relación entre ondas P y complejos QRS (disociación AV completa).",q:"¿Cuál es el diagnóstico y qué estructura asume el ritmo?",opts:["Fibrilación auricular — nodo sinusal asume el ritmo","Síndrome de Stokes-Adams — fibras de Purkinje asumen el ritmo","Taquicardia ventricular — nodo AV asume","Flutter auricular — aurícula izquierda asume"],ans:1,fb:"Síndrome de Stokes-Adams = bloqueo AV completo → el corazón para 5–20s hasta que las fibras de Purkinje asumen (~30–40 lpm). La disociación AV en el ECG + síncope son la clave diagnóstica. Tratamiento: marcapasos definitivo."},
+  {section:"🏥 Caso Clínico",caseText:"Paciente con IC. Ecocardiograma: VTD = 180 mL, VTS = 140 mL.",q:"¿Cuál es la fracción de eyección (FE) y su interpretación?",opts:["FE = 77% — función normal","FE = 22% — disfunción sistólica grave","FE = 40% — función en el límite","FE = 55% — función preservada"],ans:1,fb:"FE = VS/VTD = (180−140)/180 = 40/180 ≈ 22%. FE < 40% = disfunción sistólica grave. VTS elevado indica que el corazón no ejeta adecuadamente. Normal: FE ≥ 55%. FE 40–55% = disfunción leve-moderada."},
+  {section:"🏥 Caso Clínico",caseText:"Paciente hipertenso, PA = 180/110 mmHg. El médico prescribe un vasodilatador arterial.",q:"¿Sobre qué parámetro hemodinámico actúa principalmente?",opts:["Reduce la precarga","Reduce la poscarga (resistencia periférica)","Aumenta la contractilidad","Aumenta la frecuencia cardíaca"],ans:1,fb:"Vasodilatadores arteriales → ↓ resistencia periférica = ↓ poscarga → facilita la eyección ventricular. Nitratos venosos → ↓ precarga. IECA/ARA-II → ↓ poscarga. Beta-bloqueantes → ↓ FC y contractilidad."},
+  {section:"🏥 Caso Clínico",caseText:"ECG: ritmo irregularmente irregular, ausencia de ondas P definidas, línea de base con oscilaciones finas de alta frecuencia, QRS estrechos.",q:"¿Cuál es el diagnóstico electrocardiográfico?",opts:["Taquicardia sinusal","Flutter auricular","Fibrilación auricular","Bloqueo AV de 2º grado"],ans:2,fb:"Fibrilación auricular: (1) ausencia de ondas P + ondas f irregulares; (2) QRS irregularmente irregulares; (3) ritmo caótico. Sin contracción auricular → ↓ 20% llenado ventricular + riesgo de trombo → anticoagulación."},
+  {section:"🏥 Caso Clínico",caseText:"Paciente 60 años con soplo sistólico en foco aórtico, síncope de esfuerzo y angina. Ecocardiograma: gradiente transvalvular aórtico de 65 mmHg.",q:"¿Qué alteración hemodinámica explica mejor los síntomas?",opts:["Reducción de la precarga","Aumento extremo de la poscarga del VI por obstrucción al flujo de salida","Disminución de FC por parasimpático","Reducción del retorno venoso"],ans:1,fb:"Estenosis aórtica severa = obstrucción al flujo de salida del VI = ↑↑ poscarga. Consecuencias: HVI, ↓ gasto cardíaco de esfuerzo → síncope + angina + disnea. Tríada clásica de la EA. Gradiente > 40 mmHg = grave. Tratamiento: reemplazo valvular."}
+];
+
+let current=0,score=0,answered=false,timerInterval,secondsLeft=1800,startTime,usedSeconds=0,reviewData=[];
+
+function startQuiz(){
+  document.getElementById('intro').classList.remove('active');
+  document.getElementById('quiz').classList.add('active');
+  startTime=Date.now();
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer(){
+  timerInterval=setInterval(()=>{
+    secondsLeft--;
+    const m=Math.floor(secondsLeft/60),s=secondsLeft%60;
+    const el=document.getElementById('timerVal');
+    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className='timer-val'+(secondsLeft<120?' warning':'');
+    if(secondsLeft<=0){clearInterval(timerInterval);showResult();}
+  },1000);
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[current];
+  document.getElementById('qNum').textContent=current+1;
+  document.getElementById('progressBar').style.width=`${(current/QUESTIONS.length)*100}%`;
+  document.getElementById('sectionLabel').textContent=q.section;
+  const cb=document.getElementById('caseBox');
+  if(q.caseText){cb.style.display='block';cb.innerHTML='<strong>📋 Caso Clínico:</strong> '+q.caseText;}
+  else cb.style.display='none';
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedbackBox').style.display='none';
+  document.getElementById('btnNext').style.display='none';
+  answered=false;
+  const keys=['A','B','C','D'];
+  const list=document.getElementById('optionsList');
+  list.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    btn.innerHTML=`<span class="option-key">${keys[i]}</span><span>${opt}</span>`;
+    btn.onclick=()=>selectAnswer(i,btn);
+    list.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx,btn){
+  if(answered)return;
+  answered=true;
+  const q=QUESTIONS[current];
+  document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
+  const correct=idx===q.ans;
+  if(correct)score++;
+  btn.classList.add(correct?'correct':'wrong');
+  document.querySelectorAll('.option-btn')[q.ans].classList.add('correct');
+  const fb=document.getElementById('feedbackBox');
+  fb.style.display='block';
+  fb.className='feedback-box '+(correct?'correct':'wrong');
+  document.getElementById('feedbackTitle').textContent=correct?'✅ ¡Correcto!':'❌ Incorrecto';
+  document.getElementById('feedbackText').textContent=q.fb;
+  reviewData.push({q:q.q,correct,chosen:q.opts[idx],right:q.opts[q.ans]});
+  const btnN=document.getElementById('btnNext');
+  btnN.style.display='block';
+  btnN.textContent=current<QUESTIONS.length-1?'Siguiente pregunta →':'Ver resultado →';
+}
+
+function nextQuestion(){
+  current++;
+  if(current>=QUESTIONS.length){clearInterval(timerInterval);showResult();}
+  else renderQuestion();
+}
+
+function showResult(){
+  usedSeconds=Math.floor((Date.now()-startTime)/1000);
+  document.getElementById('quiz').classList.remove('active');
+  document.getElementById('result').classList.add('active');
+  const pct=Math.round((score/QUESTIONS.length)*100);
+  const sn=document.getElementById('scoreNum');
+  sn.textContent=`${score}/${QUESTIONS.length}`;
+  sn.style.color=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';
+  let medal,label;
+  if(pct>=90){medal='🏆';label='¡Excelente! Dominio avanzado — listo para la prueba.';}
+  else if(pct>=70){medal='🥇';label='¡Muy bien! Conocimiento sólido de fisiología cardíaca.';}
+  else if(pct>=50){medal='🥈';label='Bien, hay puntos a reforzar antes de la prueba.';}
+  else{medal='📚';label='Necesitas revisar el contenido — vuélvelo a intentar.';}
+  document.getElementById('medalEmoji').textContent=medal;
+  document.getElementById('scoreLabel').textContent=label;
+  const bar=document.getElementById('perfBar');
+  bar.style.background=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';
+  setTimeout(()=>bar.style.width=pct+'%',100);
+  document.getElementById('statCorrect').textContent=score;
+  document.getElementById('statWrong').textContent=QUESTIONS.length-score;
+  const m=Math.floor(usedSeconds/60),s=usedSeconds%60;
+  document.getElementById('statTime').textContent=`${m}m ${s}s`;
+  const list=document.getElementById('reviewList');
+  list.innerHTML='';
+  reviewData.forEach((r,i)=>{
+    const div=document.createElement('div');
+    div.className='review-item '+(r.correct?'ok':'err');
+    div.innerHTML=`<span style="flex-shrink:0">${r.correct?'✅':'❌'}</span><div><strong>P${i+1}:</strong> ${r.q.substring(0,90)}...<br><span style="font-size:.82rem;color:${r.correct?'var(--green)':'var(--red)'}">${r.correct?'Correcto':'Respondido: '+r.chosen.substring(0,60)}</span></div>`;
+    list.appendChild(div);
+  });
+}
+
+function restart(){
+  current=0;score=0;answered=false;secondsLeft=1800;reviewData=[];
+  clearInterval(timerInterval);
+  document.getElementById('result').classList.remove('active');
+  document.getElementById('intro').classList.add('active');
+}
+</script>
+</body>
+</html>
