@@ -72,7 +72,7 @@ a{color:inherit;}
 }
 .hero-badge b{color:var(--gold);}
 
-/* PULSE DIVIDER — elemento de assinatura: linha de ECG marcando a progressão entre semestres */
+/* PULSE DIVIDER */
 .pulse-divider{width:100%;max-width:1000px;margin:36px auto;padding:0 24px;}
 .pulse-divider svg{width:100%;height:36px;display:block;}
 .pulse-divider path{
@@ -331,7 +331,9 @@ function buildAccessIndex(data){
         });
       }
       if(m.simulado.disponivel && m.simulado.arquivo){
-        itens.push({nome:'Simulado - '+m.nome, url:m.simulado.arquivo});
+        m.simulado.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
+          itens.push({nome:'Simulado - '+m.nome+(i>0?' (parte '+(i+1)+')':''), url:arq});
+        });
       }
       if(itens.length){
         idx[base+'-resumo'] = itens.filter(it=>it.nome.startsWith('Resumo'));
@@ -340,7 +342,6 @@ function buildAccessIndex(data){
         todosArquivos.push(...itens);
       }
     });
-    const itensSemestre = (idx[sem.slug+'-combo']) ? [] : [];
   });
   // combo por semestre = soma de tudo disponivel daquele semestre
   data.semestres.forEach(sem=>{
@@ -434,8 +435,6 @@ fetch('./catalogo.json')
     document.getElementById('catalogo').innerHTML = '<p style="text-align:center;color:var(--muted)">Não foi possível carregar o catálogo. Verifique se o catalogo.json está no mesmo diretório.</p>';
   });
 
-/* MODAL DE ACESSO — checagem por email contra a planilha publicada como CSV.
-   Troque ACESSOS_CSV_URL pela URL de "Publicar na web" (formato CSV) da sua planilha "Acessos". */
 const ACESSOS_CSV_URL = "https://docs.google.com/spreadsheets/d/1gElYiuzWI0JbupCtxCdj9p_P1xu78LwjsargG2cTa5E/export?format=csv&gid=0";
 
 document.getElementById('acessoBtn').onclick = ()=>document.getElementById('modalBg').classList.add('show');
