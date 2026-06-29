@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Microbiología — Mycobacterium tuberculosis</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #1c2128; --border: #30363d;
+  --green: #3fb950; --green-dim: #1a4a23; --red: #f85149; --red-dim: #4a1a1a;
+  --yellow: #d29922; --yellow-dim: #3d2c00; --blue: #58a6ff; --blue-dim: #0d2144;
+  --amber: #e3b341; --amber-dim: #3d2e00;
+  --text: #e6edf3; --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; min-height: 100vh; }
+.header { border-bottom: 1px solid var(--border); padding: 24px 32px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+.header-badge { font-family: var(--mono); font-size: 11px; background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); border-radius: 4px; padding: 3px 8px; letter-spacing: .08em; text-transform: uppercase; }
+.header h1 { font-size: 16px; font-weight: 600; }
+.header-sub { font-size: 13px; color: var(--muted); font-family: var(--mono); margin-left: auto; }
+.progress-bar { height: 3px; background: var(--border); }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--red)); transition: width .4s ease; }
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+.caso-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 20px 24px; border-bottom: none; }
+.bacteria-tag { font-family: var(--mono); font-size: 11px; color: var(--amber); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s; }
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num { font-family: var(--mono); font-size: 12px; color: var(--amber); background: var(--amber-dim); border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px; }
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">EXAMEN FINAL</span>
+  <h1>Microbiología — Casos Clínicos</h1>
+  <span class="header-sub">Micobacterias · 1 caso</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+
+<div class="container">
+
+  <div class="caso-header">
+    <div class="bacteria-tag">Bacilo Ácido-Alcohol Resistente (BAAR) · Aerobio estricto · DOTS</div>
+    <div class="caso-title">Mycobacterium tuberculosis</div>
+    <div class="caso-meta">Paciente: Varón, 38 años · Servicio: Neumología/Infectología · Nivel: ★★★★★</div>
+  </div>
+
+  <div class="caso-body">
+    <div class="section-label">Presentación clínica</div>
+    <div class="caso-text">
+      Varón de 38 años, inmigrante de zona endémica de tuberculosis, con antecedentes de <strong>VIH diagnosticado hace 2 años, actualmente sin tratamiento antirretroviral</strong>. Acude por <strong>tos productiva con esputo hemoptoico de 3 meses de evolución, fiebre vespertina de 38.2°C, sudoración nocturna empapante y pérdida de 12 kg en 4 meses</strong>. Refiere contacto frecuente con un familiar que fue diagnosticado con TB hace 6 meses.
+      <br><br>
+      Examen físico: paciente adelgazado, febril (38.2°C), FC 96 lpm. Auscultación pulmonar: <strong>crepitantes y broncofonía en ápice pulmonar derecho</strong>. Sin adenopatías periféricas. Sin signos meníngeos. CD4: <strong>180 células/mm³</strong>.
+      <br><br>
+      Rx tórax: <strong>infiltrado apical derecho con cavitación y nódulos satélites</strong>. Baciloscopia de esputo (Ziehl-Neelsen): <strong>bacilos ácido-alcohol resistentes (BAAR) positivos 3+ (abundantes)</strong>. Cultivo en Löwenstein-Jensen: colonias rugosas, crema/beige, de crecimiento lento (6 semanas). Test de niacina positivo, reducción de nitratos positiva.
+    </div>
+
+    <div class="section-label">Datos de laboratorio</div>
+    <div class="dados-grid">
+      <div class="dado"><div class="dado-label">BAAR (Ziehl-Neelsen)</div><div class="dado-valor anormal">Positivo 3+</div></div>
+      <div class="dado"><div class="dado-label">CD4</div><div class="dado-valor anormal">180 células/mm³</div></div>
+      <div class="dado"><div class="dado-label">Rx tórax</div><div class="dado-valor anormal">Cavitación apical</div></div>
+      <div class="dado"><div class="dado-label">Cultivo LJ</div><div class="dado-valor anormal">6 semanas</div></div>
+      <div class="dado"><div class="dado-label">Pérdida de peso</div><div class="dado-valor anormal">12 kg / 4 meses</div></div>
+      <div class="dado"><div class="dado-label">Test niacina</div><div class="dado-valor anormal">Positivo</div></div>
+      <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">38.2°C vespertina</div></div>
+      <div class="dado"><div class="dado-label">VIH</div><div class="dado-valor anormal">Sin TAR</div></div>
+    </div>
+  </div>
+
+  <div class="perguntas-section">
+    <div class="section-label">Preguntas del caso</div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">01</span>
+        <span class="pergunta-texto">¿Cuál es el diagnóstico y qué características microbiológicas hacen único a M. tuberculosis entre las bacterias?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">Diagnóstico: <strong>tuberculosis pulmonar activa por Mycobacterium tuberculosis</strong> en paciente VIH+. Características microbiológicas únicas: 1) <strong>Ácido-alcohol resistencia (BAAR)</strong>: pared celular muy rica en ácidos micólicos (lípidos de cadena larga) que retienen la fucsina básica con calor incluso tras decoloración con alcohol-ácido (tinción de Ziehl-Neelsen). 2) <strong>Crecimiento lento</strong>: tiempo de duplicación de 15-20 horas (vs. 20 min de E. coli) → colonias visibles en 3-8 semanas. 3) <strong>Aerobio estricto</strong>: predilección por tejidos con alta pO₂ (ápices pulmonares). 4) <strong>Pared celular cerosa</strong>: resistente a desecación, ácidos, álcalis y muchos desinfectantes. 5) <strong>Parásito intracelular facultativo</strong>: sobrevive en macrófagos.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">02</span>
+        <span class="pergunta-texto">¿Qué es la tinción de Ziehl-Neelsen y cómo se realiza? ¿Por qué los BAAR son resistentes a la decoloración?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">La tinción de <strong>Ziehl-Neelsen</strong> se realiza en 3 pasos: 1) <strong>Fucsina fenicada con calor</strong>: el calor ayuda a la penetración del colorante a través de la pared cerosa rica en lípidos → los bacilos se tiñen de rojo. 2) <strong>Decoloración con alcohol-ácido</strong> (HCl 3% en etanol): en bacterias comunes elimina el colorante; en micobacterias, los <strong>ácidos micólicos</strong> (ácidos grasos de cadena muy larga C₆₀-C₉₀) forman una barrera hidrofóbica impermeable que retiene la fucsina → permanecen rojos. 3) <strong>Contratinción con azul de metileno</strong>: tiñe el fondo y otras bacterias de azul. Resultado: BAAR = bacilos rojos sobre fondo azul. La "ácido-alcohol resistencia" se debe exclusivamente a los ácidos micólicos de la pared.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">03</span>
+        <span class="pergunta-texto">¿Cuál es la patogenia de la tuberculosis primaria y post-primaria? ¿Qué es el complejo de Ghon?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto"><strong>TB primaria</strong>: primer contacto con M. tuberculosis. Las partículas infecciosas (núcleos de Wells, &lt;5 μm) llegan a los alvéolos → fagocitadas por macrófagos alveolares → la bacteria sobrevive y se multiplica intracelularmente inhibiendo la fusión fagosoma-lisosoma. Respuesta: inmunidad celular (CD4+ Th1, IFN-γ) → macrófagos activados → formación del <strong>granuloma tuberculoso</strong> con necrosis caseosa central. <strong>Complejo de Ghon</strong>: foco de Ghon (lesión parenquimatosa primaria, generalmente lóbulos inferiores/medios) + adenopatía hiliar ipsilateral = complejo primario. Habitualmente se cura con calcificación. <strong>TB post-primaria (reactivación)</strong>: reactivación por inmunodepresión → lesiones en <strong>ápices pulmonares</strong> (alta pO₂) con cavitación (como este caso).</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">04</span>
+        <span class="pergunta-texto">¿Cuál es el esquema de tratamiento estándar de la tuberculosis y por qué se usan 4 fármacos inicialmente?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">Esquema estándar <strong>DOTS (Directly Observed Treatment Short-course)</strong>: <strong>Fase intensiva (2 meses)</strong>: <strong>HRZE</strong> = Isoniazida (H) + Rifampicina (R) + Pirazinamida (Z) + Etambutol (E) diario. <strong>Fase de consolidación (4 meses)</strong>: HR diario. Total: 6 meses. Se usan 4 fármacos porque: 1) M. tuberculosis tiene mutaciones espontáneas de resistencia (~1/10⁶ bacilos). 2) En cavidades pulmonares hay &gt;10⁸ bacilos. 3) La combinación de 4 fármacos previene la selección de mutantes resistentes (probabilidad de resistencia simultánea a 4 fármacos: 10⁻²⁴). 4) Cada fármaco actúa en diferentes poblaciones bacterianas (activas, metabólicamente latentes, intracelulares).</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">05</span>
+        <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de M. tuberculosis y cómo evade la respuesta inmune?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">1. <strong>Pared celular cerosa (ácidos micólicos)</strong>: resistencia a fagocitosis, digestión lisosomal y antibióticos. 2. <strong>Cord factor (trehalosa dimicolato)</strong>: inhibe la migración de leucocitos, tóxico para mitocondrias, estimula formación de granuloma. 3. <strong>Inhibición de la fusión fagosoma-lisosoma</strong>: la bacteria impide que el fagosoma madure y se fusione con el lisosoma → sobrevive y se multiplica dentro del macrófago. 4. <strong>Lipoarabinomanano (LAM)</strong>: inhibe la activación de macrófagos por IFN-γ, suprime la respuesta Th1. 5. <strong>Proteínas de choque térmico</strong>: respuesta adaptativa al estrés. 6. <strong>Catalasa-peroxidasa (KatG)</strong>: neutraliza radicales libres de oxígeno del macrófago. La supervivencia intracelular es la clave de su patogenicidad.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">06</span>
+        <span class="pergunta-texto">¿Qué es la tuberculosis multirresistente (TB-MDR) y la extremadamente resistente (TB-XDR)?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto"><strong>TB-MDR</strong>: resistente al menos a <strong>isoniazida y rifampicina</strong> (los 2 fármacos más potentes de primera línea). Causas: tratamiento irregular, dosis inadecuadas, mala adherencia. Tratamiento: esquemas de segunda línea (fluoroquinolonas, bedaquilina, linezolid, amikacina) por 18-24 meses. <strong>TB-XDR (pre-XDR nueva definición OMS 2021)</strong>: TB-MDR + resistencia a cualquier fluoroquinolona + al menos un fármaco de segunda línea inyectable. <strong>TB-XDR</strong>: TB-MDR + resistente a fluoroquinolonas + bedaquilina y/o linezolid. Opciones muy limitadas, mortalidad muy alta. Prevalencia mundial de TB-MDR: ~3.3% de casos nuevos y 18% de casos previamente tratados. Crisis global de salud pública.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">07</span>
+        <span class="pergunta-texto">¿Cómo afecta el VIH a la tuberculosis y por qué este paciente tiene mayor riesgo de formas graves?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">VIH y TB son la peor combinación de coinfección: 1) VIH destruye <strong>linfocitos CD4+</strong> (Th1), que son esenciales para la respuesta inmune antituberculosa (producción de IFN-γ, activación de macrófagos, formación de granuloma). 2) CD4 &lt;200/mm³: riesgo de <strong>TB diseminada</strong> (miliar, meníngea, extrapulmonar). 3) CD4 &lt;350/mm³: riesgo de <strong>reactivación</strong> de TB latente 10% anual (vs. 10% a lo largo de la vida en inmunocompetentes). 4) TB con VIH tiene mayor mortalidad, mayor tasa de recaída, presentaciones atípicas (sin cavitación, sin positividad en BAAR en esputo). 5) La interacción farmacológica entre rifampicina y antirretrovirales complica el manejo. Siempre iniciar TAR en TB/VIH.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">08</span>
+        <span class="pergunta-texto">¿Qué es la prueba de tuberculina (PPD/Mantoux) y cuáles son sus limitaciones?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">La prueba de <strong>Mantoux (PPD)</strong> consiste en la inyección intradérmica de 0.1 mL de derivado proteico purificado de M. tuberculosis. Lectura a las 48-72h: se mide la induración (no el eritema). <strong>Positivo</strong>: ≥10mm (en inmunocompetentes y grupos de riesgo), ≥5mm en VIH+ o contactos recientes. Indica respuesta inmune celular previa (infección o vacunación BCG). <strong>Limitaciones</strong>: 1) No diferencia infección activa de latente. 2) <strong>Falsos positivos</strong>: vacunación BCG, micobacterias no tuberculosas. 3) <strong>Falsos negativos</strong>: VIH con CD4 bajo (anergia), desnutrición, corticoides, TB miliar, &lt;6 semanas post-infección. En VIH/inmunosuprimidos se prefiere <strong>IGRA (QuantiFERON-TB Gold)</strong>: menos afectado por BCG y más específico.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">09</span>
+        <span class="pergunta-texto">¿Cuáles son las principales formas de tuberculosis extrapulmonar y en qué pacientes se presentan?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">TB extrapulmonar (más frecuente en VIH y niños): 1) <strong>TB ganglionar</strong>: más frecuente forma extrapulmonar, adenopatías cervicales (escrófula), fistulización. 2) <strong>TB meníngea</strong>: grave, mortalidad alta, secuelas neurológicas, LCR con linfocitos + glucosa baja + proteínas altas. 3) <strong>TB miliar</strong>: diseminación hematógena → pequeños nódulos en todos los órganos (aspecto de "mijo" en Rx), forma más grave, frecuente en CD4&lt;100. 4) <strong>TB pleural</strong>: derrame exudativo con predominio de linfocitos, ADA elevada. 5) <strong>TB osteoarticular</strong>: mal de Pott (vértebras), artritis. 6) <strong>TB genitourinaria</strong>: piuria estéril (leucocitos sin bacterias en cultivo convencional). 7) <strong>TB pericárdica</strong>: pericarditis constrictiva.</div>
+      </div>
+    </div>
+
+    <div class="pergunta-item">
+      <div class="pergunta-header" onclick="toggleGabarito(this)">
+        <span class="pergunta-num">10</span>
+        <span class="pergunta-texto">¿Qué es la vacuna BCG, a quién se administra y cuáles son sus limitaciones?</span>
+        <span class="pergunta-toggle">▼</span>
+      </div>
+      <div class="gabarito">
+        <div class="gabarito-label">✓ Respuesta esperada</div>
+        <div class="gabarito-texto">La <strong>BCG (Bacillus Calmette-Guérin)</strong> es una vacuna de cepa atenuada de <strong>Mycobacterium bovis</strong>. <strong>Administración</strong>: intradérmica, al nacimiento o en el primer mes de vida (programa nacional en países endémicos). <strong>Eficacia</strong>: 70-80% de protección contra TB meníngea y miliar en niños (formas graves). Eficacia variable contra TB pulmonar en adultos (0-80% según zona geográfica). <strong>Limitaciones</strong>: 1) No previene la infección por M. tuberculosis. 2) Eficacia contra TB pulmonar en adultos incierta. 3) Produce PPD positivo (interfiere con diagnóstico por Mantoux). 4) <strong>Contraindicada en inmunosuprimidos</strong> (VIH con CD4 bajo, corticoides) — riesgo de BCGitis diseminada. La BCG es una de las vacunas más administradas en el mundo, incluida en el PAI (Programa Ampliado de Inmunización) de Paraguay y Brasil.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleGabarito(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

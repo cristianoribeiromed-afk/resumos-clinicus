@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Microbiología — Cocos Gram Negativos</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a23;
+  --red: #f85149;
+  --red-dim: #4a1a1a;
+  --yellow: #d29922;
+  --yellow-dim: #3d2c00;
+  --blue: #58a6ff;
+  --blue-dim: #0d2144;
+  --purple: #bc8cff;
+  --purple-dim: #2d1a4a;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; min-height: 100vh; }
+.header { border-bottom: 1px solid var(--border); padding: 24px 32px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+.header-badge { font-family: var(--mono); font-size: 11px; background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple); border-radius: 4px; padding: 3px 8px; letter-spacing: .08em; text-transform: uppercase; }
+.header h1 { font-size: 16px; font-weight: 600; color: var(--text); }
+.header-sub { font-size: 13px; color: var(--muted); font-family: var(--mono); margin-left: auto; }
+.progress-bar { height: 3px; background: var(--border); width: 100%; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--red)); transition: width .4s ease; }
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill { font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all .2s; }
+.pill:hover { border-color: var(--purple); color: var(--purple); }
+.pill.active { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.caso-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 20px 24px; border-bottom: none; }
+.bacteria-tag { font-family: var(--mono); font-size: 11px; color: var(--purple); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s; }
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num { font-family: var(--mono); font-size: 12px; color: var(--purple); background: var(--purple-dim); border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px; }
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--purple); color: #fff; border-color: var(--purple); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">EXAMEN FINAL</span>
+  <h1>Microbiología — Casos Clínicos</h1>
+  <span class="header-sub">Cocos Gram (−) · 2 casos</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:50%"></div></div>
+
+<div class="container">
+  <div class="nav-pills" id="navPills">
+    <div class="pill active" onclick="irCaso(0)">N. gonorrhoeae</div>
+    <div class="pill" onclick="irCaso(1)">N. meningitidis</div>
+  </div>
+
+  <!-- CASO 1: Neisseria gonorrhoeae -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (−) · Diplococo · Intracelular · ITS</div>
+      <div class="caso-title">Neisseria gonorrhoeae</div>
+      <div class="caso-meta">Paciente: Varón, 26 años · Servicio: Urología/ITS · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 26 años, sin antecedentes patológicos, acude a consulta por <strong>secreción uretral purulenta amarillo-verdosa abundante y disuria intensa de 5 días de evolución</strong>. Refiere relación sexual sin protección con una pareja nueva hace 10 días. Niega fiebre, dolor articular o lesiones cutáneas.
+        <br><br>
+        Examen físico: <strong>secreción purulenta visible en meato uretral</strong>, sin adenopatías inguinales palpables, sin lesiones en piel ni mucosas. Testículos normales, sin dolor a la palpación epididimaria. Temperatura 36.8°C.
+        <br><br>
+        Tinción de Gram de la secreción uretral: <strong>diplococos Gram negativos en forma de granos de café (riñón) intracelulares en leucocitos polimorfonucleares</strong>. Cultivo en ágar Thayer-Martin: colonias oxidasa positivas, catalasa positiva, fermentación de glucosa únicamente.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Gram uretral</div><div class="dado-valor anormal">Diplococos GN intracel.</div></div>
+        <div class="dado"><div class="dado-label">Medio de cultivo</div><div class="dado-valor anormal">Thayer-Martin</div></div>
+        <div class="dado"><div class="dado-label">Oxidasa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Fermentación</div><div class="dado-valor anormal">Solo glucosa</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor normal">36.8°C</div></div>
+        <div class="dado"><div class="dado-label">VIH/Sífilis</div><div class="dado-valor anormal">Pendiente</div></div>
+        <div class="dado"><div class="dado-label">Clamidia NAAT</div><div class="dado-valor anormal">Pendiente</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor normal">12 mg/L</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y qué hallazgo del Gram es patognomónico de esta infección?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>uretritis gonocócica</strong> por Neisseria gonorrhoeae. El hallazgo patognomónico en el Gram es la presencia de <strong>diplococos Gram negativos en forma de "granos de café" (riñón) localizados intracelularmente dentro de leucocitos PMN</strong>. Esta localización intracelular es clave: N. gonorrhoeae sobrevive y se multiplica dentro de los neutrófilos gracias a sus mecanismos de evasión. Sensibilidad del Gram en uretritis masculina sintomática: ~95%.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Por qué se usa el ágar Thayer-Martin para cultivar N. gonorrhoeae? ¿Qué contiene?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El ágar Thayer-Martin es un <strong>medio selectivo y enriquecido</strong> para Neisseria patógenas. Contiene: base de ágar chocolate (eritrocitos lisados que aportan hemina y NAD), más antibióticos selectivos: <strong>vancomicina</strong> (inhibe Gram +), <strong>colistina</strong> (inhibe Gram − no patógenos), <strong>nistatina</strong> (inhibe hongos) y <strong>trimetoprim</strong> (inhibe Proteus). Así elimina la flora contaminante y permite el crecimiento exclusivo de Neisseria patógenas. N. gonorrhoeae requiere CO₂ al 5% (capnofílica) y temperatura de 35-37°C.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cómo se diferencia N. gonorrhoeae de N. meningitidis en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambas son oxidasa (+), catalasa (+), diplococos Gram (−). La diferencia clave es el <strong>patrón de fermentación de azúcares</strong>: <strong>N. gonorrhoeae fermenta SOLO glucosa</strong>. <strong>N. meningitidis fermenta glucosa Y maltosa</strong>. N. lactamica fermenta glucosa, maltosa y lactosa. Regla mnemotécnica: "Gonorrea solo con Glucosa; Meningitis con Maltosa también". Además: N. gonorrhoeae no tiene cápsula, N. meningitidis sí.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de N. gonorrhoeae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Pili (fimbrias)</strong>: adhesión a células epiteliales no ciliadas, variación antigénica (evita inmunidad). 2. <strong>Proteína Opa (II)</strong>: adhesión y penetración celular, invasión de PMN. 3. <strong>Proteína Por (porina, proteína I)</strong>: forma canales en membrana, inhibe fusión fagosoma-lisosoma (sobrevive intracelularmente). 4. <strong>IgA proteasa</strong>: destruye IgA secretora de mucosas. 5. <strong>LOS (lipooligosacárido)</strong>: endotoxina, daño tisular, similar al LPS pero sin cadena O. 6. <strong>Variación antigénica de pili y Opa</strong>: evasión inmune.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección actual para la gonorrea no complicada y por qué ha cambiado en los últimos años?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Tratamiento actual (OMS/CDC): <strong>ceftriaxona 500mg IM dosis única</strong> (o 1g si peso &gt;150kg). Ha cambiado porque N. gonorrhoeae desarrolló resistencia progresiva: primero a <strong>penicilina</strong> (betalactamasas plasmídicas), luego a <strong>tetraciclinas</strong>, luego a <strong>fluoroquinolonas</strong> (mutaciones en ADN girasa), y hay cepas con resistencia emergente a cefalosporinas orales. Por esto se usa ceftriaxona IM (concentraciones más altas). Siempre tratar también para Chlamydia (coinfección en 20-40%): azitromicina 1g VO o doxiciclina 7 días.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Qué es la enfermedad gonocócica diseminada (EGD) y cómo se presenta?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La EGD ocurre cuando N. gonorrhoeae invade la sangre (bacteriemia gonocócica), más frecuente en mujeres (infección cervical silente). Presentación clásica: <strong>tríada de artritis-dermatitis-tenosinovitis</strong>: 1) <strong>Artritis séptica</strong> (mono u oligoarticular, grandes articulaciones), 2) <strong>Lesiones cutáneas pustulosas/necróticas</strong> en extremidades (5-20 lesiones), 3) <strong>Tenosinovitis migratoria</strong>. Factores predisponentes: déficit de complemento (C5-C9), menstruación, embarazo. Tratamiento: ceftriaxona IV 1g/día por 7 días.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué es la oftalmía neonatal gonocócica y cómo se previene?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La oftalmía neonatal es una conjuntivitis purulenta grave que ocurre en las primeras <strong>24-48 horas de vida</strong> por contagio durante el parto vaginal a través de cuello uterino materno infectado. Puede causar <strong>ceguera</strong> si no se trata. Prevención: <strong>profilaxis ocular neonatal universal</strong> con eritromicina 0.5% ungüento oftálmico (o nitrato de plata 1% — método de Credé) al nacer. Tratamiento si ocurre: ceftriaxona 25-50mg/kg IV dosis única. La madre debe ser tratada también.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Cuáles son las complicaciones de la gonorrea no tratada en hombres y mujeres?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>En hombres</strong>: epididimitis (dolor testicular, induración), orquitis, estrechez uretral, infertilidad masculina (obstrucción). <strong>En mujeres</strong>: enfermedad pélvica inflamatoria (EPI) — salpingitis, endometritis, ooforitis — con riesgo de: infertilidad tubárica (obstrucción por cicatrices), embarazo ectópico, dolor pélvico crónico. La EPI es la complicación más importante y frecuente (15-20% de mujeres con gonorrea no tratada). Síndrome de Fitz-Hugh-Curtis: perihepatitis por extensión abdominal.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Por qué N. gonorrhoeae no tiene cápsula y qué implicaciones tiene esto?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">A diferencia de N. meningitidis, N. gonorrhoeae <strong>carece de cápsula polisacárida</strong>. Implicaciones: 1) Es más susceptible a la fagocitosis en bacteriemia (por eso la EGD es menos frecuente que la meningococcemia), 2) No tiene inmunización basada en polisacáridos capsulares (a diferencia de la meningitis), 3) Depende más de otros mecanismos de evasión (pili, proteínas Opa, IgA proteasa, inhibición de fusión fagolisosoma). 4) No existe vacuna efectiva disponible actualmente contra N. gonorrhoeae.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué otras ITS deben descartarse en este paciente y por qué?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Deben solicitarse: 1) <strong>Chlamydia trachomatis</strong> (NAAT): coinfección en 20-40% de casos, causa uretritis no gonocócica, asintomática frecuentemente. 2) <strong>Sífilis</strong> (RPR/VDRL + confirmación con FTA-ABS): período de incubación 10-90 días, puede coexistir. 3) <strong>VIH</strong> (ELISA + carga viral): las ITS ulcerativas/inflamatorias aumentan el riesgo de transmisión del VIH x3-5. 4) <strong>Hepatitis B y C</strong>: transmisión sexual posible. 5) <strong>Tricomonas vaginalis</strong>: puede coexistir. El principio es: donde hay una ITS, buscar otras.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2: Neisseria meningitidis -->
+  <div class="caso" id="caso-1">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (−) · Diplococo · Cápsula · Meningitis · Sepsis</div>
+      <div class="caso-title">Neisseria meningitidis</div>
+      <div class="caso-meta">Paciente: Adolescente, 17 años · Servicio: Urgencias/UCI · Nivel: ★★★★★</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Adolescente de 17 años, previamente sano, residente de internado universitario. Traído por sus compañeros por <strong>fiebre de 40.1°C, cefalea intensa de inicio brusco, vómitos en proyectil y rigidez de nuca</strong> de 8 horas de evolución. Sus compañeros refieren que en las últimas 2 horas comenzó a presentar <strong>manchas rojizas que no desaparecen con la presión (petequias y púrpura)</strong> en tronco y extremidades inferiores.
+        <br><br>
+        Examen físico: paciente somnoliento, desorientado. <strong>Signos de Kernig y Brudzinski positivos</strong>. Petequias confluentes en tronco, brazos y piernas evolucionando a manchas purpúricas necróticas. TA 80/50 mmHg, FC 130 lpm, FR 26 rpm, SpO₂ 92%, T° 40.1°C. Llenado capilar &gt;4 segundos.
+        <br><br>
+        LCR: <strong>turbio, presión elevada, glucosa 20 mg/dL, proteínas 320 mg/dL, leucocitos 4.200/mm³ (90% PMN)</strong>. Gram de LCR: <strong>diplococos Gram negativos intracelulares y extracelulares</strong>. Cultivo en Thayer-Martin: oxidasa (+), fermentación de glucosa y maltosa.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Glucosa LCR</div><div class="dado-valor anormal">20 mg/dL</div></div>
+        <div class="dado"><div class="dado-label">Proteínas LCR</div><div class="dado-valor anormal">320 mg/dL</div></div>
+        <div class="dado"><div class="dado-label">Leucocitos LCR</div><div class="dado-valor anormal">4.200/mm³ PMN</div></div>
+        <div class="dado"><div class="dado-label">TA</div><div class="dado-valor anormal">80/50 mmHg</div></div>
+        <div class="dado"><div class="dado-label">FC</div><div class="dado-valor anormal">130 lpm</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">40.1°C</div></div>
+        <div class="dado"><div class="dado-label">Fermentación</div><div class="dado-valor anormal">Glucosa + Maltosa</div></div>
+        <div class="dado"><div class="dado-label">Púrpura</div><div class="dado-valor anormal">No desaparece presión</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico? ¿Qué dos síndromes graves presenta simultáneamente este paciente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: infección por <strong>Neisseria meningitidis</strong>. El paciente presenta simultáneamente: 1) <strong>Meningitis bacteriana</strong>: tríada clásica (fiebre + cefalea intensa + rigidez de nuca) + signos de Kernig y Brudzinski positivos + LCR purulento con pleocitosis PMN, glucorraquia baja y proteínas elevadas. 2) <strong>Meningococcemia/Sepsis meningocócica</strong>: bacteriemia con púrpura fulminante (petequias que no desaparecen a la presión = extravasación por vasculitis y CID) + shock séptico (TA 80/50, FC 130, llenado capilar &gt;4s). Esta combinación tiene mortalidad &gt;20-30%.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuál es el significado de la púrpura que no desaparece a la presión y qué mecanismo fisiopatológico la explica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La púrpura no blanqueable indica <strong>extravasación de eritrocitos fuera de los vasos</strong> (hemorragia dérmica), no vasodilatación. Mecanismo: la endotoxina (LPS) de N. meningitidis activa masivamente la cascada de la coagulación y el complemento → <strong>CID (Coagulación Intravascular Diseminada)</strong>: microtrombos en capilares que consumen factores de coagulación y plaquetas → hemorragias. Simultáneamente, la endotoxina daña directamente el endotelio vascular. La <strong>prueba del vaso</strong> (presionar con un vaso transparente): si la mancha no blanquea = emergencia vital por meningococcemia.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Qué antibiótico debe administrarse INMEDIATAMENTE y cuándo iniciarlo?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Penicilina G sódica IV o ceftriaxona 2g IV</strong> deben administrarse <strong>ANTES de cualquier otra evaluación diagnóstica</strong> si hay sospecha clínica de meningococcemia (púrpura + fiebre). El retraso de 1 hora en el antibiótico aumenta la mortalidad significativamente. En meningitis: administrar ceftriaxona 2g IV + dexametasona 0.15mg/kg IV antes o junto con el antibiótico (reduce inflamación meníngea y secuelas). Si no hay posibilidad de PL inmediata y hay sospecha: antibiótico primero, PL después. La TC previa a la PL solo si hay focalidad neurológica.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuáles son los factores de virulencia de N. meningitidis y cómo explican la gravedad de esta infección?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Cápsula polisacárida</strong> (serotipos A, B, C, W, X, Y): principal factor antifagocítico, base de las vacunas. 2. <strong>LOS (lipooligosacárido)</strong>: potente endotoxina, activa complemento y cascada de coagulación → CID, shock. 3. <strong>Pili</strong>: adhesión a nasofaringe y barrera hematoencefálica. 4. <strong>IgA proteasa</strong>: destruye IgA secretora de mucosas nasales. 5. <strong>Proteínas de membrana externa</strong> (PorA, PorB): modulan respuesta inmune. La fulminancia se debe a la liberación masiva de LOS durante la bacteriólisis por antibióticos y por el sistema inmune.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué serotipos de N. meningitidis son más frecuentes y qué vacunas existen?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Serotipos más frecuentes: <strong>B, C, A, W, Y</strong>. Distribución geográfica: A y W en "cinturón meningítico" africano; B y C en Europa/América; W emergente en Latinoamérica. <strong>Vacunas</strong>: 1) <strong>MenACWY</strong> (conjugada tetravalente): cubre A, C, W, Y — recomendada en adolescentes, viajeros a zonas endémicas, aspirantes a umrá/hajj. 2) <strong>MenB</strong> (Bexsero/Trumenba): cubre serogrupo B (el más frecuente en Europa). 3) <strong>MenC</strong> conjugada: programa infantil en muchos países. El serogrupo B es el más difícil de vacunar (su cápsula es similar al tejido nervioso humano — autoinmunidad).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Qué es la profilaxis de contactos y quién debe recibirla en este caso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La profilaxis de contactos elimina la portación nasofaríngea en personas expuestas al caso índice. Indicada en <strong>contactos estrechos</strong>: convivientes del mismo hogar/habitación, compañeros de habitación del internado, parejas sentimentales, personas con contacto directo con secreciones orales (besos). Régimen: <strong>rifampicina 600mg c/12h x 2 días</strong> (adultos) o <strong>ciprofloxacino 500mg VO dosis única</strong> (adultos, alternativa) o <strong>ceftriaxona 250mg IM dosis única</strong> (embarazadas). Iniciar en las primeras 24h del diagnóstico. Notificación obligatoria a salud pública.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">Interprete los valores del LCR de este paciente comparando con los valores normales.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">LCR normal: glucosa 45-85 mg/dL, proteínas 15-45 mg/dL, leucocitos &lt;5/mm³ (linfocitos). Este caso: <strong>Glucosa 20 mg/dL</strong> (↓↓ — bacteria consume glucosa), <strong>Proteínas 320 mg/dL</strong> (↑↑ — inflamación e infección aumentan permeabilidad BHE), <strong>Leucocitos 4.200/mm³ con 90% PMN</strong> (↑↑↑ — respuesta inflamatoria intensa, PMN = bacteriana). El cociente glucosa LCR/glucosa sérica &lt;0.4 es criterio de meningitis bacteriana. LCR turbio por el conteo celular elevado. Este perfil es clásico de meningitis bacteriana (vs. viral: linfocitos, glucosa normal, proteínas levemente elevadas).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué los adolescentes que viven en internados o residencias universitarias tienen mayor riesgo de meningococcemia?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">N. meningitidis coloniza la <strong>nasofaringe</strong> de forma asintomática en 5-15% de la población (portadores). En internados y residencias universitarias: 1) <strong>Alta densidad de convivientes</strong> (mayor transmisión por gotas y contacto estrecho), 2) <strong>Convivencia en espacios cerrados</strong> (dormitorios, comedores), 3) <strong>Comportamientos de riesgo</strong> (fumar, besar múltiples personas), 4) <strong>Estrés e inmunosupresión relativa</strong>. Los adolescentes tienen menor inmunidad preexistente que adultos mayores. Brotes en internados son bien documentados epidemiológicamente.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuáles son las secuelas más frecuentes de la meningitis meningocócica en sobrevivientes?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Secuelas en 10-20% de sobrevivientes: 1) <strong>Hipoacusia neurosensorial</strong> (más frecuente, por inflamación del nervio auditivo y cóclea). 2) <strong>Necrosis por CID</strong>: amputaciones de dedos, manos, pies o miembros por isquemia en la púrpura fulminante. 3) <strong>Déficits neurológicos</strong>: epilepsia, déficit cognitivo, parálisis. 4) <strong>Hidrocefalia</strong>. 5) <strong>Insuficiencia suprarrenal</strong>: síndrome de Waterhouse-Friderichsen (hemorragia bilateral de suprarrenales por CID — mortalidad &gt;80%). Seguimiento auditivo y neurológico obligatorio post-alta.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué poblaciones tienen déficit del complemento y por qué son especialmente vulnerables a Neisseria?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El déficit de los componentes terminales del complemento (<strong>C5-C9, complejo de ataque a membrana — MAC</strong>) aumenta dramáticamente el riesgo de infecciones por Neisseria (meningitidis y gonorrhoeae) y puede causar episodios recurrentes. El MAC es fundamental para lisar bacterias Gram negativas con LPS (mecanismo bactericida sérico). Poblaciones vulnerables: déficit congénito de C5-C9 (autosómico recesivo), pacientes con eculizumab (terapia anti-C5 para HPN/SHUa), asplenia (también vulnerables). Estas personas deben recibir vacunación meningocócica completa y profilaxis antibiótica en algunos casos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 2</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)">Siguiente →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 2;
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+function toggleGabarito(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

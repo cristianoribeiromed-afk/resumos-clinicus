@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Microbiología — Bacilos Gram Negativos Parte 1</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #1c2128; --border: #30363d;
+  --green: #3fb950; --green-dim: #1a4a23; --red: #f85149; --red-dim: #4a1a1a;
+  --yellow: #d29922; --yellow-dim: #3d2c00; --blue: #58a6ff; --blue-dim: #0d2144;
+  --orange: #f0883e; --orange-dim: #3d1f00;
+  --text: #e6edf3; --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; min-height: 100vh; }
+.header { border-bottom: 1px solid var(--border); padding: 24px 32px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+.header-badge { font-family: var(--mono); font-size: 11px; background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange); border-radius: 4px; padding: 3px 8px; letter-spacing: .08em; text-transform: uppercase; }
+.header h1 { font-size: 16px; font-weight: 600; color: var(--text); }
+.header-sub { font-size: 13px; color: var(--muted); font-family: var(--mono); margin-left: auto; }
+.progress-bar { height: 3px; background: var(--border); width: 100%; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--yellow)); transition: width .4s ease; }
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill { font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all .2s; }
+.pill:hover { border-color: var(--orange); color: var(--orange); }
+.pill.active { background: var(--orange-dim); border-color: var(--orange); color: var(--orange); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.caso-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 20px 24px; border-bottom: none; }
+.bacteria-tag { font-family: var(--mono); font-size: 11px; color: var(--orange); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s; }
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num { font-family: var(--mono); font-size: 12px; color: var(--orange); background: var(--orange-dim); border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px; }
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--orange); color: #fff; border-color: var(--orange); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">EXAMEN FINAL</span>
+  <h1>Microbiología — Casos Clínicos</h1>
+  <span class="header-sub">Bacilos Gram (−) · Parte 1 · 5 casos</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+
+<div class="container">
+  <div class="nav-pills">
+    <div class="pill active" onclick="irCaso(0)">K. granulomatis</div>
+    <div class="pill" onclick="irCaso(1)">K. pneumoniae</div>
+    <div class="pill" onclick="irCaso(2)">P. aeruginosa</div>
+    <div class="pill" onclick="irCaso(3)">E. coli</div>
+    <div class="pill" onclick="irCaso(4)">Salmonella spp.</div>
+  </div>
+
+  <!-- CASO 1: Klebsiella granulomatis -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Intracelular · ITS · Donovanosis</div>
+      <div class="caso-title">Klebsiella granulomatis</div>
+      <div class="caso-meta">Paciente: Varón, 32 años · Servicio: Dermatología/ITS · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 32 años, oriundo de una región tropical, acude por <strong>úlceras genitales indoloras progresivas de 3 meses de evolución</strong>. Refiere que comenzaron como pequeños nódulos subcutáneos que luego se ulceraron. Tiene múltiples parejas sexuales y no usa preservativo habitualmente.
+        <br><br>
+        Examen físico: <strong>úlceras granulomatosas de bordes bien definidos, de fondo rojizo carnoso (aspecto de "carne de res"), indoloras, con tendencia a sangrar con el contacto</strong> en pene y área inguinal bilateral. Sin adenopatías inguinales palpables (pseudobubones por extensión subcutánea). Sin fiebre, sin dolor.
+        <br><br>
+        Biopsia de la lesión: <strong>células de Donovan (macrófagos con bacilos encapsulados intracelulares teñidos con Wright-Giemsa)</strong>. No crece en cultivo convencional.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Células de Donovan</div><div class="dado-valor anormal">Presentes</div></div>
+        <div class="dado"><div class="dado-label">Cultivo convencional</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">Úlcera</div><div class="dado-valor anormal">Indolora, granulomatosa</div></div>
+        <div class="dado"><div class="dado-label">Adenopatías</div><div class="dado-valor normal">Ausentes</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor normal">36.9°C</div></div>
+        <div class="dado"><div class="dado-label">RPR/VDRL</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">VIH</div><div class="dado-valor anormal">Pendiente</div></div>
+        <div class="dado"><div class="dado-label">Evolución</div><div class="dado-valor anormal">3 meses</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y cuál es el hallazgo histopatológico patognomónico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>Donovanosis (granuloma inguinal)</strong> por Klebsiella granulomatis. Hallazgo patognomónico: <strong>células de Donovan</strong> — macrófagos vacuolados que contienen numerosos bacilos encapsulados intracelulares con tinción bipolar ("aspecto de alfiler de gancho") visibles con tinción de Wright-Giemsa o Warthin-Starry en biopsia de la lesión. El microorganismo no crece en medios de cultivo convencionales (requiere cultivo en embrión de pollo o células de McCoy), por lo que el diagnóstico es histopatológico.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cómo se diferencia clínicamente la donovanosis de otras úlceras genitales (sífilis, chancroide, herpes)?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Donovanosis</strong>: úlcera indolora, granulomatosa, fondo rojo carnoso, bordes bien definidos, sin adenopatías reales (pseudobubones subcutáneos), evolución crónica progresiva. <strong>Sífilis primaria</strong>: chancro indoloro, bordes indurados, fondo limpio, adenopatías satélite, autolimitado. <strong>Chancroide (H. ducreyi)</strong>: úlcera muy dolorosa, bordes irregulares blandos, adenopatías dolorosas (bubones). <strong>Herpes genital</strong>: vesículas-úlceras múltiples muy dolorosas, recurrente. Regla: donovanosis = indolora + granulomatosa + crónica + sin adenopatías.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección y cuánto tiempo debe durar?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Tratamiento de elección: <strong>azitromicina 1g VO semanal o 500mg/día</strong> por mínimo <strong>3 semanas</strong> y hasta que las lesiones hayan cicatrizado completamente. Alternativas: doxiciclina 100mg c/12h, trimetoprim-sulfametoxazol, eritromicina o ciprofloxacino — todos por ≥3 semanas. En embarazadas: eritromicina o azitromicina (evitar doxiciclina y ciprofloxacino). La respuesta es lenta; las lesiones pueden tardar semanas en curar. Se deben tratar también las parejas sexuales.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es la distribución geográfica de la donovanosis y por qué es relevante epidemiológicamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La donovanosis es endémica en regiones tropicales y subtropicales: <strong>India, Papúa Nueva Guinea, sur de África, Brasil (nordeste), Caribe, Australia aborigen</strong>. Es una ITS rara en países desarrollados, pero emerge en inmigrantes y viajeros. Su relevancia epidemiológica: 1) Las úlceras genitales aumentan el riesgo de transmisión del VIH x3-5. 2) Es una de las 5 ITS ulcerativas clásicas (junto con sífilis, chancroide, linfogranuloma venéreo, herpes). 3) El médico debe sospecharla en pacientes de zonas endémicas.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué son los pseudobubones y por qué se forman en la donovanosis?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Los pseudobubones son <strong>masas subcutáneas en región inguinal que simulan adenopatías</strong> pero no son ganglios linfáticos inflamados. Se forman por <strong>extensión subcutánea del proceso granulomatoso</strong> desde las lesiones genitales hacia el área inguinal, sin afectación ganglionar real. A diferencia de los bubones verdaderos (chancroide, linfogranuloma venéreo) que son ganglios inflamados, los pseudobubones son tejido granulomatoso que puede ulcerarse y drenar. Esta ausencia de adenopatías reales es un dato clínico diferenciador importante.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Qué complicaciones puede presentar la donovanosis no tratada?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Complicaciones de donovanosis no tratada: 1) <strong>Destrucción tisular progresiva</strong> de genitales externos (fimosis, estenosis uretral, destrucción del pene o labios mayores). 2) <strong>Elefantiasis genital</strong>: linfedema crónico por obstrucción linfática. 3) <strong>Cicatrices y deformidades genitales</strong> permanentes. 4) <strong>Extensión extragenital</strong>: rara, puede afectar huesos, hígado, bazo (diseminación hematógena). 5) <strong>Mayor susceptibilidad al VIH</strong> por rotura de barrera mucosa. 6) En mujeres: diseminación pélvica, compromiso cervical.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Por qué K. granulomatis no crece en medios de cultivo convencionales?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">K. granulomatis es un <strong>parásito intracelular obligado</strong> (o casi obligado) que requiere células vivas para multiplicarse. No puede crecer en medios acelulares convencionales porque depende del metabolismo celular del huésped. Puede cultivarse en: <strong>embrión de pollo (saco vitelino)</strong>, cultivo en células de McCoy o líneas celulares. Por esta razón, el diagnóstico estándar es <strong>histopatológico</strong> (biopsia + tinción de Wright-Giemsa) y en los últimos años se usa <strong>PCR</strong> en tejido de biopsia, que es el método más sensible y específico disponible actualmente.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Cómo se clasifica taxonómicamente K. granulomatis y cuál es su relación con otras Klebsiella?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">K. granulomatis pertenece a la familia <strong>Enterobacteriaceae</strong>, género Klebsiella. Antes llamado Calymmatobacterium granulomatis o Donovania granulomatis. Comparte el género con K. pneumoniae y K. oxytoca, pero es muy diferente clínica y microbiológicamente: mientras K. pneumoniae y K. oxytoca son patógenos oportunistas que crecen bien en medios convencionales y causan infecciones respiratorias/urinarias, K. granulomatis es un patógeno intracelular de transmisión sexual que causa infección crónica granulomatosa. La similitud genómica justifica la reclasificación en Klebsiella.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuál es la tinción de elección para identificar las células de Donovan y cómo se procesan las muestras?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Las tinciones de elección son: <strong>Wright-Giemsa</strong> (más usada) y <strong>Warthin-Starry</strong>. Con Wright-Giemsa, las células de Donovan muestran macrófagos vacuolados con bacilos intracelulares teñidos de azul-negro con tinción bipolar en "alfiler de gancho". Procesamiento: <strong>biopsia por punción (punch biopsy)</strong> o hisopo de la úlcera aplastado entre dos portaobjetos (técnica de aplastamiento/crush prep), fijado y teñido. La biopsia formal permite mejor análisis histológico. La muestra debe tomarse del borde activo de la úlcera, no del centro necrótico.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Cuál es el impacto del VIH en la donovanosis y cómo modifica el manejo?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El VIH tiene impacto bidireccional: 1) La donovanosis <strong>facilita la transmisión del VIH</strong> al romper la barrera mucosa y concentrar células inmunes susceptibles (células CD4+) en el sitio de la úlcera. 2) El VIH <strong>empeora la donovanosis</strong>: lesiones más extensas, diseminación extragenital más frecuente, respuesta más lenta al tratamiento, mayor tasa de recaídas. Modificaciones en el manejo: añadir azitromicina al régimen (primera elección en coinfección), tratamiento más prolongado, seguimiento más frecuente, iniciar/optimizar TAR. Siempre solicitar VIH en pacientes con donovanosis.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2: Klebsiella pneumoniae -->
+  <div class="caso" id="caso-1">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Encapsulado · Nosocomial · Multirresistente</div>
+      <div class="caso-title">Klebsiella pneumoniae</div>
+      <div class="caso-meta">Paciente: Varón, 58 años · Servicio: UCI · Nivel: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 58 años, diabético tipo 2 con mal control metabólico, alcohólico crónico, ingresado en UCI hace 8 días por pancreatitis aguda severa. Actualmente intubado y ventilado. <strong>En las últimas 48 horas presenta fiebre de 39.1°C, aumento de secreciones traqueobronquiales purulentas y espesas de color marrón-rojizo ("gelatina de grosella"), deterioro del intercambio gaseoso</strong> con aumento de requerimientos de FiO₂.
+        <br><br>
+        Rx tórax: <strong>nueva consolidación en lóbulo superior derecho con imagen de abombamiento de la cisura</strong> (signo de Fleischner). BAL (lavado broncoalveolar): bacilos Gram negativos encapsulados. Cultivo: colonias mucosas en ágar, lactosa positiva, oxidasa negativa, <strong>urea positiva, indol negativo</strong>. Antibiograma: BLEE positivo.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Esputo</div><div class="dado-valor anormal">Gelatina de grosella</div></div>
+        <div class="dado"><div class="dado-label">Rx signo</div><div class="dado-valor anormal">Abombamiento cisura</div></div>
+        <div class="dado"><div class="dado-label">BLEE</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-valor anormal">Colonias mucosas</div><div class="dado-label">Cultivo</div></div>
+        <div class="dado"><div class="dado-label">Lactosa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Urea</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Indol</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.1°C</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y qué hallazgos clínicos y radiológicos son típicos de K. pneumoniae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>neumonía nosocomial/asociada a ventilación por Klebsiella pneumoniae</strong>. Hallazgos típicos: 1) Esputo <strong>"gelatina de grosella"</strong> (rojo-marrón viscoso por la abundante cápsula y hemorragia alveolar). 2) Signo de <strong>Fleischner (abombamiento de cisura)</strong>: el exudado abundante y la consolidación masiva empujan la cisura hacia abajo. 3) Colonias <strong>mucosas</strong> en cultivo (por la abundante cápsula polisacárida). 4) Factores de riesgo clásicos: alcohol, diabetes, hospitalización prolongada, ventilación mecánica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Qué son las BLEE y por qué complican el tratamiento de K. pneumoniae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>BLEE (Betalactamasas de Espectro Extendido)</strong>: enzimas que hidrolizan (destruyen) penicilinas, cefalosporinas de 1ª, 2ª, 3ª y 4ª generación y aztreonam. Codificadas por plásmidos transferibles (CTX-M, SHV, TEM). Complican el tratamiento porque: 1) Eliminan casi todos los betalactámicos orales e IV. 2) Las cepas suelen ser <strong>multirresistentes</strong> (también resistentes a quinolonas y aminoglucósidos por cotransferencia plasmídica). 3) Tratamiento de elección: <strong>carbapenémicos</strong> (imipenem, meropenem, ertapenem). Alternativas: tigeciclina, fosfomicina. Hay cepas productoras de carbapenemasas (KPC) — resistentes a todo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de K. pneumoniae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Cápsula polisacárida</strong> (serotipos K): principal factor de virulencia, antifagocítica, responsable de las colonias mucosas. 2. <strong>LPS (lipopolisacárido)</strong>: endotoxina, activa respuesta inflamatoria sistémica → shock séptico. 3. <strong>Pili tipo 1 y tipo 3</strong>: adhesión a células epiteliales de vías respiratorias y urinarias. 4. <strong>Sideróforos</strong> (aerobactina, enterobactina): captura de hierro del huésped. 5. <strong>Proteasas y lipasas</strong>: destrucción tisular. Las cepas hipervirulentas (hvKP) tienen cápsula hipermucosa (string test +), son más agresivas aún en inmunocompetentes.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección para esta neumonía por K. pneumoniae BLEE+?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Para K. pneumoniae BLEE+: <strong>carbapenémico IV</strong>: meropenem 1-2g c/8h o imipenem-cilastatina 500mg c/6h. Duración: 14-21 días para neumonía grave/VAP. Si KPC (resistente a carbapenémicos): combinaciones de: <strong>ceftazidima-avibactam</strong> (primera elección para KPC), colistina + carbapenémico, fosfomicina + carbapenémico, tigeciclina (actividad pulmonar limitada). Las inhibidores de betalactamasas clásicos (ácido clavulánico, tazobactam) NO inhiben BLEE en concentraciones clínicas. Ajuste según antibiograma siempre.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué otras infecciones graves causa K. pneumoniae fuera del pulmón?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>ITU nosocomial</strong>: especialmente en cateterizados (2ª causa tras E. coli en ITU nosocomial). 2. <strong>Bacteriemia/sepsis</strong>: alta mortalidad, especialmente con BLEE/KPC. 3. <strong>Absceso hepático primario</strong>: cepas hipervirulentas (hvKP, serotipo K1/K2) causan abscesos hepáticos en diabéticos asiáticos, con diseminación metastásica (endoftalmitis, meningitis, abscesos pulmonares). 4. <strong>Meningitis</strong> (nosocomial, neonatal). 5. <strong>Infecciones de herida quirúrgica</strong>. 6. <strong>Peritonitis</strong> (en diálisis peritoneal).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se diferencia K. pneumoniae de E. coli en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambas son enterobacterias Gram (−), lactosa (+), oxidasa (−). Diferencias: <strong>Indol</strong>: E. coli (+), K. pneumoniae (−). <strong>Movilidad</strong>: E. coli móvil (flagelos perítricos), K. pneumoniae <strong>inmóvil</strong>. <strong>Urea</strong>: K. pneumoniae (+), E. coli (−). <strong>Colonias</strong>: K. pneumoniae mucosas (cápsula), E. coli no mucosas. <strong>Voges-Proskauer</strong>: K. pneumoniae (+), E. coli (−). <strong>RM (rojo de metilo)</strong>: E. coli (+), K. pneumoniae (−). Regla: Klebsiella = Inmóvil + Indol (−) + Urea (+) + mucosa.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué medidas de control de infecciones son fundamentales para prevenir la diseminación de K. pneumoniae BLEE/KPC en UCI?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Medidas: 1) <strong>Higiene de manos</strong> estricta (agua+jabón para esporas, alcohol gel para vegetativas). 2) <strong>Precauciones de contacto</strong>: bata + guantes para todo contacto con paciente/entorno. 3) <strong>Cohorte</strong>: aislar pacientes colonizados/infectados. 4) <strong>Vigilancia activa</strong>: cultivos de vigilancia (rectal/perirectal) en pacientes de riesgo. 5) <strong>Desescalada antibiótica</strong>: evitar carbapenémicos innecesarios (presión selectiva). 6) <strong>Limpieza ambiental exhaustiva</strong>: desinfección terminal con hipoclorito. 7) Uso de catéteres con precaución (bundles de catéter).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué el alcoholismo y la diabetes son factores de riesgo para neumonía por K. pneumoniae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Alcoholismo</strong>: 1) Altera el reflejo de deglución y tos → aspiración de secreciones orofaríngeas colonizadas. 2) Deprime la función de macrófagos alveolares y neutrófilos. 3) Desnutrición → inmunosupresión. 4) Colonización orofaríngea por Gram negativos aumentada. <strong>Diabetes</strong>: 1) Hiperglucemia inhibe quimiotaxis, fagocitosis y función bactericida de neutrófilos. 2) Menor producción de citocinas proinflamatorias. 3) Mayor adherencia bacteriana a células epiteliales. 4) Neuropatía autonómica puede alterar reflejos protectores. Ambas condiciones combinadas son especialmente sinérgicas para K. pneumoniae.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Qué es el "string test" y cuándo se usa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>string test</strong> (prueba del hilo) es una prueba fenotípica para detectar cepas <strong>hipermucoviscosas</strong> de K. pneumoniae (hvKP). Se realiza tocando una colonia con un asa bacteriológica y levantándola: si forma un hilo viscoso de &gt;5mm, es <strong>string test positivo</strong> (hipermucosa). Las cepas hvKP (especialmente K1 y K2) son más virulentas, causan abscesos hepáticos primarios, endoftalmitis séptica y meningitis en pacientes aparentemente sanos, especialmente en diabéticos de origen asiático. No necesariamente son BLEE+ (pueden ser sensibles a antibióticos).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué es una carbapenemasa KPC y cuál es su importancia clínica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>KPC (Klebsiella pneumoniae Carbapenemase)</strong> es una betalactamasa clase A de Ambler que hidroliza carbapenémicos (imipenem, meropenem, ertapenem) además de todos los otros betalactámicos. Codificada por el plásmido blaKPC, fácilmente transferible. Importancia: 1) Elimina el "último recurso" terapéutico (carbapenémicos). 2) Las opciones se reducen a: ceftazidima-avibactam (inhibe KPC), colistina (nefrotóxica), tigeciclina, fosfomicina. 3) Mortalidad de bacteriemia por KPC-Kp: 40-70%. 4) Diseminación pandémica (endémica en Italia, Grecia, Israel, América Latina). Detección: test de Hodge modificado, PCR blaKPC.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 3: Pseudomonas aeruginosa -->
+  <div class="caso" id="caso-2">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · No fermentador · Oxidasa (+) · Pigmento verde</div>
+      <div class="caso-title">Pseudomonas aeruginosa</div>
+      <div class="caso-meta">Paciente: Niña, 12 años · Servicio: Pediatría/Fibrosis Quística · Nivel: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Niña de 12 años con diagnóstico de <strong>fibrosis quística</strong> desde los 2 años, en seguimiento regular. Acude a urgencias por <strong>aumento de tos productiva con esputo verde-azulado, disnea progresiva, fiebre de 38.7°C y deterioro del FEV1 en espirometría de control</strong> (caída del 20% respecto a basal). Refiere que el cuadro comenzó hace 5 días.
+        <br><br>
+        Examen físico: taquicardia 108 lpm, FR 24 rpm, SpO₂ 93%, murmullo vesicular disminuido en bases con sibilancias. Dedos en palillo de tambor. <strong>Olor característico dulce-frutal (a uva)</strong> de las secreciones.
+        <br><br>
+        Cultivo de esputo: <strong>colonias beta-hemolíticas con pigmento verde-azul (piocianina), olor a uva, oxidasa positiva, no fermenta glucosa (oxidativa)</strong>. Crece a 42°C.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Esputo color</div><div class="dado-valor anormal">Verde-azulado</div></div>
+        <div class="dado"><div class="dado-label">Pigmento</div><div class="dado-valor anormal">Piocianina (azul-verde)</div></div>
+        <div class="dado"><div class="dado-label">Oxidasa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Glucosa</div><div class="dado-valor normal">No fermenta</div></div>
+        <div class="dado"><div class="dado-label">FEV1</div><div class="dado-valor anormal">Caída 20%</div></div>
+        <div class="dado"><div class="dado-label">SpO₂</div><div class="dado-valor anormal">93%</div></div>
+        <div class="dado"><div class="dado-label">Crece a 42°C</div><div class="dado-valor anormal">Sí</div></div>
+        <div class="dado"><div class="dado-label">Olor</div><div class="dado-valor anormal">Dulce-frutal (uva)</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el agente y qué características del laboratorio son diagnósticas?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Agente: <strong>Pseudomonas aeruginosa</strong>. Características diagnósticas: 1) <strong>Piocianina</strong>: pigmento azul-verde no fluorescente patognomónico (solo P. aeruginosa lo produce). 2) <strong>Oxidasa positiva</strong>: diferencia de Enterobacteriaceae. 3) <strong>No fermenta glucosa</strong>: metabolismo oxidativo (no fermentativo). 4) Crece a <strong>42°C</strong> (diferencial de otras Pseudomonas). 5) <strong>Olor a uva/frutal</strong> por 2-aminoacetofenona. 6) Hemólisis beta. 7) También produce pioverdin (pigmento amarillo-verde fluorescente). Es el bacilo Gram (−) más oxidasa (+) + no fermentador de importancia clínica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Por qué P. aeruginosa infecta tan frecuentemente a pacientes con fibrosis quística?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">En fibrosis quística, la mutación en CFTR genera secreciones mucosas espesas y deshidratadas. Factores que favorecen P. aeruginosa: 1) <strong>Moco espeso</strong>: dificulta el aclaramiento mucociliar → acumulación de bacterias. 2) El moco hiperviscoso es un excelente substrato para el <strong>biofilm</strong> de P. aeruginosa (forma alginato). 3) <strong>Hipoxia relativa</strong> en las capas profundas del moco (favorece formas mucoídes). 4) La infección crónica por PA lleva a <strong>conversión mucoide</strong> (sobreproducción de alginato) → aún más resistente al sistema inmune y antibióticos. 5) FQ elimina mecanismos innatos de defensa pulmonar.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de P. aeruginosa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Piocianina</strong>: inhibe cilios, genera ROS, daña células epiteliales. 2. <strong>Exotoxina A</strong>: inhibe EF-2 (igual que toxina diftérica), bloquea síntesis proteica → muerte celular. 3. <strong>Exoenzimas S, T, U, Y</strong> (sistema de secreción tipo III): inyectadas directamente en células del huésped, inducen apoptosis. 4. <strong>Alginato</strong>: matriz del biofilm, antiopsónica, protege de fagocitosis y antibióticos. 5. <strong>LPS</strong>: endotoxina, shock séptico. 6. <strong>Proteasas</strong> (elastasa LasB, proteasa alcalina): destruyen elastina, IgG, componentes del complemento. 7. <strong>Flagelos y pili</strong>: movilidad y adhesión.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento antipseudomónico de elección y por qué se usa terapia combinada?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Antibióticos antipseudomónicos: <strong>piperacilina-tazobactam, ceftazidima, cefepima, carbapenémicos (imipenem, meropenem), ciprofloxacino, aminoglucósidos (amikacina, tobramicina)</strong>. Se usa terapia combinada (betalactámico + aminoglucósido o fluoroquinolona) porque: 1) P. aeruginosa tiene <strong>alta capacidad de desarrollar resistencia durante el tratamiento</strong>. 2) La combinación puede ser sinérgica. 3) Reduce riesgo de emergencia de resistencias. En FQ: tobramicina inhalada crónica (reduce carga bacteriana pulmonar). En infecciones graves: piperacilina-tazobactam IV + aminoglucósido.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué otras infecciones graves causa P. aeruginosa y en qué poblaciones?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Quemados</strong>: sepsis y destrucción de injertos (ectima gangrenosa: lesión necrótica negra por vasculitis séptica). 2. <strong>Neutropénicos</strong> (oncológicos): bacteriemia fulminante con ectima gangrenosa. 3. <strong>Otitis externa maligna</strong>: diabéticos, destrucción de hueso temporal, parálisis facial (VII par). 4. <strong>VAP (neumonía asociada a ventilación)</strong>: UCI, alta mortalidad. 5. <strong>Foliculitis por "hot tub"</strong>: agua contaminada de jacuzzi, autolimitada. 6. <strong>Queratitis</strong>: usuarios de lentes de contacto. 7. <strong>Osteomielitis</strong>: adictos a drogas IV (vértebras), heridas punzantes en pie.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cuáles son los mecanismos de resistencia antibiótica de P. aeruginosa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">P. aeruginosa tiene <strong>resistencia intrínseca y adquirida</strong>: 1) <strong>Betalactamasas</strong> (AmpC cromosómica inducible, BLEE, metalo-betalactamasas tipo VIM, IMP, NDM). 2) <strong>Bombas de eflujo</strong> (MexAB-OprM, MexXY): expulsan antibióticos de la célula activamente. 3) <strong>Pérdida de porinas OprD</strong>: impermeabilización de membrana externa → resistencia a carbapenémicos. 4) <strong>Modificación de aminoglucósidos</strong>: enzimas modificadoras (AME). 5) <strong>Mutaciones en ADN girasa/topoisomerasa IV</strong>: resistencia a fluoroquinolonas. 6) <strong>Biofilm</strong>: barrera física. Puede desarrollar resistencia durante el tratamiento por desrepresión de AmpC.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué es la ectima gangrenosa y cómo se produce?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La <strong>ectima gangrenosa</strong> es una lesión cutánea necrótica característica de la sepsis por P. aeruginosa, especialmente en neutropénicos y quemados. Morfología: pápula eritematosa → vesícula hemorrágica → úlcera necrótica con centro negro/gris y halo eritematoso. Mecanismo: P. aeruginosa invade los vasos dérmicos → vasculitis necrotizante por LPS + exotoxinas → infarto e isquemia tisular. Las bacterias son abundantes en la pared vascular (invasión directa). Puede aparecer en múltiples localizaciones. Es un signo de <strong>bacteriemia grave</strong> y tiene alta mortalidad si no se trata urgentemente con antibioticoterapia antipseudomónica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué P. aeruginosa es llamado patógeno oportunista y en qué condiciones puede infectar a personas sanas?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">P. aeruginosa es oportunista porque el sistema inmune íntegro normalmente lo elimina eficientemente. Rara vez infecta personas inmunocompetentes. Sin embargo, puede infectar a sanos en situaciones específicas: 1) <strong>Foliculitis por jacuzzi</strong> (agua caliente contaminada). 2) <strong>Otitis externa del nadador</strong> (agua + maceración). 3) <strong>Queratitis</strong> en usuarios de lentes de contacto (trauma corneal mínimo). 4) <strong>Osteomielitis por herida punzante</strong> en pie (a través de zapatilla de deporte). En todas estas situaciones hay una <strong>ruptura de barrera local</strong> que permite la entrada. Las infecciones sistémicas graves ocurren casi exclusivamente en inmunocomprometidos.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuál es la diferencia entre metabolismo fermentativo y oxidativo en bacterias Gram negativas?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Fermentativo</strong>: bacterias que degradan glucosa tanto en presencia como en ausencia de oxígeno (anaerobio facultativo). Producen ácidos mixtos, gas. Enterobacteriaceae (E. coli, Klebsiella, Salmonella). Oxidasa (−) porque tienen cadena respiratoria diferente. <strong>Oxidativo</strong>: bacterias que solo degradan glucosa en presencia de O₂ (aerobio estricto). No fermenta glucosa en anaerobiosis. P. aeruginosa es el ejemplo clásico. <strong>Oxidasa (+)</strong> porque tiene citocromo c oxidasa. En la práctica: prueba de O/F (Hugh-Leifson) distingue fermentadores (cambian en ambos tubos) de oxidadores (solo en tubo abierto).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué es el quorum sensing en P. aeruginosa y por qué es relevante clínicamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>quorum sensing (QS)</strong> es un sistema de comunicación bacteriana dependiente de densidad poblacional. P. aeruginosa produce y detecta moléculas señalizadoras (N-acil-homoserin-lactonas: 3-oxo-C12-HSL y C4-HSL). Cuando la concentración alcanza un umbral (quórum), se activa coordinadamente la expresión de: factores de virulencia (exotoxinas, proteasas, biofilm), formación de biopelícula, esporulación adaptativa. Relevancia clínica: el QS permite a P. aeruginosa "esperar" hasta tener suficiente número para atacar coordinadamente. Inhibidores del QS están en investigación como nueva estrategia anti-virulencia para tratar infecciones crónicas en FQ.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 4: Escherichia coli -->
+  <div class="caso" id="caso-3">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Enterobacteria · Lactosa (+) · Indol (+)</div>
+      <div class="caso-title">Escherichia coli</div>
+      <div class="caso-meta">Paciente: Mujer, 45 años · Servicio: Urgencias · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Mujer de 45 años, sin antecedentes relevantes, acude a urgencias por <strong>fiebre de 39.4°C, escalofríos intensos, dolor lumbar derecho con irradiación a fosa ilíaca y disuria de 4 días de evolución</strong>. Refiere haber tenido síntomas de cistitis (disuria, polaquiuria) hace una semana, que no trató.
+        <br><br>
+        Examen físico: <strong>puñopercusión renal derecha positiva (Murphy renal)</strong>, fiebre 39.4°C, FC 108 lpm, TA 100/65 mmHg, FR 22 rpm. Dolor a la palpación en fosa renal derecha.
+        <br><br>
+        Urocultivo: <strong>&gt;100.000 UFC/mL de bacilos Gram negativos, lactosa positiva, indol positivo, oxidasa negativa, motilidad positiva</strong>. Hemocultivos: 2/2 positivos con el mismo microorganismo. Antibiograma: sensible a ceftriaxona, resistente a ampicilina, sensible a fluoroquinolonas.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Urocultivo</div><div class="dado-valor anormal">&gt;100.000 UFC/mL</div></div>
+        <div class="dado"><div class="dado-label">Hemocultivos</div><div class="dado-valor anormal">2/2 positivos</div></div>
+        <div class="dado"><div class="dado-label">Indol</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Lactosa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">186 mg/L</div></div>
+        <div class="dado"><div class="dado-label">Leucocitos</div><div class="dado-valor anormal">18.600/mm³</div></div>
+        <div class="dado"><div class="dado-label">Creatinina</div><div class="dado-valor anormal">1.8 mg/dL</div></div>
+        <div class="dado"><div class="dado-label">Murphy renal</div><div class="dado-valor anormal">Positivo derecho</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico completo de este caso y qué datos lo confirman?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>pielonefritis aguda derecha complicada con bacteriemia (urosepsis) por E. coli</strong>. Datos confirmatorios: 1) Clínica de pielonefritis (fiebre + dolor lumbar + Murphy renal +). 2) Urocultivo &gt;100.000 UFC/mL E. coli. 3) <strong>Hemocultivos 2/2 positivos</strong> con mismo microorganismo (bacteriemia). 4) Criterios de sepsis: fiebre 39.4°C + taquicardia 108 + taquipnea 22 + TA 100/65 (hipotensión leve). 5) Elevación de creatinina: disfunción orgánica incipiente. La bacteriemia hace que sea una infección grave que requiere hospitalización e IV.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuáles son los patotipos de E. coli patógena y qué enfermedades causan?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>UPEC (uropatógena)</strong>: ITU, pielonefritis (este caso). Adhesinas P fimbriae (une a uroepitelio). 2. <strong>ETEC</strong>: diarrea del viajero, cólera-like (enterotoxinas LT y ST). 3. <strong>EPEC</strong>: diarrea infantil en países en desarrollo (adherencia A/E). 4. <strong>EHEC/STEC (O157:H7)</strong>: colitis hemorrágica + síndrome hemolítico urémico (toxina Shiga). 5. <strong>EIEC</strong>: disentería similar a Shigella (invasión celular). 6. <strong>EAEC</strong>: diarrea persistente en niños. 7. <strong>Meningitis neonatal</strong>: E. coli K1 (cápsula de ácido siálico). Cada patotipo tiene virulencia específica para su niche.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Qué es el síndrome hemolítico urémico (SHU) y cuál es su relación con E. coli O157:H7?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>SHU</strong> es una microangiopatía trombótica caracterizada por la tríada: <strong>anemia hemolítica microangiopática + trombocitopenia + insuficiencia renal aguda</strong>. E. coli O157:H7 (EHEC) produce <strong>toxina Shiga (Stx1, Stx2)</strong> que se absorbe en el intestino, llega al riñón y se une al receptor Gb3 en células endoteliales glomerulares → inhibición de síntesis proteica → muerte celular → microtrombos, hemólisis mecánica, fallo renal. Transmisión: carne picada poco cocinada, leche no pasteurizada, agua contaminada. Tratamiento: soporte (diálisis si necesario). <strong>CONTRAINDICADOS antibióticos y antidiarreicos</strong> (aumentan liberación de Stx).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección para esta paciente con urosepsis por E. coli?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Manejo: 1) <strong>Hospitalización</strong> (bacteriemia + hipotensión). 2) Antibioticoterapia IV empírica: <strong>ceftriaxona 1-2g IV c/24h</strong> (buena actividad vs E. coli, excelente penetración renal) o piperacilina-tazobactam. 3) Según antibiograma (sensible a ceftriaxona): mantener ceftriaxona o <strong>desescalar a fluoroquinolona oral</strong> (ciprofloxacino) al mejorar clínicamente. 4) <strong>Duración</strong>: 14 días para pielonefritis con bacteriemia. 5) Hidratación IV, control de diuresis. 6) Descartar obstrucción urinaria (eco/TC) ya que puede requerir drenaje urgente. No usar ampicilina (resistente).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuáles son los factores de virulencia de E. coli uropatógena (UPEC)?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>P fimbriae (tipo P)</strong>: se unen al antígeno P del uroepitelio y eritrocitos, permiten ascenso hasta riñón (correlacionan con pielonefritis). 2. <strong>Tipo 1 fimbriae</strong>: adhesión a uroepitelio vesical (cistitis). 3. <strong>Toxinas</strong>: hemolisina (HlyA) destruye eritrocitos y células, citotoxic necrotizing factor (CNF1). 4. <strong>Sideróforos</strong>: aerobactina, yersiniabactina (captura hierro). 5. <strong>Cápsula</strong>: antifagocítica. 6. <strong>Resistencia al suero</strong>: evita lisis por complemento. Los P fimbriae son el marcador más importante de capacidad de producir pielonefritis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Por qué E. coli es la causa más frecuente de ITU y cuáles son sus fuentes de infección?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">E. coli causa el <strong>80-85% de las ITU no complicadas</strong> porque: 1) Es el principal habitante del colon humano (flora normal). 2) Coloniza el área perineal/vaginal próxima a la uretra. 3) Sus adhesinas (P fimbriae, tipo 1) le permiten adherirse y ascender por el tracto urinario. 4) La uretra femenina corta (~4cm) facilita el ascenso. Fuentes: <strong>flora intestinal propia</strong> (endógena) en el 90% de los casos. En raras ocasiones: transmisión sexual (E. coli como ITS es poco frecuente). La resistencia a ampicilina es ahora >50% en cepas comunitarias, por eso no es primera línea.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Cómo se diferencia E. coli de otras Enterobacteriaceae en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">E. coli: <strong>indol (+)</strong> (diferencial más importante vs Klebsiella), <strong>RM (rojo de metilo) (+)</strong>, <strong>VP (Voges-Proskauer) (−)</strong>, <strong>citrato (−)</strong>, <strong>móvil</strong>, fermenta glucosa y lactosa con gas, <strong>glucuronidasa (+)</strong> (prueba rápida en medio CLED/chromogenic), forma colonias con <strong>brillo metálico verde</strong> en ágar EMB (eosina-azul de metileno) por abundante producción de ácidos. En MacConkey: colonias rosadas (lactosa +). Indol positivo = diferencial más práctico vs Klebsiella (indol −) y otros géneros.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Qué es la bacteriuria asintomática y cuándo debe tratarse?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Bacteriuria asintomática (BA): ≥100.000 UFC/mL en 2 cultivos consecutivos (o 1 en cateterizado) sin síntomas de ITU. <strong>Tratar</strong>: 1) <strong>Embarazadas</strong> (riesgo de pielonefritis y parto prematuro → tratar siempre). 2) Antes de <strong>procedimientos urológicos invasivos</strong> (RTUP, litotripsia). <strong>NO tratar</strong>: mujeres no embarazadas, ancianos institucionalizados, pacientes cateterizados crónicos, diabéticos sin síntomas, trasplantados renales estables. El tratamiento innecesario selecciona resistencias y no mejora outcomes. E. coli es la bacteria más frecuente en BA.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Por qué los antibióticos están contraindicados en la colitis por E. coli O157:H7?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Los antibióticos están <strong>contraindicados</strong> en EHEC O157:H7 porque: 1) Inducen el <strong>fago lisogénico</strong> que codifica la toxina Shiga → liberación masiva de Stx → mayor riesgo de SHU. 2) Los antibióticos lisan las bacterias, liberando grandes cantidades de Stx de una vez. 3) Estudios clínicos muestran que antibióticos aumentan x17 el riesgo de SHU. El tratamiento es <strong>soporte</strong>: hidratación IV, control electrolítico, diálisis si necesario. Evitar también antiperistálticos (prolongan contacto de toxina con mucosa). Esta es una excepción importante a la regla general de tratar infecciones bacterianas con antibióticos.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué es la diarrea del viajero y cuál es el patotipo de E. coli implicado?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La <strong>diarrea del viajero</strong> es la infección gastrointestinal más común en viajeros a países en desarrollo (>10 millones de casos/año). El principal agente es <strong>ETEC (E. coli enterotoxigénica)</strong> en 40-60% de casos. ETEC produce: <strong>toxina termoestable (ST)</strong>: activa guanilato ciclasa → ↑GMPc → secreción de Cl− y H₂O. <strong>Toxina termolábil (LT)</strong>: similar a toxina colérica → activa adenilato ciclasa → ↑AMPc → secreción masiva. Clínica: diarrea acuosa no sanguinolenta, autolimitada (3-5 días). Tratamiento: hidratación oral, azitromicina (primera línea) o fluoroquinolona. Prevención: higiene alimentaria ("hierve, cocina, pela o déjalo").</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 5: Salmonella spp. -->
+  <div class="caso" id="caso-4">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Enterobacteria · Lactosa (−) · H₂S (+)</div>
+      <div class="caso-title">Salmonella spp.</div>
+      <div class="caso-meta">Paciente: Varón, 19 años · Servicio: Medicina Interna · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 19 años, recién regresado de un viaje a zona rural de Paraguay hace 10 días. Acude por <strong>fiebre progresiva en escalera (39.5°C), cefalea frontal intensa, dolor abdominal difuso y bradicardia relativa</strong> (FC 68 lpm con T° 39.5°C). Refiere que la fiebre comenzó gradualmente hace 8 días. Niega diarrea actualmente, aunque tuvo algunos días de deposiciones blandas al inicio.
+        <br><br>
+        Examen físico: <strong>manchas rosadas en tronco (roséolas tíficas)</strong>, esplenomegalia leve, lengua saburral. Abdomen con dolor leve en fosa ilíaca derecha.
+        <br><br>
+        Hemocultivos: bacilos Gram negativos, lactosa negativa, <strong>H₂S positivo, TSI: K/AG + H₂S</strong>, oxidasa negativa, motilidad positiva. Widal: anti-O &gt;1/160, anti-H &gt;1/160.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.5°C</div></div>
+        <div class="dado"><div class="dado-label">FC (bradicardia relativa)</div><div class="dado-valor anormal">68 lpm</div></div>
+        <div class="dado"><div class="dado-label">H₂S</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Lactosa</div><div class="dado-valor normal">Negativa</div></div>
+        <div class="dado"><div class="dado-label">Widal anti-O</div><div class="dado-valor anormal">&gt;1/160</div></div>
+        <div class="dado"><div class="dado-label">Roséolas tíficas</div><div class="dado-valor anormal">Presentes</div></div>
+        <div class="dado"><div class="dado-label">Esplenomegalia</div><div class="dado-valor anormal">Presente</div></div>
+        <div class="dado"><div class="dado-label">TSI</div><div class="dado-valor anormal">K/AG + H₂S</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y qué hallazgos clínicos son patognomónicos de la fiebre tifoidea?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>fiebre tifoidea por Salmonella Typhi</strong>. Hallazgos patognomónicos: 1) <strong>Fiebre en escalera</strong>: sube gradualmente cada día (a diferencia del paludismo que es remitente). 2) <strong>Bradicardia relativa (disociación pulso-temperatura)</strong>: FC baja a pesar de fiebre alta (signo de Faget). 3) <strong>Roséolas tíficas</strong>: máculas eritematosas de 2-4mm en tronco, fugaces (24-48h), patognomónicas. 4) <strong>Esplenomegalia</strong>. 5) Lengua saburral. 6) Leucopenia (a diferencia de otras infecciones bacterianas). Triada clásica: fiebre + bradicardia relativa + roséolas.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuál es la diferencia entre Salmonella Typhi y Salmonella no tifoidea en cuanto a patogenia y clínica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>S. Typhi (y S. Paratyphi)</strong>: patógeno exclusivamente humano, causa fiebre entérica sistémica. Invade el epitelio ileal → macrófagos de placas de Peyer → bacteriemia → órganos del SRE (hígado, bazo, médula). Incubación 7-21 días. Clínica sistémica prolongada (sin diarrea prominente inicial). <strong>Salmonella no tifoidea</strong> (S. Typhimurium, S. Enteritidis, S. Newport): fuente animal (aves, huevos, reptiles). Causa gastroenteritis autolimitada 1-3 días (diarrea, vómitos, fiebre). Raramente bacteriemia (excepto en inmunocomprometidos, anemia de células falciformes, extremos de edad). No produce fiebre entérica sistémica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Qué es la prueba de Widal y cuáles son sus limitaciones diagnósticas?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La <strong>prueba de Widal</strong> detecta anticuerpos aglutinantes contra antígenos O (somático) y H (flagelar) de Salmonella. Título diagnóstico: anti-O ≥1/160 y anti-H ≥1/160 en una sola determinación (o cuadruplicación en muestras pareadas). <strong>Limitaciones</strong>: 1) <strong>Baja especificidad</strong>: reacciones cruzadas con otras salmonellas, E. coli, Brucella, dengue. 2) Puede ser negativa en los primeros 7 días (anticuerpos aún no detectables). 3) Positiva por vacunación previa. 4) Positiva en zonas endémicas sin enfermedad activa. El <strong>hemocultivo</strong> (primera semana) es el gold standard. Coprocultivo y mielocultivo también útiles. Widal es orientativa, no confirmatoria.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección para la fiebre tifoidea y cuáles son las alternativas?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Tratamiento de elección actual: <strong>fluoroquinolonas</strong> (ciprofloxacino 500mg c/12h VO x 10-14 días) en cepas sensibles. Sin embargo, la resistencia a fluoroquinolonas aumenta (cepas MDR del sur de Asia). Alternativas: <strong>ceftriaxona 2g IV/día x 7-14 días</strong> (para cepas resistentes a fluoroquinolonas), <strong>azitromicina</strong> (para cepas no complicadas). En cepas MDR: carbapenémicos. Histórico: cloranfenicol (primera elección clásica), ahora limitado por resistencia y toxicidad (anemia aplásica). Amoxicilina y TMP-SMX también usados antes, ahora alta resistencia.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuáles son las complicaciones más graves de la fiebre tifoidea no tratada?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Complicaciones graves (3ª semana de enfermedad): 1) <strong>Perforación intestinal</strong>: necrosis de placas de Peyer en íleon terminal → peritonitis → mortalidad sin cirugía >50%. Clínica: dolor abdominal brusco, peritonismo, neumoperitoneo en Rx. 2) <strong>Hemorragia intestinal</strong>: melena/rectorragia por ulceración de placas de Peyer. 3) <strong>Encefalopatía tífica</strong>: delirio, convulsiones, coma. 4) <strong>Miocarditis</strong>. 5) <strong>Hepatitis tífica</strong>. 6) <strong>Portador crónico</strong>: excreción &gt;1 año de S. Typhi en heces (colonización vesícula biliar, especialmente en litiasis biliar). Los portadores son fuente de transmisión.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cuál es la clasificación antigénica de Salmonella (esquema de Kauffmann-White)?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El esquema Kauffmann-White clasifica Salmonella según: 1) <strong>Antígeno O (somático)</strong>: polisacárido del LPS, termoestable, define el serogrupo (A, B, C1, C2, D, E...). 2) <strong>Antígeno H (flagelar)</strong>: proteína flagelina, termolábil, puede estar en fase 1 (específica) y fase 2 (inespecífica) — variación de fase. 3) <strong>Antígeno Vi (capsular)</strong>: solo en S. Typhi y S. Paratyphi C, antifagocítico. Ejemplo: S. Typhi = serogrupo D, O:9,12, H:d, Vi(+). La identificación completa: serogrupo O + fase H → nombre. La fórmula antigénica sirve para tipificación epidemiológica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Cuál es el período de mayor positividad del hemocultivo en la fiebre tifoidea y por qué?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El hemocultivo tiene mayor positividad en la <strong>primera semana de enfermedad</strong> (sensibilidad 80-90%), cuando la bacteriemia primaria es máxima (S. Typhi pasa de placas de Peyer a sangre). Medios de elección: <strong>caldo bilis verde brillante</strong> (inhibe flora contaminante, favorece Salmonella). En la segunda semana: coprocultivo (bacterias se eliminan por bilis hacia intestino). Tercera semana: urocultivo (eliminación renal). El mielocultivo tiene la mayor sensibilidad en cualquier semana (90-95%) porque S. Typhi sobrevive en macrófagos de médula, pero es invasivo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Cuál es el papel de las aves de corral y huevos en la transmisión de Salmonella no tifoidea?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Salmonella Enteritidis coloniza el <strong>ovario</strong> de las gallinas, infectando el huevo antes de la formación de la cáscara (<strong>transmisión transovárica</strong>), por lo que el interior del huevo puede estar contaminado aunque la cáscara esté intacta. S. Typhimurium contamina los huevos externamente (cloaca). Las aves de corral también se contaminan en mataderos (contaminación cruzada). Riesgos: huevos crudos/poco cocidos (mayonesa casera, mousse), pollo poco cocinado. Prevención: cocción completa (>70°C en el centro), refrigeración, higiene de manos. Principal fuente de brotes de gastroenteritis por Salmonella en países desarrollados.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cómo se diferencia Salmonella de Shigella en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambas son Gram (−), lactosa (−), oxidasa (−). Diferencias: <strong>H₂S</strong>: Salmonella <strong>(+)</strong>, Shigella (−). <strong>Motilidad</strong>: Salmonella <strong>móvil</strong> (flagelos perítricos), Shigella <strong>inmóvil</strong>. <strong>Gas de glucosa</strong>: Salmonella (+) (excepto S. Typhi), Shigella (−). <strong>TSI</strong>: Salmonella K/AG+H₂S; Shigella K/A sin gas sin H₂S. <strong>Lisina descarboxilasa</strong>: Salmonella (+), Shigella (−). <strong>Antígeno Vi</strong>: S. Typhi (+), Shigella (−). Regla: Salmonella = móvil + H₂S + gas; Shigella = inmóvil + sin H₂S + sin gas.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Existen vacunas contra Salmonella Typhi y cuándo están indicadas?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Sí, existen <strong>2 vacunas</strong>: 1) <strong>Ty21a (Vivotif)</strong>: vacuna oral de bacteria atenuada viva, 4 cápsulas en días alternos. Protección ~70%, dura 5 años. Contraindicada en inmunosuprimidos y &lt;6 años. 2) <strong>Vi-CPS (Typhim Vi)</strong>: polisacárido Vi purificado, IM dosis única. Protección ~70-75%, dura 3 años. Válida desde los 2 años. Nueva: <strong>Typbar TCV</strong>: conjugada (Vi+proteína), mayor immunogenicidad, válida desde 6 meses. Indicaciones: viajeros a zonas endémicas (Asia sur, África), contactos de portadores crónicos, personal de laboratorio. No reemplazan las medidas de higiene (agua + alimentos seguros).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 5</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)">Siguiente →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 5;
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+function toggleGabarito(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

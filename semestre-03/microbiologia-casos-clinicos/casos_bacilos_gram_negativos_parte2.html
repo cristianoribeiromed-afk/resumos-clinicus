@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Microbiología — Bacilos Gram Negativos Parte 2</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #1c2128; --border: #30363d;
+  --green: #3fb950; --green-dim: #1a4a23; --red: #f85149; --red-dim: #4a1a1a;
+  --yellow: #d29922; --yellow-dim: #3d2c00; --blue: #58a6ff; --blue-dim: #0d2144;
+  --teal: #39d353; --teal-dim: #0d3320;
+  --cyan: #56d364; --cyan-dim: #1a3a20;
+  --text: #e6edf3; --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+  --accent: #2ea043; --accent-dim: #0d2818;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; min-height: 100vh; }
+.header { border-bottom: 1px solid var(--border); padding: 24px 32px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+.header-badge { font-family: var(--mono); font-size: 11px; background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; padding: 3px 8px; letter-spacing: .08em; text-transform: uppercase; }
+.header h1 { font-size: 16px; font-weight: 600; }
+.header-sub { font-size: 13px; color: var(--muted); font-family: var(--mono); margin-left: auto; }
+.progress-bar { height: 3px; background: var(--border); }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--blue)); transition: width .4s ease; }
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill { font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all .2s; }
+.pill:hover { border-color: var(--accent); color: var(--accent); }
+.pill.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.caso-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 20px 24px; border-bottom: none; }
+.bacteria-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s; }
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num { font-family: var(--mono); font-size: 12px; color: var(--accent); background: var(--accent-dim); border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px; }
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">EXAMEN FINAL</span>
+  <h1>Microbiología — Casos Clínicos</h1>
+  <span class="header-sub">Bacilos Gram (−) · Parte 2 · 5 casos</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+
+<div class="container">
+  <div class="nav-pills">
+    <div class="pill active" onclick="irCaso(0)">Shigella</div>
+    <div class="pill" onclick="irCaso(1)">H. influenzae</div>
+    <div class="pill" onclick="irCaso(2)">H. ducreyi</div>
+    <div class="pill" onclick="irCaso(3)">H. pylori</div>
+    <div class="pill" onclick="irCaso(4)">Campylobacter</div>
+  </div>
+
+  <!-- CASO 1: Shigella spp. -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Enterobacteria · Inmóvil · Disentería</div>
+      <div class="caso-title">Shigella spp.</div>
+      <div class="caso-meta">Paciente: Niño, 4 años · Servicio: Pediatría · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Niño de 4 años, residente en zona periurbana sin acceso a agua potable segura, traído por su madre por <strong>diarrea con sangre y moco de 3 días de evolución, fiebre de 39.2°C, cólicos abdominales intensos y tenesmo rectal</strong>. La madre refiere que el niño defeca hasta 15 veces al día con poca cantidad de heces. Varios niños del mismo jardín de infantes presentan cuadros similares.
+        <br><br>
+        Examen físico: niño irritable, febril (39.2°C), deshidratación leve-moderada, abdomen con dolor difuso a la palpación, mayor en fosa ilíaca izquierda. Sin distensión abdominal. <strong>Proctoscopia: mucosa rectal eritematosa, friable, con úlceras superficiales</strong>.
+        <br><br>
+        Coprocultivo en ágar SS y MacConkey: <strong>colonias incoloras (lactosa negativa), inmóvil, H₂S negativo, sin gas</strong>. Serología: reacción positiva con antisuero anti-Shigella sonnei.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Heces</div><div class="dado-valor anormal">Sangre + moco</div></div>
+        <div class="dado"><div class="dado-label">Frecuencia</div><div class="dado-valor anormal">15 veces/día</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.2°C</div></div>
+        <div class="dado"><div class="dado-label">Lactosa</div><div class="dado-valor normal">Negativa</div></div>
+        <div class="dado"><div class="dado-label">H₂S</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">Motilidad</div><div class="dado-valor normal">Inmóvil</div></div>
+        <div class="dado"><div class="dado-label">Gas</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">Serogrupo</div><div class="dado-valor anormal">S. sonnei</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y cuáles son las 4 especies de Shigella y su gravedad relativa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>disentería bacilar (shigelosis)</strong> por Shigella sonnei. Las 4 especies: <strong>S. dysenteriae (Grupo A)</strong>: más grave, produce toxina Shiga, causa epidemias con alta mortalidad, endémica en países en desarrollo. <strong>S. flexneri (Grupo B)</strong>: frecuente en países en desarrollo, endémica. <strong>S. boydii (Grupo C)</strong>: rara, Asia. <strong>S. sonnei (Grupo D)</strong>: más frecuente en países desarrollados, la más leve, autolimitada. Regla de gravedad: dysenteriae &gt; flexneri &gt; boydii &gt; sonnei. S. sonnei causa la mayoría de casos en guarderías de países desarrollados.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuál es la dosis infectante de Shigella y por qué es clínicamente importante?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La dosis infectante de Shigella es extremadamente baja: <strong>10-200 bacterias</strong> son suficientes para causar infección (comparado con Salmonella que requiere 10⁵-10⁸). Importancia clínica: 1) Explica la alta transmisibilidad entre personas (fecal-oral directa). 2) Brotes frecuentes en guarderías, escuelas, instituciones cerradas. 3) No necesita multiplicarse en alimentos (a diferencia de Salmonella). 4) La transmisión persona-persona es la principal vía. 5) Las medidas de higiene de manos son críticas para el control. Esta dosis mínima es posible porque Shigella es muy resistente al ácido gástrico.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el mecanismo patogénico de Shigella y cómo produce la disentería?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Shigella invade el <strong>epitelio del colon</strong> (no del intestino delgado): 1) Ingresa por las células M de las placas de Peyer del colon. 2) Es fagocitada por macrófagos subepiteliales → escapa al citoplasma → induce apoptosis del macrófago → inflamación. 3) Invade células epiteliales basalmente → se multiplica intracelularmente → se mueve usando actina del huésped (<strong>propulsión por polimerización de actina</strong> — "cola de cometa") → pasa a células adyacentes sin salir al extracelular. 4) Destrucción de células colónicas → ulceraciones → sangre + moco + pus en heces. Resultado: <strong>colitis invasiva</strong> con disentería (heces pequeñas, frecuentes, con sangre y moco, tenesmo).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de la shigelosis y cuándo está indicado?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El tratamiento antibiótico está indicado porque: 1) Acorta la duración de síntomas. 2) Erradica la excreción fecal (reduce transmisión). 3) Previene complicaciones (SHU en S. dysenteriae). Tratamiento: <strong>azitromicina 500mg/día x 3 días</strong> (primera elección en niños y adultos, buena actividad). Alternativas: <strong>ciprofloxacino 500mg c/12h x 3-5 días</strong> (adultos, resistencia creciente en Asia). <strong>Ceftriaxona</strong> para cepas MDR. <strong>Hidratación oral</strong> siempre. Contraindicados: antidiarreicos (loperamida) — prolongan la invasión bacteriana y el riesgo de megacolon tóxico. Ampicilina y TMP-SMX: alta resistencia.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué es la toxina Shiga y qué especie la produce principalmente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La <strong>toxina Shiga (Stx)</strong> es una citotoxina producida principalmente por <strong>S. dysenteriae tipo 1</strong> (y por E. coli STEC/EHEC, que produce Stx1 y Stx2 — toxinas Shiga-like). Mecanismo: subunidad B se une al receptor Gb3 en células del huésped; subunidad A inhibe la síntesis proteica (inactiva el ribosoma 28S rRNA → muerte celular). Efectos: 1) Destrucción del epitelio colónico (disentería grave). 2) En riñón: destrucción de células endoteliales glomerulares → <strong>SHU</strong> (anemia hemolítica + trombocitopenia + IRA). S. sonnei NO produce toxina Shiga (por eso es más leve). S. dysenteriae tipo 1 puede causar SHU en niños.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se diferencia la shigelosis de la amebiasis intestinal clínica y microbiológicamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Shigelosis</strong>: bacteriana, inicio agudo, fiebre alta, diarrea muy frecuente (15-20 veces/día), heces pequeñas con sangre y moco, PMN en coproscopia, coprocultivo positivo. <strong>Amebiasis</strong>: parasitaria (Entamoeba histolytica), inicio más gradual, fiebre leve o ausente, menos deposiciones (4-8/día), heces con moco y sangre pero más voluminosas, <strong>macrófagos con eritrocitos fagocitados</strong> (en vez de PMN), ausencia de PMN en heces (E. histolytica los destruye), coproscopia con trofozoítos o quistes. Tratamiento radicalmente diferente: shigelosis → antibióticos; amebiasis → metronidazol + paromomicina.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué es el tenesmo y por qué ocurre en la shigelosis?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>tenesmo rectal</strong> es la sensación urgente e imperiosa de defecar, con sensación de evacuación incompleta, incluso cuando el recto está vacío. En la shigelosis se produce por: 1) <strong>Inflamación intensa de la mucosa rectal y sigmoide</strong> (proctosigmoiditis). 2) Ulceraciones que irritan los receptores de distensión rectal → señal constante de "necesidad de defecar". 3) Espasmo del esfínter anal interno por inflamación. El tenesmo es característico de colitis inflamatoria/invasiva (Shigella, E. histolytica, colitis ulcerosa) y ayuda a diferenciar de diarrea secretora (cólera, ETEC) donde no hay tenesmo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué Shigella no produce H₂S ni gas y qué importancia tiene esto en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Shigella carece de las enzimas necesarias para: 1) Reducir sulfatos a H₂S (ausencia de tiosulfato reductasa). 2) Producir gas CO₂/H₂ de la fermentación de glucosa (excepción: S. flexneri tipo 6 produce pequeñas cantidades). Importancia en laboratorio: En el TSI (Triple Sugar Iron): <strong>Shigella: K/A, sin gas, sin H₂S</strong> (alcalino en bisel, ácido en base, sin gas, sin ennegrecimiento). Esto contrasta con Salmonella (K/AG + H₂S) y E. coli (A/AG, sin H₂S). El patrón TSI + motilidad negativa + lactosa negativa es muy sugestivo de Shigella. Confirmación con antisueros específicos (grupos A, B, C, D).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Qué complicaciones extraintestinales puede causar la shigelosis?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>SHU</strong>: especialmente S. dysenteriae tipo 1 (toxina Shiga → daño renal). 2. <strong>Convulsiones febriles</strong>: frecuentes en niños pequeños con shigelosis (por fiebre alta y neurotoxina de Shigella). 3. <strong>Artritis reactiva (síndrome de Reiter)</strong>: semanas post-infección, especialmente HLA-B27 positivos (artritis + uretritis + conjuntivitis). 4. <strong>Megacolon tóxico</strong>: dilatación colónica grave, riesgo de perforación. 5. <strong>Bacteriemia</strong>: rara (Shigella raramente invade sangre), más en inmunocomprometidos. 6. <strong>Desnutrición</strong>: en niños con shigelosis recurrente (países en desarrollo).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Cuáles son las medidas de salud pública para controlar un brote de shigelosis en una guardería?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Higiene de manos estricta</strong>: jabón + agua (alcohol no elimina Shigella eficientemente), especialmente después de cambiar pañales y antes de preparar alimentos. 2. <strong>Exclusión</strong>: niños y trabajadores sintomáticos fuera hasta 2 coprocultivos negativos. 3. <strong>Tratamiento de casos confirmados</strong> (reduce transmisión). 4. <strong>Desinfección</strong> de superficies con hipoclorito. 5. <strong>Agua potable segura</strong>. 6. <strong>Notificación obligatoria</strong> a salud pública. 7. Investigación de fuente común. 8. Estudio de contactos y coprocultivos a convivientes sintomáticos. La transmisión fecal-oral directa (manos) es la principal vía en guarderías.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2: Haemophilus influenzae -->
+  <div class="caso" id="caso-1">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Cocobacilo · Factores X e V · Satelitismo</div>
+      <div class="caso-title">Haemophilus influenzae</div>
+      <div class="caso-meta">Paciente: Niño, 2 años · Servicio: Urgencias Pediátricas · Nivel: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Niño de 2 años, no vacunado (familia que rechaza vacunación), traído en ambulancia por <strong>inicio brusco de fiebre de 39.8°C, estridor inspiratorio, disfagia intensa, sialorrea y posición en trípode</strong> (sentado, inclinado hacia adelante, con cuello extendido). Los padres refieren que el niño comenzó el cuadro hace 6 horas con dificultad para tragar y voz apagada.
+        <br><br>
+        Examen físico: <strong>niño con aspecto tóxico, cianosis perioral leve, SpO₂ 91%</strong>, stridor marcado, rehúsa acostarse. <strong>EPIGLOTIS EDEMATOSA Y ERITEMATOSA</strong> visible en laringoscopía de urgencia (imagen en "dedo pulgar" en Rx lateral de cuello).
+        <br><br>
+        Hemocultivo: cocobacilos Gram negativos, <strong>factores X (hemina) y V (NAD) dependientes, satelitismo alrededor de colonias de S. aureus</strong>. Látex: serotipo b.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">SpO₂</div><div class="dado-valor anormal">91%</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.8°C</div></div>
+        <div class="dado"><div class="dado-label">Epiglotis</div><div class="dado-valor anormal">Edematosa "dedo pulgar"</div></div>
+        <div class="dado"><div class="dado-label">Factor X</div><div class="dado-valor anormal">Requerido</div></div>
+        <div class="dado"><div class="dado-label">Factor V</div><div class="dado-valor anormal">Requerido</div></div>
+        <div class="dado"><div class="dado-label">Satelitismo</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Serotipo</div><div class="dado-valor anormal">b (Hib)</div></div>
+        <div class="dado"><div class="dado-label">Vacunación</div><div class="dado-valor anormal">No vacunado</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico de urgencia y por qué es una emergencia vital?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>epiglotitis aguda por Haemophilus influenzae tipo b (Hib)</strong>. Es emergencia vital porque: 1) La epiglotis edematosa puede obstruir completamente la vía aérea en minutos → <strong>asfixia y muerte</strong>. 2) Cualquier maniobra que agite al niño (laringoscopía forzada, venopunción, acostarlo) puede precipitar el cierre total. Manejo inmediato: 1) No intentar visualizar la faringe en urgencias. 2) Mantener al niño en posición confortante. 3) Llamar a anestesiología y ORL urgente. 4) Intubación orotraqueal controlada en quirófano o UCI. 5) Antibióticos IV (ceftriaxona). 6) Oxígeno húmedo suave. La cianosis y SpO₂ 91% son signos de compromiso grave inminente.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Qué son los factores X y V y por qué H. influenzae los necesita?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Factor X (hemina)</strong>: protoporfirina IX con hierro, necesaria para la síntesis de enzimas de la cadena respiratoria (citocromos). H. influenzae no puede sintetizarla → la obtiene de los eritrocitos lisados. <strong>Factor V (NAD/NADP)</strong>: coenzima esencial para reacciones redox del metabolismo. H. influenzae no puede sintetizarla → la obtiene de otras bacterias o del ágar chocolate (eritrocitos lisados por calentamiento que liberan NAD). Medio de cultivo: <strong>ágar chocolate</strong> (hemoglobina calentada libera factores X y V). El <strong>fenómeno de satelitismo</strong>: colonias de H. influenzae crecen más cerca de colonias de S. aureus (que libera factor V) en ágar sangre.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el principal factor de virulencia de H. influenzae tipo b y por qué la vacuna fue un hito en salud pública?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El principal factor de virulencia es la <strong>cápsula de polirribitol fosfato (PRP)</strong> del serotipo b: antifagocítica, inhibe la opsonización. La <strong>vacuna Hib (conjugada PRP-proteína)</strong> fue un hito porque: antes de su introducción (1990s), Hib era la causa más frecuente de meningitis bacteriana en niños &lt;5 años y la principal causa de epiglotitis. Tras vacunación universal, estas enfermedades son raras. La conjugación con proteínas (PRP-T, PRP-OMP) convierte la respuesta en T-dependiente, generando memoria inmunológica desde los 2 meses de vida. Es una de las vacunas con mayor impacto en morbimortalidad infantil.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Qué otras enfermedades graves causa H. influenzae tipo b en niños no vacunados?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Meningitis bacteriana</strong>: más frecuente en &lt;5 años no vacunados, alta mortalidad y secuelas (sordera). 2. <strong>Epiglotitis</strong> (este caso): emergencia vía aérea. 3. <strong>Neumonía lobar</strong>: con bacteriemia. 4. <strong>Celulitis facial</strong>: en mejilla/periorbitaria, color violáceo, con bacteriemia. 5. <strong>Artritis séptica</strong>: grandes articulaciones. 6. <strong>Pericarditis purulenta</strong>. 7. <strong>Osteomielitis</strong>. Las cepas <strong>no tipables</strong> (sin cápsula) causan en adultos: otitis media, sinusitis, exacerbaciones de EPOC (son colonizadoras del tracto respiratorio superior).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento antibiótico y la profilaxis de contactos en este caso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Tratamiento: <strong>ceftriaxona 100mg/kg/día IV</strong> (elección), duración 7-10 días. Alternativa: ampicilina (si cepa productora de no betalactamasa) + cloranfenicol. Profilaxis de contactos: <strong>rifampicina 20mg/kg/día VO x 4 días</strong> (máx 600mg/día) para todos los contactos domiciliarios cuando hay &lt;4 años no completamente vacunados en el hogar. También en guarderías si hay convivientes susceptibles. Objetivo: eliminar portación nasofaríngea. El caso índice también recibe rifampicina al alta (ceftriaxona no elimina la portación nasofaríngea). Vacunación inmediata de contactos no inmunizados.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se diferencia la epiglotitis del crup viral (laringotraqueobronquitis) clínicamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Epiglotitis (Hib)</strong>: inicio brusco (&lt;12h), fiebre alta (39-40°C), aspecto tóxico, disfagia + sialorrea, voz apagada/afónica, posición en trípode, stridor inspiratorio, sin tos (o mínima), NO mejora con adrenalina nebulizada, imagen "dedo pulgar" en Rx. <strong>Crup viral</strong>: inicio gradual (1-3 días), fiebre moderada, aspecto menos tóxico, <strong>tos perruna característica</strong>, llanto disfónico, stridor inspiratorio + espiratorio, imagen en "torre de iglesia" en Rx (subglótica), mejora con adrenalina nebulizada y corticoides. La tos perruna y el inicio gradual son los diferenciadores clave del crup.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué mecanismo de resistencia ha desarrollado H. influenzae a ampicilina?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El principal mecanismo de resistencia es la producción de <strong>betalactamasa TEM-1</strong> (codificada por plásmidos), que hidroliza ampicilina y amoxicilina. La prevalencia es del 20-35% en cepas clínicas. Existe también resistencia mediada por alteración de PBPs (BLNAR: beta-lactamase negative ampicillin resistant), menos frecuente. Implicaciones terapéuticas: 1) No usar ampicilina empírica para infecciones graves por Hib sin conocer sensibilidad. 2) Amoxicilina-clavulánico activo (inhibe TEM-1). 3) Ceftriaxona es el tratamiento de elección para infecciones invasivas (no afectada por betalactamasas de H. influenzae).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué H. influenzae NO tipable es relevante en adultos con EPOC?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">H. influenzae no tipable (NTHi) carece de cápsula y coloniza crónicamente el tracto respiratorio de pacientes con EPOC (40-60% son colonizados). En exacerbaciones de EPOC: 1) Es la <strong>bacteria más frecuente</strong> en exacerbaciones infecciosas. 2) Produce inflamación crónica que acelera la destrucción pulmonar. 3) Forma biofilm en el moco bronquial → difícil erradicación. 4) La vacuna Hib NO protege contra NTHi (no hay cápsula). Tratamiento de exacerbaciones: amoxicilina-clavulánico, fluoroquinolonas respiratorias o azitromicina. La vacunación Hib previene Hib encapsulado pero no las cepas no tipables.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuál es el fenómeno de satelitismo y cómo se usa en el diagnóstico de H. influenzae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>fenómeno de satelitismo</strong> es el crecimiento preferencial de colonias de H. influenzae <strong>alrededor de colonias de S. aureus</strong> en ágar sangre. S. aureus libera factor V (NAD) al medio, permitiendo el crecimiento de H. influenzae en su vecindad, mientras que las colonias alejadas no crecen (el ágar sangre no libera el factor V necesario, aunque sí contiene factor X de los eritrocitos). Es una prueba diagnóstica útil: al sembrar en ágar sangre junto con S. aureus, las colonias satélite (pequeñas, grises, en torno a S. aureus) confirman la dependencia del factor V. En ágar chocolate ambos factores están disponibles y crecen libremente.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué secuelas puede dejar la meningitis por H. influenzae tipo b en niños sobrevivientes?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La meningitis por Hib dejaba secuelas en 15-30% de sobrevivientes: 1) <strong>Hipoacusia neurosensorial bilateral</strong>: la más frecuente (15-20%), por laberintitis o inflamación del VIII par. Es la causa principal de sordera adquirida en niños. 2) <strong>Hidrocefalia</strong>: obstrucción al flujo de LCR por adhesiones. 3) <strong>Déficit cognitivo/retraso del desarrollo</strong>. 4) <strong>Epilepsia</strong>. 5) <strong>Déficits motores/parálisis</strong>. 6) <strong>Ceguera</strong> (menos frecuente). La dexametasona IV previa al antibiótico <strong>reduce significativamente la hipoacusia</strong> (0.15mg/kg c/6h x 4 días). Esta es la principal razón de usar corticoides en meningitis bacteriana pediátrica.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 3: Haemophilus ducreyi -->
+  <div class="caso" id="caso-2">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · ITS · Úlcera dolorosa · Bubo inguinal</div>
+      <div class="caso-title">Haemophilus ducreyi</div>
+      <div class="caso-meta">Paciente: Varón, 28 años · Servicio: Dermatología/ITS · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 28 años, trabajador sexual masculino, acude por <strong>úlcera genital dolorosa de 8 días de evolución</strong>. Refiere que comenzó como una pápula eritematosa que rápidamente se ulceró. El dolor es intenso y se exacerba al contacto. También nota <strong>inflamación dolorosa en la ingle derecha</strong> desde hace 4 días.
+        <br><br>
+        Examen físico: <strong>úlcera de 2×3 cm en surco balanoprepucial, bordes irregulares blandos (no indurados), fondo necrótico sucio, muy dolorosa</strong>. Adenopatía inguinal derecha fluctuante y dolorosa (<strong>bubo inguinal</strong>). Sin fiebre sistémica.
+        <br><br>
+        Gram de la secreción: <strong>cocobacilos Gram negativos en cadenas paralelas ("banco de peces" o "escuela de peces")</strong>. Cultivo requiere ágar especial con factores X y V + vancomicina (inhibe flora contaminante). RPR negativo, herpes VHS negativo por PCR.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Úlcera</div><div class="dado-valor anormal">Muy dolorosa</div></div>
+        <div class="dado"><div class="dado-label">Bordes</div><div class="dado-valor anormal">Irregulares blandos</div></div>
+        <div class="dado"><div class="dado-label">Fondo</div><div class="dado-valor anormal">Necrótico sucio</div></div>
+        <div class="dado"><div class="dado-label">Bubo inguinal</div><div class="dado-valor anormal">Fluctuante doloroso</div></div>
+        <div class="dado"><div class="dado-label">Gram</div><div class="dado-valor anormal">"Banco de peces"</div></div>
+        <div class="dado"><div class="dado-label">RPR</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">VHS PCR</div><div class="dado-valor normal">Negativo</div></div>
+        <div class="dado"><div class="dado-label">Fiebre</div><div class="dado-valor normal">Ausente</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y cuál es la característica morfológica patognomónica en el Gram?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>chancroide</strong> por Haemophilus ducreyi. Característica patognomónica en Gram: <strong>cocobacilos Gram negativos agrupados en cadenas paralelas entrelazadas</strong>, descritas como "banco de peces", "escuela de peces" o "huellas de ferrocarril". Esta disposición en cadenas paralelas es característica y altamente sugestiva de H. ducreyi. Sin embargo, la sensibilidad del Gram directo es solo 50-80%, y el cultivo es difícil (requiere condiciones especiales). El diagnóstico suele ser <strong>clínico + exclusión de otras ITS ulcerativas</strong> (sífilis RPR−, herpes PCR−).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cómo se diferencia el chancroide de la sífilis primaria clínicamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Chancroide (H. ducreyi)</strong>: úlcera <strong>muy dolorosa</strong>, bordes irregulares <strong>blandos</strong> (no indurados), fondo sucio/necrótico, adenopatía dolorosa y fluctuante (bubo que puede drenar espontáneamente). Generalmente única pero puede ser múltiple (autoinoculación). <strong>Sífilis primaria (T. pallidum)</strong>: chancro <strong>indoloro</strong>, bordes bien definidos <strong>indurados</strong> (cartilaginosos), fondo limpio y liso, adenopatía indolora (satélite). Autolimitado (desaparece en 3-6 semanas aunque no se trate). Regla mnemotécnica: <strong>chancroide = doloroso + blando; chancro sifilítico = indoloro + indurado</strong>.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección del chancroide?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Opciones de tratamiento (todas equivalentes): 1) <strong>Azitromicina 1g VO dosis única</strong> (primera elección por comodidad). 2) <strong>Ceftriaxona 250mg IM dosis única</strong>. 3) <strong>Ciprofloxacino 500mg c/12h x 3 días</strong> (evitar en embarazo). 4) <strong>Eritromicina 500mg c/8h x 7 días</strong>. Los bubones fluctuantes pueden requerir <strong>aspiración con aguja</strong> (no incisión — riesgo de fístulas) para alivio y para prevenir ruptura espontánea. Tratar también a las parejas sexuales. Siempre descartar coinfección con sífilis y VIH (úlceras genitales aumentan riesgo de transmisión del VIH x3-5).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuáles son las 5 ITS que causan úlceras genitales y cómo se diferencian entre sí?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Sífilis primaria</strong> (T. pallidum): indolora, indurada, adenopatía indolora, RPR+. 2. <strong>Chancroide</strong> (H. ducreyi): muy dolorosa, blanda, bubo fluctuante doloroso, Gram "banco de peces". 3. <strong>Herpes genital</strong> (VHS-2): vesículas-úlceras múltiples muy dolorosas, recurrente, PCR+. 4. <strong>Linfogranuloma venéreo</strong> (C. trachomatis L1-L3): úlcera pequeña transitoria + bubón fluctuante (puede drenar), serología C. trachomatis+. 5. <strong>Donovanosis</strong> (K. granulomatis): crónica, indolora, granulomatosa, fondo rojo carnoso, células de Donovan. Regla: dolorosas = chancroide + herpes; indoloras = sífilis + donovanosis; LGV = mixto.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Por qué el chancroide facilita la transmisión del VIH?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El chancroide facilita la transmisión del VIH por varios mecanismos: 1) <strong>Ruptura de barrera mucosa</strong>: la úlcera elimina la barrera epitelial protectora, permitiendo entrada directa del VIH. 2) <strong>Concentración de células CD4+</strong>: la respuesta inflamatoria local atrae linfocitos T CD4+ y macrófagos (células diana del VIH) al sitio de la úlcera. 3) En el infectado por VIH: la úlcera libera grandes cantidades de VIH en secreciones. El riesgo de transmisión del VIH por contacto sexual se multiplica <strong>3-5 veces</strong> en presencia de úlcera genital. África subsahariana: el chancroide impulsó la epidemia de VIH heterosexual en los años 80-90.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cuál es la distribución geográfica del chancroide y su prevalencia actual?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El chancroide es endémico en <strong>África subsahariana, partes de Asia (sudeste), Caribe y Latinoamérica</strong>. En países desarrollados (Europa, EEUU) es raro (solo en brotes localizados y viajeros). Su prevalencia ha disminuido significativamente por: 1) Mejora del diagnóstico (mayor diagnóstico de herpes y sífilis que antes se confundían). 2) Programas de control de ITS. 3) Tratamiento efectivo en dosis única. Sin embargo, sigue siendo importante porque: 1) Cofactor de VIH en países endémicos. 2) Puede presentarse en inmigrantes/viajeros. 3) El diagnóstico diferencial con sífilis y herpes es esencial en la práctica clínica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué factores de virulencia posee H. ducreyi para producir úlceras?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Citotoxina distensora celular (CDT)</strong>: detiene el ciclo celular en G2/M → apoptosis de células epiteliales y fibroblastos → formación de la úlcera. 2. <strong>Hemolisinas</strong>: lisan eritrocitos para obtener factores de crecimiento. 3. <strong>Proteínas de superficie</strong>: adhesión a células epiteliales del epitelio genital. 4. <strong>IgA1 proteasa</strong>: destruye IgA secretora local. 5. <strong>LOS (lipooligosacárido)</strong>: endotoxina que contribuye a la inflamación local. 6. Resistencia a la <strong>fagocitosis</strong> por PMN: mediante mecanismos de evasión. Todos contribuyen a la necrosis tisular y al exudado purulento característico del chancroide.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué el cultivo de H. ducreyi es difícil y qué métodos diagnósticos alternativos existen?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">H. ducreyi es <strong>extremadamente fastidioso</strong>: requiere medios especiales enriquecidos (ágar con hemoglobina, IsoVitaleX, vancomicina para inhibir flora), temperatura exacta 33-35°C, atmósfera húmeda con 5% CO₂. La sensibilidad del cultivo es solo 60-80% incluso en condiciones ideales. Alternativas diagnósticas: 1) <strong>Diagnóstico clínico</strong>: úlcera dolorosa + bubo + exclusión de otras ITS (sífilis RPR−, herpes PCR−). 2) <strong>PCR</strong>: más sensible y específica (disponible en laboratorios de referencia). 3) Gram de secreción (50-80% sensibilidad): "banco de peces". En la práctica: el diagnóstico es principalmente clínico-epidemiológico + exclusión de otras ITS.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuándo es necesario drenar el bubo inguinal y cómo debe hacerse?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El drenaje del bubo está indicado cuando es <strong>fluctuante</strong> (colección líquida central palpable) para: 1) Alivio del dolor. 2) Prevenir ruptura espontánea con fístulas crónicas. Técnica correcta: <strong>aspiración con aguja gruesa</strong> (18-20G) a través de piel sana adyacente (no directamente sobre el bubo para evitar fístulas). <strong>Contraindicada la incisión y drenaje abierto</strong> (riesgo alto de formación de fístulas crónicas y cicatrices queloides). El antibiótico sistémico debe iniciarse antes del drenaje. Bubones no fluctuantes no se drenan — solo antibiótico. Pueden resolverse con el tratamiento solo si se tratan a tiempo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué relación tiene H. ducreyi con H. influenzae y en qué se diferencian?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambos pertenecen al género <strong>Haemophilus</strong>, familia Pasteurellaceae, y comparten: Gram (−), cocobacilos, dependencia de factores X y/o V. Diferencias: <strong>H. influenzae</strong>: requiere factores X <strong>y</strong> V, patógeno respiratorio y sistémico, serotipo b capsulado es el más virulento, vacuna disponible. <strong>H. ducreyi</strong>: requiere factor X <strong>solo</strong> (no factor V), patógeno genital exclusivo (ITS), no tiene serotipo capsular relevante, no hay vacuna disponible, temperatura de crecimiento más baja (33-35°C). El satelitismo en H. influenzae se debe a la necesidad de ambos factores; H. ducreyi no muestra satelitismo clásico (no necesita factor V).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 4: Helicobacter pylori -->
+  <div class="caso" id="caso-3">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Microaerófilo · Ureasa (+) · Úlcera péptica</div>
+      <div class="caso-title">Helicobacter pylori</div>
+      <div class="caso-meta">Paciente: Varón, 47 años · Servicio: Gastroenterología · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 47 años, fumador, con <strong>epigastralgia de tipo urente de 6 meses de evolución</strong> que mejora transitoriamente con alimentos y antiácidos, pero reaparece 2-3 horas después. Refiere <strong>dolor nocturno que lo despierta</strong> y pérdida de 4 kg en 3 meses. Niega hematemesis o melena. Toma ibuprofeno frecuentemente por lumbalgia crónica.
+        <br><br>
+        Endoscopia digestiva alta: <strong>úlcera en bulbo duodenal de 1.2 cm, bordes regulares, fondo limpio</strong>. Biopsia: gastritis crónica activa antral. Test rápido de ureasa (CLO test) en biopsia: <strong>positivo en 30 minutos</strong> (viraje a rosa/rojo). Histología: bacilos curvados en capa de moco gástrico.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">CLO test</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Ureasa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Úlcera duodenal</div><div class="dado-valor anormal">1.2 cm</div></div>
+        <div class="dado"><div class="dado-label">Histología</div><div class="dado-valor anormal">Bacilos curvados</div></div>
+        <div class="dado"><div class="dado-label">Gastritis antral</div><div class="dado-valor anormal">Crónica activa</div></div>
+        <div class="dado"><div class="dado-label">AINE</div><div class="dado-valor anormal">Ibuprofeno crónico</div></div>
+        <div class="dado"><div class="dado-label">Pérdida de peso</div><div class="dado-valor anormal">4 kg / 3 meses</div></div>
+        <div class="dado"><div class="dado-label">Hematemesis</div><div class="dado-valor normal">No</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y cómo H. pylori sobrevive en el ambiente ácido del estómago?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Diagnóstico: <strong>úlcera duodenal por H. pylori</strong>. Supervivencia en ambiente ácido: H. pylori produce <strong>ureasa</strong> en grandes cantidades → hidroliza urea a CO₂ + NH₃ (amoniaco) → el amoniaco alcaliniza el microentorno inmediato alrededor de la bacteria → crea un microambiente de pH neutro (6-7) en la capa de moco gástrico. Además: 1) Vive en la capa de moco mucoso adherente (protección mecánica). 2) Tiene movilidad flagelar que le permite penetrar el moco. 3) Adhesinas específicas para unirse a células epiteliales gástricas. 4) Expresión de proteínas de choque térmico adaptadas al pH ácido.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuáles son los métodos diagnósticos para H. pylori y cuándo se usa cada uno?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Invasivos</strong> (requieren endoscopia): 1) <strong>CLO test (ureasa rápida)</strong>: resultado en 30-60 min, alta sensibilidad. 2) <strong>Histología</strong>: gold standard, permite evaluar gastritis, displasia. 3) <strong>Cultivo</strong>: permite antibiograma (útil en recidivas). <strong>No invasivos</strong>: 1) <strong>Test de aliento con urea marcada (¹³C)</strong>: gold standard no invasivo, confirma erradicación (4 semanas post-tratamiento). 2) <strong>Antígeno en heces</strong>: sensible, barato, confirma erradicación. 3) <strong>Serología (IgG)</strong>: permanece positiva años post-infección, NO confirma erradicación (no útil para control de tratamiento). Indicación: endoscopia si síntomas de alarma; test no invasivo si &lt;55 años sin alarma.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de erradicación de H. pylori (triple terapia) y cuál es su eficacia?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Triple terapia clásica (14 días)</strong>: <strong>IBP</strong> (omeprazol 20mg c/12h) + <strong>claritromicina</strong> 500mg c/12h + <strong>amoxicilina</strong> 1g c/12h. Eficacia: 70-85% (disminuyendo por resistencia a claritromicina). <strong>Terapia cuádruple con bismuto</strong>: IBP + bismuto + tetraciclina + metronidazol × 10-14 días. Eficacia: &gt;90% (primera línea en zonas con alta resistencia a claritromicina). <strong>Terapia cuádruple concomitante</strong>: IBP + amoxicilina + claritromicina + metronidazol × 14 días. El IBP es fundamental: eleva el pH gástrico mejorando la actividad de los antibióticos. Confirmar siempre erradicación con test de aliento 4-6 semanas post-tratamiento.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es la relación entre H. pylori y el cáncer gástrico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">H. pylori es clasificado por la IARC como <strong>carcinógeno grupo I</strong> (carcinógeno definitivo para humanos). Mecanismo de carcinogénesis (cascada de Correa): <strong>gastritis crónica → atrofia gástrica → metaplasia intestinal → displasia → adenocarcinoma gástrico</strong>. Factores que potencian el riesgo: cepa CagA+ (gen de patogenicidad), tabaco, dieta rica en sal/nitratos, historia familiar. H. pylori causa el <strong>90% de adenocarcinomas gástricos de tipo intestinal</strong>. También causa <strong>linfoma MALT gástrico</strong> (tejido linfoide asociado a mucosas): la erradicación de H. pylori puede remitir el linfoma MALT de bajo grado en 70-80% de casos. Riesgo relativo de cáncer: x3-6 veces mayor en infectados.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de H. pylori?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Ureasa</strong>: neutraliza ácido, daño directo al epitelio por NH₃. 2. <strong>CagA (Cytotoxin-Associated Gene A)</strong>: proteína inyectada en células epiteliales via sistema de secreción tipo IV → altera señalización celular, promueve inflamación y carcinogénesis. Cepas CagA+ son más virulentas. 3. <strong>VacA (Vacuolating Cytotoxin A)</strong>: forma canales en membrana → vacuolización celular → apoptosis de células epiteliales, inmunosupresión local. 4. <strong>Flagelos</strong>: movilidad para penetrar moco. 5. <strong>Adhesinas (BabA, SabA)</strong>: unión a antígenos Lewis del epitelio gástrico. 6. <strong>LPS</strong>: estimulación inflamatoria crónica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se transmite H. pylori y cuáles son los factores de riesgo de adquisición?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Transmisión: principalmente <strong>fecal-oral</strong> (agua y alimentos contaminados) y <strong>oral-oral</strong> (saliva, vómitos). Factores de riesgo: 1) <strong>Nivel socioeconómico bajo</strong>: hacinamiento, agua no potable, higiene deficiente. 2) <strong>Infancia en países en desarrollo</strong>: la mayoría se infecta antes de los 10 años. 3) <strong>Convivencia con personas infectadas</strong>. 4) Uso de endoscopios sin adecuada esterilización (iatrogénica). Prevalencia mundial: ~50% de la población global (hasta 80-90% en países en desarrollo vs 20-40% en desarrollados). La infección ocurre principalmente en la infancia y persiste de por vida si no se trata. No hay reservoir animal significativo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Cuáles son las indicaciones absolutas de erradicación de H. pylori?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Indicaciones absolutas (consenso de Maastricht VI): 1) <strong>Úlcera péptica</strong> gastroduodenal activa o historia de úlcera (como este caso). 2) <strong>Linfoma MALT gástrico</strong> de bajo grado. 3) <strong>Gastritis atrófica</strong>. 4) Post-resección quirúrgica o endoscópica de <strong>cáncer gástrico</strong>. 5) <strong>Familiares de primer grado de cáncer gástrico</strong>. 6) Pacientes que van a iniciar <strong>AINE o aspirina</strong> crónica (reduce riesgo de úlcera). 7) <strong>Dispepsia funcional</strong> (puede mejorar síntomas en subgrupo). 8) <strong>Anemia ferropénica inexplicada</strong>. 9) <strong>Púrpura trombocitopénica inmune</strong>. La estrategia "test and treat" se recomienda en dispepsia sin síntomas de alarma en &lt;55 años.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué H. pylori causa úlcera duodenal si la bacteria coloniza el estómago?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El mecanismo es indirecto: H. pylori coloniza el antro gástrico → inflamación crónica → destrucción de células D (productoras de somatostatina) → pérdida del freno de la gastrina → células G sobreproducen <strong>gastrina</strong> → hipergastrinemia → estimulación excesiva de células parietales → <strong>hiperclorhidria</strong> (exceso de HCl). El exceso de ácido: 1) Llega al duodeno en cantidad excesiva. 2) Provoca <strong>metaplasia gástrica en duodeno</strong> (el duodeno cambia su mucosa para adaptarse al ácido). 3) H. pylori coloniza estas áreas de metaplasia gástrica duodenal. 4) La combinación ácido+bacteria → úlcera duodenal. Las úlceras duodenales son casi siempre (95%) causadas por H. pylori o AINEs.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuándo se considera que existe fracaso del tratamiento erradicador y cuál es la actitud?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Se considera fracaso cuando el test de confirmación (aliento o antígeno en heces, 4-6 semanas post-tratamiento) es <strong>positivo</strong>. Actitud: 1) <strong>2° línea</strong>: terapia cuádruple con bismuto (si no se usó en 1ª línea) o terapia levofloxacino-amoxicilina-IBP x 14 días. 2) <strong>3° línea</strong>: cultivo con antibiograma → tratamiento dirigido (rifabutina-amoxicilina-IBP). Las principales causas de fracaso: resistencia a claritromicina (&gt;15% en muchos países), resistencia a metronidazol, mala adherencia, dosis insuficiente de IBP. Nunca repetir el mismo esquema que falló. Registro de antibióticos previos obligatorio.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué características microbiológicas especiales tiene H. pylori (morfología, requerimientos de cultivo)?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">H. pylori: bacilo Gram (−) <strong>curvado o en espiral</strong> (forma de S o C), 2.5-5 μm. <strong>Microaerófilo</strong>: crece con 5-10% O₂ y 5-10% CO₂ (no en aerobiosis ni anaerobiosis estricta). <strong>Temperatura</strong>: 37°C. <strong>Medios especiales</strong>: ágar sangre con antibióticos selectivos (vancomicina, trimetoprim, anfotericina B) para inhibir flora contaminante de la biopsia. Crecimiento lento: 3-5 días. Pruebas bioquímicas positivas: <strong>ureasa, catalasa, oxidasa</strong> (las 3 positivas son el patrón diagnóstico). Flagelos unipolares (4-6 flagelos en un polo) que le dan movilidad. En condiciones adversas adopta forma cocoide (viable pero no cultivable).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 5: Campylobacter jejuni -->
+  <div class="caso" id="caso-4">
+    <div class="caso-header">
+      <div class="bacteria-tag">Bacilo Gram (−) · Microaerófilo · Termofílico · Zoonosis</div>
+      <div class="caso-title">Campylobacter jejuni</div>
+      <div class="caso-meta">Paciente: Varón, 22 años · Servicio: Urgencias · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 22 años, sin antecedentes, acude por <strong>diarrea con sangre de 4 días de evolución, cólicos abdominales intensos, fiebre de 38.9°C y mialgias</strong>. Refiere que 3 días antes del inicio comió en una barbacoa donde consumió <strong>pollo poco cocido</strong>. Varios comensales del mismo evento presentan cuadros similares.
+        <br><br>
+        Examen físico: fiebre 38.9°C, abdomen con dolor difuso a la palpación, sin signos peritoneales. Heces con sangre visible.
+        <br><br>
+        Coproscopia: <strong>leucocitos abundantes, hematíes</strong>. Coprocultivo en <strong>ágar Campy-BAP a 42°C</strong> en microaerofilia: <strong>colonias grises, oxidasa positiva, catalasa positiva, bacilos curvados en "ala de gaviota" en Gram</strong>. Sensible a ácido nalidíxico.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Heces</div><div class="dado-valor anormal">Con sangre</div></div>
+        <div class="dado"><div class="dado-label">Temperatura cultivo</div><div class="dado-valor anormal">42°C</div></div>
+        <div class="dado"><div class="dado-label">Morfología</div><div class="dado-valor anormal">"Ala de gaviota"</div></div>
+        <div class="dado"><div class="dado-label">Oxidasa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Catalasa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Microaerofilia</div><div class="dado-valor anormal">Requerida</div></div>
+        <div class="dado"><div class="dado-label">Fuente</div><div class="dado-valor anormal">Pollo poco cocido</div></div>
+        <div class="dado"><div class="dado-label">Ác. nalidíxico</div><div class="dado-valor normal">Sensible</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el agente y qué características microbiológicas lo identifican?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Agente: <strong>Campylobacter jejuni</strong>. Características identificativas: 1) Bacilo Gram (−) <strong>curvado o en espiral</strong>, forma de "S", "C" o "ala de gaviota" en Gram. 2) <strong>Microaerófilo</strong>: crece con 5% O₂, 10% CO₂, 85% N₂. 3) <strong>Termofílico</strong>: temperatura óptima 42°C (igual que temperatura intestinal de aves). 4) <strong>Oxidasa (+)</strong> y <strong>catalasa (+)</strong>: diferencia de Shigella y Salmonella (oxidasa −). 5) <strong>Sensible a ácido nalidíxico</strong> (diferencia C. jejuni de C. coli que es resistente, y de H. pylori). 6) Medio selectivo: <strong>ágar Campy-BAP (Butzler)</strong> con antibióticos inhibidores de flora fecal.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuál es la principal fuente de infección por Campylobacter y cómo se previene?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La <strong>principal fuente</strong> es el <strong>pollo de granja</strong>: Campylobacter coloniza el intestino de las aves a 42°C sin causarles enfermedad. Contaminación durante el faenado es casi universal. Otras fuentes: leche no pasteurizada, agua contaminada, contacto con animales de granja, mascotas (perros, gatos). Campylobacter es la <strong>causa más frecuente de gastroenteritis bacteriana</strong> en países desarrollados (supera a Salmonella). Prevención: 1) Cocción completa del pollo (>70°C en el centro). 2) No lavar pollo crudo (aerosoles contaminan superficies). 3) Tablas de corte separadas. 4) Lavado de manos. 5) Leche pasteurizada. 6) Agua potable segura.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de la campylobacteriosis y cuándo están indicados los antibióticos?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La mayoría de casos (leves-moderados) son <strong>autolimitados en 5-7 días</strong> y solo requieren hidratación oral. Antibióticos indicados en: 1) Casos graves (fiebre alta, diarrea sanguinolenta intensa, más de 7 días). 2) Inmunocomprometidos. 3) Bacteriemia. 4) Embarazadas. Tratamiento: <strong>azitromicina 500mg/día x 3 días</strong> (primera línea — resistencia creciente a fluoroquinolonas). Alternativa: eritromicina 500mg c/12h x 5 días. <strong>Fluoroquinolonas (ciprofloxacino) ya no son primera línea</strong>: resistencia >40% en muchos países (relacionada con uso de fluoroquinolonas en avicultura). No usar ampicilina (resistencia intrínseca).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Qué complicaciones post-infecciosas puede causar Campylobacter jejuni?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Síndrome de Guillain-Barré (SGB)</strong>: la complicación más grave y temida. Neuropatía periférica desmielinizante autoinmune 2-4 semanas post-infección. Mecanismo: <strong>mimetismo molecular</strong> — el LOS de C. jejuni tiene estructura similar a gangliósidos del nervio periférico (GM1, GD1a) → anticuerpos anti-LOS atacan la mielina → parálisis ascendente flácida. C. jejuni es la causa infecciosa más frecuente de SGB. 2. <strong>Artritis reactiva</strong>: especialmente HLA-B27+. 3. <strong>Síndrome de Reiter</strong>: artritis + conjuntivitis + uretritis. 4. <strong>Eritema nodoso</strong>. 5. <strong>Bacteriemia</strong>: rara, en inmunocomprometidos.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Por qué Campylobacter requiere microaerofilia para crecer y qué temperatura de cultivo se usa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Campylobacter requiere <strong>microaerofilia</strong> (5% O₂) porque: 1) No tiene los sistemas enzimáticos para neutralizar radicales libres de oxígeno generados en aerobiosis completa (sensible al O₂ en alta concentración). 2) No puede crecer en anaerobiosis (necesita algo de O₂ para la cadena respiratoria). Este ambiente refleja el intestino delgado/grueso, su hábitat natural. Temperatura de cultivo: <strong>42°C</strong> (termofílico). Ventajas del cultivo a 42°C: 1) Temperatura óptima para Campylobacter. 2) Inhibe la mayoría de la flora fecal competidora (que no crece bien a 42°C). 3) Es un selector adicional junto con los antibióticos del medio. C. fetus crece a 25°C pero no a 42°C (diferencial).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se diferencia Campylobacter de Helicobacter pylori microbiológicamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambos son bacilos curvados Gram (−), microaerófilos, oxidasa (+), catalasa (+). Diferencias: <strong>Temperatura óptima</strong>: C. jejuni 42°C; H. pylori 37°C. <strong>Ureasa</strong>: H. pylori <strong>(+)</strong>; Campylobacter (−). <strong>Ácido nalidíxico</strong>: C. jejuni sensible; H. pylori resistente. <strong>Hábitat</strong>: C. jejuni intestino; H. pylori estómago. <strong>Reservorio</strong>: C. jejuni en aves/animales; H. pylori exclusivamente humano. <strong>Transmisión</strong>: C. jejuni zoonótica/alimentaria; H. pylori fecal-oral persona-persona. <strong>Enfermedad</strong>: C. jejuni → gastroenteritis aguda; H. pylori → infección crónica, úlcera, cáncer.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Cuál es el mecanismo patogénico de Campylobacter jejuni en el intestino?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">C. jejuni afecta principalmente <strong>íleon terminal y colon</strong>. Mecanismo: 1) <strong>Flagelos</strong>: penetración del moco intestinal, movilidad, adhesión al epitelio. 2) <strong>Adhesinas</strong>: unión a células epiteliales. 3) <strong>Invasión celular</strong>: puede invadir enterocitos (mecanismo similar a Shigella pero menos eficiente). 4) <strong>Citotoxinas</strong>: toxina distensora celular (CDT), similar a H. ducreyi → daño celular. 5) <strong>LOS (endotoxina)</strong>: inflamación local. 6) Respuesta inflamatoria intensa con infiltrado PMN → destrucción epitelial → úlceras → diarrea inflamatoria con sangre. La combinación de invasión + citotoxinas + inflamación explica la diarrea sanguinolenta.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Qué es el Síndrome de Guillain-Barré y cómo lo causa C. jejuni?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>SGB</strong> es una polineuropatía inflamatoria aguda autoinmune caracterizada por: debilidad muscular ascendente simétrica (comienza en piernas, asciende), arreflexia, posible compromiso respiratorio (requiere ventilación en 30%). Mecanismo por C. jejuni: <strong>mimetismo molecular</strong>. El <strong>LOS</strong> de C. jejuni tiene estructuras de gangliósidos idénticas a las del nervio periférico (GM1, GD1a, GD1b). Los anticuerpos anti-C. jejuni (anti-LOS) atacan por error los gangliósidos neuronales → desmielinización y/o daño axonal. Variante axonal (AMAN) más frecuente post-Campylobacter. C. jejuni es el desencadenante infeccioso más frecuente de SGB (20-30% de casos). Tratamiento SGB: IVIG o plasmaféresis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuáles son las diferencias entre C. jejuni y C. coli en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambas son morfológica y clínicamente similares. Diferencias de laboratorio: <strong>Hidrólisis de hipurato</strong>: C. jejuni <strong>(+)</strong>; C. coli (−) — prueba diferencial clave. <strong>Ácido nalidíxico</strong>: C. jejuni sensible; C. coli <strong>resistente</strong>. <strong>Epidemiología</strong>: C. jejuni causa 80-90% de campylobacteriosis humanas; C. coli 5-10% (más en cerdos). C. fetus: menos frecuente, crece a 25°C pero no a 42°C, causa infecciones sistémicas en inmunocomprometidos (bacteriemia, endocarditis). En la práctica clínica, ambas se manejan igual y no siempre se diferencian, pero la diferenciación es importante epidemiológicamente.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Por qué la resistencia a fluoroquinolonas en Campylobacter ha aumentado tan rápidamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La resistencia a fluoroquinolonas en Campylobacter aumentó porque: 1) <strong>Uso masivo de fluoroquinolonas en avicultura</strong>: enrofloxacino y ciprofloxacino se usaron durante años para tratar infecciones en pollos y como promotores de crecimiento. 2) Campylobacter desarrolló mutaciones en la <strong>ADN girasa (subunidad gyrA, Thr-86-Ile)</strong> con alta frecuencia. 3) No necesita plásmidos: la resistencia es cromosómica y se selecciona rápidamente con exposición. 4) Las aves resistentes contaminan la cadena alimentaria. Resultado: en muchos países la resistencia de C. jejuni a ciprofloxacino es &gt;40-50%. La UE prohibió el uso de fluoroquinolonas en avicultura en 2006, pero el impacto ha sido limitado. Por eso azitromicina es ahora primera línea.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 5</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)">Siguiente →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 5;
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+function toggleGabarito(header) {
+  header.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>

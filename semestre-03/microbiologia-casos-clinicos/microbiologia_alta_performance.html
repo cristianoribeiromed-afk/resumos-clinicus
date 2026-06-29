@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiología · Alta Performance</title>
+<style>
+  :root{
+    --bg:#0f1115; --bg2:#171a21; --card:#1c2029; --card2:#222733;
+    --border:#2c313d; --text:#e8e6e1; --muted:#9aa0ab;
+    --gold:#e0b15c; --gold2:#c98f3a; --blue:#5c9ee0; --red:#e0615c;
+    --green:#5ce0a0; --purple:#b08ce0; --orange:#e08a5c;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Georgia',serif;background:var(--bg);color:var(--text);}
+  h1,h2,h3,h4{font-family:'Trebuchet MS',sans-serif;}
+  .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#11141a,#0f1115cc);
+    border-bottom:1px solid var(--border);padding:14px 18px;display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:10px;backdrop-filter:blur(6px);}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);}
+  .brand span{font-weight:bold;letter-spacing:.5px;}
+  .xpbox{display:flex;align-items:center;gap:12px;font-family:sans-serif;font-size:14px;}
+  .xpbar{width:140px;height:10px;background:#2a2f3a;border-radius:6px;overflow:hidden;}
+  .xpfill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));width:0%;transition:width .4s;}
+  .streak{background:#2a2f3a;padding:4px 10px;border-radius:20px;color:var(--orange);}
+  nav{display:flex;gap:6px;overflow-x:auto;padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--border);}
+  nav button{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 14px;border-radius:20px;
+    cursor:pointer;font-size:13px;white-space:nowrap;font-family:sans-serif;transition:.2s;}
+  nav button:hover{color:var(--text);border-color:var(--gold2);}
+  nav button.active{background:var(--gold);color:#15161a;border-color:var(--gold);font-weight:bold;}
+  main{max-width:980px;margin:0 auto;padding:26px 18px 80px;}
+  .section{display:none;animation:fade .3s;}
+  .section.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .hero{padding:18px 22px;border-radius:14px;margin-bottom:24px;border:1px solid var(--border);
+    background:linear-gradient(135deg,var(--card),var(--card2));}
+  .hero h2{margin:0 0 6px;color:var(--gold);font-size:22px;}
+  .hero p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.5;font-family:sans-serif;}
+  .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;font-family:sans-serif;margin-right:6px;}
+  .tag.alta{background:#3a2f1a;color:var(--gold);}
+  .tag.pega{background:#3a2020;color:var(--red);}
+  .tag.macete{background:#1f3a2c;color:var(--green);}
+  .tag.confunde{background:#2a1f3a;color:var(--purple);}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .card h3{margin:0 0 10px;color:var(--blue);font-size:17px;border-left:3px solid var(--blue);padding-left:10px;}
+  .card p, .card li{font-size:14.5px;line-height:1.65;color:#dcdad4;}
+  .mnemo{background:#1f3a2c33;border:1px dashed var(--green);border-radius:10px;padding:12px 14px;margin-top:10px;font-family:sans-serif;font-size:13.5px;color:#bfe8d2;}
+  .pegadinha{background:#3a202033;border:1px dashed var(--red);border-radius:10px;padding:12px 14px;margin-top:10px;font-family:sans-serif;font-size:13.5px;color:#f0bcb8;}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-family:sans-serif;font-size:13.5px;}
+  th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;}
+  th{background:#252a35;color:var(--gold);}
+  tr:nth-child(even){background:#1a1e26;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:700px){.grid2{grid-template-columns:1fr;}}
+  .bugcard{border-left:4px solid var(--gold2);}
+  .bugcard h3{color:var(--gold);border-left:none;padding-left:0;font-size:18px;}
+  .bugmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+
+  .flashzone{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .flashcard{width:100%;max-width:560px;height:230px;perspective:1200px;cursor:pointer;}
+  .flashinner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+  .flashcard.flipped .flashinner{transform:rotateY(180deg);}
+  .face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:sans-serif;
+    border:1px solid var(--border);}
+  .front{background:var(--card2);font-size:17px;color:var(--text);}
+  .back{background:#1f2a22;transform:rotateY(180deg);color:var(--green);font-size:14.5px;}
+  .flashnav{display:flex;gap:10px;font-family:sans-serif;}
+  .btn{background:var(--gold);color:#15161a;border:none;padding:9px 18px;border-radius:8px;cursor:pointer;
+    font-weight:bold;font-family:sans-serif;font-size:13.5px;}
+  .btn.sec{background:#2a2f3a;color:var(--text);}
+  .progresslabel{font-family:sans-serif;color:var(--muted);font-size:13px;}
+
+  .qcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+  .qcard h4{margin:0 0 12px;font-size:15.5px;font-family:sans-serif;}
+  .opt{display:block;width:100%;text-align:left;background:#20242e;border:1px solid var(--border);color:var(--text);
+    padding:10px 14px;border-radius:8px;margin-bottom:8px;cursor:pointer;font-family:sans-serif;font-size:13.5px;}
+  .opt:hover{border-color:var(--gold2);}
+  .opt.correct{background:#1f3a2c;border-color:var(--green);color:var(--green);}
+  .opt.wrong{background:#3a2020;border-color:var(--red);color:var(--red);}
+  .explain{margin-top:8px;font-size:13px;color:var(--muted);font-family:sans-serif;display:none;}
+  .quizresult{text-align:center;padding:30px;font-family:sans-serif;}
+  .quizresult h2{color:var(--gold);font-size:34px;}
+
+  .timeline{display:flex;flex-direction:column;gap:10px;}
+  .tstep{display:flex;gap:14px;align-items:flex-start;}
+  .tdot{min-width:70px;text-align:center;background:var(--gold);color:#15161a;border-radius:8px;
+    padding:6px 0;font-weight:bold;font-family:sans-serif;font-size:12.5px;}
+  .tcontent{font-family:sans-serif;font-size:13.5px;color:#dcdad4;background:var(--card2);border-radius:8px;
+    padding:10px 14px;flex:1;border:1px solid var(--border);}
+
+  .pocket{background:#15171c;border:1px solid var(--gold2);border-radius:14px;padding:20px;}
+  .pocket h3{color:var(--gold);}
+  .pocket p{font-family:sans-serif;font-size:13px;}
+  .footer{text-align:center;color:var(--muted);font-family:sans-serif;font-size:12px;padding:30px 0;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><div class="dot"></div><span>MICROBIOLOGÍA · ALTA PERFORMANCE — Dr. Cristiano</span></div>
+  <div class="xpbox">
+    <div class="streak">🔥 <span id="streakCount">0</span> aciertos</div>
+    <span>XP: <span id="xpVal">0</span></span>
+    <div class="xpbar"><div class="xpfill" id="xpFill"></div></div>
+    <span id="lvlVal" style="color:var(--gold);font-weight:bold;">Nv.1</span>
+  </div>
+</div>
+
+<nav id="navTabs"></nav>
+<main id="mainContent"></main>
+<div class="footer">Plataforma generada con la metodología "Prompt Master" — Mapa de prueba · Mnemónicos · Confusiones clásicas · Flashcards · Quiz · Resumen de bolsillo</div>
+
+<script>
+let state = { xp:0, streak:0, level:1 };
+function addXP(n){
+  state.xp += n;
+  if(n>0) state.streak++; else state.streak=0;
+  state.level = Math.floor(state.xp/100)+1;
+  document.getElementById('xpVal').textContent = state.xp;
+  document.getElementById('lvlVal').textContent = 'Nv.'+state.level;
+  document.getElementById('streakCount').textContent = state.streak;
+  document.getElementById('xpFill').style.width = (state.xp%100)+'%';
+}
+
+const sections = [
+  {id:'mapa', label:'🗺️ Mapa da Prova'},
+  {id:'cocosp', label:'🔵 Cocos Gram+'},
+  {id:'cocosn', label:'🟣 Cocos Gram-'},
+  {id:'bacilosn', label:'🟠 Bacilos Gram-'},
+  {id:'myco', label:'🫁 Micobacterias'},
+  {id:'bacilosp', label:'🟢 Bacilos Gram+'},
+  {id:'confusiones', label:'🚨 Confusiones'},
+  {id:'flash', label:'🃏 Flashcards'},
+  {id:'quiz', label:'🎯 Quiz'},
+  {id:'plan', label:'📅 Plan de Revisión'},
+  {id:'bolso', label:'📄 Resumen de Bolsillo'},
+];
+const nav = document.getElementById('navTabs');
+sections.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.textContent = s.label;
+  b.onclick = ()=>showSection(s.id, b);
+  if(i===0) b.classList.add('active');
+  nav.appendChild(b);
+});
+function showSection(id, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+const main = document.getElementById('mainContent');
+main.innerHTML = `
+
+<section id="mapa" class="section active">
+  <div class="hero">
+    <h2>🗺️ Etapa 1 — Mapa da Prova (26 Bactérias)</h2>
+    <p>5 blocos: Cocos Gram+ (6), Cocos Gram- (2), Bacilos Gram- (10), Micobacterias (1), Bacilos Gram+ (7). 
+    A banca adora testar: morfologia + coloración, fator de virulência-chave, doença típica e diferencial entre espécies parecidas.</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>⭐ Alta incidência</h3>
+      <ul>
+        <li><em>S. aureus</em> coagulasa+ vs. <em>S. epidermidis/saprophyticus</em> coagulasa-</li>
+        <li><em>S. pyogenes</em> (grupo A) vs. <em>S. agalactiae</em> (grupo B) — fiebre reumática vs. sepsis neonatal</li>
+        <li><em>N. gonorrhoeae</em> vs. <em>N. meningitidis</em> — diplococos Gram-, doenças diferentes</li>
+        <li><em>E. coli</em> e <em>Klebsiella pneumoniae</em> — enterobactérias, ITU/nosocomial</li>
+        <li><em>M. tuberculosis</em> — BAAR, Ziehl-Neelsen, tratamento de 6 meses</li>
+        <li>Esporulados Gram+: <em>Clostridium</em> (anaeróbio) vs. <em>Bacillus</em> (aeróbio)</li>
+      </ul>
+    </div>
+    <div class="card"><h3>🔥 Pegadinhas frequentes</h3>
+      <ul>
+        <li>Confundir toxina tetânica (espástica) com botulínica (flácida)</li>
+        <li>Pensar que toda Neisseria causa a mesma doença</li>
+        <li><em>H. pylori</em> não é enterobactéria típica — é espiralada, urease+</li>
+        <li><em>C. difficile</em> associado a antibiótico, não a comida (diferente de <em>C. perfringens</em>)</li>
+        <li><em>Bacillus anthracis</em> tem cápsula de polipéptido (raro entre bactérias — a maioria tem cápsula de polissacarídeo)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="cocosp" class="section">
+  <div class="hero"><h2>🔵 Cocos Gram Positivos</h2><p>Staphylococcus e Streptococcus</p></div>
+
+  <div class="card bugcard"><h3>Staphylococcus aureus</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p><strong>Morfología:</strong> coco Gram+ en racimos. <strong>Coagulasa: POSITIVA</strong> (clave diferencial del género).</p>
+    <p><strong>Virulencia:</strong> toxina TSST-1 (shock tóxico), leucocidina, coagulasa, proteína A (evade fagocitosis), beta-lactamasa.</p>
+    <p><strong>Clínica:</strong> abscesos, foliculitis, impetigo bulloso, neumonía post-influenza, endocarditis aguda, osteomielitis, intoxicación alimentaria (toxina termoestable, inicio rápido 1-6h), síndrome de shock tóxico, MRSA (resistencia a meticilina).</p>
+    <div class="mnemo">🧠 Macete: "Aureus = oro = TODO" — causa de casi todo (piel, hueso, sangre, intoxicación). Coagulasa POSITIVA = "se queda" formando coágulo y abscesos localizados.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Staphylococcus saprophyticus</h3>
+    <p><strong>Coagulasa: negativa.</strong> Resistente a novobiocina.</p>
+    <p><strong>Clínica:</strong> ITU en mujeres jóvenes sexualmente activas — 2ª causa de ITU no complicada después de <em>E. coli</em>.</p>
+    <div class="mnemo">🧠 Macete: "SaproPHYticus" suena a "fica feliz" na uretra de mulher jovem — segunda causa de ITU.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Staphylococcus epidermidis</h3>
+    <p><strong>Coagulasa: negativa.</strong> Sensible a novobiocina.</p>
+    <p><strong>Clínica:</strong> infecciones de catéteres y prótesis (forma biofilm) — contaminante común de hemocultivos.</p>
+    <div class="pegadinha">🔥 Pegadinha: la prueba diferencia saprophyticus de epidermidis por la NOVOBIOCINA: saprophyticus es RESISTENTE, epidermidis es SENSIBLE.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Streptococcus pyogenes (Grupo A)</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Beta-hemolítico. Catalasa NEGATIVA (diferencia de Staph).</p>
+    <p><strong>Virulencia:</strong> proteína M (adhesión, evade fagocitosis), exotoxina pirogénica (escarlatina), estreptolisina O/S.</p>
+    <p><strong>Clínica:</strong> faringitis, escarlatina, impetigo, erisipela, fascitis necrotizante, fiebre reumática y glomerulonefritis post-estreptocócica (secuelas inmunológicas, NO infección directa).</p>
+    <div class="mnemo">🧠 Macete: "Pyogenes Pega o coração e o Rim depois" — las secuelas (fiebre reumática = corazón; GN = riñón) ocurren SEMANAS después, por anticuerpos cruzados, no por la bacteria en sí.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Streptococcus agalactiae (Grupo B)</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Beta-hemolítico. <strong>Causa #1 de sepsis y meningitis neonatal</strong> (transmisión vertical en el canal del parto).</p>
+    <div class="mnemo">🧠 Macete: "Agalactiae = bebé Grupo B" — toda gestante se hace cultivo vaginal-rectal en la semana 35-37 para detectarlo y dar profilaxis ATB intraparto.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Streptococcus pneumoniae</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Diplococo Gram+ encapsulado, alfa-hemolítico, lanceolado.</p>
+    <p><strong>Clínica:</strong> neumonía adquirida en la comunidad (#1 causa), otitis media, sinusitis, meningitis en adultos (#1 causa).</p>
+    <div class="mnemo">🧠 Macete: "Pneumoniae = Pulmón + Meninges + Oído" — la cápsula es el factor de virulencia clave (por eso existe vacuna conjugada/polisacárida).</div>
+  </div>
+</section>
+
+<section id="cocosn" class="section">
+  <div class="hero"><h2>🟣 Cocos Gram Negativos</h2><p>Neisseria</p></div>
+
+  <div class="card bugcard"><h3>Neisseria gonorrhoeae</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Diplococo Gram- "en granos de café". No tiene cápsula polisacárida prominente. Solo infecta humanos.</p>
+    <p><strong>Clínica:</strong> uretritis purulenta, cervicitis, conjuntivitis neonatal (oftalmia gonocócica), EIP (enfermedad inflamatoria pélvica), artritis séptica en adultos jóvenes sexualmente activos.</p>
+    <div class="mnemo">🧠 Macete: "GonorrHOEae = HOje mesmo" — incubación corta (2-5 días) y secreción purulenta abundante, a diferencia de Chlamydia (más silenciosa).</div>
+  </div>
+
+  <div class="card bugcard"><h3>Neisseria meningitidis</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Diplococo Gram-, CON cápsula de polisacárido (clave para vacunas por serogrupo: A, B, C, W, Y).</p>
+    <p><strong>Clínica:</strong> meningitis bacteriana aguda en jóvenes/adolescentes, meningococcemia con petequias/púrpura, síndrome de Waterhouse-Friderichsen (hemorragia adrenal).</p>
+    <div class="pegadinha">🔥 Pegadinha clásica: gonorrhoeae y meningitidis son morfológicamente IDÉNTICAS al Gram (diplococos en granos de café) — la diferencia está en la cápsula y la clínica, no en la coloración.</div>
+    <div class="mnemo">🧠 Macete: "MeningitIDIS tem cápsula e vacIDna" — la cápsula es lo que permite las vacunas meningocócicas.</div>
+  </div>
+</section>
+
+<section id="bacilosn" class="section">
+  <div class="hero"><h2>🟠 Bacilos Gram Negativos</h2><p>Enterobacterias y otros</p></div>
+
+  <div class="card bugcard"><h3>Escherichia coli</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Enterobacteria, flora normal intestinal — pero cepas patógenas causan enfermedad.</p>
+    <p><strong>Causa #1 de ITU</strong> (fimbrias P se adhieren al uroepitelio). Cepa O157:H7 (enterohemorrágica) → toxina Shiga-like → síndrome hemolítico-urémico (SHU).</p>
+    <div class="mnemo">🧠 Macete: "E. coli O157:H7 = Hambúrguer Hemolítico" — carne mal cocida, diarrea sanguinolenta, luego SHU en niños.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Klebsiella pneumoniae</h3>
+    <p>Bacilo Gram-, gran cápsula mucoide. Lactosa+ (colonias rosadas en Mac Conkey).</p>
+    <p><strong>Clínica:</strong> neumonía nosocomial/en alcohólicos-diabéticos, esputo "en gelatina de grosella" (sanguinolento y espeso), ITU, infecciones nosocomiales multirresistentes (KPC, carbapenemasa).</p>
+    <div class="mnemo">🧠 Macete: "Klebsiella = Kápsula Konfusa" — la cápsula gruesa le da el aspecto mucoide y la resistencia a la fagocitosis.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Klebsiella granulomatis</h3>
+    <p>Causa el <strong>granuloma inguinal (donovanosis)</strong> — ITS con úlceras genitales indoloras, progresivas, sin adenopatía dolorosa.</p>
+    <p>Diagnóstico: cuerpos de Donovan (intracelulares) en tejido — NO crece en cultivo de rutina.</p>
+    <div class="pegadinha">🔥 Pegadinha: no confundir con <em>Haemophilus ducreyi</em> (chancroide) — ese SÍ es doloroso y con adenopatía dolorosa ("bubón").</div>
+  </div>
+
+  <div class="card bugcard"><h3>Pseudomonas aeruginosa</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Bacilo Gram- no fermentador, oxidasa+, pigmento verdoso (piocianina), olor a uva/tierra.</p>
+    <p><strong>Clínica:</strong> infección en quemaduras, neumonía en fibrosis quística/ventilados, otitis externa "del nadador", ectima gangrenoso, osteomielitis en usuarios de drogas IV. Muy resistente (multidroga).</p>
+    <div class="mnemo">🧠 Macete: "Pseudomonas = Piscina + Pus verde + Paciente internado" — agua, color verde-azulado, ambiente hospitalario/inmunosuprimido.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Salmonella spp.</h3>
+    <p>Bacilo Gram-, NO fermenta lactosa, móvil (flagelos), invasiva (atraviesa la mucosa intestinal → bacteriemia).</p>
+    <p><strong>Clínica:</strong> gastroenteritis (huevo/pollo mal cocido), fiebre tifoidea (S. typhi — fiebre prolongada, "rosa spots", portador en vesícula biliar).</p>
+    <div class="mnemo">🧠 Macete: "SalmoNELLA viaja (invade la sangre)" — a diferencia de Shigella, sí causa bacteriemia con frecuencia.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Shigella spp.</h3>
+    <div class="bugmeta"><span class="tag confunde">🚨 CONFUNDE</span></div>
+    <p>Bacilo Gram-, NO fermenta lactosa, INMÓVIL (sin flagelos) — diferencia clave vs. Salmonella.</p>
+    <p><strong>Clínica:</strong> disentería bacilar (moco + sangre + pus), muy baja dosis infectante, NO suele causar bacteriemia (permanece local en la mucosa).</p>
+    <div class="pegadinha">🔥 Pegadinha clásica: Salmonella (móvil, invade sangre) vs. Shigella (inmóvil, queda local) — la prueba ama invertir esto.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Haemophilus influenzae</h3>
+    <p>Cocobacilo Gram-, requiere factores X (hemina) y V (NAD) para crecer — agar chocolate.</p>
+    <p><strong>Tipo B (Hib, encapsulado):</strong> meningitis/epiglotitis en niños no vacunados. <strong>No tipificable:</strong> otitis media, sinusitis, exacerbación de EPOC.</p>
+    <div class="mnemo">🧠 Macete: "Hib = Hospital infantil before vacuna" — antes de la vacuna Hib, era causa #1 de meningitis infantil; hoy es rara por la vacunación.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Haemophilus ducreyi</h3>
+    <p>Causa el <strong>chancroide</strong>: úlcera genital DOLOROSA + adenopatía inguinal dolorosa y supurativa ("bubón").</p>
+    <div class="mnemo">🧠 Macete: "Ducreyi DUEle" — única ITS con úlcera genital francamente dolorosa (vs. sífilis y donovanosis, que son indoloras).</div>
+  </div>
+
+  <div class="card bugcard"><h3>Helicobacter pylori</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Bacilo espiralado Gram-, microaerófilo, ureasa+ (clave diagnóstica: test de aliento con urea marcada, test rápido de ureasa en biopsia).</p>
+    <p><strong>Clínica:</strong> gastritis crónica, úlcera peptídica (duodenal &gt; gástrica), factor de riesgo para adenocarcinoma gástrico y linfoma MALT.</p>
+    <div class="mnemo">🧠 Macete: "Pylori = Produce amonio" (ureasa rompe urea en amonio + CO₂) — el amonio neutraliza el ácido local y permite que la bacteria sobreviva en el estómago.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Campylobacter jejuni</h3>
+    <p>Bacilo Gram- en forma de "ala de gaviota", microaerófilo. Causa más común de gastroenteritis bacteriana en muchos países (pollo mal cocido).</p>
+    <div class="mnemo">🧠 Macete: "Campylobacter → Guillain-Barré" — es la causa infecciosa más asociada al síndrome de Guillain-Barré por mimetismo molecular (gangliósidos).</div>
+  </div>
+</section>
+
+<section id="myco" class="section">
+  <div class="hero"><h2>🫁 Micobacterias</h2></div>
+  <div class="card bugcard"><h3>Mycobacterium tuberculosis</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>BAAR (bacilo ácido-alcohol resistente) — pared rica en ácido micólico, tinción de Ziehl-Neelsen (no se tiñe con Gram convencional).</p>
+    <p><strong>Patogenia:</strong> crecimiento intracelular en macrófagos, formación de granulomas (necrosis caseosa), reactivación en inmunosupresión.</p>
+    <p><strong>Clínica:</strong> tos crónica &gt;2-3 semanas, hemoptisis, pérdida de peso, sudoración nocturna, fiebre vespertina. Diagnóstico: baciloscopia, cultivo (Löwenstein-Jensen), PCR/GeneXpert, PPD/IGRA para latente.</p>
+    <p><strong>Tratamiento:</strong> esquema de 6 meses — RIPE (Rifampicina, Isoniazida, Pirazinamida, Etambutol) 2 meses + RI 4 meses.</p>
+    <div class="mnemo">🧠 Macete: "RIPE seis meses" — 2 meses con los 4, 4 meses con los 2 primeros (RI). BAAR = "Bacilo Bonito Ácido-resistente" — no se ve con Gram normal.</div>
+    <div class="pegadinha">🔥 Pegadinha: la prova pode tentar fazer você colorar TB com Gram — ela é BAAR, requer Ziehl-Neelsen ou auramina-rodamina (fluorescencia).</div>
+  </div>
+</section>
+
+<section id="bacilosp" class="section">
+  <div class="hero"><h2>🟢 Bacilos Gram Positivos</h2><p>Listeria, Clostridium y Bacillus</p></div>
+
+  <div class="card bugcard"><h3>Listeria monocytogenes</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Bacilo Gram+, intracelular facultativo, móvil ("motilidad en tumbling"), crece a 4°C (refrigeración no la mata).</p>
+    <p><strong>Clínica:</strong> gastroenteritis por alimentos contaminados (quesos no pasteurizados, embutidos), meningitis en neonatos/ancianos/inmunosuprimidos, <strong>sepsis y aborto en embarazadas</strong> (atraviesa la placenta).</p>
+    <div class="mnemo">🧠 Macete: "Listeria gosta de geladeira e de gestante" — sobrevive en frío y es de las pocas bacterias que cruzan la placenta causando aborto/sepsis neonatal.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Clostridium tetani</h3>
+    <div class="bugmeta"><span class="tag confunde">🚨 CONFUNDE</span></div>
+    <p>Bacilo Gram+ anaerobio, esporulado (esporas en heces de animales, tierra). Toxina <strong>tetanoespasmina</strong> bloquea liberación de GABA/glicina (neuronas inhibitorias) en médula.</p>
+    <p><strong>Clínica:</strong> parálisis ESPÁSTICA — trismus ("risa sardónica"), opistótonos, espasmos musculares generalizados.</p>
+    <div class="mnemo">🧠 Macete: "TeTAni = TenSo" — bloquea la INHIBICIÓN → todo músculo queda contraído (espástico, rígido).</div>
+  </div>
+
+  <div class="card bugcard"><h3>Clostridium botulinum</h3>
+    <div class="bugmeta"><span class="tag confunde">🚨 CONFUNDE</span></div>
+    <p>Toxina botulínica bloquea la liberación de <strong>acetilcolina</strong> en la unión neuromuscular (impide la contracción).</p>
+    <p><strong>Clínica:</strong> parálisis FLÁCIDA descendente, diplopía/ptosis, sin fiebre, sin alteración de conciencia. En lactantes: por esporas en la miel ("botulismo del lactante").</p>
+    <div class="pegadinha">🔥 Pegadinha clásica de la prueba: invertir tétanos (espástico, bloquea inhibición) con botulismo (flácido, bloquea excitación/ACh). Son polos opuestos del mismo género.</div>
+    <div class="mnemo">🧠 Macete: "BOTulinum = BObo/flácido" — bloquea la ACh, el músculo queda "flojo" (flácido).</div>
+  </div>
+
+  <div class="card bugcard"><h3>Clostridium difficile</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Anaerobio, esporulado. <strong>Asociado al USO DE ANTIBIÓTICOS</strong> (clindamicina, fluoroquinolonas) que destruyen la flora normal y permiten su sobrecrecimiento.</p>
+    <p><strong>Clínica:</strong> colitis pseudomembranosa — diarrea acuosa/con moco tras antibioticoterapia. Toxinas A y B. Tratamiento: vancomicina oral o fidaxomicina (NO metronidazol IV como primera línea actual).</p>
+    <div class="mnemo">🧠 Macete: "DIFficile = Depois de antibIóticos" — la clave diagnóstica en la prueba siempre es el antecedente de uso reciente de antibiótico.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Clostridium perfringens</h3>
+    <div class="bugmeta"><span class="tag confunde">🚨 CONFUNDE</span></div>
+    <p>Anaerobio, productor de toxina alfa (lecitinasa). Dos presentaciones clave:</p>
+    <ul>
+      <li><strong>Mionecrosis (gangrena gaseosa):</strong> tras trauma/herida profunda, crepitación por gas en tejido.</li>
+      <li><strong>Intoxicación alimentaria:</strong> carne mal recalentada, diarrea acuosa autolimitada (12-24h), SIN fiebre.</li>
+    </ul>
+    <div class="pegadinha">🔥 Pegadinha: no confundir con <em>S. aureus</em> en intoxicación alimentaria — ambas son por toxina preformada/rápida, pero <em>perfringens</em> es por COMIDA RECALENTADA (esporas sobreviven cocción, germinan al enfriar lento) y <em>aureus</em> por alimentos manipulados (mayonesa, cremas) a temperatura ambiente.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Bacillus cereus</h3>
+    <p>Aerobio (a diferencia de los Clostridium), esporulado, Gram+. Asociado clásicamente al <strong>arroz frito recalentado</strong>.</p>
+    <p>Dos toxinas: emética (rápida, &lt;6h, vómitos — similar a S. aureus) y diarreica (tardía, 8-16h, similar a C. perfringens).</p>
+    <div class="mnemo">🧠 Macete: "CeREus = aRRoz" — arroz frito chino recalentado es el caso clásico de prueba.</div>
+  </div>
+
+  <div class="card bugcard"><h3>Bacillus anthracis</h3>
+    <div class="bugmeta"><span class="tag alta">⭐ ALTA</span></div>
+    <p>Aerobio, esporulado, Gram+, con cápsula de POLIPÉPTIDO (ácido D-glutámico) — rareza, ya que la mayoría de cápsulas bacterianas son polisacáridos.</p>
+    <p><strong>Clínica:</strong> ántrax cutáneo (escara negra indolora — "pústula maligna"), ántrax por inhalación (mediastinitis hemorrágica, alta mortalidad — riesgo de bioterrorismo), ántrax gastrointestinal.</p>
+    <div class="mnemo">🧠 Macete: "AnthRACis = cápsula RACa (proteína, no azúcar)" — la única bacteria de la lista con cápsula proteica en vez de polisacárida.</div>
+  </div>
+</section>
+
+<section id="confusiones" class="section">
+  <div class="hero"><h2>🚨 Etapa 4 — Tabla de Confusiones Clásicas</h2></div>
+  <div class="card">
+    <table>
+      <tr><th>Concepto</th><th>Confunde con</th><th>Cómo diferenciar en 5 segundos</th></tr>
+      <tr><td>S. aureus</td><td>S. epidermidis/saprophyticus</td><td>Coagulasa: aureus es POSITIVA, los otros dos negativos</td></tr>
+      <tr><td>S. saprophyticus</td><td>S. epidermidis</td><td>Novobiocina: saprophyticus RESISTENTE, epidermidis SENSIBLE</td></tr>
+      <tr><td>S. pyogenes (Grupo A)</td><td>S. agalactiae (Grupo B)</td><td>Pyogenes = fiebre reumática/GN; agalactiae = sepsis neonatal</td></tr>
+      <tr><td>N. gonorrhoeae</td><td>N. meningitidis</td><td>Meningitidis tiene cápsula (permite vacuna); gonorrhoeae no</td></tr>
+      <tr><td>Salmonella</td><td>Shigella</td><td>Salmonella es MÓVIL e invade sangre; Shigella es INMÓVIL y queda local</td></tr>
+      <tr><td>H. ducreyi (chancroide)</td><td>K. granulomatis (donovanosis)</td><td>Ducreyi = úlcera DOLOROSA con bubón; granulomatis = úlcera INDOLORA progresiva</td></tr>
+      <tr><td>C. tetani</td><td>C. botulinum</td><td>Tetani = parálisis ESPÁSTICA (bloquea inhibición); botulinum = FLÁCIDA (bloquea ACh)</td></tr>
+      <tr><td>C. difficile</td><td>C. perfringens</td><td>Difficile = post-antibiótico; perfringens = comida recalentada o herida (gangrena gaseosa)</td></tr>
+      <tr><td>Clostridium (género)</td><td>Bacillus (género)</td><td>Clostridium = anaerobio; Bacillus = aerobio (ambos esporulados Gram+)</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="flash" class="section">
+  <div class="hero"><h2>🃏 Flashcards — Anki Style</h2><p>Toca la tarjeta para ver la respuesta. +5 XP por tarjeta revisada.</p></div>
+  <div class="flashzone">
+    <div class="flashcard" id="flashcard">
+      <div class="flashinner">
+        <div class="face front" id="flashFront"></div>
+        <div class="face back" id="flashBack"></div>
+      </div>
+    </div>
+    <div class="progresslabel" id="flashProgress"></div>
+    <div class="flashnav">
+      <button class="btn sec" onclick="prevFlash()">⬅ Anterior</button>
+      <button class="btn" onclick="flipFlash()">🔄 Voltear</button>
+      <button class="btn sec" onclick="nextFlash()">Siguiente ➡</button>
+    </div>
+  </div>
+</section>
+
+<section id="quiz" class="section">
+  <div class="hero"><h2>🎯 Simulador de Quiz — Estilo Revalida/INEP</h2><p>+10 XP por respuesta correcta, feedback inmediato.</p></div>
+  <div id="quizContainer"></div>
+  <div id="quizResultBox"></div>
+</section>
+
+<section id="plan" class="section">
+  <div class="hero"><h2>📅 Etapa 8 — Plan de Revisión</h2></div>
+  <div class="card">
+    <div class="timeline">
+      <div class="tstep"><div class="tdot">24 horas</div><div class="tcontent">Releer los 5 bloques y repetir en voz alta los mnemónicos de cada uno.</div></div>
+      <div class="tstep"><div class="tdot">3 días</div><div class="tcontent">Resolver el quiz completo otra vez. Enfocarse en las confusiones clásicas (Salmonella/Shigella, tetani/botulinum).</div></div>
+      <div class="tstep"><div class="tdot">7 días</div><div class="tcontent">Tapar el nombre de cada bacteria y, solo con la clínica, intentar adivinarla (flashcards al revés).</div></div>
+      <div class="tstep"><div class="tdot">15 días</div><div class="tcontent">Releer solo el Resumen de Bolsillo y dibujar de memoria la tabla de confusiones.</div></div>
+      <div class="tstep"><div class="tdot">30 días</div><div class="tcontent">Simulado cronometrado completo — meta: &gt;85% sin consultar material.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="bolso" class="section">
+  <div class="hero"><h2>📄 Etapa 9 — Resumen de Bolsillo</h2></div>
+  <div class="pocket">
+    <h3>Cocos Gram+</h3>
+    <p>S. aureus (coagulasa+, abscesos/TSS) · S. epidermidis (catéteres, novobiocina sensible) · S. saprophyticus (ITU joven, novobiocina resistente) · S. pyogenes (fiebre reumática/GN) · S. agalactiae (sepsis neonatal) · S. pneumoniae (neumonía/meningitis adulto)</p>
+    <h3>Cocos Gram-</h3>
+    <p>N. gonorrhoeae (uretritis purulenta, sin cápsula) · N. meningitidis (meningitis joven, con cápsula/vacuna)</p>
+    <h3>Bacilos Gram-</h3>
+    <p>E. coli (ITU #1, O157:H7→SHU) · Klebsiella pneumoniae (neumonía gelatina de grosella) · K. granulomatis (donovanosis indolora) · Pseudomonas (quemados/FQ, verde) · Salmonella (móvil, invade) · Shigella (inmóvil, disentería) · H. influenzae (Hib→meningitis niño) · H. ducreyi (chancroide doloroso) · H. pylori (úlcera, ureasa+) · Campylobacter (Guillain-Barré)</p>
+    <h3>Micobacterias</h3>
+    <p>M. tuberculosis (BAAR, Ziehl-Neelsen, RIPE 6 meses)</p>
+    <h3>Bacilos Gram+</h3>
+    <p>Listeria (frío, embarazada/aborto) · C. tetani (espástico) · C. botulinum (flácido) · C. difficile (post-ATB) · C. perfringens (gangrena gaseosa/comida recalentada) · B. cereus (arroz frito) · B. anthracis (cápsula proteica, escara negra)</p>
+  </div>
+</section>
+`;
+
+const flashcards = [
+  {f:"¿Cuál es la diferencia de coagulasa entre S. aureus y los demás estafilococos?", b:"S. aureus es coagulasa POSITIVA; S. epidermidis y S. saprophyticus son coagulasa NEGATIVA"},
+  {f:"¿Cómo se diferencian S. saprophyticus y S. epidermidis por antibiograma?", b:"Por la novobiocina: saprophyticus es RESISTENTE, epidermidis es SENSIBLE"},
+  {f:"¿Qué secuelas inmunológicas causa Streptococcus pyogenes y cuándo aparecen?", b:"Fiebre reumática (corazón) y glomerulonefritis post-estreptocócica (riñón) — semanas después, por anticuerpos cruzados"},
+  {f:"¿Por qué se hace cribado vaginal-rectal a las gestantes en la semana 35-37?", b:"Para detectar Streptococcus agalactiae (Grupo B) y dar profilaxis antibiótica intraparto, evitando sepsis/meningitis neonatal"},
+  {f:"¿Qué diferencia a Neisseria meningitidis de N. gonorrhoeae en cuanto a vacunación?", b:"Meningitidis tiene cápsula de polisacárido (permite vacunas por serogrupo); gonorrhoeae no tiene cápsula prominente"},
+  {f:"¿Qué cepa de E. coli causa síndrome hemolítico-urémico y por qué?", b:"O157:H7 — produce toxina Shiga-like que daña el endotelio, causando SHU (anemia hemolítica + trombocitopenia + falla renal)"},
+  {f:"Diferencia clave entre Salmonella y Shigella en motilidad e invasión", b:"Salmonella es móvil e invade el torrente sanguíneo (bacteriemia); Shigella es inmóvil y permanece local en la mucosa intestinal"},
+  {f:"¿Qué diferencia clínica hay entre chancroide y donovanosis?", b:"Chancroide (H. ducreyi): úlcera DOLOROSA + bubón doloroso. Donovanosis (K. granulomatis): úlcera INDOLORA progresiva"},
+  {f:"¿Qué prueba diagnóstica es clave para Helicobacter pylori?", b:"Test de ureasa (aliento con urea marcada o test rápido en biopsia) — la bacteria produce ureasa abundante"},
+  {f:"¿Qué complicación neurológica se asocia clásicamente a Campylobacter jejuni?", b:"Síndrome de Guillain-Barré, por mimetismo molecular con gangliósidos nerviosos"},
+  {f:"¿Cómo se tiñe Mycobacterium tuberculosis y por qué no con Gram convencional?", b:"Con Ziehl-Neelsen (BAAR) — su pared rica en ácido micólico no retiene bien los colorantes de Gram"},
+  {f:"¿Cuál es el esquema de tratamiento estándar de la tuberculosis?", b:"RIPE (Rifampicina, Isoniazida, Pirazinamida, Etambutol) por 2 meses, seguido de RI (Rifampicina, Isoniazida) por 4 meses — total 6 meses"},
+  {f:"¿Por qué Listeria monocytogenes es peligrosa en el embarazo?", b:"Es una de las pocas bacterias que atraviesa la placenta, causando sepsis y aborto; también sobrevive a la refrigeración"},
+  {f:"¿Cuál es la diferencia de mecanismo entre la toxina tetánica y la botulínica?", b:"Tetánica bloquea la liberación de GABA/glicina (inhibitorios) → parálisis ESPÁSTICA. Botulínica bloquea la liberación de acetilcolina → parálisis FLÁCIDA"},
+  {f:"¿Qué antecedente clínico es clave para sospechar Clostridium difficile?", b:"Uso reciente de antibióticos (clindamicina, fluoroquinolonas) que alteran la flora intestinal normal"},
+  {f:"¿Qué dos presentaciones clínicas causa Clostridium perfringens?", b:"Mionecrosis/gangrena gaseosa (tras trauma) e intoxicación alimentaria (carne mal recalentada, diarrea sin fiebre)"},
+  {f:"¿Qué alimento se asocia clásicamente a Bacillus cereus?", b:"Arroz frito recalentado (toxina emética rápida o diarreica tardía)"},
+  {f:"¿Qué hace única la cápsula de Bacillus anthracis comparada con otras bacterias?", b:"Es de polipéptido (ácido D-glutámico), no de polisacárido como la mayoría de las bacterias encapsuladas"},
+  {f:"¿Cuál es la diferencia metabólica de oxígeno entre Clostridium y Bacillus?", b:"Clostridium es anaerobio; Bacillus es aerobio — ambos son bacilos Gram+ esporulados"},
+  {f:"¿Qué hallazgo clásico en esputo se asocia a Klebsiella pneumoniae?", b:"Esputo en 'gelatina de grosella' — sanguinolento y espeso, típico en alcohólicos/diabéticos"},
+];
+let flashIdx = 0;
+function renderFlash(){
+  const c = flashcards[flashIdx];
+  document.getElementById('flashFront').textContent = c.f;
+  document.getElementById('flashBack').textContent = c.b;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('flashProgress').textContent = (flashIdx+1)+' / '+flashcards.length;
+}
+function flipFlash(){
+  const el = document.getElementById('flashcard');
+  el.classList.toggle('flipped');
+  if(el.classList.contains('flipped')) addXP(5);
+}
+function nextFlash(){ flashIdx=(flashIdx+1)%flashcards.length; renderFlash(); }
+function prevFlash(){ flashIdx=(flashIdx-1+flashcards.length)%flashcards.length; renderFlash(); }
+document.getElementById('flashcard').addEventListener('click', flipFlash);
+renderFlash();
+
+const quizData = [
+  {q:"Un paciente presenta abscesos cutáneos recurrentes. El cultivo muestra cocos Gram+ en racimos, coagulasa positiva. ¿Cuál es el agente?", opts:[
+    "Staphylococcus epidermidis","Staphylococcus aureus","Streptococcus pyogenes","Staphylococcus saprophyticus"],
+   correct:1, exp:"Coagulasa positiva es el rasgo diferencial clave de S. aureus frente a los demás estafilococos."},
+  {q:"Mujer joven con disuria. Urocultivo: cocos Gram+ resistentes a novobiocina. ¿Diagnóstico microbiológico?", opts:[
+    "Staphylococcus epidermidis","Escherichia coli","Staphylococcus saprophyticus","Klebsiella pneumoniae"],
+   correct:2, exp:"S. saprophyticus es resistente a novobiocina y es causa frecuente de ITU en mujeres jóvenes sexualmente activas."},
+  {q:"Recién nacido con sepsis y meningitis pocos días tras el parto. ¿Cuál es el agente más probable?", opts:[
+    "Streptococcus pyogenes","Streptococcus agalactiae","Listeria monocytogenes","Neisseria meningitidis"],
+   correct:1, exp:"S. agalactiae (Grupo B) es la causa #1 de sepsis/meningitis neonatal por transmisión vertical en el canal del parto. (Listeria también es posible pero menos frecuente que GBS en este escenario clásico)."},
+  {q:"Paciente con diarrea con sangre y moco tras comer pollo mal cocido; el cultivo es móvil e invade la mucosa causando bacteriemia ocasional. ¿Agente más probable?", opts:[
+    "Shigella spp.","Salmonella spp.","Campylobacter jejuni","Vibrio cholerae"],
+   correct:1, exp:"Salmonella es móvil e invade la mucosa pudiendo causar bacteriemia, a diferencia de Shigella que es inmóvil y queda local."},
+  {q:"Paciente con úlcera genital muy dolorosa y adenopatía inguinal supurativa ('bubón'). ¿Agente causal?", opts:[
+    "Klebsiella granulomatis","Treponema pallidum","Haemophilus ducreyi","Neisseria gonorrhoeae"],
+   correct:2, exp:"H. ducreyi causa el chancroide: úlcera dolorosa con bubón doloroso, a diferencia de sífilis y donovanosis que son indoloras."},
+  {q:"Paciente con trismus, opistótonos y espasmos musculares generalizados tras herida punzante con clavo oxidado. ¿Mecanismo de la toxina implicada?", opts:[
+    "Bloquea la liberación de acetilcolina","Bloquea la liberación de GABA y glicina","Inhibe la síntesis de proteínas ribosomales","Forma poros en la membrana celular"],
+   correct:1, exp:"La tetanoespasmina de C. tetani bloquea neuronas inhibitorias (GABA/glicina), generando parálisis espástica generalizada."},
+  {q:"Paciente con diarrea acuosa tras 5 días de clindamicina por una infección dental. ¿Agente más probable?", opts:[
+    "Clostridium perfringens","Clostridium difficile","Bacillus cereus","Clostridium botulinum"],
+   correct:1, exp:"El antecedente de uso reciente de antibióticos es la clave diagnóstica clásica para C. difficile."},
+  {q:"¿Qué hace única a la cápsula de Bacillus anthracis en comparación con la mayoría de bacterias encapsuladas?", opts:[
+    "Es de polisacárido como las demás","Es de polipéptido (ácido D-glutámico)","No tiene cápsula","Es de lipopolisacárido"],
+   correct:1, exp:"B. anthracis tiene una cápsula proteica (polipéptido), una rareza frente a la mayoría de cápsulas bacterianas que son polisacáridas."},
+];
+let quizScore=0, quizAnswered=0;
+function renderQuiz(){
+  const container = document.getElementById('quizContainer');
+  container.innerHTML='';
+  quizData.forEach((q,qi)=>{
+    const div=document.createElement('div');
+    div.className='qcard';
+    let optsHtml=q.opts.map((o,oi)=>`<button class="opt" data-qi="${qi}" data-oi="${oi}">${o}</button>`).join('');
+    div.innerHTML=`<h4>${qi+1}. ${q.q}</h4>${optsHtml}<div class="explain" id="exp-${qi}">💡 ${q.exp}</div>`;
+    container.appendChild(div);
+  });
+  container.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const qi=+this.dataset.qi, oi=+this.dataset.oi;
+      const qcard=this.closest('.qcard');
+      if(qcard.dataset.answered) return;
+      qcard.dataset.answered="1";
+      quizAnswered++;
+      qcard.querySelectorAll('.opt').forEach((b,i)=>{
+        b.style.pointerEvents='none';
+        if(i===quizData[qi].correct) b.classList.add('correct');
+        else if(i===oi) b.classList.add('wrong');
+      });
+      if(oi===quizData[qi].correct){ quizScore++; addXP(10);} else { addXP(-2); }
+      document.getElementById('exp-'+qi).style.display='block';
+      if(quizAnswered===quizData.length) showQuizResult();
+    });
+  });
+}
+function showQuizResult(){
+  const pct=Math.round((quizScore/quizData.length)*100);
+  document.getElementById('quizResultBox').innerHTML=`
+    <div class="quizresult card">
+      <h2>${pct}%</h2>
+      <p style="font-family:sans-serif;color:var(--muted);">Aciertos: ${quizScore} / ${quizData.length}</p>
+      <button class="btn" onclick="resetQuiz()">🔁 Repetir Quiz</button>
+    </div>`;
+}
+function resetQuiz(){ quizScore=0; quizAnswered=0; document.getElementById('quizResultBox').innerHTML=''; renderQuiz(); }
+renderQuiz();
+addXP(0);
+</script>
+</body>
+</html>

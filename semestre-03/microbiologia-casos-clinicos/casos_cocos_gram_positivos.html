@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Microbiología — Casos Clínicos Práctica y Teoría</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a23;
+  --red: #f85149;
+  --red-dim: #4a1a1a;
+  --yellow: #d29922;
+  --yellow-dim: #3d2c00;
+  --blue: #58a6ff;
+  --blue-dim: #0d2144;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+.header-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 4px;
+  padding: 3px 8px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.header h1 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+.header-sub {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: var(--mono);
+  margin-left: auto;
+}
+
+/* PROGRESS */
+.progress-bar {
+  height: 3px;
+  background: var(--border);
+  width: 100%;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--blue));
+  transition: width .4s ease;
+}
+
+/* LAYOUT */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* NAV PILLS */
+.nav-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.pill {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .2s;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+/* CASO CARD */
+.caso {
+  display: none;
+  animation: fadeIn .3s ease;
+}
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.caso-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px 12px 0 0;
+  padding: 20px 24px;
+  border-bottom: none;
+}
+.bacteria-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.caso-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.caso-meta {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+/* CASO CLINICO */
+.caso-body {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 24px;
+}
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.caso-text {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+.caso-text strong { color: var(--yellow); }
+
+/* DADOS CLÍNICOS */
+.dados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.dado {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+
+/* PERGUNTAS */
+.perguntas-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0 0 12px 12px;
+  border-top: none;
+  padding: 24px;
+}
+.pergunta-item {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pergunta-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  cursor: pointer;
+  user-select: none;
+  transition: background .2s;
+}
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--blue);
+  background: var(--blue-dim);
+  border-radius: 4px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.pergunta-texto {
+  font-size: 14px;
+  color: var(--text);
+  flex: 1;
+  line-height: 1.5;
+}
+.pergunta-toggle {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: transform .2s;
+}
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+
+.gabarito {
+  display: none;
+  padding: 14px 16px;
+  border-top: 1px solid var(--green-dim);
+  background: rgba(63,185,80,.05);
+}
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.gabarito-texto {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.7;
+}
+.gabarito-texto strong { color: var(--green); }
+
+/* NAVEGAÇÃO */
+.nav-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  gap: 12px;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all .2s;
+  font-weight: 600;
+}
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+
+.caso-counter {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">EXAMEN FINAL</span>
+  <h1>Microbiología — Casos Clínicos</h1>
+  <span class="header-sub">Cocos Gram (+) · 6 casos</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:16.6%"></div></div>
+
+<div class="container">
+  <div class="nav-pills" id="navPills">
+    <div class="pill active" onclick="irCaso(0)">S. aureus</div>
+    <div class="pill" onclick="irCaso(1)">S. saprophyticus</div>
+    <div class="pill" onclick="irCaso(2)">S. epidermidis</div>
+    <div class="pill" onclick="irCaso(3)">S. pyogenes</div>
+    <div class="pill" onclick="irCaso(4)">S. agalactiae</div>
+    <div class="pill" onclick="irCaso(5)">S. pneumoniae</div>
+  </div>
+
+  <!-- CASO 1: Staphylococcus aureus -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (+) · Coagulasa (+)</div>
+      <div class="caso-title">Staphylococcus aureus</div>
+      <div class="caso-meta">Paciente: Varón, 34 años · Servicio: Urgencias · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 34 años, sin antecedentes patológicos relevantes, acude a urgencias por <strong>fiebre de 39.2°C de 4 días de evolución</strong>, escalofríos intensos y dolor en muslo derecho. Refiere que hace 10 días sufrió una <strong>pequeña herida punzante</strong> al pisar un clavo en una obra de construcción. Inicialmente no dio importancia a la lesión, pero en los últimos días desarrolló enrojecimiento, calor local y una colección purulenta fluctuante en el sitio de entrada.
+        <br><br>
+        Al examen físico: zona eritematosa de 8×6 cm en muslo derecho con <strong>fluctuación central y secreción purulenta amarillenta y cremosa</strong>. Adenopatías inguinales palpables. TA 110/70 mmHg, FC 102 lpm, FR 20 rpm.
+        <br><br>
+        Se realiza cultivo del material purulento. El laboratorio reporta: <strong>colonias doradas, hemólisis beta, coagulasa positiva, catalasa positiva</strong>. Antibiograma en proceso.
+      </div>
+
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Leucocitos</div><div class="dado-valor anormal">18.400/mm³</div></div>
+        <div class="dado"><div class="dado-label">Neutrófilos</div><div class="dado-valor anormal">85%</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">142 mg/L</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.2°C</div></div>
+        <div class="dado"><div class="dado-label">Gram del pus</div><div class="dado-valor anormal">Cocos (+) en racimos</div></div>
+        <div class="dado"><div class="dado-label">Coagulasa</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Hemólisis</div><div class="dado-valor anormal">Beta</div></div>
+        <div class="dado"><div class="dado-label">Colonias</div><div class="dado-valor anormal">Doradas (ágar sangre)</div></div>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el agente etiológico más probable y qué características microbiológicas del laboratorio lo confirman en este caso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El agente etiológico es <strong>Staphylococcus aureus</strong>. Lo confirman: colonias doradas en ágar sangre, <strong>hemólisis beta</strong>, <strong>coagulasa positiva</strong> (principal diferencial con otros estafilococos), catalasa positiva y la morfología de cocos Gram (+) en racimos en la tinción de Gram.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de este microorganismo y cómo explican la presentación clínica del paciente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Los principales factores de virulencia son: <strong>proteína A</strong> (se une a IgG impidiendo opsonización), <strong>leucocidina de Panton-Valentine</strong> (destruye leucocitos), <strong>hemolisinas alfa, beta, gamma y delta</strong> (destruyen eritrocitos y tejidos), <strong>coagulasa</strong> (coagula fibrina formando barrera protectora), <strong>hialuronidasa y proteasa</strong> (facilitan diseminación tisular). Explican la colección purulenta, la necrosis local y el estado febril con leucocitosis.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Qué es MRSA y por qué es clínicamente relevante en este caso? ¿Qué antibiótico se usaría si el antibiograma confirma resistencia a meticilina?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>MRSA</strong> (Methicillin-Resistant S. aureus) es resistente a todos los betalactámicos por el gen <strong>mecA</strong>, que codifica una PBP2a con baja afinidad. Es relevante porque el paciente tiene herida traumática, entorno de obra (riesgo de MRSA comunitario, CA-MRSA). Si se confirma MRSA, el tratamiento de elección es <strong>vancomicina</strong> (IV) o linezolid. Para MSSA, el tratamiento estándar es oxacilina o cefalosporinas de 1ª generación.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">Además de piel y tejidos blandos, cite tres infecciones graves que puede causar S. aureus y los mecanismos patogénicos involucrados.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Endocarditis bacteriana</strong>: por bacteriemia, las proteínas de adhesión (fibronectina, fibrinógeno) facilitan la adhesión a válvulas cardíacas. 2. <strong>Osteomielitis hematógena</strong>: predilección por metáfisis de huesos largos en niños. 3. <strong>Síndrome del shock tóxico (SST)</strong>: mediado por toxina TSST-1, un superantígeno que activa masivamente linfocitos T, liberando citocinas con hipotensión, fiebre y falla multiorgánica.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cómo se diferencia S. aureus de S. epidermidis y S. saprophyticus en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Todos son catalasa (+). La diferenciación clave: <strong>S. aureus</strong>: coagulasa (+), hemólisis beta, colonias doradas. <strong>S. epidermidis</strong>: coagulasa (−), novobiocina sensible, colonias blancas, no hemólisis. <strong>S. saprophyticus</strong>: coagulasa (−), <strong>resistente a novobiocina</strong> (clave diferencial), colonias blancas, frecuente en ITU de mujeres jóvenes.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Qué enfermedades mediadas por toxinas produce S. aureus? Describa brevemente cada una.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Intoxicación alimentaria</strong>: toxinas termoestables A-E (enterotoxinas), síntomas a las 1-6h (vómitos, diarrea), sin fiebre. 2. <strong>Síndrome de piel escaldada (SSSS)</strong>: exfoliatinas A y B que cortan la desmogleína-1, causando desprendimiento de epidermis (en neonatos y niños). 3. <strong>Síndrome del shock tóxico</strong>: TSST-1, superantígeno con fiebre >39°C, hipotensión, rash eritematoso difuso y afectación multiorgánica.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Cuál es la importancia epidemiológica de S. aureus en infecciones nosocomiales y qué medidas de control se deben tomar?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">S. aureus es la principal causa de infecciones nosocomiales. Las cepas MRSA-H (hospitalario) son endémicas en UCI y cirugía. Medidas de control: <strong>higiene de manos</strong> (alcohol gel), detección de portadores nasales en personal sanitario, uso de bata y guantes, descolonización con mupirocina nasal en portadores de MRSA, vigilancia activa con cultivos de vigilancia, y cohorte de pacientes colonizados.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿En qué sitio del cuerpo humano S. aureus es comensal habitual y cómo esto facilita su transmisión?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El principal reservorio es la <strong>mucosa nasal anterior</strong> (portación nasal en ~30% de la población general, hasta 50-60% en personal de salud). También coloniza axilas, perineo e ingle. La transmisión es principalmente por <strong>contacto directo</strong> (manos contaminadas) y por diseminación de secreciones nasales. Los portadores nasales pueden autoinocularse o transmitirlo a pacientes vulnerables.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Qué tipo de hemólisis produce S. aureus en ágar sangre y cuál es su importancia diagnóstica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Produce <strong>hemólisis beta</strong> (hemólisis completa): halo claro y transparente alrededor de la colonia por lisis completa de eritrocitos. Es importante porque diferencia S. aureus de: S. epidermidis (gamma-hemólisis, sin halo) y ayuda en la identificación preliminar. La responsable principal es la <strong>alfa-toxina (alfa-hemolisina)</strong>, que forma poros en membranas de eritrocitos, leucocitos y plaquetas.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">El paciente desarrolla bacteriemia. ¿Cuál es la complicación más temida y cómo la manejarías?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La complicación más temida es la <strong>endocarditis infecciosa</strong> (especialmente en válvula tricúspide en adictos a drogas IV, o mitral/aórtica en pacientes con prótesis). Manejo: ecocardiograma transesofágico urgente para descartar vegetaciones, hemocultivos seriados (3 pares), antibioticoterapia prolongada 4-6 semanas (oxacilina o vancomicina según sensibilidad), evaluación quirúrgica si hay insuficiencia valvular severa o embolia séptica.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2: Staphylococcus saprophyticus -->
+  <div class="caso" id="caso-1">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (+) · Coagulasa (−) · Novobiocina R</div>
+      <div class="caso-title">Staphylococcus saprophyticus</div>
+      <div class="caso-meta">Paciente: Mujer, 21 años · Servicio: Consulta externa · Nivel: ★★☆☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Mujer de 21 años, universitaria, sin antecedentes patológicos, acude a consulta por <strong>disuria, polaquiuria y urgencia miccional de 3 días de evolución</strong>. Refiere molestia suprapúbica y orina de aspecto turbio con leve olor desagradable. Niega fiebre, escalofríos o dolor lumbar. Menciona que inició actividad sexual recientemente.
+        <br><br>
+        Examen físico: afebril (37.1°C), puñopercusión renal bilateral negativa, leve sensibilidad suprapúbica a la palpación. Sin otros hallazgos relevantes.
+        <br><br>
+        Urocultivo: <strong>&gt;100.000 UFC/mL</strong> de cocos Gram (+) en racimos, coagulasa negativa, catalasa positiva, <strong>resistente a novobiocina</strong>. Tinción de Gram de orina: leucocitos y cocos en racimos.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Urocultivo</div><div class="dado-valor anormal">&gt;100.000 UFC/mL</div></div>
+        <div class="dado"><div class="dado-label">Leucocitos en orina</div><div class="dado-valor anormal">50-80/campo</div></div>
+        <div class="dado"><div class="dado-label">Nitritos</div><div class="dado-valor normal">Negativos</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor normal">37.1°C</div></div>
+        <div class="dado"><div class="dado-label">Coagulasa</div><div class="dado-valor normal">Negativa</div></div>
+        <div class="dado"><div class="dado-label">Novobiocina</div><div class="dado-valor anormal">Resistente</div></div>
+        <div class="dado"><div class="dado-label">Catalasa</div><div class="dado-valor normal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor normal">8 mg/L</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el agente etiológico y qué característica de laboratorio es patognomónica para diferenciarlo de otros estafilococos coagulasa negativos?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El agente es <strong>Staphylococcus saprophyticus</strong>. La característica patognomónica es la <strong>resistencia intrínseca a novobiocina</strong>. S. epidermidis (el otro SCN frecuente) es sensible a novobiocina. Esta prueba simple (disco de novobiocina 5μg) es el diferencial clave en el laboratorio clínico.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Por qué esta infección es más frecuente en mujeres jóvenes sexualmente activas? Explique la patogenia.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">S. saprophyticus es la <strong>segunda causa de ITU no complicada</strong> en mujeres jóvenes sexualmente activas (después de E. coli). Factores predisponentes: uretra femenina corta (~4 cm), proximidad anatómica ano-uretra, colonización perineal del microorganismo y el "efecto masaje" de la actividad sexual que facilita el ascenso bacteriano. Posee adhesinas específicas para el urotelio que le permiten colonizar la vejiga.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Por qué los nitritos son negativos en este urocultivo positivo? ¿Qué implicación diagnóstica tiene?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Los nitritos detectan bacterias que convierten nitratos en nitritos (principalmente enterobacterias como E. coli). <strong>S. saprophyticus no posee nitroreductasa</strong>, por lo que no reduce nitratos y el test de nitritos es negativo. Implicación: un urocultivo con leucocituria, síntomas clásicos de ITU y nitritos negativos debe hacer pensar en S. saprophyticus o Enterococcus. No descarta infección.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección para esta paciente? ¿Por cuánto tiempo?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El tratamiento de elección es <strong>nitrofurantoína 100 mg c/12h por 5-7 días</strong> o <strong>trimetoprim-sulfametoxazol</strong> (si sensible) por 3-7 días. S. saprophyticus es generalmente sensible a fluoroquinolonas, betalactámicos y nitrofurantoína. Se evitan los aminoglucósidos para ITU no complicada. El urocultivo de control post-tratamiento es recomendable en este contexto.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuál es el hábitat natural de S. saprophyticus y cómo coloniza el tracto urinario?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">S. saprophyticus coloniza normalmente la <strong>piel y mucosas del área perineal y gastrointestinal</strong> de mujeres jóvenes. Para colonizar el tracto urinario utiliza <strong>adhesinas de superficie</strong> (proteínas de unión a fibronectina y uroepithelio) y produce <strong>ureasa</strong>, que alcaliniza la orina (favorece la formación de cálculos). La ascensión desde el periné hasta la uretra y vejiga es facilitada por el acto sexual.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Puede S. saprophyticus causar pielonefritis? ¿Qué hallazgos clínicos indicarían compromiso renal?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Sí, aunque es menos frecuente. Los hallazgos que indicarían pielonefritis son: <strong>fiebre &gt;38.5°C, escalofríos, dolor lumbar/costovertebral (puñopercusión positiva)</strong>, náuseas y vómitos, cilindros leucocitarios en orina y elevación de PCR/procalcitonina. En ese caso, el tratamiento sería más prolongado (7-14 días) y podría requerir hospitalización con antibioticoterapia IV inicial.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué medidas preventivas recomendarías a esta paciente para evitar recurrencias?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Medidas preventivas: <strong>micción post-coital</strong> (principal medida), hidratación abundante (&gt;2L/día), higiene perineal de adelante hacia atrás, evitar ropa interior sintética ajustada, vaciar completamente la vejiga. En casos de ITU recurrente (≥3/año) puede valorarse profilaxis antibiótica post-coital con nitrofurantoína o TMP-SMX en dosis única.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">Compare las características bioquímicas de S. saprophyticus, S. aureus y S. epidermidis en una tabla mental.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>S. aureus</strong>: catalasa (+), coagulasa (+), hemólisis beta, novobiocina S, colonias doradas. <strong>S. epidermidis</strong>: catalasa (+), coagulasa (−), sin hemólisis, novobiocina S, colonias blancas, biofilm (+). <strong>S. saprophyticus</strong>: catalasa (+), coagulasa (−), sin hemólisis o débil, <strong>novobiocina R</strong>, ureasa (+), colonias blancas. La clave diferencial entre los SCN es la novobiocina.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Qué significa UFC/mL en el urocultivo y cuál es el punto de corte para considerar una ITU significativa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">UFC = Unidades Formadoras de Colonias. El punto de corte clásico es <strong>≥100.000 UFC/mL</strong> en orina de chorro medio para considerar bacteriuria significativa. Sin embargo, en mujeres sintomáticas puede ser significativo ≥1.000-10.000 UFC/mL. En este caso, &gt;100.000 UFC/mL con síntomas clásicos confirma ITU por S. saprophyticus.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Cuándo estaría indicada la hospitalización en una paciente con ITU por S. saprophyticus?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Indicaciones de hospitalización: <strong>pielonefritis con sepsis</strong>, intolerancia oral a antibióticos (vómitos), embarazo con pielonefritis, inmunosupresión, anomalías urológicas subyacentes, fallo al tratamiento ambulatorio, o signos de shock (hipotensión, taquicardia, alteración de conciencia). En ITU no complicada como este caso, el manejo ambulatorio es adecuado.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 3: Staphylococcus epidermidis -->
+  <div class="caso" id="caso-2">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (+) · Coagulasa (−) · Biofilm (+)</div>
+      <div class="caso-title">Staphylococcus epidermidis</div>
+      <div class="caso-meta">Paciente: Varón, 68 años · Servicio: UCI/Cardiología · Nivel: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 68 años con antecedentes de valvulopatía aórtica, sometido a <strong>reemplazo valvular mecánico hace 3 semanas</strong>. Acude por fiebre de 38.8°C, escalofríos y deterioro del estado general de 5 días de evolución. Refiere que le extrajeron el catéter venoso central hace 10 días por sospecha de infección local.
+        <br><br>
+        Examen físico: paciente pálido, febril (38.9°C), FC 98 lpm. <strong>Soplo cardíaco nuevo</strong> de regurgitación aórtica leve. Sin petequias ni nódulos de Osler.
+        <br><br>
+        Hemocultivos seriados (3 pares): <strong>cocos Gram (+) en racimos, coagulasa negativos, catalasa positivos, novobiocina sensibles</strong>. Ecocardiograma transesofágico: vegetación de 8mm en prótesis aórtica.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Hemocultivos</div><div class="dado-valor anormal">3/3 positivos</div></div>
+        <div class="dado"><div class="dado-label">Leucocitos</div><div class="dado-valor anormal">14.200/mm³</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">98 mg/L</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">38.9°C</div></div>
+        <div class="dado"><div class="dado-label">Coagulasa</div><div class="dado-valor normal">Negativa</div></div>
+        <div class="dado"><div class="dado-label">Novobiocina</div><div class="dado-valor normal">Sensible</div></div>
+        <div class="dado"><div class="dado-label">Eco-TEE</div><div class="dado-valor anormal">Vegetación 8mm</div></div>
+        <div class="dado"><div class="dado-label">Válvula</div><div class="dado-valor anormal">Prótesis mecánica</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el agente etiológico y por qué es considerado patógeno en este contexto si es parte de la flora normal?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Staphylococcus epidermidis</strong>. Aunque es flora normal de la piel (comensal), se convierte en patógeno oportunista en pacientes con <strong>material protésico</strong> (válvulas, catéteres, prótesis articulares). Su principal factor de virulencia es la capacidad de formar <strong>biofilm</strong> sobre superficies plásticas o metálicas, lo que lo protege de antibióticos y de la respuesta inmune. 3/3 hemocultivos positivos en este contexto no es contaminante.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Qué es el biofilm y por qué dificulta el tratamiento de esta infección?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>biofilm</strong> es una comunidad bacteriana adherida a una superficie, embebida en una matriz extracelular de polisacáridos (slime). Dificulta el tratamiento porque: 1) actúa como barrera física impidiendo la penetración de antibióticos, 2) las bacterias en biofilm tienen metabolismo reducido (menos susceptibles), 3) protege de fagocitosis, 4) puede diseminar bacterias planctónicas periódicamente. Generalmente requiere <strong>retirada del material infectado</strong> más antibioticoterapia prolongada.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuáles son los Criterios de Duke para endocarditis infecciosa y cómo se aplican a este caso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Criterios de Duke: <strong>Mayores</strong>: 1) Hemocultivos positivos con microorganismo típico (≥2 positivos) y 2) evidencia ecocardiográfica (vegetación, absceso, dehiscencia de válvula). <strong>Menores</strong>: factores predisponentes, fiebre, fenómenos vasculares, fenómenos inmunológicos, hemocultivos positivos que no cumplen criterio mayor. Este caso tiene <strong>2 criterios mayores</strong> (3/3 hemocultivos positivos + vegetación en eco-TEE): endocarditis infecciosa <strong>definitiva</strong>.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento antibiótico de elección para endocarditis por S. epidermidis sobre válvula protésica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Las cepas de S. epidermidis nosocomial son frecuentemente <strong>MRSE (resistentes a meticilina)</strong>. Tratamiento: <strong>vancomicina + rifampicina + gentamicina</strong> por 6 semanas (rifampicina tiene actividad antibiofilm, gentamicina por 2 semanas iniciales). Se evalúa cirugía para recambio valvular si: fallo cardíaco, persistencia de bacteriemia, absceso perivalvular o vegetación &gt;10mm con embolias.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿En qué otras situaciones clínicas S. epidermidis puede causar infección grave?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">S. epidermidis causa infecciones graves en presencia de cuerpos extraños o inmunosupresión: <strong>infección de catéter venoso central</strong> (CRBSI, más frecuente), <strong>meningitis en derivaciones ventriculoperitoneal</strong>, <strong>infección de prótesis articulares</strong>, <strong>sepsis neonatal</strong> (prematuros con catéteres), <strong>infección de marcapasos/desfibriladores</strong>. En todos estos casos, el biofilm es el factor de virulencia clave.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se diferencia una bacteriemia real por S. epidermidis de una contaminación de hemocultivos?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Criterios para considerar bacteriemia real: <strong>≥2/3 hemocultivos positivos</strong> (como en este caso), tiempo de positivización corto (&lt;12-16h), clínica compatible (fiebre, deterioro), presencia de foco infeccioso identificado (prótesis, catéter), mismo perfil de sensibilidad en todos los frascos. Contaminación: 1/3 positivo, clínica ausente, tiempo largo de positivización, paciente sin factores de riesgo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué gen confiere resistencia a meticilina en estafilococos coagulasa negativos y cómo actúa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El gen <strong>mecA</strong> (localizado en el cassette SCCmec) codifica la <strong>PBP2a (PBP2')</strong>, una proteína de unión a penicilina con baja afinidad por todos los betalactámicos. Esta PBP alternativa puede seguir sintetizando pared celular aunque los betalactámicos bloqueen las PBPs normales. El gen mecA es el mismo en MRSA y MRSE, y puede transferirse horizontalmente entre especies de estafilococos.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Cuál es la diferencia entre endocarditis precoz y tardía sobre válvula protésica y qué microorganismos caracterizan cada una?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Precoz (&lt;1 año post-cirugía)</strong>: microorganismos adquiridos en el perioperatorio: S. epidermidis, S. aureus, bacilos Gram negativos, hongos. Alta mortalidad. <strong>Tardía (&gt;1 año)</strong>: microorganismos de la comunidad: Streptococcus viridans, enterococos, S. aureus. Este caso es <strong>precoz</strong> (3 semanas post-reemplazo), típico de S. epidermidis nosocomial con biofilm en la prótesis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Qué papel juega la rifampicina en el tratamiento de infecciones por estafilococos sobre material protésico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La rifampicina tiene excelente actividad contra bacterias en <strong>biofilm</strong> porque penetra la matriz extracelular y actúa sobre bacterias en fase estacionaria (baja actividad metabólica). Inhibe la ARN polimerasa bacteriana (subunidad beta). Sin embargo, <strong>nunca se usa en monoterapia</strong> (emergen resistencias rápidamente). Siempre se combina con vancomicina o fluoroquinolonas. Es especialmente útil en infecciones de prótesis articulares y válvulas protésicas.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Cuáles son las indicaciones quirúrgicas absolutas en endocarditis infecciosa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Indicaciones quirúrgicas absolutas: 1) <strong>Insuficiencia cardíaca refractaria</strong> por disfunción valvular, 2) <strong>Infección no controlada</strong>: bacteriemia persistente &gt;7 días, absceso perivalvular, fístulas, 3) <strong>Embolias sépticas recurrentes</strong> con vegetación persistente, 4) <strong>Hongos o microorganismos multirresistentes</strong>, 5) <strong>Dehiscencia de prótesis</strong>. En este caso la vegetación de 8mm con soplo nuevo indica evaluación quirúrgica urgente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 4: Streptococcus pyogenes -->
+  <div class="caso" id="caso-3">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (+) · Beta-hemolítico · Grupo A de Lancefield</div>
+      <div class="caso-title">Streptococcus pyogenes</div>
+      <div class="caso-meta">Paciente: Niño, 8 años · Servicio: Pediatría · Nivel: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Niño de 8 años traído por su madre por <strong>fiebre de 39.5°C, dolor de garganta intenso y dificultad para tragar de 2 días de evolución</strong>. Refiere que el dolor comenzó abruptamente, sin rinorrea ni tos previa. Vive en un colegio con varios compañeros con cuadros similares en los últimos días.
+        <br><br>
+        Examen físico: faringitis con <strong>exudado purulento en amígdalas bilaterales</strong>, petequias en paladar blando, <strong>adenopatías cervicales anteriores dolorosas</strong> bilaterales. Sin rinorrea, sin tos. Temperatura 39.5°C, FC 102 lpm. Exantema puntiforme eritematoso en tronco con textura de lija al tacto.
+        <br><br>
+        Test rápido de estreptococo (RADT): <strong>positivo</strong>. Cultivo de exudado faríngeo: colonias beta-hemolíticas, catalasa negativa, bacitracina sensible, PYR positivo.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">RADT</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Hemólisis</div><div class="dado-valor anormal">Beta</div></div>
+        <div class="dado"><div class="dado-label">Bacitracina</div><div class="dado-valor anormal">Sensible</div></div>
+        <div class="dado"><div class="dado-label">PYR</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.5°C</div></div>
+        <div class="dado"><div class="dado-label">ASO (ASLO)</div><div class="dado-valor anormal">Elevado</div></div>
+        <div class="dado"><div class="dado-label">Exantema</div><div class="dado-valor anormal">Tipo "lija"</div></div>
+        <div class="dado"><div class="dado-label">Catalasa</div><div class="dado-valor normal">Negativa</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico y qué síndrome específico presenta el niño además de la faringoamigdalitis?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El agente es <strong>Streptococcus pyogenes</strong> (Streptococcus beta-hemolítico del Grupo A). El niño presenta <strong>escarlatina</strong>: faringoamigdalitis estreptocócica + exantema eritematoso puntiforme con textura de lija (producido por la <strong>toxina eritrogénica/pirógena</strong> de S. pyogenes). También puede observarse "lengua de fresa" y descamación posterior. El exantema respeta la zona peribucal (palidez perioral).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuáles son las complicaciones no supurativas de la infección por S. pyogenes y cómo se previenen?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Complicaciones no supurativas: 1) <strong>Fiebre reumática</strong>: 2-4 semanas post-faringitis, afecta corazón (carditis, pancarditis), articulaciones (poliartritis migratoria), SNC (corea de Sydenham), piel (eritema marginado, nódulos subcutáneos). 2) <strong>Glomerulonefritis post-estreptocócica</strong>: 1-3 semanas post-faringitis o 3-6 semanas post-impétigo. Prevención: tratamiento completo con penicilina por 10 días elimina la bacteria y previene fiebre reumática (no previene GN).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de elección y por qué la duración es de 10 días?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Tratamiento: <strong>penicilina V oral 250mg c/8h por 10 días</strong> (o amoxicilina 50mg/kg/día). S. pyogenes permanece 100% sensible a penicilina (sin resistencia descrita). Los 10 días son necesarios para erradicar completamente la bacteria de la faringe y <strong>prevenir la fiebre reumática</strong>. Tratamientos más cortos no eliminan el riesgo de complicaciones. En alérgicos a penicilina: azitromicina 5 días o clindamicina.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuáles son los principales factores de virulencia de S. pyogenes?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Proteína M</strong>: antifagocítica, principal factor de virulencia, base de la clasificación serológica. 2. <strong>Cápsula de ácido hialurónico</strong>: mimetismo molecular (similar al tejido humano), antifagocítica. 3. <strong>Estreptolisinas S y O</strong>: hemolisinas (lisan eritrocitos y leucocitos). 4. <strong>Toxinas pirogénicas (A,B,C)</strong>: superantígenos, causan escarlatina y SST estreptocócico. 5. <strong>Estreptoquinasa</strong>: disuelve trombos facilitando diseminación. 6. <strong>Hialuronidasa, DNAsa</strong>: favorecen invasión tisular.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué es la fascitis necrotizante y cuál es su relación con S. pyogenes?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La <strong>fascitis necrotizante</strong> (bacteria "comecarnes") es una infección grave de tejidos blandos con necrosis rápida de fascia y tejido subcutáneo. S. pyogenes causa el <strong>Tipo II</strong> (monomicrobiana). Mecanismo: las toxinas pirogénicas A y B + leucocidinas destruyen tejidos a gran velocidad. Presentación: dolor desproporcionado, fiebre, crepitación y necrosis cutánea. Mortalidad &gt;30%. Tratamiento: <strong>cirugía urgente</strong> (desbridamiento amplio) + penicilina + clindamicina (clindamicina inhibe síntesis de toxinas).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cómo se diferencia la faringitis estreptocócica de la viral en la clínica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Criterios de Centor/McIsaac para faringitis estreptocócica: <strong>exudado amigdalino, adenopatías cervicales anteriores, fiebre &gt;38°C, ausencia de tos</strong> (1 punto cada uno). &gt;3 puntos: alta probabilidad estreptocócica. A favor de viral: rinorrea, tos, conjuntivitis, úlceras orales (sugieren virus), vesículas (herpes, coxsackie). La escarlatina (exantema) es patognomónica de S. pyogenes.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué es el ASLO y cuándo se solicita?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">ASLO (Antiestreptolisina O) son <strong>anticuerpos contra la estreptolisina O</strong> de S. pyogenes. Se elevan 1-3 semanas post-infección y permanecen elevados meses. Se solicita para: 1) confirmar infección estreptocócica reciente cuando el cultivo ya es negativo, 2) diagnóstico de fiebre reumática (criterio menor en criterios de Jones), 3) glomerulonefritis post-estreptocócica. Valores normales: &lt;200 UI/mL. No sirve para infecciones cutáneas (estreptolisina O es inactivada por lípidos de la piel).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Qué otras infecciones de piel y tejidos blandos causa S. pyogenes?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Impétigo</strong>: vesículas superficiales con costra mielicérica (miel), en niños, cara/extremidades. 2. <strong>Erisipela</strong>: infección dérmica superficial con borde bien demarcado, eritema brillante, doloroso, con linfangitis. 3. <strong>Celulitis</strong>: infección de dermis profunda y tejido subcutáneo, bordes mal definidos. 4. <strong>Fascitis necrotizante tipo II</strong> (ya descrita). 5. <strong>Síndrome de shock tóxico estreptocócico</strong>: similar al estafilocócico pero causado por toxinas pirogénicas estreptocócicas.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Por qué S. pyogenes nunca ha desarrollado resistencia a la penicilina?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">S. pyogenes mantiene sensibilidad universal a penicilina por: 1) <strong>ausencia de betalactamasas</strong>, 2) sus PBPs tienen alta afinidad por la penicilina y no han mutado, 3) no adquiere fácilmente plásmidos de resistencia. La razón evolutiva no está completamente clara, pero se cree que las PBPs de S. pyogenes son esenciales y cualquier mutación que reduzca la afinidad a penicilina también compromete su función vital. Es uno de los pocos patógenos que permanece sensible a penicilina tras décadas de uso.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué es la profilaxis secundaria de la fiebre reumática y cuándo se indica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La profilaxis secundaria previene recurrencias de fiebre reumática (cada nueva infección estreptocócica puede agravar la carditis). Indicación: todo paciente con fiebre reumática confirmada. Régimen: <strong>penicilina benzatínica 1.200.000 UI IM cada 21-28 días</strong>. Duración: sin carditis → 5 años o hasta los 18 años; con carditis leve → 10 años o hasta los 25 años; con carditis severa/valvulopatía → de por vida. En alérgicos: sulfadiazina o eritromicina oral diaria.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 5: Streptococcus agalactiae -->
+  <div class="caso" id="caso-4">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (+) · Beta-hemolítico · Grupo B de Lancefield</div>
+      <div class="caso-title">Streptococcus agalactiae</div>
+      <div class="caso-meta">Paciente: Neonato, 18 horas de vida · Servicio: Neonatología · Nivel: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Neonato de 18 horas de vida, producto de parto vaginal a las 38 semanas, con <strong>rotura de membranas de 22 horas</strong> de evolución. La madre (28 años, primigesta) no realizó cultivo vagino-rectal en la semana 35-37 de gestación y no recibió profilaxis antibiótica intraparto.
+        <br><br>
+        El neonato presenta <strong>dificultad respiratoria progresiva, quejido, aleteo nasal, cianosis perioral y fiebre de 38.3°C</strong>. Al examen: taquicardia (180 lpm), SpO₂ 88% con FiO₂ 21%, llenado capilar 3 segundos. Fontanela normotensa.
+        <br><br>
+        Hemocultivos y cultivo de LCR solicitados. Gram del LCR: <strong>cocos Gram (+) en cadenas, diplococos</strong>. Cultivo de hemocultivo: beta-hemólisis, CAMP test positivo, hidrólisis de hipurato positiva, sensible a bacitracina.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">38.3°C</div></div>
+        <div class="dado"><div class="dado-label">FC</div><div class="dado-valor anormal">180 lpm</div></div>
+        <div class="dado"><div class="dado-label">SpO₂</div><div class="dado-valor anormal">88%</div></div>
+        <div class="dado"><div class="dado-label">CAMP test</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Hipurato</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Hemólisis</div><div class="dado-valor anormal">Beta</div></div>
+        <div class="dado"><div class="dado-label">RPM</div><div class="dado-valor anormal">22 horas</div></div>
+        <div class="dado"><div class="dado-label">Profilaxis</div><div class="dado-valor anormal">No recibida</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el agente y cómo confirman los datos de laboratorio el diagnóstico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Streptococcus agalactiae</strong> (Grupo B de Lancefield). Confirmación: beta-hemólisis en ágar sangre, <strong>CAMP test positivo</strong> (produce factor CAMP que actúa sinérgicamente con la beta-toxina de S. aureus produciendo hemólisis "en flecha"), <strong>hidrólisis de hipurato positiva</strong>, resistente a bacitracina (a diferencia de S. pyogenes que es sensible). Gram: cocos en cadenas (Gram +), catalasa negativa.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuál es la diferencia entre la enfermedad neonatal de inicio precoz y tardío por S. agalactiae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Inicio precoz (&lt;7 días, generalmente &lt;24h)</strong>: transmisión vertical durante el parto, fuente materna. Presentación: sepsis, neumonía, meningitis. Alta mortalidad. Este caso es de inicio precoz. <strong>Inicio tardío (7 días - 3 meses)</strong>: transmisión nosocomial o comunitaria. Presentación predominante: <strong>meningitis</strong> (más frecuente que en precoz), bacteriemia sin foco. Menor mortalidad pero mayor morbilidad neurológica. Fuente: madre, personal sanitario, ambiente.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">¿Qué es la profilaxis intraparto y cuándo está indicada?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La profilaxis intraparto consiste en <strong>penicilina G IV</strong> (o ampicilina) administrada durante el trabajo de parto. Indicada cuando: 1) <strong>cultivo vagino-rectal positivo</strong> para SGB en semana 35-37, 2) bacteriuria por SGB en el embarazo actual, 3) antecedente de hijo previo con enfermedad neonatal por SGB, 4) cultivo no realizado + fiebre intraparto (&gt;38°C), 5) RPM &gt;18 horas, 6) parto &lt;37 semanas. En este caso: RPM 22h + cultivo no realizado = indicación de profilaxis (que no se administró).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuáles son los factores de virulencia de S. agalactiae y cómo facilitan la infección neonatal?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Cápsula polisacárida</strong>: principal factor de virulencia, antifagocítica, 10 serotipos (Ia, Ib, II-IX). 2. <strong>Proteínas de superficie</strong>: adhesinas que facilitan colonización vaginal y del neonato. 3. <strong>CAMP factor</strong>: potencia hemólisis. 4. <strong>Hialuronidasa y neuraminidasa</strong>: facilitan invasión tisular. Los neonatos son especialmente vulnerables porque carecen de anticuerpos maternos anticapsulares (IgG que no cruza placenta en cantidad suficiente en portadoras).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento de la sepsis neonatal por S. agalactiae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Tratamiento: <strong>ampicilina + gentamicina</strong> empírico inicial (sinergia bactericida). Una vez confirmado SGB: <strong>penicilina G IV en altas dosis</strong> (300.000-400.000 UI/kg/día dividido c/4-6h). Si hay meningitis: penicilina G IV 14-21 días. Gentamicina puede mantenerse las primeras 2 semanas en meningitis por sinergia. S. agalactiae es uniformemente sensible a penicilina. En alérgicos: cefazolina o vancomicina (si la cepa es resistente a clindamicina).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Qué infecciones causa S. agalactiae en adultos no gestantes?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">En adultos con factores de riesgo (diabetes, inmunosupresión, hepatopatía, neoplasias): 1) <strong>Bacteriemia primaria</strong>, 2) <strong>Infecciones de piel y tejidos blandos</strong> (celulitis, úlceras diabéticas), 3) <strong>Osteoartritis séptica</strong>, 4) <strong>Neumonía</strong>, 5) <strong>Endocarditis</strong> (menos frecuente). En mujeres embarazadas: infección urinaria, endometritis, corioamnionitis. S. agalactiae es el 3er estreptococo más importante en adultos mayores tras S. pneumoniae y S. pyogenes.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Cuál es la tasa de portación vaginal de S. agalactiae en embarazadas y qué porcentaje de neonatos de madres portadoras desarrolla enfermedad?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La tasa de portación vagino-rectal de SGB en embarazadas es del <strong>10-30%</strong> (varía por región y etnia). De los neonatos de madres portadoras sin profilaxis: <strong>40-70% se colonizan</strong> durante el parto. De los colonizados, solo el <strong>1-2%</strong> desarrolla enfermedad invasiva. La profilaxis intraparto reduce la tasa de transmisión y enfermedad neonatal precoz en &gt;80%. Por eso el tamizaje universal en semana 35-37 es fundamental.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Cómo se diferencia S. agalactiae de S. pyogenes en el laboratorio?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Ambos son beta-hemolíticos, Gram (+), catalasa negativos. Diferencias: <strong>Bacitracina</strong>: S. pyogenes sensible (halo &gt;10mm), S. agalactiae <strong>resistente</strong>. <strong>CAMP test</strong>: S. agalactiae <strong>positivo</strong>, S. pyogenes negativo. <strong>Hidrólisis de hipurato</strong>: S. agalactiae <strong>positivo</strong>, S. pyogenes negativo. <strong>PYR (pirrolidonil arilamidasa)</strong>: S. pyogenes positivo, S. agalactiae negativo. <strong>Lancefield</strong>: S. pyogenes grupo A, S. agalactiae grupo B.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Qué complicaciones neurológicas puede dejar la meningitis neonatal por S. agalactiae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La meningitis neonatal por SGB tiene mortalidad del 10-15% y deja secuelas en 25-50% de sobrevivientes: <strong>déficit auditivo neurosensorial</strong> (más frecuente), <strong>hidrocefalia</strong>, <strong>retraso del desarrollo psicomotor</strong>, <strong>déficits visuales</strong>, <strong>epilepsia</strong>, <strong>parálisis cerebral</strong>. El daño se debe a inflamación meníngea, vasculitis, edema cerebral y necrosis. Seguimiento neurológico a largo plazo es mandatorio en todo neonato con meningitis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Existe vacuna contra S. agalactiae? ¿Cuál es el estado de desarrollo actual?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">No existe vacuna aprobada actualmente contra S. agalactiae. Sin embargo, hay <strong>vacunas en desarrollo</strong> basadas en los <strong>polisacáridos capsulares</strong> (serotipos Ia, Ib, II, III, V) conjugados con proteínas portadoras. La estrategia es la vacunación materna durante el embarazo para generar anticuerpos IgG que crucen la placenta y protejan al neonato (inmunidad pasiva). Varias candidatas están en fases II-III de ensayos clínicos. La OMS considera el desarrollo de esta vacuna una prioridad de salud global.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 6: Streptococcus pneumoniae -->
+  <div class="caso" id="caso-5">
+    <div class="caso-header">
+      <div class="bacteria-tag">Coco Gram (+) · Alfa-hemolítico · Diplococo lanceolado</div>
+      <div class="caso-title">Streptococcus pneumoniae</div>
+      <div class="caso-meta">Paciente: Varón, 72 años · Servicio: Urgencias/Neumología · Nivel: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Presentación clínica</div>
+      <div class="caso-text">
+        Varón de 72 años, fumador (40 paquetes/año), EPOC moderada, no vacunado contra neumococo. Acude por <strong>fiebre de 39.8°C con escalofríos, tos productiva con esputo herrumbroso (color óxido), dolor pleurítico en hemitórax derecho y disnea</strong> de 3 días de evolución. Refiere que comenzó con un cuadro catarral hace 5 días.
+        <br><br>
+        Examen físico: paciente en mal estado general, FR 28 rpm, SpO₂ 89%, TA 95/60 mmHg. <strong>Matidez a la percusión en base derecha</strong>, crepitantes finos en inspiración en base derecha, broncofonía aumentada. Sin rigidez de nuca.
+        <br><br>
+        Rx tórax: <strong>consolidación lobar en lóbulo inferior derecho</strong>. Gram de esputo: <strong>diplococos lanceolados Gram (+) en abundante cantidad, leucocitos</strong>. Cultivo: alfa-hemólisis, soluble en bilis, optoquina sensible.
+      </div>
+      <div class="section-label">Datos de laboratorio</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Temperatura</div><div class="dado-valor anormal">39.8°C</div></div>
+        <div class="dado"><div class="dado-label">FR</div><div class="dado-valor anormal">28 rpm</div></div>
+        <div class="dado"><div class="dado-label">SpO₂</div><div class="dado-valor anormal">89%</div></div>
+        <div class="dado"><div class="dado-label">TA</div><div class="dado-valor anormal">95/60 mmHg</div></div>
+        <div class="dado"><div class="dado-label">Optoquina</div><div class="dado-valor anormal">Sensible</div></div>
+        <div class="dado"><div class="dado-label">Bilis (solubilidad)</div><div class="dado-valor anormal">Positiva</div></div>
+        <div class="dado"><div class="dado-label">Hemólisis</div><div class="dado-valor anormal">Alfa (verdosa)</div></div>
+        <div class="dado"><div class="dado-label">Rx Tórax</div><div class="dado-valor anormal">Consolidación LID</div></div>
+      </div>
+    </div>
+    <div class="perguntas-section">
+      <div class="section-label">Preguntas del caso</div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">¿Cuál es el diagnóstico microbiológico y qué hallazgos del laboratorio son patognomónicos?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>Streptococcus pneumoniae</strong> (neumococo). Diagnóstico: neumonía lobar neumocócica. Hallazgos patognomónicos: 1) <strong>Diplococos lanceolados Gram (+)</strong> en esputo, 2) <strong>alfa-hemólisis</strong> (halo verde por conversión de hemoglobina en biliverdina), 3) <strong>sensibilidad a optoquina</strong> (diferencia de otros estreptococos alfa-hemolíticos como viridans), 4) <strong>solubilidad en bilis</strong> (desoxicolato sódico lisa la bacteria, diferencia de S. viridans).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">¿Cuál es el principal factor de virulencia del neumococo y cómo evade la respuesta inmune?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El principal factor de virulencia es la <strong>cápsula polisacárida</strong> (90+ serotipos): inhibe la fagocitosis al impedir la opsonización (anticuerpos anticapsulares específicos son necesarios). Otros: <strong>neumolisina</strong> (toxina que perfora membranas celulares, similar a estreptolisina O), <strong>IgA proteasa</strong> (destruye IgA secretora de mucosas), <strong>proteína A superficial (PspA)</strong> (inhibe complemento), <strong>adhesinas</strong> (colina surface proteins). La cápsula es la base de la vacunación (PCV13, PPSV23).</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Aplique la escala PSI/PORT o CURB-65 a este paciente. ¿Requiere hospitalización?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto"><strong>CURB-65</strong>: C (confusión: no, 0), U (urea &gt;7mmol/L: desconocido), R (FR ≥30: sí, 1 punto), B (TA sistólica &lt;90 o diastólica ≤60: sí, 1 punto), 65 (edad ≥65: sí, 1 punto) = mínimo <strong>3 puntos</strong> → mortalidad ~17% → <strong>hospitalización urgente, evaluar UCI</strong>. La SpO₂ de 89% y TA 95/60 mmHg (hipotensión) confirman gravedad. Este paciente tiene criterios de neumonía grave con posible sepsis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">¿Cuál es el tratamiento antibiótico empírico y cuándo se puede desescalar?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">Para neumonía grave hospitalizada: <strong>betalactámico + macrólido</strong> (ampicilina-sulbactam + azitromicina IV) o <strong>fluoroquinolona respiratoria</strong> (levofloxacino 750mg/día). Si el antibiograma confirma S. pneumoniae sensible a penicilina: <strong>desescalar a amoxicilina oral</strong> al lograr estabilidad clínica (≥48h afebril, FR&lt;24, SpO₂&gt;90%, tolerancia oral). Duración total: 5-7 días en neumonía no complicada, hasta 10-14 días en bacteriémica.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">¿Qué otras enfermedades graves causa S. pneumoniae además de neumonía?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>Meningitis bacteriana</strong>: causa más frecuente en adultos y segunda en neonatos. Alta mortalidad (20-30%), secuelas graves. 2. <strong>Otitis media aguda</strong>: causa más frecuente en niños. 3. <strong>Sinusitis bacteriana aguda</strong>. 4. <strong>Bacteriemia/sepsis</strong> (especialmente en asplénicos, inmunosuprimidos). 5. <strong>Pericarditis</strong> (extensión directa). La "tríada clásica" de S. pneumoniae: neumonía, meningitis, otitis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">¿Cuáles son las vacunas disponibles contra S. pneumoniae y a quién se recomiendan?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">1. <strong>PCV13 (Prevenar 13)</strong>: vacuna conjugada, 13 serotipos, inmunidad T-dependiente, recomendada en niños &lt;5 años y adultos ≥65 años o inmunosuprimidos. 2. <strong>PPSV23 (Pneumovax 23)</strong>: polisacárida pura, 23 serotipos, T-independiente, no inmunogénica en &lt;2 años, recomendada en &gt;65 años y grupos de riesgo. Esquema en adultos de riesgo: PCV13 → esperar 1 año → PPSV23. Este paciente (72 años, EPOC) debería haber recibido ambas vacunas.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">¿Qué es el esputo herrumbroso (color óxido) y por qué es característico de la neumonía neumocócica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El esputo herrumbroso (color óxido, "rust-colored") es causado por la <strong>degradación de la hemoglobina</strong> de eritrocitos extravasados al espacio alveolar (hepatización roja) en hemoglobina oxidada y hemosiderina. S. pneumoniae produce una respuesta inflamatoria intensa con extravasación de sangre y fibrina en los alvéolos. Es un signo clásico de <strong>neumonía lobar neumocócica</strong> y refleja la fase de hepatización roja del proceso. Característico pero no exclusivo del neumococo.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">¿Por qué los pacientes asplénicos tienen riesgo especialmente elevado de sepsis fulminante por S. pneumoniae?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El bazo es el principal órgano de <strong>aclaramiento de bacterias encapsuladas</strong> mediante fagocitosis por macrófagos esplénicos (que no requieren opsonización previa). Los asplénicos no pueden eliminar eficientemente S. pneumoniae encapsulado sin anticuerpos específicos. Esto lleva al <strong>OPSS (Overwhelming Post-Splenectomy Sepsis)</strong>: bacteriemia fulminante con mortalidad &gt;50%. Prevención: vacunación con PCV13+PPSV23, profilaxis con penicilina V oral, educación sobre consulta urgente ante fiebre.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">¿Cuál es el mecanismo de resistencia a penicilina en S. pneumoniae y cómo afecta el tratamiento?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">La resistencia en S. pneumoniae es por <strong>mutación de PBPs</strong> (PBP1a, PBP2b, PBP2x) con baja afinidad a penicilina, NO por betalactamasas. Se clasifican como: sensibles (CIM &lt;0.06 μg/mL), intermedias (0.12-1 μg/mL) y resistentes (&gt;2 μg/mL). Para meningitis (peor penetración BHE): usar ceftriaxona independientemente. Para neumonía: la penicilina IV a altas dosis puede funcionar en cepas intermedias. Cepas resistentes: ceftriaxona ± vancomicina en meningitis.</div>
+        </div>
+      </div>
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">¿Qué es la prueba de antígeno urinario neumocócico y cuáles son sus ventajas en el diagnóstico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Respuesta esperada</div>
+          <div class="gabarito-texto">El <strong>antígeno urinario neumocócico</strong> (BinaxNOW) detecta el polisacárido C de S. pneumoniae en orina mediante inmunocromatografía. Ventajas: resultado en <strong>15 minutos</strong>, no afectado por antibióticos previos (útil cuando el cultivo ya es negativo), sensibilidad 70-80% y especificidad &gt;90% para neumonía neumocócica en adultos. Limitaciones: no detecta todos los serotipos, puede ser positivo en portadores sanos (niños), no diferencia infección activa de colonización pasada. Complementa pero no reemplaza el cultivo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 6</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)">Siguiente →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 6;
+
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  const pills = document.querySelectorAll('.pill');
+  pills[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    // Mark current as done when going forward
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+
+function toggleGabarito(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>
