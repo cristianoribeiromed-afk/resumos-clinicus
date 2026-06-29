@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cocos Gram+ e Gram- | Microbiología</title>
+<style>
+:root{
+  --bg:#0b0f0e;
+  --panel:#121917;
+  --panel2:#161f1c;
+  --green:#1fb86a;
+  --green-dark:#0e6e3f;
+  --green-light:#7fe6b0;
+  --text:#e8efec;
+  --muted:#9bb0a8;
+  --border:#22302a;
+  --warn:#e8b34a;
+  --bad:#e84a4a;
+  --gp:#1fb86a;
+  --gn:#4aa3e8;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  min-height:100vh;
+}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-thumb{background:var(--green-dark);border-radius:4px;}
+
+/* SIDEBAR */
+#sidebar{
+  width:280px;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  padding:18px 12px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  flex-shrink:0;
+}
+#sidebar h1{
+  font-size:17px;
+  color:var(--green-light);
+  margin:0 0 4px;
+}
+#sidebar .sub{color:var(--muted);font-size:12px;margin-bottom:16px;}
+.xp-box{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:16px;
+}
+.xp-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;}
+.xp-bar{height:8px;background:#0d1413;border-radius:5px;overflow:hidden;}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--green-dark),var(--green));width:0%;transition:.4s;}
+.group-title{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--muted);
+  margin:14px 6px 6px;
+}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13.5px;
+  color:var(--text);
+  margin-bottom:2px;
+  border-left:3px solid transparent;
+}
+.nav-item:hover{background:var(--panel2);}
+.nav-item.active{background:var(--panel2);border-left-color:var(--green);color:var(--green-light);font-weight:600;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot.gp{background:var(--gp);}
+.dot.gn{background:var(--gn);}
+.nav-check{margin-left:auto;font-size:11px;color:var(--green);opacity:0;}
+.nav-item.done .nav-check{opacity:1;}
+
+/* MAIN */
+#main{flex:1;padding:28px 36px;max-width:980px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.topbar h2{margin:0;font-size:24px;}
+.badge{
+  display:inline-block;
+  font-size:11px;
+  padding:3px 10px;
+  border-radius:20px;
+  font-weight:600;
+  letter-spacing:.03em;
+}
+.badge.gp{background:rgba(31,184,106,.15);color:var(--green-light);border:1px solid var(--green-dark);}
+.badge.gn{background:rgba(74,163,232,.15);color:#9fd0f5;border:1px solid #2a6ea3;}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:18px;
+}
+.card h3{
+  margin:0 0 12px;
+  font-size:14px;
+  color:var(--green-light);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.card p, .card li{font-size:14.5px;line-height:1.55;color:var(--text);}
+.card ul{margin:0;padding-left:20px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:760px){.grid2{grid-template-columns:1fr;} #sidebar{display:none;} #main{padding:18px;}}
+
+.pill{
+  display:inline-block;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:2px 8px;
+  font-size:12px;
+  color:var(--green-light);
+  margin:2px 4px 2px 0;
+}
+.tx-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px;}
+.tx-table th,.tx-table td{border:1px solid var(--border);padding:8px 10px;text-align:left;}
+.tx-table th{background:var(--panel2);color:var(--green-light);font-size:12px;text-transform:uppercase;}
+.tx-table tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.tabbar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.tabbtn{
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:var(--muted);
+  padding:7px 14px;
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+}
+.tabbtn.active{background:var(--green-dark);color:#fff;border-color:var(--green);}
+
+/* FLASHCARD */
+.flash-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.flashcard{
+  width:100%;
+  max-width:520px;
+  min-height:140px;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:16px;
+  cursor:pointer;
+  perspective:1000px;
+}
+.flash-controls{display:flex;gap:10px;}
+.btn{
+  background:var(--green-dark);
+  color:#fff;
+  border:none;
+  padding:9px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13.5px;
+  font-weight:600;
+}
+.btn.secondary{background:var(--panel2);border:1px solid var(--border);color:var(--text);}
+.btn:hover{opacity:.88;}
+
+/* QUIZ */
+.qcard{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+.qcard .qtext{font-size:14.5px;margin-bottom:10px;font-weight:600;}
+.opt{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:9px 12px;
+  border-radius:8px;
+  margin-bottom:7px;
+  cursor:pointer;
+  font-size:13.5px;
+}
+.opt:hover{border-color:var(--green);}
+.opt.correct{background:rgba(31,184,106,.18);border-color:var(--green);}
+.opt.wrong{background:rgba(232,74,74,.18);border-color:var(--bad);}
+.feedback{font-size:13px;margin-top:6px;color:var(--muted);}
+.feedback.ok{color:var(--green-light);}
+.feedback.bad{color:#f0a0a0;}
+.quiz-summary{text-align:center;padding:24px;}
+.quiz-summary .score{font-size:42px;font-weight:700;color:var(--green-light);}
+
+.toast{
+  position:fixed;
+  top:18px;right:18px;
+  background:var(--green-dark);
+  color:#fff;
+  padding:10px 16px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:.3s;
+  z-index:99;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+.intro-table-wrap{overflow-x:auto;}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast">+10 XP</div>
+
+<div id="sidebar">
+  <h1>🦠 Cocos Microbiología</h1>
+  <div class="sub">Gram positivos y Gram negativos</div>
+  <div class="xp-box">
+    <div class="xp-row"><span>Nivel <span id="lvl">1</span></span><span id="xpval">0 XP</span></div>
+    <div class="xp-bar"><div class="xp-fill" id="xpfill"></div></div>
+  </div>
+
+  <div class="group-title">Inicio</div>
+  <div class="nav-item active" data-page="home"><span class="dot" style="background:var(--muted)"></span>Tabla comparativa</div>
+
+  <div class="group-title">Staphylococcus</div>
+  <div class="nav-item" data-page="saureus"><span class="dot gp"></span>S. aureus</div>
+  <div class="nav-item" data-page="sepidermidis"><span class="dot gp"></span>S. epidermidis</div>
+  <div class="nav-item" data-page="ssaprophyticus"><span class="dot gp"></span>S. saprophyticus</div>
+
+  <div class="group-title">Streptococcus</div>
+  <div class="nav-item" data-page="spyogenes"><span class="dot gp"></span>S. pyogenes (GAS)</div>
+  <div class="nav-item" data-page="sagalactiae"><span class="dot gp"></span>S. agalactiae (GBS)</div>
+  <div class="nav-item" data-page="spneumoniae"><span class="dot gp"></span>S. pneumoniae</div>
+
+  <div class="group-title">Neisseria</div>
+  <div class="nav-item" data-page="ngonorrhoeae"><span class="dot gn"></span>N. gonorrhoeae</div>
+  <div class="nav-item" data-page="nmeningitidis"><span class="dot gn"></span>N. meningitidis</div>
+
+  <div class="group-title">Práctica</div>
+  <div class="nav-item" data-page="flashcards"><span class="dot" style="background:var(--warn)"></span>Flashcards</div>
+  <div class="nav-item" data-page="quiz"><span class="dot" style="background:var(--bad)"></span>Quiz final (15)</div>
+</div>
+
+<div id="main"></div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const DATA = {
+saureus:{
+  gram:"gp", name:"Staphylococcus aureus",
+  morfo:"Coco Gram positivo, agrupado en racimos ('uvas'), catalasa positiva, coagulasa positiva (la única del género), inmóvil, anaerobio facultativo.",
+  virulencia:["Coagulasa","Proteína A (se une a Fc de IgG, evita opsonización)","Toxina TSST-1 (síndrome de shock tóxico)","Leucocidina (Panton-Valentine, asociada a CA-MRSA)","Hemolisinas (α,β,δ)","Enterotoxinas termoestables (intoxicación alimentaria)","Exfoliatina (síndrome de piel escaldada)","Cápsula polisacárida"],
+  enfermedades:["Piel/tejidos blandos: foliculitis, furúnculos, abscesos, celulitis, impétigo bulloso","Síndrome de piel escaldada (exfoliatina, niños)","Síndrome de shock tóxico (TSST-1, tampones, taponamiento nasal)","Intoxicación alimentaria (enterotoxina, inicio rápido 1-6h, vómito predominante)","Neumonía (post-influenza, necrotizante)","Endocarditis aguda (válvula nativa o tricúspide en UDIV)","Osteomielitis hematógena (causa #1 en adultos y niños)","Artritis séptica","Bacteriemia/sepsis","Infecciones asociadas a catéteres/prótesis"],
+  epidem:"Coloniza piel y mucosa nasal (fosas nasales anteriores) en ~30% de la población. Transmisión por contacto directo, fómites. MRSA (resistente a meticilina) es relevante intrahospitalario y comunitario (CA-MRSA).",
+  dx_clinico:"Lesiones cutáneas purulentas localizadas, fluctuantes; cuadro sistémico en sepsis/endocarditis; inicio súbito de vómito en intoxicación alimentaria.",
+  dx_lab:["Tinción de Gram: cocos Gram+ en racimos","Cultivo en agar sangre: colonias doradas, beta-hemólisis","Catalasa positiva (distingue de Streptococcus)","Coagulasa positiva (distingue de S. epidermidis/saprophyticus)","Prueba de DNasa positiva","Manitol salado (agar Chapman): fermenta manitol → amarillo"],
+  dx_diff:"Catalasa (+) lo separa de Streptococcus (catalasa -). Coagulasa (+) lo separa de los estafilococos coagulasa-negativos (epidermidis, saprophyticus).",
+  tto:"Oxacilina/cloxacilina (cepas sensibles a meticilina, MSSA). Si MRSA: vancomicina, linezolid, daptomicina o clindamicina (CA-MRSA leve). Drenaje quirúrgico de abscesos siempre.",
+  prevencion:"Higiene de manos, descolonización nasal con mupirocina en portadores de alto riesgo, no hay vacuna disponible."
+},
+sepidermidis:{
+  gram:"gp", name:"Staphylococcus epidermidis",
+  morfo:"Coco Gram positivo en racimos, catalasa positiva, coagulasa NEGATIVA, forma biofilm denso.",
+  virulencia:["Producción de biofilm (slime) — principal factor de virulencia","Adhesinas para superficies plásticas/metálicas"],
+  enfermedades:["Infecciones asociadas a catéteres venosos centrales","Endocarditis sobre válvula PROTÉSICA (causa más común)","Infecciones de prótesis articulares","Infecciones de shunts de LCR","Bacteriemia asociada a dispositivos"],
+  epidem:"Flora normal de la piel humana (el más abundante). Patógeno oportunista típico en pacientes con dispositivos médicos implantados.",
+  dx_clinico:"Fiebre persistente en paciente portador de catéter, prótesis o shunt, sin foco claro.",
+  dx_lab:["Catalasa positiva","Coagulasa negativa","Sensible a novobiocina (lo diferencia de S. saprophyticus)","Hemocultivos repetidos para confirmar (común contaminante de piel, se requiere ≥2 cultivos positivos)"],
+  dx_diff:"Coagulasa negativa + sensible a novobiocina = S. epidermidis. (S. saprophyticus es resistente a novobiocina).",
+  tto:"Vancomicina (alta tasa de resistencia a meticilina). Retirar el dispositivo/catéter infectado siempre que sea posible.",
+  prevencion:"Técnica aséptica estricta en colocación de catéteres y prótesis."
+},
+ssaprophyticus:{
+  gram:"gp", name:"Staphylococcus saprophyticus",
+  morfo:"Coco Gram positivo en racimos, catalasa positiva, coagulasa negativa, resistente a novobiocina.",
+  virulencia:["Adhesinas urinarias","Ureasa"],
+  enfermedades:["Infección del tracto urinario (ITU) no complicada en mujeres jóvenes sexualmente activas (2da causa más común después de E. coli)"],
+  epidem:"Flora normal del periné y tracto genitourinario. Clásico en mujeres jóvenes sexualmente activas.",
+  dx_clinico:"Disuria, polaquiuria, urgencia en mujer joven, sin fiebre alta típicamente.",
+  dx_lab:["Catalasa positiva","Coagulasa negativa","RESISTENTE a novobiocina (clave diagnóstica)","Urocultivo positivo"],
+  dx_diff:"Coagulasa negativa + RESISTENTE a novobiocina = S. saprophyticus (vs. epidermidis que es sensible).",
+  tto:"Nitrofurantoína o trimetoprim-sulfametoxazol (igual que ITU no complicada por E. coli).",
+  prevencion:"Higiene genital, micción postcoital."
+},
+spyogenes:{
+  gram:"gp", name:"Streptococcus pyogenes (Grupo A - GAS)",
+  morfo:"Coco Gram positivo en cadenas, catalasa NEGATIVA, beta-hemolítico, sensible a bacitracina.",
+  virulencia:["Proteína M (antifagocítica, base de clasificación serológica y de la patogenia de fiebre reumática)","Estreptolisina O y S (hemólisis, la O es inmunogénica → ASO)","Exotoxina pirogénica (escarlatina, shock tóxico estreptocócico)","Estreptoquinasa, hialuronidasa, DNasa (factores de diseminación)","Cápsula de ácido hialurónico"],
+  enfermedades:["Faringitis estreptocócica","Escarlatina (exantema + lengua aframbuesada)","Impétigo y erisipela","Celulitis","Fascitis necrotizante ('bacteria caníbal')","Síndrome de shock tóxico estreptocócico","Secuelas NO supurativas (inmunomediadas): Fiebre reumática y Glomerulonefritis postestreptocócica"],
+  epidem:"Transmisión por gotas respiratorias (faringitis) o contacto directo (piel). Pico en niños 5-15 años para faringitis.",
+  dx_clinico:"Faringitis: fiebre, exudado amigdalino, adenopatía cervical anterior, SIN tos (criterios de Centor). Fascitis: dolor desproporcionado al examen físico, signos sistémicos.",
+  dx_lab:["Cultivo en agar sangre: beta-hemólisis completa","Test rápido de antígeno estreptocócico (faringitis)","Sensible a bacitracina (disco A) — distingue de Grupo B","Anticuerpos ASO (estreptolisina O) y anti-DNasa B: útiles para diagnóstico retrospectivo de fiebre reumática/GN postestreptocócica, NO para infección aguda"],
+  dx_diff:"Beta-hemólisis + sensible a bacitracina = Grupo A (pyogenes). Si es resistente a bacitracina, pensar en Grupo B (agalactiae).",
+  tto:"Penicilina G o amoxicilina (de elección, sin resistencia descrita). Alérgicos: macrólidos o cefalosporinas. Fascitis necrotizante: cirugía urgente + penicilina + clindamicina (inhibe síntesis de toxinas).",
+  prevencion:"No hay vacuna. Tratamiento oportuno de faringitis previene fiebre reumática (no previene GN postestreptocócica)."
+},
+sagalactiae:{
+  gram:"gp", name:"Streptococcus agalactiae (Grupo B - GBS)",
+  morfo:"Coco Gram positivo en cadenas, catalasa negativa, beta-hemolítico, RESISTENTE a bacitracina, hidrólisis de hipurato positiva, prueba CAMP positiva.",
+  virulencia:["Cápsula polisacárida (factor principal antifagocítico)","Hemolisina"],
+  enfermedades:["Sepsis neonatal de inicio precoz (<7 días) — causa #1 de sepsis neonatal","Meningitis neonatal","Neumonía neonatal","Infecciones en embarazadas (ITU, corioamnionitis)","Infecciones en adultos mayores/diabéticos/inmunocomprometidos (celulitis, ITU, bacteriemia)"],
+  epidem:"Coloniza tracto vaginal/rectal en 10-30% de embarazadas. Transmisión vertical durante el parto.",
+  dx_clinico:"Neonato con fiebre/inestabilidad térmica, dificultad respiratoria, letargia en primeros días de vida.",
+  dx_lab:["Cultivo: beta-hemólisis (más débil que GAS)","RESISTENTE a bacitracina (distingue de GAS)","Prueba de CAMP positiva (sinergismo con S. aureus)","Hidrólisis de hipurato positiva","Cribado universal recto-vaginal a las 35-37 semanas de embarazo (cultivo)"],
+  dx_diff:"Resistente a bacitracina + CAMP positivo + hipurato positivo = Grupo B (agalactiae).",
+  tto:"Penicilina G o ampicilina (de elección). Profilaxis intraparto en gestantes colonizadas o con factores de riesgo.",
+  prevencion:"Cribado universal a las 35-37 semanas + profilaxis intraparto con penicilina IV si cultivo positivo."
+},
+spneumoniae:{
+  gram:"gp", name:"Streptococcus pneumoniae",
+  morfo:"Diplococo Gram positivo 'en lanceta', catalasa negativa, alfa-hemolítico, sensible a optoquina, soluble en bilis (lisis por bilis).",
+  virulencia:["Cápsula polisacárida (>90 serotipos, principal factor de virulencia, base de las vacunas)","Neumolisina (citotoxina)","IgA proteasa","Autolisina"],
+  enfermedades:["Neumonía adquirida en la comunidad (causa #1 bacteriana)","Otitis media aguda (causa #1 en niños)","Sinusitis bacteriana aguda","Meningitis bacteriana en adultos (causa #1) y niños mayores","Bacteriemia/sepsis, especialmente en asplénicos (sepsis fulminante post-esplenectomía)"],
+  epidem:"Coloniza nasofaringe, más frecuente en extremos de edad, asplénicos, inmunocomprometidos, fumadores.",
+  dx_clinico:"Neumonía: fiebre, tos productiva, dolor pleurítico, consolidación lobar en Rx. Meningitis: cefalea, fiebre, rigidez de nuca.",
+  dx_lab:["Tinción de Gram en esputo/LCR: diplococos Gram+ en lanceta","Cultivo en agar sangre: alfa-hemólisis (colonias verdosas)","Sensible a OPTOQUINA (distingue de otros alfa-hemolíticos como Viridans)","Prueba de solubilidad en bilis: positiva (se lisa)","Antígeno urinario neumocócico (rápido, útil en neumonía)","Hemocultivos y cultivo de LCR si meningitis"],
+  dx_diff:"Alfa-hemólisis + sensible a optoquina + soluble en bilis = S. pneumoniae (vs. Streptococcus viridans que es resistente a optoquina e insoluble en bilis).",
+  tto:"Penicilina o amoxicilina si sensible. Resistencia creciente: ceftriaxona/cefotaxima (empírico en neumonía grave/meningitis) ± vancomicina si se sospecha alta resistencia. Meningitis: ceftriaxona + vancomicina + dexametasona.",
+  prevencion:"Vacunas conjugadas (PCV13/PCV15/PCV20) y polisacárida (PPSV23), indicadas en niños, >65 años, asplénicos e inmunocomprometidos."
+},
+ngonorrhoeae:{
+  gram:"gn", name:"Neisseria gonorrhoeae",
+  morfo:"Diplococo Gram negativo 'en grano de café', oxidasa positiva, intracelular en PMN, no fermenta maltosa (fermenta solo glucosa), no encapsulado.",
+  virulencia:["Pili (adherencia y variación antigénica — evita inmunidad)","Proteína Por (porina, invasión)","Proteína Opa (adherencia íntima)","LOS (lipooligosacárido, no LPS clásico)","IgA proteasa"],
+  enfermedades:["Uretritis/cervicitis gonocócica (secreción purulenta)","Enfermedad pélvica inflamatoria (EPI)","Epididimitis","Conjuntivitis neonatal (oftalmía neonatorum, por transmisión vertical)","Artritis gonocócica/infección gonocócica diseminada (poliartritis migratoria + lesiones cutáneas pustulosas)","Faringitis y proctitis gonocócica (sexo oral/anal)"],
+  epidem:"ITS exclusiva de humanos, alta transmisibilidad. Creciente resistencia antimicrobiana (cepas multirresistentes).",
+  dx_clinico:"Secreción uretral/cervical purulenta, disuria; en neonatos conjuntivitis purulenta en primeros días de vida.",
+  dx_lab:["Tinción de Gram de secreción: diplococos Gram- intracelulares en PMN (alta sensibilidad/especificidad en hombres sintomáticos)","Cultivo en agar Thayer-Martin (medio selectivo con antibióticos para inhibir flora normal)","Oxidasa positiva","Fermenta SOLO glucosa (no maltosa) — distingue de N. meningitidis","NAAT/PCR (prueba molecular, de elección actualmente, más sensible que cultivo)"],
+  dx_diff:"Fermentación de azúcares: gonorrhoeae fermenta SOLO glucosa; meningitidis fermenta glucosa Y maltosa.",
+  tto:"Ceftriaxona IM/IV dosis única (monoterapia actual por guías recientes, alta resistencia a otros antibióticos). Tratar siempre Chlamydia de forma empírica (coinfección frecuente) si no se descartó.",
+  prevencion:"Uso de condón, tamizaje en poblaciones de riesgo, profilaxis ocular neonatal con eritromicina o nitrato de plata."
+},
+nmeningitidis:{
+  gram:"gn", name:"Neisseria meningitidis",
+  morfo:"Diplococo Gram negativo 'en grano de café', oxidasa positiva, ENCAPSULADO (factor clave de virulencia), fermenta glucosa Y maltosa.",
+  virulencia:["Cápsula polisacárida (12 serogrupos, principalmente A,B,C,W,Y causantes de enfermedad)","Endotoxina LOS (causa el shock séptico/CID en meningococcemia)","Pili (adherencia a nasofaringe)","IgA proteasa"],
+  enfermedades:["Meningitis bacteriana (causa principal en niños/adultos jóvenes, brotes en comunidades cerradas)","Meningococcemia (sepsis fulminante con púrpura/petequias)","Síndrome de Waterhouse-Friderichsen (hemorragia suprarrenal bilateral, CID, shock)"],
+  epidem:"Coloniza nasofaringe humana, transmisión por gotas respiratorias, brotes en dormitorios/cuarteles. Mayor riesgo en asplénicos y deficiencia de complemento (C5-C9).",
+  dx_clinico:"Inicio súbito: fiebre alta, cefalea, rigidez de nuca, fotofobia; petequias/púrpura no blanqueable son signo de alarma de meningococcemia.",
+  dx_lab:["Punción lumbar: LCR turbio, pleocitosis neutrofílica, proteínas altas, glucosa baja","Tinción de Gram de LCR: diplococos Gram- en grano de café","Cultivo en agar chocolate o Thayer-Martin","Oxidasa positiva","Fermenta glucosa Y maltosa (distingue de gonorrhoeae)","PCR de LCR/sangre (rápido y sensible)"],
+  dx_diff:"Fermenta glucosa Y maltosa = N. meningitidis (vs. gonorrhoeae que fermenta solo glucosa). Presencia de cápsula visible y petequias orienta clínicamente a meningococo.",
+  tto:"Penicilina G o ceftriaxona/cefotaxima. Empírico inicial en sospecha de meningitis bacteriana: ceftriaxona + vancomicina (hasta excluir neumococo resistente) + dexametasona.",
+  prevencion:"Vacunas conjugadas (MenACWY, MenB). Quimioprofilaxis a contactos cercanos: rifampicina, ciprofloxacino o ceftriaxona dosis única."
+}
+};
+
+const ORDER = ["saureus","sepidermidis","ssaprophyticus","spyogenes","sagalactiae","spneumoniae","ngonorrhoeae","nmeningitidis"];
+
+const QUIZ = [
+{q:"Coco Gram+ catalasa positiva, coagulasa positiva, causa síndrome de piel escaldada en niños:",opts:["S. aureus","S. epidermidis","S. pyogenes","S. agalactiae"],a:0},
+{q:"¿Qué prueba diferencia S. epidermidis de S. saprophyticus (ambos coagulasa negativos)?",opts:["Catalasa","Coagulasa","Sensibilidad a novobiocina","Oxidasa"],a:2},
+{q:"Causa más frecuente de ITU no complicada en mujer joven sexualmente activa, después de E. coli:",opts:["S. saprophyticus","S. epidermidis","S. aureus","N. gonorrhoeae"],a:0},
+{q:"Coco Gram+ en cadenas, beta-hemolítico, sensible a bacitracina, causa fiebre reumática como secuela:",opts:["S. agalactiae","S. pyogenes","S. pneumoniae","S. aureus"],a:1},
+{q:"Causa #1 de sepsis neonatal de inicio precoz, resistente a bacitracina, CAMP positivo:",opts:["S. pyogenes","S. agalactiae","S. pneumoniae","N. meningitidis"],a:1},
+{q:"Diplococo Gram+ en lanceta, alfa-hemolítico, sensible a optoquina, soluble en bilis:",opts:["S. pyogenes","S. viridans","S. pneumoniae","S. agalactiae"],a:2},
+{q:"¿Qué distingue a S. pneumoniae de Streptococcus viridans (ambos alfa-hemolíticos)?",opts:["Catalasa","Sensibilidad a bacitracina","Sensibilidad a optoquina y solubilidad en bilis","Coagulasa"],a:2},
+{q:"Diplococo Gram negativo 'en grano de café' que fermenta SOLO glucosa (no maltosa):",opts:["N. meningitidis","N. gonorrhoeae","H. influenzae","M. catarrhalis"],a:1},
+{q:"Diplococo Gram negativo encapsulado, fermenta glucosa Y maltosa, causa meningococcemia con petequias:",opts:["N. gonorrhoeae","N. meningitidis","S. pneumoniae","H. influenzae"],a:1},
+{q:"Tratamiento de elección actual para N. gonorrhoeae no complicada:",opts:["Penicilina G","Ceftriaxona dosis única","Ciprofloxacino","Doxiciclina sola"],a:1},
+{q:"Profilaxis a contactos cercanos de un caso de meningitis meningocócica:",opts:["Amoxicilina 7 días","Rifampicina, ciprofloxacino o ceftriaxona dosis única","Vancomicina","No requiere profilaxis"],a:1},
+{q:"Factor de virulencia que permite a S. aureus evadir la opsonización al unirse a Fc de IgG:",opts:["Proteína A","Coagulasa","Proteína M","Cápsula"],a:0},
+{q:"Toxina responsable del síndrome de shock tóxico estafilocócico:",opts:["Enterotoxina","TSST-1","Exfoliatina","Hemolisina alfa"],a:1},
+{q:"¿En qué medio selectivo se cultiva clásicamente N. gonorrhoeae?",opts:["Agar MacConkey","Agar Thayer-Martin","Agar sangre simple","Agar manitol salado"],a:1},
+{q:"Cribado recomendado en embarazadas para prevenir sepsis neonatal por S. agalactiae:",opts:["Cultivo recto-vaginal a las 35-37 semanas","Hemocultivo en el primer trimestre","Urocultivo mensual","No se realiza cribado"],a:0}
+];
+
+/* ---------------- STATE ---------------- */
+let state = {xp:0, done:new Set(), quizIdx:0, quizScore:0, quizAnswered:false, flashIdx:0, flashFlipped:false};
+
+function addXP(n){
+  state.xp += n;
+  document.getElementById('xpval').textContent = state.xp+" XP";
+  document.getElementById('lvl').textContent = Math.floor(state.xp/50)+1;
+  let pct = (state.xp % 50)/50*100;
+  document.getElementById('xpfill').style.width = pct+"%";
+  let t=document.getElementById('toast');
+  t.textContent="+"+n+" XP";
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1200);
+}
+
+function markDone(page){
+  if(!state.done.has(page)){
+    state.done.add(page);
+    addXP(10);
+    let el=document.querySelector('.nav-item[data-page="'+page+'"]');
+    if(el) el.classList.add('done');
+  }
+}
+
+/* ---------------- RENDER ---------------- */
+function render(page){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.page===page));
+  const main = document.getElementById('main');
+  if(page==='home'){ renderHome(main); return; }
+  if(page==='flashcards'){ renderFlash(main); return; }
+  if(page==='quiz'){ renderQuiz(main); return; }
+  renderBacteria(main, page);
+}
+
+function renderHome(main){
+  main.innerHTML = `
+  <div class="topbar"><h2>Tabla comparativa rápida — Cocos</h2></div>
+  <div class="card">
+    <h3>🔬 Pruebas bioquímicas de diferenciación clave</h3>
+    <div class="intro-table-wrap">
+    <table class="tx-table">
+      <tr><th>Bacteria</th><th>Gram</th><th>Hemólisis</th><th>Catalasa</th><th>Coagulasa</th><th>Prueba clave</th></tr>
+      <tr><td>S. aureus</td><td>+</td><td>Beta</td><td>+</td><td>+</td><td>Coagulasa (+) = único</td></tr>
+      <tr><td>S. epidermidis</td><td>+</td><td>—/variable</td><td>+</td><td>—</td><td>Sensible a novobiocina</td></tr>
+      <tr><td>S. saprophyticus</td><td>+</td><td>—/variable</td><td>+</td><td>—</td><td>Resistente a novobiocina</td></tr>
+      <tr><td>S. pyogenes (GAS)</td><td>+</td><td>Beta</td><td>—</td><td>—</td><td>Sensible a bacitracina</td></tr>
+      <tr><td>S. agalactiae (GBS)</td><td>+</td><td>Beta (débil)</td><td>—</td><td>—</td><td>Resistente a bacitracina, CAMP (+)</td></tr>
+      <tr><td>S. pneumoniae</td><td>+</td><td>Alfa</td><td>—</td><td>—</td><td>Sensible a optoquina, soluble en bilis</td></tr>
+      <tr><td>N. gonorrhoeae</td><td>—</td><td>N/A</td><td>N/A</td><td>N/A</td><td>Oxidasa (+), fermenta solo glucosa</td></tr>
+      <tr><td>N. meningitidis</td><td>—</td><td>N/A</td><td>N/A</td><td>N/A</td><td>Oxidasa (+), fermenta glucosa + maltosa</td></tr>
+    </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🧭 Algoritmo mental rápido</h3>
+    <ul>
+      <li><b>Coco Gram+ en racimos</b> → Staphylococcus. Catalasa (+) → mirar coagulasa: (+) aureus / (−) mirar novobiocina (sensible=epidermidis, resistente=saprophyticus).</li>
+      <li><b>Coco Gram+ en cadenas</b> → Streptococcus. Catalasa (−). Beta-hemólisis → bacitracina (sensible=pyogenes/GAS, resistente=agalactiae/GBS). Alfa-hemólisis → optoquina/bilis (sensible y soluble=pneumoniae; resistente e insoluble=viridans).</li>
+      <li><b>Diplococo Gram− 'en grano de café'</b> → Neisseria. Oxidasa (+) en ambas. Fermentación: solo glucosa=gonorrhoeae; glucosa+maltosa=meningitidis.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>📌 Cómo navegar</h3>
+    <p>Usá el menú lateral para entrar en cada bacteria (clasificación, virulencia, clínica, diagnóstico, tratamiento). Cuando termines, practicá con las <b>Flashcards</b> y cerrá con el <b>Quiz final</b> de 15 preguntas. Cada sección visitada suma XP.</p>
+  </div>`;
+}
+
+function renderBacteria(main, key){
+  const d = DATA[key];
+  const badgeClass = d.gram==='gp' ? 'gp':'gn';
+  const badgeText = d.gram==='gp' ? 'GRAM POSITIVO':'GRAM NEGATIVO';
+  main.innerHTML = `
+  <div class="topbar"><h2>${d.name}</h2><span class="badge ${badgeClass}">${badgeText}</span></div>
+
+  <div class="card"><h3>🧫 Clasificación y morfología</h3><p>${d.morfo}</p></div>
+
+  <div class="card"><h3>⚔️ Factores de virulencia</h3>
+    ${d.virulencia.map(v=>'<span class="pill">'+v+'</span>').join(' ')}
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h3>🩺 Enfermedades / cuadros clínicos</h3><ul>${d.enfermedades.map(e=>'<li>'+e+'</li>').join('')}</ul></div>
+    <div class="card"><h3>🌍 Epidemiología / transmisión</h3><p>${d.epidem}</p></div>
+  </div>
+
+  <div class="card"><h3>🔎 Diagnóstico clínico</h3><p>${d.dx_clinico}</p></div>
+
+  <div class="card"><h3>🧪 Diagnóstico de laboratorio</h3><ul>${d.dx_lab.map(e=>'<li>'+e+'</li>').join('')}</ul></div>
+
+  <div class="card" style="border-color:var(--green-dark);"><h3>✅ Clave práctica — diagnóstico diferencial</h3><p>${d.dx_diff}</p></div>
+
+  <div class="card"><h3>💊 Tratamiento de elección</h3><p>${d.tto}</p></div>
+
+  <div class="card"><h3>🛡️ Prevención</h3><p>${d.prevencion}</p></div>
+  `;
+  markDone(key);
+}
+
+/* FLASHCARDS */
+function renderFlash(main){
+  const keys = ORDER;
+  const key = keys[state.flashIdx];
+  const d = DATA[key];
+  main.innerHTML = `
+  <div class="topbar"><h2>Flashcards</h2><span class="badge ${d.gram}">${state.flashIdx+1}/${keys.length}</span></div>
+  <div class="flash-wrap">
+    <div class="flashcard" id="fc">${state.flashFlipped ? d.dx_diff : '<b>'+d.name+'</b><br><br>¿Cuál es la prueba clave que la diferencia en el laboratorio? <br><br><i>(click para ver respuesta)</i>'}</div>
+    <div class="flash-controls">
+      <button class="btn secondary" id="prevFc">← Anterior</button>
+      <button class="btn" id="flipFc">Girar tarjeta</button>
+      <button class="btn secondary" id="nextFc">Siguiente →</button>
+    </div>
+  </div>`;
+  document.getElementById('fc').onclick = ()=>{state.flashFlipped=!state.flashFlipped; renderFlash(main);};
+  document.getElementById('flipFc').onclick = ()=>{state.flashFlipped=!state.flashFlipped; renderFlash(main);};
+  document.getElementById('prevFc').onclick = ()=>{state.flashIdx=(state.flashIdx-1+keys.length)%keys.length; state.flashFlipped=false; renderFlash(main);};
+  document.getElementById('nextFc').onclick = ()=>{state.flashIdx=(state.flashIdx+1)%keys.length; state.flashFlipped=false; addXP(2); renderFlash(main);};
+  markDone('flashcards');
+}
+
+/* QUIZ */
+function renderQuiz(main){
+  if(state.quizIdx >= QUIZ.length){
+    main.innerHTML = `
+    <div class="card quiz-summary">
+      <h3>Quiz finalizado</h3>
+      <div class="score">${state.quizScore} / ${QUIZ.length}</div>
+      <p>${state.quizScore>=12?'¡Excelente dominio, Dr. Cristiano!':state.quizScore>=9?'Buen resultado, repasá los puntos flojos.':'Conviene repasar las tablas comparativas de nuevo.'}</p>
+      <button class="btn" id="restartQ">Repetir quiz</button>
+    </div>`;
+    document.getElementById('restartQ').onclick=()=>{state.quizIdx=0;state.quizScore=0;renderQuiz(main);};
+    return;
+  }
+  const q = QUIZ[state.quizIdx];
+  state.quizAnswered=false;
+  main.innerHTML = `
+  <div class="topbar"><h2>Quiz final</h2><span class="badge gp">${state.quizIdx+1}/${QUIZ.length}</span></div>
+  <div class="qcard">
+    <div class="qtext">${q.q}</div>
+    ${q.opts.map((o,i)=>'<button class="opt" data-i="'+i+'">'+o+'</button>').join('')}
+    <div class="feedback" id="fb"></div>
+  </div>`;
+  document.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.quizAnswered) return;
+      state.quizAnswered = true;
+      const i = parseInt(btn.dataset.i);
+      document.querySelectorAll('.opt').forEach(b=>{
+        if(parseInt(b.dataset.i)===q.a) b.classList.add('correct');
+        else if(parseInt(b.dataset.i)===i && i!==q.a) b.classList.add('wrong');
+      });
+      const fb = document.getElementById('fb');
+      if(i===q.a){ state.quizScore++; fb.textContent='✅ ¡Correcto!'; fb.className='feedback ok'; addXP(5);}
+      else { fb.textContent='❌ Incorrecto. Respuesta correcta: '+q.opts[q.a]; fb.className='feedback bad'; }
+      setTimeout(()=>{ state.quizIdx++; renderQuiz(document.getElementById('main')); }, 1400);
+    };
+  });
+}
+
+/* ---------------- INIT ---------------- */
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click', ()=> render(item.dataset.page));
+});
+render('home');
+</script>
+</body>
+</html>
