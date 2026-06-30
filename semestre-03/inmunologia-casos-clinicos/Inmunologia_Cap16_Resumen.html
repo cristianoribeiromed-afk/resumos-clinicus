@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inmunología — Cap. 16 | Inmunidad frente a Microbios</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #100a1f;
+    --surface: #160f2c;
+    --card: #1e1538;
+    --border: #2d2150;
+    --accent: #c084fc;
+    --accent2: #fb923c;
+    --accent3: #34d399;
+    --accent4: #38bdf8;
+    --accent5: #f472b6;
+    --text: #e9d5ff;
+    --muted: #8b7cb8;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Source Sans 3', sans-serif; font-weight: 300; line-height: 1.7; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0a0618 0%, #1a0e38 55%, #0d0822 100%);
+    padding: 3rem 2rem 2.5rem; text-align: center;
+    border-bottom: 2px solid var(--accent); position: relative; overflow: hidden;
+  }
+  .hero::before { content:''; position:absolute; top:-80px; left:-80px; width:260px; height:260px; background:radial-gradient(circle,rgba(192,132,252,0.13),transparent 70%); border-radius:50%; }
+  .hero::after  { content:''; position:absolute; bottom:-60px; right:-60px; width:200px; height:200px; background:radial-gradient(circle,rgba(251,146,60,0.1),transparent 70%); border-radius:50%; }
+  .hero-tag { font-family:'Fira Code',monospace; font-size:0.75rem; color:var(--accent); letter-spacing:3px; text-transform:uppercase; margin-bottom:0.8rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,2.8rem); color:var(--white); line-height:1.2; margin-bottom:0.6rem; }
+  .hero h1 span { color:var(--accent); }
+  .hero p { color:var(--muted); font-size:0.9rem; }
+
+  /* TABS */
+  .tabs-wrapper { background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; overflow-x:auto; }
+  .tabs { display:flex; max-width:1150px; margin:0 auto; padding:0 1rem; }
+  .tab-btn {
+    background:none; border:none; color:var(--muted); font-family:'Source Sans 3',sans-serif;
+    font-size:0.82rem; font-weight:600; padding:1rem 1.1rem; cursor:pointer; white-space:nowrap;
+    border-bottom:3px solid transparent; transition:all 0.2s; text-transform:uppercase; letter-spacing:0.8px;
+  }
+  .tab-btn:hover { color:var(--text); }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  /* CONTENT */
+  .content { max-width:1150px; margin:0 auto; padding:2.5rem 1.5rem; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTION INTRO */
+  .section-intro {
+    background:linear-gradient(135deg,var(--card),#150f30);
+    border:1px solid var(--border); border-left:4px solid var(--accent);
+    border-radius:8px; padding:1.5rem 1.8rem; margin-bottom:2rem;
+  }
+  .section-intro h2 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--white); margin-bottom:0.4rem; }
+  .section-intro p { color:var(--muted); font-size:0.95rem; }
+
+  /* GRIDS */
+  .grid { display:grid; gap:1.2rem; }
+  .grid-2 { grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .grid-3 { grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+  .grid-4 { grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+
+  /* CARDS */
+  .card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:1.4rem 1.6rem;
+    transition:border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { transform:translateY(-2px); }
+  .card-icon { font-size:1.5rem; margin-bottom:0.6rem; }
+  .card h3 { font-size:0.93rem; font-weight:600; color:var(--accent); margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px; }
+  .card p, .card li { font-size:0.87rem; color:var(--text); line-height:1.6; }
+  .card ul { padding-left:1.1rem; }
+  .card li { margin-bottom:0.25rem; }
+
+  /* COLOR VARIANTS */
+  .c-orange h3, .c-orange .card-icon + h3 { color:var(--accent2); }
+  .c-orange:hover { border-color:var(--accent2); }
+  .c-green h3  { color:var(--accent3); }
+  .c-green:hover  { border-color:var(--accent3); }
+  .c-blue h3   { color:var(--accent4); }
+  .c-blue:hover   { border-color:var(--accent4); }
+  .c-pink h3   { color:var(--accent5); }
+  .c-pink:hover   { border-color:var(--accent5); }
+
+  /* PATHOGEN HEADER */
+  .pathogen-section {
+    border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 2rem;
+  }
+  .pathogen-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.8rem;
+  }
+  .pathogen-header.bact-ext { background: linear-gradient(90deg,rgba(251,146,60,0.15),transparent); border-bottom:1px solid var(--border); }
+  .pathogen-header.bact-int { background: linear-gradient(90deg,rgba(248,113,113,0.15),transparent); border-bottom:1px solid var(--border); }
+  .pathogen-header.fungi    { background: linear-gradient(90deg,rgba(52,211,153,0.15),transparent); border-bottom:1px solid var(--border); }
+  .pathogen-header.virus    { background: linear-gradient(90deg,rgba(56,189,248,0.15),transparent); border-bottom:1px solid var(--border); }
+  .pathogen-header.para     { background: linear-gradient(90deg,rgba(244,114,182,0.15),transparent); border-bottom:1px solid var(--border); }
+  .pathogen-emoji { font-size:2.2rem; }
+  .pathogen-title { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--white); }
+  .pathogen-sub   { font-family:'Fira Code',monospace; font-size:0.7rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+  .pathogen-body  { padding:1.5rem 1.8rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.2rem; }
+
+  /* COLUMN INSIDE PATHOGEN */
+  .pcol h4 { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.6rem; padding-bottom:0.4rem; border-bottom:2px solid currentColor; }
+  .pcol.innata  h4 { color:var(--accent2); }
+  .pcol.adapta  h4 { color:var(--accent); }
+  .pcol.evasion h4 { color:#f87171; }
+  .pcol.clinic  h4 { color:var(--accent4); }
+  .pcol ul { padding-left:1rem; }
+  .pcol li { font-size:0.85rem; color:var(--text); margin-bottom:0.3rem; line-height:1.5; }
+
+  /* HIGHLIGHT */
+  .highlight { background:rgba(192,132,252,0.07); border:1px solid rgba(192,132,252,0.25); border-radius:8px; padding:1.2rem 1.5rem; margin:1.5rem 0; }
+  .highlight.warn    { background:rgba(251,146,60,0.07);  border-color:rgba(251,146,60,0.3);  }
+  .highlight.danger  { background:rgba(248,113,113,0.07); border-color:rgba(248,113,113,0.3); }
+  .highlight.success { background:rgba(52,211,153,0.07);  border-color:rgba(52,211,153,0.3);  }
+  .highlight.info    { background:rgba(56,189,248,0.07);  border-color:rgba(56,189,248,0.3);  }
+  .highlight strong  { color:var(--accent); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:0.4rem; }
+  .highlight.warn strong    { color:var(--accent2); }
+  .highlight.danger strong  { color:#f87171; }
+  .highlight.success strong { color:var(--accent3); }
+  .highlight.info strong    { color:var(--accent4); }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; margin:1.5rem 0; }
+  table { width:100%; border-collapse:collapse; font-size:0.86rem; }
+  thead tr { background:linear-gradient(90deg,#3b0764,#5b21b6); color:#fff; }
+  th { padding:0.75rem 1rem; text-align:left; font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px; }
+  td { padding:0.65rem 1rem; border-bottom:1px solid var(--border); color:var(--text); vertical-align:top; }
+  tbody tr:hover { background:rgba(192,132,252,0.04); }
+  tbody tr:nth-child(even) { background:rgba(255,255,255,0.02); }
+
+  /* BADGE */
+  .badge { display:inline-block; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.72rem; font-weight:600; margin:0.1rem; }
+  .badge-purple { background:rgba(192,132,252,0.15); color:var(--accent);  border:1px solid rgba(192,132,252,0.3); }
+  .badge-orange { background:rgba(251,146,60,0.15);  color:var(--accent2); border:1px solid rgba(251,146,60,0.3); }
+  .badge-green  { background:rgba(52,211,153,0.15);  color:var(--accent3); border:1px solid rgba(52,211,153,0.3); }
+  .badge-blue   { background:rgba(56,189,248,0.15);  color:var(--accent4); border:1px solid rgba(56,189,248,0.3); }
+  .badge-pink   { background:rgba(244,114,182,0.15); color:var(--accent5); border:1px solid rgba(244,114,182,0.3); }
+  .badge-red    { background:rgba(248,113,113,0.15); color:#f87171;        border:1px solid rgba(248,113,113,0.3); }
+
+  h2.sec { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--white); margin:2rem 0 1rem; }
+
+  /* EVASION TABLE */
+  .evasion-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .evasion-card {
+    background:rgba(248,113,113,0.05); border:1px solid rgba(248,113,113,0.2);
+    border-radius:10px; padding:1.2rem;
+  }
+  .evasion-card h4 { font-size:0.82rem; font-weight:700; color:#f87171; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.6rem; }
+  .evasion-card li { font-size:0.83rem; color:var(--text); margin-bottom:0.25rem; line-height:1.5; }
+  .evasion-card ul { padding-left:1rem; }
+
+  /* QUIZ */
+  .quiz-box { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.6rem; margin-bottom:1.2rem; }
+  .quiz-q { font-weight:600; color:var(--white); margin-bottom:1rem; font-size:0.95rem; }
+  .quiz-q span { display:inline-block; background:var(--accent); color:#100a1f; border-radius:50%; width:24px; height:24px; line-height:24px; text-align:center; font-size:0.78rem; font-weight:700; margin-right:0.5rem; }
+  .options { display:flex; flex-direction:column; gap:0.5rem; }
+  .opt-btn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:var(--text); font-family:'Source Sans 3',sans-serif; font-size:0.87rem; cursor:pointer; text-align:left; transition:all 0.2s; }
+  .opt-btn:hover { border-color:var(--accent); color:var(--white); }
+  .opt-btn.correct { background:rgba(52,211,153,0.12); border-color:var(--accent3); color:var(--accent3); }
+  .opt-btn.wrong   { background:rgba(248,113,113,0.12); border-color:#f87171; color:#f87171; }
+  .feedback { margin-top:0.8rem; padding:0.7rem 1rem; border-radius:6px; font-size:0.85rem; display:none; }
+  .feedback.show { display:block; }
+  .feedback.ok  { background:rgba(52,211,153,0.09); color:var(--accent3); border:1px solid rgba(52,211,153,0.2); }
+  .feedback.err { background:rgba(248,113,113,0.09); color:#f87171; border:1px solid rgba(248,113,113,0.2); }
+
+  @media(max-width:600px){
+    .pathogen-body { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Inmunología · Cap. 16 · Abbas</div>
+  <h1>Inmunidad frente a <span>Microbios</span>:<br>Bacterias, Hongos, Virus y Parásitos</h1>
+  <p>Prof. Geovani Meireles &nbsp;|&nbsp; Resumen de estudio · Cristiano Ribeiro</p>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('intro')">🧭 Generalidades</button>
+    <button class="tab-btn" onclick="switchTab('bacterias')">🦠 Bacterias</button>
+    <button class="tab-btn" onclick="switchTab('hongos')">🍄 Hongos</button>
+    <button class="tab-btn" onclick="switchTab('virus')">⚡ Virus</button>
+    <button class="tab-btn" onclick="switchTab('parasitos')">🪱 Parásitos</button>
+    <button class="tab-btn" onclick="switchTab('evasion')">🛡️ Evasión</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">📝 Quiz</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ===== INTRO ===== -->
+  <div class="tab-panel active" id="intro">
+    <div class="section-intro">
+      <h2>Capítulo 16 — Inmunidad frente a Microbios</h2>
+      <p>El sistema inmune no responde igual a todos los patógenos. Cada microorganismo tiene su estrategia de ataque y el SI ha desarrollado respuestas especializadas para cada uno. Entender quién combate qué es clave para el Revalida.</p>
+    </div>
+
+    <div class="highlight">
+      <strong>📌 Concepto fundamental</strong>
+      Los M.O y el Sistema Inmune han <strong>coevolucionado</strong>. Muchos patógenos sobreviven en el cuerpo sin propagar infección activa (ej: herpesvirus, M. tuberculosis). En algunas infecciones, el malestar no lo causa el microbio en sí, sino la respuesta del propio SI. Los <strong>LT de memoria</strong> son los responsables de protegernos de infecciones repetidas — base de las vacunas.
+    </div>
+
+    <h2 class="sec">⚔️ Patrón general de la infección</h2>
+    <div class="grid grid-4">
+      <div class="card">
+        <div class="card-icon">🚪</div>
+        <h3>1. Entrada</h3>
+        <p>El M.O supera la barrera epitelial. Vías: respiratoria, digestiva, cutánea, genitourinaria.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏃</div>
+        <h3>2. Invasión</h3>
+        <p>El M.O se disemina más allá del punto de entrada hacia tejidos profundos.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏠</div>
+        <h3>3. Colonización</h3>
+        <p>Se establece, se replica y evade los primeros mecanismos de defensa innata.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💀</div>
+        <h3>4. Lesión tisular</h3>
+        <p>Muerte celular directa, toxinas o daño por la propia respuesta inmune excesiva.</p>
+      </div>
+    </div>
+
+    <h2 class="sec">🗺️ Mapa general — ¿Quién combate a quién?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Patógeno</th><th>Localización</th><th>Innata</th><th>Adaptativa</th><th>Anticuerpo clave</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-orange">Bact. Extracel.</span></td>
+            <td>Sangre, tejido conj., luces</td>
+            <td>Complemento, fagocitosis</td>
+            <td>Humoral: IgG, IgM, IgA</td>
+            <td>IgG + IgM</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Bact. Intracel.</span></td>
+            <td>Dentro de fagocitos</td>
+            <td>Fagocitos, NK</td>
+            <td>Celular: Th1 + CTL</td>
+            <td>Poca eficacia</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Hongos</span></td>
+            <td>Intra y extracelular</td>
+            <td>Neutrófilos, macrófagos</td>
+            <td>Th17 (extracel.) + Th1 (intracel.)</td>
+            <td>Variable</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Virus</span></td>
+            <td>Intracelular obligado</td>
+            <td>Interferones tipo I, NK</td>
+            <td>Anticuerpos (pre-entrada) + CTL (post-entrada)</td>
+            <td>IgG, IgA (mucosas)</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-pink">Parásitos</span></td>
+            <td>Variable según tipo</td>
+            <td>Superan fácilmente</td>
+            <td>Th1 (protozoos) + Th2 (helmintos)</td>
+            <td>IgE (helmintos)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== BACTERIAS ===== -->
+  <div class="tab-panel" id="bacterias">
+    <div class="section-intro">
+      <h2>Inmunidad frente a Bacterias</h2>
+      <p>Las bacterias se dividen en dos grandes grupos según su localización. Cada grupo activa un brazo diferente de la respuesta inmune.</p>
+    </div>
+
+    <!-- EXTRACELULARES -->
+    <div class="pathogen-section">
+      <div class="pathogen-header bact-ext">
+        <div class="pathogen-emoji">🟠</div>
+        <div>
+          <div class="pathogen-sub">Grupo 1</div>
+          <div class="pathogen-title">Bacterias Extracelulares</div>
+        </div>
+      </div>
+      <div class="pathogen-body">
+        <div class="pcol innata">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li>Sistema <strong>complemento</strong> (MAC, opsonización)</li>
+            <li><strong>Fagocitosis</strong> por neutrófilos y macrófagos</li>
+            <li>Respuestas inflamatorias locales</li>
+            <li>Reconocimiento de <strong>LPS</strong> (endotoxina) por TLR4</li>
+          </ul>
+        </div>
+        <div class="pcol adapta">
+          <h4>🎯 Adaptativa (Humoral)</h4>
+          <ul>
+            <li><strong>IgG, IgM e IgA</strong> actúan en conjunto</li>
+            <li><strong>Neutralización</strong> de toxinas y bloqueo de adhesión</li>
+            <li><strong>Opsonización</strong> → fagocitosis facilitada</li>
+            <li>Activación del complemento por vía clásica</li>
+            <li>LT CD4+ cooperadores auxilian al LB</li>
+          </ul>
+        </div>
+        <div class="pcol clinic">
+          <h4>🏥 Toxinas</h4>
+          <ul>
+            <li><strong>Endotoxinas (LPS):</strong> componente de pared Gram −</li>
+            <li><strong>Exotoxinas:</strong> proteínas secretadas</li>
+            <li>Pueden causar choque séptico</li>
+            <li>También activan <strong>superantígenos</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight danger">
+      <strong>🚨 Choque Séptico y Superantígenos — Examen!</strong>
+      <strong>Choque séptico:</strong> colapso circulatorio + CID (coagulación intravascular diseminada), desencadenado principalmente por LPS (endotoxina Gram −) que activa masivamente TLR4 → tormenta de citocinas (TNF, IL-1, IL-6).<br><br>
+      <strong>Superantígenos:</strong> toxinas bacterianas (ej: Staphylococcus, Streptococcus) que se unen fuera del sitio normal del TCR → activan hasta 20% de todos los LT → tormenta de citocinas → choque. Diferente al antígeno convencional que activa solo 0,01% de los LT.
+    </div>
+
+    <!-- INTRACELULARES -->
+    <div class="pathogen-section" style="margin-top:2rem;">
+      <div class="pathogen-header bact-int">
+        <div class="pathogen-emoji">🔴</div>
+        <div>
+          <div class="pathogen-sub">Grupo 2</div>
+          <div class="pathogen-title">Bacterias Intracelulares</div>
+        </div>
+      </div>
+      <div class="pathogen-body">
+        <div class="pcol innata">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li><strong>Fagocitos</strong> (macrófagos y neutrófilos)</li>
+            <li>Células <strong>NK</strong> — producen IFN-γ</li>
+            <li>IFN-γ activa macrófagos para matar intracelularmente</li>
+            <li>Primera defensa antes de la respuesta adaptativa</li>
+          </ul>
+        </div>
+        <div class="pcol adapta">
+          <h4>🎯 Adaptativa (Celular)</h4>
+          <ul>
+            <li><strong>Th1</strong> activa macrófagos via IFN-γ</li>
+            <li>Reclutamiento y activación de fagocitos</li>
+            <li>Antígenos transportados al citosol → MHC I → CTL</li>
+            <li><strong>Granuloma:</strong> respuesta característica en TBC</li>
+            <li>Los Ac son poco eficaces — el M.O está dentro de la célula</li>
+          </ul>
+        </div>
+        <div class="pcol evasion">
+          <h4>⚠️ Evasión</h4>
+          <ul>
+            <li>Escape del <strong>fagosoma</strong> al citosol</li>
+            <li><strong>Inactivación</strong> del mecanismo bactericida</li>
+            <li>Resistencia a la <strong>fagocitosis</strong></li>
+            <li>M. tuberculosis bloquea la fusión fagosoma-lisosoma</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight warn">
+      <strong>⚠️ Tuberculosis — concepto de examen</strong>
+      M. tuberculosis sobrevive dentro de macrófagos bloqueando la fusión del fagosoma con el lisosoma. La respuesta del anfitrión forma un <strong>granuloma</strong> — estructura que contiene pero no elimina el bacilo. Las lesiones tisulares (cavernas pulmonares) son causadas por la propia respuesta inmune (hipersensibilidad tipo IV / DTH), no directamente por el bacilo.
+    </div>
+  </div>
+
+  <!-- ===== HONGOS ===== -->
+  <div class="tab-panel" id="hongos">
+    <div class="section-intro">
+      <h2>Inmunidad frente a Hongos</h2>
+      <p>Los hongos son un grupo especial: pueden vivir tanto <strong>dentro como fuera de las células</strong>. Causan infecciones endémicas (en personas inmunocompetentes) u oportunistas (en inmunocomprometidos).</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card c-green">
+        <div class="card-icon">🌎</div>
+        <h3>Infecciones Endémicas</h3>
+        <ul>
+          <li>Afectan a personas <strong>inmunocompetentes</strong></li>
+          <li>Ejemplos: Histoplasma, Coccidioides, Paracoccidioides</li>
+          <li>Adquiridas por inhalación de esporas del ambiente</li>
+          <li>Respuesta granulomatosa (similar a TBC)</li>
+        </ul>
+      </div>
+      <div class="card c-orange">
+        <div class="card-icon">⚠️</div>
+        <h3>Infecciones Oportunistas</h3>
+        <ul>
+          <li>Afectan a personas <strong>inmunocomprometidas</strong></li>
+          <li>Ejemplos: Candida, Aspergillus, Cryptococcus, Pneumocystis</li>
+          <li>Riesgo alto en VIH/SIDA, neutropenia, trasplantados</li>
+          <li>Pueden ser diseminadas y letales</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">⚙️ Respuesta Inmune contra Hongos</h2>
+    <div class="pathogen-section">
+      <div class="pathogen-header fungi">
+        <div class="pathogen-emoji">🍄</div>
+        <div>
+          <div class="pathogen-sub">Estrategia dual</div>
+          <div class="pathogen-title">Innata + Adaptativa</div>
+        </div>
+      </div>
+      <div class="pathogen-body">
+        <div class="pcol innata">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li><strong>Neutrófilos y macrófagos</strong> son la primera línea</li>
+            <li>Reconocen PAMPs fúngicos via <strong>TLR</strong></li>
+            <li>Receptores de lectinas de tipo C (Dectina-1)</li>
+            <li>Fagocitan y realizan <strong>lisis intracelular</strong></li>
+            <li>Neutropenia → riesgo enorme de aspergilosis</li>
+          </ul>
+        </div>
+        <div class="pcol adapta">
+          <h4>🎯 Adaptativa</h4>
+          <ul>
+            <li><strong>Th17:</strong> contra hongos extracelulares (Candida superficial)</li>
+            <li>IL-17 → recluta neutrófilos → control del hongo</li>
+            <li><strong>Th1:</strong> contra hongos intracelulares (Histoplasma)</li>
+            <li>IFN-γ activa macrófagos para matar intracelularmente</li>
+            <li>Anticuerpos: papel auxiliar en opsonización</li>
+          </ul>
+        </div>
+        <div class="pcol clinic">
+          <h4>🏥 Clínica</h4>
+          <ul>
+            <li>Defecto en Th17 → candidiasis mucocutánea recurrente</li>
+            <li>Defecto en Th1 → histoplasmosis diseminada</li>
+            <li>Neutropenia → aspergilosis invasiva</li>
+            <li>CD4+ &lt; 200/µL (SIDA) → Pneumocystis jirovecii</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight success">
+      <strong>💡 Regla rápida — Th17 vs Th1 en hongos</strong>
+      <strong>Th17 + IL-17 → neutrófilos → hongos extracelulares</strong> (Candida en mucosas, Aspergillus en pulmón)<br>
+      <strong>Th1 + IFN-γ → macrófago activado → hongos intracelulares</strong> (Histoplasma, Cryptococcus intracelular)<br><br>
+      La misma lógica que aplica a bacterias intracelulares (Th1) vs extracelulares (Th17).
+    </div>
+  </div>
+
+  <!-- ===== VIRUS ===== -->
+  <div class="tab-panel" id="virus">
+    <div class="section-intro">
+      <h2>Inmunidad frente a Virus</h2>
+      <p>Los virus son <strong>parásitos intracelulares obligados</strong>. Usan la maquinaria de síntesis proteica del anfitrión para replicarse. El SI debe actuar en dos momentos: <em>antes</em> de que entren a la célula (anticuerpos) y <em>después</em> (CTL).</p>
+    </div>
+
+    <div class="highlight info">
+      <strong>💡 La carrera armamentista</strong>
+      Los virus evolucionan para escapar de la respuesta inmune. El SI, a su vez, ha desarrollado mecanismos específicos anti-virales. Los <strong>interferones tipo I</strong> (IFN-α e IFN-β) son la primera y más rápida respuesta — se liberan en horas, antes de que el LT específico esté listo.
+    </div>
+
+    <div class="pathogen-section">
+      <div class="pathogen-header virus">
+        <div class="pathogen-emoji">⚡</div>
+        <div>
+          <div class="pathogen-sub">Intracelular obligado</div>
+          <div class="pathogen-title">Respuesta Antiviral</div>
+        </div>
+      </div>
+      <div class="pathogen-body">
+        <div class="pcol innata">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li><strong>IFN tipo I (α y β):</strong> primera respuesta en horas</li>
+            <li>Inhiben la replicación viral en células vecinas</li>
+            <li>Activan células <strong>NK</strong></li>
+            <li><strong>TLR endosomales</strong> detectan ARN/ADN viral</li>
+            <li>NK mata células con <strong>MHC I reducido</strong> (los virus lo inhiben)</li>
+          </ul>
+        </div>
+        <div class="pcol adapta">
+          <h4>🎯 Adaptativa</h4>
+          <ul>
+            <li><strong>Anticuerpos (fase extracelular):</strong> neutralización antes de la entrada</li>
+            <li>Opsonización del virión libre</li>
+            <li><strong>CTL (CD8+):</strong> mata células ya infectadas</li>
+            <li>Los Ac <strong>pierden eficacia</strong> una vez que el virus entra a la célula</li>
+            <li>Los LT CD8+ proliferan masivamente</li>
+            <li>LT CD4+ cooperadores potencian la respuesta CTL</li>
+          </ul>
+        </div>
+        <div class="pcol clinic">
+          <h4>🏥 Infecciones Latentes</h4>
+          <ul>
+            <li>ADN viral permanece en la célula pero <strong>no se replica</strong></li>
+            <li>Equilibrio entre virus y CTL — ninguno "gana" definitivamente</li>
+            <li>Ejemplos: <strong>VEB, VHS, CMV, VVZ</strong></li>
+            <li>La lesión puede darse por el propio CTL en la reactivación</li>
+            <li>Inmunosupresión → reactivación</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔄 Secuencia temporal de la respuesta antiviral</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Tiempo</th><th>Mecanismo</th><th>Actor</th><th>Acción</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>0–6 h</strong></td>
+            <td>Innata inmediata</td>
+            <td>IFN tipo I</td>
+            <td>Inhibe replicación, activa NK</td>
+          </tr>
+          <tr>
+            <td><strong>6–24 h</strong></td>
+            <td>Innata celular</td>
+            <td>Células NK</td>
+            <td>Mata células infectadas con MHC I reducido</td>
+          </tr>
+          <tr>
+            <td><strong>1–5 días</strong></td>
+            <td>Adaptativa humoral</td>
+            <td>IgM (primaria) / IgG (secundaria)</td>
+            <td>Neutraliza virus extracelular</td>
+          </tr>
+          <tr>
+            <td><strong>5–10 días</strong></td>
+            <td>Adaptativa celular</td>
+            <td>CTL (CD8+)</td>
+            <td>Mata células infectadas via MHC I</td>
+          </tr>
+          <tr>
+            <td><strong>Semanas</strong></td>
+            <td>Memoria</td>
+            <td>LT y LB de memoria</td>
+            <td>Protección a largo plazo / base de vacunas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="highlight danger">
+      <strong>🚨 Clave: NK vs CTL — ¿quién mata primero?</strong>
+      Los virus inhiben MHC I para esconderse de los CTL. Las NK reconocen precisamente esta <strong>ausencia de MHC I</strong> como señal de peligro ("missing self") y matan sin necesidad de reconocer el antígeno específico. Las NK actúan primero (días 1-3). Los CTL actúan después (días 5-10) cuando ya están activados y expandidos.
+    </div>
+  </div>
+
+  <!-- ===== PARÁSITOS ===== -->
+  <div class="tab-panel" id="parasitos">
+    <div class="section-intro">
+      <h2>Inmunidad frente a Parásitos</h2>
+      <p>Los parásitos son los más complejos de combatir. Tienen <strong>ciclos vitales multi-etapa</strong>, pueden pasar por anfitriones intermediarios y vectores, y han desarrollado mecanismos de evasión muy sofisticados.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card c-pink">
+        <div class="card-icon">🔬</div>
+        <h3>Protozoos</h3>
+        <ul>
+          <li>Unicelulares</li>
+          <li>Pueden ser intracelulares (<em>Leishmania</em>, <em>Plasmodium</em>)</li>
+          <li>O extracelulares (<em>Trypanosoma</em> en sangre)</li>
+          <li>Respuesta principal: <strong>Th1</strong></li>
+        </ul>
+      </div>
+      <div class="card c-pink">
+        <div class="card-icon">🪱</div>
+        <h3>Helmintos</h3>
+        <ul>
+          <li>Multicelulares, muy grandes</li>
+          <li>No pueden ser fagocitados</li>
+          <li>Respuesta principal: <strong>Th2</strong></li>
+          <li>IgE + eosinófilos + mastocitos</li>
+        </ul>
+      </div>
+      <div class="card c-pink">
+        <div class="card-icon">🦟</div>
+        <h3>Ectoparásitos</h3>
+        <ul>
+          <li>Artrópodos: pulgas, piojos, ácaros, garrapatas</li>
+          <li>Actúan como <strong>vectores</strong> de otros patógenos</li>
+          <li>Respuesta principalmente local e inflamatoria</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pathogen-section" style="margin-top:2rem;">
+      <div class="pathogen-header para">
+        <div class="pathogen-emoji">🪱</div>
+        <div>
+          <div class="pathogen-sub">Ciclos vitales complejos</div>
+          <div class="pathogen-title">Respuesta Antiparasitaria</div>
+        </div>
+      </div>
+      <div class="pathogen-body">
+        <div class="pcol innata">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li>Los parásitos <strong>superan fácilmente</strong> la innata</li>
+            <li>Se replican en fagosomas resistentes</li>
+            <li>Resistentes al complemento</li>
+            <li>Barrera epitelial dificulta la entrada inicial</li>
+          </ul>
+        </div>
+        <div class="pcol adapta">
+          <h4>🎯 Adaptativa</h4>
+          <ul>
+            <li><strong>Th1</strong> → protozoos intracelulares</li>
+            <li>IFN-γ activa macrófagos contra <em>Leishmania</em>, <em>Toxoplasma</em></li>
+            <li><strong>Th2</strong> → helmintos</li>
+            <li>IL-4, IL-5, IL-13 → IgE + eosinófilos</li>
+            <li>Mastocitos → expulsión por moco y motilidad</li>
+          </ul>
+        </div>
+        <div class="pcol evasion">
+          <h4>⚠️ Evasión</h4>
+          <ul>
+            <li>Variación antigénica (<em>Trypanosoma</em>)</li>
+            <li>Inhibición de la respuesta inmune</li>
+            <li>Mimetismo molecular</li>
+            <li>Localización inmunoprivilegiada</li>
+            <li>Inducción de tolerancia</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>💡 Leishmania — ejemplo clásico de Th1</strong>
+      <em>Leishmania</em> se replica dentro de macrófagos (el mismo fagocito que debería matarla). La respuesta Th1 activa macrófagos via IFN-γ, generando especies reactivas de oxígeno y NO que matan el parásito. Si la respuesta se polariza a Th2, la enfermedad progresa (leishmaniasis visceral / kala-azar). El balance Th1/Th2 determina el pronóstico clínico.
+    </div>
+  </div>
+
+  <!-- ===== EVASION ===== -->
+  <div class="tab-panel" id="evasion">
+    <div class="section-intro">
+      <h2>Estrategias de Evasión Inmunitaria</h2>
+      <p>Cada microorganismo ha desarrollado mecanismos para escapar del SI. Conocerlos explica por qué ciertas infecciones son difíciles de curar y por qué algunas persisten de por vida.</p>
+    </div>
+
+    <h2 class="sec">🦠 Bacterias Extracelulares</h2>
+    <div class="evasion-grid">
+      <div class="evasion-card">
+        <h4>💊 Cápsulas</h4>
+        <ul>
+          <li>Capa polisacárida alrededor de la bacteria</li>
+          <li>Dificulta la <strong>opsonización y fagocitosis</strong></li>
+          <li>Ejemplos: <em>S. pneumoniae, N. meningitidis, H. influenzae</em></li>
+          <li>Las vacunas anti-polisacárido generan Ac contra la cápsula</li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>🧪 Ácidos Siálicos</h4>
+        <ul>
+          <li>Inhiben el depósito de C3b</li>
+          <li>Bloquean la activación del complemento</li>
+          <li>Usados por: <em>N. gonorrhoeae, H. influenzae, E. coli K1, meningococo</em></li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>🔄 Variación Antigénica</h4>
+        <ul>
+          <li>Cambian antígenos de superficie frecuentemente</li>
+          <li>Los anticuerpos previos pierden eficacia</li>
+          <li><strong>Pilina:</strong> gonococos cambian la proteína de su pili</li>
+          <li>Dificulta el desarrollo de vacunas efectivas</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🔴 Bacterias Intracelulares</h2>
+    <div class="evasion-grid">
+      <div class="evasion-card">
+        <h4>🔓 Escape del Fagosoma</h4>
+        <ul>
+          <li><em>Listeria, Shigella:</em> rompen la membrana del fagosoma</li>
+          <li>Se mueven libremente en el citoplasma</li>
+          <li>Escapan al citosol → activan MHC I → CTL</li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>🚧 Bloqueo Lisosoma</h4>
+        <ul>
+          <li><em>M. tuberculosis, Leishmania:</em> bloquean fusión fagosoma-lisosoma</li>
+          <li>Sobreviven en el fagosoma sin ser digeridos</li>
+          <li>Base del granuloma en la TBC</li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>🛡️ Resistencia</h4>
+        <ul>
+          <li>Resistencia química al sistema oxidativo</li>
+          <li>Inactivación de ROS y NO</li>
+          <li>Paredes ricas en lípidos (micobacterias)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">⚡ Virus</h2>
+    <div class="evasion-grid">
+      <div class="evasion-card">
+        <h4>🔄 Variación Antigénica</h4>
+        <ul>
+          <li><strong>Gripe (Influenza):</strong> deriva antigénica anual</li>
+          <li>Cambio antigénico mayor → pandemias</li>
+          <li>Por eso la vacuna de gripe se actualiza cada año</li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>🙈 Inhibición del MHC I</h4>
+        <ul>
+          <li>Impide que los CTL vean el antígeno viral</li>
+          <li>Las NK compensan reconociendo ausencia de MHC I</li>
+          <li>Ejemplos: CMV, adenovirus, herpesvirus</li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>😴 Agotamiento del CTL</h4>
+        <ul>
+          <li>En infecciones crónicas (VIH, VHC) los CTL se "agotan"</li>
+          <li>Expresan PD-1 → receptor inhibidor</li>
+          <li>Los anti-PD-1 (inmunoterapia) revierten esto</li>
+          <li>Inactivación del LT CD4+ (VIH)</li>
+        </ul>
+      </div>
+      <div class="evasion-card">
+        <h4>🧪 Quimiocinas Inhibidoras</h4>
+        <ul>
+          <li><strong>Poxvirus</strong> producen homólogos de quimiocinas</li>
+          <li>Bloquean el reclutamiento de células inflamatorias</li>
+          <li>Interfieren con la respuesta innata local</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div class="tab-panel" id="quiz">
+    <div class="section-intro">
+      <h2>📝 Quiz de Autoevaluación — Cap. 16</h2>
+      <p>8 preguntas sobre inmunidad frente a microbios. ¡A jugar!</p>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>1</span> Un paciente VIH+ con CD4+ por debajo de 200 cel/µL desarrolla una infección pulmonar por Pneumocystis jirovecii. ¿Cuál mecanismo de defensa falló principalmente?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Los anticuerpos (LB) tienen función limitada contra Pneumocystis, que es un hongo que requiere inmunidad celular.')">Producción de anticuerpos por linfocito B</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! La caída de los LT CD4+ compromete toda la respuesta celular, especialmente Th1 que activa macrófagos contra hongos intracelulares. Pneumocystis es una infección oportunista típica de la inmunosupresión celular.')">Respuesta Th1 mediada por LT CD4+</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El complemento (innata) funciona de forma relativamente independiente del recuento de CD4+.')">Sistema complemento</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>2</span> ¿Cuál es la primera citocina liberada en la respuesta antiviral innata, producida en las primeras horas tras la infección?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','IL-2 promueve la proliferación de LT, pero no es la primera respuesta antiviral innata.')">IL-2</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El IFN-γ es producido principalmente por Th1 y NK como parte de la respuesta celular, no es el primer interferón antiviral.')">IFN-γ (interferón gamma)</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Los interferones tipo I (IFN-α e IFN-β) son producidos en las primeras horas por células infectadas. Inhiben la replicación viral en células vecinas y activan las células NK — antes de que haya respuesta adaptativa.')">IFN tipo I (IFN-α e IFN-β)</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>3</span> Mycobacterium tuberculosis sobrevive dentro del macrófago usando ¿qué mecanismo de evasión?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Escape al citosol es la estrategia de Listeria y Shigella, no de M. tuberculosis.')">Escape al citosol rompiendo la membrana del fagosoma</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! M. tuberculosis bloquea la fusión del fagosoma con el lisosoma, sobreviviendo dentro del fagosoma sin ser digerido. El SI forma el granuloma para contener la infección pero no la erradica.')">Bloqueo de la fusión fagosoma-lisosoma</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La cápsula es una estrategia de bacterias extracelulares como S. pneumoniae y N. meningitidis.')">Producción de cápsula polisacárida</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>4</span> ¿Por qué las células NK pueden matar células infectadas por virus aunque los CTL no lo hayan hecho aún?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Las NK no producen anticuerpos. Son linfocitos innatos sin BCR ni TCR.')">Producen anticuerpos neutralizantes rápidamente</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Los virus inhiben la expresión de MHC I para escapar de los CTL. Las NK tienen mecanismo "missing self": reconocen la AUSENCIA de MHC I como señal de peligro y matan sin necesitar reconocer el antígeno específico.')">Reconocen la ausencia de MHC I ("missing self")</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Las NK no tienen TCR ni reconocen MHC II. No necesitan presentación antigénica.')">Reconocen antígenos presentados en MHC II</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>5</span> Un paciente con deficiencia genética de Th17 tendría mayor susceptibilidad a ¿cuál tipo de infección?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Los protozoos intracelulares son combatidos principalmente por Th1, no Th17.')">Infecciones por protozoos intracelulares</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Th17 produce IL-17 que recluta neutrófilos para combatir bacterias y hongos extracelulares. La deficiencia de Th17 lleva principalmente a candidiasis mucocutánea crónica (Candida en mucosas) y susceptibilidad a Staphylococcus.')">Candidiasis mucocutánea e infecciones bacterianas extracelulares</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Los virus son combatidos principalmente por interferones tipo I, NK y CTL (CD8+).')">Infecciones virales recurrentes</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>6</span> ¿Qué son los superantígenos y por qué son más peligrosos que antígenos convencionales?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Los superantígenos activan LT de forma masiva y no específica — lo contrario de una respuesta selectiva.')">Antígenos que activan solo los LT específicos de forma muy eficiente</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Los superantígenos (ej: toxinas de Staphylococcus y Streptococcus) se unen fuera del sitio normal del TCR y activan hasta 20% de todos los LT T (vs 0,01% de los antígenos convencionales), causando tormenta de citocinas que puede llevar a choque.')">Toxinas que activan hasta 20% de todos los LT, causando tormenta de citocinas</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Los superantígenos activan LT de forma masiva, no activan el complemento preferentemente.')">Antígenos que activan exclusivamente el complemento</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>7</span> En la infección por Leishmania, ¿cuál subgrupo de LT determina el pronóstico clínico?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Si la respuesta se polariza a Th1 (IFN-γ → activación del macrófago), el parásito es controlado. Si se polariza a Th2 (IL-4 → macrófago alternativo que no mata Leishmania), la enfermedad progresa a leishmaniasis visceral (kala-azar). El balance Th1/Th2 es determinante.')">El balance Th1/Th2 — Th1 favorece curación, Th2 favorece progresión</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El Th17 actúa principalmente en hongos y bacterias extracelulares, tiene papel menor en Leishmania.')">Th17 — determina la resolución o persistencia</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El CTL actúa contra células infectadas via MHC I, tiene papel secundario en la leishmaniasis.')">CTL (CD8+) — mata los macrófagos infectados directamente</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>8</span> ¿En qué momento de la infección viral los anticuerpos pierden eficacia?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Los anticuerpos son muy eficaces en la fase extracelular, antes de que el virus entre a la célula.')">Cuando el virus está circulando libremente en la sangre</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Los anticuerpos neutralizan virus extracelulares. Una vez que el virus entra a la célula, los anticuerpos no pueden acceder al antígeno viral. A partir de ese momento el CTL (CD8+) es el mecanismo efector principal.')">Una vez que el virus ha entrado a la célula huésped</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Los anticuerpos no pierden eficacia con la temperatura fisiológica.')">Cuando la temperatura corporal supera los 38°C</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function answer(btn, result, explanation) {
+  const box = btn.closest('.quiz-box');
+  if (box.dataset.answered) return;
+  box.dataset.answered = '1';
+  btn.classList.add(result);
+  box.querySelectorAll('.opt-btn').forEach(b => b.style.pointerEvents = 'none');
+  const fb = box.querySelector('.feedback');
+  fb.innerHTML = (result === 'correct' ? '✅ ' : '❌ ') + explanation;
+  fb.className = 'feedback show ' + (result === 'correct' ? 'ok' : 'err');
+}
+</script>
+
+</body>
+</html>

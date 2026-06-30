@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inmunología — Cap. 13 y 14 | Resumen de Estudio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0b1a14;
+    --surface: #0f2219;
+    --card: #142d20;
+    --border: #1e4030;
+    --accent: #2dd4a0;
+    --accent2: #f97316;
+    --accent3: #60a5fa;
+    --accent4: #facc15;
+    --text: #d4f0e4;
+    --muted: #6aab88;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #061410 0%, #0f2d1e 50%, #091a12 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    border-bottom: 2px solid var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; top:-80px; left:-80px;
+    width:260px; height:260px;
+    background:radial-gradient(circle,rgba(45,212,160,0.13),transparent 70%);
+    border-radius:50%;
+  }
+  .hero::after {
+    content:''; position:absolute; bottom:-60px; right:-60px;
+    width:200px; height:200px;
+    background:radial-gradient(circle,rgba(249,115,22,0.09),transparent 70%);
+    border-radius:50%;
+  }
+  .hero-tag {
+    font-family:'Fira Code',monospace; font-size:0.75rem;
+    color:var(--accent); letter-spacing:3px; text-transform:uppercase; margin-bottom:0.8rem;
+  }
+  .hero h1 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.8rem,5vw,2.8rem);
+    color:var(--white); line-height:1.2; margin-bottom:0.6rem;
+  }
+  .hero h1 span { color:var(--accent); }
+  .hero p { color:var(--muted); font-size:0.9rem; }
+
+  /* TABS */
+  .tabs-wrapper {
+    background:var(--surface); border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:100; overflow-x:auto;
+  }
+  .tabs { display:flex; max-width:1100px; margin:0 auto; padding:0 1rem; }
+  .tab-btn {
+    background:none; border:none; color:var(--muted);
+    font-family:'Source Sans 3',sans-serif; font-size:0.82rem; font-weight:600;
+    padding:1rem 1.2rem; cursor:pointer; white-space:nowrap;
+    border-bottom:3px solid transparent; transition:all 0.2s;
+    text-transform:uppercase; letter-spacing:1px;
+  }
+  .tab-btn:hover { color:var(--text); }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  /* CONTENT */
+  .content { max-width:1100px; margin:0 auto; padding:2.5rem 1.5rem; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTION INTRO */
+  .section-intro {
+    background:linear-gradient(135deg,var(--card),#0d2b1c);
+    border:1px solid var(--border); border-left:4px solid var(--accent);
+    border-radius:8px; padding:1.5rem 1.8rem; margin-bottom:2rem;
+  }
+  .section-intro h2 {
+    font-family:'Playfair Display',serif; font-size:1.5rem;
+    color:var(--white); margin-bottom:0.4rem;
+  }
+  .section-intro p { color:var(--muted); font-size:0.95rem; }
+
+  /* GRIDS */
+  .grid { display:grid; gap:1.2rem; }
+  .grid-2 { grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .grid-3 { grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+
+  /* CARDS */
+  .card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:1.4rem 1.6rem;
+    transition:border-color 0.2s,transform 0.2s;
+  }
+  .card:hover { transform:translateY(-2px); border-color:var(--accent); }
+  .card-icon { font-size:1.6rem; margin-bottom:0.6rem; }
+  .card h3 {
+    font-size:0.95rem; font-weight:600; color:var(--accent);
+    margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px;
+  }
+  .card p, .card li { font-size:0.88rem; color:var(--text); line-height:1.6; }
+  .card ul { padding-left:1.1rem; }
+  .card li { margin-bottom:0.25rem; }
+
+  /* ACCENT VARIANTS */
+  .card.orange h3 { color:var(--accent2); }
+  .card.orange:hover { border-color:var(--accent2); }
+  .card.blue h3 { color:var(--accent3); }
+  .card.blue:hover { border-color:var(--accent3); }
+  .card.yellow h3 { color:var(--accent4); }
+  .card.yellow:hover { border-color:var(--accent4); }
+
+  /* HIGHLIGHT BOXES */
+  .highlight {
+    background:rgba(45,212,160,0.07); border:1px solid rgba(45,212,160,0.25);
+    border-radius:8px; padding:1.2rem 1.5rem; margin:1.5rem 0;
+  }
+  .highlight.warn { background:rgba(249,115,22,0.07); border-color:rgba(249,115,22,0.3); }
+  .highlight.info { background:rgba(96,165,250,0.07); border-color:rgba(96,165,250,0.3); }
+  .highlight.danger { background:rgba(248,113,113,0.07); border-color:rgba(248,113,113,0.3); }
+  .highlight strong {
+    color:var(--accent); font-size:0.78rem; text-transform:uppercase;
+    letter-spacing:1px; display:block; margin-bottom:0.4rem;
+  }
+  .highlight.warn strong { color:var(--accent2); }
+  .highlight.info strong { color:var(--accent3); }
+  .highlight.danger strong { color:#f87171; }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; margin:1.5rem 0; }
+  table { width:100%; border-collapse:collapse; font-size:0.87rem; }
+  thead tr { background:linear-gradient(90deg,#0e4d30,#0f6b40); color:#fff; }
+  th { padding:0.75rem 1rem; text-align:left; font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px; }
+  td { padding:0.65rem 1rem; border-bottom:1px solid var(--border); color:var(--text); }
+  tbody tr:hover { background:rgba(45,212,160,0.04); }
+  tbody tr:nth-child(even) { background:rgba(255,255,255,0.02); }
+
+  /* BADGE */
+  .badge {
+    display:inline-block; padding:0.2rem 0.65rem;
+    border-radius:20px; font-size:0.72rem; font-weight:600; margin:0.1rem;
+  }
+  .badge-green { background:rgba(45,212,160,0.15); color:var(--accent); border:1px solid rgba(45,212,160,0.3); }
+  .badge-orange { background:rgba(249,115,22,0.15); color:var(--accent2); border:1px solid rgba(249,115,22,0.3); }
+  .badge-blue { background:rgba(96,165,250,0.15); color:var(--accent3); border:1px solid rgba(96,165,250,0.3); }
+  .badge-yellow { background:rgba(250,204,21,0.15); color:var(--accent4); border:1px solid rgba(250,204,21,0.3); }
+
+  /* FLOW */
+  .flow { display:flex; flex-wrap:wrap; margin:1.5rem 0; }
+  .flow-step {
+    flex:1; min-width:120px; background:var(--card);
+    border:1px solid var(--border); padding:1rem; text-align:center; position:relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content:'→'; position:absolute; right:-13px; top:50%;
+    transform:translateY(-50%); color:var(--accent); font-size:1.1rem; z-index:1;
+  }
+  .flow-step:first-child { border-radius:8px 0 0 8px; }
+  .flow-step:last-child { border-radius:0 8px 8px 0; }
+  .flow-step .num {
+    display:inline-block; width:26px; height:26px; border-radius:50%;
+    background:var(--accent); color:#0b1a14; font-weight:700; font-size:0.82rem;
+    line-height:26px; margin-bottom:0.4rem;
+  }
+  .flow-step strong { display:block; font-size:0.84rem; color:var(--white); margin-bottom:0.15rem; }
+  .flow-step p { font-size:0.78rem; color:var(--muted); line-height:1.4; }
+
+  /* ORGAN CARD — big layout for Cap 14 */
+  .organ-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:12px; padding:1.6rem; margin-bottom:1.5rem;
+  }
+  .organ-header {
+    display:flex; align-items:center; gap:1rem; margin-bottom:1rem;
+    padding-bottom:0.8rem; border-bottom:1px solid var(--border);
+  }
+  .organ-emoji { font-size:2rem; }
+  .organ-header h3 {
+    font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--white);
+  }
+  .organ-header .organ-tag {
+    font-family:'Fira Code',monospace; font-size:0.72rem;
+    color:var(--accent); letter-spacing:2px; text-transform:uppercase;
+  }
+  .organ-body { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+  .organ-col h4 { font-size:0.8rem; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:0.5rem; }
+  .organ-col.orange h4 { color:var(--accent2); }
+  .organ-col.blue h4 { color:var(--accent3); }
+  .organ-col ul { padding-left:1rem; }
+  .organ-col li { font-size:0.85rem; color:var(--text); margin-bottom:0.25rem; line-height:1.5; }
+
+  h2.sec { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--white); margin:2rem 0 1rem; }
+  h3.sub { font-size:0.9rem; font-weight:600; color:var(--accent); margin:1.4rem 0 0.6rem; text-transform:uppercase; letter-spacing:0.5px; }
+
+  /* QUIZ */
+  .quiz-box {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:1.6rem; margin-bottom:1.2rem;
+  }
+  .quiz-q { font-weight:600; color:var(--white); margin-bottom:1rem; font-size:0.95rem; }
+  .quiz-q span {
+    display:inline-block; background:var(--accent); color:#0b1a14;
+    border-radius:50%; width:24px; height:24px; line-height:24px;
+    text-align:center; font-size:0.78rem; font-weight:700; margin-right:0.5rem;
+  }
+  .options { display:flex; flex-direction:column; gap:0.5rem; }
+  .opt-btn {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:0.7rem 1rem; color:var(--text);
+    font-family:'Source Sans 3',sans-serif; font-size:0.88rem;
+    cursor:pointer; text-align:left; transition:all 0.2s;
+  }
+  .opt-btn:hover { border-color:var(--accent); color:var(--white); }
+  .opt-btn.correct { background:rgba(45,212,160,0.12); border-color:var(--accent); color:var(--accent); }
+  .opt-btn.wrong { background:rgba(248,113,113,0.12); border-color:#f87171; color:#f87171; }
+  .feedback { margin-top:0.8rem; padding:0.7rem 1rem; border-radius:6px; font-size:0.85rem; display:none; }
+  .feedback.show { display:block; }
+  .feedback.ok { background:rgba(45,212,160,0.09); color:var(--accent); border:1px solid rgba(45,212,160,0.2); }
+  .feedback.err { background:rgba(248,113,113,0.09); color:#f87171; border:1px solid rgba(248,113,113,0.2); }
+
+  @media(max-width:600px){
+    .flow { flex-direction:column; }
+    .flow-step:not(:last-child)::after { display:none; }
+    .flow-step { border-radius:8px !important; border:1px solid var(--border); margin-bottom:0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Inmunología · Cap. 13 y 14 · Abbas</div>
+  <h1>Inmunidad <span>Humoral</span> y<br>Defensas en los Tejidos</h1>
+  <p>Prof. Geovani Meireles &nbsp;|&nbsp; Resumen de estudio · Cristiano Ribeiro</p>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('humoral')">💉 Inmunidad Humoral</button>
+    <button class="tab-btn" onclick="switchTab('mecanismos')">⚙️ Mecanismos Efectores</button>
+    <button class="tab-btn" onclick="switchTab('complemento')">🧬 Complemento</button>
+    <button class="tab-btn" onclick="switchTab('tejidos')">🏛️ Defensas en Tejidos</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">📝 Quiz</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ========== HUMORAL ========== -->
+  <div class="tab-panel active" id="humoral">
+    <div class="section-intro">
+      <h2>Capítulo 13 — Inmunidad Humoral</h2>
+      <p>La inmunidad humoral está mediada por <strong>anticuerpos secretados</strong>. Defiende contra microbios extracelulares, toxinas y puede transmitirse pasivamente por el suero.</p>
+    </div>
+
+    <div class="highlight">
+      <strong>📌 Concepto base</strong>
+      La inmunidad humoral actúa donde la celular no llega: en el <strong>espacio extracelular</strong>. Los anticuerpos circulan por sangre y linfa, llegan a mucosas y fluidos corporales, y neutralizan antes de que el patógeno entre a la célula. Una vez que el microbio entra a la célula, es trabajo de la inmunidad celular.
+    </div>
+
+    <h2 class="sec">🎯 ¿Qué combate la Inmunidad Humoral?</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-icon">🦠</div>
+        <h3>Bacterias Extracelulares</h3>
+        <p>Los anticuerpos neutralizan toxinas bacterianas y opsonizan bacterias para facilitar su fagocitosis. Sin anticuerpos, toxinas como la diftérica y la tetánica actúan libremente.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🍄</div>
+        <h3>Hongos</h3>
+        <p>Los anticuerpos colaboran con el complemento y los fagocitos para eliminar hongos patógenos. La opsonización facilita la fagocitosis de esporas y hifas.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔬</div>
+        <h3>Virus (fase extracelular)</h3>
+        <p>Antes de infectar células, los virus están libres en sangre o mucosas. Los anticuerpos neutralizantes bloquean su unión a receptores celulares — base de las <strong>vacunas</strong>.</p>
+      </div>
+    </div>
+
+    <h2 class="sec">🏭 Producción y Distribución de los Anticuerpos</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-icon">🏗️</div>
+        <h3>¿Dónde se producen?</h3>
+        <ul>
+          <li><strong>Ganglios linfáticos</strong> — principal sitio de respuesta primaria</li>
+          <li><strong>Bazo</strong> — respuesta a antígenos en sangre</li>
+          <li><strong>Médula ósea</strong> — células plasmáticas de larga vida</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3>¿Cómo llegan a los tejidos?</h3>
+        <ul>
+          <li>Transportados por la <strong>circulación sanguínea</strong></li>
+          <li>Realizan funciones efectoras <strong>lejos del lugar de producción</strong></li>
+          <li>Llegan a mucosas (IgA) y fluidos corporales (IgG)</li>
+          <li>En sangre predomina <strong>IgG</strong></li>
+          <li>En mucosas predomina <strong>IgA</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">☠️ Neutralización — Ejemplo Clásico: Toxinas</h2>
+    <div class="grid grid-2">
+      <div class="card orange">
+        <div class="card-icon">⚡</div>
+        <h3>Toxina Tetánica</h3>
+        <ul>
+          <li>Se une a receptores en la <strong>placa motora neuromuscular</strong></li>
+          <li>Inhibe la transmisión neuromuscular</li>
+          <li>Causa espasmos, trismo, opistótono</li>
+          <li>Síntomas: tensión, calambres, irritabilidad</li>
+          <li><strong>Muerte por fallo respiratorio</strong></li>
+          <li>Los anticuerpos bloquean su unión al receptor</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <div class="card-icon">🚫</div>
+        <h3>Toxina Diftérica</h3>
+        <ul>
+          <li>Inhibe la <strong>síntesis proteica</strong> celular</li>
+          <li>Primeros síntomas en <strong>18 a 24 horas</strong></li>
+          <li>Alteraciones visuales, dificultad para deglutir y hablar</li>
+          <li><strong>Sin fiebre</strong> — diferencial importante</li>
+          <li>Muerte por parálisis respiratoria</li>
+          <li>Los anticuerpos "estorban" la unión al receptor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight warn">
+      <strong>⚠️ Dato clínico — Botulismo vs Tétanos vs Difteria</strong>
+      Tres toxinas que afectan el sistema neuromuscular, pero de forma diferente:<br><br>
+      <strong>Tétanos:</strong> espasticidad / contracción → bloquea inhibición de la sinapsis<br>
+      <strong>Botulismo:</strong> parálisis flácida → bloquea liberación de acetilcolina<br>
+      <strong>Difteria:</strong> inhibe síntesis proteica → daño sistémico, pseudomembrana, sin fiebre<br><br>
+      Los tres se previenen con vacunas que generan anticuerpos neutralizantes (DTP).
+    </div>
+  </div>
+
+  <!-- ========== MECANISMOS ========== -->
+  <div class="tab-panel" id="mecanismos">
+    <div class="section-intro">
+      <h2>Mecanismos Efectores de los Anticuerpos</h2>
+      <p>Los anticuerpos no solo neutralizan: tienen múltiples mecanismos para eliminar patógenos, desde facilitar la fagocitosis hasta reclutar células citotóxicas.</p>
+    </div>
+
+    <h2 class="sec">🔑 Los 4 Mecanismos Principales</h2>
+
+    <!-- Neutralización -->
+    <div class="card" style="margin-bottom:1.2rem;">
+      <div class="card-icon">🚧</div>
+      <h3>1. Neutralización</h3>
+      <p>El anticuerpo se une al microbio o toxina y <strong>bloquea físicamente</strong> su unión al receptor celular. El patógeno queda marcado pero no puede entrar a la célula. Es el mecanismo de las vacunas. IgG en sangre e IgA en mucosas son los principales actores.</p>
+    </div>
+
+    <!-- Opsonización -->
+    <div class="card orange" style="margin-bottom:1.2rem;">
+      <div class="card-icon">🎯</div>
+      <h3>2. Opsonización</h3>
+      <p>El anticuerpo (IgG) se une al antígeno en la superficie del patógeno. Los fagocitos (macrófagos y neutrófilos) tienen receptores Fc que reconocen el anticuerpo → la fagocitosis se facilita enormemente. Los anticuerpos actúan como "señal de bandera" — <em>opsonos</em> = preparar para comer.</p>
+    </div>
+
+    <!-- ADCC -->
+    <div class="card blue" style="margin-bottom:1.2rem;">
+      <div class="card-icon">🔪</div>
+      <h3>3. ADCC — Citotoxicidad Celular Dependiente de Anticuerpos</h3>
+      <p>Cuando la <strong>célula diana está cubierta de anticuerpos</strong>, las células NK reconocen el extremo Fc del anticuerpo via receptor FcγRIII (CD16). Las NK se activan y matan a la célula infectada por <strong>degranulación</strong> (perforinas/granzimas), sin necesidad de reconocer el antígeno directamente.</p>
+    </div>
+
+    <!-- Helmintos -->
+    <div class="card yellow" style="margin-bottom:1.2rem;">
+      <div class="card-icon">🪱</div>
+      <h3>4. Eliminación de Helmintos</h3>
+      <ul style="margin-top:0.5rem;">
+        <li>Helmintos son demasiado grandes para ser fagocitados</li>
+        <li>Su tegumento resiste a los neutrófilos</li>
+        <li><strong>Eosinófilos, basófilos y mastocitos</strong> trabajan en conjunto</li>
+        <li>Los eosinófilos sufren <strong>degranulación</strong> sobre el helminto</li>
+        <li>Mastocitos inducen <strong>broncoconstricción + aumento de motilidad</strong> → expulsión</li>
+        <li>IgE es el anticuerpo clave — se une a mastocitos y eosinófilos</li>
+      </ul>
+    </div>
+
+    <h2 class="sec">📊 Resumen de Mecanismos</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Mecanismo</th><th>Anticuerpo clave</th><th>Célula efectora</th><th>Patógeno blanco</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Neutralización</strong></td>
+            <td>IgG (sangre), IgA (mucosas)</td>
+            <td>— (sin célula)</td>
+            <td>Virus, toxinas, bacterias extracelulares</td>
+          </tr>
+          <tr>
+            <td><strong>Opsonización + Fagocitosis</strong></td>
+            <td>IgG</td>
+            <td>Macrófago, Neutrófilo</td>
+            <td>Bacterias (especialmente capsuladas)</td>
+          </tr>
+          <tr>
+            <td><strong>Activación del Complemento</strong></td>
+            <td>IgG, IgM</td>
+            <td>Complemento (cascada)</td>
+            <td>Bacterias Gram -, hongos</td>
+          </tr>
+          <tr>
+            <td><strong>ADCC</strong></td>
+            <td>IgG</td>
+            <td>Célula NK</td>
+            <td>Células infectadas por virus</td>
+          </tr>
+          <tr>
+            <td><strong>Anti-helmíntico</strong></td>
+            <td>IgE</td>
+            <td>Eosinófilo, Mastocito</td>
+            <td>Helmintos (parásitos grandes)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== COMPLEMENTO ========== -->
+  <div class="tab-panel" id="complemento">
+    <div class="section-intro">
+      <h2>El Sistema Complemento</h2>
+      <p>El complemento es un conjunto de proteínas plasmáticas que actúan en <strong>cascada</strong>. Su nombre refleja su función: <em>complementa</em> la acción de los anticuerpos y los fagocitos. Es parte de la inmunidad innata pero puede ser activado por la adaptativa.</p>
+    </div>
+
+    <div class="highlight">
+      <strong>💡 Concepto clave</strong>
+      El sistema complemento actúa como <strong>amplificador</strong>: una pequeña cantidad de anticuerpo puede activar una cascada masiva que resulta en lisis bacteriana, opsonización y reclutamiento de células inflamatorias. La inhibición del complemento lleva a propagación sin control de la infección.
+    </div>
+
+    <h2 class="sec">⚙️ Las 3 Vías de Activación</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-icon">🧲</div>
+        <h3>Vía Clásica</h3>
+        <ul>
+          <li>Activada por <strong>IgG e IgM</strong> unidas al antígeno</li>
+          <li>Conecta la respuesta adaptativa al complemento</li>
+          <li>Inicio: C1q se une al Fc del anticuerpo</li>
+          <li>Más eficiente y específica</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Vía Alternativa</h3>
+        <ul>
+          <li>Activada <strong>directamente por la superficie del patógeno</strong></li>
+          <li>No requiere anticuerpo — parte de la innata</li>
+          <li>C3 se hidroliza espontáneamente</li>
+          <li>Amplifica las otras vías</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-icon">🍬</div>
+        <h3>Vía de las Lectinas (MBL)</h3>
+        <ul>
+          <li>Lectinas del plasma reconocen <strong>manosa</strong> en superficies microbianas</li>
+          <li>No requiere anticuerpo</li>
+          <li>MBL (Mannose-Binding Lectin) activa la cascada</li>
+          <li>Innata pero sofisticada</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🎯 Efectos del Complemento — Las 3 "C"</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-icon">💥</div>
+        <h3>C — Citólisis (MAC)</h3>
+        <p>El <strong>Complejo de Ataque a la Membrana (MAC)</strong> perfora la membrana del patógeno. Formado por C5b-C9. Crea poros → entrada de agua → lisis osmótica. Muy eficaz contra bacterias Gram negativas.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚩</div>
+        <h3>C — Opsonización (C3b)</h3>
+        <p>C3b se deposita sobre la superficie del patógeno. Los fagocitos tienen receptores CR1 que reconocen C3b → fagocitosis facilitada. Complementa la opsonización por IgG.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📣</div>
+        <h3>C — Quimiotaxis (C3a, C5a)</h3>
+        <p><strong>Anafilotoxinas:</strong> C3a y C5a atraen neutrófilos y macrófagos al foco. C5a también activa mastocitos y aumenta la permeabilidad vascular. Amplificadores de la inflamación.</p>
+      </div>
+    </div>
+
+    <h2 class="sec">⚠️ Efectos Patológicos del Complemento</h2>
+    <div class="grid grid-2">
+      <div class="card orange">
+        <div class="card-icon">🔥</div>
+        <h3>Daño tisular propio</h3>
+        <ul>
+          <li>Puede causar <strong>lesión tisular</strong> en tejidos propios</li>
+          <li>Trombosis e <strong>lesiones isquémicas</strong></li>
+          <li>Asociado con anticuerpos → <strong>glomerulonefritis</strong></li>
+          <li>Las lesiones cicatrizan pero comprometen elasticidad y función</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <div class="card-icon">🛡️</div>
+        <h3>Evasión del complemento por M.O</h3>
+        <ul>
+          <li>Gram +: <strong>pared celular gruesa</strong> impide MAC</li>
+          <li>Reclutamiento de <strong>proteínas reguladoras del anfitrión</strong></li>
+          <li><em>Esquistosomas, N. gonorrhoeae, H. influenzae</em> → usan <strong>ácidos siálicos</strong> del anfitrión</li>
+          <li><em>E. coli</em> y meningococo → sintetizan propios ácidos siálicos</li>
+          <li>Algunos producen <strong>proteínas inhibidoras</strong> del complemento</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight warn">
+      <strong>⚠️ Punto de examen — Ácidos Siálicos</strong>
+      Los ácidos siálicos inhiben el depósito de C3b en la superficie bacteriana, evitando la opsonización. Varios patógenos importantes (N. gonorrhoeae, H. influenzae tipo b, E. coli K1, meningococo) usan esta estrategia. El meningococo y E. coli sintetizan sus propios ácidos siálicos — no necesitan "robarlos" del anfitrión.
+    </div>
+  </div>
+
+  <!-- ========== TEJIDOS ========== -->
+  <div class="tab-panel" id="tejidos">
+    <div class="section-intro">
+      <h2>Capítulo 14 — Defensas en los Tejidos y Barreras</h2>
+      <p>Cada tejido tiene sus propias estrategias inmunológicas adaptadas a su microambiente. El sistema inmune mucoso es el más grande y complejo del organismo.</p>
+    </div>
+
+    <div class="highlight info">
+      <strong>📏 Escala del sistema inmune mucoso</strong>
+      La <strong>mucosa intestinal</strong> tiene ~200 m² (vellosidades + microvellosidades) y contiene ~50 × 10¹⁰ células inmunes. La <strong>piel</strong> cubre ~2 m² y tiene ~20 × 10⁹ células. La mucosa intestinal aloja más de <strong>500 especies de bacterias comensales</strong> y 10 × 10¹⁴ bacterias en total.
+    </div>
+
+    <!-- TUBO DIGESTIVO -->
+    <div class="organ-card">
+      <div class="organ-header">
+        <div class="organ-emoji">🫁</div>
+        <div>
+          <div class="organ-tag">Mayor sistema inmune del cuerpo</div>
+          <h3>Tubo Digestivo</h3>
+        </div>
+      </div>
+      <div class="organ-body">
+        <div class="organ-col">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li>Barrera física: mucosa + moco</li>
+            <li><strong>Moco en 2 capas:</strong> externa (contacto con microbios) e interna (contacto con epitelio)</li>
+            <li>Alta producción de <strong>mucina</strong> → forma gel protector</li>
+            <li>Producción de <strong>defensinas</strong></li>
+            <li>Reconocimiento de PAMPs</li>
+            <li>Renovación del moco en <strong>6 a 12 horas</strong></li>
+          </ul>
+        </div>
+        <div class="organ-col orange">
+          <h4>🔄 Homeostasis</h4>
+          <ul>
+            <li>CD y macrófagos de la lámina propia <strong>reconocen PAMPs pero inhiben inflamación</strong></li>
+            <li>Macrófagos modificados → secretan <strong>IL-10</strong> (antiinflamatoria)</li>
+            <li>Alta producción de <strong>IgA</strong></li>
+            <li>Bacterias comensales compiten con patógenos</li>
+            <li>Balance delicado: tolerar comensales, atacar patógenos</li>
+          </ul>
+        </div>
+        <div class="organ-col blue">
+          <h4>🎯 Adaptativa</h4>
+          <ul>
+            <li>IgA, IgG e IgM trabajan en conjunto en la luz</li>
+            <li>Suprime constantemente antígenos de M.O y alimentos</li>
+            <li>Evita inflamación excesiva (tolerancia oral)</li>
+            <li><strong>Vacunas orales:</strong> virus atenuados infectan CD → activan LB y LT → fuerte respuesta local</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SISTEMA RESPIRATORIO -->
+    <div class="organ-card">
+      <div class="organ-header">
+        <div class="organ-emoji">🫀</div>
+        <div>
+          <div class="organ-tag">Alta exposición a antígenos aéreos</div>
+          <h3>Sistema Respiratorio</h3>
+        </div>
+      </div>
+      <div class="organ-body">
+        <div class="organ-col">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li><strong>Epitelio cilíndrico ciliado seudoestratificado</strong></li>
+            <li>Alta producción de <strong>defensinas</strong></li>
+            <li>Moco atrapa partículas extrañas</li>
+            <li>Cilios mueven el moco hacia arriba (escalera mucociliar)</li>
+            <li><strong>Fumadores:</strong> daño a la función ciliar → mayor susceptibilidad</li>
+            <li>Macrófagos alveolares: inhiben LT y secretan <strong>IL-10</strong></li>
+          </ul>
+        </div>
+        <div class="organ-col blue">
+          <h4>🎯 Adaptativa</h4>
+          <ul>
+            <li>Rico en <strong>IgA</strong> secretora</li>
+            <li>Respuesta por <strong>IgE</strong> → procesos alérgicos (asma, rinitis)</li>
+            <li>Mayor utilización del <strong>LTh2</strong></li>
+            <li>Flora menos densa y diversa que el intestino</li>
+            <li>Control de respuestas es crucial → evitar daño pulmonar</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENITOURINARIO -->
+    <div class="organ-card">
+      <div class="organ-header">
+        <div class="organ-emoji">🔬</div>
+        <div>
+          <div class="organ-tag">Escasa especialización relativa</div>
+          <h3>Sistema Genitourinario</h3>
+        </div>
+      </div>
+      <div class="organ-body">
+        <div class="organ-col">
+          <h4>🧱 Estructura</h4>
+          <ul>
+            <li><strong>Epitelio escamoso estratificado:</strong> mucosa vaginal y uretra masculina terminal</li>
+            <li><strong>Epitelio cilíndrico secretor de moco:</strong> vía genital femenina superior</li>
+            <li>Epitelio vaginal contiene <strong>células de Langerhans</strong> (CD especializadas)</li>
+          </ul>
+        </div>
+        <div class="organ-col orange">
+          <h4>🎯 Inmunidad</h4>
+          <ul>
+            <li>Escasa especialización en comparación con intestino y pulmón</li>
+            <li>Mayoría de anticuerpos son <strong>IgG</strong> (no IgA como en otras mucosas)</li>
+            <li>Las células de Langerhans capturan antígenos → llevan al ganglio</li>
+            <li>Relevante en infecciones de transmisión sexual (VIH, HPV, gonococo)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIEL -->
+    <div class="organ-card">
+      <div class="organ-header">
+        <div class="organ-emoji">🧴</div>
+        <div>
+          <div class="organ-tag">~2 m² — Primera barrera física</div>
+          <h3>Sistema Inmunitario Cutáneo</h3>
+        </div>
+      </div>
+      <div class="organ-body">
+        <div class="organ-col">
+          <h4>🧱 Estructura</h4>
+          <ul>
+            <li><strong>Epidermis:</strong> múltiples capas de epitelio escamoso estratificado</li>
+            <li><strong>Dermis:</strong> capa subyacente vascularizada</li>
+            <li><strong>Queratinocitos:</strong> células especializadas de la epidermis</li>
+            <li>En el estrato córneo: muerte programada → impermeabilización</li>
+          </ul>
+        </div>
+        <div class="organ-col">
+          <h4>🛡️ Innata</h4>
+          <ul>
+            <li>Queratinocitos secretan amplia variedad de <strong>interleucinas</strong></li>
+            <li>Rica en <strong>células dendríticas y plasmocitoides</strong></li>
+            <li>Colonizada por microbiota normal</li>
+            <li>Punto de entrada frecuente de agentes infecciosos</li>
+          </ul>
+        </div>
+        <div class="organ-col blue">
+          <h4>🎯 Adaptativa</h4>
+          <ul>
+            <li>CD transportan antígenos hasta ganglios → inician respuesta LT</li>
+            <li>Células pierden adhesividad → entran en vasos linfáticos</li>
+            <li>Piel humana contiene muchos LT: <strong>95% son LT de memoria</strong></li>
+            <li>Vigilancia inmune constante incluso sin infección activa</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📊 Comparación Rápida entre Tejidos</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Tejido</th><th>Anticuerpo principal</th><th>Epitelio</th><th>Característica única</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🫁 Tubo Digestivo</td>
+            <td><span class="badge badge-green">IgA</span></td>
+            <td>Columnar + vellosidades</td>
+            <td>Mayor sistema inmune del cuerpo; bacterias comensales; tolerancia oral</td>
+          </tr>
+          <tr>
+            <td>🫀 Sistema Respiratorio</td>
+            <td><span class="badge badge-green">IgA</span></td>
+            <td>Ciliado seudoestratificado</td>
+            <td>Escalera mucociliar; macrófagos alveolares; IgE → alergias</td>
+          </tr>
+          <tr>
+            <td>🔬 Genitourinario</td>
+            <td><span class="badge badge-blue">IgG</span></td>
+            <td>Escamoso + cilíndrico</td>
+            <td>Células de Langerhans; escasa especialización; relevante en ITS</td>
+          </tr>
+          <tr>
+            <td>🧴 Piel</td>
+            <td><span class="badge badge-orange">IgG (sistémica)</span></td>
+            <td>Escamoso estratificado</td>
+            <td>95% LT de memoria; queratinocitos secretores; barrera física primaria</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== QUIZ ========== -->
+  <div class="tab-panel" id="quiz">
+    <div class="section-intro">
+      <h2>📝 Quiz de Autoevaluación — Cap. 13 y 14</h2>
+      <p>7 preguntas sobre inmunidad humoral, complemento y defensas en tejidos.</p>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>1</span> La toxina diftérica presenta un síntoma diferencial importante. ¿Cuál de las siguientes afirmaciones es CORRECTA?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','La toxina diftérica inhibe la síntesis proteica, no actúa en la placa motora. Eso es el tétanos.')">Causa espasmos musculares por acción en la placa motora</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! La toxina diftérica inhibe la síntesis proteica y cursa SIN fiebre. Los primeros síntomas aparecen entre 18-24 horas: alteraciones visuales, dificultad para deglutir y hablar, pudiendo llevar a parálisis respiratoria.')">Inhibe la síntesis proteica y no presenta fiebre</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La parálisis flácida es característica del botulismo, que bloquea la liberación de acetilcolina.')">Causa parálisis flácida por bloqueo de acetilcolina</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>2</span> En el mecanismo de ADCC (Citotoxicidad Celular Dependiente de Anticuerpos), ¿cuál célula es la principal ejecutora de la muerte celular?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Los macrófagos participan en opsonización y fagocitosis, no son los principales en ADCC.')">Macrófago</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Los eosinófilos actúan contra helmintos via IgE, no son los ejecutores del ADCC clásico.')">Eosinófilo</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Las células NK reconocen el extremo Fc del anticuerpo (IgG) mediante CD16 (FcγRIII). Al unirse a la célula opsonizada, las NK se activan y matan via perforinas/granzimas.')">Célula NK</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El LT CD8+ mata directamente células infectadas via MHC I, sin necesidad de anticuerpos.')">LT CD8+</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>3</span> ¿Qué estrategia usan N. gonorrhoeae y H. influenzae para evadir el sistema complemento?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','La pared gruesa es una estrategia de las bacterias Gram positivas, no de gonococos o H. influenzae.')">Pared celular gruesa que impide el MAC</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! N. gonorrhoeae, H. influenzae y esquistosomas incorporan ácidos siálicos del anfitrión en su superficie, lo que inhibe el depósito de C3b y bloquea la activación del complemento.')">Incorporan ácidos siálicos del anfitrión en su superficie</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Producir proteínas inhibidoras del complemento es otra estrategia usada por otros patógenos, pero no es la específica de gonococos y H. influenzae.')">Producen proteínas inhibidoras del complemento propias</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>4</span> ¿Cuál es el anticuerpo predominante en el sistema genitourinario, diferente a otras mucosas?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','La IgA predomina en intestino y sistema respiratorio, pero no en el genitourinario.')">IgA</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! A diferencia del intestino y respiratorio (IgA), en el sistema genitourinario predomina la IgG. Esta es una característica importante que lo diferencia de otras mucosas.')">IgG</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La IgM es el primer anticuerpo en respuestas primarias, no predomina en el genitourinario.')">IgM</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La IgE se asocia a alergias y anti-helmíntica, no predomina en el genitourinario.')">IgE</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>5</span> En la piel, ¿qué porcentaje de los linfocitos T son de memoria?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Ese porcentaje no refleja la realidad de la piel, que tiene una vigilancia inmune muy especializada.')">Aproximadamente 50%</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','Cerca del 75% no es lo indicado — la piel tiene una proporción aún mayor de LT memoria.')">Aproximadamente 75%</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! La piel humana contiene muchos LT donde el 95% son LT de memoria. Esto refleja la importancia de la vigilancia continua de este tejido, que es la principal puerta de entrada de patógenos.')">95% son LT de memoria</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>6</span> En el intestino, los macrófagos de la lámina propia son "modificados". ¿Qué citocina secretan y cuál es su efecto?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','IL-6 es proinflamatoria — estimula neutrófilos y LTh17. Lo contrario de lo que se necesita en el intestino.')">IL-6 — estimula inflamación</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','IL-17 es producida por el Th17 para reclutar neutrófilos. No es la citocina de los macrófagos intestinales modificados.')">IL-17 — recluta neutrófilos</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! Los macrófagos de la lámina propia del intestino están modificados para reconocer PAMPs pero INHIBIR la inflamación, secretando IL-10 (antiinflamatoria). Esto es esencial para la tolerancia oral y la convivencia con la microbiota.')">IL-10 — inhibe la inflamación</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>7</span> ¿Con qué frecuencia se renueva la capa de moco intestinal que protege el epitelio?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','La renovación del moco es mucho más frecuente que una vez al día.')">Cada 24 horas</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! El proceso de cambio de la capa de moco intestinal ocurre entre 6 y 12 horas. Esta renovación constante es crucial para mantener la barrera actualizada y sin acumulación de patógenos.')">Entre 6 y 12 horas</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El moco se renueva más frecuentemente — cada 6-12 horas, no cada semana.')">Cada 7 días</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+</div><!-- end content -->
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function answer(btn, result, explanation) {
+  const box = btn.closest('.quiz-box');
+  if (box.dataset.answered) return;
+  box.dataset.answered = '1';
+  btn.classList.add(result);
+  box.querySelectorAll('.opt-btn').forEach(b => b.style.pointerEvents = 'none');
+  const fb = box.querySelector('.feedback');
+  fb.innerHTML = (result === 'correct' ? '✅ ' : '❌ ') + explanation;
+  fb.className = 'feedback show ' + (result === 'correct' ? 'ok' : 'err');
+}
+</script>
+
+</body>
+</html>

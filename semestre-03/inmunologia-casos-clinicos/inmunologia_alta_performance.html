@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inmunología — Alta Performance</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2128;--border:#30363d;
+  --green:#3fb950;--green-dim:#1a4a23;--red:#f85149;--red-dim:#3d1010;
+  --yellow:#d29922;--yellow-dim:#3d2c00;--blue:#58a6ff;--blue-dim:#0d2144;
+  --violet:#a371f7;--violet-dim:#2d1a4a;--orange:#f0883e;--orange-dim:#3d1f00;
+  --cyan:#39d353;--cyan-dim:#0d3320;
+  --text:#e6edf3;--muted:#7d8590;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;}
+
+/* HEADER */
+.header{border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;position:sticky;top:0;background:var(--bg);z-index:100;}
+.header-badge{font-family:var(--mono);font-size:10px;background:var(--violet-dim);color:var(--violet);border:1px solid var(--violet);border-radius:4px;padding:2px 8px;letter-spacing:.08em;text-transform:uppercase;}
+.header h1{font-size:15px;font-weight:600;}
+.header-sub{font-size:12px;color:var(--muted);font-family:var(--mono);margin-left:auto;}
+
+/* NAV */
+.nav-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:4px;overflow-x:auto;}
+.nav-btn{font-family:var(--mono);font-size:11px;padding:10px 14px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;}
+.nav-btn:hover{color:var(--text);}
+.nav-btn.active{color:var(--violet);border-bottom-color:var(--violet);}
+
+/* LAYOUT */
+.container{max-width:960px;margin:0 auto;padding:28px 24px 80px;}
+.section{display:none;}
+.section.active{display:block;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
+.card-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.card-body{font-size:14px;color:var(--text);line-height:1.75;}
+.card-body strong{color:var(--yellow);}
+.card-body em{color:var(--cyan);font-style:normal;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:20px;margin:2px;}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid var(--red);}
+.badge-yellow{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow);}
+.badge-green{background:var(--green-dim);color:var(--green);border:1px solid var(--green);}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);}
+.badge-violet{background:var(--violet-dim);color:var(--violet);border:1px solid var(--violet);}
+
+/* SECTION LABEL */
+.section-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:12px;margin-top:24px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-label:first-child{margin-top:0;}
+
+/* MNEMONIC BOX */
+.mnemonic{background:linear-gradient(135deg,rgba(163,113,247,.1),rgba(88,166,255,.08));border:1px solid var(--violet);border-radius:10px;padding:16px;margin:12px 0;}
+.mnemonic-label{font-family:var(--mono);font-size:10px;color:var(--violet);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.mnemonic-text{font-size:14px;color:var(--text);line-height:1.7;}
+.mnemonic-text strong{color:var(--violet);}
+
+/* ALERT BOXES */
+.alert{border-radius:8px;padding:14px 16px;margin:10px 0;font-size:13.5px;line-height:1.6;}
+.alert-red{background:var(--red-dim);border-left:3px solid var(--red);}
+.alert-yellow{background:var(--yellow-dim);border-left:3px solid var(--yellow);}
+.alert-green{background:var(--green-dim);border-left:3px solid var(--green);}
+.alert-blue{background:var(--blue-dim);border-left:3px solid var(--blue);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;margin:12px 0;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--surface2);color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;line-height:1.5;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+td strong{color:var(--yellow);}
+td em{color:var(--green);font-style:normal;}
+
+/* FLASHCARD */
+.flashcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:12px 0;}
+.flashcard{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;user-select:none;}
+.flashcard:hover{border-color:var(--violet);}
+.flashcard.flipped{border-color:var(--green);background:var(--green-dim);}
+.fc-q{font-size:13px;color:var(--muted);font-family:var(--mono);margin-bottom:6px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
+.fc-text{font-size:14px;color:var(--text);line-height:1.5;}
+.flashcard.flipped .fc-text{color:var(--green);}
+.fc-hint{font-size:11px;color:var(--muted);margin-top:8px;font-family:var(--mono);}
+
+/* QUIZ */
+.quiz-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px;}
+.quiz-q{font-size:14px;color:var(--text);margin-bottom:14px;line-height:1.5;}
+.quiz-q strong{color:var(--yellow);}
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13.5px;color:var(--text);transition:all .2s;text-align:left;}
+.quiz-opt:hover{border-color:var(--blue);color:var(--blue);}
+.quiz-opt.correct{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-dim);border-color:var(--red);color:var(--red);}
+.quiz-opt.disabled{cursor:not-allowed;}
+.quiz-explanation{margin-top:12px;padding:12px;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--muted);display:none;line-height:1.6;}
+.quiz-explanation.show{display:block;}
+.quiz-explanation strong{color:var(--green);}
+
+/* RELAMPAGO */
+.relampago-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--surface2);border-radius:8px;margin-bottom:8px;cursor:pointer;border:1px solid var(--border);transition:all .2s;}
+.relampago-item:hover{border-color:var(--yellow);}
+.relampago-q{font-size:14px;color:var(--text);}
+.relampago-a{font-family:var(--mono);font-size:12px;color:var(--yellow);background:var(--yellow-dim);padding:3px 10px;border-radius:4px;display:none;}
+.relampago-item.show .relampago-a{display:block;}
+
+/* SCORE */
+.score-bar{background:var(--surface2);border-radius:20px;height:8px;margin:8px 0;}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:20px;transition:width .5s ease;}
+
+/* PROGRESS */
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-title{font-size:13px;color:var(--muted);font-family:var(--mono);}
+.progress-val{font-size:13px;color:var(--green);font-family:var(--mono);}
+
+/* BOLSO */
+.bolso-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.bolso-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.bolso-card h4{font-size:12px;font-family:var(--mono);color:var(--violet);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.bolso-card ul{list-style:none;padding:0;}
+.bolso-card li{font-size:13px;color:var(--text);padding:4px 0;border-bottom:1px solid var(--border);line-height:1.4;}
+.bolso-card li:last-child{border-bottom:none;}
+.bolso-card li strong{color:var(--yellow);}
+
+/* REVISAO */
+.revisao-timeline{position:relative;padding-left:28px;}
+.revisao-timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
+.revisao-item{position:relative;margin-bottom:20px;}
+.revisao-item::before{content:'';position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--violet);border:2px solid var(--bg);}
+.revisao-day{font-family:var(--mono);font-size:11px;color:var(--violet);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.revisao-content{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:13.5px;color:var(--text);line-height:1.6;}
+
+/* BUTTONS */
+.btn{font-family:var(--mono);font-size:12px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .2s;font-weight:600;}
+.btn-violet{background:var(--violet);color:#fff;border-color:var(--violet);}
+.btn-violet:hover{opacity:.85;}
+.btn-sm{padding:5px 12px;font-size:11px;}
+
+/* SCORE DISPLAY */
+#quizScore{font-family:var(--mono);font-size:13px;color:var(--green);margin-top:12px;display:none;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-badge">ALTA PERFORMANCE</span>
+  <h1>Inmunología — Final Exam</h1>
+  <span class="header-sub">9 etapas · Máximo rendimiento</span>
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn active" onclick="showSection('mapa')">🗺️ Mapa Prova</button>
+  <button class="nav-btn" onclick="showSection('memo')">🧠 Memorização</button>
+  <button class="nav-btn" onclick="showSection('raciocinio')">⚡ Raciocínio</button>
+  <button class="nav-btn" onclick="showSection('confusoes')">🚨 Confusões</button>
+  <button class="nav-btn" onclick="showSection('relampago')">💥 Relâmpago</button>
+  <button class="nav-btn" onclick="showSection('flashcards')">🃏 Flashcards</button>
+  <button class="nav-btn" onclick="showSection('quiz')">🎯 Quiz</button>
+  <button class="nav-btn" onclick="showSection('revisao')">📅 Revisão</button>
+  <button class="nav-btn" onclick="showSection('bolso')">📋 Resumo Bolso</button>
+</div>
+
+<div class="container">
+
+<!-- ======================== ETAPA 1: MAPA DA PROVA ======================== -->
+<div class="section active" id="mapa">
+  <div class="section-label">Etapa 1 — Mapa da Prova</div>
+
+  <div class="card">
+    <div class="card-title">⭐ Os 20% que geram 80% das questões</div>
+    <div class="card-body">
+      Com base nas provas anteriores da professora Graciela, os tópicos de maior incidência são:
+    </div>
+    <br>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Tópico</th><th>Incidência</th><th>Tipo de questão</th></tr>
+        <tr><td><strong>Linfócitos T: Th1, Th2, Th17, Treg, Tfh</strong></td><td><span class="badge badge-red">⭐ Altíssima</span></td><td>Múltipla escolha, V/F, completar</td></tr>
+        <tr><td><strong>Hipersensibilidades I, II, III, IV</strong></td><td><span class="badge badge-red">⭐ Altíssima</span></td><td>Casos clínicos, tabela sinóptica</td></tr>
+        <tr><td><strong>MHC I vs MHC II</strong></td><td><span class="badge badge-red">⭐ Altíssima</span></td><td>Múltipla escolha, completar</td></tr>
+        <tr><td><strong>Imunidade Inata vs Adaptativa</strong></td><td><span class="badge badge-yellow">⭐ Alta</span></td><td>Completar, V/F</td></tr>
+        <tr><td><strong>TLRs (receptores Toll-like)</strong></td><td><span class="badge badge-yellow">⭐ Alta</span></td><td>Múltipla escolha</td></tr>
+        <tr><td><strong>Anticuerpos (IgA, IgG, IgM, IgE, IgD)</strong></td><td><span class="badge badge-yellow">⭐ Alta</span></td><td>Múltipla escolha, completar</td></tr>
+        <tr><td><strong>Sistema Complemento (3 vías)</strong></td><td><span class="badge badge-yellow">⭐ Alta</span></td><td>Múltipla escolha</td></tr>
+        <tr><td><strong>Trasplante: tipos e rechazo</strong></td><td><span class="badge badge-yellow">⭐ Alta</span></td><td>Completar, V/F</td></tr>
+        <tr><td><strong>Privilegio Inmunitario</strong></td><td><span class="badge badge-green">Media</span></td><td>V/F, completar</td></tr>
+        <tr><td><strong>Respuesta Antitumoral + PD-L1</strong></td><td><span class="badge badge-green">Media</span></td><td>Múltipla escolha, V/F</td></tr>
+        <tr><td><strong>HIV (pincelada)</strong></td><td><span class="badge badge-green">Media</span></td><td>Múltipla escolha</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔥 Pegadinhas clássicas da professora</div>
+    <div class="alert alert-red">🔥 <strong>NK são imunidade INATA</strong>, não adaptativa! A prova já cobrou isso como V/F e muitos alunos erram.</div>
+    <div class="alert alert-red">🔥 <strong>MHC II é expresso em APCs</strong> (células dendríticas, macrófagos, linfócitos B) — NÃO em todas as células nucleadas.</div>
+    <div class="alert alert-red">🔥 <strong>Via alternativa do complemento é INDEPENDENTE de anticuerpos</strong>. A via clássica que depende.</div>
+    <div class="alert alert-red">🔥 <strong>Hipersensibilidade tipo IV NÃO envolve anticuerpos</strong> — é mediada exclusivamente por linfócitos T.</div>
+    <div class="alert alert-red">🔥 <strong>IgE se liga aos mastocitos</strong> — não IgG, não IgM. Exclusividade da IgE!</div>
+    <div class="alert alert-red">🔥 <strong>Los anticuerpos actúan en medio EXTRACELULAR</strong> — a prova cobrou isso como falso afirmando "intracelular".</div>
+    <div class="alert alert-yellow">🔥 <strong>TLR4 reconoce Gram negativos</strong> (LPS). TLR2 reconoce Gram positivos. TLR3,7,8 = virus. TLR5 = flagelos.</div>
+    <div class="alert alert-yellow">🔥 <strong>Treg é marcado por FoxP3</strong> (proteína, não citocina!). Questão clássica de completar.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚨 Definições cobradas literalmente</div>
+    <div class="card-body">
+      <strong>Antígeno</strong>: sustância capaz de induzir a formação de anticuerpos.<br>
+      <strong>Alérgeno</strong>: sustância que induz resposta alérgica.<br>
+      <strong>Tolerógeno</strong>: sustância que induz tolerância (não ação do sistema imune).<br>
+      <strong>PAMP</strong>: patrón molecular asociado a patógenos — reconocido por receptores Toll-like.<br>
+      <strong>DAMP</strong>: patrón molecular asociado a daño (células propias dañadas).<br>
+      <strong>Piroptosis</strong>: muerte celular en situaciones de estrés del neutrófilo, causando daño a tejidos.<br>
+      <strong>IgA2</strong>: anticuerpo específico del aparato genitourinario (cobrado na prova!).
+    </div>
+  </div>
+</div>
+
+<!-- ======================== ETAPA 2: MEMORIZAÇÃO ======================== -->
+<div class="section" id="memo">
+  <div class="section-label">Etapa 2 — Memorização Inteligente</div>
+
+  <div class="card">
+    <div class="card-title">🧠 Linfócitos T CD4+ — Mnemônico Mestre</div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 Macete Visual</div>
+      <div class="mnemonic-text">
+        Pense em 4 guerreiros numa batalha:<br><br>
+        <strong>Th1 = "O Caçador de Intracelulares"</strong> — usa IFN-γ como arma, ativa macrófagos pela via clássica. Combate vírus, bactérias intracelulares. Efeito deletério: lesão tissular.<br><br>
+        <strong>Th2 = "O Caçador de Vermes"</strong> — usa IL-4, IL-5, IL-13. Ativa eosinófilos e mastocitos. Efeito deletério: ALERGIAS.<br><br>
+        <strong>Th17 = "O Guarda de Fronteiras"</strong> — usa IL-17 e IL-22. Recruta neutrófilos e reforça barreira. Combate fungos e extracelulares. Efeito deletério: inflamação crónica.<br><br>
+        <strong>Treg = "O Árbitro da Paz"</strong> — usa FoxP3. Controla e evita excessos. Sem efeito deletério.
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 Acrônimo para citocinas</div>
+      <div class="mnemonic-text">
+        <strong>Th1:</strong> "IFN-γamma Grita em Guerra" = IFN-γ<br>
+        <strong>Th2:</strong> "IL-4, 5, 13 = Amor, Abraço, Beijo" (alergias são reações exageradas de amor pelo alérgeno 😄)<br>
+        <strong>Th17:</strong> "17 é a idade da Rebeldia" = IL-17, IL-22 (inflamação crônica = rebeldia do sistema)<br>
+        <strong>Treg:</strong> "FoxP3 = Raposa Pacificadora"
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧠 Hipersensibilidades — História Mental</div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 A história dos 4 irmãos</div>
+      <div class="mnemonic-text">
+        <strong>Tipo I (Alérgico):</strong> "O irmão IMPULSIVO" — reage em minutos, usa IgE nos mastocitos. Como uma pessoa que entra em pânico imediatamente ao ver uma abelha.<br><br>
+        <strong>Tipo II (Citotóxico):</strong> "O irmão RANCOROSO" — ataca alvos FIXOS (células próprias). IgG/IgM na superfície celular. Como um rancoroso que tem um alvo específico e não desiste.<br><br>
+        <strong>Tipo III (Imunocomplejos):</strong> "O irmão ESPALHAFATOSO" — os complexos circulam e se depositam em VÁRIOS lugares ao mesmo tempo. Sistêmico. Como uma fofoca que se espalha por toda a cidade.<br><br>
+        <strong>Tipo IV (Tardio):</strong> "O irmão LENTO" — resposta em 48-72h. Sem anticuerpos! Só linfócitos T. Como aquela pessoa que demora 3 dias para responder uma mensagem.
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 Mnemônico IICV</div>
+      <div class="mnemonic-text">
+        <strong>I</strong>mediata (Tipo I) — IgE<br>
+        <strong>I</strong>gG/IgM em célula fixa (Tipo II)<br>
+        <strong>C</strong>omplejos circulantes (Tipo III)<br>
+        <strong>V</strong>ia celular, 48-72h, sem anticuerpos (Tipo IV)
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧠 MHC I vs MHC II — Palácio da Memória</div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 Imagine dois porteiros de uma festa</div>
+      <div class="mnemonic-text">
+        <strong>MHC I = "O Porteiro de TODAS as células"</strong><br>
+        — Presente em TODAS as células nucleadas (menos eritrócitos)<br>
+        — Apresenta antígenos INTRACELULARES (vírus, tumores)<br>
+        — Para os linfócitos T <strong>CD8+</strong> (citotóxicos)<br>
+        — Lembre: "MHC <strong>1</strong> para <strong>1</strong> tipo de célula (CD<strong>8</strong>)" → 1+8=9 ou MHC1→CD8<br><br>
+        <strong>MHC II = "O Porteiro EXCLUSIVO das APCs"</strong><br>
+        — Apenas em APCs (dendríticas, macrófagos, linfócitos B)<br>
+        — Apresenta antígenos EXTRACELULARES<br>
+        — Para os linfócitos T <strong>CD4+</strong> (auxiliares)<br>
+        — Lembre: "MHC <strong>II</strong> = <strong>APCs</strong> = CD<strong>4</strong>"
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧠 Anticuerpos — Mnemônico GADME</div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 "GADME" = Todos os anticuerpos em ordem de concentração</div>
+      <div class="mnemonic-text">
+        <strong>G</strong>ama (IgG) = Maior concentração no sangue (~65%). Memória, placenta, opsonização.<br>
+        <strong>A</strong>mor (IgA) = Mucosas (intestino, pulmão, genitourinário). IgA2 no trato genitourinário!<br>
+        <strong>D</strong>etector (IgD) = Receptor em linfócito B virgem. Raramente cobrado.<br>
+        <strong>M</strong>ega (IgM) = Primeira resposta! Pentâmero. Maior em volume no sangue.<br>
+        <strong>E</strong>xplode (IgE) = Alergia! Liga nos mastocitos. Menor concentração.<br><br>
+        <em>Ordem de concentração plasmática: IgG &gt; IgA &gt; IgM &gt; IgD &gt; IgE</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧠 HIV — Pincelada de Alta Performance</div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 O assassino silencioso do CD4</div>
+      <div class="mnemonic-text">
+        <strong>HIV = Vírus da Imunodeficiência Humana</strong><br><br>
+        <strong>Célula alvo principal:</strong> Linfócito T <strong>CD4+</strong> (via receptor CD4 + co-receptor CCR5/CXCR4)<br><br>
+        <strong>Progressão:</strong> HIV → destrói CD4+ → &lt;200 células/mm³ = AIDS → infecções oportunistas<br><br>
+        <strong>Mecanismo de evasão imune do HIV:</strong><br>
+        — Muta constantemente (variação antigênica)<br>
+        — Se integra ao genoma (provirus) — fica latente<br>
+        — Destrói as próprias células de defesa<br><br>
+        <strong>O que cobram em provas:</strong><br>
+        ⭐ HIV infecta <strong>CD4+</strong> (não CD8+, não NK)<br>
+        ⭐ CD4 &lt;200 = AIDS definida<br>
+        ⭐ HIV é retrovírus (RNA → DNA via transcriptase reversa)<br>
+        ⭐ Infecções oportunistas = resultado da imunossupressão do Th1
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧠 TLRs — Mnemônico Rápido</div>
+    <div class="mnemonic">
+      <div class="mnemonic-label">🧠 "124 reconhece paredes, 357 reconhece conteúdo"</div>
+      <div class="mnemonic-text">
+        <strong>TLR1, 2, 6</strong> = Gram positivos (peptidoglicano, ácido lipoteicóico) — PAREDE bacteriana<br>
+        <strong>TLR4</strong> = Gram negativos (LPS) — PAREDE bacteriana<br>
+        <strong>TLR5</strong> = Flagelos bacterianos<br>
+        <strong>TLR3, 7, 8</strong> = Vírus (RNA viral) — CONTEÚDO interno<br>
+        <strong>TLR9</strong> = DNA bacteriano (CpG)<br><br>
+        <em>Cobrado na prova: TLR4 reconhece proteínas virais? NÃO! TLR4 = LPS de Gram negativos!</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== ETAPA 3: RACIOCÍNIO ======================== -->
+<div class="section" id="raciocinio">
+  <div class="section-label">Etapa 3 — Raciocínio de Prova</div>
+
+  <div class="card">
+    <div class="card-title">⚡ Como reconhecer a resposta certa em cada tipo de questão</div>
+
+    <div class="section-label">Questões sobre Linfócitos T</div>
+    <div class="alert alert-blue">
+      <strong>Quando a questão fala em "microorganismos intracelulares"</strong> → Th1 + IFN-γ + CD8+<br>
+      <strong>Quando fala em "parásitos/helmintos"</strong> → Th2 + IL-4, IL-5, IL-13 + eosinófilos<br>
+      <strong>Quando fala em "hongos/extracelulares"</strong> → Th17 + IL-17, IL-22 + neutrófilos<br>
+      <strong>Quando fala em "regular/evitar excesso"</strong> → Treg + FoxP3<br>
+      <strong>Quando fala em "isótipo de anticuerpo"</strong> → Tfh (T folicular humano)
+    </div>
+
+    <div class="section-label">Questões sobre Hipersensibilidades</div>
+    <div class="alert alert-blue">
+      <strong>Reação em MINUTOS</strong> → Tipo I (IgE + mastocitos)<br>
+      <strong>Anticuerpos atacando células PRÓPRIAS fixas</strong> → Tipo II (fiebre reumática, miastenia)<br>
+      <strong>Complexos que se depositam em MÚLTIPLOS lugares</strong> → Tipo III (vasculitis, glomerulonefritis)<br>
+      <strong>48-72 horas + SEM anticuerpos</strong> → Tipo IV (dermatitis, rechazo trasplante)<br>
+      <strong>Dica de ouro</strong>: Se a questão diz "linfócitos T" como mediador → SEMPRE tipo IV!
+    </div>
+
+    <div class="section-label">Questões sobre Complemento</div>
+    <div class="alert alert-blue">
+      <strong>Via Clásica</strong>: Precisa de anticuerpos IgG/IgM<br>
+      <strong>Via Alternativa</strong>: INDEPENDENTE de anticuerpos (reconhece diretamente PAMPs)<br>
+      <strong>Via Lectina</strong>: Lectina liga à manose bacteriana<br>
+      <strong>Função principal</strong>: Promover la fagocitosis de patógenos extracelulares (opsonización + MAC)
+    </div>
+
+    <div class="section-label">Questões sobre Trasplante</div>
+    <div class="alert alert-blue">
+      <strong>Autólogo</strong> = Próprio → Sem rechazo<br>
+      <strong>Singênico</strong> = Gêmeos idênticos → Sem rechazo<br>
+      <strong>Alogênico</strong> = Mesma espécie diferente → Rechazo (mais comum na prova)<br>
+      <strong>Xenogênico</strong> = Espécies diferentes → Rechazo elevado<br>
+      <strong>Rechazo hiperagudo</strong>: Imediato (anticuerpos pré-formados)<br>
+      <strong>Rechazo agudo</strong>: ≤ 6 meses (linfócitos T)<br>
+      <strong>Rechazo crónico</strong>: &gt; 6 meses (macrófagos)
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Onde os alunos mais erram</div>
+    <div class="alert alert-red">❌ Confundir NK com imunidade adaptativa → NK é INATA!</div>
+    <div class="alert alert-red">❌ Dizer que IgM tem maior concentração plasmática → IgG tem mais!</div>
+    <div class="alert alert-red">❌ Dizer que MHC II está em todas as células nucleadas → Só em APCs!</div>
+    <div class="alert alert-red">❌ Dizer que via alternativa depende de anticuerpos → É INDEPENDENTE!</div>
+    <div class="alert alert-red">❌ Confundir Th2 com resposta a bactérias → Th2 é para HELMINTOS/ALERGIAS!</div>
+    <div class="alert alert-red">❌ Dizer que linfócitos NK reconhecem tumores por MHC → NK reconhece a AUSÊNCIA de MHC!</div>
+  </div>
+</div>
+
+<!-- ======================== ETAPA 4: CONFUSÕES ======================== -->
+<div class="section" id="confusoes">
+  <div class="section-label">Etapa 4 — Tabela de Confusões Clássicas</div>
+
+  <div class="card">
+    <div class="card-title">🚨 Confusões mais comuns — Diferencia em 5 segundos</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Conceito</th><th>Confunde com</th><th>Como diferenciar em 5 segundos</th></tr>
+        <tr><td><strong>NK (Natural Killer)</strong></td><td>Linfócito T CD8+</td><td><em>NK = INATA (nasce pronta). CD8 = ADAPTATIVA (precisa ser ativada)</em></td></tr>
+        <tr><td><strong>MHC I</strong></td><td>MHC II</td><td><em>MHC I = em TODAS as células nucleadas → para CD8+. MHC II = só APCs → para CD4+</em></td></tr>
+        <tr><td><strong>IgE</strong></td><td>IgG</td><td><em>IgE = alergia + mastocitos. IgG = maior concentração + memória + placenta</em></td></tr>
+        <tr><td><strong>IgM</strong></td><td>IgG</td><td><em>IgM = PRIMEIRA resposta (primo contato). IgG = maior concentração plasmática</em></td></tr>
+        <tr><td><strong>IgA</strong></td><td>IgG</td><td><em>IgA = mucosas (intestino, pulmão, geniturinário). IgA2 = aparato genitourinário!</em></td></tr>
+        <tr><td><strong>Hipersens. Tipo II</strong></td><td>Tipo III</td><td><em>Tipo II = antígeno FIXO em célula (1 órgão). Tipo III = complexos CIRCULANTES (múltiplos órgãos)</em></td></tr>
+        <tr><td><strong>Th1</strong></td><td>Th17</td><td><em>Th1 = intracelulares + IFN-γ. Th17 = extracelulares/hongos + IL-17, IL-22</em></td></tr>
+        <tr><td><strong>Via Clásica Complemento</strong></td><td>Via Alternativa</td><td><em>Clásica = precisa de anticuerpos. Alternativa = INDEPENDENTE de anticuerpos</em></td></tr>
+        <tr><td><strong>Treg</strong></td><td>Th2</td><td><em>Treg = FoxP3, REGULA tudo, evita excesso. Th2 = IL-4/5/13, alergias</em></td></tr>
+        <tr><td><strong>TLR4</strong></td><td>TLR1/2</td><td><em>TLR4 = LPS de Gram NEGATIVOS. TLR1/2 = peptidoglicano de Gram POSITIVOS</em></td></tr>
+        <tr><td><strong>Choque Anafilático</strong></td><td>Choque Anafilactoide</td><td><em>Anafilático = IgE + histamina (estamínico). Anafilactoide = eosinófilos (celular)</em></td></tr>
+        <tr><td><strong>Rechazo Agudo</strong></td><td>Rechazo Crónico</td><td><em>Agudo ≤ 6 meses (linfócitos T). Crónico &gt; 6 meses (macrófagos)</em></td></tr>
+        <tr><td><strong>Tolerancia Central</strong></td><td>Periférica</td><td><em>Central = timo (T) + medula óssea (B). Periférica = linfonodos (3 mecanismos: anergia, supressão, eliminação)</em></td></tr>
+        <tr><td><strong>Célula Dendrítica Clássica</strong></td><td>Cd. Plasmocitoide</td><td><em>Clássica = apresenta antígenos. Plasmocitoide = função ANTIVIRAL (produz IFN tipo I)</em></td></tr>
+        <tr><td><strong>Piroptosis</strong></td><td>Apoptosis</td><td><em>Piroptosis = morte por estrés do neutrófilo, causa dano tissular. Apoptosis = morte programada silenciosa</em></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== ETAPA 5: RELÂMPAGO ======================== -->
+<div class="section" id="relampago">
+  <div class="section-label">Etapa 5 — Questões Relâmpago</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Clique em cada item para revelar a resposta. Treine até responder sem clicar! ⚡</p>
+
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Célula que identifica tumores (imunidade inata)?</span><span class="relampago-a">Células NK</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Anticuerpo que se liga ao mastocito?</span><span class="relampago-a">IgE</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Anticuerpo de MAIOR concentração no plasma?</span><span class="relampago-a">IgG (~65%)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Anticuerpo da PRIMEIRA resposta imune?</span><span class="relampago-a">IgM</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Anticuerpo predominante nas mucosas?</span><span class="relampago-a">IgA</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">IgA específica do aparato genitourinário?</span><span class="relampago-a">IgA2</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Função principal do MHC?</span><span class="relampago-a">Presentar antígenos a células T para su reconocimiento</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">MHC I → apresenta para qual célula T?</span><span class="relampago-a">CD8+ (citotóxico)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">MHC II → presente em quais células?</span><span class="relampago-a">APCs (dendríticas, macrófagos, linfócitos B)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Citocina chave do Th1?</span><span class="relampago-a">IFN-γ (interferon gama)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Citocinas do Th2?</span><span class="relampago-a">IL-4, IL-5, IL-13</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Citocinas do Th17?</span><span class="relampago-a">IL-17, IL-22</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Marcador do Treg?</span><span class="relampago-a">FoxP3 (proteína, não citocina!)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Hipersensibilidade mediada por IgE?</span><span class="relampago-a">Tipo I (imediata/alérgica)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Hipersensibilidade SEM anticuerpos?</span><span class="relampago-a">Tipo IV (tardía, 48-72h)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Fiebre reumática = qual tipo de hipersensibilidade?</span><span class="relampago-a">Tipo II (citotóxica — mimetismo molecular com miosina cardíaca)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">TLR4 reconhece o quê?</span><span class="relampago-a">LPS de Gram negativos</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">TLR reconhece proteínas virales?</span><span class="relampago-a">TLR3, 7, 8 (RNA viral)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Via alternativa do complemento depende de anticuerpos?</span><span class="relampago-a">NÃO — é independente de anticuerpos!</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Função principal do complemento?</span><span class="relampago-a">Promover fagocitose de patógenos extracelulares (opsonização)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">NK são imunidade inata ou adaptativa?</span><span class="relampago-a">INATA (nascem prontas, sem memória)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Proteína que o tumor expressa para escapar da imunidade?</span><span class="relampago-a">PD-L1</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Medicamento que bloqueia PD-L1?</span><span class="relampago-a">Pembrolizumab / Nivolumab</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">HIV infecta principalmente qual célula?</span><span class="relampago-a">Linfócito T CD4+</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">CD4 &lt; 200 células/mm³ = ?</span><span class="relampago-a">AIDS definida</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Anticuerpos atuam em meio intracelular ou extracelular?</span><span class="relampago-a">EXTRACELULAR (pegadinha clássica!)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Qual célula do sistema imune está presente em MAIOR número no sangue?</span><span class="relampago-a">Neutrófilos</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Célula dendrítica PLASMOCITOIDE — função?</span><span class="relampago-a">Função ANTIVIRAL (produz interferons tipo I)</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">O que é piroptosis?</span><span class="relampago-a">Morte celular por estresse do neutrófilo, causando dano tecidual</span></div>
+  <div class="relampago-item" onclick="this.classList.toggle('show')"><span class="relampago-q">Trasplante entre gêmeos idênticos = ?</span><span class="relampago-a">Singênico — sem rechazo</span></div>
+</div>
+
+<!-- ======================== ETAPA 6: FLASHCARDS ======================== -->
+<div class="section" id="flashcards">
+  <div class="section-label">Etapa 6 — Flashcards Anki</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Clique no card para revelar a resposta. Verde = revisado! 🃏</p>
+
+  <div class="flashcard-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Quais são os 5 subtipos de linfócitos T CD4+ e suas citocinas?" data-a="Th1→IFN-γ | Th2→IL-4,5,13 | Th17→IL-17,22 | Treg→FoxP3 | Tfh→determina isótipo de Ac">Quais são os 5 subtipos de linfócitos T CD4+ e suas citocinas?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Qual hipersensibilidade é mediada por IgE e mastocitos?" data-a="Tipo I (Imediata/Alérgica) — reação em minutos">Qual hipersensibilidade é mediada por IgE e mastocitos?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="MHC I apresenta para qual célula T e está presente onde?" data-a="CD8+ citotóxicos. Presente em TODAS as células nucleadas">MHC I apresenta para qual célula T e está presente onde?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Qual anticuerpo se liga à membrana do mastocito?" data-a="IgE — exclusividade da IgE para mastocitos e basófilos">Qual anticuerpo se liga à membrana do mastocito?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Diferença entre rechazo agudo e crónico no trasplante?" data-a="Agudo ≤ 6 meses (linfócitos T). Crónico &gt;6 meses (macrófagos)">Diferença entre rechazo agudo e crónico no trasplante?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Qual TLR reconhece LPS de bactérias Gram negativas?" data-a="TLR4 — reconhece LPS (lipopolissacarídeo)">Qual TLR reconhece LPS de bactérias Gram negativas?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="O que é FoxP3 e a qual célula pertence?" data-a="Proteína marcadora do Treg (linfócito T Regulador). Controla e evita excessos da resposta imune">O que é FoxP3 e a qual célula pertence?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Hipersensibilidade tipo IV — características principais?" data-a="48-72h, SEM anticuerpos, mediada por linfócitos T (Th1, Th17, CD8+). Ex: dermatitis de contacto, rechazo de trasplante">Hipersensibilidade tipo IV — características principais?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="NK reconhecem tumores como? E como atuam?" data-a="Reconhecem a AUSÊNCIA de MHC I (células tumorais apagam MHC para escapar de CD8+, mas NK detecta a ausência). Liberam perforinas e granzimas">NK reconhecem tumores como? E como atuam?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Via alternativa do complemento depende de anticuerpos?" data-a="NÃO! A via alternativa é INDEPENDENTE de anticuerpos. A via clásica que depende de IgG/IgM.">Via alternativa do complemento depende de anticuerpos?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="Qual anticuerpo tem maior concentração plasmática?" data-a="IgG (~65% dos anticuerpos plasmáticos). IgM tem maior tamanho (pentâmero) mas menor concentração que IgG">Qual anticuerpo tem maior concentração plasmática?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Pergunta</div>
+      <div class="fc-text" data-q="HIV: qual célula infecta e co-receptores?" data-a="Linfócito T CD4+. Co-receptores: CCR5 (macrófagos/monócitos) e CXCR4 (linfócitos T). CD4 &lt;200 = AIDS">HIV: qual célula infecta e co-receptores?</div>
+      <div class="fc-hint">↓ clique para resposta</div>
+    </div>
+  </div>
+
+  <script>
+  document.querySelectorAll('.flashcard').forEach(card => {
+    card.addEventListener('click', function() {
+      const textEl = this.querySelector('.fc-text');
+      const hint = this.querySelector('.fc-hint');
+      if (this.classList.contains('flipped')) {
+        textEl.textContent = textEl.dataset.a;
+        hint.textContent = '↑ clique para pergunta';
+      } else {
+        textEl.textContent = textEl.dataset.q;
+        hint.textContent = '↓ clique para resposta';
+      }
+    });
+  });
+  </script>
+</div>
+
+<!-- ======================== ETAPA 7: QUIZ ======================== -->
+<div class="section" id="quiz">
+  <div class="section-label">Etapa 7 — Nível Professor Maldoso 🎯</div>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Questões no estilo da professora Graciela. Selecione a alternativa correta!</p>
+  <div id="quizScore"></div>
+
+  <div class="quiz-item" data-correct="b">
+    <div class="quiz-q">1. <strong>¿Cuál de los siguientes enunciados es FALSO?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Las células dendríticas pueden diferenciarse en un grupo de células con efectos antivirales</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Los linfocitos NK son células de la inmunidad adaptativa que reconocen células tumorales</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Las células del sistema humoral liberan anticuerpos</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) Las células del sistema fagocítico mononuclear tienen como función la presentación de antígenos</button>
+    </div>
+    <div class="quiz-explanation">✓ NK são imunidade <strong>INATA</strong>, não adaptativa! São células que nascem prontas para atacar. A questão foi cobrada literalmente na prova P1 da turma.</div>
+  </div>
+
+  <div class="quiz-item" data-correct="c">
+    <div class="quiz-q">2. <strong>¿Cuál es la función principal de los complejos mayores de histocompatibilidad (MHC) en la presentación de antígenos?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Activar directamente las células</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Capturar y degradar antígenos extracelulares</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Presentar antígenos a células T para su reconocimiento</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) Producir anticuerpos para neutralizar los patógenos</button>
+    </div>
+    <div class="quiz-explanation">✓ O MHC é a "janela" da célula — apresenta fragmentos de proteínas internas para que os linfócitos T possam inspecionar. <strong>MHC I→CD8+</strong> e <strong>MHC II→CD4+</strong>.</div>
+  </div>
+
+  <div class="quiz-item" data-correct="b">
+    <div class="quiz-q">3. <strong>¿Cuál es la principal función del sistema complemento en la respuesta inmunológica?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Activar células T para la eliminación de patógenos intracelulares</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Promover la fagocitosis de patógenos extracelulares</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Mediar la respuesta inmune adaptativa</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) Estimular la producción de anticuerpos por células B</button>
+    </div>
+    <div class="quiz-explanation">✓ O complemento é parte da imunidade INATA e sua função principal é a <strong>opsonização e fagocitose de patógenos extracelulares</strong> + formação do MAC (complexo de ataque à membrana).</div>
+  </div>
+
+  <div class="quiz-item" data-correct="d">
+    <div class="quiz-q">4. <strong>Paciente com eritroblastosis fetal. La madre es Rh negativo y el feto Rh positivo. ¿Qué tipo de hipersensibilidad es?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Hipersensibilidad Tipo I (IgE + mastocitos)</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Hipersensibilidad Tipo III (inmunocomplejos circulantes)</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Hipersensibilidad Tipo IV (linfocitos T, 48-72h)</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) Hipersensibilidad Tipo II (anticuerpos contra antígenos fijos en eritrocitos)</button>
+    </div>
+    <div class="quiz-explanation">✓ Tipo II — os anticuerpos IgG maternos anti-Rh atacam os eritrócitos FIXOS do feto (antígeno fixo na superfície celular). Não é tipo III porque o antígeno não circula livremente.</div>
+  </div>
+
+  <div class="quiz-item" data-correct="e">
+    <div class="quiz-q">5. <strong>¿Qué anticuerpo se encuentra en mayor concentración en el plasma sanguíneo?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) IgA</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) IgM</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) IgE</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) IgD</button>
+      <button class="quiz-opt" data-opt="e" onclick="responder(this)">e) IgG</button>
+    </div>
+    <div class="quiz-explanation">✓ IgG representa ~65% de todos os anticuerpos plasmáticos. Muitos alunos confundem com IgM (que é o maior em tamanho por ser pentâmero, mas não o mais concentrado).</div>
+  </div>
+
+  <div class="quiz-item" data-correct="d">
+    <div class="quiz-q">6. <strong>¿Cuál es la característica principal que diferencia la hipersensibilidad Tipo IV de las demás?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Está mediada por IgE</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Ocurre en minutos tras la exposición</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Forma complejos antígeno-anticuerpo circulantes</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) No involucra anticuerpos — es mediada exclusivamente por linfocitos T</button>
+    </div>
+    <div class="quiz-explanation">✓ Tipo IV é a ÚNICA hipersensibilidade sem anticuerpos. Mediada por Th1, Th17 e CD8+. Tempo de 48-72h. Exemplos: dermatitis de contacto, rejeição de enxerto, teste de PPD.</div>
+  </div>
+
+  <div class="quiz-item" data-correct="b">
+    <div class="quiz-q">7. <strong>Un paciente recibe un trasplante de riñón. A los 4 meses presenta rechazo con infiltrado de linfocitos T en la biopsia. ¿Qué tipo de rechazo es?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Rechazo hiperagudo (anticuerpos preformados)</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Rechazo agudo (linfocitos T, ≤6 meses)</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Rechazo crónico (macrófagos, >6 meses)</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) Rechazo singénico</button>
+    </div>
+    <div class="quiz-explanation">✓ Rechazo AGUDO: ocorre em ≤6 meses, mediado por linfócitos T que reconhecem os aloantígenos do doador. O rechazo crónico (&gt;6 meses) é mediado principalmente por macrófagos e fibrose progressiva.</div>
+  </div>
+
+  <div class="quiz-item" data-correct="c">
+    <div class="quiz-q">8. <strong>¿Qué receptor Toll-like (TLR) reconoce específicamente solo proteínas virales?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) TLR2</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) TLR1</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) TLR4</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) TLR7</button>
+    </div>
+    <div class="quiz-explanation">✓ PEGADINHA! Nenhum dos listados "reconhece especificamente proteínas virais". TLR4 = LPS Gram−. TLR7 = RNA viral monocatenário. A questão da prova original tinha TLR4 como pegadinha, pois muitos marcam sem pensar. TLR3,7,8 reconhecem RNA viral.</div>
+  </div>
+
+  <div class="quiz-item" data-correct="a">
+    <div class="quiz-q">9. <strong>¿Cuál es el anticuerpo específico del aparato genitourinario?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) IgA2</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) IgA1</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) IgG</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) IgM</button>
+    </div>
+    <div class="quiz-explanation">✓ IgA2 é específica do trato genitourinário. IgA1 é predominante no trato respiratório superior. Questão cobrada literalmente na prova — muitos alunos respondem IgA genérica sem especificar a subclasse!</div>
+  </div>
+
+  <div class="quiz-item" data-correct="b">
+    <div class="quiz-q">10. <strong>¿Cuál de los siguientes mecanismos utiliza el tumor para evadir el sistema inmune?</strong></div>
+    <div class="quiz-options">
+      <button class="quiz-opt" data-opt="a" onclick="responder(this)">a) Aumenta la expresión de MHC I para ser reconocido</button>
+      <button class="quiz-opt" data-opt="b" onclick="responder(this)">b) Expresa PD-L1 para inhibir los linfocitos T citotóxicos</button>
+      <button class="quiz-opt" data-opt="c" onclick="responder(this)">c) Recluta células NK para su defensa</button>
+      <button class="quiz-opt" data-opt="d" onclick="responder(this)">d) Aumenta la producción de IFN-γ</button>
+    </div>
+    <div class="quiz-explanation">✓ O tumor expressa <strong>PD-L1</strong> (molécula de privilegio inmunitário) para inibir linfócitos T que tentam atacá-lo. Os medicamentos pembrolizumab e nivolumab bloqueiam essa via. Também reduz MHC (não aumenta) para fugir do CD8+.</div>
+  </div>
+</div>
+
+<!-- ======================== ETAPA 8: REVISÃO ======================== -->
+<div class="section" id="revisao">
+  <div class="section-label">Etapa 8 — Plano de Revisão de Longo Prazo</div>
+
+  <div class="revisao-timeline">
+    <div class="revisao-item">
+      <div class="revisao-day">⏰ 24 horas após estudar</div>
+      <div class="revisao-content">
+        <strong>Fazer:</strong> Todos os flashcards sem olhar a resposta. Acertou &gt;70%? Pode avançar.<br>
+        <strong>Focar em:</strong> Subtipos Th1/Th2/Th17/Treg + suas citocinas. MHC I vs II. IgE nos mastocitos.<br>
+        <strong>Tempo:</strong> 15 minutos
+      </div>
+    </div>
+    <div class="revisao-item">
+      <div class="revisao-day">📅 3 dias</div>
+      <div class="revisao-content">
+        <strong>Fazer:</strong> Questões Relâmpago — responder mentalmente antes de clicar. Refazer os erros.<br>
+        <strong>Focar em:</strong> Hipersensibilidades I-IV + tabela de confusões. TLRs.<br>
+        <strong>Tempo:</strong> 20 minutos
+      </div>
+    </div>
+    <div class="revisao-item">
+      <div class="revisao-day">📅 7 dias</div>
+      <div class="revisao-content">
+        <strong>Fazer:</strong> Quiz completo (10 questões) — anotar erros. Rever as pegadinhas.<br>
+        <strong>Focar em:</strong> Trasplante (tipos + rechazo) + Privilegio Inmunitario + Resposta Antitumoral.<br>
+        <strong>Tempo:</strong> 25 minutos
+      </div>
+    </div>
+    <div class="revisao-item">
+      <div class="revisao-day">📅 15 dias</div>
+      <div class="revisao-content">
+        <strong>Fazer:</strong> Resumo de Bolso (última etapa) — cobrir e tentar completar de memória.<br>
+        <strong>Focar em:</strong> Todos os tópicos de alta incidência. HIV. Anticuerpos e sua distribuição.<br>
+        <strong>Tempo:</strong> 20 minutos
+      </div>
+    </div>
+    <div class="revisao-item">
+      <div class="revisao-day">📅 30 dias / Véspera da prova</div>
+      <div class="revisao-content">
+        <strong>Fazer:</strong> Apenas o Resumo de Bolso + flashcards dos que ainda erra. NÃO estudar conteúdo novo.<br>
+        <strong>Focar em:</strong> Pegadinhas clássicas + mnemônicos. Confirmar as definições literais.<br>
+        <strong>Tempo:</strong> 30 minutos máximo
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== ETAPA 9: RESUMO DE BOLSO ======================== -->
+<div class="section" id="bolso">
+  <div class="section-label">Etapa 9 — Resumo de Bolso (1 página)</div>
+
+  <div class="bolso-grid">
+    <div class="bolso-card">
+      <h4>⭐ Linfócitos T CD4+</h4>
+      <ul>
+        <li><strong>Th1</strong>: Intracelulares → IFN-γ → Via Clásica Mac.</li>
+        <li><strong>Th2</strong>: Helmintos/alergias → IL-4,5,13 → Via Alternativa</li>
+        <li><strong>Th17</strong>: Hongos/extracel. → IL-17,22 → neutrófilos</li>
+        <li><strong>Treg</strong>: Regula tudo → <strong>FoxP3</strong></li>
+        <li><strong>Tfh</strong>: Determina isótipo de anticuerpo dos B</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ Hipersensibilidades</h4>
+      <ul>
+        <li><strong>Tipo I</strong>: IgE+mastocitos → minutos (anafilaxia)</li>
+        <li><strong>Tipo II</strong>: IgG/IgM+antígeno FIXO (fiebre reumática)</li>
+        <li><strong>Tipo III</strong>: Complexos CIRCULANTES (vasculitis)</li>
+        <li><strong>Tipo IV</strong>: SEM anticuerpos, 48-72h, linfócitos T</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ Anticuerpos</h4>
+      <ul>
+        <li><strong>IgG</strong>: Maior concentração plasmática (65%)</li>
+        <li><strong>IgA</strong>: Mucosas. <strong>IgA2</strong>: genitourinário</li>
+        <li><strong>IgM</strong>: Primeira resposta (pentâmero)</li>
+        <li><strong>IgE</strong>: Liga ao mastocito → alergia</li>
+        <li><strong>IgD</strong>: Receptor B virgem</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ MHC</h4>
+      <ul>
+        <li><strong>MHC I</strong>: Todas células nucleadas → CD8+</li>
+        <li><strong>MHC II</strong>: Só APCs → CD4+</li>
+        <li>APCs = dendríticas, macrófagos, linfócitos B</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ TLRs</h4>
+      <ul>
+        <li><strong>TLR1,2,6</strong>: Gram+ (peptidoglicano)</li>
+        <li><strong>TLR4</strong>: Gram− (LPS)</li>
+        <li><strong>TLR5</strong>: Flagelos</li>
+        <li><strong>TLR3,7,8</strong>: Vírus (RNA viral)</li>
+        <li><strong>TLR9</strong>: DNA bacteriano (CpG)</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ Trasplante</h4>
+      <ul>
+        <li><strong>Autólogo/Singênico</strong>: sem rechazo</li>
+        <li><strong>Alogênico</strong>: mesmo espécie, com rechazo</li>
+        <li><strong>Xenogênico</strong>: espécies diferentes, rechazo ++</li>
+        <li>Hiperagudo: imediato | Agudo: ≤6m | Crónico: &gt;6m</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>🔥 Pegadinhas</h4>
+      <ul>
+        <li>NK = INATA (não adaptativa!)</li>
+        <li>Anticuerpos = meio EXTRAcelular</li>
+        <li>Via alternativa = INDEPENDENTE de Ac</li>
+        <li>Tipo IV = SEM anticuerpos</li>
+        <li>FoxP3 = proteína (não citocina)</li>
+        <li>IgG &gt; IgM em concentração plasmática</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ HIV (pincelada)</h4>
+      <ul>
+        <li>Infecta: <strong>T CD4+</strong></li>
+        <li>Co-receptores: CCR5, CXCR4</li>
+        <li>CD4 &lt;200 = AIDS</li>
+        <li>Retrovírus (RNA→DNA)</li>
+        <li>Evasão: variação antigênica + integração ao genoma</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ Imunidade Antitumoral</h4>
+      <ul>
+        <li>CD8+ = principal executor (perforinas)</li>
+        <li>NK = detecta ausência de MHC I</li>
+        <li>Tumor expressa <strong>PD-L1</strong> para escapar</li>
+        <li>Pembrolizumab/Nivolumab = bloqueiam PD-L1</li>
+        <li>CAR-T = linfócitos modificados geneticamente</li>
+      </ul>
+    </div>
+
+    <div class="bolso-card">
+      <h4>⭐ Privilégio Imunitário</h4>
+      <ul>
+        <li><strong>Hemato-ocular</strong>: córnea avascular, PD-L1</li>
+        <li><strong>Hematoencefálica</strong>: microglía faz defesa</li>
+        <li><strong>Hematotesticular</strong>: TGF-β + testosterona</li>
+        <li><strong>Hematoplacentária</strong>: PD-L1 protege feto</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="alert alert-green" style="margin-top:20px;">
+    🧠 <strong>Mnemônico final:</strong> "Th1=Intracelular+IFN | Th2=Verme+IL4,5,13 | Th17=Fungo+IL17,22 | Treg=FoxP3 | Tipo IV sem Ac | NK=Inata | IgG=Maior | IgE=Mastocito | TLR4=Gram− | MHC1=Todas células→CD8 | MHC2=APCs→CD4"
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+let quizAcertos = 0;
+let quizTotal = 0;
+
+function responder(btn) {
+  const item = btn.closest('.quiz-item');
+  if (item.querySelector('.correct, .wrong')) return;
+  const correct = item.dataset.correct;
+  const chosen = btn.dataset.opt;
+  item.querySelectorAll('.quiz-opt').forEach(b => b.classList.add('disabled'));
+  item.querySelector(`[data-opt="${correct}"]`).classList.add('correct');
+  if (chosen !== correct) btn.classList.add('wrong');
+  else quizAcertos++;
+  quizTotal++;
+  item.querySelector('.quiz-explanation').classList.add('show');
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.style.display = 'block';
+  scoreEl.textContent = `✓ Pontuação: ${quizAcertos}/${quizTotal} questões`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inmunología — Cap. 17 | Trasplantes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0c1520;
+    --surface: #111e2e;
+    --card: #172638;
+    --border: #1f3550;
+    --accent: #38bdf8;
+    --accent2: #f87171;
+    --accent3: #34d399;
+    --accent4: #fbbf24;
+    --accent5: #a78bfa;
+    --text: #cee8fa;
+    --muted: #5a8aaa;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Source Sans 3', sans-serif; font-weight: 300; line-height: 1.7; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #060f1a 0%, #0d1e35 55%, #081525 100%);
+    padding: 3rem 2rem 2.5rem; text-align: center;
+    border-bottom: 2px solid var(--accent); position: relative; overflow: hidden;
+  }
+  .hero::before { content:''; position:absolute; top:-80px; left:-80px; width:260px; height:260px; background:radial-gradient(circle,rgba(56,189,248,0.13),transparent 70%); border-radius:50%; }
+  .hero::after  { content:''; position:absolute; bottom:-60px; right:-60px; width:200px; height:200px; background:radial-gradient(circle,rgba(248,113,113,0.1),transparent 70%); border-radius:50%; }
+  .hero-tag { font-family:'Fira Code',monospace; font-size:0.75rem; color:var(--accent); letter-spacing:3px; text-transform:uppercase; margin-bottom:0.8rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,2.8rem); color:var(--white); line-height:1.2; margin-bottom:0.6rem; }
+  .hero h1 span { color:var(--accent); }
+  .hero p { color:var(--muted); font-size:0.9rem; }
+
+  /* TABS */
+  .tabs-wrapper { background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; overflow-x:auto; }
+  .tabs { display:flex; max-width:1150px; margin:0 auto; padding:0 1rem; }
+  .tab-btn {
+    background:none; border:none; color:var(--muted);
+    font-family:'Source Sans 3',sans-serif; font-size:0.82rem; font-weight:600;
+    padding:1rem 1.2rem; cursor:pointer; white-space:nowrap;
+    border-bottom:3px solid transparent; transition:all 0.2s; text-transform:uppercase; letter-spacing:0.8px;
+  }
+  .tab-btn:hover { color:var(--text); }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  /* CONTENT */
+  .content { max-width:1150px; margin:0 auto; padding:2.5rem 1.5rem; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTION INTRO */
+  .section-intro {
+    background:linear-gradient(135deg,var(--card),#102030);
+    border:1px solid var(--border); border-left:4px solid var(--accent);
+    border-radius:8px; padding:1.5rem 1.8rem; margin-bottom:2rem;
+  }
+  .section-intro h2 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--white); margin-bottom:0.4rem; }
+  .section-intro p { color:var(--muted); font-size:0.95rem; }
+
+  /* GRIDS */
+  .grid { display:grid; gap:1.2rem; }
+  .grid-2 { grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .grid-3 { grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+  .grid-4 { grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); }
+
+  /* CARDS */
+  .card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; padding:1.4rem 1.6rem;
+    transition:border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { transform:translateY(-2px); }
+  .card-icon { font-size:1.5rem; margin-bottom:0.6rem; }
+  .card h3 { font-size:0.93rem; font-weight:600; color:var(--accent); margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.5px; }
+  .card p, .card li { font-size:0.87rem; color:var(--text); line-height:1.6; }
+  .card ul { padding-left:1.1rem; }
+  .card li { margin-bottom:0.28rem; }
+  .c-red h3    { color:var(--accent2); } .c-red:hover    { border-color:var(--accent2); }
+  .c-green h3  { color:var(--accent3); } .c-green:hover  { border-color:var(--accent3); }
+  .c-yellow h3 { color:var(--accent4); } .c-yellow:hover { border-color:var(--accent4); }
+  .c-purple h3 { color:var(--accent5); } .c-purple:hover { border-color:var(--accent5); }
+
+  /* HIGHLIGHT */
+  .highlight { background:rgba(56,189,248,0.07); border:1px solid rgba(56,189,248,0.25); border-radius:8px; padding:1.2rem 1.5rem; margin:1.5rem 0; }
+  .highlight.warn    { background:rgba(251,191,36,0.07);  border-color:rgba(251,191,36,0.3);  }
+  .highlight.danger  { background:rgba(248,113,113,0.07); border-color:rgba(248,113,113,0.3); }
+  .highlight.success { background:rgba(52,211,153,0.07);  border-color:rgba(52,211,153,0.3);  }
+  .highlight strong  { color:var(--accent); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:0.4rem; }
+  .highlight.warn strong    { color:var(--accent4); }
+  .highlight.danger strong  { color:var(--accent2); }
+  .highlight.success strong { color:var(--accent3); }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; margin:1.5rem 0; }
+  table { width:100%; border-collapse:collapse; font-size:0.86rem; }
+  thead tr { background:linear-gradient(90deg,#0a3050,#0e4a78); color:#fff; }
+  th { padding:0.75rem 1rem; text-align:left; font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px; }
+  td { padding:0.65rem 1rem; border-bottom:1px solid var(--border); color:var(--text); vertical-align:top; }
+  tbody tr:hover { background:rgba(56,189,248,0.04); }
+  tbody tr:nth-child(even) { background:rgba(255,255,255,0.02); }
+
+  /* BADGE */
+  .badge { display:inline-block; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.72rem; font-weight:600; margin:0.1rem; }
+  .badge-blue   { background:rgba(56,189,248,0.15);  color:var(--accent);  border:1px solid rgba(56,189,248,0.3);  }
+  .badge-red    { background:rgba(248,113,113,0.15); color:var(--accent2); border:1px solid rgba(248,113,113,0.3); }
+  .badge-green  { background:rgba(52,211,153,0.15);  color:var(--accent3); border:1px solid rgba(52,211,153,0.3);  }
+  .badge-yellow { background:rgba(251,191,36,0.15);  color:var(--accent4); border:1px solid rgba(251,191,36,0.3);  }
+  .badge-purple { background:rgba(167,139,250,0.15); color:var(--accent5); border:1px solid rgba(167,139,250,0.3); }
+
+  h2.sec { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--white); margin:2rem 0 1rem; }
+  h3.sub { font-size:0.9rem; font-weight:600; color:var(--accent); margin:1.4rem 0 0.6rem; text-transform:uppercase; letter-spacing:0.5px; }
+
+  /* TIPO INJERTO - visual cards */
+  .tipo-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0; border:1px solid var(--border); border-radius:12px; overflow:hidden; margin:1.5rem 0; }
+  .tipo-col { padding:1.4rem; border-right:1px solid var(--border); }
+  .tipo-col:last-child { border-right:none; }
+  .tipo-col h4 { font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:0.3rem; }
+  .tipo-col .tipo-prefijo { font-family:'Fira Code',monospace; font-size:1.1rem; font-weight:500; margin-bottom:0.5rem; display:block; }
+  .tipo-col .tipo-tag { font-size:0.75rem; display:inline-block; padding:0.15rem 0.5rem; border-radius:12px; margin-bottom:0.6rem; font-weight:600; }
+  .tipo-col li { font-size:0.83rem; color:var(--text); line-height:1.5; margin-bottom:0.25rem; }
+  .tipo-col ul { padding-left:1rem; }
+  .tipo-auto   { background:rgba(52,211,153,0.05); }
+  .tipo-auto   h4 { color:var(--accent3); }
+  .tipo-auto   .tipo-prefijo { color:var(--accent3); }
+  .tipo-auto   .tipo-tag  { background:rgba(52,211,153,0.15); color:var(--accent3); }
+  .tipo-singen { background:rgba(56,189,248,0.05); }
+  .tipo-singen h4 { color:var(--accent); }
+  .tipo-singen .tipo-prefijo { color:var(--accent); }
+  .tipo-singen .tipo-tag  { background:rgba(56,189,248,0.15); color:var(--accent); }
+  .tipo-alogen { background:rgba(251,191,36,0.05); }
+  .tipo-alogen h4 { color:var(--accent4); }
+  .tipo-alogen .tipo-prefijo { color:var(--accent4); }
+  .tipo-alogen .tipo-tag  { background:rgba(251,191,36,0.15); color:var(--accent4); }
+  .tipo-xenogen{ background:rgba(248,113,113,0.05); }
+  .tipo-xenogen h4 { color:var(--accent2); }
+  .tipo-xenogen .tipo-prefijo { color:var(--accent2); }
+  .tipo-xenogen .tipo-tag  { background:rgba(248,113,113,0.15); color:var(--accent2); }
+
+  /* RECHAZO TIMELINE */
+  .rechazo-timeline { display:flex; flex-direction:column; gap:0; margin:1.5rem 0; }
+  .rechazo-item { display:flex; gap:1.2rem; padding:1.4rem 1.6rem; border:1px solid var(--border); align-items:flex-start; }
+  .rechazo-item:first-child { border-radius:10px 10px 0 0; }
+  .rechazo-item:last-child  { border-radius:0 0 10px 10px; }
+  .rechazo-item + .rechazo-item { border-top:none; }
+  .rechazo-hiper { background:linear-gradient(90deg,rgba(248,113,113,0.08),transparent); }
+  .rechazo-agudo { background:linear-gradient(90deg,rgba(251,191,36,0.08),transparent); }
+  .rechazo-cron  { background:linear-gradient(90deg,rgba(167,139,250,0.08),transparent); }
+  .rechazo-marker { flex-shrink:0; text-align:center; min-width:80px; }
+  .rechazo-marker .rm-icon { font-size:1.8rem; display:block; margin-bottom:0.3rem; }
+  .rechazo-marker .rm-time { font-family:'Fira Code',monospace; font-size:0.7rem; font-weight:500; }
+  .rechazo-hiper .rm-time { color:var(--accent2); }
+  .rechazo-agudo .rm-time { color:var(--accent4); }
+  .rechazo-cron  .rm-time { color:var(--accent5); }
+  .rechazo-body h4 { font-size:1rem; font-weight:700; margin-bottom:0.5rem; }
+  .rechazo-hiper .rechazo-body h4 { color:var(--accent2); }
+  .rechazo-agudo .rechazo-body h4 { color:var(--accent4); }
+  .rechazo-cron  .rechazo-body h4 { color:var(--accent5); }
+  .rechazo-body ul { padding-left:1.1rem; }
+  .rechazo-body li { font-size:0.86rem; color:var(--text); margin-bottom:0.3rem; line-height:1.5; }
+
+  /* ABO VISUAL */
+  .abo-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .abo-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.2rem; text-align:center; }
+  .abo-card .abo-tipo { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; margin-bottom:0.4rem; }
+  .abo-card h4 { font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:0.6rem; }
+  .abo-card .abo-ag  { font-size:0.82rem; margin-bottom:0.2rem; }
+  .abo-card .abo-ac  { font-size:0.82rem; margin-bottom:0.2rem; }
+  .abo-card .abo-don { font-size:0.78rem; color:var(--muted); }
+  .tipo-A  .abo-tipo { color:#f87171; }
+  .tipo-B  .abo-tipo { color:var(--accent); }
+  .tipo-AB .abo-tipo { color:var(--accent5); }
+  .tipo-O  .abo-tipo { color:var(--accent3); }
+  .tipo-O  { border-color:rgba(52,211,153,0.4); }
+  .tipo-AB { border-color:rgba(167,139,250,0.4); }
+
+  /* DRUG CARD */
+  .drug-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; margin:1.5rem 0; }
+  .drug-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.3rem 1.5rem; position:relative; overflow:hidden; }
+  .drug-card::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; }
+  .drug-ciclo::before { background:var(--accent3); }
+  .drug-cort::before  { background:var(--accent4); }
+  .drug-card h4 { font-family:'Fira Code',monospace; font-size:1rem; margin-bottom:0.3rem; }
+  .drug-ciclo h4 { color:var(--accent3); }
+  .drug-cort  h4 { color:var(--accent4); }
+  .drug-card .drug-mec { font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.8rem; font-family:'Fira Code',monospace; }
+  .drug-card ul { padding-left:1rem; }
+  .drug-card li { font-size:0.85rem; color:var(--text); margin-bottom:0.3rem; line-height:1.5; }
+
+  /* FLOW */
+  .flow { display:flex; flex-wrap:wrap; margin:1.5rem 0; }
+  .flow-step { flex:1; min-width:120px; background:var(--card); border:1px solid var(--border); padding:1rem; text-align:center; position:relative; }
+  .flow-step:not(:last-child)::after { content:'→'; position:absolute; right:-13px; top:50%; transform:translateY(-50%); color:var(--accent); font-size:1.1rem; z-index:1; }
+  .flow-step:first-child { border-radius:8px 0 0 8px; }
+  .flow-step:last-child  { border-radius:0 8px 8px 0; }
+  .flow-step .num { display:inline-block; width:26px; height:26px; border-radius:50%; background:var(--accent); color:#0c1520; font-weight:700; font-size:0.82rem; line-height:26px; margin-bottom:0.4rem; }
+  .flow-step strong { display:block; font-size:0.84rem; color:var(--white); margin-bottom:0.15rem; }
+  .flow-step p { font-size:0.78rem; color:var(--muted); line-height:1.4; }
+
+  /* QUIZ */
+  .quiz-box { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1.6rem; margin-bottom:1.2rem; }
+  .quiz-q { font-weight:600; color:var(--white); margin-bottom:1rem; font-size:0.95rem; }
+  .quiz-q span { display:inline-block; background:var(--accent); color:#0c1520; border-radius:50%; width:24px; height:24px; line-height:24px; text-align:center; font-size:0.78rem; font-weight:700; margin-right:0.5rem; }
+  .options { display:flex; flex-direction:column; gap:0.5rem; }
+  .opt-btn { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:var(--text); font-family:'Source Sans 3',sans-serif; font-size:0.87rem; cursor:pointer; text-align:left; transition:all 0.2s; }
+  .opt-btn:hover { border-color:var(--accent); color:var(--white); }
+  .opt-btn.correct { background:rgba(52,211,153,0.12); border-color:var(--accent3); color:var(--accent3); }
+  .opt-btn.wrong   { background:rgba(248,113,113,0.12); border-color:#f87171; color:#f87171; }
+  .feedback { margin-top:0.8rem; padding:0.7rem 1rem; border-radius:6px; font-size:0.85rem; display:none; }
+  .feedback.show { display:block; }
+  .feedback.ok  { background:rgba(52,211,153,0.09); color:var(--accent3); border:1px solid rgba(52,211,153,0.2); }
+  .feedback.err { background:rgba(248,113,113,0.09); color:#f87171; border:1px solid rgba(248,113,113,0.2); }
+
+  @media(max-width:640px){
+    .tipo-grid { grid-template-columns:1fr; }
+    .tipo-col { border-right:none; border-bottom:1px solid var(--border); }
+    .tipo-col:last-child { border-bottom:none; }
+    .flow { flex-direction:column; }
+    .flow-step:not(:last-child)::after { display:none; }
+    .flow-step { border-radius:8px !important; border:1px solid var(--border); margin-bottom:0.5rem; }
+    .rechazo-item { flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Inmunología · Cap. 17 · Abbas</div>
+  <h1><span>Trasplantes</span>:<br>Tipos, Rechazos, ABO y Médula Ósea</h1>
+  <p>Prof. Geovani Meireles &nbsp;|&nbsp; Resumen de estudio · Cristiano Ribeiro</p>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('conceptos')">🔬 Conceptos Base</button>
+    <button class="tab-btn" onclick="switchTab('tipos')">🧩 Tipos de Injerto</button>
+    <button class="tab-btn" onclick="switchTab('rechazo')">⚡ Rechazos</button>
+    <button class="tab-btn" onclick="switchTab('abo')">🩸 Sistema ABO</button>
+    <button class="tab-btn" onclick="switchTab('medula')">🦴 Médula Ósea</button>
+    <button class="tab-btn" onclick="switchTab('tratamiento')">💊 Tratamiento</button>
+    <button class="tab-btn" onclick="switchTab('quiz')">📝 Quiz</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ===== CONCEPTOS BASE ===== -->
+  <div class="tab-panel active" id="conceptos">
+    <div class="section-intro">
+      <h2>Capítulo 17 — Inmunología de los Trasplantes</h2>
+      <p>Un trasplante es la transferencia de células, tejidos u órganos (injertos) de un individuo a otro. La mayor limitación es la <strong>respuesta inmunológica del receptor</strong> — el rechazo. Entender por qué ocurre es entender la inmunología del MHC.</p>
+    </div>
+
+    <h2 class="sec">📖 Vocabulario Esencial</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-icon">🎁</div>
+        <h3>Donador</h3>
+        <p>Quien <strong>provee</strong> el injerto. Puede ser vivo (donación de riñón, hígado parcial) o fallecido (corazón, pulmón, riñón).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛏️</div>
+        <h3>Receptor / Hospedero</h3>
+        <p>Quien <strong>recibe</strong> el injerto. Su sistema inmune reconocerá las moléculas del donador como extrañas y montará la respuesta de rechazo.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h3>Injerto</h3>
+        <p>El material trasplantado: célula, tejido u órgano. Su destino depende de la compatibilidad inmunológica entre donador y receptor.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:1.2rem;">
+      <div class="card c-green">
+        <div class="card-icon">📍</div>
+        <h3>Ortotópico</h3>
+        <p>El injerto se inserta en el <strong>mismo lugar anatómico</strong> que el órgano original. Ej: trasplante de corazón en la cavidad torácica.</p>
+      </div>
+      <div class="card c-purple">
+        <div class="card-icon">🔀</div>
+        <h3>Heterotópico</h3>
+        <p>El injerto se inserta en un lugar <strong>diferente</strong> al original. Ej: riñón trasplantado en la fosa ilíaca (no en el retroperitoneo original).</p>
+      </div>
+    </div>
+
+    <h2 class="sec">🎭 El protagonista del rechazo: el MHC</h2>
+    <div class="card" style="border-left:4px solid var(--accent);">
+      <div class="card-icon">🧬</div>
+      <h3>¿Por qué el MHC es el problema?</h3>
+      <p style="margin-bottom:0.8rem;">Las moléculas del MHC (= HLA en humanos) son <strong>altamente polimórficas</strong> — hay miles de variantes alélicas diferentes. La probabilidad de que dos individuos no relacionados tengan el mismo HLA es muy baja. Cuando el receptor recibe un órgano con HLA diferente, sus LT reconocen esas moléculas como extrañas y montan una respuesta potente.</p>
+      <ul>
+        <li>Los antígenos del donador se llaman <strong>aloantigenos</strong> (trasplante de misma especie) o <strong>xenoantigenos</strong> (especie diferente)</li>
+        <li>Los LT del receptor que reconocen estos antígenos son <strong>células aloreactivas</strong></li>
+        <li>El reconocimiento puede ocurrir por <strong>vía directa</strong> (CD del donador presenta en el ganglio del receptor) o <strong>vía indirecta</strong> (APC del receptor procesa y presenta peptidos del donador)</li>
+      </ul>
+    </div>
+
+    <div class="highlight">
+      <strong>💡 Vía directa vs. indirecta — distinción clave</strong>
+      <strong>Vía directa:</strong> Las CDs del donador viajan al ganglio del receptor y presentan antígenos directamente a los LT del receptor. Muy potente — responsable del rechazo agudo precoz.<br><br>
+      <strong>Vía indirecta:</strong> Las APCs del <em>receptor</em> capturan y procesan fragmentos del injerto, presentándolos como si fueran antígenos normales. Más lenta — contribuye al rechazo crónico.
+    </div>
+  </div>
+
+  <!-- ===== TIPOS ===== -->
+  <div class="tab-panel" id="tipos">
+    <div class="section-intro">
+      <h2>Tipos de Injerto</h2>
+      <p>La clasificación del injerto determina si habrá o no respuesta inmunológica de rechazo. La regla fundamental: cuanto mayor la diferencia genética entre donador y receptor, mayor el rechazo.</p>
+    </div>
+
+    <div class="tipo-grid">
+      <!-- AUTÓLOGO -->
+      <div class="tipo-col tipo-auto">
+        <span class="tipo-prefijo">Auto-</span>
+        <h4>Autólogo / Auto-injerto</h4>
+        <span class="tipo-tag">✅ Sin rechazo</span>
+        <ul>
+          <li>Trasplante del individuo <strong>para sí mismo</strong></li>
+          <li>No desarrolla respuesta inmunológica</li>
+          <li>El receptor y el donador son la <strong>misma persona</strong></li>
+          <li><strong>Ejemplo:</strong> injerto de piel (quemados), injerto de vena safena para bypass, injerto de tendón</li>
+        </ul>
+      </div>
+      <!-- SINGÉNICO -->
+      <div class="tipo-col tipo-singen">
+        <span class="tipo-prefijo">Iso-</span>
+        <h4>Singénico</h4>
+        <span class="tipo-tag">✅ Sin rechazo</span>
+        <ul>
+          <li>Entre individuos de <strong>misma carga genética</strong></li>
+          <li>No desarrolla respuesta inmunológica</li>
+          <li>Solo posible en <strong>gemelos idénticos (monocigotos)</strong></li>
+          <li>Raros en la práctica clínica</li>
+        </ul>
+      </div>
+      <!-- ALOGÉNICO -->
+      <div class="tipo-col tipo-alogen">
+        <span class="tipo-prefijo">Alo-</span>
+        <h4>Alogénico</h4>
+        <span class="tipo-tag">⚠️ Rechazo probable</span>
+        <ul>
+          <li>Entre individuos de <strong>misma especie</strong> pero genética diferente</li>
+          <li><strong>Gran mayoría</strong> de los trasplantes clínicos</li>
+          <li>El injerto es rechazado sin inmunosupresión</li>
+          <li>Antígenos del donador = <strong>aloantigenos</strong></li>
+          <li>Ejemplo: trasplante renal, cardíaco, hepático</li>
+        </ul>
+      </div>
+      <!-- XENOGÉNICO -->
+      <div class="tipo-col tipo-xenogen">
+        <span class="tipo-prefijo">Xeno-</span>
+        <h4>Xenogénico</h4>
+        <span class="tipo-tag">🚨 Altamente rechazado</span>
+        <ul>
+          <li>Entre individuos de <strong>especies distintas</strong></li>
+          <li>Altamente rechazado — barreras inmunológicas y moleculares</li>
+          <li>Antígenos = <strong>xenoantigenos</strong></li>
+          <li>Aún en estudio; demanda &gt; oferta justifica investigación</li>
+          <li>Ej: válvulas porcinas, investigación com cerdos humanizados</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight warn">
+      <strong>⚠️ Punto de examen — la escala del rechazo</strong>
+      Autólogo = Singénico (sin rechazo) → Alogénico (rechazo moderado a severo sin inmunosupresión) → Xenogénico (rechazo fulminante). La intensidad del rechazo es proporcional a la <strong>distancia genética</strong> entre donador y receptor, especialmente en los loci del HLA.
+    </div>
+  </div>
+
+  <!-- ===== RECHAZO ===== -->
+  <div class="tab-panel" id="rechazo">
+    <div class="section-intro">
+      <h2>Tipos de Rechazo</h2>
+      <p>Los rechazos se clasifican según el <strong>tiempo de aparición</strong> y las <strong>características histopatológicas</strong>. Cada tipo tiene mecanismo inmunológico y presentación clínica diferente.</p>
+    </div>
+
+    <div class="rechazo-timeline">
+
+      <!-- HIPERAGUDO -->
+      <div class="rechazo-item rechazo-hiper">
+        <div class="rechazo-marker">
+          <span class="rm-icon">⚡</span>
+          <div class="rm-time">Minutos a Horas</div>
+        </div>
+        <div class="rechazo-body">
+          <h4>🔴 Rechazo Hiperagudo</h4>
+          <ul>
+            <li><strong>Oclusión trombótica</strong> de los vasos sanguíneos del injerto</li>
+            <li>Causado por <strong>anticuerpos pre-existentes</strong> en el receptor que reconocen antígenos del donador</li>
+            <li>Los anticuerpos se unen al endotelio del donador → activación del complemento → trombosis → isquemia → necrosis del órgano</li>
+            <li>Principal causa: incompatibilidad del <strong>sistema ABO</strong></li>
+            <li>También: anticuerpos anti-HLA previos (por transfusiones, embarazos previos, trasplantes anteriores)</li>
+            <li><strong>Irreversible</strong> — el órgano se pierde</li>
+            <li>Se previene con tipificación ABO previa y prueba cruzada (<em>crossmatch</em>)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- AGUDO -->
+      <div class="rechazo-item rechazo-agudo">
+        <div class="rechazo-marker">
+          <span class="rm-icon">🔥</span>
+          <div class="rm-time">Días a Semanas</div>
+        </div>
+        <div class="rechazo-body">
+          <h4>🟡 Rechazo Agudo</h4>
+          <ul>
+            <li>Lesión <strong>vascular y parenquimatosa</strong> mediada por LT y anticuerpos</li>
+            <li><strong>LT CD8+ (CTL):</strong> lisis directa de las células del injerto que expresan MHC I del donador</li>
+            <li><strong>LT CD4+ (Th1):</strong> producción de citocinas inflamatorias → daño tisular</li>
+            <li>Necrosis de vasos con alta inflamación local</li>
+            <li>Aparece semanas después del trasplante</li>
+            <li><strong>Tratable</strong> con aumento de inmunosupresión (corticoides en pulso, anticuerpos anti-LT)</li>
+            <li>Principal causa de pérdida del injerto en el primer año</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CRÓNICO -->
+      <div class="rechazo-item rechazo-cron">
+        <div class="rechazo-marker">
+          <span class="rm-icon">🔄</span>
+          <div class="rm-time">Meses a Años</div>
+        </div>
+        <div class="rechazo-body">
+          <h4>🟣 Rechazo Crónico</h4>
+          <ul>
+            <li>Intensa producción de <strong>citocinas por macrófagos</strong></li>
+            <li>Estimulan la proliferación de <strong>células musculares lisas</strong> en la pared de los vasos</li>
+            <li>Engrosamiento progresivo de la íntima arterial → <strong>oclusión arterial lenta</strong></li>
+            <li>Isquemia progresiva y pérdida gradual de función del órgano</li>
+            <li>También mediado por anticuerpos anti-HLA del receptor</li>
+            <li><strong>Difícilmente reversible</strong> — es la principal causa de pérdida tardía del injerto</li>
+            <li>No responde bien a la inmunosupresión convencional</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="sec">📊 Resumen Comparativo</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Tipo</th><th>Tiempo</th><th>Mecanismo</th><th>Actor principal</th><th>Tratable?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-red">Hiperagudo</span></td>
+            <td>Minutos–horas</td>
+            <td>Anticuerpos preformados + complemento → trombosis</td>
+            <td>IgG/IgM pre-existentes</td>
+            <td>No — órgano se pierde</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">Agudo</span></td>
+            <td>Días–semanas</td>
+            <td>LT CD8+ mata células; LT CD4+ produce citocinas</td>
+            <td>CTL (CD8+) + Th1 (CD4+)</td>
+            <td>Sí — corticoides en pulso</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-purple">Crónico</span></td>
+            <td>Meses–años</td>
+            <td>Citocinas de MØ → proliferación muscular → oclusión</td>
+            <td>Macrófagos + Ac anti-HLA</td>
+            <td>Poco — difícilmente reversible</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== ABO ===== -->
+  <div class="tab-panel" id="abo">
+    <div class="section-intro">
+      <h2>Sistema ABO y Transfusiones</h2>
+      <p>El sistema ABO es la barrera inmunológica más básica en trasplantes y transfusiones. Los anticuerpos anti-ABO son <strong>naturales</strong> — existen sin exposición previa al antígeno — y son la causa del rechazo hiperagudo más clásico.</p>
+    </div>
+
+    <div class="highlight danger">
+      <strong>🚨 Los anticuerpos ABO son naturales (no requieren sensibilización)</strong>
+      A diferencia de los anticuerpos anti-HLA que requieren exposición previa (embarazos, transfusiones, trasplantes), los anticuerpos ABO existen desde el primer año de vida, probablemente estimulados por bacterias intestinales con antígenos similares. Por eso una transfusión ABO incompatible puede causar hemólisis fulminante desde la primera exposición.
+    </div>
+
+    <h2 class="sec">🩸 Los 4 Grupos Sanguíneos</h2>
+    <div class="abo-grid">
+      <div class="abo-card tipo-A">
+        <div class="abo-tipo">A</div>
+        <h4>Grupo A</h4>
+        <div class="abo-ag">🔴 Antígeno: <strong>A</strong></div>
+        <div class="abo-ac">💧 Anticuerpos: <strong>Anti-B</strong></div>
+        <div class="abo-don">Dona a: A, AB</div>
+      </div>
+      <div class="abo-card tipo-B">
+        <div class="abo-tipo">B</div>
+        <h4>Grupo B</h4>
+        <div class="abo-ag">🔵 Antígeno: <strong>B</strong></div>
+        <div class="abo-ac">💧 Anticuerpos: <strong>Anti-A</strong></div>
+        <div class="abo-don">Dona a: B, AB</div>
+      </div>
+      <div class="abo-card tipo-AB">
+        <div class="abo-tipo">AB</div>
+        <h4>Grupo AB</h4>
+        <div class="abo-ag">🟣 Antígenos: <strong>A y B</strong></div>
+        <div class="abo-ac">💧 Anticuerpos: <strong>Ninguno</strong></div>
+        <div class="abo-don">Receptor universal — recibe de todos</div>
+      </div>
+      <div class="abo-card tipo-O">
+        <div class="abo-tipo">O</div>
+        <h4>Grupo O</h4>
+        <div class="abo-ag">⚪ Antígeno: <strong>Ninguno</strong></div>
+        <div class="abo-ac">💧 Anticuerpos: <strong>Anti-A y Anti-B</strong></div>
+        <div class="abo-don">Donador universal — dona a todos</div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔄 Sistema Rhesus (Rh)</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-icon">➕</div>
+        <h3>Rh Positivo (Rh+)</h3>
+        <ul>
+          <li>Posee el antígeno <strong>D</strong> en la superficie del eritrocito</li>
+          <li>Más frecuente (~85% de la población)</li>
+          <li>No produce anti-D espontáneamente</li>
+        </ul>
+      </div>
+      <div class="card c-red">
+        <div class="card-icon">➖</div>
+        <h3>Rh Negativo (Rh−)</h3>
+        <ul>
+          <li>No posee el antígeno D</li>
+          <li>Si se expone a sangre Rh+ → produce <strong>anti-D</strong></li>
+          <li>Relevante en gestación: madre Rh− + feto Rh+ → eritroblastosis fetal</li>
+          <li>Prevenible con <strong>inmunoglobulina anti-D (Rhogam)</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight warn">
+      <strong>⚠️ Transfusión sanguínea — barrera inmunológica</strong>
+      La transfusión es una forma de trasplante celular. La principal barrera son las respuestas contra los antígenos de superficie de los eritrocitos. Una transfusión ABO incompatible causa hemólisis aguda intravascular → choque anafiláctico → fallo renal → muerte. Prevenible con tipificación previa.
+    </div>
+  </div>
+
+  <!-- ===== MÉDULA ÓSEA ===== -->
+  <div class="tab-panel" id="medula">
+    <div class="section-intro">
+      <h2>Trasplante de Médula Ósea</h2>
+      <p>El trasplante de médula ósea es el único trasplante donde el injerto (las células del donador) puede atacar al receptor. Este fenómeno único se llama <strong>GVHD</strong> — Enfermedad de Injerto contra Huésped.</p>
+    </div>
+
+    <h2 class="sec">🎯 ¿Qué se trasplanta?</h2>
+    <div class="card" style="border-left:4px solid var(--accent); margin-bottom:1.5rem;">
+      <div class="card-icon">🧫</div>
+      <h3>Células Hematopoyéticas Indiferenciadas Pluripotentes</h3>
+      <ul>
+        <li>Células madre capaces de dar origen a <strong>todas las células sanguíneas</strong></li>
+        <li>Indicaciones: leucemias, linfomas, aplasia medular, inmunodeficiencias congénitas, corrección de hemoglobinopatías (anemia falciforme, talasemia)</li>
+        <li>Las células indiferenciadas son <strong>altamente rechazadas</strong></li>
+        <li>Necesidad de inmunosupresión casi completa del receptor</li>
+      </ul>
+    </div>
+
+    <h2 class="sec">⚙️ Pre-tratamiento: Condicionamiento</h2>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="num">1</div>
+        <strong>Quimioterapia + Radioterapia</strong>
+        <p>Destruye la médula del receptor para abrir "nichos"</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">2</div>
+        <strong>Inmunosupresión total</strong>
+        <p>Evita rechazo de las células del donador</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">3</div>
+        <strong>Infusión de células</strong>
+        <p>Células del donador migran y se alojan en la médula</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">4</div>
+        <strong>Engraftment</strong>
+        <p>Las células se establecen y comienzan a proliferar</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">5</div>
+        <strong>Reconstitución hematológica</strong>
+        <p>Nuevo sistema inmune del donador toma el control</p>
+      </div>
+    </div>
+
+    <h2 class="sec">☠️ GVHD — Enfermedad de Injerto contra Huésped</h2>
+    <div class="grid grid-2">
+      <div class="card c-red">
+        <div class="card-icon">⚔️</div>
+        <h3>¿Qué es GVHD?</h3>
+        <ul>
+          <li>Los <strong>LT del donador</strong> reconocen los tejidos del receptor como extraños</li>
+          <li>Atacan al receptor en lugar de protegerlo</li>
+          <li>El receptor (inmunosuprimido) no puede defenderse</li>
+          <li>Órganos blanco principales: <strong>piel, hígado, tracto gastrointestinal</strong></li>
+          <li>Puede ser aguda (semanas) o crónica (meses)</li>
+        </ul>
+      </div>
+      <div class="card c-red">
+        <div class="card-icon">🎯</div>
+        <h3>Manifestaciones clínicas</h3>
+        <ul>
+          <li><strong>Piel:</strong> muerte de células epiteliales → rash, descamación</li>
+          <li><strong>Hígado:</strong> hepatitis por LT donador → ictericia, elevación de enzimas</li>
+          <li><strong>Tubo digestivo:</strong> diarrea, vómito, dolor abdominal, malabsorción</li>
+          <li>Puede ser letal si es severa y no responde a tratamiento</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight danger">
+      <strong>🚨 GVHD — mecanismo inverso al rechazo convencional</strong>
+      En el rechazo normal: el receptor ataca al injerto.<br>
+      En GVHD: el injerto (LT del donador) ataca al receptor.<br><br>
+      Causas facilitadoras: (1) Incapacidad del receptor de generar un repertorio completo de células inmunes (por la quimio/radio), (2) Población de células supresoras "desenmascarada" por la radiación → favorece la activación de los LT del donador contra los tejidos del receptor.
+    </div>
+  </div>
+
+  <!-- ===== TRATAMIENTO ===== -->
+  <div class="tab-panel" id="tratamiento">
+    <div class="section-intro">
+      <h2>Prevención y Tratamiento del Rechazo</h2>
+      <p>La inmunosupresión es el pilar del manejo del trasplante. El desafío: suprimir la respuesta contra el injerto sin dejar al paciente vulnerable a infecciones y tumores.</p>
+    </div>
+
+    <div class="highlight">
+      <strong>⚖️ El gran dilema del trasplante</strong>
+      Demasiada inmunosupresión → infecciones oportunistas, tumores (ej: linfomas de células B asociados a VEB), toxicidad farmacológica.<br>
+      Poca inmunosupresión → rechazo agudo o crónico → pérdida del injerto.<br><br>
+      El objetivo es encontrar el <strong>equilibrio individualizado</strong> para cada paciente.
+    </div>
+
+    <h2 class="sec">💊 Principales Fármacos Inmunosupresores</h2>
+    <div class="drug-grid">
+      <div class="drug-card drug-ciclo">
+        <h4>Ciclosporina A</h4>
+        <div class="drug-mec">Inhibidora de IL-2</div>
+        <ul>
+          <li>Bloquea la <strong>calcineurina</strong> → impide transcripción de IL-2</li>
+          <li>Sin IL-2, los LT no proliferan → no hay respuesta de rechazo</li>
+          <li>Revolucionó la era del trasplante desde los años 80</li>
+          <li>Efectos adversos: nefrotoxicidad, hipertensión, hiperplasia gingival</li>
+          <li>Análogo: <strong>Tacrolimus (FK506)</strong> — mismo mecanismo, más potente</li>
+        </ul>
+      </div>
+      <div class="drug-card drug-cort">
+        <h4>Corticosteroides</h4>
+        <div class="drug-mec">Antiinflamatorios / Bloqueadores de Citocinas</div>
+        <ul>
+          <li>Disminuyen la <strong>inflamación</strong> local y sistémica</li>
+          <li>Bloquean producción de <strong>IL-1, TNF, IL-6</strong></li>
+          <li>Inhiben la activación de macrófagos y células dendríticas</li>
+          <li>Usados en el rechazo agudo (pulsos de metilprednisolona)</li>
+          <li>Uso crónico: Cushing iatrogénico, osteoporosis, DM</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">📋 Estrategias de Prevención del Rechazo</h2>
+    <div class="grid grid-3">
+      <div class="card c-green">
+        <div class="card-icon">🧬</div>
+        <h3>Tipificación HLA</h3>
+        <p>Antes del trasplante se compara el HLA del donador y receptor. Mayor compatibilidad → menor riesgo de rechazo. Obligatorio en trasplante renal y de médula.</p>
+      </div>
+      <div class="card c-green">
+        <div class="card-icon">🩸</div>
+        <h3>Tipificación ABO</h3>
+        <p>Compatibilidad ABO es obligatoria para evitar el rechazo hiperagudo. El <em>crossmatch</em> detecta anticuerpos preformados contra el donador específico.</p>
+      </div>
+      <div class="card c-green">
+        <div class="card-icon">💉</div>
+        <h3>Inmunosupresión de mantenimiento</h3>
+        <p>El receptor toma fármacos de por vida (ciclosporina, tacrolimus, micofenolato, prednisona). El esquema triple es el más común.</p>
+      </div>
+    </div>
+
+    <h2 class="sec">📌 Las Interleucinas en el Contexto de los Trasplantes</h2>
+    <div class="card" style="border-left:4px solid var(--accent4);">
+      <div class="card-icon">📡</div>
+      <h3>¿Por qué importan las interleucinas?</h3>
+      <p style="margin-bottom:0.7rem;">Las interleucinas son proteínas sintetizadas por leucocitos que sirven como <strong>mensajeros entre subpoblaciones inmunes</strong>. En el contexto del trasplante, son las responsables de coordinar el rechazo y también los blancos de los fármacos inmunosupresores.</p>
+      <ul>
+        <li><strong>IL-2:</strong> proliferación de LT → bloqueada por ciclosporina y tacrolimus</li>
+        <li><strong>IL-1:</strong> inflamación y activación de células → bloqueada por corticosteroides</li>
+        <li><strong>IL-6:</strong> respuesta de fase aguda y activación de LT → bloqueada por corticosteroides</li>
+        <li>Alteraciones de interleucinas se asocian con enfermedades autoinmunes, raras e inmunodeficiencias</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div class="tab-panel" id="quiz">
+    <div class="section-intro">
+      <h2>📝 Quiz de Autoevaluación — Cap. 17</h2>
+      <p>8 preguntas sobre trasplantes, rechazos y sistema ABO.</p>
+    </div>
+
+    <!-- Q1 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>1</span> Un paciente recibe un trasplante renal de un donador ABO incompatible. Minutos después del implante, el órgano se vuelve negro y cianótico. ¿Cuál tipo de rechazo ocurrió?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! El rechazo hiperagudo ocurre minutos a horas después del trasplante. Es causado por anticuerpos ABO preformados que se unen al endotelio del injerto → complemento → trombosis → isquemia → necrosis. Es irreversible y el órgano se pierde.')">Rechazo hiperagudo — anticuerpos ABO preformados</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El rechazo agudo ocurre días a semanas después y es mediado por LT, no por anticuerpos preformados. No sería tan rápido.')">Rechazo agudo — mediado por LT CD8+</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El rechazo crónico es un proceso lento de meses a años, no minutos.')">Rechazo crónico — proliferación de músculo liso arterial</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>2</span> ¿Cuál mecanismo distingue el rechazo agudo del hiperagudo?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Ambos tipos de rechazo pueden involucrar anticuerpos. La distinción no es solo el tipo de molécula sino el mecanismo y velocidad.')">El rechazo agudo involucra IgA, el hiperagudo involucra IgG</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! El rechazo hiperagudo se debe a anticuerpos PRE-EXISTENTES (ya circulaban antes del trasplante). El rechazo agudo involucra LT CD8+ (lisis) y CD4+ (citocinas inflamatorias) que se activan DESPUÉS de reconocer los antígenos del donador.')">El hiperagudo usa Ac preformados; el agudo usa LT activados post-trasplante</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El complemento puede participar en ambos tipos de rechazo. No es el factor diferenciador.')">El hiperagudo activa el complemento, el agudo no lo activa</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>3</span> La ciclosporina A previene el rechazo del trasplante. ¿Cuál es su mecanismo de acción?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Los corticosteroides bloquean IL-1 y TNF. La ciclosporina tiene mecanismo específico sobre IL-2.')">Bloquea la producción de IL-1 e IL-6 por macrófagos</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La ciclosporina actúa en la producción de IL-2, no en la destrucción de LT. Los Ac anti-CD3 (muromonab) destruyen LT.')">Destruye los LT T directamente por apoptosis</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! La ciclosporina inhibe la calcineurina, una fosfatasa necesaria para que los LT produzcan IL-2. Sin IL-2, los LT no proliferan y no se activan para rechazar el injerto. Tacrolimus tiene el mismo mecanismo pero es más potente.')">Inhibe la calcineurina → bloquea la producción de IL-2 por LT</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>4</span> ¿Qué diferencia al GVHD (Enfermedad de Injerto contra Huésped) del rechazo convencional?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','Es exactamente al revés. En GVHD son los LT del donador los que atacan al receptor.')">En GVHD, los LT del receptor atacan al injerto</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! En el rechazo convencional: el receptor ataca el injerto. En GVHD (exclusivo del trasplante de médula ósea): los LT del donador atacan al receptor. Los órganos blanco son piel, hígado y tubo digestivo. El receptor no puede defenderse por estar inmunosuprimido.')">En GVHD, los LT del donador atacan los tejidos del receptor</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La GVHD ocurre específicamente en el trasplante de médula ósea, que es el único trasplante donde el injerto contiene LT funcionales.')">El GVHD ocurre en cualquier tipo de trasplante de órgano sólido</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>5</span> Un paciente del grupo O necesita una transfusión urgente. ¿Cuál grupo puede donar con seguridad?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','El grupo A tiene antígeno A en sus eritrocitos. El paciente O tiene anti-A → hemólisis aguda.')">Grupo A</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El grupo AB tiene antígenos A y B. El paciente O tiene anti-A y anti-B → reacción hemolítica grave.')">Grupo AB</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! El grupo O no tiene antígenos A ni B en sus eritrocitos. Por eso no hay anticuerpos en el receptor que los ataquen — es el donador universal de glóbulos rojos. (Nota: el plasma del grupo O sí tiene anti-A y anti-B, entonces el donador universal de plasma es el AB).')">Grupo O (donador universal)</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>6</span> ¿Por qué es necesario el acondicionamiento (quimio + radio) antes del trasplante de médula ósea?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','El acondicionamiento tiene el objetivo opuesto: destruir la médula existente para crear espacio para las nuevas células, no estimularla.')">Para estimular la médula del receptor a producir más células</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! El acondicionamiento (quimio + radio) sirve para: (1) destruir la médula enferma del receptor (ej: leucemia), (2) abrir "nichos" en la médula para que las células del donador puedan instalarse, (3) eliminar la inmunidad del receptor para evitar rechazo de las células trasplantadas.')">Destruir la médula existente y crear espacio para las células del donador</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El acondicionamiento elimina la inmunidad del receptor, lo que lo hace más susceptible a infecciones — el efecto es el contrario.')">Potenciar la respuesta inmune del receptor contra infecciones</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>7</span> ¿Cuál tipo de trasplante tiene la menor probabilidad de rechazo y por qué?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','El alogénico es el más común en la práctica, pero requiere inmunosupresión precisamente porque tiene alta probabilidad de rechazo.')">Alogénico — porque la compatibilidad HLA es evaluada antes</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! El auto-injerto (autólogo) o el singénico son los que tienen menor probabilidad de rechazo. En el autólogo el donador y receptor son la misma persona — el sistema inmune reconoce sus propias moléculas como propias y no monta respuesta. En el singénico (gemelos idénticos) ocurre lo mismo.')">Autólogo o singénico — mismo individuo o genética idéntica, no hay aloantigenos</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','El xenogénico tiene el mayor riesgo de rechazo de todos por las diferencias moleculares entre especies.')">Xenogénico — las diferencias de especie evitan la respuesta inmune</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="quiz-box">
+      <div class="quiz-q"><span>8</span> El rechazo crónico es el principal responsable de la pérdida tardía del injerto. ¿Cuál es su mecanismo histopatológico característico?</div>
+      <div class="options">
+        <button class="opt-btn" onclick="answer(this,'wrong','La trombosis aguda de vasos es el mecanismo del rechazo hiperagudo, no crónico.')">Trombosis aguda de vasos mediada por anticuerpos ABO</button>
+        <button class="opt-btn" onclick="answer(this,'wrong','La lisis de células parenquimatosas por CTL es el mecanismo del rechazo agudo mediado por LT CD8+.')">Lisis de células parenquimatosas por CTL (CD8+)</button>
+        <button class="opt-btn" onclick="answer(this,'correct','¡Correcto! En el rechazo crónico, los macrófagos producen citocinas que estimulan la proliferación de células musculares lisas en la pared vascular → engrosamiento progresivo de la íntima (arterioesclerosis acelerada) → oclusión arterial lenta → isquemia progresiva del órgano.')">Proliferación de músculo liso vascular → oclusión arterial progresiva</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+</div><!-- end content -->
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+function answer(btn, result, explanation) {
+  const box = btn.closest('.quiz-box');
+  if (box.dataset.answered) return;
+  box.dataset.answered = '1';
+  btn.classList.add(result);
+  box.querySelectorAll('.opt-btn').forEach(b => b.style.pointerEvents = 'none');
+  const fb = box.querySelector('.feedback');
+  fb.innerHTML = (result === 'correct' ? '✅ ' : '❌ ') + explanation;
+  fb.className = 'feedback show ' + (result === 'correct' ? 'ok' : 'err');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tolerância Imunológica & Treg — Guia do Iniciante</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #f7f4ef;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b6b80;
+    --accent1: #2d6a4f; /* verde imuno */
+    --accent2: #d62839; /* vermelho perigo/autoimune */
+    --accent3: #4361ee; /* azul células */
+    --accent4: #f77f00; /* laranja sinal */
+    --accent5: #7209b7; /* roxo Treg */
+    --border: #e0dbd0;
+    --light1: #e9f5ee;
+    --light2: #fdecea;
+    --light3: #eef1fd;
+    --light4: #fff3e0;
+    --light5: #f3e8ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(67,97,238,0.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(114,9,183,0.15) 0%, transparent 50%);
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #a8d8b9;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 700;
+    line-height: 1.2;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: #a8d8b9; }
+  .hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+    max-width: 580px;
+    position: relative;
+  }
+  .hero-badges {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; position: relative;
+  }
+  .badge {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* PROGRESS */
+  .progress-bar {
+    background: #e0dbd0;
+    height: 4px;
+    border-radius: 2px;
+    margin: 32px 0 0;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent3));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* SECTION HEADINGS */
+  .section-block { margin: 40px 0; }
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 18px;
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 24px 26px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card p { font-size: 14.5px; color: #333; line-height: 1.75; }
+  .card p + p { margin-top: 10px; }
+
+  /* ANALOGY BOX */
+  .analogy {
+    background: var(--light4);
+    border-left: 4px solid var(--accent4);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 20px;
+    margin: 16px 0;
+    font-size: 14.5px;
+  }
+  .analogy strong { color: var(--accent4); }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  th {
+    background: var(--text);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #faf9f6; }
+  tr:hover td { background: var(--light1); }
+
+  /* TWO COLS */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .mini-card {
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .mini-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .mini-card ul { padding-left: 16px; }
+  .mini-card li { margin-bottom: 5px; line-height: 1.5; }
+
+  /* MECHANISM FLOW */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 16px 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .flow-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .flow-step strong { display: block; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+
+  /* HIGHLIGHT */
+  .highlight {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .hl-green { background: var(--light1); color: var(--accent1); }
+  .hl-red { background: var(--light2); color: var(--accent2); }
+  .hl-blue { background: var(--light3); color: var(--accent3); }
+  .hl-purple { background: var(--light5); color: var(--accent5); }
+
+  /* QUIZ */
+  .quiz-section {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 16px;
+    padding: 32px 28px;
+    margin: 40px 0;
+    color: white;
+  }
+  .quiz-section h3 {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: #a8d8b9;
+  }
+  .quiz-section p { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 24px; }
+  .quiz-q {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .quiz-q p { color: white; font-size: 14.5px; margin-bottom: 14px; font-weight: 500; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-opt {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13.5px;
+    text-align: left;
+    transition: all 0.2s;
+  }
+  .quiz-opt:hover { background: rgba(255,255,255,0.12); }
+  .quiz-opt.correct { background: rgba(45,106,79,0.5); border-color: #a8d8b9; color: #a8d8b9; }
+  .quiz-opt.wrong { background: rgba(214,40,57,0.35); border-color: #f09; color: #faa; }
+  .quiz-feedback {
+    font-size: 13px;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: rgba(45,106,79,0.25); color: #a8d8b9; }
+  .quiz-feedback.err { background: rgba(214,40,57,0.25); color: #faa; }
+
+  /* MNEMONIC */
+  .mnemonic {
+    background: var(--light5);
+    border: 2px dashed var(--accent5);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 16px 0;
+  }
+  .mnemonic h4 { color: var(--accent5); font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+  .mnemonic p { font-size: 14px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  /* PILL TABS */
+  .tab-nav {
+    display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--text);
+    color: white;
+    border-color: var(--text);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* DIAGRAM */
+  .diagram {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 13.5px;
+  }
+  .diagram-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin: 8px 0; flex-wrap: wrap;
+  }
+  .d-box {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    min-width: 110px;
+  }
+  .d-arrow { font-size: 20px; color: var(--muted); }
+  .d-green { background: var(--light1); color: var(--accent1); border: 1.5px solid #a8d8b9; }
+  .d-blue { background: var(--light3); color: var(--accent3); border: 1.5px solid #b8c8f9; }
+  .d-red { background: var(--light2); color: var(--accent2); border: 1.5px solid #f8b4bb; }
+  .d-purple { background: var(--light5); color: var(--accent5); border: 1.5px solid #d8b8f9; }
+  .d-gray { background: #f0f0f0; color: #555; border: 1.5px solid #ccc; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Imunologia · Cap. 15 — Abbas</div>
+  <h1>Tolerância Imunológica<br>& <span>Células Treg</span></h1>
+  <p>Material didático para quem nunca viu o assunto. Do zero ao entendimento clínico, com analogias, diagramas e quiz.</p>
+  <div class="hero-badges">
+    <span class="badge">🎓 Nível iniciante</span>
+    <span class="badge">🧬 Imunologia</span>
+    <span class="badge">📖 Abbas Cap. 15</span>
+    <span class="badge">✅ Quiz incluído</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="section-block">
+    <div class="section-label" style="margin-top:36px;">
+      <div class="section-num" style="background:var(--accent3);">0</div>
+      <div class="section-title">Por que isso importa? O problema central</div>
+    </div>
+
+    <div class="card">
+      <p>Imagine que o seu sistema imunológico é um <strong>exército de soldados</strong> cujo trabalho é identificar e destruir inimigos (vírus, bactérias, células tumorais). Esse exército é <em>incrivelmente poderoso</em> — mas perigoso se atacar as células do próprio corpo.</p>
+      <p>A questão é: <strong>como o sistema imunológico aprende a não atacar o próprio corpo?</strong> A resposta é a <span class="highlight hl-blue">tolerância imunológica</span>. E as <span class="highlight hl-purple">células T reguladoras (Treg)</span> são os "oficiais de paz" que garantem que esse exército não entre em colapso.</p>
+    </div>
+
+    <div class="analogy">
+      <strong>🧠 Analogia:</strong> Pense no sistema imune como um detetive de aeroporto. Ele precisa identificar terroristas (patógenos), mas sem prender os passageiros inocentes (células do próprio corpo). A tolerância é o treinamento que ensina o detetive a distinguir um do outro.
+    </div>
+  </div>
+
+  <!-- BLOCO 1: TOLERÂNCIA -->
+  <div class="section-block">
+    <div class="section-label">
+      <div class="section-num" style="background:var(--accent1);">1</div>
+      <div class="section-title">O que é Tolerância Imunológica?</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📌 Definição simples</div>
+      <p><strong>Tolerância</strong> é a <em>não-resposta</em> do sistema imune a um antígeno específico, causada pela exposição prévia a esse antígeno.</p>
+      <p>Existem dois tipos de antígenos com efeitos opostos:</p>
+    </div>
+
+    <div class="two-col">
+      <div class="mini-card" style="background:var(--light1); border-color:#a8d8b9;">
+        <h4 style="color:var(--accent1);">🛡️ Tolerógenos</h4>
+        <ul>
+          <li>Induzem <strong>tolerância</strong></li>
+          <li>O sistema imune "ignora" o antígeno</li>
+          <li>Ex: antígenos próprios do corpo</li>
+        </ul>
+      </div>
+      <div class="mini-card" style="background:var(--light2); border-color:#f8b4bb;">
+        <h4 style="color:var(--accent2);">⚠️ Imunógenos</h4>
+        <ul>
+          <li>Induzem <strong>resposta imune</strong></li>
+          <li>O sistema ataca e elimina o antígeno</li>
+          <li>Ex: vírus, bactérias</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 Auto-tolerância</div>
+      <p>É a tolerância especificamente aos <strong>próprios antígenos do organismo</strong> (autoantígenos). Quando esse mecanismo falha, o sistema imune começa a atacar o próprio corpo — isso é chamado de <span class="highlight hl-red">autoimunidade</span>.</p>
+    </div>
+
+    <div class="mnemonic">
+      <h4>💡 Macete para fixar</h4>
+      <p><strong>Tol</strong>erância = <strong>Tol</strong>eramos o que é nosso &nbsp;|&nbsp; <strong>Imun</strong>ógeno = <strong>Imun</strong>idade (resposta) &nbsp;|&nbsp; <strong>Auto</strong>imunidade = sistema que <strong>auto</strong>-agride</p>
+    </div>
+  </div>
+
+  <!-- BLOCO 2: CENTRAL vs PERIFÉRICA -->
+  <div class="section-block">
+    <div class="section-label">
+      <div class="section-num" style="background:var(--accent3);">2</div>
+      <div class="section-title">Onde ocorre a tolerância? Central vs. Periférica</div>
+    </div>
+
+    <div class="card">
+      <p>A tolerância acontece em <strong>dois lugares diferentes</strong> do corpo, em momentos diferentes da vida de um linfócito:</p>
+    </div>
+
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="d-box d-blue">Medula Óssea<br><small>+ Timo</small></div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-green">Tolerância<br>CENTRAL</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-gray">Linfócito<br>"treinado"</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-purple">Órgãos<br>Periféricos</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-green">Tolerância<br>PERIFÉRICA</div>
+      </div>
+    </div>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab(this,'central')">🏛️ Tolerância Central</button>
+      <button class="tab-btn" onclick="switchTab(this,'periferica')">🌿 Tolerância Periférica</button>
+    </div>
+
+    <div id="tab-central" class="tab-content active">
+      <div class="card">
+        <div class="card-title" style="color:var(--accent3);">🏛️ Tolerância Central — no Timo (células T)</div>
+        <p>Acontece durante o <strong>desenvolvimento do linfócito T no timo</strong>, antes de ele sair para a circulação. O processo principal é chamado de <span class="highlight hl-blue">seleção negativa (deleção clonal)</span>.</p>
+      </div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-icon">🧪</div>
+          <div><strong>Passo 1 — Apresentação de autoantígenos</strong><br>No timo, células especializadas chamadas <strong>MTECs</strong> (células epiteliais tímicas medulares) apresentam antígenos do próprio corpo ao linfócito T jovem.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">🔍</div>
+          <div><strong>Passo 2 — AIRE entra em ação</strong><br>A proteína <span class="highlight hl-blue">AIRE</span> (regulador autoimune) permite que as MTECs expressem proteínas de órgãos distantes (insulina, proteínas da tireoide etc.) — como se "importassem" amostras do corpo todo.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">❌</div>
+          <div><strong>Passo 3 — Seleção negativa</strong><br>Linfócitos T que reconhecem esses autoantígenos com <strong>alta afinidade</strong> são eliminados por apoptose. Somente os "inofensivos" sobrevivem e saem para a circulação.</div>
+        </div>
+      </div>
+
+      <div class="card" style="background:var(--light2);">
+        <div class="card-title" style="color:var(--accent2);">🚨 Quando AIRE falha: Síndrome Poliendócrina Autoimune Tipo 1 (APS-1)</div>
+        <p>Mutações no gene AIRE impedem que os antígenos periféricos sejam apresentados no timo. Linfócitos auto-reativos <em>não são eliminados</em> e saem para atacar múltiplos órgãos.</p>
+        <p><strong>Resultado clínico:</strong> ataque autoimune simultâneo a múltiplas glândulas endócrinas (suprarrenal, tireoide, pâncreas, paratireoide).</p>
+      </div>
+    </div>
+
+    <div id="tab-periferica" class="tab-content">
+      <div class="card">
+        <div class="card-title" style="color:var(--accent1);">🌿 Tolerância Periférica — fora do timo</div>
+        <p>Alguns linfócitos auto-reativos <em>escapam</em> da seleção negativa central. A tolerância periférica é o segundo nível de controle, ativado nos tecidos e órgãos linfoides secundários.</p>
+        <p>Existem <strong>3 mecanismos principais</strong>:</p>
+      </div>
+
+      <div class="two-col">
+        <div class="mini-card" style="background:var(--light4);">
+          <h4 style="color:var(--accent4);">1️⃣ Anergia</h4>
+          <p>O linfócito T precisa de <strong>dois sinais</strong> para ser ativado:</p>
+          <ul style="margin-top:8px;">
+            <li><strong>Sinal 1:</strong> TCR reconhece o antígeno</li>
+            <li><strong>Sinal 2:</strong> Coestimulação (B7 + CD28)</li>
+          </ul>
+          <p style="margin-top:8px;">Se só recebe o Sinal 1 <em>sem</em> Sinal 2 → linfócito entra em <strong>anergia</strong> (fica vivo mas incapaz de responder).</p>
+        </div>
+        <div class="mini-card" style="background:var(--light5);">
+          <h4 style="color:var(--accent5);">2️⃣ Supressão pelo Treg</h4>
+          <p>As células <strong>T reguladoras (Treg)</strong> suprimem ativamente outros linfócitos. Isso é feito através de:</p>
+          <ul style="margin-top:8px;">
+            <li>CTLA-4 (bloqueia coestimulação)</li>
+            <li>IL-10 e TGF-β (citocinas supressoras)</li>
+            <li>Consumo de IL-2</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mini-card" style="background:var(--light2); border-color:#f8b4bb; margin-top:0;">
+        <h4 style="color:var(--accent2);">3️⃣ Apoptose (Deleção periférica)</h4>
+        <p>Linfócitos auto-reativos ativados de forma crônica podem ser eliminados por morte celular programada (apoptose), via ativação repetida sem sinal de sobrevivência adequado.</p>
+      </div>
+
+      <div class="analogy">
+        <strong>🧠 Analogia da anergia:</strong> Imagine um guarda de segurança que precisa de dois crachás para abrir a porta. Se apresentar só um crachá, ele fica parado na frente da porta, incapaz de entrar ou sair. Esse guarda está em "anergia".
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 3: TREG -->
+  <div class="section-block">
+    <div class="section-label">
+      <div class="section-num" style="background:var(--accent5);">3</div>
+      <div class="section-title">As Células Treg — os "oficiais de paz"</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:var(--accent5);">🔬 O que são as Treg?</div>
+      <p>As <span class="highlight hl-purple">células T reguladoras (Treg)</span> são um subtipo especial de linfócito T CD4⁺ que, em vez de atacar, <strong>suprime</strong> a resposta imune. São identificadas principalmente pela expressão do fator de transcrição <strong>FOXP3</strong>.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="mini-card" style="background:var(--light3);">
+        <h4 style="color:var(--accent3);">tTreg (Treg Tímicas)</h4>
+        <ul>
+          <li>Originadas <strong>no timo</strong></li>
+          <li>"Treg naturais"</li>
+          <li>Reconhecem autoantígenos</li>
+          <li>Principal papel: <strong>auto-tolerância</strong></li>
+        </ul>
+      </div>
+      <div class="mini-card" style="background:var(--light5);">
+        <h4 style="color:var(--accent5);">pTreg (Treg Periféricas)</h4>
+        <ul>
+          <li>Originadas na <strong>periferia</strong></li>
+          <li>Induzidas por TGF-β + IL-2</li>
+          <li>Reconhecem antígenos externos</li>
+          <li>Principal papel: <strong>tolerância a alimentos, microbiota</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:var(--accent5);">⚙️ Como as Treg suprimem a resposta imune?</div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-icon">🔒</div>
+        <div><strong>CTLA-4 — bloqueio da coestimulação</strong><br>CTLA-4 compete com CD28 pela ligação às proteínas B7 na célula apresentadora. Sem coestimulação → o linfócito T convencional entra em anergia ou morre.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">💊</div>
+        <div><strong>IL-10 e TGF-β — citocinas supressoras</strong><br>Essas citocinas inibem diretamente a ativação e proliferação de outros linfócitos T e células apresentadoras de antígenos (APCs).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">🍽️</div>
+        <div><strong>Consumo de IL-2 — "fome" dos efetores</strong><br>Treg expressam muito receptor de IL-2 (CD25). Elas "consomem" o IL-2 disponível, privando os linfócitos T efetores do sinal de sobrevivência.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">☠️</div>
+        <div><strong>Indução de apoptose</strong><br>Em alguns casos, Treg podem induzir a morte direta de células efetoras.</div>
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <h4>💡 Macete dos mecanismos Treg</h4>
+      <p><strong>"CIA come"</strong> → <strong>C</strong>TLA-4 &nbsp;|&nbsp; <strong>I</strong>L-10 / TGF-β &nbsp;|&nbsp; <strong>A</strong>poptose &nbsp;|&nbsp; <strong>Come</strong> IL-2 (consumo)</p>
+    </div>
+  </div>
+
+  <!-- BLOCO 4: LINFÓCITO B -->
+  <div class="section-block">
+    <div class="section-label">
+      <div class="section-num" style="background:var(--accent2);">4</div>
+      <div class="section-title">Tolerância nos Linfócitos B</div>
+    </div>
+
+    <div class="card">
+      <p>Os linfócitos B também passam por controles de tolerância semelhantes. Linfócitos B auto-reativos podem ser eliminados ou silenciados por mecanismos centrais (na medula óssea) e periféricos (nos tecidos linfoides secundários).</p>
+    </div>
+
+    <table>
+      <tr>
+        <th>Mecanismo</th>
+        <th>Onde ocorre</th>
+        <th>O que acontece</th>
+      </tr>
+      <tr>
+        <td><strong>Deleção clonal central</strong></td>
+        <td>Medula óssea</td>
+        <td>Células B muito auto-reativas são eliminadas por apoptose</td>
+      </tr>
+      <tr>
+        <td><strong>Edição do receptor</strong></td>
+        <td>Medula óssea</td>
+        <td>O receptor BCR é "reescrito" para deixar de reconhecer autoantígenos</td>
+      </tr>
+      <tr>
+        <td><strong>Anergia periférica</strong></td>
+        <td>Sangue / tecidos</td>
+        <td>Célula B fica viva mas incapaz de montar resposta adequada</td>
+      </tr>
+      <tr>
+        <td><strong>Exclusão folicular</strong></td>
+        <td>Órgãos linfoides</td>
+        <td>Célula B auto-reativa é impedida de entrar nos folículos (sem acesso ao Th folicular)</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- BLOCO 5: RESUMO VISUAL -->
+  <div class="section-block">
+    <div class="section-label">
+      <div class="section-num" style="background:#333;">5</div>
+      <div class="section-title">Visão Geral — Mapa Mental</div>
+    </div>
+
+    <div class="diagram">
+      <p style="font-weight:700; margin-bottom:16px; font-size:15px;">Como o sistema se protege da autoimunidade</p>
+      <div class="diagram-row">
+        <div class="d-box d-blue">Linfócito<br>Imaturo</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-green">Timo /<br>Medula Óssea</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-red">Auto-reativo?</div>
+      </div>
+      <div class="diagram-row" style="margin-top:4px;">
+        <div style="width:110px;"></div>
+        <div style="width:8px;"></div>
+        <div style="width:110px;"></div>
+        <div style="width:8px;"></div>
+        <div style="display:flex; gap:10px;">
+          <div class="d-box d-gray" style="font-size:12px;">✅ Não → sobrevive<br>sai para circulação</div>
+          <div class="d-box d-red" style="font-size:12px;">❌ Sim → apoptose<br>(tolerância central)</div>
+        </div>
+      </div>
+      <div class="diagram-row" style="margin-top:12px;">
+        <div class="d-box d-gray">Na periferia</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box d-purple">Treg suprime</div>
+        <div style="font-size:13px; color:var(--muted); margin: 0 4px;">ou</div>
+        <div class="d-box d-blue">Anergia</div>
+        <div style="font-size:13px; color:var(--muted); margin: 0 4px;">ou</div>
+        <div class="d-box d-red">Apoptose</div>
+      </div>
+      <p style="margin-top:18px; font-size:13px; color:var(--muted);">Se todos esses mecanismos falham → <span style="color:var(--accent2); font-weight:700;">Autoimunidade</span></p>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-section">
+    <h3>🎯 Quiz Rápido</h3>
+    <p>Teste seus conhecimentos sobre tolerância e Treg</p>
+
+    <div class="quiz-q">
+      <p>1. Um linfócito T que reconhece autoantígenos com alta afinidade no timo sofre qual processo?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this, false, 'q1', 'Anergia ocorre na periferia, não no timo.')">Anergia</button>
+        <button class="quiz-opt" onclick="answer(this, true,  'q1', 'Correto! A seleção negativa (deleção clonal) elimina linfócitos auto-reativos por apoptose no timo.')">Seleção negativa (deleção clonal)</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q1', 'Edição do receptor é um mecanismo dos linfócitos B na medula óssea.')">Edição do receptor</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q1', 'Ativação seria o oposto — queremos eliminar esse linfócito, não ativá-lo.')">Ativação por IL-2</button>
+      </div>
+      <div id="q1" class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-q">
+      <p>2. Qual proteína permite que as MTECs expressem antígenos de órgãos distantes no timo?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this, false, 'q2', 'CTLA-4 é um receptor inibitório das células T, não relacionado às MTECs.')">CTLA-4</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q2', 'FOXP3 é o fator de transcrição que define as células Treg.')">FOXP3</button>
+        <button class="quiz-opt" onclick="answer(this, true,  'q2', 'Correto! AIRE (AutoImmune REgulator) permite às MTECs expressar antígenos periféricos para a seleção negativa.')">AIRE</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q2', 'TGF-β é uma citocina supressora, não responsável pela função das MTECs.')">TGF-β</button>
+      </div>
+      <div id="q2" class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-q">
+      <p>3. Um linfócito T recebe o Sinal 1 (TCR) mas NÃO recebe coestimulação (Sinal 2). O resultado é:</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this, false, 'q3', 'Ativação requer os dois sinais. Sem Sinal 2 não há ativação completa.')">Ativação plena</button>
+        <button class="quiz-opt" onclick="answer(this, true,  'q3', 'Correto! Sem coestimulação, o linfócito T entra em anergia — fica vivo mas incapaz de responder.')">Anergia</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q3', 'A seleção negativa é um processo do timo, não da periferia.')">Seleção negativa</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q3', 'A diferenciação em Treg requer FOXP3 e TGF-β, não a simples ausência de Sinal 2.')">Diferenciação em Treg</button>
+      </div>
+      <div id="q3" class="quiz-feedback"></div>
+    </div>
+
+    <div class="quiz-q">
+      <p>4. Qual dos seguintes NÃO é um mecanismo de supressão das células Treg?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this, false, 'q4', 'IL-10 é sim um mecanismo Treg — é uma citocina supressora.')">Secreção de IL-10</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q4', 'CTLA-4 é sim um mecanismo Treg — bloqueia a coestimulação.')">Expressão de CTLA-4</button>
+        <button class="quiz-opt" onclick="answer(this, true,  'q4', 'Correto! Produção de IL-2 NÃO é mecanismo Treg. Na verdade, as Treg CONSOMEM IL-2 (expressam CD25 em alta densidade), privando os efetores desse fator de sobrevivência.')">Produção de IL-2</button>
+        <button class="quiz-opt" onclick="answer(this, false, 'q4', 'TGF-β é sim um mecanismo Treg — suprime a resposta imune.')">Secreção de TGF-β</button>
+      </div>
+      <div id="q4" class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- TABELA RESUMO FINAL -->
+  <div class="section-block">
+    <div class="section-label">
+      <div class="section-num" style="background:#555;">📋</div>
+      <div class="section-title">Tabela Resumo Final — Cola de Prova</div>
+    </div>
+    <table>
+      <tr>
+        <th>Conceito</th>
+        <th>Definição resumida</th>
+        <th>Palavra-chave</th>
+      </tr>
+      <tr><td>Tolerância</td><td>Não-resposta a antígeno após exposição prévia</td><td>Silêncio imune</td></tr>
+      <tr><td>Auto-tolerância</td><td>Tolerância aos próprios antígenos do organismo</td><td>AIRE, FOXP3</td></tr>
+      <tr><td>Tolerógeno</td><td>Antígeno que induz tolerância</td><td>Próprio</td></tr>
+      <tr><td>Imunógeno</td><td>Antígeno que induz resposta imune</td><td>Estranho</td></tr>
+      <tr><td>Tol. Central (T)</td><td>Deleção no timo de linfócitos auto-reativos</td><td>MTECs, AIRE</td></tr>
+      <tr><td>Tol. Periférica</td><td>Anergia, supressão Treg, apoptose</td><td>B7, CTLA-4, Treg</td></tr>
+      <tr><td>Anergia</td><td>Linfócito vivo mas incapaz de responder (sem Sinal 2)</td><td>CD28, coestimulação</td></tr>
+      <tr><td>Treg (tTreg)</td><td>Originada no timo, suprime auto-reativos</td><td>FOXP3, CD25</td></tr>
+      <tr><td>Treg (pTreg)</td><td>Originada na periferia, tolerância a alimentos/microbiota</td><td>TGF-β, IL-2</td></tr>
+      <tr><td>Mecanismos Treg</td><td>CTLA-4, IL-10, TGF-β, consumo de IL-2, apoptose</td><td>CIA come</td></tr>
+      <tr><td>APS-1</td><td>Falha de AIRE → autoimunidade poliendócrina</td><td>Mutação AIRE</td></tr>
+      <tr><td>Autoimunidade</td><td>Falha de todos os mecanismos de tolerância</td><td>Ataque ao self</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<div class="footer">
+  Material elaborado com base no Abbas, Lichtman & Pillai — Imunologia Celular e Molecular, Cap. 15<br>
+  Para uso educacional · Dr. Cristiano Ribeiro da Silva
+</div>
+
+<script>
+function switchTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+function answer(btn, correct, feedbackId, msg) {
+  const q = btn.closest('.quiz-q');
+  q.querySelectorAll('.quiz-opt').forEach(b => { b.disabled = true; b.style.opacity = '0.7'; });
+  btn.style.opacity = '1';
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const fb = document.getElementById(feedbackId);
+  fb.textContent = (correct ? '✅ ' : '❌ ') + msg;
+  fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'err');
+}
+</script>
+</body>
+</html>
