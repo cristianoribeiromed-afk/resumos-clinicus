@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomía II — Repaso de Alta Performance | Final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17130f;
+  --surface:#211a15;
+  --surface-2:#2a2119;
+  --line:#3d3126;
+  --text:#f2e8da;
+  --text-dim:#c9b9a5;
+  --text-faint:#8f7c68;
+  --bone:#e3c98f;
+  --bone-deep:#c9a663;
+  --blood:#c1503f;
+  --nerve:#5f9bb3;
+  --good:#7ec98a;
+  --good-bg:#1f2e1f;
+  --bad:#e2695f;
+  --bad-bg:#331f1c;
+  --gold:#e8c27a;
+  --radius:14px;
+  --serif:'Lora',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(193,80,63,0.07), transparent 55%),
+    radial-gradient(ellipse at 92% 15%, rgba(95,155,179,0.06), transparent 50%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.55;
+  min-height:100vh;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 90px;}
+
+header.top{position:sticky;top:0;z-index:50;background:rgba(23,19,15,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--bone-deep),var(--blood));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:14px;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.streak{color:var(--blood);}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--bone);color:var(--text);}
+.tab-btn.active{background:var(--bone);border-color:var(--bone);color:#1d140c;}
+
+.hero{padding:30px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--nerve);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(22px,4vw,30px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:14px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--bone);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--nerve);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(193,80,63,0.08);border-left:3px solid var(--blood);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.clinico b{color:var(--blood);}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--nerve);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.pill-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}
+.pill{font-size:11.5px;background:var(--surface-2);border:1px solid var(--line);padding:4px 9px;border-radius:7px;color:var(--text-dim);}
+
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--nerve);padding-left:12px;}
+
+/* QUIZ */
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--bone);font-size:14px;background:rgba(227,201,143,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtopic{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;background:rgba(95,155,179,0.15);color:var(--nerve);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--bone);background:rgba(227,201,143,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--nerve);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+
+/* VF fill blank */
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.8px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--bone);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--bone);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .msg{color:var(--text-dim);font-size:13.5px;margin-top:8px;}
+
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🦴</div>
+      <div class="brand-text">
+        <h1>Anatomía II — Alta Performance</h1>
+        <span>Cráneo · SNC · Abdomen · Pelvis — Repaso Final</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill streak">🔥 <span id="streakCount">0</span></div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Repaso final · Anatomía II</div>
+    <h2>Todo lo que cae en la prueba, condensado</h2>
+    <p>Cráneo y meninges, cara/ojo/oído/nariz/lengua, sistema nervioso central, pared abdominal, estómago/duodeno/hígado/páncreas, pelvis y aparato reproductor. Termina con un quiz de fijación con feedback inmediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="craneo">Cráneo &amp; Meninges</button>
+    <button class="tab-btn" data-tab="cara">Cara, Ojo &amp; Oído</button>
+    <button class="tab-btn" data-tab="nariz">Nariz &amp; Lengua</button>
+    <button class="tab-btn" data-tab="snc">SNC &amp; Vascular</button>
+    <button class="tab-btn" data-tab="abdomen">Abdomen</button>
+    <button class="tab-btn" data-tab="pelvis">Pelvis &amp; Reproductor</button>
+    <button class="tab-btn" data-tab="quiz">Quiz Final</button>
+  </nav>
+
+  <!-- CRANEO -->
+  <section class="panel active" id="craneo">
+    <p class="part-intro">Osteología del cráneo, forames, base craneal y meninges.</p>
+
+    <div class="block">
+      <h3>1. División y huesos del cráneo</h3>
+      <ul>
+        <li><b>Línea calota / base:</b> va de la <b>glabela</b> a la <b>protuberancia occipital externa</b>.</li>
+        <li><b>Huesos neumáticos</b> (con senos): frontal, etmoides, esfenoides, maxilar, temporal.</li>
+        <li><b>Etmoides:</b> dos masas laterales + <b>lámina cribosa</b> + apófisis <b>crista galli</b>. Es el único hueso con celdillas propias (etmoidales).</li>
+        <li><b>Apófisis mastoides:</b> se comporta como celdillas neumáticas hasta los 6 años de edad.</li>
+        <li><b>Foramen ciego:</b> entre frontal y etmoides.</li>
+        <li><b>Clivus:</b> formado por la porción basilar del occipital + cuerpo del esfenoides (se articulan entre sí). Sobre él reposa la <b>arteria basilar</b>.</li>
+        <li><b>Recién nacido:</b> nace con <b>fontanelas</b>, no con puntos craneométricos definidos.</li>
+        <li><b>Foramen parietal:</b> inconstante — drena vena emisaria; si no existe, esta drena por el foramen ciego.</li>
+      </ul>
+      <div class="mnemo"><b>Truco:</b> Etmoides = el hueso "esponjoso" — cribosa (huele), crista galli (fija la duramadre), masas laterales (celdillas + pared medial de la órbita).</div>
+    </div>
+
+    <div class="block">
+      <h3>2. Silla turca y estructuras relacionadas</h3>
+      <ul>
+        <li>Aloja la <b>hipófisis</b>.</li>
+        <li>Límites: apófisis <b>clinoides anteriores y posteriores</b>.</li>
+        <li>Por el <b>conducto óptico</b> pasan: nervio óptico (II) + arteria oftálmica.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>3. Forámenes de la base del cráneo (tabla de alto rendimiento)</h3>
+      <table class="quicktab">
+        <tr><th>Forámen</th><th>Contenido</th></tr>
+        <tr><td><b>Conducto óptico</b></td><td>N. óptico (II), arteria oftálmica</td></tr>
+        <tr><td><b>Fisura orbitaria superior</b></td><td>N. III, IV, VI, V1 (oftálmico), vena oftálmica</td></tr>
+        <tr><td><b>Foramen redondo (rotundum)</b></td><td>N. V2 (maxilar)</td></tr>
+        <tr><td><b>Foramen oval</b></td><td>N. V3 (mandibular), n. petroso menor, a. meníngea accesoria</td></tr>
+        <tr><td><b>Foramen espinoso</b></td><td>Arteria meníngea media (rama de la maxilar)</td></tr>
+        <tr><td><b>Conducto auditivo interno</b></td><td>N. VII (facial), N. VIII (vestibulococlear)</td></tr>
+        <tr><td><b>Foramen yugular (rasgado post.)</b></td><td>N. IX, X, XI + seno sigmoideo → v. yugular interna</td></tr>
+        <tr><td><b>Canal del hipogloso</b></td><td>N. XII (hipogloso)</td></tr>
+      </table>
+      <div class="mnemo"><b>Mnemónico clásico:</b> "3 nervios craneales por foramen redondo, oval y espinoso" → Redondo = <b>2</b> (V2), Oval = <b>3</b> (V3), esPinoso = <b>0</b> nervios craneales (solo arteria) — útil para no confundir espinoso con oval.</div>
+    </div>
+
+    <div class="block">
+      <h3>4. Meninges y senos venosos</h3>
+      <ul>
+        <li>3 capas (externa → interna): <b>duramadre</b>, <b>aracnoides</b>, <b>piamadre</b>.</li>
+        <li>La duramadre forma pliegues: <b>hoz del cerebro (falx cerebri)</b> y <b>tentorio del cerebelo</b> (separa cerebro de cerebelo).</li>
+        <li>Hoz del cerebro: inserción anterior en la <b>crista galli</b>; inserción posterior en la <b>protuberancia occipital interna</b>, continúa con el tentorio del cerebelo.</li>
+        <li><b>Prensa de Herófilo</b> (confluencia de senos): reúne el <b>seno sagital superior</b> + <b>seno recto</b> (+ seno occipital si existe) → drena a los <b>senos transversos</b> → sigmoideos → vena yugular interna.</li>
+        <li><b>Hematoma epidural:</b> sangrado entre hueso y duramadre (típicamente por lesión de la arteria meníngea media).</li>
+      </ul>
+      <div class="clinico"><b>Clínico:</b> fractura de base de cráneo → signo de <b>Battle</b> (hematoma retroauricular) o <b>"ojos de mapache"</b> (hematoma periorbitario). <b>Nunca sondar por la nariz</b>: riesgo de perforar la lámina cribosa y lesionar el bulbo olfatorio (→ anosmia) o introducir la sonda intracranealmente.</div>
+    </div>
+
+    <div class="block">
+      <h3>5. Articulación temporomandibular (ATM)</h3>
+      <ul>
+        <li>Luxación de ATM → músculo lesionado: <b>pterigoideo lateral</b>.</li>
+        <li>Nervio implicado: <b>mandibular (V3)</b>, rama del trigémino.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CARA -->
+  <section class="panel" id="cara">
+    <p class="part-intro">Músculos de la cara, masticación, globo ocular y oído.</p>
+
+    <div class="block">
+      <h3>1. Músculos de la mímica facial</h3>
+      <ul>
+        <li>Inervados todos por el <b>nervio facial (VII)</b> — motor de la expresión facial.</li>
+        <li>Ejemplos clave: cigomático mayor, procer, transverso de la nariz, orbicular de la boca, orbicular del ojo, risorio, mentoniano.</li>
+        <li><b>Músculo con dos vientres:</b> occipitofrontal (frontooccipital) y digástrico.</li>
+        <li><b>Parálisis de Bell:</b> lesión periférica del nervio facial (VII) → caída hemifacial (afecta especialmente al depresor del ángulo de la boca).</li>
+      </ul>
+      <div class="clinico"><b>Clínico:</b> parotiditis (caxumba/paperas) puede comprimir el VII par al atravesar la glándula parótida → paresia facial. El nervio facial atraviesa la parótida pero no la inerva.</div>
+    </div>
+
+    <div class="block">
+      <h3>2. Músculos masticadores</h3>
+      <ul>
+        <li><b>Masetero</b> — mandíbula y arco cigomático.</li>
+        <li><b>Temporal</b> — hueso temporal y apófisis coronoides de la mandíbula.</li>
+        <li><b>Pterigoideo medial</b> y <b>pterigoideo lateral</b>.</li>
+        <li>Todos inervados por el <b>nervio mandibular (V3)</b>, rama motora del trigémino.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>3. Globo ocular</h3>
+      <table class="quicktab">
+        <tr><th>Capa</th><th>Estructuras</th></tr>
+        <tr><td><b>Fibrosa</b></td><td>Esclera + córnea</td></tr>
+        <tr><td><b>Vascular (úvea)</b></td><td>Coroides, cuerpo ciliar, iris</td></tr>
+        <tr><td><b>Nerviosa</b></td><td>Retina (+ nervio óptico)</td></tr>
+      </table>
+      <ul>
+        <li>Pared medial de la órbita: etmoides, lagrimal, maxilar, esfenoides.</li>
+        <li><b>Mácula lútea (fóvea):</b> zona central de la retina, visión de detalle. <span style="color:var(--blood)">(Ojo: "mácula densa" es un término renal, no ocular — error frecuente en apuntes.)</span></li>
+        <li>En la <b>diabetes</b>, la alteración vascular de la <b>coroides</b> puede llevar a desprendimiento de retina y ceguera.</li>
+      </ul>
+      <h4>Músculos extrínsecos del ojo — inervación</h4>
+      <table class="quicktab">
+        <tr><th>Músculo</th><th>Nervio</th></tr>
+        <tr><td>Oblicuo superior</td><td><b>Troclear (IV)</b></td></tr>
+        <tr><td>Recto lateral</td><td><b>Abducens (VI)</b></td></tr>
+        <tr><td>Todos los demás (recto sup./inf./medial, oblicuo inferior)</td><td><b>Oculomotor (III)</b></td></tr>
+      </table>
+      <div class="mnemo"><b>Regla LR6-SO4-resto3:</b> Recto Lateral → VI; Oblicuo Superior → IV; el resto → III.</div>
+      <p>Ramas del nervio oftálmico (V1): nervio frontal, entre otras. El ganglio sensitivo del trigémino se llama <b>ganglio de Gasser</b>.</p>
+    </div>
+
+    <div class="block">
+      <h3>4. Oído</h3>
+      <table class="quicktab">
+        <tr><th>Región</th><th>Puntos clave</th></tr>
+        <tr><td><b>Externo</b></td><td>Separado del medio por la <b>membrana timpánica</b></td></tr>
+        <tr><td><b>Medio</b></td><td>Contiene los huesecillos: <b>martillo</b> (contacto con membrana timpánica) → <b>yunque</b> → <b>estribo</b> (contacto con ventana oval). Comunica con la nasofaringe por la <b>trompa de Eustaquio</b> (conducto faringotimpánico).</td></tr>
+        <tr><td><b>Interno</b></td><td>Vestíbulo-cóclea: equilibrio (vestíbulo) y audición (cóclea). El <b>modiolo</b> aloja vasos y distribuye el nervio coclear.</td></tr>
+      </table>
+      <ul>
+        <li>N. facial (VII) entra por el <b>conducto auditivo interno</b> y sale por el <b>foramen estilomastoideo</b>.</li>
+        <li>N. VIII (vestibulococlear) también entra por el conducto auditivo interno.</li>
+      </ul>
+      <div class="clinico"><b>Clínico:</b> en niños la trompa de Eustaquio es más <b>corta, horizontal y ancha</b> (vs. oblicua en el adulto) → mayor riesgo de otitis media por infecciones ascendentes desde la nasofaringe. Otitis media puede comprometer el VII par → parálisis facial periférica.</div>
+    </div>
+  </section>
+
+  <!-- NARIZ -->
+  <section class="panel" id="nariz">
+    <p class="part-intro">Cavidad nasal, senos paranasales y lengua.</p>
+    <div class="block">
+      <h3>1. Tabique y piso nasal</h3>
+      <ul>
+        <li><b>Tabique nasal:</b> lámina perpendicular del etmoides + vómer (+ cartílago septal).</li>
+        <li><b>Piso de la cavidad nasal:</b> hueso palatino (+ proceso palatino del maxilar).</li>
+        <li><b>Coanas:</b> comunican la cavidad nasal con la nasofaringe.</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>2. Cornetes y drenaje de los meatos</h3>
+      <table class="quicktab">
+        <tr><th>Meato / receso</th><th>Drena</th></tr>
+        <tr><td><b>Meato inferior</b></td><td>Conducto (ducto) nasolacrimal</td></tr>
+        <tr><td><b>Meato medio</b></td><td>Seno maxilar, seno frontal (vía hiato semilunar), celdillas etmoidales ant./medias</td></tr>
+        <tr><td><b>Meato superior</b></td><td>Celdillas etmoidales posteriores</td></tr>
+        <tr><td><b>Receso esfenoetmoidal</b></td><td>Seno esfenoidal</td></tr>
+      </table>
+      <ul>
+        <li>Cornetes <b>verdaderos</b> (inferior, medio, superior): participan activamente en calentar, humidificar y filtrar el aire.</li>
+        <li>Cornete "falso" (bulla etmoidal): deriva del etmoides, menor capacidad de calentamiento.</li>
+        <li>El <b>seno maxilar</b> es el principal contribuyente al calentamiento del aire (mayor superficie de contacto).</li>
+      </ul>
+      <div class="mnemo"><b>Truco:</b> "Inferior-lacrimal, Medio-maxilar/frontal, Superior-etmoidal posterior, Esfeno-etmoidal-esfenoidal" — sigue el orden de arriba hacia abajo del receso más alto al meato más bajo.</div>
+    </div>
+    <div class="block">
+      <h3>3. Lengua</h3>
+      <ul>
+        <li>Es un <b>músculo estriado esquelético</b>.</li>
+        <li><b>Inervación motora:</b> nervio hipogloso (XII) — (algunos apuntes citan también participación faríngea/glosofaríngea en musculatura asociada).</li>
+        <li><b>Inervación sensitiva general:</b> depende de la región (V3/lingual en 2/3 anteriores, IX en 1/3 posterior).</li>
+        <li><b>Irrigación:</b> arteria lingual (rama de la carótida externa); su rama terminal es la arteria ranina.</li>
+        <li><b>Drenaje venoso:</b> vena lingual → tronco tirolinguofaríngeo-facial → vena yugular interna.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SNC -->
+  <section class="panel" id="snc">
+    <p class="part-intro">Meninges, LCR, tronco encefálico, círculo arterial y sistema nervioso autónomo.</p>
+
+    <div class="block">
+      <h3>1. Líquido cefalorraquídeo (LCR)</h3>
+      <ul>
+        <li><b>Formación:</b> filtración a través de la membrana ependimaria en los <b>plexos coroideos</b> (principalmente ventrículos laterales).</li>
+        <li><b>Circulación:</b> ventrículos laterales → acueducto de Silvio → 3º y 4º ventrículo → espacio subaracnoideo.</li>
+        <li><b>Reabsorción:</b> granulaciones aracnoideas (de Pacchioni) → senos venosos durales.</li>
+        <li><b>Punción lumbar:</b> se realiza a nivel de L3-L4 (por debajo del cono medular).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>2. Senos venosos durales</h3>
+      <div class="pill-row">
+        <span class="pill">Sagital superior</span><span class="pill">Sagital inferior</span><span class="pill">Recto</span>
+        <span class="pill">Transversos</span><span class="pill">Sigmoideos</span><span class="pill">Occipital</span>
+        <span class="pill">Cavernoso</span><span class="pill">Petrosos sup./inf.</span>
+      </div>
+      <p>Confluencia de senos = <b>prensa de Herófilo</b> (sagital superior + recto → transversos).</p>
+    </div>
+
+    <div class="block">
+      <h3>3. Tronco encefálico y pares craneales</h3>
+      <ul>
+        <li>Compuesto por: <b>mesencéfalo</b>, <b>protuberancia (puente)</b>, <b>bulbo raquídeo</b>.</li>
+        <li>Desde el 3º par craneal en adelante nacen del tronco encefálico (10 estructuras: pares 3 al 12; el I y II nacen del cerebro/bulbo olfatorio y retina, no del tronco).</li>
+        <li>La <b>arteria basilar</b> reposa sobre la protuberancia y se forma por la unión de las arterias vertebrales.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>4. Polígono de Willis</h3>
+      <ul>
+        <li><b>Carótida interna</b> da: oftálmica, comunicante posterior, cerebral anterior (ACA), cerebral media (ACM, rama terminal).</li>
+        <li><b>ACA</b> derecha e izquierda se unen por la <b>comunicante anterior</b>.</li>
+        <li><b>Comunicante posterior:</b> conecta carótida interna ↔ cerebral posterior.</li>
+        <li><b>Arteria basilar</b> (unión de vertebrales) → rama terminal: <b>arterias cerebrales posteriores (ACP)</b>. También da las arterias pontinas.</li>
+      </ul>
+      <table class="quicktab">
+        <tr><th>Arteria</th><th>Origen</th></tr>
+        <tr><td>Cerebral anterior (ACA)</td><td>Carótida interna</td></tr>
+        <tr><td>Cerebral media (ACM)</td><td>Carótida interna (terminal)</td></tr>
+        <tr><td>Cerebral posterior (ACP)</td><td>Arteria basilar (terminal)</td></tr>
+      </table>
+    </div>
+
+    <div class="block">
+      <h3>5. Sistema nervioso autónomo (SNA)</h3>
+      <ul>
+        <li><b>Simpático ("toracolumbar"):</b> nace en la médula espinal T1–L2, astas laterales (sustancia intermedia lateral).</li>
+        <li><b>Parasimpático ("craneosacro"):</b> porción craneal — núcleos en el tronco encefálico: III (Edinger-Westphal), VII (salivar superior/lagrimal), IX (salivar inferior), X (núcleo dorsal del vago).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ABDOMEN -->
+  <section class="panel" id="abdomen">
+    <p class="part-intro">Pared abdominal, conducto inguinal, estómago, duodeno, hígado, vías biliares y páncreas.</p>
+
+    <div class="block">
+      <h3>1. Pared abdominal</h3>
+      <ul>
+        <li><b>Anterolaterales:</b> oblicuo externo, oblicuo interno (da origen al m. cremáster), transverso del abdomen, recto abdominal (con intersecciones tendinosas), piramidal (inconstante, se inserta en la espina del pubis).</li>
+        <li><b>Posteriores:</b> cuadrado lumbar, psoas mayor, ilíaco.</li>
+        <li><b>Vaina de los rectos:</b> formada por la aponeurosis de los músculos de la pared.</li>
+        <li><b>Línea alba:</b> unión de las aponeurosis de ambos rectos.</li>
+        <li><b>A. epigástrica superior:</b> rama de la mamaria interna, pasa por el triángulo de Larrey.</li>
+        <li><b>A. epigástrica inferior:</b> rama de la ilíaca externa, a nivel umbilical.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>2. Conducto inguinal y arco crural</h3>
+      <table class="quicktab">
+        <tr><th>Conducto inguinal</th><th></th></tr>
+        <tr><td>Techo</td><td>Oblicuo interno + transverso</td></tr>
+        <tr><td>Suelo</td><td>Ligamento inguinal</td></tr>
+        <tr><td>Pared anterior</td><td>Aponeurosis del oblicuo externo</td></tr>
+        <tr><td>Pared posterior</td><td>Fascia transversalis</td></tr>
+        <tr><td>Contenido</td><td>Cordón espermático (H) / ligamento redondo (M) + n. ilioinguinal</td></tr>
+      </table>
+      <p><b>Arco crural:</b> techo formado por el ligamento inguinal; une la espina ilíaca al tubérculo del pubis. El <b>ligamento iliopectíneo</b> lo divide en dos compartimentos. Contiene vasos femorales, nervio femoral y psoas-ilíaco.</p>
+    </div>
+
+    <div class="block">
+      <h3>3. Estómago</h3>
+      <ul>
+        <li>Porciones: cardias (unión con esófago), fundus, cuerpo, porción pilórica.</li>
+        <li><b>Incisura angular:</b> marca la unión del cuerpo con la porción pilórica.</li>
+        <li>Función: almacenar alimento (~1-2 L), producir jugo gástrico, transformar bolo → <b>quimo</b>.</li>
+        <li>Relación superior del fundus: <b>diafragma</b>.</li>
+        <li><b>Bolsa omental (transcavidad de los epiplones):</b> entre estómago y páncreas.</li>
+        <li><b>Irrigación:</b> curvatura menor (gástrica izquierda + gástrica derecha); curvatura mayor (gastroepiploica izquierda + derecha).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>4. Duodeno, páncreas y pinza aortomesentérica</h3>
+      <ul>
+        <li>Partes del duodeno: superior (1ª), descendente (2ª), horizontal (3ª), ascendente (4ª).</li>
+        <li>Flexura duodenoyeyunal: suspendida por el <b>músculo de Treitz</b>.</li>
+        <li><b>Pinza aortomesentérica:</b> entre la aorta abdominal (posterior) y la arteria mesentérica superior (anterior) pasa la <b>vena renal izquierda</b>, a nivel de la 3ª porción del duodeno.</li>
+        <li>Páncreas: cabeza, proceso unciforme, cuello, cuerpo, cola.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>5. Hígado y vías biliares</h3>
+      <ul>
+        <li>Cápsula propia del hígado: <b>cápsula de Glisson</b>.</li>
+        <li><b>Ligamento falciforme:</b> divide el hígado en lóbulo derecho e izquierdo. Contiene el ligamento redondo (vestigio embrionario de la vena umbilical).</li>
+        <li><b>Hilio hepático:</b> arteria hepática propia + vena porta hepática + conducto hepático común (+ nervios y linfáticos).</li>
+        <li><b>Vías biliares:</b> conductos hepáticos derecho e izquierdo → hepático común → (+ cístico) → colédoco → ampolla de Vater.</li>
+        <li><b>Triángulo de Calot (cistohepático):</b> límites = conducto cístico, conducto hepático común, arteria cística.</li>
+        <li><b>Foramen epiploico (de Winslow):</b> superior = lóbulo cuadrado; inferior = 1ª porción del duodeno; anterior = borde libre del omento menor (hilio hepático); posterior = vena cava inferior.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>6. Sistema porta y vasos abdominales</h3>
+      <ul>
+        <li><b>Vena porta:</b> vena mesentérica superior + tronco espleno-mesaraico (esplénica + mesentérica inferior), posterior a la cabeza del páncreas.</li>
+        <li><b>Aorta abdominal — ramas:</b> viscerales impares (tronco celíaco: hepática común, gástrica izquierda, esplénica; mesentérica superior; mesentérica inferior); viscerales pares (renales, suprarrenales medias, gonadales); parietales (frénicas inferiores, lumbares); terminales (ilíacas comunes).</li>
+        <li><b>Vena cava inferior:</b> se forma por la unión de las venas ilíacas comunes a nivel de L5.</li>
+        <li><b>AMS (ramas terminales):</b> ileales, yeyunales, ileocólica, cólica derecha, cólica media.</li>
+        <li><b>AMI (rama terminal):</b> rectal superior (+ ramas sigmoideas).</li>
+        <li><b>Arco de Riolano:</b> anastomosis entre cólica media (AMS) y cólica izquierda (AMI), a nivel del mesocolon transverso.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>7. Intestino grueso, riñón, uréter y vejiga</h3>
+      <ul>
+        <li>Partes del colon: ciego → ascendente → transverso → descendente → sigmoide → recto → conducto anal.</li>
+        <li>Cuadrantes: hígado/vesícula (sup. derecho); estómago/bazo (sup. izquierdo); ciego/apéndice (inf. derecho); sigmoide (inf. izquierdo).</li>
+        <li><b>Vena gonadal derecha</b> → vena cava inferior; <b>izquierda</b> → vena renal izquierda.</li>
+        <li><b>Unidad funcional del riñón:</b> nefrona.</li>
+        <li><b>Órganos retroperitoneales</b> (ej.: riñones, páncreas, duodeno, aorta/cava, colon ascendente y descendente).</li>
+        <li><b>Epiplón</b> (formación de pared a órgano, sin paquete vascular) — distinto del omento (pared a órgano, con vasos).</li>
+        <li><b>Vejiga:</b> capacidad fisiológica ~300-500 ml. Trígono vesical: delimitado por los 2 orificios ureterales + orificio uretral interno.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PELVIS -->
+  <section class="panel" id="pelvis">
+    <p class="part-intro">Aparato reproductor masculino y femenino.</p>
+
+    <div class="block">
+      <h3>1. Aparato reproductor masculino</h3>
+      <ul>
+        <li><b>Órganos internos:</b> testículos, epidídimo, ducto deferente, ducto eyaculador, vesículas seminales, próstata, glándulas bulbouretrales.</li>
+        <li><b>Escroto:</b> músculo <b>dartos</b> (liso, involuntario) — regula temperatura testicular.</li>
+        <li><b>Testículo:</b> túnica albugínea (cápsula); túbulos seminíferos (espermatogénesis); <b>células de Leydig</b> → testosterona; <b>células de Sertoli</b> → sostén y nutrición de células germinales.</li>
+        <li><b>Hidrocele:</b> exceso de líquido entre las láminas de la túnica vaginal.</li>
+        <li><b>Cordón espermático:</b> ducto deferente, arteria testicular, plexo pampiniforme, arteria cremastérica, nervios ilioinguinal y genitofemoral.</li>
+        <li><b>Cremáster:</b> eleva el testículo ante el frío. Plexo pampiniforme: regula temperatura testicular (retorno venoso).</li>
+        <li><b>Próstata:</b> ~20% del volumen del semen, líquido alcalino. <b>Vesículas seminales:</b> gran parte del semen, líquido alcalino también.</li>
+        <li><b>Pene:</b> 2 cuerpos cavernosos + 1 cuerpo esponjoso (rodea la uretra, evita su colapso en la eyaculación). Erección: estímulo <b>parasimpático</b>; mantenimiento de rigidez por compresión venosa (m. bulboesponjoso e isquiocavernoso).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>2. Aparato reproductor femenino</h3>
+      <ul>
+        <li><b>Vagina:</b> conducto músculo-elástico, 7-9 cm; fórnix vaginal rodea el cuello uterino. Relaciones: anterior = vejiga/uretra; posterior = recto.</li>
+        <li><b>Útero:</b> fondo, cuerpo, istmo, cuello. Capas: <b>endometrio</b> (mucosa, se descama en menstruación — epitelio cilíndrico simple), <b>miometrio</b> (muscular, responsable de las contracciones), <b>perimetrio</b> (serosa). Posición normal: <b>anteversoflexión</b>.</li>
+        <li><b>Fondo de saco de Douglas</b> (rectouterino): punto más bajo de la cavidad pélvica, sitio de punción diagnóstica y acumulación de líquidos patológicos.</li>
+        <li><b>Sostén uterino:</b> ligamento redondo (mantiene anteversoflexión), ligamento ancho (evita desplazamiento lateral — pliegue de peritoneo), ligamentos uterosacros y de Mackenrodt.</li>
+        <li><b>Trompas uterinas:</b> intramural → istmo → <b>ampolla (sitio de fecundación)</b> → infundíbulo. Mesosalpinx contiene vasos.</li>
+        <li><b>Ovarios:</b> no cubiertos por peritoneo; corteza = folículos. Ligamento propio del ovario (ovario-útero) y ligamento suspensorio (contiene arteria/vena ovárica, origen: aorta abdominal). En nulíparas: fosita de Claudius.</li>
+        <li><b>Vulva:</b> monte de Venus, labios mayores/menores, clítoris (homólogo del glande del pene), vestíbulo (meato uretral + introito vaginal), glándulas de Bartholin (lubricación).</li>
+      </ul>
+      <div class="mnemo"><b>Truco:</b> "Ampolla = donde se AMAN los gametos" → sitio de fecundación. Istmo = la parte más estrecha (¡no confundir con "istmo uterino"!).</div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">0</span> · <span id="resPct">0%</span></span></div>
+      <div class="msg" id="resMsg">Responde el quiz para ver tu desempeño.</div>
+    </div>
+    <div id="quizContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudio basado en cuestionarios y repasos del profesor — Anatomía II. No sustituye la revisión de las clases originales ni la bibliografía oficial.</footer>
+</div>
+
+<script>
+const letters=['A','B','C','D','E'];
+let xp=0, streak=0, correctCount=0, totalAnswered=0;
+
+function addXP(amount, correct){
+  xp+=amount;
+  if(correct){streak++; correctCount++;} else {streak=0;}
+  totalAnswered++;
+  document.getElementById('xpCount').textContent=xp;
+  document.getElementById('streakCount').textContent=streak;
+  document.getElementById('resScore').textContent=correctCount;
+  document.getElementById('resTotal').textContent=totalAnswered;
+  const pct=Math.round((correctCount/totalAnswered)*100);
+  document.getElementById('resPct').textContent=pct+'%';
+  let msg="Sigue respondiendo.";
+  if(totalAnswered>3){
+    if(pct>=85) msg="Excelente — nivel de aprobación.";
+    else if(pct>=65) msg="Bien, pero repasa los temas fallados.";
+    else msg="Vale la pena repasar antes de la prueba.";
+  }
+  document.getElementById('resMsg').textContent=msg;
+}
+
+const quizData=[
+  {topic:"Cráneo", stem:"La línea que divide al cráneo en calota y base va desde…", alts:["La glabela hasta la protuberancia occipital interna","La glabela hasta la protuberancia occipital externa","El arco superciliar hasta la protuberancia occipital interna","El arco superciliar hasta la protuberancia occipital externa"], correct:1, comment:"La línea craneal de referencia va de la glabela a la protuberancia occipital externa (línea nucal superior), no a la interna."},
+  {topic:"Cráneo", stem:"¿Cuál es la porción del hueso temporal donde se encuentra el oído interno?", alts:["Porción escamosa","Porción petrosa","Porción mastoidea","Porción timpánica"], correct:1, comment:"La porción petrosa aloja el meato auditivo interno y el oído interno (vestíbulo-cóclea)."},
+  {topic:"Cráneo", stem:"Las partes constitutivas del hueso etmoides son:", alts:["Dos masas laterales, lámina perpendicular, apófisis estiloides","Dos masas laterales, lámina cribosa, apófisis estiloides","Dos masas laterales, lámina cribosa, apófisis crista galli","Dos masas laterales, lámina perpendicular, apófisis mastoides"], correct:2, comment:"El etmoides se compone de dos masas laterales, la lámina cribosa (perforada, para el bulbo olfatorio) y la crista galli (inserción de la hoz del cerebro)."},
+  {topic:"Cráneo", stem:"La porción basilar del occipital se articula con el cuerpo del esfenoides formando el clivus.", alts:["Verdadero","Falso"], correct:0, comment:"Correcto: el clivus se forma por la unión entre la porción basilar del occipital y el cuerpo del esfenoides."},
+  {topic:"Cráneo", stem:"Las apófisis clinoides son estructuras de la silla turca.", alts:["Verdadero","Falso"], correct:0, comment:"Correcto: las apófisis clinoides anteriores y posteriores delimitan la silla turca."},
+  {topic:"Cráneo", stem:"¿Qué pasa por el foramen oval?", alts:["Nervio maxilar (V2)","Nervio mandibular (V3)","Nervio facial (VII)","Arteria meníngea media"], correct:1, comment:"El foramen oval da paso al nervio mandibular (V3). El foramen redondo da paso al V2, y la arteria meníngea media pasa por el foramen espinoso."},
+  {topic:"Cráneo", stem:"¿Qué nervios pasan por la fisura orbitaria superior?", alts:["Óptico, troclear, oculomotor, abducens","Oftálmico, troclear, oculomotor, abducens","Oftálmico, maxilar, oculomotor, abducens","Óptico, oftálmico, troclear, abducens"], correct:1, comment:"Por la fisura orbitaria superior pasan III (oculomotor), IV (troclear), VI (abducens) y V1 (oftálmico) — el nervio óptico (II) va por el conducto óptico, no por esta fisura."},
+  {topic:"Cráneo", stem:"Un sangrado entre el hueso y la duramadre se denomina:", alts:["Hematoma subdural","Hematoma epidural","Hemorragia subaracnoidea","Hematoma intraparenquimatoso"], correct:1, comment:"El hematoma epidural ocurre entre el hueso y la duramadre, típicamente por lesión de la arteria meníngea media (que entra por el foramen espinoso)."},
+  {topic:"Cara/ATM", stem:"En una luxación de la articulación temporomandibular, ¿qué músculo suele lesionarse?", alts:["Masetero","Temporal","Pterigoideo lateral","Pterigoideo medial"], correct:2, comment:"El pterigoideo lateral es el músculo clásicamente implicado en la luxación de ATM."},
+  {topic:"Cara", stem:"Todos los músculos de la mímica facial están inervados por:", alts:["Nervio trigémino (V)","Nervio facial (VII)","Nervio mandibular (V3)","Nervio glosofaríngeo (IX)"], correct:1, comment:"El nervio facial (VII) es el motor de la expresión facial; el trigémino da la sensibilidad de la cara y motricidad de la masticación."},
+  {topic:"Ojo", stem:"Las capas del globo ocular, de externa a interna, son:", alts:["Nerviosa, vascular, fibrosa","Fibrosa, vascular, nerviosa","Vascular, fibrosa, nerviosa","Fibrosa, nerviosa, vascular"], correct:1, comment:"Fibrosa (esclera/córnea) → vascular (coroides/úvea) → nerviosa (retina)."},
+  {topic:"Ojo", stem:"¿Qué nervio inerva el músculo recto lateral del ojo?", alts:["Oculomotor (III)","Troclear (IV)","Abducens (VI)","Óptico (II)"], correct:2, comment:"Regla LR6-SO4: recto lateral (LR) → abducens (VI); oblicuo superior (SO) → troclear (IV); el resto → oculomotor (III)."},
+  {topic:"Oído", stem:"¿Qué hueso del oído está en contacto con la membrana timpánica?", alts:["Yunque","Martillo","Estribo","Ninguno"], correct:1, comment:"El martillo contacta la membrana timpánica; el estribo contacta la ventana oval."},
+  {topic:"Oído", stem:"¿Por qué los niños presentan más otitis media que los adultos?", alts:["Su trompa de Eustaquio es más larga y oblicua","Su trompa de Eustaquio es más corta y horizontal","Tienen menos cerumen protector","Su membrana timpánica es más gruesa"], correct:1, comment:"La trompa de Eustaquio infantil es más corta, ancha y horizontal, facilitando el ascenso de infecciones desde la nasofaringe."},
+  {topic:"Oído", stem:"El nervio facial (VII) entra por el conducto auditivo interno y sale por:", alts:["El foramen yugular","El foramen estilomastoideo","El foramen oval","El conducto óptico"], correct:1, comment:"El trayecto intrapetroso del facial termina saliendo por el foramen estilomastoideo."},
+  {topic:"Nariz", stem:"¿Qué drena en el meato inferior?", alts:["Seno maxilar","Seno frontal","Conducto nasolacrimal","Seno esfenoidal"], correct:2, comment:"El conducto (ducto) nasolacrimal drena en el meato inferior."},
+  {topic:"Nariz", stem:"¿Qué seno drena en el receso esfenoetmoidal?", alts:["Seno maxilar","Seno frontal","Seno esfenoidal","Celdillas etmoidales anteriores"], correct:2, comment:"El seno esfenoidal drena en el receso esfenoetmoidal, por encima del cornete superior."},
+  {topic:"Nariz", stem:"El tabique nasal está formado principalmente por:", alts:["Vómer y hueso palatino","Lámina perpendicular del etmoides y vómer","Cornete inferior y vómer","Lámina cribosa y hueso nasal"], correct:1, comment:"El tabique nasal óseo se forma por la lámina perpendicular del etmoides (superior) y el vómer (inferior), más el cartílago septal anteriormente."},
+  {topic:"Lengua", stem:"La lengua es un músculo de tipo:", alts:["Liso","Cardíaco","Estriado esquelético","Mixto"], correct:2, comment:"La lengua es músculo estriado esquelético, a pesar de su control involuntario parcial."},
+  {topic:"SNC", stem:"¿Dónde se inserta la porción anterior de la hoz del cerebro (falx cerebri)?", alts:["Protuberancia occipital interna","Crista galli del etmoides","Silla turca","Clivus"], correct:1, comment:"La inserción anterior de la falx cerebri es en la crista galli; la posterior es en la protuberancia occipital interna."},
+  {topic:"SNC", stem:"La confluencia de senos venosos (prensa de Herófilo) reúne principalmente:", alts:["Seno cavernoso y seno petroso","Seno sagital superior y seno recto, hacia los transversos","Seno sagital inferior y seno recto","Senos petrosos superior e inferior"], correct:1, comment:"La prensa de Herófilo es la confluencia del seno sagital superior con el seno recto, que drena hacia los senos transversos."},
+  {topic:"SNC", stem:"¿Dónde se realiza habitualmente la punción lumbar para obtener LCR?", alts:["T12-L1","L1-L2","L3-L4","S1-S2"], correct:2, comment:"La punción lumbar se realiza a nivel de L3-L4 (o L4-L5), por debajo del cono medular, para evitar lesionar la médula."},
+  {topic:"SNC", stem:"¿Cuál es la rama terminal de la arteria basilar?", alts:["Arteria cerebral media","Arteria cerebral anterior","Arteria cerebral posterior","Arteria comunicante posterior"], correct:2, comment:"La arteria basilar (unión de las vertebrales) termina dando las arterias cerebrales posteriores."},
+  {topic:"SNC", stem:"El sistema nervioso parasimpático craneal tiene su núcleo en el par craneal III, llamado:", alts:["Núcleo dorsal del vago","Edinger-Westphal","Núcleo ambiguo","Núcleo salivar superior"], correct:1, comment:"El núcleo de Edinger-Westphal (III par) es el origen parasimpático craneal más rostral, relacionado con la constricción pupilar."},
+  {topic:"Abdomen", stem:"¿Qué estructura suspende la flexura duodenoyeyunal?", alts:["Ligamento falciforme","Omento mayor","Músculo de Treitz","Ligamento gastrocólico"], correct:2, comment:"El músculo (ligamento) de Treitz suspende la flexura duodenoyeyunal."},
+  {topic:"Abdomen", stem:"La bolsa omental (transcavidad de los epiplones) se localiza entre:", alts:["Intestino delgado y grueso","Estómago y páncreas","Hígado y bazo","Estómago e hígado"], correct:1, comment:"La bolsa omental está situada posterior al estómago y anterior al páncreas."},
+  {topic:"Abdomen", stem:"La transformación del bolo alimenticio en quimo ocurre en:", alts:["Boca","Esófago","Estómago","Intestino delgado"], correct:2, comment:"La mezcla del bolo con jugo gástrico y su transformación en quimo ocurre en el estómago."},
+  {topic:"Abdomen", stem:"¿Cuáles son los límites del triángulo de Calot (cistohepático)?", alts:["Conducto cístico, conducto hepático común y arteria cística","Conducto colédoco, arteria hepática y vena porta","Conducto cístico, arteria hepática propia y vena cava","Hilio hepático, colédoco y duodeno"], correct:0, comment:"El triángulo de Calot está delimitado por el conducto cístico, el conducto hepático común y la arteria cística."},
+  {topic:"Abdomen", stem:"El sistema porta hepático se forma principalmente por la unión de:", alts:["Vena mesentérica superior y vena esplénica","Vena renal izquierda y vena cava inferior","Vena mesentérica inferior y vena gonadal","Vena hepática y vena cava inferior"], correct:0, comment:"La vena porta se forma por la unión de la vena mesentérica superior con el tronco espleno-mesaraico (esplénica + mesentérica inferior)."},
+  {topic:"Abdomen", stem:"Entre la aorta abdominal y la arteria mesentérica superior (pinza aortomesentérica) pasa:", alts:["El uréter derecho","La vena renal izquierda","El colédoco","La vena cava inferior"], correct:1, comment:"La vena renal izquierda cruza entre la aorta y la AMS, a nivel de la 3ª porción del duodeno — puede comprimirse en el síndrome de la pinza aortomesentérica."},
+  {topic:"Pelvis M", stem:"¿Dónde ocurre la producción de espermatozoides?", alts:["Epidídimo","Ducto deferente","Túbulos seminíferos","Vesículas seminales"], correct:2, comment:"La espermatogénesis ocurre dentro de los túbulos seminíferos del testículo."},
+  {topic:"Pelvis M", stem:"Las células responsables de producir testosterona son:", alts:["Células de Sertoli","Células de Leydig","Células germinales","Células foliculares"], correct:1, comment:"Las células de Leydig (intersticiales) producen testosterona; las de Sertoli sostienen y nutren a las células germinales."},
+  {topic:"Pelvis M", stem:"El músculo responsable de arrugar la piel del escroto es:", alts:["Cremáster","Dartos","Bulboesponjoso","Isquiocavernoso"], correct:1, comment:"El músculo dartos (liso, involuntario) es responsable de las arrugas escrotales."},
+  {topic:"Pelvis M", stem:"La erección peniana ocurre principalmente por estímulo:", alts:["Simpático","Parasimpático","Somático","Endocrino"], correct:1, comment:"La erección es un evento parasimpático (relajación del músculo liso y vasodilatación arterial)."},
+  {topic:"Pelvis F", stem:"El fondo de saco de Douglas se localiza entre:", alts:["Vejiga y vagina","Vagina y recto","Útero y recto","Útero y vejiga"], correct:2, comment:"El fondo de saco de Douglas (rectouterino) está entre el útero y el recto — punto más bajo de la cavidad pélvica."},
+  {topic:"Pelvis F", stem:"El sitio más frecuente de fecundación en la trompa uterina es:", alts:["Istmo","Infundíbulo","Ampolla","Porción intramural"], correct:2, comment:"La ampolla tubárica es el sitio habitual de fecundación."},
+  {topic:"Pelvis F", stem:"La capa uterina responsable de las contracciones durante el parto es:", alts:["Endometrio","Miometrio","Perimetrio","Serosa"], correct:1, comment:"El miometrio es la capa muscular lisa responsable de la contractilidad uterina."},
+  {topic:"Pelvis F", stem:"¿Qué estructura mantiene al útero en anteversoflexión?", alts:["Ligamento ancho","Ligamento redondo","Ligamento uterosacro","Mesosalpinx"], correct:1, comment:"El ligamento redondo del útero es el principal responsable de mantener la anteversoflexión uterina."},
+  {topic:"Pelvis F", stem:"El clítoris es homólogo embriológico de:", alts:["El escroto","El cuerpo esponjoso","El glande del pene","La próstata"], correct:2, comment:"El clítoris es homólogo del glande del pene en el desarrollo embriológico."},
+];
+
+const quizContainer=document.getElementById('quizContainer');
+quizData.forEach((q,qi)=>{
+  const card=document.createElement('div');
+  card.className='qcard';
+  card.innerHTML=`
+    <div class="qhead">
+      <div class="qnum">${qi+1}</div>
+      <span class="qtopic">${q.topic}</span>
+      <div class="qstem">${q.stem}</div>
+    </div>
+    <div class="alts"></div>
+    <div class="feedback"></div>
+  `;
+  const altsDiv=card.querySelector('.alts');
+  const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button');
+    btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn');
+      allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){ btn.classList.add('correct'); addXP(10,true); }
+      else { btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct'); addXP(0,false); }
+      allBtns.forEach((b,i)=>{ if(i!==ai && i!==q.correct) b.classList.add('dim'); });
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+    };
+    altsDiv.appendChild(btn);
+  });
+  quizContainer.appendChild(card);
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+</script>
+</body>
+</html>
