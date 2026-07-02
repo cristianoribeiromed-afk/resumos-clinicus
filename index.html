@@ -453,17 +453,25 @@ document.getElementById('modalCheck').onclick = async ()=>{
     const iEmail = header.indexOf("email");
     const iPlano = header.indexOf("plano");
     const iAtivo = header.indexOf("ativo");
-    const encontrada = linhas.slice(1).find(l=> (l[iEmail]||"").trim().toLowerCase()===email && (l[iAtivo]||"").trim().toUpperCase()==="TRUE");
-    if(encontrada){
-      const planoKey = (encontrada[iPlano]||"").trim().toLowerCase();
+    // Um email pode ter VÁRIAS linhas ativas (um combo/plano por linha) — junta todas.
+    const encontradas = linhas.slice(1).filter(l=> (l[iEmail]||"").trim().toLowerCase()===email && (l[iAtivo]||"").trim().toUpperCase()==="TRUE");
+    if(encontradas.length){
       const idx = CATALOGO_DATA ? buildAccessIndex(CATALOGO_DATA) : {};
-      const itens = idx[planoKey] || [];
+      const planosNomes = [];
+      const itensMap = new Map(); // dedupe por url, caso dois planos compartilhem material
+      encontradas.forEach(l=>{
+        const planoRaw = (l[iPlano]||"").trim();
+        const planoKey = planoRaw.toLowerCase();
+        planosNomes.push(planoRaw);
+        (idx[planoKey] || []).forEach(it=> itensMap.set(it.url, it));
+      });
+      const itens = Array.from(itensMap.values());
       if(itens.length){
-        msg.innerHTML = `<span style="color:var(--green-light)">Acesso liberado: <b>${encontrada[iPlano]}</b></span><div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">`+
+        msg.innerHTML = `<span style="color:var(--green-light)">Acesso liberado: <b>${planosNomes.join(', ')}</b></span><div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">`+
           itens.map(it=>`<a href="${it.url}" target="_blank" style="background:var(--green-dark);color:#fff;text-align:center;padding:8px 10px;border-radius:8px;text-decoration:none;font-size:13px;">📂 ${it.nome}</a>`).join('')+
           `</div>`;
       } else {
-        msg.innerHTML = `<span style="color:var(--gold)">Acesso confirmado (plano: ${encontrada[iPlano]}), mas não encontramos os arquivos vinculados a esse plano. Fale com o suporte no WhatsApp.</span>`;
+        msg.innerHTML = `<span style="color:var(--gold)">Acesso confirmado (plano(s): ${planosNomes.join(', ')}), mas não encontramos os arquivos vinculados. Fale com o suporte no WhatsApp.</span>`;
       }
     } else {
       msg.textContent = "Não encontramos esse email ativo ainda. Se você já pagou, aguarde a confirmação ou fale no WhatsApp.";
