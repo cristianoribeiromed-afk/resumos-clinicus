@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioeletricidad — Potencial de Acción Nervioso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>Bioeletricidad</h1>
+        <span>Potencial Subumbral · Potencial de Acción · Condução</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Bioeletricidad — potencial subumbral e potencial de ação nervoso</h2>
+    <p>Células excitáveis, limiar (umbral), lei do tudo ou nada, fases do potencial de ação e condução nervosa — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="excitaveis">🔌 Células Excitáveis</button>
+    <button class="tab-btn" data-tab="fenomeno">⚡ Excitação Elétrica</button>
+    <button class="tab-btn" data-tab="umbral">🎯 Umbral &amp; Tudo-ou-Nada</button>
+    <button class="tab-btn" data-tab="fases">🌊 Fases do PA</button>
+    <button class="tab-btn" data-tab="conducao">🏃 Condução do PA</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- CÉLULAS EXCITÁVEIS -->
+  <section class="panel active" id="excitaveis">
+    <div class="block">
+      <h3>Membrana citoplasmática polarizada</h3>
+      <p>Toda membrana citoplasmática está <b>polarizada</b> — existe uma diferença de potencial elétrico entre o interior e o exterior da célula.</p>
+    </div>
+    <div class="block">
+      <h3>Classificação das células segundo o comportamento elétrico</h3>
+      <table class="quicktab">
+        <tr><th>Tipo</th><th>Característica</th><th>Exemplos</th></tr>
+        <tr><td><b>Células excitáveis</b></td><td>O potencial de membrana (Em) sofre importantes variações periódicas associadas à função celular. A magnitude da resposta é MUITO MAIOR que a magnitude do estímulo. Apresentam Potencial de Membrana em Repouso (Er/PMR).</td><td>Neurônios, fibras musculares</td></tr>
+        <tr><td><b>Células não excitáveis</b></td><td>Apresentam mudanças locais subumbrais (potenciais locais) que ativam funções celulares, sem gerar PA propagado.</td><td>Macrófagos, células glandulares, células ciliadas</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> nas células excitáveis, uma pequena mudança de estímulo gera uma resposta GRANDE e desproporcional — é essa amplificação que caracteriza a excitabilidade.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Excitáveis: neurônios/músculo, resposta ampliada, mudanças cíclicas rápidas. Não excitáveis: macrófagos/glandulares/ciliadas, só respostas locais.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que células não excitáveis não têm NENHUMA resposta elétrica — elas têm, só que local e subumbral, sem PA propagado.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Um macrófago responde a um estímulo com um potencial local. Isso gera um PA propagado?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Não — células não excitáveis não geram PA propagado, apenas respostas locais subumbrais.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que faz sentido que neurônios e fibras musculares (que precisam transmitir sinais rapidamente) sejam as células excitáveis por excelência?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FENÔMENO DE EXCITAÇÃO -->
+  <section class="panel" id="fenomeno">
+    <div class="block">
+      <h3>O que caracteriza a excitação elétrica?</h3>
+      <p>Uma mudança (aumento) na <b>condutância</b> (↑g) / <b>permeabilidade</b> (↑P) para algum dos íons envolvidos no Er (Na⁺, K⁺, Cl⁻).</p>
+    </div>
+    <div class="block">
+      <h3>Causas do aumento de condutância — tipos de estímulo</h3>
+      <table class="quicktab">
+        <tr><th>Tipo de estímulo</th><th>Exemplo</th></tr>
+        <tr><td>Químico</td><td>Acetilcolina (ACh)</td></tr>
+        <tr><td>Elétrico</td><td>Mudança no Er</td></tr>
+        <tr><td>Mecânico</td><td>Deformação mecânica da membrana citoplasmática</td></tr>
+      </table>
+      <p>A excitação consiste em que o Er muda transitoriamente, se afastando do valor negativo (fica menos negativo/mais positivo).</p>
+    </div>
+    <div class="block">
+      <h3>2 tipos de respostas elétricas</h3>
+      <ol style="font-size:13.8px;color:var(--text-dim);padding-left:20px;">
+        <li><b>Respostas subumbrais</b> (potenciais graduados, potenciais locais não propagados)</li>
+        <li><b>Potencial de Ação (PA)</b> ou impulso</li>
+      </ol>
+      <div class="trap"><b>Pegadinha:</b> nem toda mudança no potencial de membrana é um PA — se não atinge o limiar, é só uma resposta subumbral local, que não se propaga.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Excitação = ↑condutância para Na⁺/K⁺/Cl⁻. Estímulos: químico (ACh), elétrico, mecânico. 2 tipos de resposta: subumbral e PA.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir resposta subumbral (local, não propagada) com potencial de ação (propagado por toda a membrana).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual neurotransmissor é citado como exemplo clássico de estímulo químico da excitação?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Acetilcolina (ACh).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que um estímulo mecânico (como pressão na pele) consegue abrir canais iônicos numa terminação nervosa?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UMBRAL E TUDO OU NADA -->
+  <section class="panel" id="umbral">
+    <div class="block">
+      <h3>Potencial umbral</h3>
+      <p>É o potencial elétrico mínimo da membrana necessário para gerar um PA. Neste potencial, se abrem automaticamente TODOS os canais de Na⁺ ativados por despolarização que ainda estavam inativos.</p>
+      <table class="quicktab">
+        <tr><th>Parâmetro</th><th>Valor</th></tr>
+        <tr><td>Potencial umbral (fibras nervosas grandes)</td><td>−65 mV</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Lei do Tudo ou Nada</h3>
+      <p>Uma vez atingido o limiar, o potencial de ação é gerado e se propaga por TODA a membrana; se o limiar não é atingido, o potencial de ação NÃO ocorre.</p>
+      <div class="mnemo"><b>Dica:</b> não existe "meio PA" — ou dispara completo (tudo), ou não dispara nada. Igual já vimos na Biofísica P1, mas aqui com o valor exato: −65 mV para fibras grandes.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Umbral de fibras grandes = −65mV. No umbral, abrem TODOS os canais de Na⁺ inativos. Lei do tudo ou nada.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que aumentar a intensidade do estímulo além do limiar gera um PA "maior" — a resposta já é máxima, sempre igual.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual é o valor do potencial umbral em fibras nervosas grandes?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">−65 mV.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que faz sentido, do ponto de vista de segurança do sistema nervoso, que TODOS os canais de Na⁺ se abram de uma vez no limiar, e não gradualmente?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FASES DO PA -->
+  <section class="panel" id="fases">
+    <div class="block">
+      <h3>O que é o Potencial de Ação?</h3>
+      <p>É uma mudança brusca (despolarização) no potencial de membrana que se estende rapidamente ao longo da membrana citoplasmática da fibra nervosa (axônio). Cada PA começa com uma mudança súbita desde o PMR negativo (−70 a −90 mV) até um potencial positivo, e termina com uma mudança quase igualmente rápida de volta ao potencial negativo.</p>
+      <table class="quicktab">
+        <tr><th>Tipo de PA</th></tr>
+        <tr><td>Potencial de espiga (agulha)</td></tr>
+        <tr><td>Potencial em platô (meseta)</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>As 3 etapas gerais</h3>
+      <ol style="font-size:13.8px;color:var(--text-dim);padding-left:20px;">
+        <li><b>Excitação</b> — geração do PA na fibra nervosa</li>
+        <li><b>Condução</b> — propagação do PA ao longo da fibra nervosa</li>
+        <li><b>Transmissão</b> — sinapse</li>
+      </ol>
+    </div>
+    <div class="block">
+      <h3>Fase 1 — Despolarização</h3>
+      <p>Estímulo despolarizante (mecânico, químico ou elétrico) → ↑PNa⁺ (abrem-se alguns canais de Na⁺ ativados por voltagem, ↑gNa⁺) → entra certa quantidade de íons Na⁺ (cargas positivas), gerando corrente iônica de Na⁺ (INa⁺) → o Em aumenta rapidamente para valores menos negativos (mais positivos) = "despolarização".</p>
+      <div class="clinico"><b>Retroalimentação positiva (círculo vicioso):</b> a entrada de Na⁺ provoca despolarização, que abre MAIS canais de Na⁺, o que causa MAIS entrada de Na⁺ — esse ciclo se autoalimenta até o pico do PA.</div>
+      <table class="quicktab">
+        <tr><th>Tipo de fibra</th><th>Comportamento no pico</th></tr>
+        <tr><td>Fibras nervosas grandes</td><td>Excesso de Na⁺ leva o potencial além de zero — fica positivo (+35 mV) — "sobreexcitação"/overshoot, com inversão de cargas</td></tr>
+        <tr><td>Fibras nervosas pequenas</td><td>O potencial se aproxima de zero, mas NÃO se torna positivo</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Fase 2 — Repolarização</h3>
+      <p>Depois de décimos-de-milésimos de segundo, após certa quantidade de Na⁺ entrar, os canais de Na⁺ ativados por voltagem se fecham (↓gNa⁺) e aumenta a condutância ao K⁺ (↑gK⁺ — canais lentos de K⁺ ativados por despolarização), gerando uma corrente iônica de K⁺ (IK⁺) de efeito hiperpolarizante — saem íons K⁺ positivos da célula, restabelecendo o PMR negativo normal: "repolarização" da membrana.</p>
+    </div>
+    <div class="block">
+      <h3>Fase 3 — Hiperpolarização</h3>
+      <p>Os canais de K⁺ continuam abertos por algum tempo (pós-potencial, nem sempre presente) até finalmente se fecharem, deixando o potencial temporariamente mais negativo que o repouso, antes de estabilizar.</p>
+      <div class="mnemo"><b>Dica:</b> Na⁺ ENTRA (despolariza) → K⁺ SAI (repolariza) → excesso de K⁺ que sai gera a hiperpolarização (nem sempre presente).</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Despolarização = Na⁺ entra (retroalimentação positiva). Repolarização = fecha Na⁺, abre K⁺, sai K⁺. Hiperpolarização = K⁺ segue saindo um pouco mais.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que TODAS as fibras nervosas atingem valores positivos no pico — só as fibras GRANDES chegam a +35mV; as pequenas só se aproximam de zero.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>O que acontece com os canais de Na⁺ e K⁺ durante a repolarização?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Os canais de Na⁺ se fecham (↓gNa⁺) e os canais de K⁺ se abrem (↑gK⁺), promovendo saída de K⁺.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a retroalimentação positiva do Na⁺ não continua indefinidamente, levando a célula a ficar permanentemente despolarizada?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONDUÇÃO -->
+  <section class="panel" id="conducao">
+    <div class="block">
+      <h3>Condução contínua × Condução saltatória</h3>
+      <table class="quicktab">
+        <tr><th>Tipo de fibra</th><th>Tipo de condução</th><th>Velocidade</th></tr>
+        <tr><td>Amielínicas (sem mielina)</td><td>Contínua — ponto a ponto ao longo de toda a membrana</td><td>Menor</td></tr>
+        <tr><td>Mielínicas (com mielina)</td><td>Saltatória — de Nodo de Ranvier a Nodo de Ranvier</td><td>Maior</td></tr>
+      </table>
+      <p>Nas fibras mielínicas, os íons não conseguem fluir através das grossas bainhas de mielina, mas fluem com facilidade pelos <b>Nodos de Ranvier</b> — zonas ricas em canais de Na⁺. Por isso, o PA só se produz nos nodos, "pulando" de um a outro.</p>
+      <div class="clinico"><b>Vantagens da condução saltatória:</b> (1) aumenta a velocidade de transmissão entre 5 e 50 vezes; (2) conserva energia para o axônio.</div>
+    </div>
+    <div class="block">
+      <h3>Fatores que afetam a velocidade de condução</h3>
+      <table class="quicktab">
+        <tr><th>Fator</th><th>Efeito</th></tr>
+        <tr><td>Diâmetro da fibra nervosa</td><td>Fibras mais GROSSAS conduzem o impulso mais rápido que as mais finas</td></tr>
+        <tr><td>Presença de mielina</td><td>Fibras MIELÍNICAS conduzem mais rápido (saltatória) que as AMIELÍNICAS (contínua)</td></tr>
+      </table>
+      <h4>Faixa de velocidade de condução</h4>
+      <p><b>0,25 m/s</b> (fibras amielínicas pequenas) até <b>100 m/s</b> (fibras mielínicas grandes).</p>
+      <div class="mnemo"><b>Dica:</b> "Grossa + Mielinizada = Rápida. Fina + Amielínica = Lenta." Os dois fatores somam efeito na mesma direção.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Saltatória = mielina, nodo a nodo, 5-50x mais rápida, poupa energia. Velocidade: 0,25 a 100 m/s.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que o PA se propaga "por dentro" da bainha de mielina — na verdade ele salta PELOS NODOS, a mielina é isolante.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Por que a condução saltatória conserva energia?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Porque o PA (e o trabalho da bomba Na⁺/K⁺ para restaurar os gradientes) só ocorre nos nodos de Ranvier, não ao longo de toda a membrana.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que uma fibra grossa conduz mais rápido que uma fina, mesmo sem considerar a mielina?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Durante uma aula prática, um estudante aplica um estímulo elétrico fraco numa fibra nervosa isolada e não observa nenhuma resposta propagada, apesar de haver uma pequena alteração local no potencial de membrana.</div>
+      <div class="caso-q">
+        <p>1) Por que esse estímulo não gerou um potencial de ação?</p>
+        <p>2) O que precisaria acontecer para que um PA fosse gerado?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O estímulo gerou apenas uma resposta subumbral (potencial local, não propagado) porque não atingiu o potencial umbral (≈−65mV em fibras grandes). Pela Lei do Tudo ou Nada, só um estímulo que atinja ou ultrapasse o limiar abre TODOS os canais de Na⁺ inativos daquela região, gerando um PA completo e propagado.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Paciente com neuropatia periférica apresenta perda seletiva da sensibilidade tátil e proprioceptiva (fibras grossas mielínicas), com preservação relativa da sensação dolorosa (fibras finas, tipo C, amielínicas).</div>
+      <div class="caso-q">
+        <p>1) Por que a velocidade de condução das fibras responsáveis pelo tato/propriocepção é maior que a das fibras de dor?</p>
+        <p>2) Qual tipo de condução (contínua ou saltatória) está mais comprometido neste paciente?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> As fibras de tato/propriocepção são grossas e mielínicas — conduzem por condução saltatória, muito mais rápida (podendo chegar a 100 m/s). As fibras de dor tipo C são finas e amielínicas — conduzem de forma contínua, mais lenta (próximo de 0,25 m/s). Uma neuropatia que afeta preferencialmente fibras mielínicas grossas compromete a condução saltatória, explicando a perda seletiva de tato/propriocepção com relativa preservação da dor.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 32 anos, diagnosticado com síndrome de Guillain-Barré (doença desmielinizante autoimune), apresenta fraqueza muscular ascendente progressiva e diminuição acentuada da velocidade de condução nervosa em exame de eletroneuromiografia.</div>
+      <div class="caso-q">
+        <p>1) Por que a perda da mielina causa lentificação da condução nervosa?</p>
+        <p>2) O que acontece com a capacidade de "saltar" de nodo a nodo quando a bainha de mielina é destruída?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> A mielina normalmente força o PA a se restringir aos Nodos de Ranvier (condução saltatória), o que multiplica a velocidade de condução em 5 a 50 vezes. Quando a bainha de mielina é destruída (desmielinização), a fibra perde essa organização, e a condução passa a se aproximar de uma condução contínua (mais lenta) ou é interrompida — os canais de Na⁺, antes concentrados nos nodos, não conseguem mais gerar PA eficientes ao longo do trecho desmielinizado, explicando a lentificação (ou até bloqueio) da condução observada no exame.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante um procedimento odontológico, o dentista aplica anestésico local (bloqueador de canais de Na⁺ dependentes de voltagem) próximo a um nervo sensitivo antes de iniciar o procedimento.</div>
+      <div class="caso-q">
+        <p>1) Como o bloqueio dos canais de Na⁺ impede a geração do potencial de ação?</p>
+        <p>2) Relacione esse mecanismo com a fase de despolarização e com a Lei do Tudo ou Nada.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> A despolarização depende da entrada de Na⁺ pelos canais de Na⁺ ativados por voltagem. Ao bloquear esses canais, o anestésico local impede o ↑gNa⁺ necessário para que o potencial de membrana atinja o limiar (≈−65mV). Sem atingir o limiar, não se abrem "todos os canais de Na⁺" da região, e — pela Lei do Tudo ou Nada — nenhum potencial de ação é gerado nem propagado, bloqueando a transmissão do estímulo doloroso ao longo daquela fibra.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">15 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 15</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">47</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">25 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Bioeléctricos — Potencial de Acción Nervioso" fornecido pelo professor. Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 25 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Célula excitável", def:"Sofre variações periódicas importantes do potencial de membrana; a resposta é muito maior que o estímulo (ex.: neurônios, fibras musculares)."},
+  {term:"Célula não excitável", def:"Apresenta apenas respostas locais subumbrais, sem PA propagado (ex.: macrófagos, glandulares, ciliadas)."},
+  {term:"Potencial umbral", def:"Voltagem mínima necessária para gerar um PA — em fibras nervosas grandes, ≈ −65 mV."},
+  {term:"Lei do tudo ou nada", def:"Atingido o limiar, o PA é gerado e se propaga por toda a membrana; se não, nada acontece."},
+  {term:"Potencial de espiga", def:"Tipo de potencial de ação em formato agudo/pontual (aguja)."},
+  {term:"Potencial em platô (meseta)", def:"Tipo de potencial de ação com fase sustentada prolongada."},
+  {term:"Despolarização", def:"Entrada de Na⁺ pelos canais ativados por voltagem, tornando o Em menos negativo/mais positivo."},
+  {term:"Retroalimentação positiva do Na⁺", def:"Entrada de Na⁺ → mais despolarização → mais canais de Na⁺ se abrem → mais entrada de Na⁺ (círculo autoalimentado)."},
+  {term:"Sobreexcitação (overshoot)", def:"Em fibras grandes, o potencial ultrapassa zero e chega a ≈+35mV, com inversão de cargas."},
+  {term:"Repolarização", def:"Fecham-se os canais de Na⁺, abrem-se os de K⁺; saída de K⁺ restabelece o potencial de repouso negativo."},
+  {term:"Hiperpolarização", def:"Canais de K⁺ seguem abertos por mais um tempo, deixando o potencial temporariamente mais negativo que o repouso."},
+  {term:"Condução contínua", def:"Propagação ponto a ponto do PA em fibras amielínicas — mais lenta."},
+  {term:"Condução saltatória", def:"Propagação do PA de Nodo de Ranvier a Nodo de Ranvier em fibras mielínicas — 5 a 50x mais rápida, poupa energia."},
+  {term:"Nodo de Ranvier", def:"Região sem mielina, rica em canais de Na⁺, onde o PA efetivamente se gera nas fibras mielínicas."},
+  {term:"Velocidade de condução", def:"Varia de 0,25 m/s (fibras amielínicas finas) a 100 m/s (fibras mielínicas grossas); depende do diâmetro e da presença de mielina."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (25) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"La membrana citoplasmática, en condiciones normales, se encuentra:", alts:["Despolarizada","Polarizada","Sin carga eléctrica","Siempre en potencial de acción"], correct:1, comment:"La membrana citoplasmática está polarizada en condiciones de reposo."},
+  {tag:"Fácil", stem:"Son ejemplos de células excitables:", alts:["Macrófagos y células glandulares","Neuronas y fibras musculares","Células ciliadas y glandulares","Ninguna célula del cuerpo"], correct:1, comment:"Neuronas y fibras musculares son el ejemplo clásico de células excitables."},
+  {tag:"Intermediária", stem:"En las células no excitables (macrófagos, glandulares, ciliadas), los cambios de potencial son:", alts:["Potenciales de acción propagados","Cambios locales subumbrales (potenciales locales)","Siempre positivos","Idénticos a los de neuronas"], correct:1, comment:"Presentan solo cambios locales subumbrales, sin PA propagado."},
+  {tag:"Fácil", stem:"El fenómeno de excitación eléctrica se caracteriza por:", alts:["Disminución de la conductancia iónica","Aumento de la conductancia (permeabilidad) para algún ion (Na⁺, K⁺, Cl⁻)","Ausencia total de cambios iónicos","Solo cambios en la temperatura celular"], correct:1, comment:"Excitación = aumento de conductancia/permeabilidad para algún ion implicado en el Er."},
+  {tag:"Intermediária", stem:"Son tipos de estímulo que pueden causar el aumento de conductancia (↑g), EXCEPTO:", alts:["Químico (Acetilcolina)","Eléctrico (cambio en el Er)","Mecánico (deformación de la membrana)","Térmico (cambio de temperatura)"], correct:3, comment:"Los tipos citados son químico, eléctrico y mecánico — el térmico no es mencionado en el material."},
+  {tag:"Fácil", stem:"Las respuestas subumbrales también son llamadas:", alts:["Potenciales de acción","Potenciales graduados o locales no propagados","Potenciales de meseta","Potenciales de espiga"], correct:1, comment:"Respuestas subumbrales = potenciales graduados, locales, no propagados."},
+  {tag:"Fácil", stem:"El potencial umbral de fibras nerviosas grandes es aproximadamente:", alts:["−90 mV","−70 mV","−65 mV","−40 mV"], correct:2, comment:"Potencial umbral de fibras nerviosas grandes: −65mV."},
+  {tag:"Intermediária", stem:"Al alcanzar el potencial umbral:", alts:["Se abren algunos canales de Na⁺ únicamente","Se abren automáticamente TODOS los canales de Na⁺ inactivos de la zona","Se cierran todos los canales de K⁺","No ocurre ningún cambio adicional"], correct:1, comment:"En el umbral se abren automáticamente TODOS los canales de Na⁺ activados por despolarización que aún estaban inactivos."},
+  {tag:"Fácil", stem:"La ley del todo o nada establece que:", alts:["La respuesta es siempre proporcional al estímulo","Alcanzado el umbral, el PA se genera y propaga completamente; si no, no ocurre nada","Solo ocurre en músculo liso","Depende exclusivamente de la temperatura"], correct:1, comment:"Ley del todo o nada: respuesta completa o ninguna, sin términos medios."},
+  {tag:"Fácil", stem:"El potencial de membrana en reposo (PMR) normal de una fibra nerviosa está entre:", alts:["+30 a +50 mV","−70 a −90 mV","0 a −20 mV","−200 a −250 mV"], correct:1, comment:"PMR normal: −70 a −90 mV."},
+  {tag:"Intermediária", stem:"En fibras nerviosas GRANDES, durante el pico del potencial de acción:", alts:["El potencial se aproxima a cero pero no se vuelve positivo","El potencial se vuelve positivo, llegando a aproximadamente +35 mV","El potencial permanece negativo todo el tiempo","No hay cambio significativo"], correct:1, comment:"En fibras grandes, el exceso de Na⁺ lleva el potencial a +35mV (sobreexcitación/overshoot)."},
+  {tag:"Difícil", stem:"En fibras nerviosas PEQUEÑAS, durante el pico del potencial de acción:", alts:["El potencial se vuelve muy positivo (+35mV)","El potencial se aproxima a cero, pero NO se vuelve positivo","No ocurre despolarización","El potencial se vuelve más negativo que el reposo"], correct:1, comment:"En fibras pequeñas el potencial se acerca a cero pero no llega a ser positivo — diferencia clave con las fibras grandes."},
+  {tag:"Intermediária", stem:"La retroalimentación positiva durante la despolarización ocurre porque:", alts:["La entrada de Na⁺ cierra los canales de Na⁺","La entrada de Na⁺ provoca despolarización, que abre más canales de Na⁺, generando más entrada de Na⁺","La salida de K⁺ abre canales de Na⁺","No existe retroalimentación en este proceso"], correct:1, comment:"Es un círculo autoalimentado: entrada de Na⁺ → despolarización → más canales de Na⁺ se abren → más entrada de Na⁺."},
+  {tag:"Fácil", stem:"Durante la repolarización:", alts:["Se abren canales de Na⁺ y se cierran los de K⁺","Se cierran canales de Na⁺ y se abren los de K⁺","Ambos canales permanecen abiertos indefinidamente","No hay cambio en la conductancia iónica"], correct:1, comment:"Repolarización: se cierran los canales de Na⁺ (↓gNa⁺) y se abren los de K⁺ (↑gK⁺)."},
+  {tag:"Intermediária", stem:"La corriente de K⁺ (IK⁺) durante la repolarización tiene efecto:", alts:["Despolarizante","Hiperpolarizante","Neutro","Solo afecta el Cl⁻"], correct:1, comment:"La salida de K⁺ genera una corriente hiperpolarizante que restablece el PMR."},
+  {tag:"Difícil", stem:"La fase de hiperpolarización ocurre porque:", alts:["Los canales de Na⁺ permanecen abiertos por más tiempo","Los canales de K⁺ siguen abiertos por algún tiempo tras la repolarización","Se abren nuevos canales de Cl⁻","Es un evento que ocurre siempre antes de la despolarización"], correct:1, comment:"Los canales de K⁺ permanecen abiertos algún tiempo más, generando el post-potencial hiperpolarizante (no siempre presente)."},
+  {tag:"Fácil", stem:"Las 3 etapas generales del potencial de acción nervioso son:", alts:["Excitación, Conducción, Transmisión","Despolarización, Repolarización, Excitación","Umbral, Meseta, Espiga","Reposo, Acción, Sinapsis únicamente"], correct:0, comment:"Excitación (generación) → Conducción (propagación) → Transmisión (sinapsis)."},
+  {tag:"Fácil", stem:"En fibras nerviosas amielínicas, la conducción del PA es de tipo:", alts:["Saltatoria","Continua","Inexistente","Solo eléctrica, sin componente iónico"], correct:1, comment:"Fibras amielínicas: conducción continua, más lenta."},
+  {tag:"Intermediária", stem:"En fibras nerviosas mielínicas, el PA solo se genera en:", alts:["Toda la extensión de la fibra","Los Nodos de Ranvier","Exclusivamente en el cuerpo neuronal","La vaina de mielina"], correct:1, comment:"Los iones fluyen con facilidad por los Nodos de Ranvier — el PA solo se produce ahí."},
+  {tag:"Fácil", stem:"La conducción saltatoria aumenta la velocidad de transmisión aproximadamente:", alts:["1-2 veces","5-50 veces","100-200 veces","No aumenta la velocidad"], correct:1, comment:"La conducción saltatoria aumenta la velocidad entre 5 y 50 veces."},
+  {tag:"Intermediária", stem:"Además de aumentar la velocidad, la conducción saltatoria tiene la ventaja de:", alts:["Aumentar el gasto energético del axón","Conservar energía para el axón","No tener ninguna otra ventaja","Eliminar la necesidad de la bomba Na⁺/K⁺"], correct:1, comment:"La conducción saltatoria conserva energía, ya que el trabajo iónico se concentra solo en los nodos."},
+  {tag:"Fácil", stem:"El diámetro de la fibra nerviosa influye en la velocidad de conducción de la siguiente forma:", alts:["Fibras más gruesas conducen más lento","Fibras más gruesas conducen más rápido","El diámetro no influye en la velocidad","Solo influye en fibras mielínicas"], correct:1, comment:"Fibras más gruesas (mayor diámetro) conducen el impulso de forma más rápida."},
+  {tag:"Intermediária", stem:"La velocidad de conducción nerviosa varía aproximadamente entre:", alts:["0,25 m/s y 100 m/s","1 m/s y 10 m/s","50 m/s y 500 m/s","No varía, es constante"], correct:0, comment:"Rango de velocidad: 0,25 m/s (amielínicas pequeñas) a 100 m/s (mielínicas grandes)."},
+  {tag:"Difícil", stem:"Un estímulo eléctrico usado para transmitir señales entre fibras musculares sucesivas del corazón y músculo liso es un ejemplo de:", alts:["Estímulo químico","Estímulo mecánico","Estímulo eléctrico","Estímulo hormonal"], correct:2, comment:"El paso de corriente eléctrica (iones) entre fibras del corazón/músculo liso es citado como ejemplo de estímulo eléctrico."},
+  {tag:"Difícil", stem:"Basándose en la ley del todo o nada, un estímulo que alcanza exactamente el umbral y otro muy superior al umbral generarán:", alts:["Potenciales de acción de diferente magnitud","Potenciales de acción idénticos en magnitud","El estímulo mayor no generará respuesta","Ninguno generará potencial de acción"], correct:1, comment:"Una vez alcanzado el umbral, la respuesta es siempre la misma (máxima) — aumentar la intensidad del estímulo no la modifica."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Células e Excitação", statements:[
+    "Células não excitáveis geram potenciais de ação propagados normalmente.",
+    "A excitação elétrica caracteriza-se por aumento da condutância para Na⁺, K⁺ ou Cl⁻.",
+    "A acetilcolina é citada como exemplo de estímulo químico.",
+    "As respostas subumbrais são potenciais de ação completos."
+  ], answers:["F","V","V","F"], comment:"I é falso: células não excitáveis geram só respostas locais, não PA propagado. IV é falso: respostas subumbrais são potenciais graduados, NÃO são PA."},
+  {theme:"Umbral e Fases do PA", statements:[
+    "O potencial umbral de fibras nervosas grandes é de aproximadamente −65 mV.",
+    "Segundo a lei do tudo ou nada, aumentar a intensidade do estímulo acima do limiar gera uma resposta maior.",
+    "Durante a despolarização, ocorre entrada de Na⁺ na célula.",
+    "Em fibras nervosas pequenas, o potencial de ação atinge valores positivos como +35mV."
+  ], answers:["V","F","V","F"], comment:"II é falso: a resposta já é máxima no limiar, não aumenta mais. IV é falso: só as fibras GRANDES chegam a valores positivos; as pequenas se aproximam de zero sem ultrapassar."},
+  {theme:"Condução Nervosa", statements:[
+    "A condução saltatória ocorre em fibras amielínicas.",
+    "Os Nodos de Ranvier são ricos em canais de Na⁺.",
+    "A condução saltatória aumenta a velocidade de transmissão entre 5 e 50 vezes.",
+    "Fibras nervosas mais finas conduzem o impulso mais rapidamente que as mais grossas."
+  ], answers:["F","V","V","F"], comment:"I é falso: a condução saltatória ocorre em fibras MIELÍNICAS. IV é falso: fibras mais GROSSAS conduzem mais rápido, não as finas."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Fases do potencial de ação e mecanismo iônico", colA:["Despolarização","Repolarização","Hiperpolarização","Sobreexcitação (overshoot)","Potencial umbral"],
+   colB:["Entrada de Na⁺ (canais de voltagem se abrem)","Saída de K⁺ (canais de Na⁺ fecham, K⁺ abrem)","Canais de K⁺ seguem abertos, potencial fica mais negativo que o repouso","Potencial ultrapassa zero, chega a +35mV em fibras grandes","≈−65mV, abre todos os canais de Na⁺ inativos"],
+   answers:["A","B","C","D","E"], comment:"A sequência completa: umbral → despolarização → sobreexcitação → repolarização → hiperpolarização (nem sempre presente)."},
+  {title:"2. Condução nervosa", colA:["Fibra amielínica","Fibra mielínica","Nodo de Ranvier","Velocidade mínima de condução","Velocidade máxima de condução"],
+   colB:["Condução contínua, mais lenta","Condução saltatória, mais rápida","Região rica em canais de Na⁺, onde o PA se gera","0,25 m/s","100 m/s"],
+   answers:["A","B","C","D","E"], comment:"Diâmetro e mielinização são os dois fatores que determinam a velocidade — quanto maiores/presentes, mais rápida a condução."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
