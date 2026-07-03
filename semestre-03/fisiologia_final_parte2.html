@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fisiologia Cardiovascular — Músculo Liso, Ciclo Cardíaco, ECG e Hemodinâmica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#160f11; --surface:#1f1519; --surface-2:#281a1f; --line:#3d2830;
+  --text:#f3e8ea; --text-dim:#c9b4b8; --text-faint:#8f767c;
+  --blood:#c1503f; --blood-deep:#8c1f2b; --gold:#e8c27a; --gold-deep:#c9a227;
+  --nerve:#5f9bb3; --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(193,80,63,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(22,15,17,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--blood-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:14px;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);} .stat-pill.streak{color:var(--blood);}
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--blood);color:var(--text);}
+.tab-btn.active{background:var(--blood);border-color:var(--blood);color:#1b0d0a;}
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--blood);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--blood);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--blood);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(193,80,63,0.1);border-left:3px solid var(--blood);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.clinico b{color:var(--blood);}
+.examtip{background:rgba(95,155,179,0.08);border-left:3px solid var(--nerve);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--nerve);margin:10px 0;}
+.examtip b{color:var(--nerve);}
+.trap{background:rgba(232,194,122,0.08);border-left:3px solid var(--gold-deep);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.trap b{color:var(--gold-deep);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--blood);padding-left:12px;}
+
+/* FLASHCARDS */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--blood);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--blood);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+/* QUIZ */
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--blood);font-size:14px;background:rgba(193,80,63,0.15);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--blood);background:rgba(193,80,63,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--nerve);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--blood);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--blood);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">❤️</div>
+      <div class="brand-text">
+        <h1>Fisiologia Cardiovascular</h1>
+        <span>Músculo Liso · Ciclo Cardíaco · Condução · ECG · Hemodinâmica</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill streak">🔥 <span id="streakCount">0</span></div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Guyton and Hall — Cap. 8 a 15</div>
+    <h2>Músculo liso, ciclo cardíaco, sistema de condução, ECG e hemodinâmica</h2>
+    <p>Teoria condensada, flashcards dos termos-chave e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="liso">Cap. 8 · Músculo Liso</button>
+    <button class="tab-btn" data-tab="cardiaca">Cap. 9 · Fisiologia Cardíaca</button>
+    <button class="tab-btn" data-tab="ciclo">Ciclo Cardíaco</button>
+    <button class="tab-btn" data-tab="conducao">Cap. 10 · Condução</button>
+    <button class="tab-btn" data-tab="ecg">Cap. 11-12 · ECG</button>
+    <button class="tab-btn" data-tab="hemo">Cap. 14-15 · Hemodinâmica</button>
+    <button class="tab-btn" data-tab="flash">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">Quiz</button>
+  </nav>
+
+  <!-- MÚSCULO LISO -->
+  <section class="panel active" id="liso">
+    <div class="block">
+      <h3>Características gerais</h3>
+      <table class="quicktab">
+        <tr><th>Parâmetro</th><th>Valor</th></tr>
+        <tr><td>Diâmetro</td><td>1–5 µm (≈30x menor que o esquelético)</td></tr>
+        <tr><td>Força máxima</td><td>4–6 kg/cm² — MAIOR que o esquelético</td></tr>
+      </table>
+      <h4>Multiunitário × Unitário</h4>
+      <table class="quicktab">
+        <tr><th></th><th>Multiunitário</th><th>Unitário (visceral)</th></tr>
+        <tr><td>Fibras</td><td>Separadas, independentes</td><td>Contraem juntas (gap junctions)</td></tr>
+        <tr><td>Controle</td><td>Nervoso</td><td>Espontâneo/hormonal</td></tr>
+        <tr><td>Exemplos</td><td>Íris, ciliar, piloeretor</td><td>Trato GI, útero, vasos</td></tr>
+      </table>
+      <div class="examtip"><b>Cai na prova:</b> memorize os exemplos de cada tipo, não só a teoria.</div>
+    </div>
+    <div class="block">
+      <h3>Mecanismo — sem troponina</h3>
+      <ul>
+        <li>NÃO possui troponina — ponto diferencial do liso</li>
+        <li>Corpos densos = equivalentes aos discos Z</li>
+        <li>5-10x mais actina que miosina</li>
+        <li>ATPase da miosina 10-300x menos ativa → mais lenta, mais eficiente</li>
+      </ul>
+      <h4>Cascata: Ca²⁺ → calmodulina → miosina cinase → fosforila miosina → contração</h4>
+      <div class="mnemo"><b>Dica:</b> regulação se desloca da ACTINA (esquelético) para a MIOSINA (liso, via calmodulina).</div>
+    </div>
+    <div class="block">
+      <h3>Mecanismo de latch e potenciais elétricos</h3>
+      <p><b>Latch (trava):</b> contração prolongada com baixíssimo gasto de energia.</p>
+      <table class="quicktab">
+        <tr><th>Potencial</th><th>Característica</th></tr>
+        <tr><td>Repouso</td><td>−50 a −60 mV</td></tr>
+        <tr><td>Platô (meseta)</td><td>Repolarização lenta (até 1s) — contração prolongada</td></tr>
+      </table>
+      <div class="clinico"><b>Clínico:</b> latch explica o tônus da bexiga e dos vasos sanguíneos.</div>
+    </div>
+  </section>
+
+  <!-- FISIOLOGIA CARDÍACA -->
+  <section class="panel" id="cardiaca">
+    <div class="block">
+      <h3>O coração como 2 bombas em série</h3>
+      <p>Coração direito → pulmões. Coração esquerdo → corpo. Átrios = bombas fracas. Ventrículos = bombas fortes. É um <b>sincício funcional</b>.</p>
+      <div class="mnemo"><b>Dica:</b> "Átrio ajuda, ventrículo trabalha".</div>
+    </div>
+    <div class="block">
+      <h3>Potencial de ação cardíaco — 5 fases</h3>
+      <table class="quicktab">
+        <tr><th>Fase</th><th>Evento</th><th>Íon</th></tr>
+        <tr><td>0</td><td>Despolarização rápida</td><td>Na⁺ entra</td></tr>
+        <tr><td>1</td><td>Repolarização inicial</td><td>K⁺ sai</td></tr>
+        <tr><td>2 (platô)</td><td>Contração sustentada (0,2-0,3s)</td><td>Ca²⁺ entra</td></tr>
+        <tr><td>3</td><td>Repolarização rápida</td><td>K⁺ sai</td></tr>
+        <tr><td>4</td><td>Repouso</td><td>—</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "Na entra rápido, Ca sostiene, K sale".</div>
+      <div class="examtip"><b>Cai na prova:</b> o platô evita a tetanização do coração. Período refratário absoluto ≈ 0,25s.</div>
+    </div>
+  </section>
+
+  <!-- CICLO CARDÍACO -->
+  <section class="panel" id="ciclo">
+    <div class="block">
+      <h3>Fases do ciclo</h3>
+      <table class="quicktab">
+        <tr><th>Diástole</th><th>O que ocorre</th></tr>
+        <tr><td>Relaxamento isovolumétrico</td><td>Todas válvulas fechadas — só muda pressão</td></tr>
+        <tr><td>Enchimento rápido</td><td>≈80% do sangue entra</td></tr>
+        <tr><td>Contração atrial</td><td>Completa os 20% finais</td></tr>
+      </table>
+      <table class="quicktab">
+        <tr><th>Sístole</th><th>O que ocorre</th></tr>
+        <tr><td>Contração isovolumétrica</td><td>Válvulas fechadas — só muda pressão</td></tr>
+        <tr><td>Ejeção</td><td>Sai ≈70ml (70% rápida, 30% lenta)</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha:</b> "TODAS válvulas fechadas" = fase isovolumétrica (sístole OU diástole).</div>
+    </div>
+    <div class="block">
+      <h3>Volumes-chave</h3>
+      <table class="quicktab">
+        <tr><th>Volume</th><th>Valor</th></tr>
+        <tr><td>VTD (telediastólico)</td><td>120 mL</td></tr>
+        <tr><td>VTS (telessistólico)</td><td>50 mL — o que SOBRA</td></tr>
+        <tr><td>VE (ejeção) = VTD−VTS</td><td>70 mL</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "120 entra, 70 sai, 50 fica".</div>
+      <p><b>R1</b> = fecha AV (início sístole). <b>R2</b> = fecha semilunares (início diástole).</p>
+    </div>
+    <div class="block">
+      <h3>Pré-carga, pós-carga, Frank-Starling</h3>
+      <p><b>Pré-carga:</b> estiramento pelo retorno venoso. <b>Pós-carga:</b> resistência da aorta. VE trabalha ≈6x mais que VD.</p>
+      <p><b>Frank-Starling:</b> "mais sangue entra → mais o coração contrai" (dentro de limites).</p>
+      <table class="quicktab">
+        <tr><th>Regulação</th><th>Efeito</th></tr>
+        <tr><td>Simpático</td><td>↑ frequência e força</td></tr>
+        <tr><td>Parassimpático</td><td>↓ frequência</td></tr>
+        <tr><td>K⁺</td><td>Deprime</td></tr>
+        <tr><td>Ca²⁺</td><td>Aumenta contratilidade</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- CONDUÇÃO -->
+  <section class="panel" id="conducao">
+    <div class="block">
+      <h3>Sistema de condução</h3>
+      <p>SA → vias internodais → AV → feixe de His → Purkinje. Átrios se contraem antes dos ventrículos (≈1/6 s).</p>
+      <table class="quicktab">
+        <tr><th>Nódulo sinusal</th><th>Valor</th></tr>
+        <tr><td>Localização</td><td>Átrio direito, perto da veia cava superior</td></tr>
+        <tr><td>Repouso / Limiar</td><td>−55 a −60 mV / −40 mV</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha:</b> o nódulo SA depende de Ca²⁺ (não Na⁺ como o ventrículo) para despolarizar.</div>
+    </div>
+    <div class="block">
+      <h3>Cronologia e velocidades</h3>
+      <table class="quicktab">
+        <tr><th>Estrutura</th><th>Velocidade/Tempo</th></tr>
+        <tr><td>Retraso interno do nó AV</td><td>≈0,09s</td></tr>
+        <tr><td>SA → entrada nos ventrículos (total)</td><td>≈0,16s</td></tr>
+        <tr><td>Até a última fibra ventricular</td><td>≈0,22s</td></tr>
+        <tr><td>Fibras de Purkinje</td><td>1,5-4 m/s — as MAIS rápidas</td></tr>
+      </table>
+      <div class="clinico"><b>Clínico:</b> Síndrome de Stokes-Adams — bloqueio AV súbito, desmaio em 4-5s (falta de O₂ cerebral), Purkinje assume em 5-20s.</div>
+      <div class="examtip"><b>Cai na prova:</b> quem INICIA (SA) → quem RETARDA (AV) → quem DISTRIBUI (Purkinje).</div>
+    </div>
+  </section>
+
+  <!-- ECG -->
+  <section class="panel" id="ecg">
+    <div class="block">
+      <h3>Ondas e intervalos</h3>
+      <table class="quicktab">
+        <tr><th>Onda</th><th>Significado</th></tr>
+        <tr><td>P</td><td>Despolarização atrial</td></tr>
+        <tr><td>QRS</td><td>Despolarização ventricular (sempre rápido)</td></tr>
+        <tr><td>T</td><td>Repolarização ventricular</td></tr>
+      </table>
+      <p>Papel: 25 mm/s | 1mm = 0,04s | PR normal: 0,12-0,20s.</p>
+      <div class="clinico"><b>Clínico:</b> "ECG normal NÃO exclui doença cardíaca; ECG alterado NÃO confirma sozinho."</div>
+    </div>
+    <div class="block">
+      <h3>Cálculo de FC</h3>
+      <table class="quicktab">
+        <tr><th>Ritmo</th><th>Regra</th></tr>
+        <tr><td>Regular</td><td>FC = 300 ÷ quadrados grandes</td></tr>
+        <tr><td>Irregular</td><td>QRS em 6s × 10</td></tr>
+      </table>
+      <p>1 quadrado=300 | 2=150 | 3=100 | 4=75 | 5=60 | 6=50</p>
+    </div>
+    <div class="block">
+      <h3>Eixo cardíaco</h3>
+      <p>Normal: −30° a +110°.</p>
+      <table class="quicktab">
+        <tr><th>DI</th><th>aVF</th><th>Resultado</th></tr>
+        <tr><td>+</td><td>+</td><td>Normal</td></tr>
+        <tr><td>+</td><td>−</td><td>Desvio esquerda</td></tr>
+        <tr><td>−</td><td>+</td><td>Desvio direita</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> só memorize DI(+) e aVF(+) = normal, os outros saem por eliminação.</div>
+    </div>
+  </section>
+
+  <!-- HEMODINÂMICA -->
+  <section class="panel" id="hemo">
+    <div class="block">
+      <h3>Componentes e resistência</h3>
+      <table class="quicktab">
+        <tr><th>Estrutura</th><th>Função</th></tr>
+        <tr><td>Arteríolas</td><td>PRINCIPAL resistência vascular</td></tr>
+        <tr><td>Capilares</td><td>Troca — maior área, MENOR velocidade</td></tr>
+        <tr><td>Veias</td><td>Reservatório — 64% do volume sanguíneo</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha:</b> "artérias = principal resistência" está ERRADO (são as arteríolas).</div>
+    </div>
+    <div class="block">
+      <h3>Leis de Ohm e Poiseuille</h3>
+      <p><b>Ohm:</b> F = ΔP/R. <b>Poiseuille:</b> F ∝ raio⁴ — dobrar o raio = 16x mais fluxo.</p>
+      <div class="clinico"><b>Clínico:</b> pequena vasoconstrição já causa grande redução do fluxo (efeito exponencial do raio).</div>
+    </div>
+    <div class="block">
+      <h3>Outros conceitos-chave</h3>
+      <table class="quicktab">
+        <tr><th>Conceito</th><th>Valor</th></tr>
+        <tr><td>Maior queda de pressão</td><td>Arteríolas</td></tr>
+        <tr><td>Débito cardíaco em repouso</td><td>≈5000 mL/min</td></tr>
+        <tr><td>Hematócrito normal</td><td>≈40%</td></tr>
+        <tr><td>Complacência venosa vs arterial</td><td>≈24x maior</td></tr>
+        <tr><td>Autorregulação</td><td>70-175 mmHg</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">23 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 23</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">40</span> · <span id="resPct">0%</span></span></div>
+    </div>
+    <p class="part-intro">30 múltipla escolha + 10 verdadeiro/falso, com feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado em Guyton and Hall — Textbook of Medical Physiology (Cap. 8 a 15). Não substitui a revisão do livro-texto original.</footer>
+</div>
+
+<script>
+let xp=0, streak=0, scoreQuiz=0, totalAnswered=0;
+function addXP(amount, correct){
+  xp+=amount;
+  if(correct){streak++; scoreQuiz++;} else {streak=0;}
+  totalAnswered++;
+  document.getElementById('xpCount').textContent=xp;
+  document.getElementById('streakCount').textContent=streak;
+  document.getElementById('resScore').textContent=scoreQuiz;
+  document.getElementById('resTotal').textContent=totalAnswered<40?40:totalAnswered;
+  document.getElementById('resPct').textContent=Math.round((scoreQuiz/40)*100)+'%';
+}
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Sincício funcional", def:"Rede de células cardíacas conectadas por junções em fenda que se contraem como uma unidade."},
+  {term:"Corpos densos", def:"Estruturas do músculo liso, equivalentes funcionais dos discos Z do esquelético."},
+  {term:"Mecanismo de latch", def:"Contração prolongada do músculo liso com baixíssimo gasto de energia."},
+  {term:"Platô (meseta)", def:"Fase 2 do potencial de ação cardíaco, sustentada pela entrada de Ca²⁺; evita a tetania."},
+  {term:"Nódulo sinusal (SA)", def:"Marcapasso fisiológico do coração, localizado no átrio direito."},
+  {term:"Corrente funny", def:"Entrada lenta de Na⁺ responsável pela despolarização espontânea do nó SA."},
+  {term:"Nódulo atrioventricular (AV)", def:"Retarda o impulso elétrico para permitir o enchimento ventricular antes da contração."},
+  {term:"Fibras de Purkinje", def:"Fibras de condução mais rápidas do coração, distribuem o impulso aos ventrículos."},
+  {term:"Síndrome de Stokes-Adams", def:"Síncope por bloqueio AV súbito, com perda de consciência por hipóxia cerebral."},
+  {term:"Volume telediastólico (VTD)", def:"Volume de sangue no ventrículo ao final do enchimento (≈120 mL)."},
+  {term:"Volume telessistólico (VTS)", def:"Volume de sangue que sobra no ventrículo após a ejeção (≈50 mL)."},
+  {term:"Pré-carga", def:"Grau de estiramento do músculo cardíaco ao final da diástole; depende do retorno venoso."},
+  {term:"Pós-carga", def:"Resistência (pressão da aorta) contra a qual o ventrículo deve ejetar o sangue."},
+  {term:"Lei de Frank-Starling", def:"Quanto maior o retorno venoso (estiramento), maior a força de contração cardíaca."},
+  {term:"Triângulo de Einthoven", def:"Base geométrica das derivações bipolares do ECG (DI, DII, DIII)."},
+  {term:"Eixo elétrico cardíaco", def:"Direção média da despolarização ventricular; normal entre −30° e +110°."},
+  {term:"Arteríolas", def:"Principais vasos de resistência da circulação periférica."},
+  {term:"Lei de Poiseuille", def:"Relação entre fluxo e raio do vaso (fluxo proporcional ao raio elevado à 4ª potência)."},
+  {term:"Fluxo turbulento", def:"Fluxo desorganizado, gera sopros; ocorre com alta velocidade ou obstruções."},
+  {term:"Autorregulação", def:"Capacidade do tecido de manter o fluxo estável apesar de variações na pressão arterial."},
+  {term:"Hematócrito", def:"Proporção de células (principalmente hemácias) no volume total de sangue (~40%)."},
+  {term:"Ruídos de Korotkoff", def:"Sons usados na aferição da pressão arterial — 1º = sistólica, 5º = diastólica."},
+  {term:"Músculo liso unitário", def:"Fibras conectadas por gap junctions, contraem-se como unidade; controle espontâneo/hormonal (ex: trato GI, útero)."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(3,true); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ addXP(0,false); nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ MCQ =====
+const letters=['A','B','C','D','E'];
+const mcqData=[
+  {stem:"O músculo liso unitário (visceral) se caracteriza por:", alts:["Fibras independentes com inervação individual","Contrair-se como conjunto, unidas por junções em fenda","Presença de troponina","Estriação evidente"], correct:1, comment:"Unitário: fibras unidas por gap junctions, contraem como um conjunto."},
+  {stem:"São exemplos de músculo liso multiunitário:", alts:["Trato GI e útero","Ureteres e vasos","Íris, músculo ciliar e piloeretor","Vasos e bexiga"], correct:2, comment:"Multiunitário: íris, músculo ciliar, piloeretor — controle nervoso direto."},
+  {stem:"O músculo liso, comparado ao esquelético, gera uma força de:", alts:["Menor (1-2 kg/cm²)","Igual","Maior (4-6 kg/cm²)","Não mensurável"], correct:2, comment:"O músculo liso é MAIS forte que o esquelético: 4-6 kg/cm²."},
+  {stem:"A ausência de troponina no músculo liso implica regulação via:", alts:["Tropomiosina exclusivamente","Calmodulina e miosina cinase, sobre a miosina","Discos Z","Troponina C modificada"], correct:1, comment:"Regulação desloca-se para a miosina, via calmodulina/miosina cinase."},
+  {stem:"O mecanismo de \"latch\" permite:", alts:["Contração rápida com alto gasto de ATP","Contração prolongada com baixíssimo gasto de energia","Relaxamento imediato","Ausência de contração"], correct:1, comment:"Latch = contração mantida, baixo consumo de energia."},
+  {stem:"O coração funciona fisiologicamente como:", alts:["Uma única bomba","Três câmaras independentes","Duas bombas em série","Apenas ventrículos"], correct:2, comment:"Coração direito e esquerdo = duas bombas em série."},
+  {stem:"A principal característica do potencial de ação cardíaco é:", alts:["Duração muito curta","Ausência de platô","Presença de platô prolongado (Ca²⁺)","Igual ao esquelético"], correct:2, comment:"Platô (fase 2) por entrada de Ca²⁺, dura 0,2-0,3s."},
+  {stem:"Durante o platô do PA cardíaco, o íon predominante é:", alts:["Potássio (K⁺)","Sódio (Na⁺)","Cálcio (Ca²⁺)","Cloro (Cl⁻)"], correct:2, comment:"Fase 2 (platô): entrada sustentada de Ca²⁺."},
+  {stem:"O volume telediastólico (VTD) normal é de aproximadamente:", alts:["50 mL","70 mL","120 mL","200 mL"], correct:2, comment:"VTD ≈ 120 mL — volume total antes da contração."},
+  {stem:"O volume telessistólico (VTS) representa:", alts:["O volume antes da contração","O volume que sobra após a ejeção","O volume atrial","O volume pulmonar"], correct:1, comment:"VTS = o que sobra no ventrículo após a sístole (≈50 mL)."},
+  {stem:"Durante a contração isovolumétrica:", alts:["Válvulas AV abertas","Válvulas semilunares abertas","Todas as válvulas fechadas","Há ejeção de sangue"], correct:2, comment:"Isovolumétrica = todas válvulas fechadas, só muda pressão."},
+  {stem:"O som R1 (B1) está associado a:", alts:["Abertura das válvulas AV","Fechamento das válvulas AV","Fechamento das semilunares","Contração atrial"], correct:1, comment:"R1 = fechamento das válvulas AV, início da sístole."},
+  {stem:"A lei de Frank-Starling afirma que:", alts:["O coração bombeia menos com mais sangue","O coração bombeia o que recebe, dentro de limites","Depende só do sistema nervoso","O coração não se adapta"], correct:1, comment:"Mais retorno venoso → mais força de contração (até um limite)."},
+  {stem:"A pré-carga está relacionada com:", alts:["A pressão da aorta","A resistência vascular periférica","O volume/estiramento do ventrículo ao final da diástole","A frequência cardíaca"], correct:2, comment:"Pré-carga = estiramento pelo retorno venoso."},
+  {stem:"A pós-carga corresponde a:", alts:["O volume do ventrículo","A pressão da aorta contra a qual o coração ejeta","O retorno venoso","A contração atrial"], correct:1, comment:"Pós-carga = resistência da aorta que o ventrículo enfrenta."},
+  {stem:"Qual é o marcapasso fisiológico do coração?", alts:["Nódulo AV","Fibras de Purkinje","Nódulo sinusal","Feixe de His"], correct:2, comment:"O nódulo sinusal (SA) é o marcapasso fisiológico."},
+  {stem:"O nódulo sinusal se localiza em:", alts:["Ventrículo esquerdo","Átrio direito","Átrio esquerdo","Septo interventricular"], correct:1, comment:"Nódulo SA: átrio direito, próximo à veia cava superior."},
+  {stem:"A despolarização espontânea do nódulo sinusal depende principalmente de:", alts:["Cloro","Potássio","Sódio e cálcio (corrente funny + Ca²⁺)","Magnésio"], correct:2, comment:"Corrente funny (Na⁺ lento) + Ca²⁺ — diferente do ventrículo (Na⁺ rápido)."},
+  {stem:"A principal função do nódulo AV é:", alts:["Gerar o impulso cardíaco","Aumentar a frequência","Retardar o impulso, permitindo enchimento ventricular","Contrair o ventrículo"], correct:2, comment:"Nó AV retarda o impulso para completar o enchimento ventricular."},
+  {stem:"As fibras com maior velocidade de condução no coração são:", alts:["Nódulo AV","Músculo ventricular","Nódulo sinusal","Fibras de Purkinje"], correct:3, comment:"Purkinje: 1,5-4 m/s, as mais rápidas."},
+  {stem:"O estímulo simpático sobre o coração produz:", alts:["Diminuição da frequência","Aumento de frequência e força","Diminuição de cálcio","Hiperpolarização do nó SA"], correct:1, comment:"Simpático: ↑ Na⁺/Ca²⁺ → ↑ frequência e força."},
+  {stem:"Paciente com bloqueio AV súbito e perda de consciência em segundos:", alts:["Infarto agudo","Síndrome de Stokes-Adams","Arritmia leve","Hipertensão"], correct:1, comment:"Stokes-Adams: bloqueio AV súbito, síncope por hipóxia cerebral."},
+  {stem:"No ECG, a onda que representa despolarização atrial é:", alts:["QRS","T","P","U"], correct:2, comment:"Onda P = despolarização atrial."},
+  {stem:"O complexo QRS representa:", alts:["Despolarização atrial","Repolarização ventricular","Despolarização ventricular","Repolarização atrial"], correct:2, comment:"QRS = despolarização ventricular, sempre rápido."},
+  {stem:"Ritmo regular, R-R de 4 quadrados grandes: FC aproximada:", alts:["50 bpm","75 bpm","100 bpm","150 bpm"], correct:1, comment:"FC = 300÷4 = 75 bpm."},
+  {stem:"Ritmo irregular, 18 ondas R em 6 segundos: FC de:", alts:["108 bpm","120 bpm","150 bpm","180 bpm"], correct:3, comment:"FC = 18 × 10 = 180 bpm (taquicardia acentuada)."},
+  {stem:"Eixo com DI positivo e aVF negativo indica:", alts:["Eixo normal","Desvio à esquerda","Desvio à direita","Eixo extremo"], correct:1, comment:"DI(+) aVF(-) = desvio à esquerda."},
+  {stem:"O principal vaso responsável pela resistência periférica é:", alts:["Veias","Capilares","Arteríolas","Aorta"], correct:2, comment:"Arteríolas = principais vasos de resistência."},
+  {stem:"Pela Lei de Poiseuille, se o raio de um vaso dobra, o fluxo:", alts:["Dobra","Quadruplica","Aumenta 8x","Aumenta 16x"], correct:3, comment:"Fluxo ∝ raio⁴ → dobrar o raio = 2⁴ = 16x mais fluxo."},
+  {stem:"A maior queda de pressão na circulação ocorre em:", alts:["Aorta","Artérias","Arteríolas","Veias"], correct:2, comment:"Arteríolas: maior resistência, maior queda de pressão."},
+];
+
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); addXP(10,true);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct'); addXP(0,false);}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>Correto!</b> ':'❌ <b>Incorreto.</b> ')+q.comment;
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ V/F =====
+const vfData=[
+  {text:"As fibras de Purkinje são as mais lentas do sistema de condução cardíaco.", answer:"F", comment:"Falso — Purkinje são as MAIS RÁPIDAS (1,5-4 m/s)."},
+  {text:"O nódulo sinusal gera impulsos automaticamente, sem estímulo externo.", answer:"V", comment:"Correto — automatismo cardíaco intrínseco."},
+  {text:"O parassimpático hiperpolariza a membrana do nó sinusal, reduzindo a FC.", answer:"V", comment:"Correto — vago aumenta K⁺, hiperpolariza, reduz frequência."},
+  {text:"O gasto cardíaco corresponde à soma de todos os fluxos locais dos tecidos.", answer:"V", comment:"Correto — débito cardíaco = soma dos fluxos teciduais."},
+  {text:"A área transversal dos capilares é menor que a das artérias, por isso o fluxo é mais rápido neles.", answer:"F", comment:"Falso — capilares têm MAIOR área e MENOR velocidade de fluxo."},
+  {text:"O volume de ejeção normal é de aproximadamente 70 mL.", answer:"V", comment:"Correto — VE = VTD(120) − VTS(50) = 70 mL."},
+  {text:"Durante o relaxamento isovolumétrico, todas as válvulas cardíacas estão fechadas.", answer:"V", comment:"Correto — fase isovolumétrica = todas fechadas."},
+  {text:"A pressão sofre a maior queda nos capilares, e não nas arteríolas.", answer:"F", comment:"Falso — a maior queda é nas ARTERÍOLAS."},
+  {text:"O período refratário absoluto impede a geração de um novo PA durante a contração.", answer:"V", comment:"Correto — ≈0,25s de refratariedade absoluta no coração."},
+  {text:"O músculo liso possui troponina, assim como o esquelético.", answer:"F", comment:"Falso — músculo liso NÃO tem troponina; regula via calmodulina."},
+];
+const vfContainer=document.getElementById('vfContainer');
+const vfCard=document.createElement('div'); vfCard.className='qcard';
+vfCard.innerHTML=`<div class="qhead"><div class="qstem" style="font-family:var(--serif);font-weight:700;color:var(--gold);">Verdadeiro ou Falso</div></div><div id="vfList"></div>`;
+const vfList=vfCard.querySelector('#vfList');
+vfData.forEach((q,qi)=>{
+  const row=document.createElement('div'); row.className='vf-item';
+  row.innerHTML=`<div class="vf-text"><b>${qi+1}.</b> ${q.text}<div class="feedback" style="margin-top:8px;"></div></div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+  const btns=row.querySelectorAll('.vf-btn'); const fb=row.querySelector('.feedback');
+  btns.forEach(btn=>{
+    btn.onclick=()=>{
+      btns.forEach(b=>b.disabled=true);
+      const picked=btn.getAttribute('data-v'); const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===q.answer);
+      if(picked===q.answer){btn.classList.add('correct'); addXP(5,true);}
+      else{btn.classList.add('incorrect'); correctBtn.classList.add('correct'); addXP(0,false);}
+      fb.className='feedback show '+(picked===q.answer?'ok':'no');
+      fb.innerHTML='💡 '+q.comment;
+    };
+  });
+  vfList.appendChild(row);
+});
+vfContainer.appendChild(vfCard);
+
+// ===== TABS =====
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+</script>
+</body>
+</html>
