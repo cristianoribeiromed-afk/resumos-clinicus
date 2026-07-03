@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biofísica Respiratória — Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+.block em.cite{display:block;font-size:12.5px;color:var(--text-faint);margin-top:8px;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🫁</div>
+      <div class="brand-text">
+        <h1>Biofísica Respiratória</h1>
+        <span>Mecânica · Pressões · Controle · Complacência</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Biofísica Respiratória — do conceito ao caso clínico</h2>
+    <p>Anatomia, pleura e pressões, dinâmica respiratória (Lei de Boyle), controle bulbar da respiração e complacência pulmonar — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="anatomia">🫁 Anatomia</button>
+    <button class="tab-btn" data-tab="pleura">🎈 Pleura &amp; Pressões</button>
+    <button class="tab-btn" data-tab="dinamica">💨 Dinâmica Respiratória</button>
+    <button class="tab-btn" data-tab="controle">🧠 Controle (Bulbo)</button>
+    <button class="tab-btn" data-tab="complacencia">📈 Complacência</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- ANATOMIA -->
+  <section class="panel active" id="anatomia">
+    <div class="block">
+      <h3>O que é a respiração?</h3>
+      <p>"La principal función de la respiración es obtener O₂ para uso de las células corporales y eliminar el CO₂ que las células producen."</p>
+      <em class="cite">— Lauralee Sherwood</em>
+      <div class="clinico"><b>Ponto-chave:</b> o sistema respiratório NÃO participa de todas as etapas da respiração. A respiração compreende dois processos distintos e relacionados: <b>respiração celular</b> e <b>respiração externa</b> (troca de O₂/CO₂ entre o ambiente e as células). O sistema respiratório participa apenas da <b>ventilação</b> (inspiração e expiração) e da troca de O₂/CO₂ entre os pulmões e o sangue.</div>
+    </div>
+    <div class="block">
+      <h3>Resumo anatômico</h3>
+      <table class="quicktab">
+        <tr><th>Vias aéreas</th><th>Estruturas</th></tr>
+        <tr><td>Superiores</td><td>Nariz, faringe, laringe</td></tr>
+        <tr><td>Inferiores</td><td>Traqueia, brônquios, bronquíolos, alvéolos</td></tr>
+      </table>
+      <ul>
+        <li><b>Pulmão:</b> conjunto de milhares de alvéolos; ocupa a maior parte da caixa torácica</li>
+        <li><b>Alvéolos:</b> têm contato direto com o ar do ambiente — trazido pelas demais estruturas do pulmão</li>
+      </ul>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>O sistema respiratório participa só da ventilação + troca alvéolo-sangue, não de toda a respiração celular.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que "respiração" e "sistema respiratório" são sinônimos — a respiração celular ocorre dentro da célula, fora do sistema respiratório.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual etapa da respiração externa o sistema respiratório NÃO realiza sozinho?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O transporte de O₂/CO₂ pelo sangue até os tecidos depende também do sistema cardiovascular — o sistema respiratório só cuida da ventilação e da troca gasosa nos pulmões.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que os alvéolos, e não a traqueia, são o local da troca gasosa?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLEURA E PRESSÕES -->
+  <section class="panel" id="pleura">
+    <div class="block">
+      <h3>Por que o pulmão não colapsa?</h3>
+      <p>O pulmão é formado por fibras elásticas e tem tendência natural a <b>colapsar</b>. Mas em condições fisiológicas, ele permanece sempre aberto, com suas paredes ocupando toda a cavidade torácica.</p>
+      <h4>Pleura</h4>
+      <p>Dupla membrana em forma de bolsa que envolve os pulmões, formada por dois folhetos:</p>
+      <ul>
+        <li><b>Pleura visceral:</b> aderida ao pulmão</li>
+        <li><b>Pleura parietal:</b> aderida à parede torácica</li>
+      </ul>
+      <p>Entre as duas pleuras existe o <b>espaço intrapleural</b>, preenchido por líquido (água).</p>
+    </div>
+    <div class="block">
+      <h3>As 2 forças que mantêm o pulmão aberto</h3>
+      <table class="quicktab">
+        <tr><th>Força</th><th>Mecanismo</th></tr>
+        <tr><td>1. Coesão do líquido intrapleural</td><td>A água é extremamente polar — suas moléculas tendem a permanecer unidas. Essa coesão "cola" a pleura visceral à parietal, que por sua vez está unida à caixa torácica.</td></tr>
+        <tr><td>2. Gradiente de pressão transmural</td><td>Pressão alveolar = pressão atmosférica (conectadas). Pressão intrapleural (756 mmHg) é menor que a atmosférica/alveolar (760 mmHg) — a diferença gera uma força de onde a pressão é maior para onde é menor.</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Valores de pressão (memorizar)</h3>
+      <table class="quicktab">
+        <tr><th>Pressão</th><th>Valor</th></tr>
+        <tr><td>Atmosférica</td><td>760 mmHg</td></tr>
+        <tr><td>Intra-alveolar (entre respirações)</td><td>760 mmHg</td></tr>
+        <tr><td>Intrapleural</td><td>756 mmHg</td></tr>
+      </table>
+      <h4>Por que a pressão intrapleural é menor que a atmosférica?</h4>
+      <p>A pleura visceral tende a colapsar (fibras elásticas do pulmão), enquanto a pleura parietal tende a distender (expansão da caixa torácica) — esse "cabo de guerra" aumenta o espaço entre as pleuras sem aumentar a quantidade de moléculas, o que reduz a pressão. O sistema linfático drena continuamente o líquido intrapleural, contribuindo ainda mais para essa queda de pressão.</p>
+      <div class="mnemo"><b>Dica:</b> 760 → 760 → 756. Só o intrapleural é diferente (mais baixo) — é ele que "segura" o pulmão aberto.</div>
+    </div>
+    <div class="block">
+      <h3>Correlação clínica: Pneumotórax traumático</h3>
+      <div class="clinico">Quando existe comunicação entre o espaço intrapleural e o meio externo (ex.: perfuração torácica), a pressão intrapleural se iguala à atmosférica — perdendo o gradiente que mantinha o pulmão aberto — e o pulmão colapsa.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Intrapleural (756) &lt; atmosférica/alveolar (760). Coesão da água + gradiente de pressão = pulmão aberto.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que a pressão intrapleural é MAIOR que a atmosférica — é o contrário, e essa diferença é o que sustenta o pulmão.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>O que acontece com a pressão intrapleural no pneumotórax traumático?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Ela se iguala à pressão atmosférica (760 mmHg), eliminando o gradiente — o pulmão colapsa.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a coesão da água, por si só, não seria suficiente para manter o pulmão aberto sem o gradiente de pressão?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DINÂMICA RESPIRATÓRIA -->
+  <section class="panel" id="dinamica">
+    <div class="block">
+      <h3>Inspiração</h3>
+      <p>Entrada de ar nos pulmões. Os músculos da respiração (<b>intercostais externos</b> e <b>diafragma</b>) distendem os pulmões, puxando o ar atmosférico para dentro.</p>
+      <div class="clinico"><b>Lei de Boyle:</b> aumentar o volume de um recipiente causa diminuição da pressão. Os gases sempre se movem de ambientes de maior pressão para ambientes de menor pressão — por isso, ao aumentar o volume pulmonar, a pressão interna cai e o ar entra.</div>
+      <h4>Músculos acessórios da inspiração forçada</h4>
+      <p>Usados em exercício físico, além dos músculos normais:</p>
+      <ul>
+        <li>Esternocleidomastoideo</li>
+        <li>Escaleno</li>
+      </ul>
+      <p>Eles contribuem para uma maior expansão da caixa torácica, permitindo maior entrada de ar.</p>
+    </div>
+    <div class="block">
+      <h3>Expiração</h3>
+      <p>Ocorre relaxamento dos músculos inspiratórios e diminuição do volume da caixa torácica, aumentando a pressão alveolar — como consequência, o ar sai do pulmão.</p>
+      <div class="trap"><b>Pegadinha clássica:</b> a expiração NORMAL não precisa de contração de nenhum músculo — é um processo passivo!</div>
+      <h4>Músculos acessórios da expiração forçada</h4>
+      <ul>
+        <li>Transverso do abdômen</li>
+        <li>Intercostais internos</li>
+        <li>Oblíquo interno</li>
+        <li>Oblíquo externo</li>
+        <li>Reto abdominal</li>
+      </ul>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Inspiração = sempre ativa (músculos). Expiração normal = passiva (nenhum músculo). Lei de Boyle: ↑volume → ↓pressão.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que a expiração normal usa os mesmos músculos da inspiração "ao contrário" — na verdade é passiva, só relaxamento.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Durante um exercício físico intenso, quais músculos entram em ação além dos normais da inspiração?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Esternocleidomastoideo e escaleno (músculos acessórios da inspiração forçada).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que faz sentido, energeticamente, que a expiração em repouso seja passiva?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTROLE -->
+  <section class="panel" id="controle">
+    <div class="block">
+      <h3>Bulbo (medula oblonga)</h3>
+      <p>O bulbo raquidiano é a porção inferior do tronco encefálico. É o órgão em contato direto com a medula espinhal, e via de passagem de nervos para os órgãos localizados mais acima.</p>
+    </div>
+    <div class="block">
+      <h3>Centro respiratório — 3 grupos neuronais</h3>
+      <p>Grupos neuronais bilaterais, localizados no bulbo raquídeo e na protuberância:</p>
+      <table class="quicktab">
+        <tr><th>Grupo</th><th>Localização</th><th>Função</th></tr>
+        <tr><td><b>Grupo respiratório dorsal</b></td><td>Porção dorsal do bulbo</td><td>Estimula a inspiração — papel principal</td></tr>
+        <tr><td><b>Grupo respiratório ventral</b></td><td>Porção ventrolateral do bulbo</td><td>Inspiração ou expiração, dependendo de qual neurônio é estimulado</td></tr>
+        <tr><td><b>Centro pneumotáxico</b></td><td>Dorsal, parte superior da protuberância</td><td>Controla a frequência e o padrão respiratório</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> Dorsal = INICIA a inspiração (papel principal). Ventral = ajuda inspiração OU expiração. Pneumotáxico = controla o RITMO/padrão, não gera o impulso em si.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Grupo dorsal = principal, inspiração. Ventral = inspiração ou expiração. Pneumotáxico = frequência/padrão.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir o grupo ventral (função dupla) com o dorsal (só inspiração, papel principal).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual grupo neuronal tem o papel principal na inspiração?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O grupo respiratório dorsal.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que faz sentido que o centro pneumotáxico controle o "padrão" e não gere diretamente o impulso respiratório?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLACÊNCIA -->
+  <section class="panel" id="complacencia">
+    <div class="block">
+      <h3>O que é complacência (compliancia) pulmonar?</h3>
+      <p>Descreve a <b>distensibilidade</b> do sistema respiratório — a dificuldade que temos para distender o pulmão.</p>
+      <table class="quicktab">
+        <tr><th>Situação</th><th>O que significa</th></tr>
+        <tr><td>Maior dificuldade para distender</td><td>MENOR complacência → pulmão mais "duro"</td></tr>
+        <tr><td>Menor dificuldade para distender</td><td>MAIOR complacência → pulmão mais distensível</td></tr>
+      </table>
+      <p>A complacência dos pulmões e da caixa torácica tem relação <b>inversa</b> com as propriedades elásticas (elastância): quanto maior a quantidade de tecido elástico, maior a força de retorno, e <b>menor</b> a complacência.</p>
+    </div>
+    <div class="block">
+      <h3>Alterações patológicas da complacência</h3>
+      <table class="quicktab">
+        <tr><th>Condição</th><th>O que ocorre</th><th>Complacência</th></tr>
+        <tr><td>Enfisema pulmonar</td><td>Destruição das fibras elásticas</td><td>↑ Aumentada</td></tr>
+        <tr><td>Fibrose pulmonar</td><td>Endurecimento das fibras elásticas</td><td>↓ Diminuída</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha clássica:</b> enfisema e fibrose têm efeitos OPOSTOS na complacência — enfisema destrói fibras (pulmão mais "mole", complacência ↑), fibrose enrijece (pulmão mais "duro", complacência ↓).</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Complacência = distensibilidade. Relação inversa com elastância. Enfisema ↑, fibrose ↓.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Trocar enfisema com fibrose na hora de dizer se a complacência aumenta ou diminui.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Num paciente com fibrose pulmonar, o pulmão fica mais fácil ou mais difícil de distender?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Mais difícil — a complacência diminui pelo endurecimento das fibras elásticas.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que um pulmão com MAIS tecido elástico tem MENOR complacência, e não maior?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 65 anos, tabagista há 40 anos, apresenta dispneia progressiva. Radiografia mostra hiperinsuflação pulmonar e diafragma retificado.</div>
+      <div class="caso-q">
+        <p>1) Que alteração de complacência pulmonar é esperada neste paciente, e por quê?</p>
+        <p>2) O que aconteceu estruturalmente com as fibras elásticas do pulmão?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Enfisema pulmonar (DPOC).<br><b>Explicação:</b> Há destruição das fibras elásticas do pulmão, o que AUMENTA a complacência pulmonar (pulmão mais "mole" e distensível, mas com menor capacidade de retorno elástico — daí a hiperinsuflação e dificuldade de esvaziar o ar).
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 24 anos, vítima de acidente de trânsito, sofre trauma torácico penetrante por objeto perfurocortante. Chega ao pronto-socorro com dispneia súbita intensa e ausência de murmúrio vesicular do lado afetado.</div>
+      <div class="caso-q">
+        <p>1) O que acontece com a pressão intrapleural nesse tipo de trauma?</p>
+        <p>2) Por que essa alteração de pressão leva ao colapso pulmonar?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Pneumotórax traumático.<br><b>Explicação:</b> A perfuração cria comunicação entre o espaço intrapleural e o meio externo, fazendo a pressão intrapleural (normalmente 756 mmHg) se igualar à pressão atmosférica (760 mmHg). Isso elimina o gradiente de pressão transmural que mantinha o pulmão aberto, levando ao colapso pulmonar.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 58 anos, com diagnóstico de fibrose pulmonar idiopática, apresenta dispneia progressiva aos esforços e ausculta com estertores em "velcro" nas bases pulmonares.</div>
+      <div class="caso-q">
+        <p>1) Compare a alteração de complacência deste paciente com a de um paciente enfisematoso.</p>
+        <p>2) Do ponto de vista da mecânica respiratória, por que este paciente tem mais dificuldade para INSPIRAR (e não para expirar, como no enfisema)?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Fibrose pulmonar.<br><b>Explicação:</b> Ao contrário do enfisema (que aumenta a complacência por destruição de fibras elásticas), a fibrose ENDURECE as fibras elásticas, diminuindo a complacência — o pulmão fica mais "duro" e resistente à distensão. Como a inspiração depende de vencer essa resistência elástica para expandir o pulmão (Lei de Boyle: aumentar volume exige vencer a rigidez do tecido), a dificuldade se concentra justamente na fase de expansão (inspiração), diferente do enfisema, onde o problema maior é o esvaziamento (expiração) por perda do retorno elástico.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante uma prova prática de fisiologia, o professor pede para você observar um voluntário realizando exercício físico intenso e identificar, pela inspeção visual, quais grupos musculares estão sendo recrutados além dos músculos respiratórios normais — tanto na inspiração quanto na expiração forçadas.</div>
+      <div class="caso-q">
+        <p>1) Quais são os músculos acessórios da inspiração forçada?</p>
+        <p>2) Quais são os músculos acessórios da expiração forçada?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta completa</button>
+        <div class="caso-answer">
+          <b>Inspiração forçada:</b> esternocleidomastoideo e escaleno — contribuem para maior expansão da caixa torácica.<br>
+          <b>Expiração forçada:</b> transverso do abdômen, intercostais internos, oblíquo interno, oblíquo externo e reto abdominal — promovem maior redução do volume pulmonar, aumentando a saída de ar.<br>
+          <b>Observação importante:</b> na respiração em repouso, a inspiração é sempre ativa (músculos normais) e a expiração é passiva (nenhum músculo) — os acessórios só entram em ação quando a demanda ventilatória aumenta.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">14 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 14</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">47</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">25 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Biomecánica y Biofísica Respiratória" fornecido pelo professor. Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 25 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Pleura visceral", def:"Folheto da pleura aderido diretamente ao pulmão."},
+  {term:"Pleura parietal", def:"Folheto da pleura aderido à parede torácica."},
+  {term:"Espaço intrapleural", def:"Espaço entre as duas pleuras, preenchido por líquido (água)."},
+  {term:"Gradiente de pressão transmural", def:"Diferença entre a pressão alveolar/atmosférica (760mmHg) e a intrapleural (756mmHg), que gera a força que mantém o pulmão aberto."},
+  {term:"Lei de Boyle", def:"Aumentar o volume de um recipiente causa diminuição da pressão — a base física da inspiração."},
+  {term:"Grupo respiratório dorsal", def:"Grupo neuronal no bulbo que estimula a inspiração — papel principal no controle respiratório."},
+  {term:"Grupo respiratório ventral", def:"Grupo neuronal no bulbo que participa da inspiração ou expiração, dependendo do neurônio estimulado."},
+  {term:"Centro pneumotáxico", def:"Localizado na protuberância; controla a frequência e o padrão respiratório."},
+  {term:"Complacência pulmonar", def:"Medida da distensibilidade do pulmão — quanto maior, mais fácil distender."},
+  {term:"Elastância", def:"Propriedade elástica do tecido pulmonar; tem relação inversa com a complacência."},
+  {term:"Enfisema pulmonar", def:"Destruição das fibras elásticas → aumento da complacência pulmonar."},
+  {term:"Fibrose pulmonar", def:"Endurecimento das fibras elásticas → diminuição da complacência pulmonar."},
+  {term:"Pneumotórax traumático", def:"Comunicação entre espaço intrapleural e meio externo → pressão intrapleural se iguala à atmosférica → colapso pulmonar."},
+  {term:"Expiração normal", def:"Processo passivo — não requer contração de nenhum músculo, apenas relaxamento dos músculos inspiratórios."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (25) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"La función principal del sistema respiratorio, según Sherwood, es:", alts:["Producir energía celular","Obtener O₂ y eliminar CO₂","Regular la temperatura corporal","Producir hormonas"], correct:1, comment:"Obtener O₂ para las células y eliminar el CO₂ que producen."},
+  {tag:"Intermediária", stem:"El sistema respiratorio participa directamente de:", alts:["Toda la respiración celular","Solamente la ventilación y el intercambio O₂/CO₂ entre pulmón y sangre","Solamente la respiración celular","El transporte de O₂ hasta los tejidos"], correct:1, comment:"El sistema respiratorio NO realiza todos los pasos de la respiración externa — solo ventilación e intercambio pulmón-sangre."},
+  {tag:"Fácil", stem:"Las vías aéreas superiores incluyen:", alts:["Tráquea, bronquios y alvéolos","Nariz, faringe y laringe","Bronquiolos y alvéolos","Solo los pulmones"], correct:1, comment:"Vías superiores: nariz, faringe, laringe."},
+  {tag:"Fácil", stem:"La pleura visceral está adherida a:", alts:["La pared torácica","El pulmón","El diafragma","El esternón"], correct:1, comment:"Pleura visceral = adherida al pulmón; parietal = adherida a la pared torácica."},
+  {tag:"Intermediária", stem:"Entre las pleuras existe el espacio intrapleural, que está lleno de:", alts:["Aire","Sangre","Líquido (agua)","Tejido graso"], correct:2, comment:"El espacio intrapleural está lleno de líquido (agua)."},
+  {tag:"Intermediária", stem:"La primera fuerza que mantiene el pulmón abierto es:", alts:["La contracción del diafragma","La cohesión del líquido intrapleural","La presión arterial","El sistema nervioso simpático"], correct:1, comment:"La cohesión de las moléculas de agua (polar) 'pega' la pleura visceral a la parietal."},
+  {tag:"Difícil", stem:"El gradiente de presión transmural existe porque:", alts:["La presión intrapleural es mayor que la atmosférica","La presión intrapleural es menor que la atmosférica/alveolar","No hay diferencia de presión entre los espacios","La presión alveolar varía constantemente"], correct:1, comment:"Intrapleural (756mmHg) < atmosférica/alveolar (760mmHg) — esa diferencia genera la fuerza."},
+  {tag:"Fácil", stem:"El valor normal de la presión atmosférica es:", alts:["756 mmHg","760 mmHg","750 mmHg","770 mmHg"], correct:1, comment:"Presión atmosférica = 760 mmHg."},
+  {tag:"Intermediária", stem:"El valor normal de la presión intrapleural es:", alts:["760 mmHg","756 mmHg","770 mmHg","740 mmHg"], correct:1, comment:"Presión intrapleural = 756 mmHg, menor que la atmosférica."},
+  {tag:"Difícil", stem:"La disminución de la presión intrapleural se debe, entre otros factores, a:", alts:["Aumento de moléculas en el espacio intrapleural","El drenaje continuo del líquido intrapleural por el sistema linfático","La contracción del diafragma únicamente","El aumento de la presión atmosférica"], correct:1, comment:"El sistema linfático drena continuamente el líquido intrapleural, contribuyendo a la disminución de la presión."},
+  {tag:"Intermediária", stem:"En un pneumotórax traumático, la presión intrapleural:", alts:["Disminuye aún más","Se iguala a la presión atmosférica","No se altera","Aumenta por encima de la atmosférica"], correct:1, comment:"La comunicación con el exterior iguala la presión intrapleural a la atmosférica, causando colapso pulmonar."},
+  {tag:"Fácil", stem:"La inspiración ocurre principalmente por la contracción de:", alts:["Músculos abdominales","Intercostales externos y diafragma","Intercostales internos","Esternocleidomastoideo únicamente"], correct:1, comment:"Inspiración normal: intercostales externos y diafragma."},
+  {tag:"Intermediária", stem:"Según la Ley de Boyle, al aumentar el volumen de un recipiente:", alts:["La presión aumenta","La presión disminuye","La presión no se altera","El volumen disminuye"], correct:1, comment:"Ley de Boyle: ↑volumen → ↓presión."},
+  {tag:"Fácil", stem:"Son músculos accesorios de la inspiración forzada:", alts:["Transverso del abdomen y oblicuo externo","Esternocleidomastoideo y escaleno","Intercostales internos y recto abdominal","Diafragma únicamente"], correct:1, comment:"Inspiración forzada: esternocleidomastoideo y escaleno."},
+  {tag:"Difícil", stem:"La espiración normal (en reposo):", alts:["Requiere contracción de los intercostales internos","Es un proceso pasivo, sin contracción muscular","Requiere contracción del diafragma","Depende exclusivamente de los músculos abdominales"], correct:1, comment:"La espiración normal NO necesita contracción de ningún músculo — es pasiva."},
+  {tag:"Intermediária", stem:"Son músculos accesorios de la espiración forzada, EXCEPTO:", alts:["Transverso del abdomen","Intercostales internos","Escaleno","Recto abdominal"], correct:2, comment:"El escaleno es músculo accesorio de la INSPIRACIÓN forzada, no de la espiración."},
+  {tag:"Fácil", stem:"El bulbo raquídeo es:", alts:["La porción superior del cerebro","La porción inferior del tronco encefálico","Parte del cerebelo","Parte de la médula espinal exclusivamente"], correct:1, comment:"El bulbo es la porción inferior del tronco encefálico, en contacto directo con la médula espinal."},
+  {tag:"Intermediária", stem:"El grupo respiratorio que tiene el papel PRINCIPAL en estimular la inspiración es:", alts:["Grupo respiratorio ventral","Grupo respiratorio dorsal","Centro neumotáxico","Ninguno de los anteriores"], correct:1, comment:"El grupo respiratorio dorsal tiene el papel principal en la inspiración."},
+  {tag:"Difícil", stem:"El grupo respiratorio ventral se caracteriza por:", alts:["Estimular solo la inspiración","Estimular solo la espiración","Poder estimular inspiración o espiración, según la neurona activada","No participar del control respiratorio"], correct:2, comment:"El grupo ventral puede estimular inspiración o espiración, dependiendo de qué neurona se activa."},
+  {tag:"Fácil", stem:"El centro neumotáxico controla principalmente:", alts:["La fuerza de contracción diafragmática","La frecuencia y el patrón respiratorio","La presión arterial","El volumen sanguíneo pulmonar"], correct:1, comment:"El centro neumotáxico controla frecuencia y patrón respiratorio."},
+  {tag:"Fácil", stem:"La complacencia (compliancia) pulmonar describe:", alts:["La fuerza muscular respiratoria","La distensibilidad del sistema","La frecuencia respiratoria","El volumen residual"], correct:1, comment:"Complacencia = distensibilidad del sistema respiratorio."},
+  {tag:"Intermediária", stem:"Cuanto mayor la dificultad para distender el pulmón:", alts:["Mayor la complacencia","Menor la complacencia","No hay relación","Mayor la elastancia solamente, sin afectar la complacencia"], correct:1, comment:"Mayor dificultad para distender = menor complacencia (pulmón más 'duro')."},
+  {tag:"Difícil", stem:"La relación entre complacencia y elastancia (tejido elástico) es:", alts:["Directa: más tejido elástico, más complacencia","Inversa: más tejido elástico, menos complacencia","No existe relación entre ambas","Ambas siempre aumentan juntas"], correct:1, comment:"Relación inversa: más tejido elástico → mayor fuerza de retorno → menor complacencia."},
+  {tag:"Intermediária", stem:"En el enfisema pulmonar, la complacencia:", alts:["Disminuye por endurecimiento de fibras","Aumenta por destrucción de fibras elásticas","No se altera","Se vuelve indetectable"], correct:1, comment:"Enfisema: destrucción de fibras elásticas → aumento de la complacencia."},
+  {tag:"Difícil", stem:"En la fibrosis pulmonar, la complacencia:", alts:["Aumenta por destrucción de fibras","Disminuye por endurecimiento de fibras elásticas","Permanece igual al enfisema","Depende exclusivamente de la edad del paciente"], correct:1, comment:"Fibrosis: endurecimiento de fibras elásticas → disminución de la complacencia."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Anatomia e Pleura", statements:[
+    "O sistema respiratório é responsável por toda a respiração celular.",
+    "A pleura parietal está aderida à parede torácica.",
+    "O espaço intrapleural está preenchido por ar.",
+    "A pressão intrapleural é normalmente menor que a pressão atmosférica."
+  ], answers:["F","V","F","V"], comment:"I é falso: o sistema respiratório só realiza ventilação e troca alvéolo-sangue. III é falso: o espaço intrapleural é preenchido por líquido, não ar."},
+  {theme:"Dinâmica Respiratória", statements:[
+    "A inspiração ocorre pela contração dos intercostais externos e do diafragma.",
+    "A expiração normal em repouso exige contração muscular ativa.",
+    "O esternocleidomastoideo é músculo acessório da inspiração forçada.",
+    "Segundo a Lei de Boyle, aumentar o volume de um recipiente aumenta sua pressão."
+  ], answers:["V","F","V","F"], comment:"II é falso: a expiração normal é passiva. IV é falso: pela Lei de Boyle, aumentar o volume DIMINUI a pressão."},
+  {theme:"Controle e Complacência", statements:[
+    "O grupo respiratório dorsal tem o papel principal na inspiração.",
+    "O centro pneumotáxico gera diretamente o impulso da inspiração.",
+    "O enfisema pulmonar aumenta a complacência pulmonar.",
+    "A fibrose pulmonar aumenta a complacência pulmonar."
+  ], answers:["V","F","V","F"], comment:"II é falso: o pneumotáxico controla frequência/padrão, não gera o impulso diretamente. IV é falso: a fibrose DIMINUI a complacência."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Pressões e forças respiratórias", colA:["Pressão atmosférica","Pressão intra-alveolar (entre respirações)","Pressão intrapleural","Coesão do líquido intrapleural","Gradiente de pressão transmural"],
+   colB:["760 mmHg","760 mmHg (igual à atmosférica, conectadas)","756 mmHg (menor, mantém o pulmão aberto)","1ª força — água polar, pleuras 'coladas'","2ª força — diferença de pressão entre espaços"],
+   answers:["A","B","C","D","E"], comment:"As duas forças (coesão + gradiente) trabalham juntas para manter o pulmão sempre aberto."},
+  {title:"2. Controle respiratório e complacência", colA:["Grupo respiratório dorsal","Grupo respiratório ventral","Centro pneumotáxico","Enfisema pulmonar","Fibrose pulmonar"],
+   colB:["Papel principal — estimula inspiração","Inspiração ou expiração, conforme o neurônio","Controla frequência e padrão respiratório","Complacência aumentada (destruição de fibras)","Complacência diminuída (endurecimento de fibras)"],
+   answers:["A","B","C","D","E"], comment:"Enfisema e fibrose têm efeitos opostos na complacência — a confusão entre os dois é o erro mais comum do tema."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
