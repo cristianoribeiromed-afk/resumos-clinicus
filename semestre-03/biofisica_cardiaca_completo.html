@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biofísica Cardíaca & ECG | Plataforma de Estudio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #111827;
+    --bg3: #1a2235;
+    --card: #141d2e;
+    --border: #1e2d45;
+    --red: #e84545;
+    --red-dim: rgba(232,69,69,0.15);
+    --gold: #f4a621;
+    --gold-dim: rgba(244,166,33,0.12);
+    --teal: #00c9a7;
+    --teal-dim: rgba(0,201,167,0.12);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.12);
+    --purple: #8b5cf6;
+    --purple-dim: rgba(139,92,246,0.12);
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --correct-dim: rgba(34,197,94,0.15);
+    --wrong-dim: rgba(239,68,68,0.15);
+    font-size: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== LANDING ===== */
+  #landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(232,69,69,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(232,69,69,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+  }
+
+  .bg-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,69,69,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--red-dim);
+    border: 1px solid rgba(232,69,69,0.3);
+    border-radius: 2rem;
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    color: var(--red);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  .landing-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+
+  .landing-title span { color: var(--red); }
+
+  .landing-sub {
+    font-size: 1.1rem;
+    color: var(--text2);
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    line-height: 1.6;
+    position: relative;
+  }
+
+  .objectives {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    max-width: 800px;
+    width: 100%;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  .obj-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: left;
+  }
+
+  .obj-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .obj-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 0.2rem; }
+  .obj-val { font-size: 0.95rem; font-weight: 500; color: var(--text); }
+
+  .start-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 0 30px rgba(232,69,69,0.4);
+  }
+
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(232,69,69,0.6); }
+
+  /* ===== APP ===== */
+  #app { display: none; min-height: 100vh; }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform 0.3s;
+  }
+
+  .sidebar-logo {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .sidebar-logo span { color: var(--red); }
+
+  .nav-section { padding: 1rem 0; }
+  .nav-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text2);
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: var(--red); background: var(--red-dim); border-left-color: var(--red); }
+  .nav-item .nav-icon { font-size: 1rem; width: 1.2rem; text-align: center; }
+
+  .progress-bar-wrap {
+    padding: 1rem 1.25rem;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-label { font-size: 0.75rem; color: var(--text3); margin-bottom: 0.4rem; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--red); border-radius: 3px; transition: width 0.4s; }
+
+  .menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem; left: 1rem;
+    z-index: 200;
+    background: var(--red);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  /* MAIN */
+  .main { margin-left: 260px; flex: 1; padding: 2rem; max-width: calc(100% - 260px); }
+
+  /* PAGE */
+  .page { display: none; animation: fadeIn 0.3s; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  .page-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .page-title span { color: var(--red); }
+
+  .page-desc { color: var(--text2); margin-bottom: 2rem; font-size: 0.95rem; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .card-title .icon { font-size: 1.2rem; }
+
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tag-red { background: var(--red-dim); color: var(--red); }
+  .tag-gold { background: var(--gold-dim); color: var(--gold); }
+  .tag-teal { background: var(--teal-dim); color: var(--teal); }
+  .tag-blue { background: var(--blue-dim); color: var(--blue); }
+  .tag-purple { background: var(--purple-dim); color: var(--purple); }
+
+  p { line-height: 1.7; color: var(--text2); margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+
+  .highlight { color: var(--text); font-weight: 500; }
+  .red { color: var(--red); font-weight: 600; }
+  .gold { color: var(--gold); font-weight: 600; }
+  .teal { color: var(--teal); font-weight: 600; }
+  .blue { color: var(--blue); font-weight: 600; }
+
+  /* ALERT BOXES */
+  .alert {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    border-left: 3px solid;
+    font-size: 0.9rem;
+  }
+
+  .alert-red { background: var(--red-dim); border-color: var(--red); color: var(--text); }
+  .alert-gold { background: var(--gold-dim); border-color: var(--gold); color: var(--text); }
+  .alert-teal { background: var(--teal-dim); border-color: var(--teal); color: var(--text); }
+  .alert-blue { background: var(--blue-dim); border-color: var(--blue); color: var(--text); }
+
+  .alert-title { font-weight: 700; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .alert-red .alert-title { color: var(--red); }
+  .alert-gold .alert-title { color: var(--gold); }
+  .alert-teal .alert-title { color: var(--teal); }
+  .alert-blue .alert-title { color: var(--blue); }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th {
+    background: var(--bg3);
+    color: var(--text);
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  td { padding: 0.7rem 1rem; color: var(--text2); border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0.4rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { border-color: var(--red); color: var(--text); }
+  .tab-btn.active { background: var(--red); border-color: var(--red); color: white; }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; animation: fadeIn 0.2s; }
+
+  /* PHASES TIMELINE */
+  .phase-timeline { display: flex; flex-direction: column; gap: 1rem; }
+  .phase-item {
+    display: flex; gap: 1rem;
+    align-items: flex-start;
+  }
+  .phase-num {
+    min-width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .phase-content { flex: 1; }
+  .phase-title { font-weight: 600; color: var(--text); margin-bottom: 0.3rem; }
+  .phase-desc { font-size: 0.9rem; color: var(--text2); line-height: 1.6; }
+
+  /* FLASHCARDS */
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+  .flashcard {
+    height: 180px;
+    cursor: pointer;
+    perspective: 1000px;
+  }
+
+  .flashcard-inner {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-front, .flashcard-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .flashcard-front { background: var(--card); }
+  .flashcard-back { background: var(--bg3); transform: rotateY(180deg); }
+
+  .fc-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; opacity: 0.7; }
+  .fc-q { font-size: 0.95rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+  .fc-a { font-size: 0.9rem; color: var(--teal); font-weight: 500; line-height: 1.5; }
+  .fc-hint { font-size: 0.75rem; color: var(--text3); margin-top: 0.5rem; }
+
+  /* QUESTIONS */
+  .question-block { margin-bottom: 2rem; }
+  .q-num { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); margin-bottom: 0.5rem; }
+  .q-text { font-size: 1rem; color: var(--text); font-weight: 500; margin-bottom: 1rem; line-height: 1.6; }
+  .q-options { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .q-option {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.9rem;
+    color: var(--text2);
+    background: var(--bg2);
+  }
+
+  .q-option:hover:not(.disabled) { border-color: var(--blue); color: var(--text); }
+  .q-option.selected { border-color: var(--blue); background: var(--blue-dim); color: var(--text); }
+  .q-option.correct { border-color: var(--correct); background: var(--correct-dim); color: var(--correct); }
+  .q-option.wrong { border-color: var(--wrong); background: var(--wrong-dim); color: var(--wrong); }
+  .q-option.disabled { cursor: not-allowed; }
+
+  .opt-letter {
+    min-width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .q-feedback {
+    display: none;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .q-feedback.correct-fb { background: var(--correct-dim); border: 1px solid var(--correct); color: var(--text); display: block; }
+  .q-feedback.wrong-fb { background: var(--wrong-dim); border: 1px solid var(--wrong); color: var(--text); display: block; }
+
+  /* VF */
+  .vf-block { margin-bottom: 1.5rem; }
+  .vf-text { font-size: 0.95rem; color: var(--text); font-weight: 500; margin-bottom: 0.75rem; line-height: 1.6; }
+  .vf-btns { display: flex; gap: 0.5rem; }
+  .vf-btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .vf-btn:hover:not(.disabled) { color: var(--text); }
+  .vf-btn.v:hover:not(.disabled) { border-color: var(--correct); background: var(--correct-dim); color: var(--correct); }
+  .vf-btn.f:hover:not(.disabled) { border-color: var(--wrong); background: var(--wrong-dim); color: var(--wrong); }
+  .vf-btn.selected-v { border-color: var(--correct); background: var(--correct-dim); color: var(--correct); }
+  .vf-btn.selected-f { border-color: var(--wrong); background: var(--wrong-dim); color: var(--wrong); }
+
+  /* MIND MAP */
+  .mind-map {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    overflow-x: auto;
+  }
+
+  .mind-center {
+    display: flex; justify-content: center; margin-bottom: 2rem;
+  }
+
+  .mind-node {
+    background: var(--red);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    font-family: 'Crimson Pro', serif;
+  }
+
+  .mind-branches { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .mind-branch { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+
+  .mind-branch-node {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .mind-leaves { display: flex; flex-direction: column; gap: 0.3rem; align-items: center; }
+  .mind-leaf {
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* SIMULADO */
+  .sim-result {
+    display: none;
+    text-align: center;
+    padding: 3rem;
+  }
+
+  .sim-score {
+    font-family: 'Crimson Pro', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 0.5rem;
+  }
+
+  .sim-label { font-size: 1.2rem; color: var(--text2); margin-bottom: 2rem; }
+
+  .rating-badge {
+    display: inline-block;
+    padding: 0.6rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* DECORE ISSO */
+  .decore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+
+  .decore-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    border-top: 3px solid var(--red);
+  }
+
+  .decore-num {
+    font-family: 'Crimson Pro', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .decore-label { font-size: 0.85rem; color: var(--text2); line-height: 1.4; }
+  .decore-unit { font-size: 0.75rem; color: var(--text3); margin-top: 0.2rem; }
+
+  /* ECG visual */
+  .ecg-wave-container {
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .lead-diagram {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .lead-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .lead-name { font-weight: 700; color: var(--gold); margin-bottom: 0.3rem; font-size: 0.9rem; }
+  .lead-detail { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
+
+  /* Association */
+  .assoc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .assoc-left, .assoc-right { display: flex; flex-direction: column; gap: 0.5rem; }
+  .assoc-item {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg2);
+    color: var(--text2);
+  }
+  .assoc-item:hover { border-color: var(--gold); color: var(--text); }
+  .assoc-item.selected { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
+  .assoc-item.matched { border-color: var(--correct); background: var(--correct-dim); color: var(--correct); pointer-events: none; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; max-width: 100%; }
+    .menu-toggle { display: block; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .assoc-grid { grid-template-columns: 1fr; }
+  }
+
+  ul.content-list { list-style: none; padding: 0; }
+  ul.content-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 0.5rem;
+    color: var(--text2);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  ul.content-list li:last-child { border-bottom: none; }
+  ul.content-list li::before { content: '▸'; color: var(--red); flex-shrink: 0; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  .stat-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .stat-pill {
+    flex: 1; min-width: 140px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    text-align: center;
+  }
+  .stat-pill .sp-val { font-family: 'Crimson Pro', serif; font-size: 1.8rem; font-weight: 700; }
+  .stat-pill .sp-label { font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .btn {
+    padding: 0.65rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+  }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+  .btn-outline:hover { border-color: var(--red); color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="badge">❤️ Biofísica Cardíaca · Dr. Saldivar + Guyton</div>
+  <h1 class="landing-title">Biofísica <span>Cardíaca</span><br>& Electrocardiograma</h1>
+  <p class="landing-sub">Plataforma de estudio interactiva: morfología, propiedades cardíacas, potenciales de acción, sistema excito-conductor y ECG. Diseñada para dominar la materia antes del examen.</p>
+  <div class="objectives">
+    <div class="obj-card">
+      <div class="obj-icon">📚</div>
+      <div class="obj-title">Tópicos</div>
+      <div class="obj-val">8 módulos completos</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-icon">🃏</div>
+      <div class="obj-title">Flashcards</div>
+      <div class="obj-val">40 tarjetas</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-icon">📝</div>
+      <div class="obj-title">Preguntas</div>
+      <div class="obj-val">40 con feedback</div>
+    </div>
+    <div class="obj-card">
+      <div class="obj-icon">⏱️</div>
+      <div class="obj-title">Tiempo est.</div>
+      <div class="obj-val">2–3 horas</div>
+    </div>
+  </div>
+  <button class="start-btn" onclick="iniciarApp()">🚀 Iniciar Estudio</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">❤️ Bio<span>Cardíaca</span></div>
+      <div class="nav-section">
+        <div class="nav-label">Contenido</div>
+        <div class="nav-item active" onclick="showPage('morfologia')"><span class="nav-icon">🫀</span> Morfología</div>
+        <div class="nav-item" onclick="showPage('propiedades')"><span class="nav-icon">⚡</span> Propiedades</div>
+        <div class="nav-item" onclick="showPage('potenciales')"><span class="nav-icon">📊</span> Potenciales de Acción</div>
+        <div class="nav-item" onclick="showPage('excitoconductor')"><span class="nav-icon">🔌</span> Sistema Excito-Conductor</div>
+        <div class="nav-item" onclick="showPage('contraccion')"><span class="nav-icon">💪</span> Contracción & Frank-Starling</div>
+        <div class="nav-item" onclick="showPage('ecg')"><span class="nav-icon">📈</span> ECG</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Práctica</div>
+        <div class="nav-item" onclick="showPage('decore')"><span class="nav-icon">⭐</span> Decore Esto</div>
+        <div class="nav-item" onclick="showPage('mapas')"><span class="nav-icon">🗺️</span> Mapa Mental</div>
+        <div class="nav-item" onclick="showPage('flashcards')"><span class="nav-icon">🃏</span> Flashcards</div>
+        <div class="nav-item" onclick="showPage('mc')"><span class="nav-icon">📝</span> Múltiple Opción</div>
+        <div class="nav-item" onclick="showPage('vf')"><span class="nav-icon">✅</span> Verdadero / Falso</div>
+        <div class="nav-item" onclick="showPage('asociacion')"><span class="nav-icon">🔗</span> Asociación</div>
+        <div class="nav-item" onclick="showPage('simulado')"><span class="nav-icon">🏆</span> Simulado</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-label">Progreso del estudio</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- MORFOLOGÍA -->
+      <div class="page active" id="page-morfologia">
+        <h1 class="page-title">🫀 Morfología <span>Cardíaca</span></h1>
+        <p class="page-desc">Estructura histológica del músculo cardíaco y características de los cardiomiocitos</p>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🔬</span> Cardiomiocitos – Características Fundamentales</div>
+          <p>El músculo cardíaco es un <span class="highlight">músculo estriado</span> que forma las paredes de aurículas y ventrículos. Posee más de <span class="red">20 millones de células</span> llamadas cardiomiocitos.</p>
+          <div class="grid-2">
+            <div class="alert alert-blue">
+              <div class="alert-title">🏗️ Estructura</div>
+              <ul class="content-list">
+                <li>Células con <strong>núcleo único</strong></li>
+                <li>Forma bifurcada en <strong>Y</strong></li>
+                <li>Retículo sarcoplasmático <strong>menos desarrollado</strong> que el músculo esquelético</li>
+                <li>Utilizan también <strong>calcio extracelular</strong> para la contracción</li>
+              </ul>
+            </div>
+            <div class="alert alert-red">
+              <div class="alert-title">🔑 Discos Intercalares</div>
+              <ul class="content-list">
+                <li>Membranas de <strong>baja resistencia</strong> eléctrica</li>
+                <li>Facilitan el movimiento de <strong>iones</strong> entre células</li>
+                <li>Dirigen la propagación de <strong>potenciales de acción</strong></li>
+                <li>Funcionan como <strong>sincicio funcional</strong></li>
+              </ul>
+            </div>
+          </div>
+          <div class="alert alert-gold">
+            <div class="alert-title">⚠️ Punto de Prueba – Comparación con Músculo Esquelético</div>
+            La diferencia fundamental es el uso de <strong>calcio extracelular</strong> en el cardíaco. Además, los discos intercalares (INEXISTENTES en el esquelético) permiten que el corazón funcione como un sincicio.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🧬</span> Tipos de Células Miocárdicas</div>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Tipo</th><th>Porcentaje</th><th>Potencial</th><th>Función</th></tr>
+              <tr><td class="red">Contráctiles</td><td>99%</td><td>Respuesta rápida</td><td>Generar fuerza de contracción</td></tr>
+              <tr><td class="teal">Autoexcitables (conductoras)</td><td>1%</td><td>Respuesta lenta</td><td>Generar y conducir impulsos</td></tr>
+            </table>
+          </div>
+          <div class="alert alert-teal">
+            <div class="alert-title">🎯 Cómo el Profesor Puede Cobrar</div>
+            "¿Cuál es el porcentaje de células automáticas en el miocardio?" → <strong>1%</strong> (nódulos SA, AV y Purkinje). Las contráctiles son el 99% y NO se autoexcitan.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🔊</span> Ruidos Cardíacos</div>
+          <div class="grid-2">
+            <div class="alert alert-red">
+              <div class="alert-title">1er Ruido – S1</div>
+              <ul class="content-list">
+                <li>Cierre de válvulas <strong>auriculoventriculares</strong></li>
+                <li>Indica início de la <strong>sístole</strong></li>
+                <li>Duración: <strong>0,14 seg</strong></li>
+                <li>Frecuencia: <strong>25–45 Hz</strong> – ruido <strong>grave</strong></li>
+              </ul>
+            </div>
+            <div class="alert alert-blue">
+              <div class="alert-title">2do Ruido – S2</div>
+              <ul class="content-list">
+                <li>Cierre de válvulas <strong>sigmoides</strong> (aórtica y pulmonar)</li>
+                <li>Indica início de la <strong>diástole</strong></li>
+                <li>Duración: <strong>0,11 seg</strong></li>
+                <li>Frecuencia: <strong>50 Hz</strong> – ruido <strong>agudo</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROPIEDADES -->
+      <div class="page" id="page-propiedades">
+        <h1 class="page-title">⚡ Propiedades del <span>Miocardio</span></h1>
+        <p class="page-desc">Las 5 propiedades fundamentales del músculo cardíaco y sus mecanismos</p>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">📋</span> Las 5 Propiedades Cardíacas</div>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Propiedad</th><th>Término Técnico</th><th>Definición</th></tr>
+              <tr><td class="red">Contractilidad</td><td>Inotropismo</td><td>Capacidad de contraerse en respuesta al estímulo</td></tr>
+              <tr><td class="gold">Automatismo</td><td>Cronotropismo</td><td>Capacidad de generar su propia despolarización</td></tr>
+              <tr><td class="teal">Conductividad</td><td>Dromotropismo</td><td>Capacidad de transmitir el PA a otras células</td></tr>
+              <tr><td class="blue">Excitabilidad</td><td>Batmotropismo</td><td>Capacidad de responder a un estímulo generando PA</td></tr>
+              <tr><td style="color:var(--purple)">Lusotropismo</td><td>Lusotropismo</td><td>Eficacia del proceso de <strong>relajación</strong></td></tr>
+            </table>
+          </div>
+          <div class="alert alert-gold">
+            <div class="alert-title">🎯 Pegadinha Clásica</div>
+            El lusotropismo es la 5ª propiedad – muchos estudiantes olvidan que la RELAJACIÓN también es una propiedad activa del corazón (requiere ATP y recaptación de Ca²⁺).
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('props','automatismo')">⚡ Automatismo</button>
+          <button class="tab-btn" onclick="switchTab('props','excitabilidad')">🎯 Excitabilidad</button>
+          <button class="tab-btn" onclick="switchTab('props','conductividad')">🔌 Conductividad</button>
+        </div>
+
+        <div id="props-automatismo" class="tab-pane active">
+          <div class="card">
+            <div class="card-title"><span class="icon">⚡</span> Automatismo (Cronotropismo)</div>
+            <p>Es la capacidad de la célula cardíaca para iniciar su propia despolarización. Se debe al <span class="gold">ingreso lento de Ca²⁺</span> en la célula marcapaso, que revierte la negatividad intracelular e inicia el Potencial de Acción.</p>
+            <p>Las células del <span class="red">Nódulo Sinoatrial</span> exhiben el automatismo más rápido (60–100 bpm), lo que las convierte en el marcapaso cardíaco dominante. Este fenómeno se llama <span class="highlight">ley del dominante</span>: el nodo más rápido comanda el ritmo.</p>
+            <div class="alert alert-red">
+              <div class="alert-title">⚠️ Concepto Clave – Potencial Marcapaso</div>
+              En las células automáticas, NO hay potencial de reposo verdadero. El potencial cae hasta un mínimo y luego <strong>sube espontáneamente</strong> (despolarización diastólica) hasta alcanzar el umbral. Esto es causado por la entrada gradual de Na⁺ y Ca²⁺.
+            </div>
+          </div>
+        </div>
+
+        <div id="props-excitabilidad" class="tab-pane">
+          <div class="card">
+            <div class="card-title"><span class="icon">🎯</span> Excitabilidad (Batmotropismo)</div>
+            <p>Es la propiedad de una célula cardíaca para responder a un estímulo, generando un Potencial de Acción. La <span class="highlight">intensidad del estímulo necesaria para alcanzar el umbral</span> define la excitabilidad.</p>
+            <div class="grid-2">
+              <div class="alert alert-teal">
+                <div class="alert-title">Muy Excitable</div>
+                Responde a estímulos de <strong>baja intensidad</strong> (umbral bajo)
+              </div>
+              <div class="alert alert-red">
+                <div class="alert-title">Poco Excitable</div>
+                Solo responde a estímulos de <strong>alta intensidad</strong> (umbral alto)
+              </div>
+            </div>
+            <p>Las células marcapaso del NSA son <span class="red">autoexcitables</span> – no necesitan estímulo externo.</p>
+          </div>
+        </div>
+
+        <div id="props-conductividad" class="tab-pane">
+          <div class="card">
+            <div class="card-title"><span class="icon">🔌</span> Conductividad (Dromotropismo)</div>
+            <p>La capacidad de conducción depende de la <span class="gold">despolarización secuencial</span> de las células del sistema de conducción. Los discos intercalares en los extremos celulares facilitan la conducción.</p>
+            <div class="alert alert-blue">
+              <div class="alert-title">Velocidades de Conducción</div>
+              Ver tabla completa en la sección "Decore Esto"
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POTENCIALES -->
+      <div class="page" id="page-potenciales">
+        <h1 class="page-title">📊 Potenciales <span>de Acción</span></h1>
+        <p class="page-desc">Fases del PA ventricular y comparación con células marcapaso</p>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">📈</span> Fases del PA en Células Ventriculares</div>
+          <p>En las células ventriculares <span class="highlight">no automáticas</span>, el potencial de reposo NO cambia hasta que llegue un estímulo externo.</p>
+          <div class="phase-timeline">
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--blue);color:white">0</div>
+              <div class="phase-content">
+                <div class="phase-title">Despolarización Rápida</div>
+                <div class="phase-desc">Entrada masiva de <span class="blue">Na⁺</span> por canales voltaje-dependientes. El potencial sube de ~-90 mV a valores positivos (+20 mV). Muy rápida.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--teal);color:#0a0e1a">1</div>
+              <div class="phase-content">
+                <div class="phase-title">Repolarización Temprana</div>
+                <div class="phase-desc">Salida rápida de <span class="teal">K⁺</span> por repulsión de cargas positivas. Muy breve. <span class="highlight">Característica infaltable de las fibras de Purkinje.</span></div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--gold);color:#0a0e1a">2</div>
+              <div class="phase-content">
+                <div class="phase-title">Meseta (Platô)</div>
+                <div class="phase-desc">Entrada lenta de <span class="gold">Ca²⁺ y Na⁺</span> contrabalancea la salida de K⁺. El potencial se estabiliza en valores positivos por tiempo prolongado. Permeabilidad al K⁺ disminuida. <span class="red">EXCLUSIVA del cardíaco – no existe en músculo esquelético.</span></div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--red);color:white">3</div>
+              <div class="phase-content">
+                <div class="phase-title">Repolarización Final</div>
+                <div class="phase-desc">Recupera permeabilidad al <span class="red">K⁺</span> (sale) y disminuye entrada de Ca²⁺. La célula retorna al potencial negativo.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--border);color:var(--text)">4</div>
+              <div class="phase-content">
+                <div class="phase-title">Potencial de Reposo</div>
+                <div class="phase-desc">La bomba <span class="highlight">Na⁺/K⁺-ATPasa</span> devuelve K⁺ al interior y Na⁺ al exterior. El potencial de reposo es ≈ -90 mV (próximo al potencial de equilibrio del K⁺).</div>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-red">
+            <div class="alert-title">🎯 Punto de Alta Probabilidad en Prueba</div>
+            La <strong>meseta (fase 2)</strong> es la característica más distintiva del PA cardíaco. Explica por qué el período refractario es TAN LARGO (no hay tétanos cardíaco). La contracción dura mientras dura la meseta.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🔄</span> Comparación: Célula Ventricular vs Marcapaso</div>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Característica</th><th>Célula Ventricular</th><th>Célula Marcapaso (NSA)</th></tr>
+              <tr><td>Potencial de reposo</td><td>-90 mV (estable)</td><td>No tiene reposo verdadero (≈-60 mV)</td></tr>
+              <tr><td>Fase 0</td><td>Entrada de Na⁺ (rápida)</td><td>Entrada de Ca²⁺ (lenta)</td></tr>
+              <tr><td>Meseta (Fase 2)</td><td>Presente</td><td>Ausente</td></tr>
+              <tr><td>Despolarización espontánea</td><td>No</td><td>Sí (por Na⁺ y Ca²⁺)</td></tr>
+              <tr><td>Canal responsable de Fase 0</td><td>Canal de Na⁺ rápido</td><td>Canal de Ca²⁺ lento</td></tr>
+              <tr><td>Respuesta</td><td>Rápida</td><td>Lenta</td></tr>
+            </table>
+          </div>
+          <div class="alert alert-gold">
+            <div class="alert-title">⚠️ Pegadinha</div>
+            En la célula marcapaso, la <strong>fase 0</strong> es mediada por Ca²⁺ (no Na⁺). Por eso los bloqueantes de canales de calcio (verapamil, diltiazem) reducen la frecuencia cardíaca.
+          </div>
+        </div>
+      </div>
+
+      <!-- EXCITO-CONDUCTOR -->
+      <div class="page" id="page-excitoconductor">
+        <h1 class="page-title">🔌 Sistema <span>Excito-Conductor</span></h1>
+        <p class="page-desc">Anatomía funcional, frecuencias espontáneas y velocidades de conducción</p>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🗺️</span> Componentes del Sistema</div>
+          <div class="phase-timeline">
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--red);color:white;font-size:0.7rem">SA</div>
+              <div class="phase-content">
+                <div class="phase-title">Nódulo Sinoatrial (NSA) – El Marcapaso Principal</div>
+                <div class="phase-desc">Localizado en la <span class="red">aurícula derecha posterior</span>. Frecuencia: <span class="red">60–100 bpm</span>. Es el dominante porque dispara más rápido. Produce el <span class="highlight">ritmo sinusal normal</span>.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--gold);color:#0a0e1a;font-size:0.7rem">AV</div>
+              <div class="phase-content">
+                <div class="phase-title">Nódulo Atrioventricular (NAV) – El Portón</div>
+                <div class="phase-desc">Único camino eléctrico entre aurículas y ventrículos (las válvulas no conducen). Frecuencia: <span class="gold">40–60 bpm</span>. Velocidad: <span class="red">0,03 m/s</span> – la más lenta. El retraso (0,1 seg) permite que las aurículas terminen su contracción antes de que empiecen los ventrículos.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--teal);color:#0a0e1a;font-size:0.65rem">HIS</div>
+              <div class="phase-content">
+                <div class="phase-title">Haz de His + Ramas</div>
+                <div class="phase-desc">Continúa desde el NAV por el septo interventricular. Se divide en rama <span class="teal">derecha e izquierda</span>, activando ambos ventrículos casi simultáneamente.</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num" style="background:var(--blue);color:white;font-size:0.65rem">PK</div>
+              <div class="phase-content">
+                <div class="phase-title">Fibras de Purkinje – La Autopista</div>
+                <div class="phase-desc">Velocidad más rápida: <span class="blue">1,5–4 m/s</span>. Frecuencia: <span class="blue">15–40 bpm</span>. Distribuyen el impulso por todo el miocardio ventricular. Tienen <strong>fase 1 característica</strong> (repolarización temprana prominente).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">📊</span> Tabla de Alto Rendimiento</div>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Estructura</th><th>Frec. Espontánea</th><th>Velocidad de Conducción</th><th>Si toma el mando</th></tr>
+              <tr><td class="red">Nódulo SA</td><td class="red">60–100 bpm</td><td>—</td><td>Ritmo sinusal normal</td></tr>
+              <tr><td class="gold">Músculo Auricular</td><td>—</td><td>0,3–0,5 m/s</td><td>—</td></tr>
+              <tr><td style="color:#a78bfa">Vías Internodales</td><td>—</td><td>1–2 m/s</td><td>—</td></tr>
+              <tr><td class="gold">Nódulo AV</td><td class="gold">40–60 bpm</td><td class="red">0,03 m/s (¡lentísimo!)</td><td>Ritmo nodal</td></tr>
+              <tr><td class="blue">Fibras de Purkinje</td><td class="blue">15–40 bpm</td><td class="blue">1,5–4 m/s (¡rápido!)</td><td>Ritmo idioventricular</td></tr>
+              <tr><td>Miocardio ventricular</td><td>—</td><td>0,3–0,5 m/s</td><td>—</td></tr>
+            </table>
+          </div>
+          <div class="alert alert-red">
+            <div class="alert-title">⚠️ Pegadinhas Frecuentes</div>
+            <ul class="content-list">
+              <li>Nódulo AV: velocidad MÁS LENTA (0,03 m/s) – esencial para el retraso fisiológico</li>
+              <li>Fibras de Purkinje: velocidad MÁS RÁPIDA (hasta 4 m/s) – para activar ventriculos sincronizadamente</li>
+              <li>El ECG NO muestra la actividad del NSA ni del NAV (voltaje insuficiente)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTRACCIÓN -->
+      <div class="page" id="page-contraccion">
+        <h1 class="page-title">💪 Contracción & <span>Frank-Starling</span></h1>
+        <p class="page-desc">Mecanismo contráctil, calcio, débito cardíaco y la ley de Frank-Starling</p>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🔩</span> Mecanismo de Contracción</div>
+          <p>Esencialmente igual al músculo esquelético, con una <span class="red">diferencia fundamental</span>: el cardíaco utiliza también el <span class="gold">calcio extracelular</span> (además del retículo sarcoplasmático).</p>
+          <div class="alert alert-blue">
+            <div class="alert-title">🔄 Bomba Na⁺/Ca²⁺</div>
+            Sistema de transporte en la membrana del cardiomiocito. Intercambia <strong>3 iones Na⁺ por 1 ion Ca²⁺</strong>. Es electrogénica (crea corriente neta). Importante para la relajación y para el control de Ca²⁺ intracelular.
+          </div>
+          <div class="alert alert-gold">
+            <div class="alert-title">💊 Relevancia Clínica – Digoxina</div>
+            La digoxina inhibe la bomba Na⁺/K⁺, ↑Na⁺ intracelular → ↓actividad de la bomba Na⁺/Ca²⁺ → ↑Ca²⁺ intracelular → mayor fuerza de contracción (efecto inotrópico positivo).
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">⚖️</span> Ley de Frank-Starling</div>
+          <p>"Dentro de límites fisiológicos, el corazón es capaz de impulsar <span class="red">toda la sangre que llega</span>".</p>
+          <div class="grid-2">
+            <div class="alert alert-teal">
+              <div class="alert-title">📥 Débito Cardíaco (DC)</div>
+              <p style="color:var(--text)">DC = <strong>Volumen Sistólico × Frecuencia Cardíaca</strong></p>
+              <p style="color:var(--text2);font-size:0.85rem">Volumen de sangre expulsado por el corazón por minuto</p>
+            </div>
+            <div class="alert alert-blue">
+              <div class="alert-title">📤 Retorno Venoso</div>
+              <p style="color:var(--text)">Volumen de sangre que <strong>recibe</strong> el corazón por minuto</p>
+              <p style="color:var(--text2);font-size:0.85rem">Frank-Starling garantiza DC = Retorno Venoso</p>
+            </div>
+          </div>
+          <p>Mecanismo: mayor llenado → mayor estiramiento de miofilamentos → mayor superposición actina-miosina → <span class="highlight">mayor fuerza de contracción</span>.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🏋️</span> Trabajo del Corazón</div>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Tipo de Sobrecarga</th><th>Término</th><th>Representado por</th></tr>
+              <tr><td class="blue">Sobrecarga de Volumen</td><td>Pre-carga</td><td>Retorno venoso ↑</td></tr>
+              <tr><td class="red">Sobrecarga de Presión</td><td>Post-carga</td><td>Presión aórtica / Resistencia periférica ↑</td></tr>
+            </table>
+          </div>
+          <div class="alert alert-gold">
+            <div class="alert-title">📐 Fórmula del Trabajo</div>
+            Trabajo = <strong>Volumen × Presión</strong> (pasar sangre de baja presión venosa a alta presión arterial)
+          </div>
+        </div>
+      </div>
+
+      <!-- ECG -->
+      <div class="page" id="page-ecg">
+        <h1 class="page-title">📈 <span>Electrocardiograma</span></h1>
+        <p class="page-desc">Principios, ondas, intervalos, derivaciones y anatomía del ECG</p>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">📡</span> ¿Qué es el ECG?</div>
+          <p>Registro de la <span class="highlight">actividad eléctrica cardíaca</span> obtenida desde la superficie del cuerpo. Muestra los procesos de <span class="red">despolarización</span> y <span class="teal">repolarización</span> del miocardio.</p>
+          <div class="alert alert-blue">
+            <div class="alert-title">⚠️ Lo que el ECG NO Muestra</div>
+            La actividad del NSA y del sistema de conducción (voltaje insuficiente). El ECG muestra principalmente las células <strong>miocárdicas</strong> (masa muscular suficiente).
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">📄</span> Papel del ECG</div>
+          <div class="grid-2">
+            <div>
+              <p><span class="highlight">Cuadrado pequeño:</span> 1×1 mm</p>
+              <p><span class="highlight">Cuadrado grande:</span> 5×5 mm</p>
+              <hr class="divider">
+              <p><span class="gold">Eje horizontal</span> = TIEMPO</p>
+              <ul class="content-list">
+                <li>1 cuadrado pequeño = <strong>0,04 seg</strong></li>
+                <li>1 cuadrado grande = <strong>0,2 seg</strong></li>
+              </ul>
+            </div>
+            <div>
+              <p><span class="blue">Eje vertical</span> = AMPLITUD (voltaje)</p>
+              <ul class="content-list">
+                <li>1 cuadrado pequeño = <strong>0,1 mV</strong></li>
+                <li>1 cuadrado grande = <strong>0,5 mV</strong></li>
+              </ul>
+              <hr class="divider">
+              <p>3 características de las ondas: <span class="red">duración</span>, <span class="gold">amplitud</span>, <span class="teal">configuración</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('ecg','ondas')">🌊 Ondas</button>
+          <button class="tab-btn" onclick="switchTab('ecg','intervalos')">⏱️ Intervalos</button>
+          <button class="tab-btn" onclick="switchTab('ecg','derivaciones')">📐 Derivaciones</button>
+          <button class="tab-btn" onclick="switchTab('ecg','deflexiones')">↕️ Deflexiones</button>
+        </div>
+
+        <div id="ecg-ondas" class="tab-pane active">
+          <div class="card">
+            <div class="card-title"><span class="icon">🌊</span> Ondas del ECG</div>
+            <div class="table-wrap">
+              <table>
+                <tr><th>Onda</th><th>Representa</th><th>Características</th></tr>
+                <tr><td class="gold"><strong>P</strong></td><td>Despolarización atrial</td><td>1ª parte = AD; 2ª parte = AI. NSA en AD → AD antes que AI</td></tr>
+                <tr><td class="red"><strong>QRS</strong></td><td>Despolarización ventricular</td><td>Mayor amplitud (masa ventricular >> atrial). Representa contracción</td></tr>
+                <tr><td style="color:var(--blue)"><strong>Q</strong></td><td>Despolarización del septo</td><td>1ª deflexión negativa del QRS</td></tr>
+                <tr><td style="color:var(--blue)"><strong>R</strong></td><td>Despolarización ventricular</td><td>1ª deflexión positiva</td></tr>
+                <tr><td style="color:var(--blue)"><strong>S</strong></td><td>Despolarización ventricular</td><td>1ª deflexión negativa después de R</td></tr>
+                <tr><td class="teal"><strong>T</strong></td><td>Repolarización ventricular</td><td>Más larga que QRS (proceso más lento). La repolarización atrial se esconde dentro del QRS</td></tr>
+              </table>
+            </div>
+            <div class="alert alert-red">
+              <div class="alert-title">🎯 Punto de Prueba Frecuente</div>
+              ¿Por qué no vemos la onda de repolarización atrial? Porque ocurre al mismo tiempo que la <strong>despolarización ventricular (QRS)</strong>, que es mucho más prominente y la "esconde".
+            </div>
+          </div>
+        </div>
+
+        <div id="ecg-intervalos" class="tab-pane">
+          <div class="card">
+            <div class="card-title"><span class="icon">⏱️</span> Segmentos e Intervalos</div>
+            <div class="alert alert-teal">
+              <div class="alert-title">🔑 Diferencia Fundamental</div>
+              <p style="color:var(--text)"><strong>Segmento:</strong> línea recta que CONECTA dos ondas (son pausas)</p>
+              <p style="color:var(--text)"><strong>Intervalo:</strong> engloba por lo menos UNA ONDA + la línea recta de conexión</p>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <tr><th>Nombre</th><th>Tipo</th><th>Qué Representa</th></tr>
+                <tr><td class="gold">Segmento PQ</td><td><span class="tag tag-teal">Segmento</span></td><td>Retraso fisiológico en el NAV (silencio eléctrico)</td></tr>
+                <tr><td class="red">Intervalo PR</td><td><span class="tag tag-red">Intervalo</span></td><td>P + segmento PQ (tiempo desde inicio atrial hasta inicio ventricular)</td></tr>
+                <tr><td class="blue">Segmento ST</td><td><span class="tag tag-teal">Segmento</span></td><td>Período entre despolarización y repolarización ventricular (meseta)</td></tr>
+                <tr><td style="color:var(--purple)">Intervalo QT</td><td><span class="tag tag-red">Intervalo</span></td><td>Actividad eléctrica ventricular total (QRS + ST + T)</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="ecg-derivaciones" class="tab-pane">
+          <div class="card">
+            <div class="card-title"><span class="icon">📐</span> Las 12 Derivaciones</div>
+            <p>El corazón es un órgano tridimensional. Las 12 derivaciones permiten verlo desde diferentes ángulos.</p>
+            <div class="grid-2">
+              <div>
+                <p style="color:var(--gold);font-weight:600;margin-bottom:0.75rem">6 Derivaciones de Miembros (Plano Frontal)</p>
+                <div class="table-wrap">
+                  <table>
+                    <tr><th>Derivación</th><th>Ángulo</th><th>Electrodos</th></tr>
+                    <tr><td class="red">DI</td><td>0°</td><td>BD(-) → BI(+)</td></tr>
+                    <tr><td class="red">DII</td><td>60°</td><td>BD(-) → Piernas(+)</td></tr>
+                    <tr><td class="red">DIII</td><td>120°</td><td>BI(-) → Piernas(+)</td></tr>
+                    <tr><td class="gold">aVL</td><td>-30°</td><td>BI(+) resto(-)</td></tr>
+                    <tr><td class="gold">aVR</td><td>-150°</td><td>BD(+) resto(-)</td></tr>
+                    <tr><td class="gold">aVF</td><td>90°</td><td>Piernas(+) resto(-)</td></tr>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <p style="color:var(--blue);font-weight:600;margin-bottom:0.75rem">6 Derivaciones Precordiales (Plano Horizontal)</p>
+                <div class="table-wrap">
+                  <table>
+                    <tr><th>Derivación</th><th>Posición</th><th>Ve</th></tr>
+                    <tr><td class="blue">V1</td><td>4° EI Der. – Esternón</td><td>VD</td></tr>
+                    <tr><td class="blue">V2</td><td>4° EI Izq. – Esternón</td><td>Septo</td></tr>
+                    <tr><td class="blue">V3</td><td>Entre V2 y V4</td><td>Septo</td></tr>
+                    <tr><td class="blue">V4</td><td>5° EI – Línea medioclavicular</td><td>Ápice VI</td></tr>
+                    <tr><td class="blue">V5</td><td>5° EI – Línea axilar ant.</td><td>Lat. VI</td></tr>
+                    <tr><td class="blue">V6</td><td>5° EI – Línea axilar med.</td><td>Lat. VI</td></tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="ecg-deflexiones" class="tab-pane">
+          <div class="card">
+            <div class="card-title"><span class="icon">↕️</span> Lógica de las Deflexiones</div>
+            <div class="alert alert-teal">
+              <div class="alert-title">Regla Fundamental</div>
+              <p style="color:var(--text)">La deflexión en el ECG depende de la <strong>dirección del vector de despolarización</strong> en relación al electrodo positivo.</p>
+            </div>
+            <div class="grid-3">
+              <div class="alert alert-teal" style="text-align:center">
+                <div class="alert-title">↑ Deflexión Positiva</div>
+                Onda se <strong>aproxima</strong> al electrodo positivo
+              </div>
+              <div class="alert alert-red" style="text-align:center">
+                <div class="alert-title">↓ Deflexión Negativa</div>
+                Onda se <strong>aleja</strong> del electrodo positivo
+              </div>
+              <div class="alert alert-gold" style="text-align:center">
+                <div class="alert-title">↕ Bifásica</div>
+                Onda pasa <strong>perpendicular</strong> al electrodo
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DECORE ESTO -->
+      <div class="page" id="page-decore">
+        <h1 class="page-title">⭐ <span>Decore Esto</span></h1>
+        <p class="page-desc">Solo la información que DEBE estar memorizada para el examen</p>
+
+        <div class="decore-grid">
+          <div class="decore-card">
+            <div class="decore-num">60–100</div>
+            <div class="decore-label">Frecuencia espontánea del Nódulo SA</div>
+            <div class="decore-unit">bpm</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--gold)">
+            <div class="decore-num" style="color:var(--gold)">40–60</div>
+            <div class="decore-label">Frecuencia espontánea del Nódulo AV</div>
+            <div class="decore-unit">bpm</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--blue)">
+            <div class="decore-num" style="color:var(--blue)">15–40</div>
+            <div class="decore-label">Frecuencia espontánea de fibras de Purkinje</div>
+            <div class="decore-unit">bpm</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--teal)">
+            <div class="decore-num" style="color:var(--teal)">0,03</div>
+            <div class="decore-label">Velocidad de conducción en Nódulo AV (¡la más lenta!)</div>
+            <div class="decore-unit">m/s</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--blue)">
+            <div class="decore-num" style="color:var(--blue)">1,5–4</div>
+            <div class="decore-label">Velocidad de conducción en fibras de Purkinje (¡la más rápida!)</div>
+            <div class="decore-unit">m/s</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--purple)">
+            <div class="decore-num" style="color:var(--purple)">0,3–0,5</div>
+            <div class="decore-label">Velocidad de conducción muscular (atrial y ventricular)</div>
+            <div class="decore-unit">m/s</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--gold)">
+            <div class="decore-num" style="color:var(--gold)">1–2</div>
+            <div class="decore-label">Velocidad de conducción en vías internodales</div>
+            <div class="decore-unit">m/s</div>
+          </div>
+          <div class="decore-card">
+            <div class="decore-num">5</div>
+            <div class="decore-label">Propiedades del miocardio: Contractilidad, Automatismo, Conductividad, Excitabilidad, Lusotropismo</div>
+            <div class="decore-unit">propiedades</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--teal)">
+            <div class="decore-num" style="color:var(--teal)">0,04</div>
+            <div class="decore-label">Tiempo de 1 cuadrado pequeño del ECG (eje horizontal)</div>
+            <div class="decore-unit">segundos</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--blue)">
+            <div class="decore-num" style="color:var(--blue)">0,2</div>
+            <div class="decore-label">Tiempo de 1 cuadrado grande del ECG</div>
+            <div class="decore-unit">segundos</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--gold)">
+            <div class="decore-num" style="color:var(--gold)">0,1</div>
+            <div class="decore-label">Amplitud de 1 cuadrado pequeño del ECG (eje vertical)</div>
+            <div class="decore-unit">mV</div>
+          </div>
+          <div class="decore-card" style="border-top-color:var(--red)">
+            <div class="decore-num">3:1</div>
+            <div class="decore-label">Razón Na⁺/Ca²⁺ intercambiados por la bomba Na⁺/Ca²⁺</div>
+            <div class="decore-unit">iones</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1.5rem">
+          <div class="card-title"><span class="icon">🧠</span> Mnemónicas de Alta Eficiencia</div>
+          <div class="grid-2">
+            <div class="alert alert-red">
+              <div class="alert-title">Propiedades Cardíacas</div>
+              <strong>C-A-C-E-L</strong><br>
+              <em>Contractilidad · Automatismo · Conductividad · Excitabilidad · Lusotropismo</em><br><br>
+              "CAda CElula Late"
+            </div>
+            <div class="alert alert-gold">
+              <div class="alert-title">Fases del PA</div>
+              <strong>0-1-2-3-4</strong><br>
+              "Na entra · K sai rápido · Ca segura · K sai · bomba repara"<br><br>
+              Fase 2 (meseta) = Ca mantiene tudo positivo
+            </div>
+            <div class="alert alert-teal">
+              <div class="alert-title">Ondas del ECG</div>
+              <strong>P–QRS–T</strong><br>
+              P = Aurículas · QRS = Ventrículos (despol.) · T = Ventrículos (repol.)<br><br>
+              "Onde está a repolarização atrial? Escondida no QRS!"
+            </div>
+            <div class="alert alert-blue">
+              <div class="alert-title">Derivaciones Precordiales</div>
+              <strong>V1=VD · V2-V3=Septo · V4=Ápice · V5-V6=Lateral VI</strong><br><br>
+              "Del derecho al izquierdo, de anterior a lateral"
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAPA MENTAL -->
+      <div class="page" id="page-mapas">
+        <h1 class="page-title">🗺️ Mapa <span>Mental</span></h1>
+        <p class="page-desc">Organización visual de los conceptos principales</p>
+
+        <div class="mind-map">
+          <div class="mind-center">
+            <div class="mind-node">❤️ BIOFÍSICA CARDÍACA</div>
+          </div>
+          <div class="mind-branches">
+            <div class="mind-branch">
+              <div class="mind-branch-node" style="background:var(--red-dim);color:var(--red);border:1px solid var(--red)">🔬 Morfología</div>
+              <div class="mind-leaves">
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Cardiomiocitos</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Discos Intercalares</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Núcleo único</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Forma en Y</div>
+              </div>
+            </div>
+            <div class="mind-branch">
+              <div class="mind-branch-node" style="background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold)">⚡ Propiedades</div>
+              <div class="mind-leaves">
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Automatismo</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Excitabilidad</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Conductividad</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Contractilidad</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Lusotropismo</div>
+              </div>
+            </div>
+            <div class="mind-branch">
+              <div class="mind-branch-node" style="background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal)">📊 PA Ventricular</div>
+              <div class="mind-leaves">
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Fase 0 – Na⁺</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Fase 1 – K⁺ sai</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Fase 2 – Meseta Ca²⁺</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Fase 3 – K⁺ sai</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Fase 4 – Reposo</div>
+              </div>
+            </div>
+            <div class="mind-branch">
+              <div class="mind-branch-node" style="background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue)">🔌 Excito-Conductor</div>
+              <div class="mind-leaves">
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">NSA 60–100 bpm</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">NAV 40–60 bpm</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Haz His</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Purkinje 15–40</div>
+              </div>
+            </div>
+            <div class="mind-branch">
+              <div class="mind-branch-node" style="background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple)">📈 ECG</div>
+              <div class="mind-leaves">
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Onda P – Aurículas</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">QRS – Ventrículos</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">Onda T – Repol. V.</div>
+                <div class="mind-leaf" style="background:var(--bg3);color:var(--text2)">12 derivaciones</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div class="page" id="page-flashcards">
+        <h1 class="page-title">🃏 <span>Flashcards</span></h1>
+        <p class="page-desc">Haz clic en la tarjeta para revelar la respuesta. 40 tarjetas.</p>
+        <div class="flashcard-grid" id="flashcardGrid"></div>
+      </div>
+
+      <!-- MC -->
+      <div class="page" id="page-mc">
+        <h1 class="page-title">📝 Múltiple <span>Opción</span></h1>
+        <p class="page-desc">20 preguntas con feedback inmediato y justificación detallada</p>
+        <div id="mcContainer"></div>
+      </div>
+
+      <!-- VF -->
+      <div class="page" id="page-vf">
+        <h1 class="page-title">✅ Verdadero / <span>Falso</span></h1>
+        <p class="page-desc">10 afirmaciones – determina si son verdaderas o falsas</p>
+        <div id="vfContainer"></div>
+      </div>
+
+      <!-- ASOCIACION -->
+      <div class="page" id="page-asociacion">
+        <h1 class="page-title">🔗 <span>Asociación</span></h1>
+        <p class="page-desc">Relaciona cada concepto de la columna A con su descripción en la columna B</p>
+        <div id="assocContainer"></div>
+      </div>
+
+      <!-- SIMULADO -->
+      <div class="page" id="page-simulado">
+        <h1 class="page-title">🏆 <span>Simulado</span></h1>
+        <p class="page-desc">Examen completo con 20 preguntas – corrección automática al final</p>
+        <div id="simInstructions" class="card">
+          <div class="card-title"><span class="icon">📋</span> Instrucciones</div>
+          <ul class="content-list">
+            <li>20 preguntas de múltiple opción</li>
+            <li>Las respuestas solo se revelan al enviar el simulado completo</li>
+            <li>Obtendrás tu porcentaje y clasificación final</li>
+          </ul>
+          <br>
+          <button class="btn btn-red" onclick="startSim()">▶ Iniciar Simulado</button>
+        </div>
+        <div id="simQuestions" style="display:none"></div>
+        <div class="sim-result" id="simResult">
+          <div class="sim-score" id="simScore">0%</div>
+          <div class="sim-label" id="simLabel">—</div>
+          <div class="rating-badge" id="simBadge">—</div>
+          <br>
+          <button class="btn btn-outline" onclick="resetSim()">🔄 Reintentar</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+
+const flashcardsData = [
+  {cat:"Morfología", q:"¿Cuántos cardiomiocitos tiene el corazón?", a:"Más de 20 millones de células"},
+  {cat:"Morfología", q:"¿Cuál es la forma característica del cardiomiocito?", a:"Bifurcada en Y, con núcleo único"},
+  {cat:"Morfología", q:"¿Qué son los Discos Intercalares?", a:"Membranas de baja resistencia eléctrica que facilitan el flujo iónico entre células vecinas"},
+  {cat:"Morfología", q:"¿Por qué el cardíaco usa calcio extracelular?", a:"Porque tiene retículo sarcoplasmático menos desarrollado que el músculo esquelético"},
+  {cat:"Morfología", q:"¿Cuál es la diferencia histológica fundamental entre músculo cardíaco y esquelético?", a:"Los Discos Intercalares y el uso de calcio extracelular en la contracción"},
+  {cat:"Propiedades", q:"¿Cuáles son las 5 propiedades del miocardio?", a:"Contractilidad, Automatismo, Conductividad, Excitabilidad, Lusotropismo"},
+  {cat:"Propiedades", q:"¿Qué es el Automatismo (Cronotropismo)?", a:"Capacidad de iniciar su propia despolarización sin estímulo externo"},
+  {cat:"Propiedades", q:"¿Qué es el Lusotropismo?", a:"Eficacia del proceso de RELAJACIÓN cardíaca"},
+  {cat:"Propiedades", q:"¿Qué es el Batmotropismo?", a:"Excitabilidad – capacidad de responder a un estímulo generando un PA"},
+  {cat:"Propiedades", q:"¿Cuál célula cardíaca tiene el automatismo más rápido?", a:"El Nódulo Sinoatrial (NSA) – 60-100 bpm"},
+  {cat:"PA Ventricular", q:"¿Cuál ión entra en la Fase 0?", a:"Na⁺ (sodio) – entrada rápida masiva"},
+  {cat:"PA Ventricular", q:"¿Cuál ión sale en la Fase 1?", a:"K⁺ (potasio) – salida rápida"},
+  {cat:"PA Ventricular", q:"¿Qué caracteriza la Fase 2 (meseta)?", a:"Entrada lenta de Ca²⁺ y Na⁺ que contrabalancea la salida de K⁺, manteniendo el potencial positivo"},
+  {cat:"PA Ventricular", q:"¿Por qué la meseta cardíaca es importante clínicamente?", a:"Explica el largo período refractario: impide que el corazón entre en tétanos"},
+  {cat:"PA Ventricular", q:"¿Qué diferencia el PA marcapaso del ventricular en la Fase 0?", a:"En marcapaso: Ca²⁺ (lento). En ventricular: Na⁺ (rápido)"},
+  {cat:"PA Ventricular", q:"¿Qué hace la bomba Na⁺/K⁺ en la Fase 4?", a:"Devuelve K⁺ al interior y Na⁺ al exterior, restaurando el potencial de reposo (-90 mV)"},
+  {cat:"Sistema Excito-Conductor", q:"¿Cuál es la frecuencia espontánea del NSA?", a:"60–100 bpm"},
+  {cat:"Sistema Excito-Conductor", q:"¿Cuál es la frecuencia espontánea del NAV?", a:"40–60 bpm"},
+  {cat:"Sistema Excito-Conductor", q:"¿Cuál es la frecuencia espontánea de las fibras de Purkinje?", a:"15–40 bpm"},
+  {cat:"Sistema Excito-Conductor", q:"¿Cuál estructura tiene la conducción más LENTA?", a:"Nódulo AV – 0,03 m/s"},
+  {cat:"Sistema Excito-Conductor", q:"¿Cuál estructura tiene la conducción más RÁPIDA?", a:"Fibras de Purkinje – 1,5 a 4 m/s"},
+  {cat:"Sistema Excito-Conductor", q:"¿Por qué el NAV es lento?", a:"El retraso de 0,1 seg permite que las aurículas terminen de contraerse antes de que empiecen los ventrículos"},
+  {cat:"Sistema Excito-Conductor", q:"¿Por qué las válvulas no conducen el impulso?", a:"Porque no tienen estructuras conductoras. El impulso solo pasa por el NAV y el septo interventricular"},
+  {cat:"ECG", q:"¿Qué representa la Onda P?", a:"Despolarización atrial (1ª parte = AD, 2ª parte = AI)"},
+  {cat:"ECG", q:"¿Qué representa el Complejo QRS?", a:"Despolarización ventricular"},
+  {cat:"ECG", q:"¿Qué representa la Onda T?", a:"Repolarización ventricular"},
+  {cat:"ECG", q:"¿Por qué no vemos la repolarización atrial en el ECG?", a:"Queda 'escondida' dentro del QRS, que es mucho más prominente"},
+  {cat:"ECG", q:"¿Por qué el QRS es más alto que la onda P?", a:"Los ventrículos tienen mucha más masa muscular que las aurículas"},
+  {cat:"ECG", q:"¿Qué es un Segmento en el ECG?", a:"Línea recta que CONECTA dos ondas (sin incluir ondas)"},
+  {cat:"ECG", q:"¿Qué es un Intervalo en el ECG?", a:"Engloba por lo menos UNA ONDA + la línea de conexión"},
+  {cat:"ECG", q:"¿Cuánto tiempo representa 1 cuadrado pequeño horizontal?", a:"0,04 segundos"},
+  {cat:"ECG", q:"¿Cuánto voltaje representa 1 cuadrado pequeño vertical?", a:"0,1 mV"},
+  {cat:"ECG", q:"¿Cuántas derivaciones tiene el ECG estándar?", a:"12 derivaciones (6 de miembros + 6 precordiales)"},
+  {cat:"ECG", q:"¿Qué ángulo tiene la derivación DI?", a:"0°"},
+  {cat:"ECG", q:"¿En qué posición está V4?", a:"5° espacio intercostal izquierdo, línea medioclavicular – sobre el ápice del VI"},
+  {cat:"ECG", q:"¿Deflexión positiva significa qué?", a:"La onda de despolarización se APROXIMA al electrodo positivo"},
+  {cat:"Frank-Starling", q:"¿Qué dice la Ley de Frank-Starling?", a:"El corazón impulsa toda la sangre que llega (dentro de límites fisiológicos). DC = Retorno Venoso"},
+  {cat:"Frank-Starling", q:"¿Qué es la Pre-carga?", a:"Sobrecarga de volumen – representada por el retorno venoso"},
+  {cat:"Frank-Starling", q:"¿Qué es la Post-carga?", a:"Sobrecarga de presión – representada por la presión aórtica o resistencia periférica"},
+  {cat:"Ruidos", q:"¿Qué válvulas se cierran en el 1er Ruido Cardíaco (S1)?", a:"Válvulas auriculoventriculares (mitral y tricúspide) – início de la sístole"},
+];
+
+const mcData = [
+  {q:"¿Cuál de las siguientes estructuras cardíacas presenta la MENOR velocidad de conducción del impulso eléctrico?",
+   opts:["Fibras de Purkinje","Músculo atrial","Nódulo Atrioventricular","Vías internodales","Músculo ventricular"],
+   correct:2,
+   exp:"El Nódulo AV posee velocidad de 0,03 m/s – la más lenta del sistema excito-conductor. Este retraso es FISIOLÓGICO y esencial para que las aurículas terminen su contracción antes que los ventrículos."},
+  {q:"La 'meseta' (Fase 2) del potencial de acción ventricular es causada principalmente por:",
+   opts:["Salida rápida de K⁺","Entrada de Na⁺ en la Fase 0","Entrada lenta de Ca²⁺ y Na⁺ que contrabalancea la salida de K⁺","Activación de la bomba Na⁺/K⁺","Apertura de canales de Cl⁻"],
+   correct:2,
+   exp:"La meseta es sostenida por la entrada lenta de Ca²⁺ y Na⁺ por canales de activación lenta. Esto mantiene el potencial positivo por tiempo prolongado, explicando el largo período refractario cardíaco."},
+  {q:"Un paciente presenta un ritmo de escape con frecuencia de 35 bpm después de un bloqueo AV completo. ¿Cuál estructura cardíaca está asumiendo el comando del marcapaso?",
+   opts:["Nódulo SA","Músculo auricular","Nódulo AV","Fibras de Purkinje","Músculo ventricular contráctil"],
+   correct:3,
+   exp:"Las fibras de Purkinje tienen frecuencia intrínseca de 15–40 bpm. En bloqueo AV completo, los ventrículos establecen un ritmo idioventricular a cargo de Purkinje, con frecuencia característica de 15–40 bpm."},
+  {q:"La Ley de Frank-Starling afirma que:",
+   opts:["El corazón late con frecuencia proporcional a la presión aórtica","Dentro de límites fisiológicos, el corazón impulsa toda la sangre que llega","El volumen sistólico es inversamente proporcional al retorno venoso","La fuerza de contracción disminuye con el estiramiento","La frecuencia cardíaca determina el gasto cardíaco"],
+   correct:1,
+   exp:"Frank-Starling: mayor llenado ventricular → mayor estiramiento de miofilamentos → mejor superposición actina-miosina → mayor fuerza de contracción. El DC se adapta al retorno venoso."},
+  {q:"¿Por qué el complejo QRS tiene mayor amplitud que la onda P en el ECG?",
+   opts:["Porque los ventrículos se despolarizan más rápido","Porque la despolarización ventricular tiene mayor voltaje debido a la mayor masa muscular","Porque los ventrículos están más cerca de los electrodos","Porque la onda P es atenuada por el NAV","Porque los ventrículos tienen mayor frecuencia de despolarización"],
+   correct:1,
+   exp:"Los ventrículos tienen masa muscular ~3 veces mayor que las aurículas, generando mayor voltaje eléctrico. El ECG registra principalmente la actividad de células miocárdicas (masa suficiente para generar voltaje registrable)."},
+  {q:"¿Cuál es la función principal del retraso fisiológico en el Nódulo AV?",
+   opts:["Aumentar la velocidad de conducción hacia los ventrículos","Permitir que los ventrículos terminen su contracción antes","Generar el ritmo de escape ventricular","Permitir que las aurículas completen su contracción antes del inicio ventricular","Sincronizar la activación del septo interventricular"],
+   correct:3,
+   exp:"El retraso de 0,1 seg en el NAV es esencial para que las aurículas terminen de vaciarse dentro de los ventrículos ANTES de que estos inicien su contracción. Sin este retraso, la sístole auricular y ventricular serían simultáneas."},
+  {q:"¿Qué onda del ECG representa la repolarización ventricular?",
+   opts:["Onda P","Onda Q","Onda R","Onda S","Onda T"],
+   correct:4,
+   exp:"La onda T representa la repolarización ventricular. Es más larga y de configuración más simple que el QRS porque la repolarización es más lenta. La repolarización ATRIAL existe pero queda escondida dentro del QRS."},
+  {q:"En la bomba Na⁺/Ca²⁺ del cardiomiocito, la relación de intercambio iónico es:",
+   opts:["1 Na⁺ por 1 Ca²⁺","2 Na⁺ por 1 Ca²⁺","3 Na⁺ por 1 Ca²⁺","1 Na⁺ por 2 Ca²⁺","4 Na⁺ por 1 Ca²⁺"],
+   correct:2,
+   exp:"La bomba Na⁺/Ca²⁺ intercambia 3 Na⁺ por 1 Ca²⁺. Es electrogénica (genera corriente neta). La digoxina, al inhibir Na⁺/K⁺-ATPasa, aumenta Na⁺ intracelular → reduce actividad de esta bomba → aumenta Ca²⁺ → efecto inotrópico positivo."},
+  {q:"¿Cuál propiedad cardíaca se refiere a la eficacia del proceso de RELAJACIÓN?",
+   opts:["Contractilidad (inotropismo)","Automatismo (cronotropismo)","Conductividad (dromotropismo)","Excitabilidad (batmotropismo)","Lusotropismo"],
+   correct:4,
+   exp:"El lusotropismo es la 5ª propiedad cardíaca, frecuentemente olvidada. Se refiere a la eficacia con que el corazón se RELAJA. Es importante en condiciones como la miocardiopatía hipertrófica, donde la relajación está alterada."},
+  {q:"¿Cuál característica histológica es exclusiva del músculo cardíaco (ausente en el esquelético)?",
+   opts:["Filamentos de actina y miosina","Retículo sarcoplasmático","Discos intercalares","Línea Z","Sarcómero"],
+   correct:2,
+   exp:"Los Discos Intercalares son exclusivos del músculo cardíaco. Son uniones especializadas entre cardiomiocitos que actúan como áreas de baja resistencia eléctrica, permitiendo la propagación del PA de célula a célula (sincicio funcional)."},
+  {q:"En el ECG, ¿cuánto tiempo representa un cuadrado GRANDE en el eje horizontal?",
+   opts:["0,04 segundos","0,08 segundos","0,1 segundos","0,2 segundos","0,5 segundos"],
+   correct:3,
+   exp:"Un cuadrado grande = 5 cuadrados pequeños × 0,04 seg = 0,2 segundos. Esta medida es fundamental para calcular la frecuencia cardíaca: dividir 300 por el número de cuadrados grandes entre dos picos R consecutivos."},
+  {q:"La Fase 1 del potencial de acción ventricular es característica de:",
+   opts:["Nódulo SA","Nódulo AV","Músculo atrial","Fibras de Purkinje","Células del endocardio"],
+   correct:3,
+   exp:"La Fase 1 (repolarización temprana por salida rápida de K⁺) es una característica INFALTABLE de las fibras de Purkinje. En otras células, esta fase es menos pronunciada o ausente."},
+  {q:"¿Cuál derivación mira el corazón a un ángulo de -150°?",
+   opts:["DI (0°)","DII (60°)","DIII (120°)","aVL (-30°)","aVR (-150°)"],
+   correct:4,
+   exp:"aVR tiene ángulo de orientación de -150°. Se crea cuando el brazo DERECHO es positivo y todos los otros miembros son negativos. En un ECG normal, aVR suele tener deflexiones negativas para las ondas P y QRS."},
+  {q:"¿Cuál es el 1er Ruido Cardíaco (S1) y qué lo produce?",
+   opts:["Cierre de válvulas sigmoides – inicio de diástole","Apertura de válvulas AV – inicio de llenado","Cierre de válvulas auriculoventriculares – inicio de sístole","Cierre de válvulas AV – fin de sístole","Apertura de la válvula aórtica – eyección"],
+   correct:2,
+   exp:"S1 es producido por el cierre de las válvulas auriculoventriculares (mitral y tricúspide) e indica el INICIO DE LA SÍSTOLE. Duración 0,14 seg, frecuencia 25-45 Hz (ruido grave). El 2do ruido (S2) es el cierre de las sigmoides."},
+  {q:"En la derivación V1 del ECG precordial, ¿cuál cámara cardíaca es vista principalmente?",
+   opts:["Aurícula derecha","Aurícula izquierda","Ventrículo derecho","Septo interventricular","Ventrículo izquierdo"],
+   correct:2,
+   exp:"V1 se coloca en el 4° espacio intercostal derecho, directamente sobre el Ventrículo Derecho. V2-V3 ven el septo, V4 el ápice del VI, y V5-V6 la pared lateral del VI."},
+  {q:"¿Por qué el automatismo del NSA domina sobre el NAV y Purkinje?",
+   opts:["Porque tiene mayor voltaje","Porque su frecuencia espontánea es la más ALTA (60-100 bpm)","Porque está ubicado más cerca del miocardio ventricular","Porque tiene mayor velocidad de conducción","Porque tiene menor período refractario"],
+   correct:1,
+   exp:"La ley del dominante: la estructura con mayor frecuencia espontánea comanda el ritmo cardíaco. El NSA (60-100 bpm) suprime las frecuencias más lentas del NAV (40-60) y Purkinje (15-40) al despolarizarlos antes de que alcancen su umbral."},
+  {q:"¿Qué diferencia un Segmento de un Intervalo en el ECG?",
+   opts:["El segmento mide voltaje; el intervalo mide tiempo","El segmento engloba al menos una onda; el intervalo no","El segmento es solo la línea recta entre dos ondas; el intervalo incluye al menos una onda","Solo el intervalo se mide en milisegundos","No hay diferencia real entre los dos términos"],
+   correct:2,
+   exp:"Definición exacta: SEGMENTO = línea recta que CONECTA dos ondas (son pausas). INTERVALO = engloba por lo menos UNA ONDA + la línea de conexión. Ejemplo: Segmento PQ (solo la línea) vs Intervalo PR (incluye la onda P)."},
+  {q:"En una célula marcapaso normal, ¿qué ion es responsable de la despolarización espontánea que lleva al umbral?",
+   opts:["K⁺ entrando","Cl⁻ saliendo","Na⁺ y Ca²⁺ entrando gradualmente","Na⁺ saliendo","K⁺ saliendo"],
+   correct:2,
+   exp:"En las células marcapaso, la despolarización diastólica espontánea (potencial marcapaso) es causada por la entrada gradual de Na⁺ y Ca²⁺. No hay verdadero 'potencial de reposo' – el voltaje baja a un mínimo y sube espontáneamente."},
+  {q:"¿Cuál es el mecanismo por el que la digoxina aumenta la fuerza de contracción cardíaca?",
+   opts:["Aumenta la permeabilidad al Ca²⁺ directamente","Bloquea la bomba Na⁺/K⁺ → ↑Na⁺ intracelular → ↓actividad de bomba Na⁺/Ca²⁺ → ↑Ca²⁺ intracelular","Estimula directamente el NSA","Bloquea canales de K⁺","Aumenta la frecuencia de los canales de Na⁺ en Fase 0"],
+   correct:1,
+   exp:"Cadena completa: Digoxina inhibe Na⁺/K⁺-ATPasa → ↑Na⁺ intracelular → ↓gradiente para Na⁺ → ↓actividad bomba Na⁺/Ca²⁺ (que usa el gradiente de Na⁺) → ↑Ca²⁺ intracelular → mayor interacción actina-miosina → inotropismo positivo."},
+  {q:"¿Cuál derivación precordial corresponde al 5° espacio intercostal izquierdo en la línea axilar anterior?",
+   opts:["V3","V4","V5","V6","V2"],
+   correct:2,
+   exp:"V5 se coloca en el 5° espacio intercostal izquierdo, línea axilar ANTERIOR. V4 está en la misma altura pero en la línea medioclavicular (ápice). V6 está en la línea axilar MEDIA. V5 y V6 ven la pared lateral del ventrículo izquierdo."},
+];
+
+const vfData = [
+  {text:"Las fibras de Purkinje tienen la velocidad de conducción más alta del sistema excito-conductor (1,5–4 m/s).", correct:true, exp:"VERDADERO. Purkinje: 1,5–4 m/s, la más rápida. Esta velocidad permite la activación sincronizada de todo el miocardio ventricular."},
+  {text:"El potencial de acción de las células del NSA posee una meseta (Fase 2) igual a la del cardiomiocito ventricular.", correct:false, exp:"FALSO. Las células marcapaso del NSA NO tienen meseta. Su Fase 0 es mediada por Ca²⁺ (lento) y no hay plató prolongado. La meseta es característica de las células ventriculares."},
+  {text:"La onda T en el ECG representa la repolarización atrial.", correct:false, exp:"FALSO. La onda T representa la repolarización VENTRICULAR. La repolarización ATRIAL existe pero está 'escondida' dentro del Complejo QRS (ocurre simultáneamente y es opacada por el QRS)."},
+  {text:"El Nódulo AV tiene la velocidad de conducción más baja del sistema excito-conductor (0,03 m/s).", correct:true, exp:"VERDADERO. 0,03 m/s es la velocidad del NAV – esencial para el retraso fisiológico de 0,1 seg que permite la contracción auricular completa antes de la ventricular."},
+  {text:"El débito cardíaco es igual al producto entre volumen sistólico y presión arterial media.", correct:false, exp:"FALSO. Débito Cardíaco = Volumen Sistólico × Frecuencia Cardíaca. La presión NO es parte de la fórmula del DC. El Trabajo del Corazón sí involucra presión."},
+  {text:"Los discos intercalares son estructuras exclusivas del músculo cardíaco que facilitan la conducción eléctrica entre cardiomiocitos.", correct:true, exp:"VERDADERO. Los Discos Intercalares son exclusivos del cardíaco. Actúan como áreas de baja resistencia eléctrica que permiten el movimiento de iones entre células vecinas, haciendo del corazón un sincicio funcional."},
+  {text:"El 1er Ruido Cardíaco (S1) se produce por el cierre de las válvulas sigmoides.", correct:false, exp:"FALSO. S1 = cierre de válvulas AURICULOVENTRICULARES (mitral y tricúspide) = inicio de sístole. S2 = cierre de válvulas SIGMOIDES (aórtica y pulmonar) = inicio de diástole."},
+  {text:"En el ECG, el Intervalo PR engloba la onda P más el segmento PQ.", correct:true, exp:"VERDADERO. Intervalo PR = Onda P (despolarización atrial) + Segmento PQ (línea de conducción en el NAV). Representa el tiempo desde el inicio de la despolarización atrial hasta el inicio de la ventricular."},
+  {text:"El lusotropismo se refiere a la eficacia de la contracción cardíaca.", correct:false, exp:"FALSO. El Lusotropismo se refiere a la eficacia de la RELAJACIÓN cardíaca (luso = del griego 'lúein' = relajar). La contracción es el Inotropismo."},
+  {text:"La derivación DII tiene ángulo de orientación de 60° y se forma tornando el brazo derecho negativo y las piernas positivas.", correct:true, exp:"VERDADERO. DII: BD(-) → Piernas(+), ángulo 60°. DI es 0°, DIII es 120°. Estos tres forman el Triángulo de Einthoven."},
+];
+
+const assocData = [
+  {left:"Nódulo SA", right:"Marcapaso principal – 60-100 bpm"},
+  {left:"Fase 2 PA", right:"Meseta sostenida por Ca²⁺"},
+  {left:"Onda P ECG", right:"Despolarización auricular"},
+  {left:"Lusotropismo", right:"Eficacia de la relajación"},
+  {left:"Discos Intercalares", right:"Baja resistencia eléctrica entre cardiomiocitos"},
+  {left:"Purkinje", right:"Velocidad de conducción más alta (1,5–4 m/s)"},
+  {left:"Frank-Starling", right:"DC igual al retorno venoso"},
+  {left:"Nódulo AV", right:"Retardo fisiológico de 0,1 segundo"},
+  {left:"Onda T ECG", right:"Repolarización ventricular"},
+  {left:"Pre-carga", right:"Sobrecarga de volumen – retorno venoso"},
+];
+
+const simData = mcData.slice();
+
+// ===== INIT =====
+function iniciarApp() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  buildFlashcards();
+  buildMC();
+  buildVF();
+  buildAssoc();
+}
+
+// ===== NAVIGATION =====
+let visitedPages = new Set(['morfologia']);
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  visitedPages.add(id);
+  const total = 13;
+  document.getElementById('progressFill').style.width = Math.min(100, Math.round(visitedPages.size / total * 100)) + '%';
+  // close sidebar on mobile
+  if (window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleMenu() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ===== TABS =====
+function switchTab(group, id) {
+  const parent = event.currentTarget.closest('.page') || document.body;
+  parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  parent.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(group + '-' + id).classList.add('active');
+}
+
+// ===== FLASHCARDS =====
+function buildFlashcards() {
+  const grid = document.getElementById('flashcardGrid');
+  const catColors = {
+    "Morfología":"var(--blue)","Propiedades":"var(--gold)","PA Ventricular":"var(--red)",
+    "Sistema Excito-Conductor":"var(--teal)","ECG":"var(--purple)","Frank-Starling":"var(--teal)","Ruidos":"var(--gold)"
+  };
+  grid.innerHTML = flashcardsData.map((fc, i) => `
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="fc-tag" style="color:${catColors[fc.cat]||'var(--red)'}">${fc.cat}</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">Toca para ver respuesta</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="fc-tag" style="color:var(--teal)">RESPUESTA</div>
+          <div class="fc-a">${fc.a}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== MC =====
+function buildMC() {
+  const container = document.getElementById('mcContainer');
+  container.innerHTML = mcData.map((q, qi) => `
+    <div class="question-block card">
+      <div class="q-num">Pregunta ${qi+1} de ${mcData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((o, oi) => `
+          <div class="q-option" onclick="answerMC(${qi}, ${oi}, ${q.correct}, this)">
+            <div class="opt-letter">${'ABCDE'[oi]}</div>
+            <span>${o}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="q-feedback" id="mc-fb-${qi}"></div>
+    </div>
+  `).join('');
+}
+
+function answerMC(qi, selected, correct, el) {
+  const block = el.closest('.question-block');
+  if (block.querySelector('.disabled')) return;
+  block.querySelectorAll('.q-option').forEach((opt, oi) => {
+    opt.classList.add('disabled');
+    if (oi === correct) opt.classList.add('correct');
+    else if (oi === selected && selected !== correct) opt.classList.add('wrong');
+  });
+  const fb = document.getElementById('mc-fb-' + qi);
+  if (selected === correct) {
+    fb.className = 'q-feedback correct-fb';
+    fb.innerHTML = `✅ <strong>¡Correcto!</strong> ${mcData[qi].exp}`;
+  } else {
+    fb.className = 'q-feedback wrong-fb';
+    fb.innerHTML = `❌ <strong>Incorrecto.</strong> ${mcData[qi].exp}`;
+  }
+}
+
+// ===== VF =====
+function buildVF() {
+  const container = document.getElementById('vfContainer');
+  container.innerHTML = vfData.map((vf, vi) => `
+    <div class="vf-block card">
+      <div class="q-num">Afirmación ${vi+1} de ${vfData.length}</div>
+      <div class="vf-text">${vf.text}</div>
+      <div class="vf-btns">
+        <button class="vf-btn v" onclick="answerVF(${vi}, true, ${vf.correct}, this)">✅ Verdadero</button>
+        <button class="vf-btn f" onclick="answerVF(${vi}, false, ${vf.correct}, this)">❌ Falso</button>
+      </div>
+      <div class="q-feedback" id="vf-fb-${vi}"></div>
+    </div>
+  `).join('');
+}
+
+function answerVF(vi, selected, correct, el) {
+  const block = el.closest('.vf-block');
+  if (block.querySelector('.disabled')) return;
+  block.querySelectorAll('.vf-btn').forEach(b => { b.classList.add('disabled'); b.style.cursor='not-allowed'; });
+  const isCorrect = selected === correct;
+  el.classList.add(selected ? 'selected-v' : 'selected-f');
+  const fb = document.getElementById('vf-fb-' + vi);
+  if (isCorrect) {
+    fb.className = 'q-feedback correct-fb';
+    fb.innerHTML = `✅ <strong>¡Correcto!</strong> ${vfData[vi].exp}`;
+  } else {
+    fb.className = 'q-feedback wrong-fb';
+    fb.innerHTML = `❌ <strong>Incorrecto.</strong> ${vfData[vi].exp}`;
+  }
+}
+
+// ===== ASSOCIATION =====
+let assocSelected = null;
+let assocMatches = {};
+let shuffledRight = [];
+
+function buildAssoc() {
+  shuffledRight = [...assocData].sort(() => Math.random() - 0.5);
+  const container = document.getElementById('assocContainer');
+  container.innerHTML = `
+    <div class="card">
+      <p style="color:var(--text2);margin-bottom:1rem">Selecciona un concepto de la <span class="gold">columna A</span>, luego selecciona su descripción en la <span class="teal">columna B</span>.</p>
+      <div class="assoc-grid">
+        <div class="assoc-left">
+          ${assocData.map((a, i) => `
+            <div class="assoc-item" id="assoc-left-${i}" onclick="selectAssoc('left', ${i})">${a.left}</div>
+          `).join('')}
+        </div>
+        <div class="assoc-right">
+          ${shuffledRight.map((a, i) => `
+            <div class="assoc-item" id="assoc-right-${i}" onclick="selectAssoc('right', ${i})">${a.right}</div>
+          `).join('')}
+        </div>
+      </div>
+      <div id="assocScore" style="margin-top:1rem;font-size:0.9rem;color:var(--text2)"></div>
+    </div>
+  `;
+}
+
+function selectAssoc(side, idx) {
+  if (!assocSelected) {
+    if (side !== 'left') return;
+    const el = document.getElementById('assoc-left-' + idx);
+    if (el.classList.contains('matched')) return;
+    assocSelected = {side, idx};
+    el.classList.add('selected');
+  } else {
+    if (side !== 'right') {
+      document.getElementById('assoc-left-' + assocSelected.idx).classList.remove('selected');
+      assocSelected = null;
+      return;
+    }
+    const leftIdx = assocSelected.idx;
+    const leftEl = document.getElementById('assoc-left-' + leftIdx);
+    const rightEl = document.getElementById('assoc-right-' + idx);
+    if (rightEl.classList.contains('matched')) { leftEl.classList.remove('selected'); assocSelected = null; return; }
+    // check match
+    const leftVal = assocData[leftIdx].right;
+    const rightVal = shuffledRight[idx].right;
+    if (leftVal === rightVal) {
+      leftEl.classList.remove('selected');
+      leftEl.classList.add('matched');
+      rightEl.classList.add('matched');
+      assocMatches[leftIdx] = idx;
+      const matched = Object.keys(assocMatches).length;
+      document.getElementById('assocScore').innerHTML = matched === assocData.length
+        ? `🎉 <strong style="color:var(--correct)">¡Perfecto! Todos los pares encontrados.</strong>`
+        : `<span style="color:var(--teal)">✅ ${matched} de ${assocData.length} pares correctos</span>`;
+    } else {
+      leftEl.style.animation = 'none';
+      leftEl.classList.remove('selected');
+      leftEl.style.borderColor = 'var(--wrong)';
+      setTimeout(() => { leftEl.style.borderColor = ''; }, 1000);
+    }
+    assocSelected = null;
+  }
+}
+
+// ===== SIMULADO =====
+let simAnswers = {};
+
+function startSim() {
+  simAnswers = {};
+  document.getElementById('simInstructions').style.display = 'none';
+  document.getElementById('simResult').style.display = 'none';
+  const sq = document.getElementById('simQuestions');
+  sq.style.display = 'block';
+  sq.innerHTML = `
+    ${simData.map((q, qi) => `
+      <div class="question-block card" id="sim-q-${qi}">
+        <div class="q-num">Pregunta ${qi+1} de ${simData.length}</div>
+        <div class="q-text">${q.q}</div>
+        <div class="q-options">
+          ${q.opts.map((o, oi) => `
+            <div class="q-option" onclick="selectSim(${qi}, ${oi}, this)">
+              <div class="opt-letter">${'ABCDE'[oi]}</div>
+              <span>${o}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('')}
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn btn-red" onclick="submitSim()">📊 Enviar Simulado</button>
+    </div>
+  `;
+}
+
+function selectSim(qi, oi, el) {
+  const block = el.closest('.question-block');
+  block.querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  simAnswers[qi] = oi;
+}
+
+function submitSim() {
+  let correct = 0;
+  simData.forEach((q, qi) => {
+    const block = document.getElementById('sim-q-' + qi);
+    block.querySelectorAll('.q-option').forEach((opt, oi) => {
+      opt.classList.add('disabled');
+      if (oi === q.correct) opt.classList.add('correct');
+      else if (oi === simAnswers[qi] && simAnswers[qi] !== q.correct) opt.classList.add('wrong');
+    });
+    if (simAnswers[qi] === q.correct) correct++;
+  });
+  const pct = Math.round(correct / simData.length * 100);
+  const result = document.getElementById('simResult');
+  document.getElementById('simScore').textContent = pct + '%';
+  const ratings = [
+    [90,'⭐ Excelente','var(--correct)'],
+    [80,'👍 Muy Bueno','var(--teal)'],
+    [70,'✅ Bueno','var(--blue)'],
+    [60,'📚 Regular','var(--gold)'],
+    [0,'⚠️ Revisar el Contenido','var(--red)'],
+  ];
+  const [,label,color] = ratings.find(r => pct >= r[0]);
+  document.getElementById('simLabel').textContent = correct + ' de ' + simData.length + ' correctas';
+  const badge = document.getElementById('simBadge');
+  badge.textContent = label;
+  badge.style.background = color + '22';
+  badge.style.color = color;
+  badge.style.border = '1px solid ' + color;
+  result.style.display = 'block';
+  result.scrollIntoView({behavior:'smooth'});
+}
+
+function resetSim() {
+  document.getElementById('simInstructions').style.display = 'block';
+  document.getElementById('simQuestions').style.display = 'none';
+  document.getElementById('simResult').style.display = 'none';
+}
+</script>
+</body>
+</html>
