@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECG en la Biofísica — Dr. Saldivar</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0f1a;
+  --surface: #111827;
+  --card: #1a2235;
+  --border: #1e2d47;
+  --accent: #38bdf8;
+  --accent2: #f97316;
+  --accent3: #4ade80;
+  --accent4: #e879f9;
+  --red: #fb7185;
+  --text: #e8eef7;
+  --muted: #6b7f9e;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px 40px 40px;
+  background:
+    radial-gradient(ellipse at 10% 80%, #0c4a6e55 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, #1e1b4b44 0%, transparent 55%),
+    linear-gradient(160deg, #0b0f1a 0%, #0f172a 100%);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero-ecg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0.06;
+}
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: var(--text);
+  position: relative;
+  margin-bottom: 12px;
+}
+.hero h1 em { color: var(--accent); font-style: italic; }
+.hero-sub { color: var(--muted); font-size: .95rem; max-width: 580px; position: relative; }
+.hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; position: relative; }
+.pill {
+  padding: 4px 14px;
+  border: 1px solid #ffffff15;
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  background: #ffffff06;
+}
+
+/* ── NAV ── */
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0d1322ee;
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-btn {
+  padding: 15px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.nav-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 7px;
+  background: #ffffff10;
+  border-radius: 10px;
+}
+
+/* ── MAIN ── */
+.main { max-width: 1140px; margin: 0 auto; padding: 40px 24px 80px; }
+.section { display: none; animation: fadeIn .3s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ── SECTION HEAD ── */
+.sec-head { margin-bottom: 28px; }
+.sec-slides {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.sec-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.sec-desc { color: var(--muted); font-size: .92rem; max-width: 640px; }
+
+/* ── SLIDE BLOCK ── */
+.slide-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.slide-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slide-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.slide-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+.slide-body {
+  font-size: .92rem;
+  color: #a8b8d0;
+  line-height: 1.85;
+}
+.slide-body strong { color: var(--text); }
+.slide-body ul, .slide-body ol { margin-left: 20px; margin-top: 8px; }
+.slide-body li { margin-bottom: 5px; }
+
+/* Accent left borders */
+.bl-blue { border-left: 3px solid var(--accent); }
+.bl-orange { border-left: 3px solid var(--accent2); }
+.bl-green { border-left: 3px solid var(--accent3); }
+.bl-pink { border-left: 3px solid var(--accent4); }
+.bl-red { border-left: 3px solid var(--red); }
+
+/* ── HIGHLIGHT ── */
+.hl {
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  font-size: .9rem;
+  line-height: 1.85;
+}
+.hl-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.hl.blue { background: #38bdf810; border: 1px solid #38bdf830; }
+.hl.blue .hl-title { color: var(--accent); }
+.hl.orange { background: #f9731610; border: 1px solid #f9731630; }
+.hl.orange .hl-title { color: var(--accent2); }
+.hl.green { background: #4ade8010; border: 1px solid #4ade8030; }
+.hl.green .hl-title { color: var(--accent3); }
+.hl.pink { background: #e879f910; border: 1px solid #e879f930; }
+.hl.pink .hl-title { color: var(--accent4); }
+.hl.red { background: #fb718510; border: 1px solid #fb718530; }
+.hl.red .hl-title { color: var(--red); }
+.hl strong { color: var(--text); }
+
+/* ── GRID ── */
+.g2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 20px; }
+.g3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+
+/* ── STAT CARD ── */
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+}
+.stat-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+.stat-lbl { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── TABLE ── */
+.t { width: 100%; border-collapse: collapse; font-size: .87rem; margin-bottom: 20px; }
+.t th {
+  padding: 11px 16px;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.t td {
+  padding: 11px 16px;
+  border-bottom: 1px solid #1e2d4766;
+  vertical-align: top;
+  color: #a8b8d0;
+}
+.t td strong { color: var(--text); }
+.t tr:last-child td { border-bottom: none; }
+
+/* ── DEFLEXION BOX ── */
+.deflexion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.def-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.def-arrow { font-size: 2rem; margin-bottom: 8px; display: block; }
+.def-name { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.def-desc { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+
+/* ── DERIVACION CARD ── */
+.deriv-wrap { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.deriv-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: border-color .2s, transform .15s;
+}
+.deriv-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.deriv-name { font-family: 'DM Mono', monospace; font-size: 1.3rem; color: var(--accent); margin-bottom: 4px; }
+.deriv-angle { font-family: 'DM Mono', monospace; font-size: .75rem; color: var(--accent2); margin-bottom: 8px; }
+.deriv-desc { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+
+/* ── PRECORDIAL CARD ── */
+.precord-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.precord-name { font-family: 'DM Mono', monospace; font-size: 1.2rem; color: var(--accent4); margin-bottom: 4px; }
+.precord-region { font-size: .72rem; color: var(--accent2); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.precord-pos { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+
+/* ── WAVE ACCORDION ── */
+.wave-acc { margin-bottom: 10px; }
+.wave-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color .2s;
+}
+.wave-head:hover { border-color: #2d4a6a; }
+.wave-head.open { border-radius: 10px 10px 0 0; border-color: var(--accent); }
+.wave-letter {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.wave-info { flex: 1; }
+.wave-name { font-weight: 600; font-size: .95rem; }
+.wave-quick { font-size: .8rem; color: var(--muted); }
+.wave-arr { color: var(--muted); font-size: 11px; transition: transform .2s; }
+.wave-head.open .wave-arr { transform: rotate(180deg); color: var(--accent); }
+.wave-body {
+  display: none;
+  padding: 18px 22px;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  font-size: .88rem;
+  color: #a8b8d0;
+  line-height: 1.85;
+}
+.wave-body.open { display: block; }
+.wave-body strong { color: var(--text); }
+.wave-body ul { margin-left: 18px; margin-top: 8px; }
+.wave-body li { margin-bottom: 4px; }
+
+/* ── RESUMEN TABLE ── */
+.sum-t { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.sum-t th { background: #38bdf820; color: var(--accent); padding: 10px 14px; text-align: left; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; border-bottom: 1px solid #38bdf830; }
+.sum-t td { padding: 10px 14px; border-bottom: 1px solid #1e2d4766; color: #a8b8d0; }
+.sum-t td strong { color: var(--text); }
+.sum-t tr:nth-child(even) td { background: #ffffff04; }
+
+/* ── ECG SVG STRIP ── */
+.ecg-strip {
+  background: #0a1628;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+.ecg-strip svg { width: 100%; height: 80px; }
+
+/* ── FOOTER ── */
+.foot {
+  text-align: center;
+  padding: 36px 20px 16px;
+  font-size: .78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+@media(max-width:640px){
+  .hero { padding: 36px 20px 32px; }
+  .main { padding: 24px 16px 60px; }
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .deflexion-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <svg class="hero-ecg" viewBox="0 0 1200 200" preserveAspectRatio="none" fill="none">
+    <polyline points="0,100 80,100 90,100 100,40 110,160 120,100 160,100 170,90 180,110 190,100 200,100 210,20 220,180 230,100 280,100 290,100 300,40 310,160 320,100 360,100 370,90 380,110 390,100 400,100 410,20 420,180 430,100 480,100 490,100 500,40 510,160 520,100 560,100 570,90 580,110 590,100 600,100 610,20 620,180 630,100 680,100 690,100 700,40 710,160 720,100 760,100 770,90 780,110 790,100 800,100 810,20 820,180 830,100 880,100 890,100 900,40 910,160 920,100 960,100 970,90 980,110 990,100 1000,100 1010,20 1020,180 1030,100 1080,100 1090,100 1100,40 1110,160 1120,100 1160,100 1200,100" stroke="#38bdf8" stroke-width="1.5"/>
+  </svg>
+  <div class="hero-tag">Dr. Saldivar · Biofísica · Slides 1–49</div>
+  <h1>ECG en la <em>Biofísica</em></h1>
+  <p class="hero-sub">Electrofisiología, células cardíacas, papel del ECG, ondas, complejos, deflexiones y derivaciones — compilado completo slide a slide</p>
+  <div class="hero-pills">
+    <span class="pill">49 Slides</span>
+    <span class="pill">6 Módulos</span>
+    <span class="pill">Guyton & Hall</span>
+    <span class="pill">Revalida · Approbation</span>
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<div class="nav-wrap">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('electrofisio')">
+      ⚡ Electrofisiología <span class="nav-num">2–5</span>
+    </button>
+    <button class="nav-btn" onclick="show('celulas')">
+      🔬 Células <span class="nav-num">6–11</span>
+    </button>
+    <button class="nav-btn" onclick="show('papel')">
+      📄 Papel del ECG <span class="nav-num">12–16</span>
+    </button>
+    <button class="nav-btn" onclick="show('ondas')">
+      〜 Ondas & Complejos <span class="nav-num">17–32</span>
+    </button>
+    <button class="nav-btn" onclick="show('deflexiones')">
+      ↕ Deflexiones <span class="nav-num">33–37</span>
+    </button>
+    <button class="nav-btn" onclick="show('derivaciones')">
+      🔌 Derivaciones <span class="nav-num">38–49</span>
+    </button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══════════════════════════════════
+     MÓDULO 1 — ELECTROFISIOLOGÍA
+══════════════════════════════════ -->
+<div class="section active" id="sec-electrofisio">
+  <div class="sec-head">
+    <div class="sec-slides">Slides 1 – 5</div>
+    <div class="sec-title">Electrofisiología Cardíaca</div>
+    <div class="sec-desc">Base eléctrica del corazón: polarización, despolarización y repolarización celular</div>
+  </div>
+
+  <!-- Slide 1 -->
+  <div class="slide-block bl-blue">
+    <div class="slide-label">Slide 01 · Título</div>
+    <div class="slide-title">Electrocardiograma</div>
+    <div class="slide-body">
+      Tema central de la clase: el <strong>Electrocardiograma (ECG)</strong> como herramienta diagnóstica de la actividad eléctrica cardíaca. Fundamento de la biofísica aplicada a la cardiología.
+    </div>
+  </div>
+
+  <!-- Slide 2 -->
+  <div class="slide-block bl-blue">
+    <div class="slide-label">Slide 02 · Definición</div>
+    <div class="slide-title">¿Qué es la Electrocardiografía?</div>
+    <div class="slide-body">
+      Es el campo de la medicina encargado del estudio del <strong>registro de la actividad eléctrica cardíaca</strong>.
+      <ul>
+        <li>Se muestra como una línea delgada con distintas <strong>inflexiones</strong> que corresponden a parámetros del estímulo eléctrico del corazón</li>
+        <li>Es el registro de la actividad eléctrica generada en el corazón obtenido desde la <strong>superficie del cuerpo</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 3 -->
+  <div class="slide-block bl-orange">
+    <div class="slide-label">Slide 03 · Electrofisiología</div>
+    <div class="slide-title">Célula Cardíaca en Reposo — Polarización</div>
+    <div class="slide-body">
+      Las células cardíacas en reposo son <strong>eléctricamente polarizadas</strong>:
+      <ul>
+        <li>Medio interno cargado <strong>negativamente</strong> en relación al medio externo</li>
+        <li>Esta polaridad es mantenida por las <strong>bombas de membrana</strong> que aseguran la distribución adecuada de iones</li>
+        <li>Iones involucrados: <strong>Na⁺, K⁺, Cl⁻, Ca²⁺</strong></li>
+        <li>Los iones pasan hacia dentro y afuera a través de <strong>canales iónicos especiales</strong> en la membrana celular</li>
+        <li>El resultado es mantener el medio interno <strong>relativamente electronegativo</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 4 -->
+  <div class="slide-block bl-green">
+    <div class="slide-label">Slide 04 · Electrofisiología</div>
+    <div class="slide-title">Despolarización y Repolarización</div>
+    <div class="slide-body">
+      <strong>Despolarización:</strong>
+      <ul>
+        <li>Las células cardíacas <em>pierden su negatividad interna</em> → evento eléctrico fundamental del corazón</li>
+        <li>En las células marcapaso ocurre <strong>espontáneamente</strong></li>
+        <li>Se propaga de célula a célula produciendo una <strong>onda de despolarización</strong> que recorre todo el corazón</li>
+        <li>Esta onda = flujo de electricidad → <strong>corriente eléctrica</strong> captable por electrodos en la piel</li>
+      </ul>
+      <strong>Repolarización:</strong>
+      <ul>
+        <li>Después de la despolarización, las células <strong>restauran su polaridad</strong></li>
+        <li>Todas las ondas del ECG son manifestaciones de estos 2 procesos: <strong>despolarización y repolarización</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="hl blue">
+    <div class="hl-title">🔑 Concepto Clave — Slides 3 y 4</div>
+    El ECG es posible porque la <strong>onda de despolarización</strong> que viaja por el miocardio genera una <strong>corriente eléctrica</strong> lo suficientemente fuerte para ser detectada por electrodos en la superficie de la piel. Sin la propagación célula a célula (discos intercalares), el ECG no existiría.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MÓDULO 2 — CÉLULAS DEL CORAZÓN
+══════════════════════════════════ -->
+<div class="section" id="sec-celulas">
+  <div class="sec-head">
+    <div class="sec-slides">Slides 6 – 11</div>
+    <div class="sec-title">Células del Corazón</div>
+    <div class="sec-desc">Los 3 tipos celulares desde el punto de vista del electrocardiografista</div>
+  </div>
+
+  <!-- Slide 6 -->
+  <div class="slide-block bl-blue">
+    <div class="slide-label">Slide 06 · Clasificación</div>
+    <div class="slide-title">3 Tipos de Células Cardíacas (visión ECG)</div>
+    <div class="slide-body">
+      Desde el punto de vista del electrocardiografista, existen 3 tipos:
+      <ul>
+        <li>🔋 <strong>Células marcapaso:</strong> la fuente normal de electricidad del corazón</li>
+        <li>⚡ <strong>Células de conducción eléctrica:</strong> el circuito de hilos del corazón</li>
+        <li>💪 <strong>Células miocárdicas:</strong> la máquina contráctil del corazón</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- Slide 7 -->
+    <div class="slide-block bl-orange" style="margin-bottom:0">
+      <div class="slide-label">Slide 07 · Marcapaso</div>
+      <div class="slide-title">Células Marcapaso — Características</div>
+      <div class="slide-body">
+        <ul>
+          <li>Son <strong>pequeñas</strong> y capaces de despolarizarse espontáneamente de forma repetida</li>
+          <li><strong>No tienen potencial de reposo verdadero:</strong> su carga disminuye hasta un valor negativo mínimo, se mantiene un momento, luego sube gradualmente hasta el umbral</li>
+          <li>Al llegar al umbral → <strong>despolarización súbita = Potencial de Acción</strong></li>
+          <li>Ejemplos: <strong>Nodo Sinoatrial</strong> y <strong>Nodo Atrioventricular</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide-block bl-orange" style="margin-bottom:0">
+      <div class="slide-label">Slide 08 · Marcapaso Dominante</div>
+      <div class="slide-title">Nodo Sinoatrial — El Marcapaso del Corazón</div>
+      <div class="slide-body">
+        <ul>
+          <li>Localizado en una <strong>posición elevada en el átrio derecho</strong></li>
+          <li>Es el <strong>marcapaso dominante</strong> del corazón normal</li>
+          <li>Dispara a <strong>60–100 potenciales de acción por minuto</strong></li>
+          <li>Su frecuencia mayor lo convierte en el marcapaso que "comanda" el ritmo cardíaco → <strong>Ritmo Sinusal</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9 -->
+  <div class="slide-block bl-green">
+    <div class="slide-label">Slide 09 · Conducción</div>
+    <div class="slide-title">Células de Conducción Eléctrica</div>
+    <div class="slide-body">
+      <ul>
+        <li>Son células <strong>finas y largas</strong> — como hilos eléctricos</li>
+        <li>Conducen la corriente eléctrica de forma <strong>fácil y eficiente</strong> hacia regiones distantes del corazón</li>
+        <li>Las células de conducción de los ventrículos forman el <strong>Sistema de Purkinje</strong></li>
+        <li>En los atrios: las vías poseen mayor variabilidad anatómica; destaca el <strong>Haz de Bachmann</strong> (tope del septo intra-atrial) → permite rápida activación del atrio izquierdo desde el derecho</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 11 -->
+  <div class="slide-block bl-pink">
+    <div class="slide-label">Slide 11 · Miocárdicas</div>
+    <div class="slide-title">Células Miocárdicas</div>
+    <div class="slide-body">
+      <ul>
+        <li>Constituyen la <strong>mayor parte del tejido cardíaco</strong></li>
+        <li>Responsables del trabajo pesado: <strong>contraer y relajar repetidamente</strong></li>
+        <li>Tienen capacidad de transmitir corriente eléctrica como las células de conducción, pero con <strong>mucho menos eficiencia</strong></li>
+        <li>Por eso, la onda de despolarización al encontrar las células miocárdicas se propaga <strong>lentamente</strong></li>
+        <li>⚠️ Son las células cuya actividad <strong>el ECG sí registra</strong> (suficiente voltaje)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="hl orange">
+    <div class="hl-title">⚠️ Por qué el ECG NO registra el marcapaso ni el sistema de conducción</div>
+    La actividad del <strong>marcapaso</strong> y la transmisión por el <strong>sistema de conducción</strong> no son visibles en el ECG porque <strong>no generan voltaje suficiente</strong> para ser registradas por los electrodos en la superficie. Solo la masa miocárdica (la mayor parte del corazón) produce corriente detectable. — <em>Slide 12</em>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MÓDULO 3 — PAPEL DEL ECG
+══════════════════════════════════ -->
+<div class="section" id="sec-papel">
+  <div class="sec-head">
+    <div class="sec-slides">Slides 12 – 16</div>
+    <div class="sec-title">Tiempo, Voltaje y Papel del ECG</div>
+    <div class="sec-desc">Características de las ondas y cómo leer el papel cuadriculado del ECG</div>
+  </div>
+
+  <!-- Slide 12 -->
+  <div class="slide-block bl-blue">
+    <div class="slide-label">Slide 12 · Ondas del ECG</div>
+    <div class="slide-title">Las 3 Características de Toda Onda</div>
+    <div class="slide-body">
+      Las ondas producidas por la despolarización y repolarización miocárdica tienen 3 características:
+      <ul>
+        <li>1️⃣ <strong>Duración:</strong> medida en fracción de segundos (eje horizontal)</li>
+        <li>2️⃣ <strong>Amplitud:</strong> medida en milivoltios (eje vertical)</li>
+        <li>3️⃣ <strong>Configuración:</strong> criterio más subjetivo — forma y aspecto de la onda</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 14 -->
+  <div class="slide-block bl-orange">
+    <div class="slide-label">Slide 14 · Papel del ECG</div>
+    <div class="slide-title">El Papel Cuadriculado</div>
+    <div class="slide-body">
+      Es un rollo de papel gráfico largo y continuo, generalmente de color rosa, con líneas claras y oscuras verticales y horizontales:
+      <ul>
+        <li>Líneas claras → <strong>cuadrados pequeños de 1×1 mm</strong></li>
+        <li>Líneas oscuras → <strong>cuadrados grandes de 5×5 mm</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="g3">
+    <div class="stat-card">
+      <span class="stat-val" style="color:var(--accent)">0,04 s</span>
+      <span class="stat-lbl">1 cuadrado pequeño horizontal (1 mm)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" style="color:var(--accent)">0,20 s</span>
+      <span class="stat-lbl">1 cuadrado grande horizontal (5 mm)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" style="color:var(--accent)">1,00 s</span>
+      <span class="stat-lbl">25 mm horizontales</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" style="color:var(--accent2)">0,1 mV</span>
+      <span class="stat-lbl">1 cuadrado pequeño vertical (1 mm)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" style="color:var(--accent2)">0,5 mV</span>
+      <span class="stat-lbl">1 cuadrado grande vertical (5 mm)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" style="color:var(--accent2)">1,0 mV</span>
+      <span class="stat-lbl">10 mm verticales (calibración estándar)</span>
+    </div>
+  </div>
+
+  <!-- ECG strip visual -->
+  <div class="ecg-strip">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:12px;letter-spacing:2px">TIRA DE ECG ESQUEMÁTICA — PAPEL MILIMETRADO</div>
+    <svg viewBox="0 0 900 80" fill="none">
+      <!-- Grid lines small -->
+      <g stroke="#1a3a5c" stroke-width="0.4">
+        <line x1="0" y1="0" x2="0" y2="80"/><line x1="9" y1="0" x2="9" y2="80"/>
+        <line x1="18" y1="0" x2="18" y2="80"/><line x1="27" y1="0" x2="27" y2="80"/>
+        <line x1="36" y1="0" x2="36" y2="80"/><line x1="45" y1="0" x2="45" y2="80"/>
+        <line x1="54" y1="0" x2="54" y2="80"/><line x1="63" y1="0" x2="63" y2="80"/>
+        <line x1="72" y1="0" x2="72" y2="80"/><line x1="81" y1="0" x2="81" y2="80"/>
+        <line x1="90" y1="0" x2="90" y2="80"/><line x1="99" y1="0" x2="99" y2="80"/>
+        <line x1="108" y1="0" x2="108" y2="80"/><line x1="117" y1="0" x2="117" y2="80"/>
+        <line x1="126" y1="0" x2="126" y2="80"/><line x1="135" y1="0" x2="135" y2="80"/>
+        <line x1="144" y1="0" x2="144" y2="80"/><line x1="153" y1="0" x2="153" y2="80"/>
+        <line x1="162" y1="0" x2="162" y2="80"/><line x1="171" y1="0" x2="171" y2="80"/>
+        <line x1="180" y1="0" x2="180" y2="80"/><line x1="189" y1="0" x2="189" y2="80"/>
+        <line x1="198" y1="0" x2="198" y2="80"/><line x1="207" y1="0" x2="207" y2="80"/>
+        <line x1="216" y1="0" x2="216" y2="80"/><line x1="225" y1="0" x2="225" y2="80"/>
+        <line x1="234" y1="0" x2="234" y2="80"/><line x1="243" y1="0" x2="243" y2="80"/>
+        <line x1="252" y1="0" x2="252" y2="80"/><line x1="261" y1="0" x2="261" y2="80"/>
+        <line x1="270" y1="0" x2="270" y2="80"/><line x1="279" y1="0" x2="279" y2="80"/>
+        <line x1="288" y1="0" x2="288" y2="80"/><line x1="297" y1="0" x2="297" y2="80"/>
+        <line x1="306" y1="0" x2="306" y2="80"/><line x1="315" y1="0" x2="315" y2="80"/>
+        <line x1="324" y1="0" x2="324" y2="80"/><line x1="333" y1="0" x2="333" y2="80"/>
+        <line x1="342" y1="0" x2="342" y2="80"/><line x1="351" y1="0" x2="351" y2="80"/>
+        <line x1="360" y1="0" x2="360" y2="80"/><line x1="369" y1="0" x2="369" y2="80"/>
+        <line x1="378" y1="0" x2="378" y2="80"/><line x1="387" y1="0" x2="387" y2="80"/>
+        <line x1="396" y1="0" x2="396" y2="80"/><line x1="405" y1="0" x2="405" y2="80"/>
+        <line x1="414" y1="0" x2="414" y2="80"/><line x1="423" y1="0" x2="423" y2="80"/>
+        <line x1="432" y1="0" x2="432" y2="80"/><line x1="441" y1="0" x2="441" y2="80"/>
+        <line x1="450" y1="0" x2="450" y2="80"/><line x1="459" y1="0" x2="459" y2="80"/>
+        <line x1="468" y1="0" x2="468" y2="80"/><line x1="477" y1="0" x2="477" y2="80"/>
+        <line x1="486" y1="0" x2="486" y2="80"/><line x1="495" y1="0" x2="495" y2="80"/>
+        <line x1="504" y1="0" x2="504" y2="80"/><line x1="513" y1="0" x2="513" y2="80"/>
+        <line x1="522" y1="0" x2="522" y2="80"/><line x1="531" y1="0" x2="531" y2="80"/>
+        <line x1="540" y1="0" x2="540" y2="80"/><line x1="549" y1="0" x2="549" y2="80"/>
+        <line x1="558" y1="0" x2="558" y2="80"/><line x1="567" y1="0" x2="567" y2="80"/>
+        <line x1="576" y1="0" x2="576" y2="80"/><line x1="585" y1="0" x2="585" y2="80"/>
+        <line x1="594" y1="0" x2="594" y2="80"/><line x1="603" y1="0" x2="603" y2="80"/>
+        <line x1="612" y1="0" x2="612" y2="80"/><line x1="621" y1="0" x2="621" y2="80"/>
+        <line x1="630" y1="0" x2="630" y2="80"/><line x1="639" y1="0" x2="639" y2="80"/>
+        <line x1="648" y1="0" x2="648" y2="80"/><line x1="657" y1="0" x2="657" y2="80"/>
+        <line x1="666" y1="0" x2="666" y2="80"/><line x1="675" y1="0" x2="675" y2="80"/>
+        <line x1="684" y1="0" x2="684" y2="80"/><line x1="693" y1="0" x2="693" y2="80"/>
+        <line x1="702" y1="0" x2="702" y2="80"/><line x1="711" y1="0" x2="711" y2="80"/>
+        <line x1="720" y1="0" x2="720" y2="80"/>
+      </g>
+      <!-- Grid large -->
+      <g stroke="#1e3d66" stroke-width="0.8">
+        <line x1="0" y1="16" x2="900" y2="16"/><line x1="0" y1="32" x2="900" y2="32"/>
+        <line x1="0" y1="48" x2="900" y2="48"/><line x1="0" y1="64" x2="900" y2="64"/>
+        <line x1="0" y1="80" x2="900" y2="80"/><line x1="0" y1="0" x2="900" y2="0"/>
+        <line x1="45" y1="0" x2="45" y2="80"/><line x1="90" y1="0" x2="90" y2="80"/>
+        <line x1="135" y1="0" x2="135" y2="80"/><line x1="180" y1="0" x2="180" y2="80"/>
+        <line x1="225" y1="0" x2="225" y2="80"/><line x1="270" y1="0" x2="270" y2="80"/>
+        <line x1="315" y1="0" x2="315" y2="80"/><line x1="360" y1="0" x2="360" y2="80"/>
+        <line x1="405" y1="0" x2="405" y2="80"/><line x1="450" y1="0" x2="450" y2="80"/>
+        <line x1="495" y1="0" x2="495" y2="80"/><line x1="540" y1="0" x2="540" y2="80"/>
+        <line x1="585" y1="0" x2="585" y2="80"/><line x1="630" y1="0" x2="630" y2="80"/>
+        <line x1="675" y1="0" x2="675" y2="80"/><line x1="720" y1="0" x2="720" y2="80"/>
+      </g>
+      <!-- ECG signal: P-QRS-T repetido 2x -->
+      <!-- Ciclo 1 -->
+      <polyline points="20,40 45,40 55,35 65,45 75,40 100,40 108,10 113,70 118,40 145,40 155,38 160,42 165,40 190,40"
+        stroke="#4ade80" stroke-width="1.8" fill="none"/>
+      <!-- Labels -->
+      <text x="55" y="8" fill="#4ade80" font-size="9" font-family="monospace">P</text>
+      <text x="106" y="8" fill="#4ade80" font-size="9" font-family="monospace">QRS</text>
+      <text x="153" y="8" fill="#4ade80" font-size="9" font-family="monospace">T</text>
+      <!-- Ciclo 2 -->
+      <polyline points="220,40 245,40 255,35 265,45 275,40 300,40 308,10 313,70 318,40 345,40 355,38 360,42 365,40 390,40"
+        stroke="#4ade80" stroke-width="1.8" fill="none"/>
+      <!-- Ciclo 3 -->
+      <polyline points="420,40 445,40 455,35 465,45 475,40 500,40 508,10 513,70 518,40 545,40 555,38 560,42 565,40 590,40"
+        stroke="#4ade80" stroke-width="1.8" fill="none"/>
+      <!-- Ciclo 4 -->
+      <polyline points="620,40 645,40 655,35 665,45 675,40 700,40 708,10 713,70 718,40 720,40"
+        stroke="#4ade80" stroke-width="1.8" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="hl green">
+    <div class="hl-title">📐 Regla Práctica para Calcular Frecuencia (Ritmo Regular)</div>
+    <strong>Método 1:</strong> 1500 ÷ número de mm entre dos picos R-R consecutivos<br>
+    <strong>Método 2:</strong> 300 ÷ número de cuadrados grandes entre dos R-R<br>
+    <strong>Ritmo irregular:</strong> contar ondas R en 6 segundos × 10<br><br>
+    Ejemplo: R-R = 20 mm → 1500/20 = <strong>75 lpm</strong> ✓
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MÓDULO 4 — ONDAS Y COMPLEJOS
+══════════════════════════════════ -->
+<div class="section" id="sec-ondas">
+  <div class="sec-head">
+    <div class="sec-slides">Slides 17 – 32</div>
+    <div class="sec-title">Ondas, Complejos e Intervalos</div>
+    <div class="sec-desc">Secuencia completa de la activación eléctrica cardíaca y su representación en el ECG</div>
+  </div>
+
+  <!-- Slides 17–18: Onda P -->
+  <div class="wave-acc">
+    <div class="wave-head" onclick="toggleWave(this)">
+      <div class="wave-letter" style="background:#38bdf820;color:#38bdf8">P</div>
+      <div class="wave-info">
+        <div class="wave-name">Onda P — Despolarización Auricular</div>
+        <div class="wave-quick">Slides 17–18 · Primera onda del ECG · NSA → Aurículas</div>
+      </div>
+      <span class="wave-arr">▼</span>
+    </div>
+    <div class="wave-body">
+      <strong>Origen:</strong> El Nodo Sinoatrial (NSA), localizado en la parte posterior del atrio derecho, inicia el impulso eléctrico en forma de onda → estimula ambas aurículas.
+      <ul>
+        <li>La Onda P es la <strong>primera que aparece en el ECG</strong></li>
+        <li>1ª parte de la onda P → despolarización del <strong>atrio derecho</strong></li>
+        <li>2ª parte de la onda P → despolarización del <strong>atrio izquierdo</strong> (el NSA está en el derecho → este se despolariza antes)</li>
+        <li>Cuando la despolarización auricular termina, el ECG se torna <strong>eléctricamente silencioso</strong></li>
+        <li>En Ritmo Sinusal Normal: positiva en DI, DII, aVF; negativa en aVR</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slides 19–20: Segmento PQ -->
+  <div class="wave-acc">
+    <div class="wave-head" onclick="toggleWave(this)">
+      <div class="wave-letter" style="background:#f9731620;color:#f97316">PQ</div>
+      <div class="wave-info">
+        <div class="wave-name">Segmento PQ — Retardo en el Nodo AV</div>
+        <div class="wave-quick">Slides 19–20 · Pausa entre aurículas y ventrículos · 0,1 s</div>
+      </div>
+      <span class="wave-arr">▼</span>
+    </div>
+    <div class="wave-body">
+      <strong>Fisiología:</strong> En corazones sanos, hay un "portón eléctrico" entre los atrios y ventrículos.
+      <ul>
+        <li>La onda de despolarización, al terminar su trayectoria en los atrios, es <strong>impedida de seguir</strong> directamente a los ventrículos (las válvulas cardíacas no tienen estructuras conductoras)</li>
+        <li>La conducción debe hacerse por el <strong>septo interventricular</strong></li>
+        <li>El Nodo AV <strong>disminuye la velocidad de conducción</strong> (~1/10 de segundo = 0,1 s)</li>
+        <li>Este retardo es <strong>esencial</strong>: permite que los atrios terminen su contracción antes que los ventrículos inicien la suya</li>
+        <li>El "inteligente sistema eléctrico" vacía completamente las aurículas dentro de los ventrículos antes de la contracción ventricular → <strong>optimiza el volumen sistólico</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slides 21–26: Complejo QRS -->
+  <div class="wave-acc">
+    <div class="wave-head" onclick="toggleWave(this)">
+      <div class="wave-letter" style="background:#4ade8020;color:#4ade80;font-size:1rem">QRS</div>
+      <div class="wave-info">
+        <div class="wave-name">Complejo QRS — Despolarización Ventricular</div>
+        <div class="wave-quick">Slides 21–26 · Haz de His → Ramas → Purkinje → Ventrículos</div>
+      </div>
+      <span class="wave-arr">▼</span>
+    </div>
+    <div class="wave-body">
+      <strong>Conducción:</strong> Después de ~1/10 s, la onda escapa del NAV y se disemina rápidamente por:
+      <ul>
+        <li><strong>Haz de His</strong> → <strong>Ramas del Haz</strong> (izquierda y derecha) → <strong>Fibras de Purkinje</strong></li>
+      </ul>
+      <strong>Registro en el ECG:</strong>
+      <ul>
+        <li>Gran deflexión llamada <strong>Complejo QRS</strong></li>
+        <li>Amplitud mucho mayor que la Onda P → los ventrículos tienen <strong>~3× más masa muscular</strong> que los atrios</li>
+      </ul>
+      <strong>Componentes del Complejo QRS:</strong>
+      <ul>
+        <li><strong>Onda Q:</strong> primera deflexión negativa → despolarización del septo interventricular</li>
+        <li><strong>Onda R:</strong> primera deflexión positiva → despolarización del ápice ventricular</li>
+        <li><strong>Onda S:</strong> primera deflexión negativa después de R → despolarización de la base ventricular</li>
+      </ul>
+      <strong>Variaciones nomenclatura:</strong>
+      <ul>
+        <li>Complejo solo negativo → <strong>onda QS</strong></li>
+        <li>Segunda deflexión positiva → <strong>R'</strong></li>
+        <li>Segunda deflexión negativa (post R') → <strong>S'</strong></li>
+      </ul>
+      <strong>Secuencia de despolarización ventricular:</strong>
+      <ul>
+        <li>Primero: septo (representado por Q) → luego VD e VI casi simultáneamente</li>
+        <li>El ECG representa principalmente la <strong>activación del VI</strong> (masa ~3× mayor que el VD)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slides 27–28: Onda T -->
+  <div class="wave-acc">
+    <div class="wave-head" onclick="toggleWave(this)">
+      <div class="wave-letter" style="background:#e879f920;color:#e879f9">T</div>
+      <div class="wave-info">
+        <div class="wave-name">Onda T — Repolarización Ventricular</div>
+        <div class="wave-quick">Slides 27–28 · Más larga que QRS · Repolarización auricular oculta</div>
+      </div>
+      <span class="wave-arr">▼</span>
+    </div>
+    <div class="wave-body">
+      <ul>
+        <li>Después de la despolarización, las células miocárdicas pasan por un <strong>período refractario</strong> (resistentes a otro estímulo)</li>
+        <li>Luego se repolarizan → restauran la electronegatividad interna → pueden ser estimuladas de nuevo</li>
+        <li>La Onda T representa la <strong>repolarización ventricular</strong></li>
+        <li>La repolarización ventricular es un <strong>proceso más lento</strong> que la despolarización → Onda T es más <strong>larga y de configuración más simple</strong> que el QRS</li>
+        <li><strong>¿Y la repolarización auricular?</strong> Existe, pero ocurre simultáneamente con la despolarización ventricular → queda <strong>oculta dentro del complejo QRS</strong> (mucho más prominente)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slides 29–31: Segmentos e Intervalos -->
+  <div class="slide-block bl-blue" style="margin-top:20px">
+    <div class="slide-label">Slides 29–31 · Segmentos e Intervalos</div>
+    <div class="slide-title">¿Cuál es la diferencia entre Segmento e Intervalo?</div>
+    <div class="slide-body">
+      <div class="g2" style="margin-top:10px;margin-bottom:0">
+        <div style="background:#38bdf810;border:1px solid #38bdf830;border-radius:10px;padding:18px">
+          <div style="color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Segmento</div>
+          <strong>Línea recta que conecta dos ondas</strong> (pausa — sin ondas dentro)<br><br>
+          Ejemplos:
+          <ul style="margin-top:6px">
+            <li><strong>Segmento PQ:</strong> fin de P → inicio de QRS (retardo NAV)</li>
+            <li><strong>Segmento ST:</strong> fin de QRS → inicio de T (isoeléctrico normal)</li>
+          </ul>
+        </div>
+        <div style="background:#f9731610;border:1px solid #f9731630;border-radius:10px;padding:18px">
+          <div style="color:var(--accent2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Intervalo</div>
+          <strong>Engloba por lo menos una onda más la línea recta de conexión</strong> — representa el tiempo entre 2 procesos en el ECG<br><br>
+          Ejemplos:
+          <ul style="margin-top:6px">
+            <li><strong>Intervalo PR:</strong> inicio P → inicio QRS (incluye Onda P + segmento PQ)</li>
+            <li><strong>Intervalo QT:</strong> inicio QRS → fin de T</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hl green">
+    <div class="hl-title">📊 Valores Normales de Referencia</div>
+    <strong>Intervalo PR:</strong> 0,12–0,20 s (3–5 cuadrados grandes) · PR > 0,20 s = Bloqueo AV 1º grado<br>
+    <strong>Complejo QRS:</strong> ≤ 0,12 s · QRS > 0,12 s = Bloqueo de rama<br>
+    <strong>Segmento ST:</strong> isoeléctrico (en la línea de base) · Elevación/depresión = isquemia/IAM<br>
+    <strong>Intervalo QT:</strong> varía con FC — normal ≤ 0,44 s (QTc)
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MÓDULO 5 — DEFLEXIONES
+══════════════════════════════════ -->
+<div class="section" id="sec-deflexiones">
+  <div class="sec-head">
+    <div class="sec-slides">Slides 33 – 37</div>
+    <div class="sec-title">Deflexiones del ECG</div>
+    <div class="sec-desc">Por qué la misma onda de despolarización produce deflexiones diferentes según la posición del electrodo</div>
+  </div>
+
+  <!-- Slide 33 -->
+  <div class="slide-block bl-orange">
+    <div class="slide-label">Slide 33 · Deflexiones</div>
+    <div class="slide-title">Positivas vs. Negativas</div>
+    <div class="slide-body">
+      Las ondas del ECG son llamadas <strong>deflexiones</strong>:
+      <ul>
+        <li>Onda hacia arriba → <strong>deflexión positiva</strong></li>
+        <li>Onda hacia abajo → <strong>deflexión negativa</strong></li>
+        <li>Una onda registrada en el brazo derecho es <strong>diferente</strong> de la registrada en el brazo izquierdo — ¿Por qué?</li>
+      </ul>
+      Porque cada electrodo tiene una <strong>posición diferente</strong> en relación a la dirección del frente de despolarización.
+    </div>
+  </div>
+
+  <div class="deflexion-grid">
+    <!-- Slide 34 -->
+    <div class="def-card" style="border-color:#4ade8040">
+      <span class="def-arrow">↑</span>
+      <div class="def-name" style="color:#4ade80">Deflexión Positiva</div>
+      <div class="def-desc">La onda de despolarización se <strong>aproxima</strong> al electrodo positivo → deflexión hacia arriba en el ECG</div>
+    </div>
+    <!-- Slide 35 -->
+    <div class="def-card" style="border-color:#fb718540">
+      <span class="def-arrow">↓</span>
+      <div class="def-name" style="color:#fb7185">Deflexión Negativa</div>
+      <div class="def-desc">La onda de despolarización se <strong>aleja</strong> del electrodo positivo → deflexión hacia abajo en el ECG</div>
+    </div>
+    <!-- Slide 36–37 -->
+    <div class="def-card" style="border-color:#38bdf840">
+      <span class="def-arrow">↕</span>
+      <div class="def-name" style="color:#38bdf8">Deflexión Bifásica</div>
+      <div class="def-desc">Electrodo en el <strong>medio</strong>: primero positiva (se aproxima) → línea base (onda en el electrodo, cargas se neutralizan) → negativa (se aleja)</div>
+    </div>
+  </div>
+
+  <div class="hl blue">
+    <div class="hl-title">🧠 Regla de Oro de las Deflexiones (Slides 34–37)</div>
+    <strong>Onda que se aproxima al electrodo positivo → deflexión positiva (↑)</strong><br>
+    <strong>Onda que se aleja del electrodo positivo → deflexión negativa (↓)</strong><br>
+    <strong>Onda perpendicular al electrodo → deflexión bifásica (↑↓) o isoeléctrica</strong><br><br>
+    Esta regla explica por qué la misma onda de despolarización cardíaca produce morfologías completamente diferentes en cada derivación.
+  </div>
+
+  <div class="slide-block bl-pink">
+    <div class="slide-label">Slide 37 · Concepto</div>
+    <div class="slide-title">Onda Bifásica — Definición Final</div>
+    <div class="slide-body">
+      El ECG retorna a su línea de base cuando todo el músculo se despolariza. La inscripción final de una onda de despolarización que se mueve <strong>perpendicularmente</strong> a un electrodo positivo es llamada de <strong>bifásica</strong> — presenta tanto deflexión positiva como negativa de igual magnitud.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MÓDULO 6 — DERIVACIONES
+══════════════════════════════════ -->
+<div class="section" id="sec-derivaciones">
+  <div class="sec-head">
+    <div class="sec-slides">Slides 38 – 49</div>
+    <div class="sec-title">Las 12 Derivaciones del ECG</div>
+    <div class="sec-desc">El corazón es un órgano tridimensional — el ECG estándar usa 12 ángulos distintos para evaluarlo completamente</div>
+  </div>
+
+  <!-- Slide 38–39 -->
+  <div class="slide-block bl-blue">
+    <div class="slide-label">Slides 38–39 · Principio</div>
+    <div class="slide-title">"Las 12 Maneras de Mirar el Corazón"</div>
+    <div class="slide-body">
+      <ul>
+        <li>El corazón es un órgano <strong>tridimensional</strong> → necesita visión tridimensional</li>
+        <li>El ECG estándar tiene <strong>12 derivaciones</strong>, cada una determinada por la colocación y orientación de varios electrodos en el cuerpo</li>
+        <li>Cada derivación mira el corazón desde un <strong>ángulo único</strong>, aumentando la sensibilidad para una región particular del corazón</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Slide 40 -->
+  <div class="slide-block bl-orange">
+    <div class="slide-label">Slide 40 · División</div>
+    <div class="slide-title">Las 12 Derivaciones — Dos Grupos</div>
+    <div class="slide-body">
+      <div class="g2" style="margin-top:10px;margin-bottom:0">
+        <div style="background:#f9731610;border:1px solid #f9731630;border-radius:10px;padding:16px">
+          <div style="color:var(--accent2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;margin-bottom:8px">6 Derivaciones de Miembros (Frontales)</div>
+          DI · DII · DIII · aVR · aVL · aVF
+        </div>
+        <div style="background:#38bdf810;border:1px solid #38bdf830;border-radius:10px;padding:16px">
+          <div style="color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;margin-bottom:8px">6 Derivaciones Precordiales</div>
+          V1 · V2 · V3 · V4 · V5 · V6
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slides 42–44: Miembros -->
+  <div class="slide-block bl-green" style="margin-top:20px">
+    <div class="slide-label">Slides 42–44 · Miembros</div>
+    <div class="slide-title">Derivaciones de los Miembros — Plano Frontal</div>
+    <div class="slide-body">
+      <ul>
+        <li>Miran el corazón en un plano vertical llamado <strong>plano frontal</strong></li>
+        <li>Se lo visualiza como un gran círculo con marcaciones en grados, superpuesto al cuerpo del paciente</li>
+        <li>Cada electrodo es designado como positivo o negativo (automáticamente por el aparato)</li>
+        <li>Se forman <strong>ángulos de orientación</strong>: línea del electrodo negativo al positivo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-bottom:12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Derivaciones Bipolares — Triángulo de Einthoven</div>
+  <div class="deriv-wrap">
+    <div class="deriv-card">
+      <div class="deriv-name">DI</div>
+      <div class="deriv-angle">0°</div>
+      <div class="deriv-desc">Brazo derecho (−)<br>Brazo izquierdo (+)</div>
+    </div>
+    <div class="deriv-card">
+      <div class="deriv-name">DII</div>
+      <div class="deriv-angle">+60°</div>
+      <div class="deriv-desc">Brazo derecho (−)<br>Piernas (+)</div>
+    </div>
+    <div class="deriv-card">
+      <div class="deriv-name">DIII</div>
+      <div class="deriv-angle">+120°</div>
+      <div class="deriv-desc">Brazo izquierdo (−)<br>Piernas (+)</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:12px;margin-top:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Derivaciones Aumentadas (Unipolares)</div>
+  <div class="deriv-wrap">
+    <div class="deriv-card">
+      <div class="deriv-name">aVR</div>
+      <div class="deriv-angle">−150°</div>
+      <div class="deriv-desc">Brazo derecho (+)<br>Todos los demás (−)</div>
+    </div>
+    <div class="deriv-card">
+      <div class="deriv-name">aVL</div>
+      <div class="deriv-angle">−30°</div>
+      <div class="deriv-desc">Brazo izquierdo (+)<br>Todos los demás (−)</div>
+    </div>
+    <div class="deriv-card">
+      <div class="deriv-name">aVF</div>
+      <div class="deriv-angle">+90°</div>
+      <div class="deriv-desc">Piernas (+)<br>Todos los demás (−)</div>
+    </div>
+  </div>
+
+  <!-- Slides 47–48: Precordiales -->
+  <div class="slide-block bl-pink" style="margin-top:8px">
+    <div class="slide-label">Slides 47–48 · Precordiales</div>
+    <div class="slide-title">Derivaciones Precordiales — Plano Horizontal</div>
+    <div class="slide-body">
+      El VD se posiciona <strong>anterior y medialmente</strong>; el VI se posiciona <strong>posterior y lateralmente</strong> en el tórax. Cada derivación tiene un punto de vista exclusivo.
+    </div>
+  </div>
+
+  <div class="deriv-wrap" style="margin-bottom:24px">
+    <div class="precord-card">
+      <div class="precord-name">V1</div>
+      <div class="precord-region">Ventrículo Derecho</div>
+      <div class="precord-pos">4º EIC derecho al lado del esternón</div>
+    </div>
+    <div class="precord-card">
+      <div class="precord-name">V2</div>
+      <div class="precord-region">Septo</div>
+      <div class="precord-pos">4º EIC izquierdo al lado del esternón</div>
+    </div>
+    <div class="precord-card">
+      <div class="precord-name">V3</div>
+      <div class="precord-region">Septo</div>
+      <div class="precord-pos">Equidistante entre V2 y V4</div>
+    </div>
+    <div class="precord-card">
+      <div class="precord-name">V4</div>
+      <div class="precord-region">Ápice VI</div>
+      <div class="precord-pos">5º EIC izquierdo, línea medio-clavicular</div>
+    </div>
+    <div class="precord-card">
+      <div class="precord-name">V5</div>
+      <div class="precord-region">VI Lateral</div>
+      <div class="precord-pos">5º EIC izquierdo, línea axilar anterior</div>
+    </div>
+    <div class="precord-card">
+      <div class="precord-name">V6</div>
+      <div class="precord-region">VI Lateral</div>
+      <div class="precord-pos">5º EIC izquierdo, línea axilar media</div>
+    </div>
+  </div>
+
+  <div class="hl pink">
+    <div class="hl-title">🎯 Eje Eléctrico — Método Rápido (DI + aVF)</div>
+    <strong>DI(+) / aVF(+)</strong> → Eje Normal (−30° a +110°) ✅<br>
+    <strong>DI(+) / aVF(−)</strong> → Desvío a la Izquierda (HBAE, HVI) ⬅<br>
+    <strong>DI(−) / aVF(+)</strong> → Desvío a la Derecha (HVD, TEP, EPOC) ➡<br>
+    <strong>DI(−) / aVF(−)</strong> → Desvío Extremo / Indeterminado ⚠
+  </div>
+
+  <!-- Tabla resumen final -->
+  <div class="slide-block bl-blue" style="margin-top:4px">
+    <div class="slide-label">Resumen Final · Derivaciones</div>
+    <div class="slide-title">Territorios y Correlación Clínica</div>
+    <div class="slide-body">
+      <table class="sum-t">
+        <thead>
+          <tr><th>Derivaciones</th><th>Territorio</th><th>Arteria Relacionada</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>DII, DIII, aVF</td><td><strong>Pared Inferior</strong></td><td>Coronaria Derecha (CD)</td></tr>
+          <tr><td>DI, aVL, V5, V6</td><td><strong>Pared Lateral</strong></td><td>Circunfleja (CX)</td></tr>
+          <tr><td>V1, V2</td><td><strong>Septo / VD</strong></td><td>DA proximal</td></tr>
+          <tr><td>V3, V4</td><td><strong>Pared Anterior</strong></td><td>Descendente Anterior (DA)</td></tr>
+          <tr><td>aVR</td><td><strong>Cavidad interna</strong> (ve "desde adentro")</td><td>Tronco / DA proximal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="foot">
+  Compilado slide a slide a partir de: <strong>ECG en la Biofísica — Dr. Saldivar</strong> (49 slides)<br>
+  Universidad Interamericana · Biofísica · Material para estudio académico · Guyton & Hall
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav-wrap').offsetTop - 4, behavior: 'smooth' });
+}
+function toggleWave(header) {
+  const body = header.nextElementSibling;
+  const open = header.classList.contains('open');
+  header.classList.toggle('open', !open);
+  body.classList.toggle('open', !open);
+}
+</script>
+</body>
+</html>
