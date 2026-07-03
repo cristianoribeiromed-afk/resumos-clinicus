@@ -353,6 +353,19 @@ function slugify(str){
 function buildAccessIndex(data){
   const idx = {};
   const todosArquivos = [];
+  function parseEntry(arq, i, tipo, materiaNome){
+    let label, url;
+    if(arq.includes('::')){
+      const parts = arq.split('::');
+      label = parts[0].trim();
+      url = parts.slice(1).join('::').trim();
+    } else {
+      const prefixo = tipo === 'resumo' ? 'Resumo' : 'Simulado';
+      label = prefixo+' - '+materiaNome+(i>0?' (parte '+(i+1)+')':'');
+      url = arq;
+    }
+    return { nome: label, url: url, tipo: tipo, materia: materiaNome };
+  }
   data.semestres.forEach(sem=>{
     sem.materias.forEach(m=>{
       const slugM = slugify(m.nome);
@@ -360,17 +373,17 @@ function buildAccessIndex(data){
       const itens = [];
       if(m.resumo.disponivel && m.resumo.arquivo){
         m.resumo.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
-          itens.push({nome:'Resumo - '+m.nome+(i>0?' (parte '+(i+1)+')':''), url:arq});
+          itens.push(parseEntry(arq, i, 'resumo', m.nome));
         });
       }
       if(m.simulado.disponivel && m.simulado.arquivo){
         m.simulado.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
-          itens.push({nome:'Simulado - '+m.nome+(i>0?' (parte '+(i+1)+')':''), url:arq});
+          itens.push(parseEntry(arq, i, 'simulado', m.nome));
         });
       }
       if(itens.length){
-        idx[base+'-resumo'] = itens.filter(it=>it.nome.startsWith('Resumo'));
-        idx[base+'-simulado'] = itens.filter(it=>it.nome.startsWith('Simulado'));
+        idx[base+'-resumo'] = itens.filter(it=>it.tipo==='resumo');
+        idx[base+'-simulado'] = itens.filter(it=>it.tipo==='simulado');
         idx[base+'-combo'] = itens;
         todosArquivos.push(...itens);
       }
@@ -500,25 +513,23 @@ document.getElementById('modalCheck').onclick = async ()=>{
       });
       const itens = Array.from(itensMap.values());
       if(itens.length){
-        // Agrupa por matéria (extraída do nome "Resumo - Matéria (parte N)" / "Simulado - Matéria (parte N)")
-        const grupos = new Map(); // materia -> { resumo:[{n,url}], simulado:[{n,url}] }
+        // Agrupa por matéria usando os campos explícitos (tipo/materia) de cada item
+        const grupos = new Map(); // materia -> { resumo:[{n,url,label}], simulado:[{n,url,label}] }
         itens.forEach(it=>{
-          const m = it.nome.match(/^(Resumo|Simulado) - (.+?)(?: \(parte (\d+)\))?$/);
-          const tipo = m ? m[1].toLowerCase() : 'resumo';
-          const materia = m ? m[2] : it.nome;
-          const parte = m && m[3] ? parseInt(m[3]) : 1;
+          const tipo = it.tipo || 'resumo';
+          const materia = it.materia || it.nome;
           if(!grupos.has(materia)) grupos.set(materia, {resumo:[], simulado:[]});
-          grupos.get(materia)[tipo].push({n:parte, url:it.url});
+          const lista = grupos.get(materia)[tipo];
+          lista.push({n:lista.length+1, url:it.url, label:it.nome});
         });
         const totalArquivos = itens.length;
         const totalMaterias = grupos.size;
 
         function renderChips(lista, tipoClasse){
-          lista.sort((a,b)=>a.n-b.n);
           if(lista.length===1){
-            return `<a href="${lista[0].url}" target="_blank" class="access-chip single ${tipoClasse}">Abrir 📂</a>`;
+            return `<a href="${lista[0].url}" target="_blank" class="access-chip single ${tipoClasse}" title="${lista[0].label}">Abrir 📂</a>`;
           }
-          return lista.map(it=>`<a href="${it.url}" target="_blank" class="access-chip ${tipoClasse}">${it.n}</a>`).join('');
+          return lista.map(it=>`<a href="${it.url}" target="_blank" class="access-chip ${tipoClasse}" title="${it.label}">${it.n}</a>`).join('');
         }
 
         let gruposHtml = '';
