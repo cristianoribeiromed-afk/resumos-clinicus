@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Lipídios Parte 1 | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🧈</div>
+      <div class="brand-text">
+        <h1>Bioquímica — Lipídios Parte 1</h1>
+        <span>Conceito · Classificação · Ácidos Graxos · Esteroides · Anabolizantes</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Lipídios — Conceito, classificação, ácidos graxos e esteroides</h2>
+    <p>Definição, classificação (saponificáveis/insaponificáveis), funções biológicas, ácidos graxos, esteroides, anabolizantes e digestão — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="conceito">🧪 Conceito</button>
+    <button class="tab-btn" data-tab="classificacao">📊 Classificação</button>
+    <button class="tab-btn" data-tab="funcoes">⚙️ Funções</button>
+    <button class="tab-btn" data-tab="acidosgraxos">⛓️ Ácidos Graxos</button>
+    <button class="tab-btn" data-tab="esteroides">💊 Esteroides</button>
+    <button class="tab-btn" data-tab="anabolizantes">💪 Anabolizantes</button>
+    <button class="tab-btn" data-tab="digestao">🍽️ Digestão</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- CONCEITO -->
+  <section class="panel active" id="conceito">
+    <div class="block">
+      <h3>O que são lipídios?</h3>
+      <p>São biomoléculas orgânicas <b>insolúveis em água</b>, que podem ser extraídas das células e dos tecidos por meio de solventes não polares (ex.: clorofórmio, éter ou benzeno).</p>
+      <p>Existem diferentes famílias ou classes de lipídios, mas a natureza distintiva de todos eles deriva da natureza <b>hidrocarbonada</b> da porção principal de sua estrutura.</p>
+      <h4>Composição química</h4>
+      <p>Formados basicamente por <b>carbono e hidrogênio</b>, e geralmente, em menor proporção, também <b>oxigênio</b>. Ocasionalmente podem conter também <b>fósforo, nitrogênio e enxofre</b>.</p>
+      <table class="quicktab">
+        <tr><th>Propriedade</th><th>Característica</th></tr>
+        <tr><td>Solubilidade em água</td><td>Insolúveis</td></tr>
+        <tr><td>Solubilidade em solventes orgânicos</td><td>Solúveis (éter, clorofórmio, benzeno, álcool)</td></tr>
+        <tr><td>Estrutura química</td><td>Ésteres formados pela reação entre ácido graxo e álcool</td></tr>
+      </table>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Lipídios = insolúveis em água, solúveis em solventes orgânicos. Formados por C, H, (O), às vezes P, N, S. São ésteres de ácido graxo + álcool.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que lipídios são sempre só C, H, O — alguns contêm também fósforo, nitrogênio e enxofre (ex: fosfolipídios, esfingolipídios).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Cite 2 solventes orgânicos que dissolvem lipídios.
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Éter e clorofórmio (ou benzeno, álcool).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a natureza hidrocarbonada dos lipídios explica sua insolubilidade em água?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSIFICAÇÃO -->
+  <section class="panel" id="classificacao">
+    <div class="block">
+      <h3>Classificação química dos lipídios</h3>
+      <table class="quicktab">
+        <tr><th>Categoria</th><th>Subtipos</th></tr>
+        <tr><td><b>1. Ácidos graxos</b></td><td>Saturados e insaturados</td></tr>
+        <tr><td><b>2. Lipídios com ácidos graxos (saponificáveis)</b></td><td>Simples: triacilglicerídeos, ceras. Complexos: fosfoglicerídeos, esfingolipídios</td></tr>
+        <tr><td><b>3. Lipídios sem ácidos graxos (insaponificáveis)</b></td><td>Esteroides, isopreno (terpeno), prostaglandinas</td></tr>
+      </table>
+      <p>Os saponificáveis recebem esse nome porque produzem <b>sabões</b> (sais dos ácidos graxos) por <b>hidrólise alcalina</b>.</p>
+    </div>
+    <div class="block">
+      <h3>Lipídios simples × complexos (dentro dos saponificáveis)</h3>
+      <table class="quicktab">
+        <tr><th>Tipo</th><th>Composição</th></tr>
+        <tr><td><b>Simples</b></td><td>Contêm SOMENTE carbono, hidrogênio e oxigênio</td></tr>
+        <tr><td><b>Complexos</b></td><td>Além de C, H, O, contêm outros elementos (nitrogênio, fósforo, enxofre) ou outra biomolécula (ex: glicídio)</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha clássica:</b> "saponificável" ≠ "simples". Um lipídio pode ser saponificável E complexo ao mesmo tempo (ex: fosfoglicerídeos são saponificáveis e complexos).</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Saponificáveis = contêm ácidos graxos, formam sabão por hidrólise alcalina. Insaponificáveis = sem ácidos graxos, NÃO formam sabão.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que todos os lipídios são saponificáveis — esteroides, terpenos e prostaglandinas são insaponificáveis.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Por que os lipídios saponificáveis recebem esse nome?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Porque produzem sabões (sais de ácidos graxos) por hidrólise alcalina.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que os esteroides não conseguem formar sabão, ao contrário dos triacilglicerídeos?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNÇÕES -->
+  <section class="panel" id="funcoes">
+    <div class="block">
+      <h3>Funções biológicas dos lipídios</h3>
+      <ul>
+        <li>Componentes estruturais das membranas</li>
+        <li>Formas de transporte e armazenamento do combustível catabólico</li>
+        <li>Cobertura protetora na superfície de muitos organismos</li>
+        <li>Componente da superfície celular, relacionado ao reconhecimento celular, especificidade da espécie e imunidade dos tecidos</li>
+        <li>Algumas substâncias lipídicas têm intensa atividade biológica: vitaminas e hormônios</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>Funções resumidas (lista de prova)</h3>
+      <table class="quicktab">
+        <tr><th>Função</th></tr>
+        <tr><td>Fonte de energia</td></tr>
+        <tr><td>Isolante térmico</td></tr>
+        <tr><td>Função hormonal</td></tr>
+        <tr><td>Função estrutural</td></tr>
+        <tr><td>Lubrificante</td></tr>
+        <tr><td>Impermeabilizante</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "FIFEL-I" — Fonte de energia, Isolante térmico, Função hormonal, Estrutural, Lubrificante, Impermeabilizante — 6 funções pra decorar em bloco.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>6 funções-chave: energia, isolante térmico, hormonal, estrutural, lubrificante, impermeabilizante.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Esquecer a função de reconhecimento celular/imunidade — não é só "energia e estrutura".</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual estrutura celular depende diretamente da função estrutural dos lipídios?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A membrana plasmática (composta majoritariamente por lipídios complexos).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a baixa condutividade térmica dos lipídios os torna bons isolantes?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÁCIDOS GRAXOS -->
+  <section class="panel" id="acidosgraxos">
+    <div class="block">
+      <h3>O que são ácidos graxos?</h3>
+      <p>São os componentes característicos de muitos lipídios, raramente encontrados livres nas células. São moléculas formadas por uma longa cadeia hidrocarbonada de tipo linear, com <b>número par</b> de átomos de carbono. Têm em uma extremidade da cadeia um grupo <b>carboxila (-COOH)</b>.</p>
+    </div>
+    <div class="block">
+      <h3>Saturados × Insaturados</h3>
+      <table class="quicktab">
+        <tr><th>Tipo</th><th>Ligações</th><th>Estado físico (temp. ambiente)</th><th>Exemplos</th></tr>
+        <tr><td><b>Saturados</b></td><td>Só ligações simples entre carbonos</td><td>SÓLIDOS</td><td>Palmítico (16 C), Esteárico (18 C)</td></tr>
+        <tr><td><b>Insaturados</b></td><td>Um ou vários enlaces duplos</td><td>LÍQUIDOS</td><td>Oleico (18 C, 1 duplo), Linoleico (18 C, 2 duplos)</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "SaturaDO = sóliDO. InsaturaDO = líquiDO" — a terminação rima com o estado físico.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Ácidos graxos: cadeia linear, número PAR de carbonos, grupo -COOH numa extremidade. Saturados=sólidos. Insaturados=líquidos.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Trocar palmítico (16C, saturado) com esteárico (18C, saturado) — ambos saturados, mas com número de carbonos diferente.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>O ácido linoleico tem quantos enlaces duplos?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Dois enlaces duplos (18 átomos de carbono).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a presença de duplas ligações torna um ácido graxo líquido à temperatura ambiente?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTEROIDES -->
+  <section class="panel" id="esteroides">
+    <div class="block">
+      <h3>Lipídios insaponificáveis</h3>
+      <p>NÃO contêm ácidos graxos em sua composição; por isso não realizam a reação de saponificação (não formam sabões). São os <b>terpenos, esteroides e prostaglandinas</b>.</p>
+      <h4>Terpenos</h4>
+      <p>Derivados de uma molécula, o <b>isopreno</b> (2-metil-1,3-butanodieno). Exemplos importantes: limoneno (odor cítrico), vitaminas A/K/E, carotenos (cor alaranjada da cenoura), borracha (pneus).</p>
+    </div>
+    <div class="block">
+      <h3>Esteroides</h3>
+      <p>Derivam de um composto químico em forma de anel chamado <b>ciclopentanoperidrofenantreno</b> (esterano ou gonano). São lipídios derivados do <b>colesterol</b>.</p>
+      <table class="quicktab">
+        <tr><th>Subtipo</th><th>Exemplos e função</th></tr>
+        <tr><td><b>Esteróis</b></td><td>Colesterol (precursor de placas arteriais, dá rigidez à membrana plasmática); Vitamina D (absorção de cálcio)</td></tr>
+        <tr><td><b>Ácidos biliares</b></td><td>Emulsionam as gorduras no tubo digestivo</td></tr>
+        <tr><td><b>Hormônios esteroides</b></td><td>Cortisol e aldosterona (córtex adrenal)</td></tr>
+        <tr><td><b>Hormônios sexuais</b></td><td>Testosterona, estrogênios, progesterona</td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica:</b> o colesterol e o lanosterol são esteróis. No tecido animal, o colesterol é precursor de: ácidos biliares (absorção intestinal de lipídios), andrógenos (hormônios sexuais masculinos), estrógenos (femininos), progesterona, hormônios adrenocorticais e vitamina D.</div>
+      <div class="mnemo"><b>Dica:</b> "Tudo vem do colesterol" — ácidos biliares, hormônios sexuais, hormônios adrenocorticais e vitamina D compartilham o mesmo precursor.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Esteroides derivam do colesterol. 4 grupos: esteróis, ácidos biliares, hormônios esteroides (córtex adrenal), hormônios sexuais.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que só os "hormônios esteroides" incluem cortisol/aldosterona/sexuais — na classificação do material, hormônios sexuais formam categoria própria, separada de "hormônios esteroides" (córtex adrenal).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>De qual molécula TODOS os esteroides derivam?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Do colesterol.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o colesterol, apesar de ter má fama, é indispensável para a produção de tantos hormônios?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANABOLIZANTES -->
+  <section class="panel" id="anabolizantes">
+    <div class="block">
+      <h3>O que são anabolizantes?</h3>
+      <p>Os anabolizantes, ou <b>esteroides androgênicos anabólicos</b>, são hormônios sintéticos que estimulam o desenvolvimento de vários tecidos do corpo a partir do crescimento da célula e sua posterior divisão. Apesar de usados no tratamento de algumas doenças, são utilizados em grandes quantidades por pessoas que desejam aumentar o volume muscular e a força física.</p>
+    </div>
+    <div class="block">
+      <h3>Efeitos "desejados" (buscados por usuários)</h3>
+      <ul>
+        <li>Aumenta a capacidade de incorporar proteína extra no músculo</li>
+        <li>Aumenta tamanho e força muscular mais rápido que treino+alimentação normal</li>
+        <li>Aumenta glóbulos vermelhos, volume e concentração de hemoglobina (melhora performance esportiva)</li>
+        <li>Aumenta o metabolismo basal (queima mais calorias)</li>
+        <li>Facilita atenção e raciocínio</li>
+        <li>Diminui a perda de proteína muscular causada pelo treino</li>
+        <li>Aumenta a autoconfiança, permitindo maior intensidade no treino</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>Efeitos adversos (risco real)</h3>
+      <table class="quicktab">
+        <tr><th>Sistema</th><th>Efeitos adversos</th></tr>
+        <tr><td>Reprodutivo</td><td>Atrofia testicular, esterilidade</td></tr>
+        <tr><td>Hepático</td><td>Pele e olhos amarelados (icterícia), câncer hepático</td></tr>
+        <tr><td>Cardiovascular</td><td>↑LDL (colesterol "ruim"), arritmia cardíaca, hipertensão, sangramento nasal</td></tr>
+        <tr><td>Dermatológico</td><td>Calvície, acne, manchas na pele, pele oleosa (mulheres)</td></tr>
+        <tr><td>Outros</td><td>Cãibras, cansaço, hálito forte, insônia, náuseas/vômitos frequentes</td></tr>
+        <tr><td>Gestação</td><td>Danos irreversíveis ao feto</td></tr>
+        <tr><td>Risco máximo</td><td>Morte</td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica importante:</b> o uso de anabolizantes eleva o LDL (colesterol "ruim") e pode causar arritmia e hipertensão — combinação que aumenta significativamente o risco cardiovascular, mesmo em pessoas jovens e aparentemente saudáveis.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Anabolizantes = esteroides androgênicos anabólicos. Efeitos adversos graves: atrofia testicular, câncer hepático, arritmia, ↑LDL, dano fetal irreversível, morte.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Focar só nos efeitos "desejados" (força/músculo) e esquecer que os riscos incluem consequências fatais e irreversíveis.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Que tipo de colesterol aumenta com o uso de anabolizantes?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O LDL ("colesterol ruim").</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o uso de anabolizantes em gestantes pode causar danos irreversíveis ao feto?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIGESTÃO -->
+  <section class="panel" id="digestao">
+    <div class="block">
+      <h3>Papel da bile na digestão dos lipídios</h3>
+      <p>Os ácidos biliares (<b>cólico e quenodesoxicólico</b>) são sintetizados a partir do <b>colesterol</b>. Conjugam-se com os aminoácidos <b>glicina e taurina</b>, formando <b>sais biliares</b> que emulsionam as gorduras e vitaminas, facilitando sua absorção intestinal.</p>
+    </div>
+    <div class="block">
+      <h3>Terminologia dos acilglicerídeos</h3>
+      <table class="quicktab">
+        <tr><th>Sigla</th><th>Significado</th></tr>
+        <tr><td>TAG</td><td>Triacilglicerídeos (3 ácidos graxos + glicerol)</td></tr>
+        <tr><td>DAG</td><td>Diacilglicerídeos (2 ácidos graxos + glicerol)</td></tr>
+        <tr><td>MAG</td><td>Monoacilglicerídeo (1 ácido graxo + glicerol)</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> TAG→DAG→MAG é exatamente a sequência de digestão: a lipase vai retirando um ácido graxo de cada vez do glicerol.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Ácidos biliares vêm do colesterol, conjugam com glicina/taurina → sais biliares → emulsionam gorduras. TAG (3) → DAG (2) → MAG (1) ácidos graxos.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir "ácido biliar" com "sal biliar" — o sal biliar é o ácido biliar já CONJUGADO com glicina ou taurina.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Com quais dois aminoácidos os ácidos biliares se conjugam?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Glicina e taurina.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que as gorduras precisam ser emulsionadas antes de serem digeridas/absorvidas?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Paciente relata dificuldade de absorção de vitaminas lipossolúveis (A, D, E, K) após colecistectomia (retirada da vesícula biliar) com alteração no fluxo biliar.</div>
+      <div class="caso-q">
+        <p>1) Por que a alteração no fluxo de bile afeta a absorção dessas vitaminas especificamente?</p>
+        <p>2) Qual estrutura molecular formada pelos ácidos biliares é responsável por essa função?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> As vitaminas lipossolúveis (A, D, E, K) dependem da emulsificação das gorduras pelos sais biliares para serem absorvidas no intestino. Sem bile adequada, essa emulsificação fica prejudicada, reduzindo a absorção dessas vitaminas — que são solúveis em lipídios, não em água.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Atleta amador de 24 anos, usuário regular de esteroides androgênicos anabólicos há 8 meses, é levado ao pronto-socorro com dor torácica e arritmia. Exames mostram LDL elevado e enzimas hepáticas alteradas.</div>
+      <div class="caso-q">
+        <p>1) Relacione o uso de anabolizantes com os achados de LDL elevado e arritmia.</p>
+        <p>2) Que outro órgão está classicamente em risco pelo uso crônico de anabolizantes, considerando as enzimas hepáticas alteradas?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O uso de anabolizantes eleva o LDL (colesterol "ruim") e está classicamente associado a arritmia cardíaca e hipertensão, aumentando o risco cardiovascular mesmo em pessoas jovens. As enzimas hepáticas alteradas refletem o risco hepático do uso crônico de anabolizantes, que pode evoluir para câncer hepático — um dos efeitos adversos mais graves.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 55 anos, com histórico de dislipidemia, é encontrado ter placas ateroscleróticas em exame de imagem das artérias coronárias. O médico explica que o colesterol é precursor dessas placas.</div>
+      <div class="caso-q">
+        <p>1) Além de ser precursor de placas arteriais, cite pelo menos 3 outras funções biológicas importantes do colesterol.</p>
+        <p>2) Por que não seria correto simplesmente "eliminar" todo o colesterol do organismo como estratégia terapêutica?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Além de precursor de placas arteriais, o colesterol: (1) confere rigidez à membrana plasmática das células; (2) é precursor dos ácidos biliares (digestão de gorduras); (3) é precursor de hormônios sexuais (testosterona, estrogênios, progesterona), hormônios adrenocorticais (cortisol, aldosterona) e vitamina D. Eliminar todo o colesterol comprometeria todas essas funções essenciais — por isso o objetivo terapêutico é o CONTROLE dos níveis, não a eliminação total.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante uma prova prática, o professor pede para classificar 3 amostras de lipídios: Amostra A não contém ácidos graxos e não forma sabão; Amostra B contém ácidos graxos e é composta apenas por C, H, O; Amostra C contém ácidos graxos e também nitrogênio e fósforo em sua estrutura.</div>
+      <div class="caso-q">
+        <p>1) Classifique cada amostra quanto à saponificação e à simplicidade/complexidade.</p>
+        <p>2) Dê um exemplo concreto de lipídio para cada categoria identificada.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação completa</button>
+        <div class="caso-answer">
+          <b>Classificação:</b><br>
+          <b>Amostra A:</b> Insaponificável (sem ácidos graxos, não forma sabão) — exemplo: esteroide (colesterol) ou terpeno.<br>
+          <b>Amostra B:</b> Saponificável simples (tem ácidos graxos, só C/H/O) — exemplo: triacilglicerídeo ou cera.<br>
+          <b>Amostra C:</b> Saponificável complexo (tem ácidos graxos + outros elementos como N e P) — exemplo: fosfoglicerídeo (fosfolipídio de membrana).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">16 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 16</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">47</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">25 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Lipídios Parte 1" (Prof. Dr. Robert Vargas Bernal). Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 25 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Lipídio", def:"Biomolécula orgânica insolúvel em água, solúvel em solventes orgânicos (éter, clorofórmio, benzeno)."},
+  {term:"Lipídios saponificáveis", def:"Contêm ácidos graxos; formam sabão por hidrólise alcalina."},
+  {term:"Lipídios insaponificáveis", def:"Não contêm ácidos graxos; não formam sabão (esteroides, terpenos, prostaglandinas)."},
+  {term:"Lipídio simples", def:"Contém apenas carbono, hidrogênio e oxigênio."},
+  {term:"Lipídio complexo", def:"Contém C, H, O + outros elementos (N, P, S) ou outra biomolécula (glicídio)."},
+  {term:"Ácido graxo saturado", def:"Só ligações simples entre carbonos; sólido à temperatura ambiente (ex: palmítico, esteárico)."},
+  {term:"Ácido graxo insaturado", def:"Uma ou mais ligações duplas; líquido à temperatura ambiente (ex: oleico, linoleico)."},
+  {term:"Terpeno", def:"Lipídio insaponificável derivado do isopreno (ex: vitaminas A/K/E, carotenos, limoneno)."},
+  {term:"Esteroide", def:"Lipídio insaponificável derivado do colesterol, com estrutura em anel (ciclopentanoperidrofenantreno)."},
+  {term:"Colesterol", def:"Esterol precursor de ácidos biliares, hormônios sexuais, adrenocorticais e vitamina D; dá rigidez à membrana."},
+  {term:"Ácidos biliares", def:"Sintetizados a partir do colesterol (cólico e quenodesoxicólico); emulsionam gorduras no tubo digestivo."},
+  {term:"Sal biliar", def:"Ácido biliar conjugado com glicina ou taurina."},
+  {term:"Anabolizante", def:"Esteroide androgênico anabólico sintético; estimula crescimento muscular mas tem efeitos adversos graves (hepático, cardíaco, reprodutivo)."},
+  {term:"TAG / DAG / MAG", def:"Tri/Di/Monoacilglicerídeo — glicerol com 3, 2 ou 1 ácidos graxos ligados, respectivamente."},
+  {term:"Isopreno", def:"Molécula precursora dos terpenos (2-metil-1,3-butanodieno)."},
+  {term:"Ciclopentanoperidrofenantreno", def:"Estrutura em anel (esterano/gonano) que forma a base de todos os esteroides."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (25) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"Los lípidos se caracterizan por ser:", alts:["Solubles en agua e insolubles en solventes orgánicos","Insolubles en agua y solubles en solventes orgánicos","Solubles tanto en agua como en solventes orgánicos","Insolubles en cualquier solvente"], correct:1, comment:"Lípidos: insolubles en agua, solubles en solventes orgánicos (éter, cloroformo, benceno)."},
+  {tag:"Fácil", stem:"Los lípidos están formados básicamente por:", alts:["Carbono e hidrógeno","Nitrógeno y azufre","Solo oxígeno","Fósforo y calcio"], correct:0, comment:"Lípidos: básicamente C y H, en menor proporción O, ocasionalmente P, N, S."},
+  {tag:"Intermediária", stem:"Los lípidos saponificables se caracterizan por:", alts:["No contener ácidos grasos","Contener ácidos grasos y producir jabones por hidrólisis alcalina","Ser siempre insaponificables","No poder ser hidrolizados"], correct:1, comment:"Saponificables: contienen ácidos grasos, forman jabones por hidrólisis alcalina."},
+  {tag:"Fácil", stem:"Son ejemplos de lípidos insaponificables:", alts:["Triacilglicéridos y ceras","Fosfoglicéridos y esfingolípidos","Esteroides, terpenos y prostaglandinas","Ácidos grasos saturados"], correct:2, comment:"Insaponificables: esteroides, terpenos (isopreno) y prostaglandinas."},
+  {tag:"Intermediária", stem:"Un lípido simple se caracteriza por contener:", alts:["Solo carbono, hidrógeno y oxígeno","Carbono, hidrógeno, oxígeno y nitrógeno","Carbono, hidrógeno, oxígeno y fósforo","Solo carbono y nitrógeno"], correct:0, comment:"Lípidos simples: SOLO C, H, O."},
+  {tag:"Difícil", stem:"Un lípido complejo, a diferencia del simple, contiene además:", alts:["Solo carbono adicional","Nitrógeno, fósforo, azufre u otra biomolécula","Menos hidrógeno","Ningún elemento adicional"], correct:1, comment:"Lípidos complejos: además de C,H,O, contienen N, P, S u otra biomolécula (glúcido)."},
+  {tag:"Fácil", stem:"Los ácidos grasos y triacilglicéridos tienen como función prioritaria:", alts:["Función estructural exclusivamente","Reserva de energía","Función hormonal exclusivamente","Ser impermeabilizantes exclusivamente"], correct:1, comment:"Ácidos grasos y triacilglicéridos: función prioritaria de reserva energética."},
+  {tag:"Intermediária", stem:"Las ceras cumplen principalmente la función de:", alts:["Reserva energética","Impermeabilizantes","Hormonal","Estructural en membranas"], correct:1, comment:"Las ceras actúan como impermeabilizantes."},
+  {tag:"Fácil", stem:"Los ácidos grasos poseen en su estructura un número de átomos de carbono:", alts:["Impar, siempre","Par, generalmente","Variable sin patrón","Siempre igual a 10"], correct:1, comment:"Los ácidos grasos tienen cadena lineal con número PAR de átomos de carbono."},
+  {tag:"Fácil", stem:"Los ácidos grasos saturados, a temperatura ambiente, suelen ser:", alts:["Líquidos","Sólidos","Gaseosos","Ninguna de las anteriores"], correct:1, comment:"Saturados = sólidos a temperatura ambiente (ej: palmítico, esteárico)."},
+  {tag:"Intermediária", stem:"El ácido oleico se caracteriza por tener:", alts:["18 átomos de C y ningún doble enlace","18 átomos de C y un doble enlace","16 átomos de C y dos dobles enlaces","20 átomos de C y tres dobles enlaces"], correct:1, comment:"Ácido oleico: 18 átomos de C, 1 doble enlace (insaturado, líquido)."},
+  {tag:"Fácil", stem:"Los terpenos derivan de la molécula:", alts:["Colesterol","Isopreno","Glicerol","Ácido palmítico"], correct:1, comment:"Terpenos derivan del isopreno (2-metil-1,3-butanodieno)."},
+  {tag:"Intermediária", stem:"Es un ejemplo de terpeno mencionado en el material:", alts:["Testosterona","Limoneno","Ácido cólico","Cortisol"], correct:1, comment:"El limoneno (olor cítrico) es un ejemplo clásico de terpeno."},
+  {tag:"Fácil", stem:"Los esteroides derivan de un compuesto en forma de anillo llamado:", alts:["Isopreno","Ciclopentanoperhidrofenantreno","Glicerol","Ácido graso"], correct:1, comment:"Esteroides derivan del ciclopentanoperhidrofenantreno (esterano/gonano)."},
+  {tag:"Fácil", stem:"El colesterol pertenece al subgrupo de esteroides llamado:", alts:["Ácidos biliares","Esteroles","Hormonas sexuales","Prostaglandinas"], correct:1, comment:"El colesterol y el lanosterol son esteroles."},
+  {tag:"Intermediária", stem:"Los ácidos biliares se sintetizan a partir de:", alts:["Ácidos grasos","Colesterol","Glicerol","Isopreno"], correct:1, comment:"Los ácidos biliares (cólico y quenodesoxicólico) se sintetizan a partir del colesterol."},
+  {tag:"Difícil", stem:"Los ácidos biliares se conjugan con qué aminoácidos para formar sales biliares?", alts:["Alanina y valina","Glicina y taurina","Lisina y arginina","Serina y treonina"], correct:1, comment:"Los ácidos biliares se conjugan con glicina y taurina, formando sales biliares."},
+  {tag:"Fácil", stem:"Son ejemplos de hormonas sexuales derivadas del colesterol:", alts:["Insulina y glucagón","Testosterona, estrógenos y progesterona","Adrenalina y noradrenalina","TSH y GH"], correct:1, comment:"Hormonas sexuales derivadas del colesterol: testosterona, estrógenos, progesterona."},
+  {tag:"Fácil", stem:"Los anabolizantes se definen como:", alts:["Vitaminas hidrosolubles","Esteroides androgénicos anabólicos sintéticos","Ácidos grasos insaturados","Enzimas digestivas"], correct:1, comment:"Anabolizantes = esteroides androgénicos anabólicos, hormonas sintéticas."},
+  {tag:"Intermediária", stem:"Un efecto adverso grave de los anabolizantes sobre el hígado es:", alts:["Aumento de la función hepática","Cáncer hepático","Regeneración acelerada","Ningún efecto"], correct:1, comment:"Anabolizantes: riesgo de cáncer hepático, entre otros efectos hepáticos adversos."},
+  {tag:"Difícil", stem:"El uso de anabolizantes se asocia con el aumento de qué tipo de colesterol?", alts:["HDL (bueno)","LDL (malo)","VLDL únicamente","Ningún cambio en el colesterol"], correct:1, comment:"Anabolizantes aumentan el LDL (colesterol 'malo'), aumentando riesgo cardiovascular."},
+  {tag:"Fácil", stem:"TAG, DAG y MAG se refieren a:", alts:["Tipos de ácidos biliares","Tri, di y monoacilglicéridos","Tipos de esteroides","Enzimas digestivas"], correct:1, comment:"TAG=triacilglicérido, DAG=diacilglicérido, MAG=monoacilglicérido."},
+  {tag:"Intermediária", stem:"Un triacilglicérido (TAG) está formado por glicerol unido a:", alts:["1 ácido graso","2 ácidos grasos","3 ácidos grasos","4 ácidos grasos"], correct:2, comment:"TAG = glicerol + 3 ácidos grasos."},
+  {tag:"Fácil", stem:"La vitamina D es clasificada químicamente como:", alts:["Un ácido graso","Un esterol","Un terpeno exclusivamente","Un fosfolípido"], correct:1, comment:"La vitamina D es un esterol, necesaria para la absorción de calcio."},
+  {tag:"Difícil", stem:"¿Cuál de las siguientes NO es una función biológica de los lípidos mencionada en el material?", alts:["Componente estructural de membranas","Transporte y almacenamiento de combustible catabólico","Síntesis directa de ADN","Reconocimiento celular e inmunidad de tejidos"], correct:2, comment:"La síntesis de ADN no es función de los lípidos — es de los ácidos nucleicos."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Conceito e Classificação", statements:[
+    "Los lípidos son solubles en agua.",
+    "Los lípidos saponificables producen jabones por hidrólisis alcalina.",
+    "Los esteroides son lípidos saponificables.",
+    "Un lípido complejo puede contener nitrógeno y fósforo en su estructura."
+  ], answers:["F","V","F","V"], comment:"El ítem I es falso: los lípidos son INSOLUBLES en agua. El ítem III es falso: los esteroides son INSAPONIFICABLES."},
+  {theme:"Ácidos Graxos e Esteroides", statements:[
+    "Los ácidos grasos saturados son líquidos a temperatura ambiente.",
+    "El colesterol es precursor de los ácidos biliares.",
+    "Los ácidos biliares se conjugan con glicina y taurina.",
+    "La vitamina D es clasificada como un ácido graso."
+  ], answers:["F","V","V","F"], comment:"El ítem I es falso: los saturados son SÓLIDOS (los insaturados son líquidos). El ítem IV es falso: la vitamina D es un ESTEROL, no un ácido graso."},
+  {theme:"Anabolizantes e Digestão", statements:[
+    "Los anabolizantes son hormonas sintéticas derivadas de esteroides.",
+    "El uso de anabolizantes disminuye el riesgo de arritmia cardíaca.",
+    "Los ácidos biliares se sintetizan a partir del colesterol.",
+    "TAG significa triacilglicérido, formado por glicerol y 3 ácidos grasos."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: los anabolizantes AUMENTAN el riesgo de arritmia cardíaca, no lo disminuyen."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Classificação dos lipídios", colA:["Ácido graxo saturado","Ácido graxo insaturado","Lipídio simples","Lipídio complexo","Terpeno"],
+   colB:["Só ligações simples, sólido à temperatura ambiente","Uma ou mais duplas ligações, líquido à temperatura ambiente","Contém apenas C, H, O","Contém N, P, S ou outra biomolécula","Derivado do isopreno"],
+   answers:["A","B","C","D","E"], comment:"A distinção saturado/insaturado (ligações) é independente de simples/complexo (composição elementar) — são dois eixos de classificação diferentes."},
+  {title:"2. Esteroides e derivados do colesterol", colA:["Esterol","Ácido biliar","Hormônio esteroide (adrenal)","Hormônio sexual","Vitamina D"],
+   colB:["Colesterol, dá rigidez à membrana","Emulsiona gorduras no tubo digestivo","Cortisol, aldosterona","Testosterona, estrogênios, progesterona","Esterol, absorção de cálcio"],
+   answers:["A","B","C","D","E"], comment:"Todos os 5 itens derivam do colesterol — o material enfatiza essa origem comum para os diferentes subtipos de esteroides."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
