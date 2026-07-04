@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Aminoácidos, Proteínas & Enzimas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --bg2: #111318;
+  --bg3: #181c26;
+  --card: #1a1f2e;
+  --card2: #202538;
+  --border: rgba(255,255,255,0.07);
+  --accent: #6ee7b7;
+  --accent2: #818cf8;
+  --accent3: #f472b6;
+  --yellow: #fcd34d;
+  --red: #f87171;
+  --orange: #fb923c;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --radius: 14px;
+  --font-d: 'Playfair Display', serif;
+  --font-b: 'DM Sans', sans-serif;
+  --font-m: 'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-b); min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 70% 50% at 20% 0%, rgba(110,231,183,0.05) 0%, transparent 60%),
+              radial-gradient(ellipse 50% 40% at 80% 100%, rgba(129,140,248,0.05) 0%, transparent 60%);
+}
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,12,16,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 58px; gap: 12px;
+}
+.nav-logo { font-family: var(--font-d); font-size: 1.1rem; font-weight: 900; color: var(--accent); white-space: nowrap; }
+.nav-tabs { display: flex; gap: 3px; flex-wrap: wrap; }
+.nav-tab {
+  padding: 5px 12px; border-radius: 8px; border: none;
+  background: transparent; color: var(--muted); font-family: var(--font-b);
+  font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.nav-tab:hover { background: var(--bg3); color: var(--text); }
+.nav-tab.active { background: var(--accent); color: #000; font-weight: 600; }
+.xp-wrap { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+.xp-bar { width: 80px; height: 5px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.xp-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.5s; }
+.xp-val { color: var(--accent); font-weight: 700; font-size: 0.75rem; }
+
+/* PANELS */
+.panel { display: none; position: relative; z-index: 1; }
+.panel.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* HERO */
+.hero {
+  text-align: center; padding: 52px 24px 36px;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(110,231,183,0.07) 0%, transparent 70%);
+}
+.hero h1 { font-family: var(--font-d); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; line-height: 1.1; }
+.hero h1 span { color: var(--accent); }
+.hero-sub { color: var(--muted); font-size: 0.92rem; margin-top: 10px; }
+.hero-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.hb { padding: 5px 14px; border-radius: 99px; font-size: 0.75rem; font-weight: 600; border: 1px solid; }
+.hb-green { border-color: var(--accent); color: var(--accent); }
+.hb-purple { border-color: var(--accent2); color: var(--accent2); }
+.hb-pink { border-color: var(--accent3); color: var(--accent3); }
+
+/* HOME GRID */
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; max-width: 900px; margin: 0 auto; padding: 0 24px 50px; }
+.home-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; cursor: pointer; transition: all 0.2s; }
+.home-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(110,231,183,0.1); }
+.home-card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+.home-card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.home-card-sub { font-size: 0.78rem; color: var(--muted); }
+
+/* CONTENT WRAP */
+.content-wrap { max-width: 880px; margin: 0 auto; padding: 24px 20px 60px; }
+.section-header { margin-bottom: 28px; }
+.section-header h2 { font-family: var(--font-d); font-size: 1.8rem; font-weight: 900; }
+.section-header p { color: var(--muted); font-size: 0.88rem; margin-top: 6px; }
+
+/* CONCEPT TABS */
+.ctabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 22px; }
+.ctab {
+  padding: 7px 16px; border-radius: 10px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); font-family: var(--font-b);
+  font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.ctab.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+.ctab:hover:not(.active) { background: var(--bg3); color: var(--text); }
+.cpanel { display: none; }
+.cpanel.active { display: block; animation: fadeIn 0.25s ease; }
+
+/* CARDS */
+.info-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+.card-label {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+}
+.card-label::before { content: ''; width: 3px; height: 12px; background: var(--accent); border-radius: 99px; }
+.card-label.purple { color: var(--accent2); }
+.card-label.purple::before { background: var(--accent2); }
+.card-label.pink { color: var(--accent3); }
+.card-label.pink::before { background: var(--accent3); }
+.card-label.yellow { color: var(--yellow); }
+.card-label.yellow::before { background: var(--yellow); }
+
+p.body-text { font-size: 0.9rem; line-height: 1.75; color: var(--text); }
+ul.styled { list-style: none; padding: 0; }
+ul.styled li { padding: 5px 0 5px 20px; position: relative; font-size: 0.88rem; line-height: 1.6; }
+ul.styled li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.8rem; }
+
+.hbox { border-radius: 12px; padding: 16px; margin: 12px 0; }
+.hbox-green { background: rgba(110,231,183,0.06); border: 1px solid rgba(110,231,183,0.2); }
+.hbox-purple { background: rgba(129,140,248,0.06); border: 1px solid rgba(129,140,248,0.2); }
+.hbox-yellow { background: rgba(252,211,77,0.06); border: 1px solid rgba(252,211,77,0.2); }
+.hbox-red { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2); }
+.hbox-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.hbox-green .hbox-title { color: var(--accent); }
+.hbox-purple .hbox-title { color: var(--accent2); }
+.hbox-yellow .hbox-title { color: var(--yellow); }
+.hbox-red .hbox-title { color: var(--red); }
+
+.mnemonic { background: linear-gradient(135deg, rgba(129,140,248,0.08), rgba(110,231,183,0.04)); border: 1px dashed rgba(129,140,248,0.4); border-radius: 12px; padding: 16px; margin: 12px 0; }
+.mnemonic-title { font-size: 0.7rem; color: var(--accent2); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.mnemonic-text { font-family: var(--font-m); font-size: 0.85rem; color: var(--accent2); line-height: 1.8; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ig-item { background: var(--bg3); border-radius: 10px; padding: 12px; }
+.ig-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+.ig-val { font-size: 0.87rem; font-weight: 500; }
+
+/* FLOW */
+.flow { display: flex; flex-direction: column; gap: 0; margin: 12px 0; }
+.flow-step { display: flex; align-items: flex-start; gap: 12px; }
+.flow-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #000; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.flow-content { flex: 1; padding-bottom: 16px; border-left: 2px solid rgba(110,231,183,0.15); padding-left: 16px; margin-left: -22px; padding-top: 4px; }
+.flow-step:last-child .flow-content { border-left-color: transparent; }
+.flow-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 3px; }
+.flow-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+/* TABLE */
+.bio-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.bio-table th { background: var(--bg3); color: var(--muted); text-align: left; padding: 9px 12px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.bio-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+.bio-table tr:last-child td { border-bottom: none; }
+.bio-table tr:hover td { background: rgba(255,255,255,0.02); }
+.ok { color: var(--accent); font-weight: 700; }
+.warn { color: var(--yellow); font-weight: 600; }
+.danger { color: var(--red); }
+.table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+.table-title { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); }
+
+/* QUIZ */
+.quiz-prog { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+.qd { width: 22px; height: 5px; border-radius: 99px; background: var(--bg3); transition: background 0.3s; }
+.qd.c { background: var(--accent); }
+.qd.w { background: var(--red); }
+.qd.cur { background: var(--accent2); }
+.q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; margin-bottom: 18px; }
+.q-num { font-size: 0.7rem; color: var(--muted); font-family: var(--font-m); margin-bottom: 10px; }
+.q-text { font-size: 0.97rem; font-weight: 500; line-height: 1.55; margin-bottom: 20px; }
+.q-opts { display: flex; flex-direction: column; gap: 9px; }
+.q-opt {
+  padding: 11px 15px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg3); cursor: pointer; font-size: 0.87rem; text-align: left;
+  font-family: var(--font-b); color: var(--text); transition: all 0.2s;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(110,231,183,0.06); }
+.q-opt.c { border-color: var(--accent); background: rgba(110,231,183,0.1); color: var(--accent); }
+.q-opt.w { border-color: var(--red); background: rgba(248,113,113,0.1); color: var(--red); }
+.q-opt:disabled { cursor: default; }
+.q-fb { animation: fadeIn 0.3s ease; margin-top: 14px; }
+.q-fb-box { border-radius: 10px; padding: 13px; font-size: 0.86rem; line-height: 1.6; }
+.q-fb-box.ok { background: rgba(110,231,183,0.07); border: 1px solid rgba(110,231,183,0.2); }
+.q-fb-box.fail { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2); }
+.q-next { margin-top: 14px; padding: 9px 22px; border-radius: 10px; border: none; background: var(--accent); color: #000; font-family: var(--font-b); font-size: 0.87rem; font-weight: 700; cursor: pointer; }
+.q-next:hover { background: #4dd4a0; }
+.score-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 40px; text-align: center; }
+.score-pct { font-family: var(--font-d); font-size: 3.5rem; font-weight: 900; }
+.score-label { color: var(--muted); font-size: 0.88rem; margin-top: 6px; }
+.score-restart { margin-top: 22px; padding: 11px 26px; border-radius: 10px; border: none; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; font-family: var(--font-b); font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+
+/* FLASHCARDS */
+.fc-level-title { font-size: 0.72rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin: 24px 0 12px; display: flex; align-items: center; gap: 8px; }
+.fc-level-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.fc { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; position: relative; user-select: none; }
+.fc:hover { border-color: var(--accent); }
+.fc-q { font-size: 0.9rem; font-weight: 600; }
+.fc-a { display: none; margin-top: 13px; padding-top: 13px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--muted); line-height: 1.65; animation: fadeIn 0.3s ease; }
+.fc-a.open { display: block; }
+.fc-ico { position: absolute; top: 14px; right: 14px; font-size: 0.9rem; opacity: 0.35; }
+.fc-btns { display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end; }
+.fc-btn { padding: 5px 13px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: 1px solid; font-family: var(--font-b); transition: all 0.2s; }
+.fc-know { border-color: var(--accent); color: var(--accent); background: transparent; }
+.fc-know:hover { background: var(--accent); color: #000; }
+.fc-nope { border-color: var(--red); color: var(--red); background: transparent; }
+.fc-nope:hover { background: var(--red); color: #fff; }
+
+/* GAMI */
+.gami-bar { height: 10px; background: var(--bg3); border-radius: 99px; margin: 10px 0; overflow: hidden; }
+.gami-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width 0.6s ease; }
+.medal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.medal { background: var(--bg3); border-radius: 12px; padding: 16px; text-align: center; opacity: 0.35; transition: opacity 0.3s; }
+.medal.earned { opacity: 1; }
+.medal-ico { font-size: 2rem; margin-bottom: 6px; }
+.medal-name { font-size: 0.77rem; font-weight: 700; }
+.medal-desc { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.stat-box { background: var(--bg3); border-radius: 10px; padding: 14px; text-align: center; }
+.stat-val { font-size: 1.4rem; font-weight: 700; }
+.stat-lbl { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+
+@media (max-width: 600px) {
+  .info-grid { grid-template-columns: 1fr; }
+  .nav-tabs { gap: 2px; }
+  .nav-tab { padding: 4px 8px; font-size: 0.7rem; }
+  .content-wrap { padding: 16px 14px 50px; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">⚗️ Bioquímica</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPanel('home')">Início</button>
+    <button class="nav-tab" onclick="goPanel('aa')">Aminoácidos</button>
+    <button class="nav-tab" onclick="goPanel('prot')">Proteínas</button>
+    <button class="nav-tab" onclick="goPanel('enz')">Enzimas</button>
+    <button class="nav-tab" onclick="goPanel('comp')">Tabelas</button>
+    <button class="nav-tab" onclick="goPanel('fc')">Flashcards</button>
+    <button class="nav-tab" onclick="goPanel('quiz')">Simulado</button>
+    <button class="nav-tab" onclick="goPanel('gami')">Progresso</button>
+  </div>
+  <div class="xp-wrap">
+    XP <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    <span class="xp-val" id="xpVal">0</span>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="panel-home" class="panel active">
+  <div class="hero">
+    <h1>Bioquímica<br><span>Aminoácidos · Proteínas · Enzimas</span></h1>
+    <p class="hero-sub">Prof. Dr. Robert Vargas Bernal · Universidade Interamericana · Material completo com analogias, casos clínicos e simulado</p>
+    <div class="hero-badges">
+      <span class="hb hb-green">🧬 20 Aminoácidos</span>
+      <span class="hb hb-purple">🔗 4 Estruturas Proteicas</span>
+      <span class="hb hb-pink">⚡ Cinética Enzimática</span>
+    </div>
+  </div>
+  <div class="home-grid">
+    <div class="home-card" onclick="goPanel('aa')">
+      <div class="home-card-icon">🧬</div>
+      <div class="home-card-title">Aminoácidos</div>
+      <div class="home-card-sub">Estrutura, classificação, quiralidade, essenciais vs não essenciais</div>
+    </div>
+    <div class="home-card" onclick="goPanel('prot')">
+      <div class="home-card-icon">🔗</div>
+      <div class="home-card-title">Proteínas</div>
+      <div class="home-card-sub">4 estruturas, funções, desnaturalização, doenças</div>
+    </div>
+    <div class="home-card" onclick="goPanel('enz')">
+      <div class="home-card-icon">⚡</div>
+      <div class="home-card-title">Enzimas</div>
+      <div class="home-card-sub">Catálise, modelos, inibição, diagnóstico clínico</div>
+    </div>
+    <div class="home-card" onclick="goPanel('fc')">
+      <div class="home-card-icon">🃏</div>
+      <div class="home-card-title">Flashcards</div>
+      <div class="home-card-sub">Active recall em 4 níveis de dificuldade</div>
+    </div>
+    <div class="home-card" onclick="goPanel('quiz')">
+      <div class="home-card-icon">📝</div>
+      <div class="home-card-title">Simulado</div>
+      <div class="home-card-sub">30 questões com feedback e comentário clínico</div>
+    </div>
+    <div class="home-card" onclick="goPanel('comp')">
+      <div class="home-card-icon">📊</div>
+      <div class="home-card-title">Tabelas</div>
+      <div class="home-card-sub">Comparativos de alto rendimento para prova</div>
+    </div>
+  </div>
+</div>
+
+<!-- AMINOÁCIDOS -->
+<div id="panel-aa" class="panel">
+<div class="content-wrap">
+  <div class="section-header">
+    <h2>🧬 Aminoácidos</h2>
+    <p>Os tijolos da vida — tudo que você precisa saber para a prova</p>
+  </div>
+  <div class="ctabs">
+    <button class="ctab active" onclick="showC('aa','intro',this)">📋 O que são?</button>
+    <button class="ctab" onclick="showC('aa','estrutura',this)">🔬 Estrutura</button>
+    <button class="ctab" onclick="showC('aa','quiral',this)">🌀 Quiralidade</button>
+    <button class="ctab" onclick="showC('aa','classif',this)">📦 Classificação</button>
+    <button class="ctab" onclick="showC('aa','essenciais',this)">⭐ Essenciais</button>
+    <button class="ctab" onclick="showC('aa','simbolos',this)">🔤 Símbolos</button>
+    <button class="ctab" onclick="showC('aa','clinica',this)">🏥 Clínica</button>
+  </div>
+
+  <div id="aa-intro" class="cpanel active">
+    <div class="info-card">
+      <div class="card-label">🧬 Conceito Central</div>
+      <p class="body-text">Imagine que o seu corpo é uma construção. Os <strong>aminoácidos</strong> são os tijolos. As <strong>proteínas</strong> são as paredes, colunas e vigas feitas com esses tijolos. Sem tijolos, não há construção. Sem aminoácidos, não há proteínas — e sem proteínas, não há vida.</p>
+    </div>
+    <div class="info-card">
+      <div class="card-label">📌 Definição</div>
+      <p class="body-text">Aminoácidos são compostos orgânicos que possuem obrigatoriamente dois grupos funcionais no mesmo carbono alfa (α):</p>
+      <div style="display:flex;gap:12px;margin:14px 0;flex-wrap:wrap">
+        <div class="hbox hbox-green" style="flex:1;min-width:180px">
+          <div class="hbox-title">Grupo Amino (NH₂)</div>
+          <p style="font-size:0.83rem">Caráter básico — aceita próton (H⁺). É a "cabeça" do aminoácido.</p>
+        </div>
+        <div class="hbox hbox-purple" style="flex:1;min-width:180px">
+          <div class="hbox-title">Grupo Carboxilo (COOH)</div>
+          <p style="font-size:0.83rem">Caráter ácido — doa próton. É a "cauda" do aminoácido.</p>
+        </div>
+      </div>
+      <p class="body-text">Fórmula geral: <strong style="font-family:var(--font-m);color:var(--accent)">R — Cα — COOH / NH₂</strong> onde <strong>R</strong> é a cadeia lateral que diferencia cada aminoácido.</p>
+    </div>
+    <div class="info-card">
+      <div class="card-label yellow">⚡ Os 20% que valem 80%</div>
+      <ul class="styled">
+        <li>Existem <strong>20 aminoácidos padrão</strong> que formam todas as proteínas humanas</li>
+        <li>Todos são aminoácidos do tipo <strong>alfa (α)</strong> — grupo amino e carboxilo no mesmo carbono</li>
+        <li>A diferença entre eles está exclusivamente no <strong>grupo R (cadeia lateral)</strong></li>
+        <li>A exceção é a <strong>Prolina</strong> — grupo amino faz parte de um anel rígido (imino)</li>
+        <li>Além dos 20, existem aminoácidos não proteicos com funções biológicas próprias (ex: homocisteína, GABA)</li>
+      </ul>
+    </div>
+    <div class="hbox hbox-yellow">
+      <div class="hbox-title">⚠️ Pegadinha de Prova</div>
+      <p style="font-size:0.85rem">A Prolina NÃO é tecnicamente um α-aminoácido — é um <strong>imino</strong>ácido. Seu grupo amino está dentro de um anel, sem hidrogênio livre. Por isso ela <strong>quebra</strong> a α-hélice das proteínas!</p>
+    </div>
+  </div>
+
+  <div id="aa-estrutura" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">🔬 Anatomia de um Aminoácido</div>
+      <p class="body-text">Pense em um aminoácido como uma pessoa de braços abertos: o braço esquerdo é o grupo carboxilo (ácido), o braço direito é o grupo amino (básico), a cabeça é o hidrogênio, e o corpo é o grupo R.</p>
+      <div class="info-grid" style="margin-top:14px">
+        <div class="ig-item"><div class="ig-label">Carbono Alfa (α)</div><div class="ig-val">Centro da molécula — ligado a TODOS os outros grupos</div></div>
+        <div class="ig-item"><div class="ig-label">Grupo -NH₂</div><div class="ig-val">Amino — básico — sempre presente (exceto Prolina)</div></div>
+        <div class="ig-item"><div class="ig-label">Grupo -COOH</div><div class="ig-val">Carboxilo — ácido — sempre presente em todos os 20</div></div>
+        <div class="ig-item"><div class="ig-label">Grupo R</div><div class="ig-val">Cadeia lateral — é o que diferencia cada aminoácido</div></div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="card-label purple">🔗 Ligação Peptídica</div>
+      <p class="body-text">Quando dois aminoácidos se unem, o grupo <strong>COOH</strong> de um reage com o <strong>NH₂</strong> do outro, liberando uma molécula de <strong>água</strong>. A ligação formada é chamada de <strong>ligação peptídica</strong> (–CO–NH–). É uma ligação <strong>covalente</strong>, forte e com característica de dupla ligação parcial (plana e rígida).</p>
+      <div class="flow" style="margin-top:14px">
+        <div class="flow-step">
+          <div class="flow-dot">1</div>
+          <div class="flow-content">
+            <div class="flow-title">Dois aminoácidos se aproximam</div>
+            <div class="flow-desc">COOH do AA1 + NH₂ do AA2</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot">2</div>
+          <div class="flow-content">
+            <div class="flow-title">Reação de condensação</div>
+            <div class="flow-desc">Liberação de H₂O — reação endergônica (gasta energia ATP via ribossomo)</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-dot">3</div>
+          <div class="flow-content">
+            <div class="flow-title">Dipeptídeo formado</div>
+            <div class="flow-desc">Ligação –CO–NH– entre os dois aminoácidos. Repetindo: oligopeptídeo → polipeptídeo → proteína</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Mnemônico</div>
+      <div class="mnemonic-text">Ligação peptídica = "Casamento com expulsão de água"<br>COOH + NH₂ → CO-NH + H₂O<br>Cabeça a cauda (N-terminal → C-terminal)</div>
+    </div>
+  </div>
+
+  <div id="aa-quiral" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">🌀 O que é Quiralidade?</div>
+      <p class="body-text">O carbono alfa está ligado a <strong>4 grupos diferentes</strong>. Isso o torna um <strong>carbono quiral</strong> (assimétrico). A consequência? O aminoácido pode existir em duas formas que são imagem especular uma da outra — como as suas mãos: idênticas, mas não superponíveis.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="hbox hbox-green">
+        <div class="hbox-title">Forma L (Levo)</div>
+        <p style="font-size:0.83rem">✅ É a forma encontrada em <strong>TODAS</strong> as proteínas humanas. A natureza "escolheu" apenas a forma L. Gira a luz polarizada para a esquerda.</p>
+      </div>
+      <div class="hbox hbox-red">
+        <div class="hbox-title">Forma D (Dextro)</div>
+        <p style="font-size:0.83rem">❌ Encontrada em paredes bacterianas (peptideoglicano) e alguns antibióticos. <strong>Não é usada</strong> nas proteínas humanas normais.</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="card-label pink">🏥 Importância Clínica</div>
+      <ul class="styled">
+        <li><strong>Fármacos quirais:</strong> só um enantiômero é ativo. Ex: ibuprofeno — o S-(+) é mais potente que o R-(-)</li>
+        <li><strong>Enzimas são quirais:</strong> reconhecem apenas a forma L dos aminoácidos (alta especificidade)</li>
+        <li><strong>Antibióticos:</strong> vancomicina age na parede bacteriana (D-Ala-D-Ala) sem afetar proteínas humanas</li>
+        <li><strong>Glicina é a exceção:</strong> único aminoácido SEM carbono quiral (R = H → dois grupos iguais)</li>
+      </ul>
+    </div>
+    <div class="hbox hbox-yellow">
+      <div class="hbox-title">⚠️ Pegadinha</div>
+      <p style="font-size:0.85rem">A GLICINA não tem atividade óptica porque seu carbono alfa está ligado a <strong>dois hidrogênios</strong> (grupo R = H). Não há carbono quiral, portanto não existem formas L e D para a glicina!</p>
+    </div>
+  </div>
+
+  <div id="aa-classif" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">📦 Classificação pelo Grupo R</div>
+      <p class="body-text" style="margin-bottom:14px">O grupo R determina as propriedades do aminoácido. A classificação mais importante para a prova é pela <strong>polaridade do grupo R</strong>:</p>
+      <div class="table-wrap">
+        <table class="bio-table">
+          <tr><th>Classe</th><th>Característica</th><th>Exemplos</th><th>Clínica</th></tr>
+          <tr><td><strong>Não polares (hidrófobos)</strong></td><td>Evitam água, se agrupam no interior proteico</td><td>Ala, Val, Leu, Ile, Pro, Phe, Trp, Met</td><td>Interior hidrofóbico das membranas</td></tr>
+          <tr><td><strong>Polares sem carga</strong></td><td>Formam pontes de H com água — hidrofílicos</td><td>Gly, Ser, Thr, Cys, Tyr, Asn, Gln</td><td>Cys forma pontes dissulfeto (estrutura proteica)</td></tr>
+          <tr><td><strong>Carga positiva (+) pH 7</strong></td><td>Básicos — carregados positivamente</td><td>Lys (K), Arg (R), His (H)</td><td>Ligam DNA (histonas), sítios ativos de enzimas</td></tr>
+          <tr><td><strong>Carga negativa (-) pH 7</strong></td><td>Ácidos — carregados negativamente</td><td>Asp (D), Glu (E)</td><td>Glutamato = neurotransmissor; Asp = ciclo do N</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Como memorizar os básicos (+ carga)</div>
+      <div class="mnemonic-text">HAL = His + Arg + Lys<br>"HAL é basicão" (carga positiva em pH fisiológico)<br>His é especial: pKa ≈ 6 → pode ser + ou neutro em pH 7</div>
+    </div>
+  </div>
+
+  <div id="aa-essenciais" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">⭐ Aminoácidos Essenciais</div>
+      <p class="body-text">São aqueles que o organismo <strong>NÃO consegue sintetizar</strong> (ou sintetiza em quantidade insuficiente). Precisam vir obrigatoriamente da <strong>dieta</strong>. São 9 no adulto, 10 na criança (+ arginina e histidina).</p>
+    </div>
+    <div class="hbox hbox-green" style="margin-bottom:14px">
+      <div class="hbox-title">Os 9 Essenciais no Adulto</div>
+      <div class="mnemonic-text" style="color:var(--accent)">FVT LIM HHT<br>Fen-Val-Tre · Leu-Ile-Met · His-His-Trp<br><br>Fenilalanina · Valina · Treonina<br>Leucina · Isoleucina · Metionina<br>Histidina · Lisina (K) · Triptofano</div>
+    </div>
+    <div class="info-card">
+      <div class="card-label purple">🏥 Aplicação Clínica</div>
+      <ul class="styled">
+        <li><strong>Fenilcetonúria (PKU):</strong> deficiência da enzima fenilalanina hidroxilase → acúmulo de Phe → retardo mental. Dieta sem fenilalanina desde o nascimento</li>
+        <li><strong>Alcaptonúria:</strong> deficiência de homogentisato oxidase → acúmulo de ácido homogentísico → urina escurece ao ar, artrite</li>
+        <li><strong>Triptofano:</strong> precursor da serotonina e melatonina. Deficiência → pelágra (deficiência de niacina, que é derivada do Trp)</li>
+        <li><strong>Metionina → Homocisteína:</strong> homocisteína elevada = risco cardiovascular (aterosclerose)</li>
+      </ul>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Mnemônico clássico</div>
+      <div class="mnemonic-text">PVTIMHFLK<br>"Pra Vencer Todo Inimigo, Mostre His, Fen, Leu, K(Lis)"<br>Phe · Val · Thr · Ile · Met · His · Phe · Leu · Lys (+Trp)</div>
+    </div>
+  </div>
+
+  <div id="aa-simbolos" class="cpanel">
+    <div class="table-wrap">
+      <div class="table-title">Tabela Completa — 20 Aminoácidos Proteicos</div>
+      <table class="bio-table">
+        <tr><th>Nome</th><th>3 letras</th><th>1 letra</th><th>Essencial?</th><th>Grupo R</th></tr>
+        <tr><td>Alanina</td><td>Ala</td><td>A</td><td>—</td><td>Não polar</td></tr>
+        <tr><td>Arginina</td><td>Arg</td><td>R</td><td>Criança</td><td>+ carregado</td></tr>
+        <tr><td>Asparagina</td><td>Asn</td><td>N</td><td>—</td><td>Polar sem carga</td></tr>
+        <tr><td>Ácido Aspártico</td><td>Asp</td><td>D</td><td>—</td><td>- carregado</td></tr>
+        <tr><td>Cisteína</td><td>Cys</td><td>C</td><td>—</td><td>Polar (–SH)</td></tr>
+        <tr><td>Glutamina</td><td>Gln</td><td>Q</td><td>—</td><td>Polar sem carga</td></tr>
+        <tr><td>Ácido Glutâmico</td><td>Glu</td><td>E</td><td>—</td><td>- carregado</td></tr>
+        <tr><td>Glicina</td><td>Gly</td><td>G</td><td>—</td><td>Não polar (H)</td></tr>
+        <tr><td>Histidina</td><td>His</td><td>H</td><td>✅ Criança</td><td>+ carregado (pKa≈6)</td></tr>
+        <tr><td>Isoleucina</td><td>Ile</td><td>I</td><td>✅</td><td>Não polar</td></tr>
+        <tr><td>Leucina</td><td>Leu</td><td>L</td><td>✅</td><td>Não polar</td></tr>
+        <tr><td>Lisina</td><td>Lys</td><td>K</td><td>✅</td><td>+ carregado</td></tr>
+        <tr><td>Metionina</td><td>Met</td><td>M</td><td>✅ (1º codon)</td><td>Não polar (S)</td></tr>
+        <tr><td>Fenilalanina</td><td>Phe</td><td>F</td><td>✅</td><td>Não polar aromático</td></tr>
+        <tr><td>Prolina</td><td>Pro</td><td>P</td><td>—</td><td>Imino (anel rígido)</td></tr>
+        <tr><td>Serina</td><td>Ser</td><td>S</td><td>—</td><td>Polar (–OH)</td></tr>
+        <tr><td>Treonina</td><td>Thr</td><td>T</td><td>✅</td><td>Polar (–OH)</td></tr>
+        <tr><td>Triptofano</td><td>Trp</td><td>W</td><td>✅</td><td>Não polar aromático</td></tr>
+        <tr><td>Tirosina</td><td>Tyr</td><td>Y</td><td>—</td><td>Polar aromático</td></tr>
+        <tr><td>Valina</td><td>Val</td><td>V</td><td>✅</td><td>Não polar</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="aa-clinica" class="cpanel">
+    <div class="info-card">
+      <div class="card-label pink">🏥 Aminoácidos e Doenças — Alta Relevância</div>
+      <ul class="styled">
+        <li><strong>Fenilcetonúria (PKU):</strong> Fenilalanina acumula → dano cerebral. Triagem neonatal = "teste do pezinho"</li>
+        <li><strong>Homocistinúria / Homocisteína elevada:</strong> Met → Homocisteína → risco de trombose, aterosclerose, AVC. Trata com B6, B12, ácido fólico</li>
+        <li><strong>Gota:</strong> não diretamente aminoácido, mas purinas (bases nitrogenadas de AA) → ácido úrico → cristais nas articulações</li>
+        <li><strong>Marasmo:</strong> deficiência total de proteínas + calorias → perda de massa muscular, criança "ossuda"</li>
+        <li><strong>Kwashiorkor:</strong> deficiência de proteína com calorias suficientes → edema, barriga protuberante, cabelos avermelhados</li>
+        <li><strong>Albinismo:</strong> Tirosina → Melanina. Deficiência de tirosinase → sem melanina → pele/cabelo brancos, fotossensibilidade</li>
+      </ul>
+    </div>
+    <div class="hbox hbox-yellow">
+      <div class="hbox-title">⚠️ NÃO CONFUNDA — Marasmo vs Kwashiorkor</div>
+      <p style="font-size:0.85rem"><strong>Marasmo:</strong> sem proteína E sem caloria → criança com aparência esquelética, sem edema<br><strong>Kwashiorkor:</strong> sem proteína MAS com caloria → edema por hipoalbuminemia (↓ pressão oncótica), barriga inchada, criança "gorda" mas desnutrida</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PROTEÍNAS -->
+<div id="panel-prot" class="panel">
+<div class="content-wrap">
+  <div class="section-header">
+    <h2>🔗 Proteínas</h2>
+    <p>As moléculas mais abundantes da célula — estrutura, função e doenças</p>
+  </div>
+  <div class="ctabs">
+    <button class="ctab active" onclick="showC('prot','intro',this)">📋 Visão Geral</button>
+    <button class="ctab" onclick="showC('prot','estrutura',this)">🏗️ 4 Estruturas</button>
+    <button class="ctab" onclick="showC('prot','classif',this)">📦 Classificação</button>
+    <button class="ctab" onclick="showC('prot','funcoes',this)">⚙️ Funções</button>
+    <button class="ctab" onclick="showC('prot','denat',this)">🔥 Desnaturalização</button>
+    <button class="ctab" onclick="showC('prot','doencas',this)">🏥 Doenças</button>
+  </div>
+
+  <div id="prot-intro" class="cpanel active">
+    <div class="info-card">
+      <div class="card-label">📋 O que são Proteínas?</div>
+      <p class="body-text">Imagine uma fábrica: os aminoácidos são as matérias-primas, e as proteínas são os produtos finais — cada um com uma função específica. Uma proteína é um <strong>polipeptídeo</strong> de alta massa molecular formado pela união de aminoácidos via ligações peptídicas. Constituem <strong>50% ou mais do peso seco celular</strong>.</p>
+    </div>
+    <div class="info-card">
+      <div class="card-label yellow">⚡ Os 20% que valem 80%</div>
+      <ul class="styled">
+        <li>Proteínas são polímeros de aminoácidos unidos por <strong>ligações peptídicas covalentes</strong></li>
+        <li>Contêm C, H, N, O e geralmente S (azufre). O N (~16%) <strong>diferencia</strong> proteínas de carboidratos e gorduras</li>
+        <li>A sequência de aminoácidos (estrutura primária) determina TUDO sobre a proteína</li>
+        <li>Dividem-se em <strong>simples</strong> (só AA) e <strong>conjugadas</strong> (AA + grupo prostético)</li>
+        <li>Morfologicamente: <strong>fibrosas</strong> (estrutural, insolúvel) e <strong>globulares</strong> (funcional, solúvel)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="prot-estrutura" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">🏗️ As 4 Estruturas Proteicas</div>
+      <p class="body-text" style="margin-bottom:14px">Pense assim: uma proteína é como um origami. A estrutura primária é a folha de papel. A secundária é quando você faz as primeiras dobras. A terciária é a figura tridimensional final. A quaternária é quando você junta várias figuras.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot">1ª</div>
+        <div class="flow-content">
+          <div class="flow-title">Estrutura Primária</div>
+          <div class="flow-desc"><strong>O que é:</strong> Sequência linear de aminoácidos unidos por ligações peptídicas covalentes.<br><strong>Determinada por:</strong> DNA (código genético)<br><strong>Importância:</strong> UMA ÚNICA mudança pode causar doença. Ex: anemia falciforme = troca de Glu por Val na β-globina → hemácias em forma de foice</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">2ª</div>
+        <div class="flow-content">
+          <div class="flow-title">Estrutura Secundária</div>
+          <div class="flow-desc"><strong>O que é:</strong> Padrão periódico de dobramento da cadeia por pontes de hidrogênio do esqueleto peptídico.<br><strong>Tipos:</strong> α-hélice (espiral estabilizada por pontes H) e folha-β pregueada (cadeia em ziguezague).<br><strong>Prolina QUEBRA</strong> a α-hélice (anel rígido, sem H livre para ponte)</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">3ª</div>
+        <div class="flow-content">
+          <div class="flow-title">Estrutura Terciária</div>
+          <div class="flow-desc"><strong>O que é:</strong> Dobramento tridimensional da cadeia — forma globular compacta.<br><strong>Estabilizada por:</strong> pontes dissulfeto (Cys-Cys), interações hidrofóbicas, iônicas, pontes H das cadeias laterais.<br><strong>Determina:</strong> sítio ativo de enzimas, especificidade funcional</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">4ª</div>
+        <div class="flow-content">
+          <div class="flow-title">Estrutura Quaternária</div>
+          <div class="flow-desc"><strong>O que é:</strong> Associação de duas ou mais cadeias polipeptídicas (subunidades).<br><strong>Exemplos:</strong> Hemoglobina (2α + 2β), Colágeno (3 cadeias em hélice tripla), queratina.<br><strong>Nota:</strong> nem toda proteína tem estrutura quaternária — mioglobina tem apenas 1 cadeia</div>
+        </div>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Mnemônico</div>
+      <div class="mnemonic-text">1ª = Sequência (peptídica covalente)<br>2ª = Dobramento local (pontes H do esqueleto)<br>3ª = Forma 3D (interações das cadeias laterais)<br>4ª = Multímero (várias subunidades juntas)</div>
+    </div>
+    <div class="hbox hbox-yellow">
+      <div class="hbox-title">⚠️ Pegadinha — Anemia Falciforme</div>
+      <p style="font-size:0.85rem">É um problema de <strong>estrutura primária</strong> (troca de Glu → Val na posição 6 da β-globina). Essa mudança cria uma região hidrofóbica → hemoglobinas se agregam em baixa O₂ → hemácias se deformam em foice → hemólise + obstrução vascular.</p>
+    </div>
+  </div>
+
+  <div id="prot-classif" class="cpanel">
+    <div class="table-wrap">
+      <div class="table-title">Classificação por Composição</div>
+      <table class="bio-table">
+        <tr><th>Tipo</th><th>Hidrólise produz</th><th>Exemplos</th></tr>
+        <tr><td><strong>Simples</strong></td><td>Somente aminoácidos</td><td>Albumina, Globulina, Colágeno, Queratina</td></tr>
+        <tr><td><strong>Conjugadas</strong></td><td>AA + grupo prostético</td><td>Nucleoproteínas, Lipoproteínas, Glicoproteínas, Metaloproteínas, Fosfoproteínas</td></tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Classificação por Conformação</div>
+      <table class="bio-table">
+        <tr><th>Tipo</th><th>Estrutura</th><th>Solubilidade</th><th>Função</th><th>Exemplos</th></tr>
+        <tr><td><strong>Fibrosas</strong></td><td>Cadeias paralelas em fibras/lâminas</td><td>Insolúvel</td><td>Estrutural</td><td>Colágeno (tendão, osso), α-Queratina (cabelo, unhas)</td></tr>
+        <tr><td><strong>Globulares</strong></td><td>Compactadas em forma esférica</td><td>Solúvel</td><td>Dinâmica/funcional</td><td>Hemoglobina, enzimas, anticorpos, insulina</td></tr>
+        <tr><td><strong>Mistas</strong></td><td>Intermediária</td><td>Solúvel em sal</td><td>Estrutural + dinâmica</td><td>Miosina (músculo), Fibrinogênio (coagulação)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="prot-funcoes" class="cpanel">
+    <div class="table-wrap">
+      <div class="table-title">Funções das Proteínas — Classificação Completa</div>
+      <table class="bio-table">
+        <tr><th>Função</th><th>Proteína</th><th>Onde age</th></tr>
+        <tr><td>Enzimática</td><td>Hexoquinase, DNA polimerase, Tripsina</td><td>Catálise de reações metabólicas</td></tr>
+        <tr><td>Transporte</td><td>Hemoglobina (O₂), Mioglobina (O₂ no músculo), Albumina (ácidos graxos, Ca)</td><td>Sangue e tecidos</td></tr>
+        <tr><td>Estrutural</td><td>Colágeno, Elastina, Queratina</td><td>Pele, osso, tendão, cabelo</td></tr>
+        <tr><td>Contração</td><td>Actina + Miosina</td><td>Músculo esquelético, cardíaco e liso</td></tr>
+        <tr><td>Hormonal</td><td>Insulina, Glucagon, GH</td><td>Regulação do metabolismo</td></tr>
+        <tr><td>Imune (Proteção)</td><td>Anticorpos (IgG, IgM...), Trombina, Fibrinogênio</td><td>Defesa + coagulação</td></tr>
+        <tr><td>Reserva</td><td>Ovalbumina (clara do ovo), Caseína (leite), Ferritina (ferro)</td><td>Estoque de nutrientes</td></tr>
+        <tr><td>Receptora</td><td>Receptores de membrana (insulina, adrenalina)</td><td>Sinalização celular</td></tr>
+      </table>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Mnemônico — Funções</div>
+      <div class="mnemonic-text">E-T-E-C-H-I-R-R<br>Enzimática · Transporte · Estrutural · Contração<br>Hormonal · Imune · Reserva · Receptora</div>
+    </div>
+  </div>
+
+  <div id="prot-denat" class="cpanel">
+    <div class="info-card">
+      <div class="card-label red">🔥 Desnaturalização</div>
+      <p class="body-text">Desnaturalização é a <strong>perda da estrutura tridimensional</strong> (3ª e 4ª estruturas) da proteína — sem quebrar as ligações peptídicas da cadeia principal. A sequência de aminoácidos permanece intacta, mas a função é perdida.</p>
+      <div class="hbox hbox-red" style="margin-top:14px">
+        <div class="hbox-title">Causas de Desnaturalização</div>
+        <ul class="styled">
+          <li><strong>Calor:</strong> maioria das proteínas globulares desnatura > 60-70°C (ex: clara do ovo ao cozinhar)</li>
+          <li><strong>pH extremo:</strong> ácido forte (HCl) ou base forte (NaOH) rompem interações iônicas e pontes H</li>
+          <li><strong>Detergentes (SDS):</strong> rompem interações hidrofóbicas</li>
+          <li><strong>Agentes redutores (β-mercaptoetanol):</strong> quebram pontes dissulfeto (Cys-Cys)</li>
+          <li><strong>Uréia concentrada:</strong> denatura por quebra de pontes H</li>
+        </ul>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="card-label purple">🔄 Renaturalização</div>
+      <p class="body-text">Ao contrário do que se pensava, a desnaturalização pode ser <strong>reversível</strong>. Se o agente desnaturante for removido cuidadosamente, algumas proteínas recuperam sua forma nativa espontaneamente — esse processo é chamado de <strong>renaturalização</strong>. Isso prova que a estrutura 3D é determinada pela sequência de aminoácidos (estrutura primária).</p>
+    </div>
+    <div class="hbox hbox-yellow">
+      <div class="hbox-title">⚠️ Pegadinha de Prova</div>
+      <p style="font-size:0.85rem">Desnaturalização <strong>NÃO quebra</strong> ligações peptídicas. A proteína desnaturada ainda tem a mesma estrutura primária (mesma sequência de AA). O que se perde é a estrutura secundária, terciária e quaternária — e junto com elas, a função biológica.</p>
+    </div>
+  </div>
+
+  <div id="prot-doencas" class="cpanel">
+    <div class="info-card">
+      <div class="card-label pink">🏥 Doenças Relacionadas a Proteínas</div>
+      <ul class="styled">
+        <li><strong>Marasmo:</strong> deficiência de proteína + caloria → criança esquelética, atrofia muscular grave</li>
+        <li><strong>Kwashiorkor:</strong> deficiência de proteína (calorias ok) → hipoalbuminemia → edema (barriga inchada), cabelo avermelhado, apático</li>
+        <li><strong>Caquexia:</strong> degradação muscular intensa associada a câncer, AIDS, DPOC, insuficiência renal. Saldo negativo de nitrogênio</li>
+        <li><strong>Escorbuto:</strong> deficiência de Vitamina C → colágeno defeituoso → sangramento, cicatrização ruim, dentes caem</li>
+        <li><strong>Síndrome de Ehlers-Danlos:</strong> colágeno defeituoso hereditário → hipermobilidade articular, pele hiperextensível, fragilidade tecidual</li>
+        <li><strong>Anemia Falciforme:</strong> estrutura primária alterada (Glu→Val) → Hb S polimeriza sem O₂</li>
+        <li><strong>Doença de Wilson:</strong> ceruloplasmina não incorpora cobre → cobre acumula no fígado, SNC (anéis de Kayser-Fleischer)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ENZIMAS -->
+<div id="panel-enz" class="panel">
+<div class="content-wrap">
+  <div class="section-header">
+    <h2>⚡ Enzimas</h2>
+    <p>Catalisadores biológicos — os motores do metabolismo</p>
+  </div>
+  <div class="ctabs">
+    <button class="ctab active" onclick="showC('enz','intro',this)">📋 O que são?</button>
+    <button class="ctab" onclick="showC('enz','modelos',this)">🔑 Modelos</button>
+    <button class="ctab" onclick="showC('enz','fatores',this)">📊 Fatores</button>
+    <button class="ctab" onclick="showC('enz','inibicao',this)">🚫 Inibição</button>
+    <button class="ctab" onclick="showC('enz','cofatores',this)">🔧 Cofatores</button>
+    <button class="ctab" onclick="showC('enz','kinetica',this)">📈 Cinética</button>
+    <button class="ctab" onclick="showC('enz','clinica',this)">🏥 Diagnóstico</button>
+  </div>
+
+  <div id="enz-intro" class="cpanel active">
+    <div class="info-card">
+      <div class="card-label">⚡ Analogia do Chef</div>
+      <p class="body-text">Imagine uma cozinha industrial: os ingredientes são os <strong>substratos</strong>, o prato pronto é o <strong>produto</strong>, e o chef que transforma sem se consumir é a <strong>enzima</strong>. O chef não vira prato — ele apenas facilita e acelera a transformação. Essa é a essência da catálise enzimática.</p>
+    </div>
+    <div class="info-card">
+      <div class="card-label yellow">⚡ Conceitos Fundamentais</div>
+      <ul class="styled">
+        <li>Enzimas são <strong>proteínas</strong> (quase todas — exceto ribozimas, que são RNA)</li>
+        <li>São <strong>biocatalizadoras</strong>: aceleram reações sem serem consumidas</li>
+        <li>Reduzem a <strong>energia de ativação</strong> (Ea) — não alteram o equilíbrio da reação</li>
+        <li><strong>Especificidade:</strong> cada enzima age sobre um substrato (ou poucos) específico</li>
+        <li><strong>Sítio ativo:</strong> região da enzima onde o substrato se liga e a reação ocorre</li>
+        <li>Nomenclatura: sufixo <strong>-ase</strong> + nome do substrato (ex: Urease = catalisa uréia)</li>
+      </ul>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">6 Classes Internacionais de Enzimas (IUB)</div>
+      <table class="bio-table">
+        <tr><th>Classe</th><th>Reação</th><th>Exemplo clínico</th></tr>
+        <tr><td>1. Oxidorredutases</td><td>Transferem elétrons/H</td><td>LDH (infarto), ALT/AST (hepatite)</td></tr>
+        <tr><td>2. Transferases</td><td>Transferem grupos químicos</td><td>Transaminases (diagnóstico hepático/cardíaco)</td></tr>
+        <tr><td>3. Hidrolases</td><td>Quebram por adição de H₂O</td><td>Lipase (pancreatite), Amilase (pancreatite)</td></tr>
+        <tr><td>4. Liases</td><td>Adicionam/removem grupos sem H₂O</td><td>Aldolase (glicólise)</td></tr>
+        <tr><td>5. Isomerases</td><td>Interconvertem isômeros</td><td>Fosfoglicose isomerase (glicólise)</td></tr>
+        <tr><td>6. Ligases (Sintetases)</td><td>Unem moléculas com ATP</td><td>DNA ligase (replicação)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="enz-modelos" class="cpanel">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+      <div class="info-card">
+        <div class="card-label">🗝️ Modelo Chave-Fechadura</div>
+        <p class="body-text" style="font-size:0.85rem">Proposto por <strong>Emil Fischer (1894)</strong>. O sítio ativo tem forma rígida e complementar ao substrato — como uma chave que só entra numa fechadura específica. <br><br>⚠️ <strong>Limitação:</strong> não explica como a enzima "força" a reação nem a flexibilidade enzimática observada.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-label purple">🤝 Modelo do Encaixe Induzido</div>
+        <p class="body-text" style="font-size:0.85rem">Proposto por <strong>Koshland (1958)</strong>. O sítio ativo é <strong>flexível</strong> — ao se ligar ao substrato, a enzima muda de conformação, envolvendo o substrato e gerando tensão molecular que facilita a reação. <br><br>✅ <strong>Modelo atual aceito.</strong></p>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Como diferenciar na prova</div>
+      <div class="mnemonic-text">Chave-Fechadura = Fischer = Forma FIXA, complementar<br>Encaixe Induzido = Koshland = FLEXÍVEL, a enzima se adapta<br>Prova sempre vai perguntar qual é o modelo ATUAL = Encaixe Induzido</div>
+    </div>
+  </div>
+
+  <div id="enz-fatores" class="cpanel">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot">1</div>
+        <div class="flow-content">
+          <div class="flow-title">Concentração de Substrato [S]</div>
+          <div class="flow-desc">↑[S] → ↑velocidade até atingir Vmax (saturação). Além de Vmax: mais substrato não aumenta velocidade — todas as enzimas estão ocupadas. Gráfico: hipérbole de Michaelis-Menten.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">2</div>
+        <div class="flow-content">
+          <div class="flow-title">Concentração de Enzima [E]</div>
+          <div class="flow-desc">↑[E] → ↑velocidade de forma proporcional (desde que substrato não seja limitante). Usado clinicamente: medir enzimas séricas para diagnóstico.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">3</div>
+        <div class="flow-content">
+          <div class="flow-title">pH</div>
+          <div class="flow-desc">Cada enzima tem pH ótimo. <br>Pepsina: pH 2 (estômago ácido) | Tripsina: pH 8 (intestino básico) | Enzimas do sangue: pH 7,4<br>pH extremo → desnaturação → perda total da atividade</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">4</div>
+        <div class="flow-content">
+          <div class="flow-title">Temperatura</div>
+          <div class="flow-desc">↑Temperatura → ↑velocidade (até temperatura ótima ≈ 37°C no humano). Acima: desnaturação → curva em sino (campana). Febre alta → desnaturação de enzimas → risco de morte.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">5</div>
+        <div class="flow-content">
+          <div class="flow-title">Salinidade e Concentração do Produto</div>
+          <div class="flow-desc">Sal interfere nas interações iônicas do sítio ativo. Acúmulo de produto → inibe a reação (feedback negativo — regulação metabólica). In vivo: produtos são rapidamente removidos.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="enz-inibicao" class="cpanel">
+    <div class="table-wrap">
+      <div class="table-title">Tipos de Inibição Enzimática</div>
+      <table class="bio-table">
+        <tr><th>Tipo</th><th>Onde se liga</th><th>Efeito em Km</th><th>Efeito em Vmax</th><th>Reversível?</th></tr>
+        <tr><td><strong>Competitiva</strong></td><td>Sítio ativo (compete com substrato)</td><td class="warn">↑ Km</td><td class="ok">Vmax normal</td><td class="ok">Sim</td></tr>
+        <tr><td><strong>Não competitiva</strong></td><td>Sítio alostérico (outro lugar)</td><td class="ok">Km normal</td><td class="danger">↓ Vmax</td><td class="ok">Sim</td></tr>
+        <tr><td><strong>Anticompetitiva</strong></td><td>Só ao complexo E-S formado</td><td class="ok">↓ Km</td><td class="danger">↓ Vmax</td><td class="ok">Sim</td></tr>
+        <tr><td><strong>Irreversível</strong></td><td>Sítio ativo (covalente)</td><td colspan="2">Inativa permanentemente</td><td class="danger">Não</td></tr>
+      </table>
+    </div>
+    <div class="info-card">
+      <div class="card-label pink">🏥 Exemplos Clínicos de Inibição</div>
+      <ul class="styled">
+        <li><strong>Inibição Competitiva — Metotrexato:</strong> inibe competitivamente a di-hidrofolato redutase (DHFR) → sem folato → sem DNA → mata células tumorais</li>
+        <li><strong>Inibição Irreversível — Organofosforados (inseticidas):</strong> inibem irreversivelmente a acetilcolinesterasa → acúmulo de acetilcolina → crise colinérgica (miose, broncospasmo, convulsão)</li>
+        <li><strong>Inibição Irreversível — Alopurinol:</strong> inibe xantina oxidase → menos ácido úrico → tratamento da gota (artrite gotosa)</li>
+        <li><strong>Penicilina:</strong> inibe irreversivelmente transpeptidases bacterianas → sem síntese de parede celular → morte bacteriana</li>
+        <li><strong>Inibição não competitiva — Metais pesados (Hg, Pb):</strong> ligam-se a grupos -SH de enzimas → inibição difusa → toxicidade</li>
+      </ul>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Como diferenciar Competitiva vs Não Competitiva</div>
+      <div class="mnemonic-text">Competitiva: Km ↑ (precisar de mais substrato para competir) / Vmax igual<br>"C de Competitiva = C de Km Cresce, Vmax Constante"<br><br>Não competitiva: Km igual / Vmax ↓<br>"Não competitiva não mexe no Km, mas mata o Vmax"</div>
+    </div>
+  </div>
+
+  <div id="enz-cofatores" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">🔧 Cofatores e Coenzimas</div>
+      <p class="body-text">Algumas enzimas precisam de "ajudantes" para funcionar. Esses ajudantes são chamados <strong>cofatores</strong>.</p>
+      <div class="info-grid" style="margin-top:14px">
+        <div class="ig-item"><div class="ig-label">Apoenzima</div><div class="ig-val">Parte proteica da enzima — inativa sozinha</div></div>
+        <div class="ig-item"><div class="ig-label">Cofator</div><div class="ig-val">Íon metálico OU molécula orgânica necessária para atividade</div></div>
+        <div class="ig-item"><div class="ig-label">Coenzima</div><div class="ig-val">Cofator orgânico (geralmente vitamina ou derivado). Ex: NAD⁺ (Vit B3), FAD (Vit B2), CoA (Vit B5)</div></div>
+        <div class="ig-item"><div class="ig-label">Holoenzima</div><div class="ig-val">Apoenzima + Cofator = Enzima ATIVA e completa</div></div>
+      </div>
+    </div>
+    <div class="hbox hbox-green">
+      <div class="hbox-title">Relação Coenzimas ↔ Vitaminas</div>
+      <ul class="styled">
+        <li><strong>NAD⁺ / NADH</strong> → derivado da Niacina (Vit B3) — deficiência: Pelágra</li>
+        <li><strong>FAD / FADH₂</strong> → derivado da Riboflavina (Vit B2) — deficiência: queilose, glossite</li>
+        <li><strong>CoA (Coenzima A)</strong> → derivado do Ácido Pantotênico (Vit B5)</li>
+        <li><strong>Piridoxal fosfato (PLP)</strong> → derivado da Vit B6 — essencial nas transaminases</li>
+        <li><strong>Tiamina pirofosfato (TPP)</strong> → derivado da Vit B1 — deficiência: Beribéri, Wernicke</li>
+      </ul>
+    </div>
+    <div class="mnemonic">
+      <div class="mnemonic-title">🧠 Mnemônico Holoenzima</div>
+      <div class="mnemonic-text">APO + Cofator = HOLO (completa)<br>"APO = APenas Proteína (incompleta, inativa)"<br>"HOLO = todo = completa = ativa"</div>
+    </div>
+  </div>
+
+  <div id="enz-kinetica" class="cpanel">
+    <div class="info-card">
+      <div class="card-label">📈 Cinética de Michaelis-Menten</div>
+      <p class="body-text">A equação de Michaelis-Menten descreve matematicamente como a velocidade de uma reação enzimática se relaciona com a concentração de substrato. O conceito mais importante é o <strong>Km</strong>.</p>
+    </div>
+    <div class="info-grid" style="margin-bottom:16px">
+      <div class="ig-item">
+        <div class="ig-label">Vmax</div>
+        <div class="ig-val">Velocidade máxima — quando todos os sítios ativos estão ocupados (enzima saturada)</div>
+      </div>
+      <div class="ig-item">
+        <div class="ig-label">Km (constante de Michaelis)</div>
+        <div class="ig-val">Concentração de substrato em que a velocidade = Vmax/2. Indica AFINIDADE: Km baixo = alta afinidade</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="card-label purple">🔄 Zimogênio (Proenzima)</div>
+      <p class="body-text">Um zimogênio é uma enzima em sua forma <strong>inativa</strong> — um precursor que precisa ser ativado por clivagem proteolítica (corte de um peptídeo de ativação).</p>
+      <ul class="styled" style="margin-top:10px">
+        <li><strong>Por que existem?</strong> Protegem o tecido de origem de ser digerido</li>
+        <li><strong>Zimogênio → Enzima ativa:</strong> Pepsinogênio → Pepsina (HCl gástrico); Tripsinogênio → Tripsina (Enteropeptidase); Protombina → Trombina (coagulação)</li>
+        <li><strong>Pancreatite aguda:</strong> ativação prematura de zimogênios pancreáticos DENTRO do pâncreas → autodigestão → inflamação grave</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="enz-clinica" class="cpanel">
+    <div class="table-wrap">
+      <div class="table-title">Enzimas Séricas — Diagnóstico Clínico</div>
+      <table class="bio-table">
+        <tr><th>Enzima</th><th>Normal (aprox.)</th><th>↑ Indica</th><th>Órgão</th></tr>
+        <tr><td><strong>AST (TGO/GOT)</strong></td><td>&lt; 40 UI/L</td><td>Infarto do miocárdio, hepatite, lesão muscular</td><td>Coração + Fígado</td></tr>
+        <tr><td><strong>ALT (TGP/GPT)</strong></td><td>&lt; 40 UI/L</td><td>Hepatite viral (mais específica para fígado)</td><td>Fígado</td></tr>
+        <tr><td><strong>Amilase</strong></td><td>&lt; 100 UI/L</td><td>Pancreatite aguda, parotidite</td><td>Pâncreas + Parótida</td></tr>
+        <tr><td><strong>Lipase</strong></td><td>&lt; 60 UI/L</td><td>Pancreatite aguda (mais específica)</td><td>Pâncreas</td></tr>
+        <tr><td><strong>Creatina Quinase (CK)</strong></td><td>variável</td><td>Infarto (CK-MB), miopatias</td><td>Coração + Músculo</td></tr>
+        <tr><td><strong>Fosfatase Alcalina (FA)</strong></td><td>30-120 UI/L</td><td>Doenças ósseas, colestase</td><td>Osso + Fígado</td></tr>
+        <tr><td><strong>Fosfatase Ácida</strong></td><td>baixo</td><td>Carcinoma de próstata metastático</td><td>Próstata</td></tr>
+        <tr><td><strong>GGT (Gama GT)</strong></td><td>&lt; 50 UI/L</td><td>Alcoolismo, doenças hepáticas</td><td>Fígado</td></tr>
+        <tr><td><strong>LDH isoenzima 5</strong></td><td>variável</td><td>Doenças hepáticas</td><td>Fígado</td></tr>
+        <tr><td><strong>Ceruloplasmina</strong></td><td>20-60 mg/dL</td><td>↓ na Doença de Wilson (cobre acumula)</td><td>Fígado</td></tr>
+      </table>
+    </div>
+    <div class="hbox hbox-yellow">
+      <div class="hbox-title">⚠️ Pegadinha — AST vs ALT</div>
+      <p style="font-size:0.85rem"><strong>ALT (GPT)</strong> é mais específica para <strong>fígado</strong> (hepatite viral → ALT muito alta)<br><strong>AST (GOT)</strong> sobe no <strong>infarto do miocárdio</strong> E hepatite<br><strong>Razão AST/ALT > 2:</strong> sugere hepatite alcoólica (GGT também ↑↑)<br>Organofosforado → acetilcolinesterase ↓ (não é sérica, mas é diagnóstico)</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TABELAS COMPARATIVAS -->
+<div id="panel-comp" class="panel">
+<div class="content-wrap">
+  <div class="section-header"><h2>📊 Tabelas de Alto Rendimento</h2><p>Comparações que mais caem na prova</p></div>
+
+  <div class="table-wrap">
+    <div class="table-title">Inibição Enzimática — Diferenciação Rápida</div>
+    <table class="bio-table">
+      <tr><th>Tipo</th><th>Sítio de ligação</th><th>Km</th><th>Vmax</th><th>Exemplo clínico</th></tr>
+      <tr><td>Competitiva</td><td>Sítio ativo</td><td class="warn">↑</td><td class="ok">= normal</td><td>Metotrexato (câncer), sulfas (bacteriostático)</td></tr>
+      <tr><td>Não competitiva</td><td>Sítio alostérico</td><td class="ok">= normal</td><td class="danger">↓</td><td>Metais pesados (Hg, Pb)</td></tr>
+      <tr><td>Anticompetitiva</td><td>Complexo E-S</td><td class="ok">↓</td><td class="danger">↓</td><td>Rara em clínica</td></tr>
+      <tr><td>Irreversível</td><td>Sítio ativo (covalente)</td><td colspan="2" style="text-align:center">Inativa permanentemente</td><td>Organofosforados, Penicilina, Alopurinol</td></tr>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-title">Estruturas Proteicas — Resumo</div>
+    <table class="bio-table">
+      <tr><th>Estrutura</th><th>O que é</th><th>Ligação responsável</th><th>Exemplo/Doença</th></tr>
+      <tr><td>1ª Primária</td><td>Sequência de aminoácidos</td><td>Peptídica (covalente)</td><td>Anemia falciforme (Glu→Val)</td></tr>
+      <tr><td>2ª Secundária</td><td>α-hélice ou β-folha</td><td>Pontes H do esqueleto</td><td>Prolina quebra α-hélice</td></tr>
+      <tr><td>3ª Terciária</td><td>Dobramento 3D</td><td>Pontes S-S, hidrofóbicas, iônicas</td><td>Sítio ativo das enzimas</td></tr>
+      <tr><td>4ª Quaternária</td><td>Múltiplas subunidades</td><td>Interações não covalentes</td><td>Hemoglobina (2α+2β)</td></tr>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-title">Marasmo vs Kwashiorkor vs Caquexia</div>
+    <table class="bio-table">
+      <tr><th>Doença</th><th>Causa</th><th>Clínica</th><th>Edema?</th></tr>
+      <tr><td>Marasmo</td><td>↓ proteína + ↓ caloria</td><td>Aparência esquelética, atrofia muscular grave</td><td class="danger">Não</td></tr>
+      <tr><td>Kwashiorkor</td><td>↓ proteína (calorias ok)</td><td>Edema, barriga inchada, cabelo avermelhado, apatia</td><td class="ok">Sim (↓ albumina)</td></tr>
+      <tr><td>Caquexia</td><td>Câncer/SIDA/DPOC</td><td>Perda muscular progressiva, fadiga, saldo N⁻</td><td class="warn">Variável</td></tr>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-title">Aminoácidos Essenciais (9 no adulto)</div>
+    <table class="bio-table">
+      <tr><th>Aminoácido</th><th>Abrev</th><th>Clínica se faltar</th></tr>
+      <tr><td>Fenilalanina</td><td>Phe / F</td><td>Fenilcetonúria (PKU) se há erro no metabolismo</td></tr>
+      <tr><td>Valina</td><td>Val / V</td><td>Síndrome do xarope de bordo (junto com Leu, Ile)</td></tr>
+      <tr><td>Treonina</td><td>Thr / T</td><td>Imunossupressão, crescimento prejudicado</td></tr>
+      <tr><td>Leucina</td><td>Leu / L</td><td>Síndrome do xarope de bordo, miopatia</td></tr>
+      <tr><td>Isoleucina</td><td>Ile / I</td><td>Síndrome do xarope de bordo</td></tr>
+      <tr><td>Metionina</td><td>Met / M</td><td>Precursor de homocisteína (risco CV se acumula)</td></tr>
+      <tr><td>Histidina</td><td>His / H</td><td>Anemia, déficit de crescimento em crianças</td></tr>
+      <tr><td>Lisina</td><td>Lys / K</td><td>Síntese de colágeno prejudicada, imunidade ↓</td></tr>
+      <tr><td>Triptofano</td><td>Trp / W</td><td>Pelágra (precursor niacina), depressão (↓ serotonina)</td></tr>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-title">Enzimas Séricas — Diagnóstico Rápido</div>
+    <table class="bio-table">
+      <tr><th>Enzima ↑</th><th>Pensar em</th></tr>
+      <tr><td>ALT >> AST</td><td>Hepatite viral aguda</td></tr>
+      <tr><td>AST >> ALT (ratio > 2) + GGT↑</td><td>Hepatite alcoólica</td></tr>
+      <tr><td>AST + CK-MB</td><td>Infarto agudo do miocárdio</td></tr>
+      <tr><td>Amilase + Lipase</td><td>Pancreatite aguda (Lipase mais específica)</td></tr>
+      <tr><td>Fosfatase alcalina</td><td>Colestase OU doença óssea (Paget, metástase óssea)</td></tr>
+      <tr><td>Fosfatase ácida</td><td>Carcinoma de próstata com metástase</td></tr>
+      <tr><td>Ceruloplasmina ↓ + Cobre ↑ no fígado</td><td>Doença de Wilson</td></tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="panel-fc" class="panel">
+<div class="content-wrap">
+  <div class="section-header"><h2>🃏 Flashcards — Active Recall</h2><p>Clique no card para revelar. Avalie sua memorização.</p></div>
+  <div id="fcArea"></div>
+</div>
+</div>
+
+<!-- QUIZ -->
+<div id="panel-quiz" class="panel">
+<div class="content-wrap">
+  <div class="section-header"><h2>📝 Simulado — 30 Questões</h2><p>Múltipla escolha com feedback detalhado e aplicação clínica</p></div>
+  <div id="quizArea"></div>
+</div>
+</div>
+
+<!-- GAMI -->
+<div id="panel-gami" class="panel">
+<div class="content-wrap">
+  <div class="section-header"><h2>🏆 Seu Progresso</h2><p>XP, conquistas e estatísticas</p></div>
+  <div id="gamiArea"></div>
+</div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const S = { xp: 0, medals: [], fcKnown: new Set(), quizScore: 0, panelsVisited: new Set() };
+
+function addXP(n) {
+  S.xp += n;
+  const pct = Math.min((S.xp / 600) * 100, 100);
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpVal').textContent = S.xp;
+  checkMedals();
+}
+
+function checkMedals() {
+  if (S.panelsVisited.size >= 3 && !S.medals.includes('explorer')) { S.medals.push('explorer'); }
+  if (S.fcKnown.size >= 5 && !S.medals.includes('fcmaster')) { S.medals.push('fcmaster'); }
+  if (S.fcKnown.size >= 15 && !S.medals.includes('fcgod')) { S.medals.push('fcgod'); }
+  if (S.quizScore >= 20 && !S.medals.includes('quizpro')) { S.medals.push('quizpro'); }
+  if (S.quizScore >= 28 && !S.medals.includes('quizgod')) { S.medals.push('quizgod'); }
+  if (S.xp >= 300 && !S.medals.includes('dedicated')) { S.medals.push('dedicated'); }
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const tabs = ['home','aa','prot','enz','comp','fc','quiz','gami'];
+  const i = tabs.indexOf(id);
+  document.querySelectorAll('.nav-tab')[i]?.classList.add('active');
+  S.panelsVisited.add(id);
+  addXP(5);
+  if (id === 'fc' && !document.getElementById('fcArea').innerHTML) renderFC();
+  if (id === 'quiz' && !document.getElementById('quizArea').innerHTML) renderQuiz();
+  if (id === 'gami') renderGami();
+}
+
+function showC(panel, tab, btn) {
+  document.querySelectorAll(`[id^="${panel}-"]`).forEach(p => p.classList.remove('active'));
+  document.getElementById(`${panel}-${tab}`).classList.add('active');
+  btn.closest('.ctabs').querySelectorAll('.ctab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  addXP(3);
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+const fcData = [
+  { lv:1, q:'O que é um aminoácido?', a:'Composto orgânico com grupo amino (–NH₂) e grupo carboxilo (–COOH) no mesmo carbono alfa. São os monômeros das proteínas. Existem 20 aminoácidos padrão que formam todas as proteínas humanas.' },
+  { lv:1, q:'O que diferencia os aminoácidos entre si?', a:'O grupo R (cadeia lateral). Todos têm o mesmo "esqueleto" (NH₂ + Cα + COOH + H). A cadeia R varia de aminoácido para aminoácido e determina suas propriedades físico-químicas.' },
+  { lv:1, q:'O que é uma ligação peptídica?', a:'Ligação covalente amida (–CO–NH–) formada entre o grupo carboxilo de um aminoácido e o grupo amino do seguinte, com liberação de água (reação de condensação). É a ligação que une aminoácidos nas proteínas.' },
+  { lv:1, q:'Quais são os 4 tipos de estrutura proteica?', a:'1ª = sequência de AA (ligação peptídica covalente)\n2ª = padrão de dobramento local (α-hélice, β-folha — pontes H do esqueleto)\n3ª = forma 3D completa (interações das cadeias R)\n4ª = associação de subunidades' },
+  { lv:1, q:'O que é desnaturalização?', a:'Perda da estrutura 3D (2ª, 3ª, 4ª) de uma proteína por calor, pH extremo, detergente etc. A estrutura primária (sequência) permanece intacta. A função biológica é perdida. Pode ser reversível (renaturalização).' },
+  { lv:1, q:'O que é uma enzima?', a:'Proteína que atua como catalisador biológico — acelera reações bioquímicas sem ser consumida. Reduz a energia de ativação (Ea). É altamente específica para seu substrato e tem pH e temperatura ótimos.' },
+  { lv:2, q:'O que é Km e o que ele representa clinicamente?', a:'Km = constante de Michaelis = concentração de substrato em que a velocidade é metade da Vmax (Vmax/2). Km baixo = alta afinidade da enzima pelo substrato. Km alto = baixa afinidade. Útil para entender dose de fármacos que inibem enzimas.' },
+  { lv:2, q:'Qual a diferença entre inibição competitiva e não competitiva?', a:'Competitiva: inibidor compete pelo sítio ativo → Km ↑ / Vmax normal (supera com ↑ substrato)\nNão competitiva: liga ao sítio alostérico → Km normal / Vmax ↓ (não supera com mais substrato)' },
+  { lv:2, q:'O que são zimogênios? Dê 3 exemplos clínicos.', a:'Proenzimas inativas que precisam de clivagem proteolítica para se ativar. Ex:\n1. Pepsinogênio → Pepsina (ativado por HCl gástrico)\n2. Tripsinogênio → Tripsina (ativado por enteropeptidase intestinal)\n3. Protrombina → Trombina (coagulação sanguínea)\nPancreatite = ativação prematura dentro do pâncreas' },
+  { lv:2, q:'Qual a diferença entre Apoenzima e Holoenzima?', a:'Apoenzima = parte proteica da enzima, inativa sozinha\nCofator = íon metálico ou coenzima necessário para atividade\nHoloenzima = Apoenzima + Cofator = enzima ATIVA e funcional\nCoenzimas derivam frequentemente de vitaminas (NAD⁺=B3, FAD=B2, CoA=B5)' },
+  { lv:2, q:'Por que a Prolina é especial entre os aminoácidos?', a:'Prolina tem seu grupo amino incorporado em um anel pirrolidínico rígido — é tecnicamente um iminoacido, não aminoácido. Por causa da rigidez, a Prolina QUEBRA a α-hélice e o β-sheet proteicos. Muito presente no colágeno (Pro-Hyp-Gly repetido).' },
+  { lv:2, q:'Por que a Glicina não tem atividade óptica?', a:'O carbono alfa da glicina está ligado a DOIS hidrogênios (R = H). Para haver carbono quiral, os 4 substituintes devem ser DIFERENTES. Com dois H iguais, não há assimetria → sem atividade óptica → não existe forma L ou D da glicina.' },
+  { lv:3, q:'Caso: Criança de 2 anos, pele muito clara, cabelo branco, convulsões, retardo mental. Pais têm pele morena. O que houve?', a:'Fenilcetonúria (PKU): deficiência da fenilalanina hidroxilase. Fenilalanina acumula → metabolizada para fenilpiruvato (tóxico para SNC) → retardo mental. A criança não absorve adequadamente tirosina (e portanto melanina), daí pele e cabelo claros. Diagnóstico: teste do pezinho. Tratamento: dieta restrita em Phe.' },
+  { lv:3, q:'Caso: Paciente com gota (artrite gotosa). Médico prescreve Alopurinol. Qual o mecanismo bioquímico?', a:'Alopurinol inibe IRREVERSIVELMENTE a xantina oxidase — enzima que converte hipoxantina → xantina → ácido úrico. Sem ácido úrico, não há cristais de urato nos articulações. É inibição irreversível (modificação covalente). O ácido úrico é produto final do catabolismo das purinas (bases nitrogenadas dos AA).' },
+  { lv:3, q:'Caso: Trabalhador agrícola, exposição a inseticida organofosforado. Miose, broncospasmo, salivação excessiva, convulsões. Qual o mecanismo?', a:'Organofosforados inibem IRREVERSIVELMENTE a acetilcolinesterase → acúmulo de acetilcolina (ACh) na fenda sináptica → superestimulação de receptores muscarínicos e nicotínicos → SLUDGE (Salivação, Lacrimejamento, Urinação, Defecação, distress GI, Emese) + broncospasmo + miose + convulsão. Tratamento: Atropina (antagoniza M) + Pralidoxima (reativa a colinesterase se usada precocemente).' },
+  { lv:3, q:'O que é Kwashiorkor e como se diferencia do Marasmo?', a:'KWASHIORKOR: deficiência de proteína com calorias suficientes → hipoalbuminemia → ↓ pressão oncótica → edema (barriga protuberante). Cabelo avermelhado. Apático.\nMARASMO: deficiência de proteína + caloria → aparência esquelética, SEM edema (albumina relativamente preservada).\nAmbos: retardo de crescimento, imunossupressão, diarreia' },
+  { lv:4, q:'PEGADINHA: Na pancreatite aguda, as enzimas pancreáticas estão elevadas no sangue. Qual o mecanismo fisiopatológico e por que é grave?', a:'Em condições normais, as enzimas pancreáticas são secretadas como ZIMOGÊNIOS (proenzimas inativas) que só se ativam no intestino. Na pancreatite, há ativação prematura intra-pancreática dos zimogênios (especialmente tripsinogênio → tripsina) → autodigestão do pâncreas → liberação para o sangue. Graves complicações: necrose pancreática, SIRS, choque, insuficiência de múltiplos órgãos.' },
+  { lv:4, q:'PEGADINHA: Por que a anemia falciforme é considerada um problema de estrutura primária, não terciária?', a:'A mutação na anemia falciforme é a substituição de Ácido Glutâmico (polar, carga negativa) por Valina (não polar, hidrofóbica) na posição 6 da cadeia β da hemoglobina. Essa é uma alteração na SEQUÊNCIA de aminoácidos = estrutura primária. A mudança de polaridade cria um ponto de contato hidrofóbico entre moléculas de HbS → polimerização em baixo O₂ → deformação da hemácia em foice.' },
+  { lv:4, q:'PEGADINHA: Um paciente tem ALT = 800 UI/L e AST = 200 UI/L (razão AST/ALT = 0.25). Outro tem AST = 500 e ALT = 200 (razão = 2.5) + GGT elevada. Qual o diagnóstico de cada um?', a:'Paciente 1 (ALT >> AST, ratio < 1): HEPATITE VIRAL — ALT é mais específica para dano hepatocelular viral\nPaciente 2 (AST >> ALT, ratio > 2) + GGT↑: HEPATITE ALCOÓLICA — álcool danifica mitocôndrias (AST é mitocondrial) + GGT é induzida pelo álcool. Regra: ratio AST/ALT > 2 = alcoolismo até prova em contrário.' },
+];
+
+function renderFC() {
+  const lvls = [1,2,3,4];
+  const lvNames = ['Nível 1 — Conceitos Básicos','Nível 2 — Mecanismos','Nível 3 — Casos Clínicos','Nível 4 — Pegadinhas'];
+  document.getElementById('fcArea').innerHTML = lvls.map(lv => `
+    <div class="fc-level-title">${lvNames[lv-1]}</div>
+    ${fcData.filter(f=>f.lv===lv).map((f,i)=>`
+      <div class="fc" onclick="toggleFC(this)">
+        <div class="fc-ico">🃏</div>
+        <div class="fc-q">${f.q}</div>
+        <div class="fc-a" id="fca-${lv}-${i}">${f.a.replace(/\n/g,'<br>')}</div>
+        <div class="fc-btns" style="display:none" id="fcb-${lv}-${i}">
+          <button class="fc-btn fc-nope" onclick="event.stopPropagation();fcVote(${lv},${i},'no')">😕 Não sei</button>
+          <button class="fc-btn fc-know" onclick="event.stopPropagation();fcVote(${lv},${i},'yes')">✅ Sei!</button>
+        </div>
+      </div>
+    `).join('')}
+  `).join('');
+}
+
+function toggleFC(card) {
+  const a = card.querySelector('.fc-a');
+  const b = card.querySelector('.fc-btns');
+  a.classList.toggle('open');
+  b.style.display = a.classList.contains('open') ? 'flex' : 'none';
+}
+
+function fcVote(lv, i, vote) {
+  const key = `${lv}-${i}`;
+  if (vote === 'yes') { S.fcKnown.add(key); addXP(4); }
+  checkMedals();
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+const qData = [
+  { q:'Qual é o componente que diferencia um aminoácido de outro?', opts:['Grupo amino (–NH₂)','Grupo carboxilo (–COOH)','Cadeia lateral (grupo R)','Carbono alfa'], c:2, fb:'O grupo R (cadeia lateral) é o único que varia entre os 20 aminoácidos padrão. Os grupos –NH₂, –COOH e o Cα são idênticos em todos.' },
+  { q:'Todos os aminoácidos encontrados nas proteínas humanas têm configuração:', opts:['D (Dextro)','L (Levo)','Mistura D e L em partes iguais','Depende do aminoácido'], c:1, fb:'Todos os α-aminoácidos proteicos humanos são da configuração L. Aminoácidos D aparecem em paredes bacterianas e alguns antibióticos, mas não nas proteínas humanas.' },
+  { q:'Qual aminoácido NÃO possui atividade óptica?', opts:['Alanina','Leucina','Glicina','Fenilalanina'], c:2, fb:'Glicina tem R = H (hidrogênio). Seu carbono alfa está ligado a DOIS hidrogênios → não é quiral → sem atividade óptica. Todos os outros têm R diferente de H.' },
+  { q:'A ligação peptídica é formada entre:', opts:['Dois grupos amino de aminoácidos diferentes','O grupo carboxilo de um AA e o grupo amino do seguinte','Dois grupos carboxilo','O grupo R de dois aminoácidos'], c:1, fb:'A ligação peptídica (–CO–NH–) é formada pela condensação (com perda de H₂O) entre o –COOH do aminoácido anterior e o –NH₂ do seguinte. A cadeia cresce sempre do N-terminal ao C-terminal.' },
+  { q:'Criança de 3 anos com aparência esquelética, sem edema, extremamente magra. A causa é:', opts:['Kwashiorkor (só proteína falta)','Marasmo (proteína + caloria faltam)','Caquexia neoplásica','Síndrome de má absorção isolada'], c:1, fb:'Marasmo = deficiência de PROTEÍNA + CALORIA. A albumina pode estar relativamente preservada → sem edema. A criança parece "ossuda". Kwashiorkor = deficiência de proteína com calorias suficientes → hipoalbuminemia → EDEMA (barriga inchada).' },
+  { q:'Qual das seguintes proteínas pertence à estrutura FIBROSA?', opts:['Hemoglobina','Mioglobina','Colágeno','Insulina'], c:2, fb:'Colágeno é proteína fibrosa (cadeias paralelas em hélice tripla, insolúvel, estrutural). Hemoglobina, Mioglobina e Insulina são globulares (compactas, solúveis, funcionais).' },
+  { q:'A estrutura secundária das proteínas é estabilizada principalmente por:', opts:['Pontes dissulfeto (Cys-Cys)','Interações hidrofóbicas','Pontes de hidrogênio do esqueleto peptídico','Ligações iônicas das cadeias R'], c:2, fb:'A estrutura secundária (α-hélice e β-folha) é estabilizada por pontes H entre o C=O de um resíduo e o N–H de outro no ESQUELETO da cadeia peptídica. Pontes dissulfeto estabilizam a estrutura terciária.' },
+  { q:'Na Anemia Falciforme, qual tipo de estrutura proteica está primariamente alterada?', opts:['Secundária (α-hélice quebra)','Terciária (dobramento errado)','Primária (sequência de AA)','Quaternária (subunidades separadas)'], c:2, fb:'A anemia falciforme é uma mutação pontual: Glu (posição 6) → Val na β-globina. Isso altera a SEQUÊNCIA de aminoácidos = estrutura primária. A mudança de polar para hidrofóbico causa polimerização em baixo O₂.' },
+  { q:'Qual aminoácido, quando presente em uma cadeia polipeptídica, QUEBRA a α-hélice?', opts:['Glicina','Alanina','Prolina','Leucina'], c:2, fb:'Prolina é um iminoacido: seu grupo amino faz parte de um anel pirrolidínico rígido, sem H livre para formar pontes de hidrogênio do esqueleto. Isso quebra a α-hélice. Por isso colágeno (rico em Pro) não forma α-hélice.' },
+  { q:'Um paciente exposto a organofosforado apresenta miose, broncospasmo e convulsões. Qual enzima foi inibida?', opts:['Xantina oxidase','Acetilcolinesterase','Di-hidrofolato redutase','Lipase pancreática'], c:1, fb:'Organofosforados inibem IRREVERSIVELMENTE a acetilcolinesterase → acúmulo de acetilcolina → crise colinérgica (SLUDGE + broncospasmo + miose + convulsão). Tratamento: Atropina + Pralidoxima (se precoce).' },
+  { q:'No modelo do Encaixe Induzido (Koshland), o que acontece quando o substrato se aproxima da enzima?', opts:['O substrato muda de forma para se encaixar','A enzima muda de conformação para envolver o substrato','Ambos permanecem rígidos','O sítio ativo é destruído'], c:1, fb:'No encaixe induzido, a enzima é FLEXÍVEL. A ligação do substrato induz uma mudança conformacional na enzima, que "abraça" o substrato e gera tensão que facilita a reação. Difere do modelo de Fischer (chave-fechadura = forma fixa).' },
+  { q:'Um inibidor aumenta o Km mas não altera o Vmax. Qual o tipo de inibição?', opts:['Não competitiva','Competitiva','Anticompetitiva','Irreversível'], c:1, fb:'Inibição COMPETITIVA: inibidor compete com substrato pelo sítio ativo → Km↑ (precisa mais substrato para atingir Vmax/2) / Vmax inalterado (pode ser superado aumentando a concentração de substrato).' },
+  { q:'Coenzimas são derivadas frequentemente de:', opts:['Lipídeos da dieta','Vitaminas da dieta','Hormônios esteroides','Ácidos graxos'], c:1, fb:'Coenzimas são moléculas orgânicas que atuam como cofatores enzimáticos e derivam das vitaminas da dieta. Ex: NAD⁺ (Vitamina B3/Niacina), FAD (Vitamina B2/Riboflavina), CoA (Vitamina B5/Ácido Pantotênico).' },
+  { q:'Qual enzima sérica é mais ESPECÍFICA para dano hepático viral (hepatite)?', opts:['AST (TGO)','Creatina Quinase (CK)','ALT (TGP)','Fosfatase Alcalina'], c:2, fb:'ALT (alanina aminotransferase / TGP / GPT) é mais específica para fígado. Na hepatite viral, ALT sobe muito mais que AST. Razão AST/ALT < 1 sugere hepatite viral. Razão > 2 sugere alcoolismo.' },
+  { q:'Qual exame diagnóstico eleva-se na PANCREATITE AGUDA e é MAIS específico?', opts:['AST','Amilase','Lipase','ALT'], c:2, fb:'Lipase é mais específica para pancreatite aguda que a amilase (amilase também sobe em parotidite, úlcera perfurada, obstrução intestinal). Ambas sobem na pancreatite, mas Lipase permanece elevada por mais tempo e é mais específica.' },
+  { q:'Qual aminoácido é o ÚNICO a iniciar a síntese proteica (primeiro codon AUG)?', opts:['Leucina','Valina','Metionina','Glicina'], c:2, fb:'AUG é o códon de início da tradução e codifica para METIONINA (Met/M). Em eucariotos, o primeiro aminoácido é sempre metionina (pode ser removida depois). Em procariotos, é N-formil-metionina.' },
+  { q:'Na desnaturalização proteica, qual estrutura NÃO é afetada?', opts:['Estrutura secundária','Estrutura terciária','Estrutura quaternária','Estrutura primária (sequência de AA)'], c:3, fb:'A desnaturalização rompe interações não covalentes e pontes dissulfeto (estruturas 2ª, 3ª e 4ª), mas NÃO quebra as ligações peptídicas covalentes. A estrutura primária (sequência de aminoácidos) permanece intacta.' },
+  { q:'A Penicilina é um exemplo de inibidor:', opts:['Competitivo — compete com substrato no sítio ativo','Não competitivo — liga-se ao sítio alostérico','Irreversível — modifica covalentemente a transpeptidase','Anticompetitivo — liga ao complexo E-S'], c:2, fb:'Penicilina inibe IRREVERSIVELMENTE as transpeptidases (PBPs — Penicillin Binding Proteins) bacterianas por ligação covalente ao sítio ativo → sem síntese de peptideoglicano → parede bacteriana fraca → lise osmótica.' },
+  { q:'Qual vitamina, quando deficiente, causa Pelágra — relacionada ao triptofano?', opts:['Vitamina B1 (Tiamina)','Vitamina B3 (Niacina/Nicotinamida)','Vitamina B12 (Cobalamina)','Vitamina C (Ácido Ascórbico)'], c:1, fb:'Triptofano (Trp) é precursor da Niacina (Vitamina B3). Deficiência de Trp OU de Niacina causa Pelágra: 3 Ds — Dermatite (pele exposta ao sol), Diarreia, Demência. A niacina forma NAD⁺ e NADP⁺ (essenciais para metabolismo energético).' },
+  { q:'Um paciente tem Doença de Wilson. O que você espera no laboratório?', opts:['Ceruloplasmina ↑ + Cobre sérico ↑','Ceruloplasmina ↓ + Cobre hepático ↑ + Cobre urinário ↑','Ceruloplasmina normal + Ferro sérico ↑','ALT ↓ + AST ↓'], c:1, fb:'Doença de Wilson: mutação no gene ATP7B → ceruloplasmina não incorpora cobre → ceruloplasmina ↓ → cobre acumula no fígado, córnea (anéis de Kayser-Fleischer), SNC, rins. Cobre urinário ↑ (excreção compensatória). Tratamento: D-penicilamina (quelante de cobre).' },
+  { q:'Qual é a holoenzima?', opts:['Apoenzima inativa','Apoenzima + cofator (forma ativa completa)','Apenas o cofator isolado','Zimogênio ativado'], c:1, fb:'Holoenzima = Apoenzima (parte proteica) + Cofator (íon metálico ou coenzima) = forma ATIVA e completa da enzima. Apoenzima sozinha = inativa. Cofator sozinho = sem especificidade.' },
+  { q:'Qual proteína transporta O₂ especificamente no MÚSCULO (não no sangue)?', opts:['Hemoglobina','Hemocianina','Mioglobina','Seroalbumina'], c:2, fb:'Mioglobina transporta e armazena O₂ no músculo. É uma proteína globular com 1 cadeia polipeptídica e 1 grupo heme. Hemoglobina: 4 subunidades (2α+2β) + 4 grupos heme — transporta O₂ no sangue. Hemocianina: transporta O₂ em invertebrados (azul por cobre, não ferro).' },
+  { q:'No diagnóstico de INFARTO AGUDO DO MIOCÁRDIO, quais enzimas são mais relevantes?', opts:['ALT + Lipase','AST + CK-MB (fração cardíaca)','Fosfatase Alcalina + GGT','Amilase + LDH total'], c:1, fb:'IAM: CK-MB (fração cardíaca da Creatina Quinase) sobe em 4-6h, pico em 18-24h, normaliza em 72h. AST (TGO) também sobe (menos específico). Troponina I e T são os marcadores mais sensíveis e específicos atualmente. LDH sobe mais tarde e dura mais.' },
+  { q:'Qual das seguintes é uma proteína CONJUGADA?', opts:['Albumina sérica','Colágeno','Hemoglobina (heme = grupo prostético)','Queratina do cabelo'], c:2, fb:'Hemoglobina é proteína conjugada: parte proteica (globina) + grupo prostético (heme = ferro + porfirina). Albumina, colágeno e queratina são proteínas simples (hidrolisam para produzir apenas aminoácidos).' },
+  { q:'Qual o efeito do pH extremo sobre uma enzima?', opts:['Aumenta a velocidade da reação indefinidamente','Desnatura a enzima → perda da atividade catalítica','Aumenta o Km sem afetar Vmax','Converte a apoenzima em holoenzima'], c:1, fb:'pH extremo altera o estado de ionização dos grupos funcionais do sítio ativo e das cadeias R → rompe interações iônicas e pontes H → desnaturação da enzima → perda da forma tridimensional → perda da atividade. Cada enzima tem pH ótimo (pepsina pH 2; tripsina pH 8).' },
+  { q:'Qual aminoácido contém enxofre E forma pontes dissulfeto?', opts:['Metionina','Cisteína','Triptofano','Histidina'], c:1, fb:'Cisteína (Cys/C) tem grupo –SH (tiol). Duas cisteínas próximas podem se oxidar formando uma PONTE DISSULFETO (–S–S–), que estabiliza a estrutura terciária das proteínas. Metionina também tem S, mas não forma pontes dissulfeto (grupo –S–CH₃ = tioéter, não reativo).' },
+  { q:'O que é um zimogênio? Qual o risco quando são ativados prematuramente?', opts:['Coenzima inativa sem vitamina','Proenzima inativa que precisa de ativação proteolítica; pancreatite se ativado no pâncreas','Inibidor enzimático irreversível','Proteína de fase aguda inflamatória'], c:1, fb:'Zimogênio = proenzima inativa. Exemplos: pepsinogênio → pepsina; tripsinogênio → tripsina; protrombina → trombina. Na PANCREATITE AGUDA, tripsinogênio é ativado prematuramente dentro do pâncreas → autodigestão pancreática → inflamação grave → SIRS → possível necrose.' },
+  { q:'Que tipo de aminoácidos são o Ácido Aspártico e o Ácido Glutâmico?', opts:['Não polares (hidrófobos)','Polares sem carga','Com carga positiva','Com carga negativa (ácidos)'], c:3, fb:'Asp (D) e Glu (E) têm grupo –COOH adicional na cadeia R que, em pH fisiológico (~7), perde o H⁺ e fica com carga NEGATIVA. São os únicos 2 aminoácidos ácidos (carga negativa). Importância: Glu é neurotransmissor excitatório; Asp participa do ciclo da ureia.' },
+  { q:'A Temperatura ótima da maioria das enzimas humanas é:', opts:['4°C','20°C','37°C','60°C'], c:2, fb:'A maioria das enzimas humanas tem temperatura ótima de 37°C (temperatura corporal normal). Acima disso, a atividade cai porque o excesso de energia cinética rompe pontes H e hidrofóbicas → desnaturação. Por isso febre muito alta (>42°C) é incompatível com a vida.' },
+  { q:'A Caquexia associada ao câncer se caracteriza por:', opts:['Ganho de peso e anabolismo proteico','Perda de massa muscular, saldo negativo de nitrogênio e resistência à insulina','Apenas deficiência de vitaminas','Acúmulo de gordura visceral'], c:1, fb:'Caquexia: síndrome metabólica complexa associada a câncer, AIDS, DPOC, IRC. Caracterizada por: ↑ catabolismo proteico → perda de músculo, saldo N negativo, ↓ síntese proteica, anorexia, fadiga, resistência à insulina. Mediadores: TNF-α, IL-1, IL-6 (citocinas pró-inflamatórias).' },
+  { q:'Qual a função da proteína Fibrinogênio?', opts:['Transporte de O₂ no sangue','Catálise de reações metabólicas','Precursor da Fibrina na coagulação sanguínea','Armazenamento de ferro no baço'], c:2, fb:'Fibrinogênio (proteína mista / globular solúvel) é o precursor inativo da fibrina. Trombina (enzima da cascata de coagulação) cliva o fibrinogênio → fibrina → rede insolúvel que forma o coágulo. Fibrinogênio é zimogênio da via de coagulação.' },
+];
+
+let qState = { cur: 0, answers: [], answered: false };
+
+function renderQuiz() {
+  qState = { cur: 0, answers: [], answered: false };
+  renderQ();
+}
+
+function renderQ() {
+  const i = qState.cur;
+  if (i >= qData.length) { renderScore(); return; }
+  const q = qData[i];
+  const dots = qData.map((_,j) => `<div class="qd ${j<i?(qState.answers[j]?'c':'w'):j===i?'cur':''}"></div>`).join('');
+  document.getElementById('quizArea').innerHTML = `
+    <div class="quiz-prog">${dots}</div>
+    <div class="q-card">
+      <div class="q-num">QUESTÃO ${i+1} / ${qData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">
+        ${q.opts.map((o,oi)=>`<button class="q-opt" onclick="answerQ(${oi})">${String.fromCharCode(65+oi)}) ${o}</button>`).join('')}
+      </div>
+      <div id="qfb"></div>
+    </div>
+  `;
+}
+
+function answerQ(chosen) {
+  if (qState.answered) return;
+  qState.answered = true;
+  const q = qData[qState.cur];
+  const ok = chosen === q.c;
+  qState.answers.push(ok);
+  if (ok) addXP(6);
+  document.querySelectorAll('.q-opt').forEach((b,i) => {
+    b.disabled = true;
+    if (i === q.c) b.classList.add('c');
+    else if (i === chosen) b.classList.add('w');
+  });
+  document.getElementById('qfb').innerHTML = `
+    <div class="q-fb">
+      <div class="q-fb-box ${ok?'ok':'fail'}">${ok?'✅ <strong>Correto!</strong>':'❌ <strong>Incorreto.</strong>'}<br><br>${q.fb}</div>
+      <button class="q-next" onclick="nextQ()">${qState.cur<qData.length-1?'Próxima →':'Ver Resultado'}</button>
+    </div>
+  `;
+}
+
+function nextQ() { qState.cur++; qState.answered = false; renderQ(); }
+
+function renderScore() {
+  const ok = qState.answers.filter(Boolean).length;
+  const pct = Math.round((ok/qData.length)*100);
+  S.quizScore = ok; checkMedals();
+  let lv = '🥉 Iniciante', cor = 'var(--red)';
+  if (pct >= 60) { lv = '🥈 Em desenvolvimento'; cor = 'var(--yellow)'; }
+  if (pct >= 80) { lv = '🥇 Avançado'; cor = 'var(--accent)'; }
+  if (pct >= 95) { lv = '👑 Mestre da Bioquímica'; cor = 'var(--accent2)'; }
+  document.getElementById('quizArea').innerHTML = `
+    <div class="score-card">
+      <div class="score-pct" style="color:${cor}">${pct}%</div>
+      <div class="score-label">${ok} de ${qData.length} corretas</div>
+      <div style="font-size:1.4rem;margin-top:12px">${lv}</div>
+      <div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+        ${qState.answers.map((a,i)=>`<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:${a?'var(--accent)':'var(--red)'};color:#000;font-size:0.62rem;font-weight:700">${i+1}</span>`).join('')}
+      </div>
+      <button class="score-restart" onclick="renderQuiz()">🔄 Refazer</button>
+    </div>
+  `;
+}
+
+// ============================================================
+// GAMI
+// ============================================================
+function renderGami() {
+  const medals = [
+    { id:'explorer', ico:'🔭', name:'Explorador', desc:'Visitou 3 seções' },
+    { id:'fcmaster', ico:'🃏', name:'Card Master', desc:'Acertou 5 flashcards' },
+    { id:'fcgod', ico:'👑', name:'Flash God', desc:'Acertou 15 flashcards' },
+    { id:'quizpro', ico:'🏆', name:'Quiz Pro', desc:'≥20 corretas no simulado' },
+    { id:'quizgod', ico:'🌟', name:'Quiz God', desc:'≥28 corretas no simulado' },
+    { id:'dedicated', ico:'⚗️', name:'Bioquímico', desc:'Acumulou 300 XP' },
+  ];
+  const maxXP = 600;
+  const pct = Math.min((S.xp/maxXP)*100, 100);
+  let lvName = '🥉 Iniciante';
+  if (S.xp >= 100) lvName = '🥈 Estudante Dedicado';
+  if (S.xp >= 300) lvName = '🥇 Bioquímico';
+  if (S.xp >= 600) lvName = '👑 Mestre da Bioquímica';
+  document.getElementById('gamiArea').innerHTML = `
+    <div class="info-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div><div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Nível</div><div style="font-size:1.05rem;font-weight:700">${lvName}</div></div>
+        <div style="text-align:right"><div style="font-family:var(--font-m);font-size:1.6rem;color:var(--accent);font-weight:700">${S.xp}</div><div style="font-size:0.68rem;color:var(--muted)">de ${maxXP} XP</div></div>
+      </div>
+      <div class="gami-bar"><div class="gami-fill" style="width:${pct}%"></div></div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-val" style="color:var(--accent)">${S.panelsVisited.size}/8</div><div class="stat-lbl">Seções visitadas</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:var(--accent2)">${S.fcKnown.size}</div><div class="stat-lbl">Flashcards dominados</div></div>
+        <div class="stat-box"><div class="stat-val" style="color:var(--yellow)">${S.quizScore}/30</div><div class="stat-lbl">Questões corretas</div></div>
+      </div>
+    </div>
+    <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin:20px 0 12px">Conquistas</div>
+    <div class="medal-grid">
+      ${medals.map(m=>`<div class="medal ${S.medals.includes(m.id)?'earned':''}"><div class="medal-ico">${m.ico}</div><div class="medal-name">${m.name}</div><div class="medal-desc">${m.desc}</div></div>`).join('')}
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
