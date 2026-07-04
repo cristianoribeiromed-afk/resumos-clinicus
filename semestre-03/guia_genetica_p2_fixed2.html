@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧬 GENÉTICA P2 — Guía de Alta Performance</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1628;
+    --bg3: #141c35;
+    --card: #1a2340;
+    --card2: #1e2a4a;
+    --border: #2a3a6a;
+    --accent: #4f8ef7;
+    --accent2: #7c5cf6;
+    --accent3: #f75f5f;
+    --accent4: #f7a34f;
+    --green: #3dd68c;
+    --text: #e2e8f8;
+    --text2: #9ab0d8;
+    --text3: #6b82aa;
+    --yellow: #f7e24f;
+    --pink: #f75fa8;
+    --cyan: #4ff7e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* NAV */
+  .top-bar { background: var(--bg2); border-bottom: 2px solid var(--border); padding: 0; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { text-align: center; padding: 10px; font-size: 1.1rem; color: var(--accent); letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+  nav { display: flex; overflow-x: auto; gap: 2px; padding: 6px 8px; scrollbar-width: thin; }
+  nav button { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 7px 13px; border-radius: 8px; cursor: pointer; white-space: nowrap; font-size: 0.78rem; font-weight: 600; transition: all 0.2s; }
+  nav button:hover { background: var(--card2); color: var(--text); }
+  nav button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* PAGES */
+  .page { display: none; max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 18px; }
+  .card-title { font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .section-title { font-size: 1.2rem; font-weight: 800; color: var(--text); margin: 28px 0 14px; display: flex; align-items: center; gap: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+
+  /* TAGS */
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; margin: 2px; }
+  .tag-star { background: #2a2000; color: var(--yellow); border: 1px solid #5a4800; }
+  .tag-fire { background: #2a0a00; color: var(--accent3); border: 1px solid #5a2000; }
+  .tag-brain { background: #0a0a2a; color: var(--cyan); border: 1px solid #1a1a5a; }
+  .tag-alert { background: #2a0020; color: var(--pink); border: 1px solid #5a0050; }
+
+  /* PRIORITY ITEM */
+  .prio-item { background: var(--bg3); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 12px 16px; margin-bottom: 10px; }
+  .prio-item.fire { border-color: var(--accent3); }
+  .prio-item.green { border-color: var(--green); }
+  .prio-item.yellow { border-color: var(--yellow); }
+  .prio-item.pink { border-color: var(--pink); }
+  .prio-header { font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .prio-body { font-size: 0.83rem; color: var(--text2); line-height: 1.6; }
+
+  /* MNEMONIC */
+  .mnemonic { background: linear-gradient(135deg, #0a1a2a 0%, #0a0a1a 100%); border: 1px solid var(--accent2); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .mnemonic-title { color: var(--accent2); font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; }
+  .mnemonic-box { background: #0d0d1f; border-radius: 8px; padding: 12px; font-size: 0.85rem; line-height: 1.7; }
+  .big-word { font-size: 1.4rem; font-weight: 900; letter-spacing: 3px; color: var(--yellow); display: block; margin-bottom: 6px; }
+  .mnemonic-exp { color: var(--text2); font-size: 0.82rem; margin-top: 8px; }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th { background: var(--bg3); color: var(--accent); padding: 10px 12px; text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border); }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg3); }
+  .td-diff { color: var(--green); font-weight: 600; }
+
+  /* FLASHCARDS */
+  .fc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .fc-grid { grid-template-columns: 1fr; } }
+  .fc { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.3s; position: relative; min-height: 90px; }
+  .fc:hover { border-color: var(--accent); }
+  .fc-q { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
+  .fc-a { display: none; font-size: 0.85rem; color: var(--green); font-weight: 600; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); line-height: 1.5; }
+  .fc.flipped .fc-a { display: block; }
+  .fc-hint { position: absolute; bottom: 8px; right: 10px; font-size: 0.65rem; color: var(--text3); }
+  .fc.flipped .fc-hint { display: none; }
+
+  /* QUIZ RELAMPAGO */
+  .ql-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .ql-item:last-child { border-bottom: none; }
+  .ql-q { flex: 1; font-size: 0.85rem; color: var(--text); }
+  .ql-a { flex: 1; font-size: 0.85rem; color: var(--green); font-weight: 600; }
+  .ql-a.hidden { filter: blur(5px); user-select: none; cursor: pointer; background: rgba(79,142,247,0.07); border-radius: 6px; padding: 2px 6px; transition: filter 0.2s; }
+  .ql-a.hidden::after { content: ' 👆 revelar'; font-size: 0.7rem; color: var(--accent); font-weight: 400; }
+  .ql-a:not(.hidden) { cursor: default; }
+  .ql-arrow { color: var(--accent); font-size: 1rem; margin-top: 1px; }
+
+  /* TRAP QUESTIONS */
+  .trap { background: #1a0a0a; border: 1px solid #4a1a1a; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .trap-header { color: var(--accent3); font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; }
+  .trap-q { font-size: 0.88rem; color: var(--text); margin-bottom: 10px; line-height: 1.6; }
+  .trap-opts { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+  .trap-opt { padding: 7px 12px; border-radius: 7px; font-size: 0.82rem; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; transition: all 0.2s; }
+  .trap-opt:hover { border-color: var(--accent); color: var(--text); }
+  .trap.answered .trap-opt.wrong { border-color: var(--accent3); color: var(--accent3); cursor: default; }
+  .trap.answered .trap-opt.right { border-color: var(--green); color: var(--green); cursor: default; }
+  .trap.answered .trap-opt { pointer-events: none; }
+  .trap-exp { display: none; font-size: 0.8rem; color: var(--text2); background: var(--bg3); border-radius: 7px; padding: 10px; border-left: 3px solid var(--yellow); margin-top: 8px; }
+  .trap.answered .trap-exp { display: block; }
+  .trap-hint { font-size: 0.75rem; color: var(--text3); text-align: center; padding: 4px; font-style: italic; }
+  .trap.answered .trap-hint { display: none; }
+
+  /* REVISION PLAN */
+  .rev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .rev-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+  .rev-day { font-size: 1.4rem; font-weight: 900; color: var(--accent); }
+  .rev-label { font-size: 0.72rem; color: var(--text3); margin-bottom: 8px; }
+  .rev-items { font-size: 0.75rem; color: var(--text2); text-align: left; line-height: 1.8; }
+
+  /* BOLSO */
+  .bolso-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .bolso-grid { grid-template-columns: 1fr; } }
+  .bolso-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .bolso-title { font-size: 0.78rem; font-weight: 700; color: var(--accent4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .bolso-item { font-size: 0.8rem; color: var(--text2); padding: 4px 0; border-bottom: 1px dashed #2a3a5a; line-height: 1.5; }
+  .bolso-item:last-child { border-bottom: none; }
+  .bolso-item strong { color: var(--text); }
+
+  /* HIGHLIGHT */
+  .hl-yellow { color: var(--yellow); font-weight: 700; }
+  .hl-green { color: var(--green); font-weight: 700; }
+  .hl-red { color: var(--accent3); font-weight: 700; }
+  .hl-blue { color: var(--accent); font-weight: 700; }
+  .hl-pink { color: var(--pink); font-weight: 700; }
+  .hl-cyan { color: var(--cyan); font-weight: 700; }
+
+  /* MISC */
+  ul { padding-left: 18px; }
+  li { margin-bottom: 5px; font-size: 0.85rem; line-height: 1.6; color: var(--text2); }
+  li strong { color: var(--text); }
+  .badge { display: inline-block; background: var(--accent); color: #fff; border-radius: 6px; padding: 1px 8px; font-size: 0.72rem; font-weight: 700; margin-left: 6px; }
+  .badge.red { background: var(--accent3); }
+  .badge.green { background: var(--green); color: #000; }
+  .badge.yellow { background: var(--yellow); color: #000; }
+  .intro-box { background: linear-gradient(135deg, #1a2a4a, #1a1a3a); border: 1px solid var(--accent); border-radius: 14px; padding: 20px; margin-bottom: 24px; text-align: center; }
+  .intro-box h2 { font-size: 1.4rem; color: var(--accent); margin-bottom: 8px; }
+  .intro-box p { font-size: 0.85rem; color: var(--text2); line-height: 1.7; }
+  .story-box { background: #0d1a0d; border: 1px solid #2a4a2a; border-radius: 10px; padding: 14px; font-size: 0.83rem; color: #8ad88a; line-height: 1.7; font-style: italic; }
+  .tip-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>🧬 GENÉTICA P2 — GUIA DE ALTA PERFORMANCE</h1>
+  <nav>
+    <button class="active" onclick="showPage('mapa',this)">⭐ Mapa da Prova</button>
+    <button onclick="showPage('memo',this)">🧠 Memorização</button>
+    <button onclick="showPage('raciocinio',this)">🎯 Raciocínio de Prova</button>
+    <button onclick="showPage('confusoes',this)">🚨 Confusões Clássicas</button>
+    <button onclick="showPage('quiz',this)">⚡ Quiz Relâmpago</button>
+    <button onclick="showPage('flash',this)">📇 Flashcards Anki</button>
+    <button onclick="showPage('pegadinhas',this)">😈 Prof. Maldoso</button>
+    <button onclick="showPage('revisao',this)">📅 Plano de Revisão</button>
+    <button onclick="showPage('bolso',this)">📋 Resumo de Bolso</button>
+  </nav>
+</div>
+
+<!-- ========== ETAPA 1: MAPA DA PROVA ========== -->
+<div class="page active" id="page-mapa">
+  <div class="intro-box">
+    <h2>📍 ETAPA 1 — MAPA DA PROVA</h2>
+    <p>Os 20% do conteúdo que geram 80% das questões.<br>Foco máximo nestes pontos = máximo de acertos.</p>
+  </div>
+
+  <div class="section-title">🔥 TOP PRIORIDADE — Alta Incidência</div>
+
+  <div class="prio-item fire">
+    <div class="prio-header"><span class="tag tag-star">⭐ ALTÍSSIMA</span> Anomalias Aisladas: os 4 tipos</div>
+    <div class="prio-body">
+      <b>Malformação × Disrupção × Deformação × Displasia</b> — é o núcleo da P2. O professor enfatiza origem, mecanismo e exemplos de cada uma. A pergunta clássica é: "Bridas amnióticas → qual tipo?" ou "Pé torto congênito posicional → qual tipo?" <span class="hl-red">Pegadinha frequentíssima: confundir DEFORMAÇÃO (mecânica, 3º trimestre, corrigível) com DISRUPÇÃO (fator extrínseco, plano genético correto).</span>
+    </div>
+  </div>
+
+  <div class="prio-item fire">
+    <div class="prio-header"><span class="tag tag-star">⭐ ALTÍSSIMA</span> Secuência × Síndrome × Associação</div>
+    <div class="prio-body">
+      <b>Secuência de Potter</b> é o exemplo mais cobrado: Agenesia renal → falta de urina → oligohidrâmnios → compressão uterina → hipoplasia pulmonar + face achatada. <span class="hl-yellow">ASSOCIAÇÃO VATER = sem padrão genético claro</span> (muito cobrado como pegadinha — não é síndrome!).
+    </div>
+  </div>
+
+  <div class="prio-item">
+    <div class="prio-header"><span class="tag tag-star">⭐ ALTA</span> Diagnóstico Prenatal: Invasivo vs. Não Invasivo</div>
+    <div class="prio-body">
+      <b>A distinção crítica:</b> métodos não-invasivos apenas <i>rastreiam/suspeita</i> — NUNCA confirmam. Somente biopsia de vilosidades coriônicas (10-12 sem) ou amniocentese (≥16 sem) <b>confirmam definitivamente</b>. Translucência nucal = suspeita de Down, não diagnóstico. NIPT = 99% de precisão para Down, mas ainda assim não é invasivo.
+    </div>
+  </div>
+
+  <div class="prio-item green">
+    <div class="prio-header"><span class="tag tag-star">⭐ ALTA</span> Herança Monogênica: Huntington, Duchenne, Hemofilia</div>
+    <div class="prio-body">
+      <b>Huntington:</b> autossômica dominante, expansão CAG, poliglutamina tóxica, antecipação. <b>Duchenne:</b> recessiva ligada ao X, distrofina ausente, amortecedor do músculo. <b>Hemofilia A vs. B:</b> Fator VIII vs. Fator IX. Hemofilia A é a mais comum. Ambas ligadas ao X recessivo. Hemartroses são a complicação clássica.
+    </div>
+  </div>
+
+  <div class="prio-item yellow">
+    <div class="prio-header"><span class="tag tag-star">⭐ ALTA</span> Aneuploidias Sexuais: Klinefelter, Turner, Jacobs, Triple X</div>
+    <div class="prio-body">
+      <b>Klinefelter:</b> 47,XXY — ginecomastia, infertilidade, testículos pequenos. <b>Turner:</b> 45,X — pescuezo alado, baixa estatura, inteligência NORMAL (pegadinha!). <b>Jacobs:</b> 47,XYY — NÃO tem relação com violência (desmitificado). <b>Triple X:</b> fenotipo feminino normal, fertilidade conservada.
+    </div>
+  </div>
+
+  <div class="prio-item pink">
+    <div class="prio-header"><span class="tag tag-star">⭐ ALTA</span> Farmacogenética: Varfarina e Isoniazida</div>
+    <div class="prio-body">
+      <b>Metabolizador lento = acumula = toxicidade. Ultra rápido = elimina rápido = ineficácia.</b> Varfarina: lento → hemorragia; rápido → trombose. Isoniazida: lentos = 50% ocidentais, rápidos = asiáticos. Curva bimodal = metabolismo geneticamente dirigido.
+    </div>
+  </div>
+
+  <div class="section-title">🎯 CONCEITOS ENFATIZADOS PELO PROFESSOR</div>
+  <div class="card">
+    <ul>
+      <li><strong>Disrupção tem risco de recorrência NULO</strong> — o plano genético é correto, o problema é extrínseco. Se reprova, usa isso.</li>
+      <li><strong>Deformação é corrigível postnatalmente</strong> — diferente de malformação (cirurgia estrutural mais complexa).</li>
+      <li><strong>Displasia é SISTÊMICA</strong> — afeta múltiplos tecidos com mesmo defeito gênico (≠ malformação, que é isolada).</li>
+      <li><strong>Distrofina = "amortecedor"</strong> — a analogia do professor: sem ela, cada contração rasga a membrana.</li>
+      <li><strong>Varón afetado X-ligado NÃO transmite a fils varones</strong> — transmite SOMENTE às filhas (todas portadoras).</li>
+      <li><strong>Antecipação em Huntington</strong> — cada geração piora e antecipa o início. Muito cobrado.</li>
+      <li><strong>SRY = interruptor mestre</strong> — sem SRY ativo, mesmo com XY o organismo desenvolve ovários.</li>
+      <li><strong>Hipótese de Lyon = corpúsculo de Barr</strong> — inativação de 1 X nas mulheres desde a embriogênese.</li>
+      <li><strong>Farmacogenética ≠ alergia</strong> — toxicidade por acúmulo é incapacidade metabólica, não reação imunológica.</li>
+      <li><strong>Alzheimer precoce (&lt;65) = mendeliano / tardio (&gt;65) = multifatorial</strong></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== ETAPA 2: MEMORIZAÇÃO ========== -->
+<div class="page" id="page-memo">
+  <div class="intro-box">
+    <h2>🧠 ETAPA 2 — MEMORIZAÇÃO INTELIGENTE</h2>
+    <p>Mnemônicos, histórias e associações que ficam na memória semanas depois.</p>
+  </div>
+
+  <div class="section-title">🔤 MNEMÔNICOS E ACRÔNIMOS</div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🧠 Os 4 tipos de Anomalias Aisladas</div>
+    <div class="mnemonic-box">
+      <span class="big-word">M · D · D · D</span>
+      <div style="color: var(--text); line-height: 2;">
+        <span class="hl-yellow">M</span>alformación — <i>"erro de projeto"</i> (genético, 3ª–8ª sem)<br>
+        <span class="hl-red">D</span>isrupción — <i>"fator externo destrói o que era perfeito"</i> (risco = 0)<br>
+        <span class="hl-cyan">D</span>eformación — <i>"força mecânica entorta o que estava pronto"</i> (3º trim, corrigível)<br>
+        <span class="hl-pink">D</span>isplasia — <i>"células mal montadas"</i> (sistêmica, gene único)
+      </div>
+      <div class="mnemonic-exp">💡 Frase absurda: <b>"Meu Deus, Dois Dinossauros!"</b> — M, D, D, D</div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🎭 Anomalias Múltiplas: SEQ · SÍN · ASO</div>
+    <div class="mnemonic-box">
+      <div style="color: var(--text); line-height: 2;">
+        <span class="hl-yellow">SEQ</span>uencia = <b>cascada</b> desde 1 defeito → Potter (agenesia renal)<br>
+        <span class="hl-green">SÍN</span>drome = <b>genética definida</b> → Down, Patau<br>
+        <span class="hl-pink">ASO</span>ciación VATER = <b>sem padrão genético</b> → coincidência frequente
+      </div>
+      <div class="mnemonic-exp">💡 Macete visual: <b>SEQ = dominó 🁢, SÍN = DNA 🧬, ASO = acaso 🎲</b></div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🔑 VATER — Associação</div>
+    <div class="mnemonic-box">
+      <span class="big-word">V · A · T · E · R</span>
+      <div style="color: var(--text); line-height: 2;">
+        <span class="hl-yellow">V</span>értebras (anomalias vertebrais)<br>
+        <span class="hl-red">A</span>nais (ânus imperfurado)<br>
+        <span class="hl-cyan">T</span>raqueoesofágicas (fístula)<br>
+        <span class="hl-green">E</span>stelares/Cardíacas (cardiopatias)<br>
+        <span class="hl-pink">R</span>enais + Radiais (membros superiores)
+      </div>
+      <div class="mnemonic-exp">💡 História: <b>O bebê VATER nasceu com vértebras tortas, ânus fechado, fístula na garganta, coração estranho e rins ruins.</b></div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">💊 Hemofilia A vs. B — 8 vs. 9</div>
+    <div class="mnemonic-box">
+      <div style="color: var(--text); line-height: 2;">
+        <span class="hl-yellow">Hemofilia A</span> = Fator <b>VIII</b> (8 letras em "oito" = A de <b>A</b>ntes)<br>
+        <span class="hl-cyan">Hemofilia B</span> = Fator <b>IX</b> (9 = B de <b>B</b>aixo, depois do A)
+      </div>
+      <div class="mnemonic-exp">💡 Ou simplesmente: <b>A vem antes de B, 8 vem antes de 9.</b> A é mais comum!</div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🏃 Duchenne — A história do amortecedor</div>
+    <div class="mnemonic-box">
+      <div class="story-box">
+        "Imagine um carro sem amortecedor (distrofina). Cada vez que o carro passa por um buraco, a carroceria rasga. O carro é o músculo — sem amortecedor, cada contração rasga a membrana até o motor parar (cardiorrespiratório)."
+      </div>
+      <div class="mnemonic-exp" style="margin-top:10px;">🔑 Distrofina = amortecedor | Liga actina ↔ membrana ↔ matriz extracelular | Ausente → necrosis progressiva | Perde marcha aos 11 anos | Morte adulto jovem</div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🏰 Palácio da Memória — Aneuploidias</div>
+    <div class="mnemonic-box">
+      <div style="color: var(--text); line-height: 2.2;">
+        🏠 <b>Sala:</b> <span class="hl-yellow">Klinefelter (47,XXY)</span> — Um homem ALTO com MAMAS sentado no sofá, infértil, sem barba.<br>
+        🛏 <b>Quarto:</b> <span class="hl-cyan">Turner (45,X)</span> — Uma mulher BAIXINHA com PESCOÇO DE ASA dormindo, mas com inteligência NORMAL (livros na cabeceira).<br>
+        🍳 <b>Cozinha:</b> <span class="hl-pink">Triple X (47,XXX)</span> — Mulher NORMAL cozinhando, ligeiramente alta, fértil, tudo bem.<br>
+        🏋️ <b>Academia:</b> <span class="hl-green">Jacobs (47,XYY)</span> — Homem MUITO ALTO, dedos longos, mas pacífico (sem violência — desmitificado!).
+      </div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">⚗️ Farmacogenética — Varfarina</div>
+    <div class="mnemonic-box">
+      <div style="color: var(--text); line-height: 2;">
+        🐌 <b>Metabolizador LENTO</b> = varfarina se acumula → <span class="hl-red">HEMORRAGIA</span> (sangra demais)<br>
+        🚀 <b>Metabolizador ULTRA RÁPIDO</b> = varfarina some → <span class="hl-cyan">TROMBOSE</span> (não protege)
+      </div>
+      <div class="mnemonic-exp">💡 Macete: <b>Lento = Lotado = Letal por sangue. Rápido = Rodrigo vai embora = Remédio não funciona.</b></div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🧬 Huntington — CAG e Antecipação</div>
+    <div class="mnemonic-box">
+      <span class="big-word">CAG → GLU</span>
+      <div style="color: var(--text); line-height: 2;">
+        <span class="hl-yellow">C</span>itosina-<span class="hl-yellow">A</span>denina-<span class="hl-yellow">G</span>uanina = <span class="hl-red">GLU</span>tamina<br>
+        Poliglutamina tóxica → ataca SNC<br>
+        Cada geração → mais repetições → início mais cedo (antecipação)
+      </div>
+      <div class="mnemonic-exp">💡 Imagine que cada filho herda um colar com mais contas (glutamina). Quanto mais contas, mais pesado, mais cedo o colar estrangula o neurônio.</div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🔬 Síndrome X Frágil — FMR1 e CGG</div>
+    <div class="mnemonic-box">
+      <div style="color: var(--text); line-height: 2;">
+        Gene <span class="hl-yellow">FMR1</span> → expansão <span class="hl-cyan">CGG</span><br>
+        Normal: 10–50 repetições<br>
+        X Frágil: <span class="hl-red">&gt;200 repetições</span> → metilação → silenciamento do gene
+      </div>
+      <div class="mnemonic-exp">💡 Mnemônico clínico dos varones: <b>"ROME"</b> — <b>R</b>ostro alargado, <b>O</b>relhas prominentes, <b>M</b>acroorquidia, <b>E</b>specialidade: deficiência intelectual</div>
+    </div>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mnemonic-title">🌿 Multifatorial — A Equação da Vida</div>
+    <div class="mnemonic-box">
+      <span class="big-word">G + A = F</span>
+      <div style="color: var(--text); line-height: 2;">
+        <span class="hl-yellow">G</span>enótipo + <span class="hl-cyan">A</span>mbiente = <span class="hl-green">F</span>enótipo<br>
+        "Você não herda a doença — herda o <b>terreno biológico</b>"
+      </div>
+      <div class="mnemonic-exp">💡 Analogia do campo: a melhor semente não cresce sem boa terra e água. E uma semente ruim pode não crescer se o campo for hostil.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ETAPA 3: RACIOCÍNIO DE PROVA ========== -->
+<div class="page" id="page-raciocinio">
+  <div class="intro-box">
+    <h2>🎯 ETAPA 3 — RACIOCÍNIO DE PROVA</h2>
+    <p>O que o professor quer, onde os alunos erram e como reconhecer a resposta correta.</p>
+  </div>
+
+  <div class="section-title">🎓 Por Tema</div>
+
+  <div class="card">
+    <div class="card-title">📌 Anomalias Aisladas — Como o Professor Testa</div>
+    <div class="tip-row"><div class="tip-icon">🎓</div><div><strong>O que quer:</strong> que você diferencie pelos 3 critérios: origem (genético vs. extrínseco), momento (quando ocorre) e reversibilidade.</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>O que cobra:</strong> dá um exemplo clínico e pergunta qual tipo é. Ex: "Criança nasceu com amputação de dedo por banda de tecido amniótico → ?" Resposta: Disrupção.</div></div>
+    <div class="tip-row"><div class="tip-icon">❌</div><div><strong>Onde erram:</strong> confundem Deformação com Disrupção. Deformação = fuerza mecânica (pressão). Disrupção = fator que DESTRÓI estrutura antes normal.</div></div>
+    <div class="tip-row"><div class="tip-icon">✅</div><div><strong>Resposta rápida:</strong> pé equinovaro posicional = DEFORMAÇÃO. Bridas amnióticas = DISRUPÇÃO. Labio leporino = MALFORMAÇÃO. Displasia tanatofórica = DISPLASIA (sistêmica).</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📌 Diagnóstico Prenatal — Como o Professor Testa</div>
+    <div class="tip-row"><div class="tip-icon">🎓</div><div><strong>O que quer:</strong> que você saiba exatamente qual método confirma vs. qual apenas rastreia.</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>O que cobra:</strong> "Translucência nucal aumentada confirma Síndrome de Down?" → <span class="hl-red">NÃO.</span> É rastreo/suspeita. Confirma = amniocentese ou biopsia coriônica.</div></div>
+    <div class="tip-row"><div class="tip-icon">❌</div><div><strong>Onde erram:</strong> confundem NIPT (99% de precisão) com diagnóstico definitivo. NIPT é não-invasivo = rastreio, não confirma.</div></div>
+    <div class="tip-row"><div class="tip-icon">✅</div><div><strong>Cronologia a saber:</strong> Translucência nucal: 10–14 sem. BVC: 10–12 sem. Ecografia de rutina: 18–20 sem. Amniocentese: ≥16 sem.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📌 Herança Monogênica — Como o Professor Testa</div>
+    <div class="tip-row"><div class="tip-icon">🎓</div><div><strong>Huntington:</strong> quer que você saiba expansão CAG, proteína huntingtina, padrão autossômico DOMINANTE e fenômeno de ANTECIPAÇÃO.</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>Duchenne:</strong> cobra quem transmite — mãe portadora transmite aos filhos varones. Pai afetado transmite a TODAS as filhas (portadoras) e a NENHUM filho varón.</div></div>
+    <div class="tip-row"><div class="tip-icon">❌</div><div><strong>Hemofilia A vs B:</strong> alunos invertem os fatores. A = 8 (mais comum). B = 9. Ambas ligadas ao X recessivo.</div></div>
+    <div class="tip-row"><div class="tip-icon">✅</div><div><strong>Chave rápida:</strong> se a questão diz "miopatia + distrofina + ligado ao X" → Duchenne. "Corea + 30-50 anos + dominante" → Huntington. "Hemartroses + coagulação + X recessivo" → Hemofilia.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📌 Aneuploidias Sexuais — Como o Professor Testa</div>
+    <div class="tip-row"><div class="tip-icon">🎓</div><div><strong>O que quer:</strong> cariotipo correto + características clínicas + o que foi desmitificado.</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>Pegadinha Turner:</strong> "Turner tem deficiência intelectual?" → <span class="hl-red">NÃO</span>. Inteligência tipicamente normal. O professor reforçou que estigmas foram desmitificados.</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>Pegadinha Jacobs:</strong> "XYY está associado a violência?" → <span class="hl-red">NÃO</span>. Associação desmentida pela ciência atual.</div></div>
+    <div class="tip-row"><div class="tip-icon">✅</div><div><strong>Klinefelter tratável:</strong> testosterona exógena corrige as características. Único entre as aneuploidias com tratamento hormonal efetivo.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📌 Farmacogenética — Como o Professor Testa</div>
+    <div class="tip-row"><div class="tip-icon">🎓</div><div><strong>O que quer:</strong> que você entenda que metabolismo é individual e geneticamente programado — não universal.</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>Curva bimodal:</strong> indica metabolismo dirigido por genes. Curva gaussiana = variação normal, dosis universal funciona.</div></div>
+    <div class="tip-row"><div class="tip-icon">❌</div><div><strong>Onde erram:</strong> confundem toxicidade farmacogenética com reação alérgica. São coisas distintas — toxicidade = acúmulo por incapacidade enzimática.</div></div>
+    <div class="tip-row"><div class="tip-icon">✅</div><div><strong>Isoniazida:</strong> lentos = ocidentais (50%), rápidos = asiáticos. Rápidos: droga não chega a agir + dano hepático.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📌 Multifatorial — Como o Professor Testa</div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>Alzheimer:</strong> precoce (&lt;65) = mendeliano (presenilinas, quase determinístico). Tardio (&gt;65) = multifatorial (apolipoproteína E + ambiente).</div></div>
+    <div class="tip-row"><div class="tip-icon">🔥</div><div><strong>Hipertensão:</strong> ambos os pais hipertensos → 45% de risco no filho. Um pai = 8–28%. Nenhum = 4%. Esses números aparecem em provas.</div></div>
+    <div class="tip-row"><div class="tip-icon">✅</div><div><strong>TEA:</strong> hereditabilidade de 90% mas SEM marcador molecular definido → difícil diagnóstico diferencial. 4:1 razão homens:mulheres.</div></div>
+  </div>
+</div>
+
+<!-- ========== ETAPA 4: TABELA DE CONFUSÕES ========== -->
+<div class="page" id="page-confusoes">
+  <div class="intro-box">
+    <h2>🚨 ETAPA 4 — TABELA DE CONFUSÕES CLÁSSICAS</h2>
+    <p>As armadilhas mais comuns. Decore a coluna "Como diferenciar em 5 segundos".</p>
+  </div>
+
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <tr>
+          <th>Conceito A</th>
+          <th>Confunde com</th>
+          <th class="td-diff">⚡ Como diferenciar em 5 segundos</th>
+        </tr>
+        <tr>
+          <td><b>Disrupção</b><br><small>fator externo destrói estrutura normal</small></td>
+          <td><b>Deformação</b><br><small>força mecânica entorta estrutura normal</small></td>
+          <td class="td-diff">Disrupção = DESTRÓI (bridas cortam dedos). Deformação = ENTORTA (pressão = pé torto). Ambas têm plano genético correto e fator extrínseco.</td>
+        </tr>
+        <tr>
+          <td><b>Síndrome</b><br><small>causa genética definida e clara</small></td>
+          <td><b>Associação</b><br><small>malformações juntas sem padrão genético</small></td>
+          <td class="td-diff">Síndrome = causa genética CONHECIDA (Down). Associação = agrupamento por ACASO frequente, sem padrão mendeliano (VATER).</td>
+        </tr>
+        <tr>
+          <td><b>Rastreo (Screening)</b><br><small>NIPT, translucência nucal, AFP</small></td>
+          <td><b>Diagnóstico definitivo</b><br><small>amniocentese, biopsia coriônica</small></td>
+          <td class="td-diff">Rastreo = suspeita, coloca em grupo de risco. Diagnóstico = análise direta do DNA/tecido fetal. NENHUM método não-invasivo confirma.</td>
+        </tr>
+        <tr>
+          <td><b>Hemofilia A</b><br><small>Fator VIII</small></td>
+          <td><b>Hemofilia B</b><br><small>Fator IX</small></td>
+          <td class="td-diff">A vem antes = Fator 8 vem antes de 9. Hemofilia A = mais comum. Ambas X recessivo, ambas causam hemartroses.</td>
+        </tr>
+        <tr>
+          <td><b>Turner</b><br><small>45,X — fenotipo feminino</small></td>
+          <td><b>Klinefelter</b><br><small>47,XXY — fenotipo masculino</small></td>
+          <td class="td-diff">Turner = mulher baixinha com pescoço alado e inteligência NORMAL. Klinefelter = homem alto com ginecomastia e infertilidade.</td>
+        </tr>
+        <tr>
+          <td><b>Metabolizador lento</b><br><small>acúmulo → toxicidade</small></td>
+          <td><b>Metabolizador ultra rápido</b><br><small>eliminação rápida → ineficácia</small></td>
+          <td class="td-diff">Lento = remédio fica → intoxica. Rápido = remédio vai embora → não funciona. Varfarina: lento = hemorragia, rápido = trombose.</td>
+        </tr>
+        <tr>
+          <td><b>Displasia</b><br><small>organização celular anormal, sistêmica</small></td>
+          <td><b>Malformação</b><br><small>defeito estrutural primário, isolado</small></td>
+          <td class="td-diff">Displasia = gene único afeta TODO o tecido (sistêmico). Malformação = defeito isolado em órgão específico (labio leporino).</td>
+        </tr>
+        <tr>
+          <td><b>Farmacogenética</b><br><small>genes → resposta ao fármaco</small></td>
+          <td><b>Farmacocinética</b><br><small>absorção, distribuição, metabolismo, excreção</small></td>
+          <td class="td-diff">Farmacogenética = GENÉTICA determina a resposta. Farmacocinética = o que o corpo faz COM o remédio (ADME). Farmacogenética explica POR QUÊ a farmacocinética varia.</td>
+        </tr>
+        <tr>
+          <td><b>Huntington</b><br><small>autossômica dominante</small></td>
+          <td><b>Duchenne / Hemofilia</b><br><small>recessiva ligada ao X</small></td>
+          <td class="td-diff">Huntington = DOMINANTE (basta 1 cópia, pai ou mãe afetado já transmite 50%). Duchenne/Hemofilia = recessivo ligado ao X (via mãe portadora, afeta varones).</td>
+        </tr>
+        <tr>
+          <td><b>X Frágil (FMR1/CGG)</b><br><small>&gt;200 repetições → retardo</small></td>
+          <td><b>Huntington (HTT/CAG)</b><br><small>expansão diferente</small></td>
+          <td class="td-diff">X Frágil = CGG no gene FMR1, ligado ao X, retardo intelectual. Huntington = CAG no gene HTT, autossômico dominante, neurodegenerativo.</td>
+        </tr>
+        <tr>
+          <td><b>DDS 46,XY</b><br><small>genéticamente homem, fenotipo feminino</small></td>
+          <td><b>DDS 46,XX</b><br><small>genéticamente mulher, genitalia virilizada</small></td>
+          <td class="td-diff">46,XY = testosterona existe mas receptor falha (insensibilidade a andrógenos) → fenotipo feminino sem útero. 46,XX = hiperplasia adrenal → excesso de andrógenos → virilização.</td>
+        </tr>
+        <tr>
+          <td><b>Alzheimer precoce (&lt;65)</b><br><small>mendeliano / determinístico</small></td>
+          <td><b>Alzheimer tardio (&gt;65)</b><br><small>multifatorial / ambiental</small></td>
+          <td class="td-diff">Precoce = mutações em presenilina, quase inevitável se tem o gene. Tardio = apolipoproteína E + ambiente (alfabetização, atividade cognitiva).</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ETAPA 5: QUIZ RELÂMPAGO ========== -->
+<div class="page" id="page-quiz">
+  <div class="intro-box">
+    <h2>⚡ ETAPA 5 — QUIZ RELÂMPAGO</h2>
+    <p>Passe o mouse (ou toque) sobre a resposta para revelar. Treine até ser reflexo!</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💡 Clique/toque na resposta para revelar</div>
+
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Bridas amnióticas causam qual tipo de anomalia?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Disrupção 🔴</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Pé equinovaro posicional = qual tipo?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Deformação 🔵</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Displasia tanatofórica afeta qual sistema?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Ósseo (sistêmico) — enanismo letal 💀</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Sequência de Potter começa com?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Agenesia renal → falta orina → oligohidrâmnios → compressão → hipoplasia pulmonar</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">VATER é síndrome ou associação?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">ASSOCIAÇÃO — sem padrão genético definido 🎲</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Translucência nucal confirma Síndrome de Down?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">NÃO! Apenas rastreia/suspeita. Confirma = amniocentese ou BVC ❌</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Biopsia de vilosidades coriônicas: quando?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">10–12 semanas de gestação</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Amniocentese: quando?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">A partir da semana 16</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Huntington: padrão de herança?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Autossômico DOMINANTE</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Mutação de Huntington: qual tripleto?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">CAG (Citosina-Adenina-Guanina) → poliglutamina</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Antecipação em Huntington = ?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Cada geração tem mais repetições CAG → início mais precoce e mais grave</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Duchenne: proteína ausente?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">DISTROFINA (amortecedor do músculo)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Duchenne: padrão de herança?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Recessivo ligado ao cromossomo X (origem materna)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Hemofilia A = qual fator?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Fator VIII — a mais comum</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Hemofilia B = qual fator?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Fator IX (Christmas disease)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Complicação articular da hemofilia?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">HEMARTROSES (hemorragia nas articulações)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Pai afetado por X-recessivo transmite a filhos varones?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">NÃO. Transmite o X a TODAS as filhas (portadoras). Filhos varones recebem o Y do pai.</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Turner: cariotipo?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">45, X (monossomia X)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Turner tem deficiência intelectual?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">NÃO! Inteligência tipicamente NORMAL ❌🧠</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Klinefelter: cariotipo e tratamento?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">47, XXY — tratável com testosterona exógena</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Jacobs (XYY) tem maior tendência à violência?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">NÃO! Associação foi DESMENTIDA pela ciência ❌</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Gene SRY inativo → desenvolvimento?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Desenvolvimento FEMININO (ovários), mesmo com cromossomo Y presente</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Corpúsculo de Barr = ?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">X inativado (Hipótese de Lyon) nas mulheres XX desde a embriogênese</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">X Frágil: gene afetado?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">FMR1 — expansão CGG > 200 repetições → silenciamento</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">X Frágil: tríade clínica nos varones?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Retardo mental + orelhas prominentes + macroorquidia</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Metabolizador lento de varfarina → resultado?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">HEMORRAGIA (acúmulo do anticoagulante)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Metabolizador ultra rápido de varfarina → resultado?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">TROMBOSE (remédio eliminado antes de agir)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Isoniazida: metabolizadores lentos predominam em que população?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Ocidentais/europeus (~50%)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Curva bimodal na farmacogenética indica?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Metabolismo dirigido por variante genética específica — dosis única NÃO serve</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Fórmula da herança multifatorial?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Genótipo + Ambiente = Fenótipo</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Ambos os pais hipertensos → risco no filho?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">45% de risco (vs. 4% se ambos normais)</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Alzheimer de início precoce (&lt;65) = ?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Altamente MENDELIANO — mutações em presenilinas, quase determinístico</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">DDS: nome correto para "hermafroditismo"?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Trastornos del Desarrollo Sexual (TDS/DDS) — hermafroditismo é obsoleto</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Disrupção: risco de recorrência?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">NULO — não depende da genética do indivíduo</div></div>
+    <div class="ql-item"><span class="ql-arrow">→</span><div class="ql-q">Alfa-fetoproteína elevada indica?</div><div class="ql-a hidden" onclick="this.classList.remove('hidden')">Defeitos do tubo neural / espinha bífida</div></div>
+  </div>
+</div>
+
+<!-- ========== ETAPA 6: FLASHCARDS ANKI ========== -->
+<div class="page" id="page-flash">
+  <div class="intro-box">
+    <h2>📇 ETAPA 6 — FLASHCARDS ANKI</h2>
+    <p>Clique no card para revelar a resposta. Apenas os de maior rendimento para prova.</p>
+  </div>
+  <div class="fc-grid" id="fc-container"></div>
+</div>
+
+<!-- ========== ETAPA 7: PROFESSOR MALDOSO ========== -->
+<div class="page" id="page-pegadinhas">
+  <div class="intro-box">
+    <h2>😈 ETAPA 7 — PROFESSOR MALDOSO</h2>
+    <p>Pegadinhas, questões difíceis e como não cair nelas.</p>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #1 — Disrupção vs. Deformação</div>
+    <div class="trap-q">Uma criança nasce com ausência de 3 dedos da mão esquerda. A investigação revela bandas de tecido amniótico que envolveram a mão durante o desenvolvimento. Sobre esta condição, é correto afirmar:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) É uma malformação, pois ocorreu durante o período embrionário precoce.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">B) É uma disrupção, pois estruturas normais foram destruídas por fator extrínseco.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">C) É uma deformação, pois forças mecânicas alteraram estruturas normais.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) Tem alto risco de recorrência pois compromete o plano genético.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ <b>Armadilha:</b> C é tentador pois envolve "fator mecânico". Mas deformação = pressão que ENTORTA. Disrupção = algo que DESTRÓI. Bridas destroem. D é outra pegadinha: disrupção tem risco de recorrência NULO (plano genético é correto).</div>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #2 — NIPT como diagnóstico definitivo</div>
+    <div class="trap-q">Gestante de 13 semanas realizou NIPT com resultado de 99% de probabilidade para Síndrome de Down. O médico deve:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) Confirmar o diagnóstico e iniciar acompanhamento para Down.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">B) Informar que o diagnóstico está confirmado pelo NIPT.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">C) Orientar método invasivo (amniocentese ou BVC) para confirmação diagnóstica.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) Repetir o NIPT em 4 semanas para maior precisão.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ <b>Armadilha:</b> 99% parece definitivo, mas NIPT é não-invasivo = rastreo = suspeita. NUNCA confirma. Apenas análise direta de tecido fetal (BVC ou amniocentese) confirma condição cromossômica.</div>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #3 — Transmissão X-ligada pelo pai</div>
+    <div class="trap-q">Um homem com Hemofilia A (XʰY) tem filhos com uma mulher saudável (XX normal). Sobre a transmissão:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) 50% dos filhos varones terão hemofilia.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">B) Todos os filhos varones terão hemofilia.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">C) Nenhum filho varón terá hemofilia; todas as filhas serão portadoras.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) 50% das filhas serão portadoras e 50% normais.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ <b>Armadilha clássica:</b> alunos esquecem que o pai dá seu Y aos filhos varones. O X hemofílico do pai vai SOMENTE para as filhas (todas portadoras). Filhos varones recebem X normal da mãe.</div>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #4 — Turner e inteligência</div>
+    <div class="trap-q">Paciente do sexo feminino, 16 anos, baixa estatura, amenorreia primária, pescoço alado e tórax em escudo. O cariotipo revela 45, X. Sobre a cognição desta paciente:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) Apresenta deficiência intelectual moderada característica da síndrome.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">B) Apresenta CI abaixo da média em todos os domínios cognitivos.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">C) A inteligência é tipicamente normal; o estigma de déficit cognitivo foi desmitificado.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) Apresenta deficiência intelectual leve, tratável com estrogenoterapia.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ <b>Armadilha:</b> o professor enfatizou que Turner NÃO implica deficiência intelectual. Podem ter dificuldades visuoespaciais específicas, mas inteligência geral é normal. Não confundir com X Frágil (que tem retardo intelectual).</div>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #5 — Varfarina: qual paciente sangra?</div>
+    <div class="trap-q">Dois pacientes idênticos em peso, idade e função renal recebem a mesma dose de varfarina. O Paciente A desenvolve hemorragia interna; o Paciente B desenvolve novo trombo. A explicação correta é:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) O Paciente A teve reação alérgica à varfarina.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">B) O Paciente B recebeu dose insuficiente por erro médico.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">C) Paciente A é metabolizador lento (acúmulo → hemorragia); B é ultra rápido (elimina antes de agir → trombose).</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) Ambos têm interações medicamentosas não registradas.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ <b>Armadilha:</b> A) confunde toxicidade farmacogenética com alergia — são coisas DISTINTAS. Toxicidade = incapacidade metabólica enzimática. Alergia = resposta imunológica. O professor enfatizou esta diferença.</div>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #6 — Síndrome vs. Sequência</div>
+    <div class="trap-q">Recém-nascido apresenta hipoplasia pulmonar, face achatada, ausência de urina e oligohidrâmnios. Esta constelação de achados representa:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) Uma síndrome, pois múltiplos sistemas estão afetados com causa genética.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">B) Uma associação, pois não há causa definida.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">C) Uma sequência (Potter), pois uma malformação única (agenesia renal) desencadeia uma cascada de eventos.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) Uma displasia, pois há organização celular anormal sistêmica.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ <b>Armadilha:</b> múltiplos achados não = síndrome. SEQUÊNCIA = 1 defeito inicial → cascata. Síndrome = múltiplos achados com causa genética conhecida e simultânea. A chave é identificar a causa-raiz única (agenesia renal).</div>
+  </div>
+
+  <div class="trap">
+    <div class="trap-header">😈 PEGADINHA #7 — X Frágil vs. Huntington (expansões de tripletos)</div>
+    <div class="trap-q">Sobre as doenças por expansão de tripletos de nucleotídeos, é INCORRETO afirmar:</div>
+    <div class="trap-opts">
+      <div class="trap-opt wrong" onclick="answerTrap(this)">A) Huntington envolve expansão CAG no gene HTT, causando acúmulo de poliglutamina.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">B) X Frágil envolve expansão CGG no gene FMR1, com silenciamento por metilação.</div>
+      <div class="trap-opt right" onclick="answerTrap(this)">C) Ambas as doenças apresentam padrão autossômico dominante com fenômeno de antecipação.</div>
+      <div class="trap-opt wrong" onclick="answerTrap(this)">D) Em Huntington, cada geração tende a apresentar início mais precoce da doença.</div>
+    </div>
+    <div class="trap-hint">👆 Escolha uma alternativa para ver o gabarito</div>
+    <div class="trap-exp">⚠️ C está ERRADA (é a resposta): X Frágil é LIGADA AO X, não autossômica dominante. Huntington é autossômica dominante. Ambas têm antecipação, mas padrões de herança são completamente diferentes.</div>
+  </div>
+</div>
+
+<!-- ========== ETAPA 8: REVISÃO ========== -->
+<div class="page" id="page-revisao">
+  <div class="intro-box">
+    <h2>📅 ETAPA 8 — PLANO DE REVISÃO DE LONGO PRAZO</h2>
+    <p>Baseado na curva do esquecimento de Ebbinghaus. Revise no momento certo para fixar.</p>
+  </div>
+
+  <div class="rev-grid">
+    <div class="rev-card">
+      <div class="rev-day">24h</div>
+      <div class="rev-label">REFORÇO INICIAL</div>
+      <div class="rev-items">
+        ✅ Os 4 tipos de anomalias<br>
+        ✅ Sequência de Potter<br>
+        ✅ Huntington: CAG, dominante, antecipação<br>
+        ✅ Flashcards Anki (todos)<br>
+        ✅ Quiz relâmpago rápido
+      </div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-day">3d</div>
+      <div class="rev-label">CONSOLIDAÇÃO</div>
+      <div class="rev-items">
+        ✅ Tabela Confusões Clássicas<br>
+        ✅ Diagnóstico Prenatal (timing)<br>
+        ✅ Duchenne vs. Hemofilia A vs. B<br>
+        ✅ Aneuploidias: cariotipo + clínica<br>
+        ✅ Refazer quiz com foco nos erros
+      </div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-day">7d</div>
+      <div class="rev-label">APROFUNDAMENTO</div>
+      <div class="rev-items">
+        ✅ Farmacogenética (varfarina, isoniazida)<br>
+        ✅ DDS: XY insensibilidade + XX hiperplasia adrenal<br>
+        ✅ Multifatorial: diabetes tipos, HAS %<br>
+        ✅ Resolver pegadinhas do Prof. Maldoso<br>
+        ✅ Flashcards errados no Anki
+      </div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-day">15d</div>
+      <div class="rev-label">INTEGRAÇÃO</div>
+      <div class="rev-items">
+        ✅ Revisão geral das tabelas<br>
+        ✅ Alzheimer precoce vs. tardio<br>
+        ✅ X Frágil: FMR1, CGG, ROME<br>
+        ✅ Rasputín + aspirina (hemofilia)<br>
+        ✅ Simular prova com tempo
+      </div>
+    </div>
+    <div class="rev-card">
+      <div class="rev-day">30d</div>
+      <div class="rev-label">MANUTENÇÃO</div>
+      <div class="rev-items">
+        ✅ Resumo de Bolso completo<br>
+        ✅ Quiz relâmpago cronometrado<br>
+        ✅ Refazer flashcards esquecidos<br>
+        ✅ Revisar apenas pontos fracos<br>
+        ✅ Relacionar com outras disciplinas
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 24px;">
+    <div class="card-title">🧬 O Que Revisar em Cada Sessão</div>
+    <table>
+      <tr><th>Sessão</th><th>Foco Principal</th><th>Ferramenta</th><th>Tempo</th></tr>
+      <tr><td>24h</td><td>Anomalias + Huntington + Flashcards todos</td><td>Flashcards + Quiz</td><td>30 min</td></tr>
+      <tr><td>3 dias</td><td>Diagnóstico + Herança X-ligada + Aneuploidias</td><td>Tabela confusões</td><td>25 min</td></tr>
+      <tr><td>7 dias</td><td>Farmacogenética + DDS + Multifatorial</td><td>Prof. Maldoso</td><td>20 min</td></tr>
+      <tr><td>15 dias</td><td>Integração geral + casos clínicos</td><td>Quiz cronometrado</td><td>20 min</td></tr>
+      <tr><td>30 dias</td><td>Revisão geral dos pontos fracos</td><td>Resumo de Bolso</td><td>15 min</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ========== ETAPA 9: RESUMO DE BOLSO ========== -->
+<div class="page" id="page-bolso">
+  <div class="intro-box">
+    <h2>📋 ETAPA 9 — RESUMO DE BOLSO</h2>
+    <p>Tudo que tem maior chance de aparecer na prova. 1 página mental.</p>
+  </div>
+
+  <div class="bolso-grid">
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ 4 Anomalias Aisladas</div>
+      <div class="bolso-item"><strong>Malformação</strong> = erro genético, organogênese (3–8 sem), primário</div>
+      <div class="bolso-item"><strong>Disrupção</strong> = externo destrói o perfeito, risco recorrência = ZERO</div>
+      <div class="bolso-item"><strong>Deformação</strong> = fuerza mecânica entorta, 3º trim, CORRIGÍVEL</div>
+      <div class="bolso-item"><strong>Displasia</strong> = gene único, organização celular anormal, SISTÊMICA</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ Anomalias Múltiplas</div>
+      <div class="bolso-item"><strong>Sequência</strong> = 1 defeito → cascata. Ex: Potter (agenesia renal)</div>
+      <div class="bolso-item"><strong>Síndrome</strong> = causa genética definida. Ex: Down, Patau</div>
+      <div class="bolso-item"><strong>Associação VATER</strong> = sem padrão genético (Vértebras, Anal, Traqueoesofágica, cardíaca, Renal+Radial)</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ Diagnóstico Prenatal</div>
+      <div class="bolso-item"><strong>Translucência nucal</strong>: 10–14 sem = rastreo Down</div>
+      <div class="bolso-item"><strong>NIPT</strong>: 99% precisão = ainda RASTREO (não confirma)</div>
+      <div class="bolso-item"><strong>BVC</strong>: 10–12 sem = confirma (invasivo)</div>
+      <div class="bolso-item"><strong>Amniocentese</strong>: ≥16 sem = confirma (invasivo)</div>
+      <div class="bolso-item"><strong>AFP elevada</strong> = defeitos do tubo neural</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ Herança Monogênica</div>
+      <div class="bolso-item"><strong>Huntington</strong>: autoss. dominante, CAG, huntingtina, antecipação</div>
+      <div class="bolso-item"><strong>Duchenne</strong>: X recessivo, sem distrofina, amortecedor ausente</div>
+      <div class="bolso-item"><strong>Hemofilia A</strong>: Fator VIII, X recessivo, mais comum</div>
+      <div class="bolso-item"><strong>Hemofilia B</strong>: Fator IX, X recessivo, hemartroses</div>
+      <div class="bolso-item">🔥 Pai X-recessivo: NUNCA transmite a fils varones</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ Aneuploidias Sexuais</div>
+      <div class="bolso-item"><strong>Klinefelter 47,XXY</strong>: alto, ginecomastia, infértil, trata c/ testosterona</div>
+      <div class="bolso-item"><strong>Turner 45,X</strong>: baixa, pescoço alado, inteligência NORMAL</div>
+      <div class="bolso-item"><strong>Triple X 47,XXX</strong>: fenotipo normal, fértil</div>
+      <div class="bolso-item"><strong>Jacobs 47,XYY</strong>: alto, aracnodactilia, SEM vínculo com violência</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ Farmacogenética</div>
+      <div class="bolso-item"><strong>Lento</strong> = acumula = TOXICIDADE</div>
+      <div class="bolso-item"><strong>Ultra rápido</strong> = elimina = INEFICÁCIA</div>
+      <div class="bolso-item"><strong>Varfarina lento</strong> = hemorragia / rápido = trombose</div>
+      <div class="bolso-item"><strong>Isoniazida lento</strong> = ocidentais (50%) / rápido = asiáticos</div>
+      <div class="bolso-item"><strong>Bimodal</strong> = gene específico dirige metabolismo</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ DDS e Determinação Sexual</div>
+      <div class="bolso-item"><strong>SRY</strong> = interruptor mestre. Inativo → ovários (mesmo XY)</div>
+      <div class="bolso-item"><strong>Lyon</strong> = inativa 1 X → corpúsculo de Barr</div>
+      <div class="bolso-item"><strong>DDS 46,XY</strong> = insensibilidade androgênios → fenotipo feminino sem útero</div>
+      <div class="bolso-item"><strong>DDS 46,XX</strong> = hiperplasia adrenal → virilização</div>
+      <div class="bolso-item"><strong>X Frágil</strong>: FMR1, CGG >200, ROME (Retardo, Orelhas, Macroorquidia, Espectro autista)</div>
+    </div>
+
+    <div class="bolso-box">
+      <div class="bolso-title">⭐ Multifatorial</div>
+      <div class="bolso-item"><strong>G + A = F</strong> (Genótipo + Ambiente = Fenótipo)</div>
+      <div class="bolso-item"><strong>HAS</strong>: 2 pais hipertensos = 45% risco no filho</div>
+      <div class="bolso-item"><strong>TEA</strong>: heredabilidade 90%, sem marcador molecular, 4:1 H:M</div>
+      <div class="bolso-item"><strong>Alzheimer &lt;65</strong> = mendeliano. <strong>&gt;65</strong> = multifatorial</div>
+      <div class="bolso-item"><strong>Esquizofrenia</strong>: 1% geral, 45% se pai afetado</div>
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top: 20px;">
+    <div class="card-title">🔥 PEGADINHAS PARA NÃO ESQUECER NUNCA</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">NIPT 99% <span class="hl-red">≠</span> diagnóstico definitivo</div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">Turner = inteligência <span class="hl-green">NORMAL</span></div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">Jacobs XYY <span class="hl-red">≠</span> violência (desmitificado)</div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">Pai X-recessivo → <span class="hl-red">0%</span> filhos varones afetados</div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">Disrupção: risco recorrência = <span class="hl-green">ZERO</span></div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">Toxicidade farmacogenética <span class="hl-red">≠</span> alergia</div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">VATER = <span class="hl-red">associação</span>, não síndrome</div></div>
+      <div class="prio-item fire" style="margin: 0;"><div class="prio-body">Deformação = <span class="hl-green">corrigível</span> pós-natal</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // NAV
+  function showPage(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // PROF. MALDOSO — reveal on answer
+  function answerTrap(opt) {
+    const trap = opt.closest('.trap');
+    if (trap.classList.contains('answered')) return;
+    trap.classList.add('answered');
+    // highlight the clicked option
+    if (opt.classList.contains('wrong')) {
+      opt.style.background = 'rgba(247,95,95,0.15)';
+    } else {
+      opt.style.background = 'rgba(61,214,140,0.15)';
+    }
+  }
+
+  // FLASHCARDS DATA
+  const flashcards = [
+    { q: "Qual a definição de Malformação congênita?", a: "Defeito estrutural primário de origem genética durante a organogênese (3ª–8ª semana). Exemplo: labio leporino, polidactilia." },
+    { q: "Disrupção × Deformação: qual tem risco de recorrência ZERO?", a: "DISRUPÇÃO — plano genético é correto, fator extrínseco destrói estrutura. Nenhum risco genético de repetição." },
+    { q: "Sequência de Potter: qual é o defeito inicial?", a: "AGENESIA RENAL → sem urina → oligohidrâmnios → compressão → hipoplasia pulmonar + face achatada." },
+    { q: "O que diferencia Síndrome de Associação?", a: "Síndrome = causa genética DEFINIDA. Associação = agrupamento por acaso frequente SEM padrão genético (ex: VATER)." },
+    { q: "VATER: o que significa cada letra?", a: "Vertebral, Anal, Traqueoesofágica (fístula), cardíaca (E), Renal + Radial." },
+    { q: "NIPT com 99% de precisão confirma Síndrome de Down?", a: "NÃO. NIPT é rastreo não-invasivo. Apenas BVC (10–12 sem) ou amniocentese (≥16 sem) confirmam." },
+    { q: "Qual método invasivo se usa na 11ª semana de gestação?", a: "Biopsia de Vilosidades Coriônicas (BVC) — aspiração de tecido placentário (10–12 semanas)." },
+    { q: "Huntington: padrão, gene, mutação e fenômeno especial?", a: "Autossômico DOMINANTE | Gene HTT | Expansão CAG → poliglutamina tóxica | Antecipação (piora a cada geração)." },
+    { q: "Por que a distrofina é chamada de 'amortecedor'?", a: "Conecta actina (citoesqueleto) à matriz extracelular via membrana. Sem ela, cada contração rasga a membrana → necrosis progressiva." },
+    { q: "Hemofilia A vs. B: fatores e frequência?", a: "A = Fator VIII (mais comum) | B = Fator IX. Ambas X recessivo. Ambas causam hemartroses." },
+    { q: "Pai com Duchenne transmite a doença aos filhos varones?", a: "NÃO. Filhos varones recebem o Y do pai. Todas as filhas serão portadoras (recebem o X afetado do pai)." },
+    { q: "Turner: cariotipo, características e ponto crítico?", a: "45, X | Baixa estatura, pescuezo alado, tórax em escudo, falla ovárica | Inteligência NORMAL (estigma desmitificado)." },
+    { q: "Klinefelter: cariotipo, clínica e tratamento?", a: "47, XXY | Alto, ginecomastia, testículos pequenos, infértil, sem vello | Tratável com testosterona." },
+    { q: "Jacobs (47,XYY): associação com violência é válida?", a: "NÃO. Associação foi desmentida pela ciência contemporânea. Estatura alta e aracnodactilia, mas comportamento normal." },
+    { q: "Gene SRY inativo em embrião XY → que acontece?", a: "Desenvolvimento FEMININO (ovários). SRY é o interruptor mestre da masculinização. Sem ele, via default = feminina." },
+    { q: "Hipótese de Lyon: o que é o corpúsculo de Barr?", a: "X inativado nas mulheres XX desde a embriogênese. Previne sobrecarga genética. 1 corpúsculo = # de X – 1." },
+    { q: "X Frágil: gene, mutação e tríade clínica nos varones?", a: "FMR1 | Expansão CGG >200 → metilação → silenciamento | ROME: Retardo mental, Orelhas proeminentes, Macroorquidia, Espectro autista." },
+    { q: "DDS 46,XY: por que o fenotipo é feminino?", a: "Síndrome de Insensibilidade a Andrógenos: testosterona é produzida mas receptor falha → via default feminina. Sem útero, com testículos internos." },
+    { q: "Metabolizador LENTO de varfarina → resultado clínico?", a: "HEMORRAGIA — varfarina se acumula pois enzimas não processam. Concentração tóxica de anticoagulante." },
+    { q: "Metabolizador ULTRA RÁPIDO de varfarina → resultado?", a: "TROMBOSE — varfarina é eliminada tão rápido que não chega ao nível terapêutico. Sem proteção anticoagulante." },
+    { q: "Curva bimodal na farmacogenética indica o quê?", a: "Metabolismo dirigido por variante genética específica — grupos claramente separados, dosis única não serve para todos." },
+    { q: "Fórmula da herança multifatorial?", a: "Genótipo + Ambiente = Fenótipo. O indivíduo herda a SUSCEPTIBILIDADE, não a doença." },
+    { q: "Alzheimer: qual tipo é mendeliano e qual é multifatorial?", a: "Precoce (<65 anos) = mendeliano (presenilinas). Tardio (>65 anos) = multifatorial (apolipoproteína E + ambiente)." },
+    { q: "Hipertensão: risco se ambos os pais são hipertensos?", a: "45% de risco (vs. 8–28% com 1 pai afetado vs. 4% com nenhum afetado)." },
+    { q: "Farmacogenética ≠ alergia: qual a diferença?", a: "Alergia = resposta imunológica. Toxicidade farmacogenética = incapacidade metabólica enzimática (acúmulo do fármaco)." },
+  ];
+
+  function buildFlashcards() {
+    const container = document.getElementById('fc-container');
+    flashcards.forEach((fc, i) => {
+      const el = document.createElement('div');
+      el.className = 'fc';
+      el.innerHTML = `<div class="fc-q"><b>Q${i+1}:</b> ${fc.q}</div><div class="fc-a">✅ ${fc.a}</div><div class="fc-hint">👆 clique para revelar</div>`;
+      el.addEventListener('click', () => el.classList.toggle('flipped'));
+      container.appendChild(el);
+    });
+  }
+  buildFlashcards();
+</script>
+</body>
+</html>

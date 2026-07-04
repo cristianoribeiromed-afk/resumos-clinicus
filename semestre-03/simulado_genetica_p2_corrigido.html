@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado P2 — Genética y Anomalías Congénitas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #20243a;
+  --border: #2d3248;
+  --accent: #7c83f5;
+  --green: #4ade80;
+  --red: #f87171;
+  --orange: #fb923c;
+  --yellow: #facc15;
+  --text: #e8eaf6;
+  --text2: #9397b8;
+  --text3: #4a4f72;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); line-height:1.65; }
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #1a1d27 0%, #20243a 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 2rem 1.5rem;
+  text-align: center;
+}
+.header h1 { font-size:1.7rem; font-weight:700; letter-spacing:-0.02em; }
+.header h1 span { color:var(--accent); }
+.header p { color:var(--text2); font-size:0.88rem; margin-top:0.4rem; }
+.chips { display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; margin-top:1rem; }
+.chip {
+  background: rgba(124,131,245,0.12);
+  border: 1px solid rgba(124,131,245,0.25);
+  color: var(--accent);
+  border-radius:20px;
+  padding:0.3rem 0.9rem;
+  font-size:0.78rem;
+  font-weight:600;
+}
+
+/* ── NAV ── */
+nav {
+  display:flex; gap:0; overflow-x:auto;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:100;
+}
+nav button {
+  background:none; border:none; border-bottom:3px solid transparent;
+  color:var(--text2); padding:0.9rem 1.4rem; cursor:pointer;
+  font-size:0.82rem; font-weight:600; white-space:nowrap;
+  font-family:'Inter',sans-serif; transition:all 0.2s;
+}
+nav button:hover { color:var(--text); }
+nav button.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+/* ── LAYOUT ── */
+.page { display:none; max-width:920px; margin:0 auto; padding:2.5rem 1.5rem; }
+.page.active { display:block; }
+
+/* ── SCOREBOARD ── */
+.scoreboard {
+  display:flex; gap:1rem; flex-wrap:wrap;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:1.2rem 1.5rem; margin-bottom:2rem;
+  align-items:center;
+}
+.score-block { text-align:center; }
+.score-num { font-size:1.8rem; font-weight:700; font-family:'JetBrains Mono',monospace; color:var(--accent); }
+.score-lbl { font-size:0.72rem; color:var(--text2); margin-top:0.1rem; }
+.divider { width:1px; background:var(--border); height:40px; }
+.btn-reset {
+  margin-left:auto;
+  background:none; border:1px solid var(--border);
+  color:var(--text2); padding:0.5rem 1rem;
+  border-radius:8px; cursor:pointer;
+  font-size:0.82rem; font-family:'Inter',sans-serif;
+  transition:all 0.15s;
+}
+.btn-reset:hover { border-color:var(--red); color:var(--red); }
+
+/* ── QUESTÃO ── */
+.q-wrap {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:1.4rem 1.6rem; margin-bottom:1rem;
+  transition:border-color 0.2s;
+}
+.q-wrap.acertou { border-color:var(--green); }
+.q-wrap.errou { border-color:var(--red); }
+
+.q-header { display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem; }
+.q-num {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:6px; padding:0.25rem 0.6rem;
+  font-size:0.72rem; font-weight:700; color:var(--text3);
+  font-family:'JetBrains Mono',monospace; white-space:nowrap;
+}
+.q-dif {
+  font-size:0.7rem; font-weight:700; padding:0.2rem 0.6rem;
+  border-radius:10px;
+}
+.facil { background:rgba(74,222,128,0.12); color:var(--green); }
+.medio { background:rgba(251,146,60,0.12); color:var(--orange); }
+.dificil { background:rgba(248,113,113,0.12); color:var(--red); }
+
+.q-enunciado { font-size:0.93rem; color:var(--text); font-weight:500; margin-bottom:1rem; }
+.q-caso {
+  background:var(--surface2); border-left:3px solid var(--orange);
+  border-radius:0 8px 8px 0; padding:0.9rem 1.1rem;
+  margin-bottom:1rem; font-size:0.88rem; color:var(--text2);
+}
+
+.opcoes { display:flex; flex-direction:column; gap:0.45rem; }
+.opcao {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:8px; padding:0.65rem 1rem;
+  cursor:pointer; font-size:0.88rem; color:var(--text2);
+  text-align:left; font-family:'Inter',sans-serif;
+  transition:all 0.15s;
+}
+.opcao:hover:not(:disabled) { border-color:var(--accent); color:var(--text); background:rgba(124,131,245,0.06); }
+.opcao.correta { background:rgba(74,222,128,0.1); border-color:var(--green); color:var(--green); }
+.opcao.errada  { background:rgba(248,113,113,0.1); border-color:var(--red); color:var(--red); }
+.opcao:disabled { cursor:default; }
+
+.gabarito-box {
+  display:none; margin-top:0.9rem;
+  background:rgba(124,131,245,0.06);
+  border:1px solid rgba(124,131,245,0.18);
+  border-radius:8px; padding:0.9rem 1.1rem;
+  font-size:0.85rem; color:var(--text2);
+}
+.gabarito-box.show { display:block; }
+.gabarito-box strong { color:var(--accent); }
+.gabarito-box .pegadinha {
+  margin-top:0.5rem; padding:0.5rem 0.7rem;
+  background:rgba(250,204,21,0.08);
+  border-left:3px solid var(--yellow);
+  border-radius:0 6px 6px 0;
+  color:var(--yellow); font-size:0.82rem;
+}
+
+/* ── V/F ── */
+.vf-opcoes { display:flex; gap:0.6rem; margin-top:0.7rem; }
+.vf-btn {
+  padding:0.55rem 1.4rem; border-radius:8px;
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--text2); cursor:pointer; font-weight:700;
+  font-size:0.88rem; font-family:'Inter',sans-serif; transition:all 0.15s;
+}
+.vf-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--text); }
+.vf-btn.correta { background:rgba(74,222,128,0.1); border-color:var(--green); color:var(--green); }
+.vf-btn.errada  { background:rgba(248,113,113,0.1); border-color:var(--red); color:var(--red); }
+
+/* ── ASSOCIAÇÃO ── */
+.assoc-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1rem 0; }
+@media(max-width:600px){ .assoc-grid { grid-template-columns:1fr; } }
+.assoc-col { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:1rem; }
+.assoc-col h4 { font-size:0.75rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.8rem; }
+.assoc-item { font-size:0.88rem; color:var(--text2); padding:0.35rem 0; border-bottom:1px solid var(--border); }
+.assoc-item:last-child { border:none; }
+
+.assoc-opcoes { display:flex; flex-wrap:wrap; gap:0.5rem; margin:0.8rem 0; }
+.assoc-opt {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:6px; padding:0.4rem 0.9rem;
+  cursor:pointer; font-size:0.83rem; color:var(--text2);
+  font-family:'Inter',sans-serif; transition:all 0.15s;
+}
+.assoc-opt:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+.assoc-opt.selected { border-color:var(--accent); color:var(--accent); background:rgba(124,131,245,0.1); }
+.assoc-opt.correta { border-color:var(--green); color:var(--green); background:rgba(74,222,128,0.1); }
+.assoc-opt.errada  { border-color:var(--red); color:var(--red); background:rgba(248,113,113,0.1); }
+
+/* ── SEÇÃO GABARITO ── */
+.gab-section { margin:2rem 0; }
+.gab-title {
+  font-size:0.75rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--accent);
+  border-bottom:1px solid var(--border); padding-bottom:0.6rem; margin-bottom:1rem;
+}
+.gab-table { width:100%; border-collapse:collapse; font-size:0.87rem; }
+.gab-table th { background:var(--surface2); color:var(--text); padding:0.6rem 0.9rem; text-align:left; }
+.gab-table td { padding:0.6rem 0.9rem; border-bottom:1px solid var(--border); color:var(--text2); vertical-align:top; }
+.gab-table tr:hover td { background:rgba(255,255,255,0.01); }
+.resp-tag {
+  display:inline-block; font-weight:700; padding:0.15rem 0.5rem;
+  border-radius:4px; font-size:0.78rem;
+}
+.resp-v { background:rgba(74,222,128,0.15); color:var(--green); }
+.resp-f { background:rgba(248,113,113,0.15); color:var(--red); }
+.resp-a { background:rgba(124,131,245,0.15); color:var(--accent); }
+
+/* ── RESULTADO FINAL ── */
+.resultado-final {
+  text-align:center; padding:2.5rem;
+  background:var(--surface); border:2px solid var(--accent);
+  border-radius:16px; margin-top:2rem; display:none;
+}
+.resultado-final.show { display:block; }
+.nota-big { font-size:4rem; font-weight:700; font-family:'JetBrains Mono',monospace; }
+.nota-conceito { font-size:1.1rem; color:var(--text2); margin-top:0.5rem; }
+.btn-primary {
+  background:var(--accent); color:#0f1117;
+  border:none; padding:0.8rem 2rem;
+  border-radius:8px; cursor:pointer; font-weight:700;
+  font-size:0.9rem; font-family:'Inter',sans-serif;
+  margin-top:1.5rem; transition:opacity 0.15s;
+}
+.btn-primary:hover { opacity:0.85; }
+
+h2 {
+  font-size:1.1rem; font-weight:700; color:var(--accent);
+  border-left:3px solid var(--accent); padding-left:0.8rem;
+  margin:2rem 0 1rem;
+}
+p.intro { color:var(--text2); font-size:0.88rem; margin-bottom:1.5rem; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Simulado <span>P2 — Genética</span></h1>
+  <p>Anomalías Congénitas · Herencia Monogénica · Herencia Sexual · Farmacogenética</p>
+  <div class="chips">
+    <span class="chip">15 Múltiple opción</span>
+    <span class="chip">5 Verdadero / Falso</span>
+    <span class="chip">5 Asociación de columnas</span>
+    <span class="chip">Gabarito comentado</span>
+  </div>
+</div>
+
+<nav>
+  <button class="active" onclick="showPage('p1',this)">Parte 1 — Múltiple opción</button>
+  <button onclick="showPage('p2',this)">Parte 2 — V/F</button>
+  <button onclick="showPage('p3',this)">Parte 3 — Asociación</button>
+  <button onclick="showPage('gab',this)">📋 Gabarito</button>
+</nav>
+
+<!-- ══════════════════════════════════
+     PARTE 1 — MÚLTIPLE OPCIÓN
+══════════════════════════════════ -->
+<div class="page active" id="page-p1">
+  <div class="scoreboard">
+    <div class="score-block">
+      <div class="score-num" id="sc1-ac">0</div>
+      <div class="score-lbl">acertos</div>
+    </div>
+    <div class="divider"></div>
+    <div class="score-block">
+      <div class="score-num" id="sc1-re">0</div>
+      <div class="score-lbl">respondidas</div>
+    </div>
+    <div class="divider"></div>
+    <div class="score-block">
+      <div class="score-num" style="color:var(--text2)">15</div>
+      <div class="score-lbl">total</div>
+    </div>
+    <button class="btn-reset" onclick="resetP1()">↺ Reiniciar</button>
+  </div>
+  <p class="intro">Lea con atención. Solo una alternativa es correcta. Las preguntas mezclan conceptos básicos, aplicaciones clínicas y casos. Hay distractores fuertes.</p>
+  <div id="container-p1"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     PARTE 2 — V/F
+══════════════════════════════════ -->
+<div class="page" id="page-p2">
+  <div class="scoreboard">
+    <div class="score-block">
+      <div class="score-num" id="sc2-ac">0</div>
+      <div class="score-lbl">acertos</div>
+    </div>
+    <div class="divider"></div>
+    <div class="score-block">
+      <div class="score-num" id="sc2-re">0</div>
+      <div class="score-lbl">respondidas</div>
+    </div>
+    <div class="divider"></div>
+    <div class="score-block">
+      <div class="score-num" style="color:var(--text2)">5</div>
+      <div class="score-lbl">total</div>
+    </div>
+    <button class="btn-reset" onclick="resetP2()">↺ Reiniciar</button>
+  </div>
+  <p class="intro">Juzgue cada afirmación como Verdadero o Falso. Cuidado con los enunciados que mezclan información correcta con un detalle incorrecto.</p>
+  <div id="container-p2"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     PARTE 3 — ASOCIACIÓN
+══════════════════════════════════ -->
+<div class="page" id="page-p3">
+  <div class="scoreboard">
+    <div class="score-block">
+      <div class="score-num" id="sc3-ac">0</div>
+      <div class="score-lbl">acertos</div>
+    </div>
+    <div class="divider"></div>
+    <div class="score-block">
+      <div class="score-num" id="sc3-re">0</div>
+      <div class="score-lbl">respondidas</div>
+    </div>
+    <div class="divider"></div>
+    <div class="score-block">
+      <div class="score-num" style="color:var(--text2)">5</div>
+      <div class="score-lbl">total</div>
+    </div>
+    <button class="btn-reset" onclick="resetP3()">↺ Reiniciar</button>
+  </div>
+  <p class="intro">Asocie cada concepto de la Columna A con su correspondiente en la Columna B. Haga clic en la opción correcta para cada ítem.</p>
+  <div id="container-p3"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     GABARITO
+══════════════════════════════════ -->
+<div class="page" id="page-gab">
+  <h2>Gabarito — Múltiple Opción</h2>
+  <table class="gab-table">
+    <tr><th>Nº</th><th>Respuesta</th><th>Comentario</th></tr>
+    <tr><td>01</td><td><span class="resp-tag resp-a">B</span></td><td>La <strong>disrupción</strong> resulta de factores extrínsecos que interrumpen un desarrollo que era genéticamente normal. Las bridas amnióticas son el ejemplo clásico. La malformación es un error primario del plan genético. La deformación ocurre por fuerzas mecánicas en el 3er trimestre.</td></tr>
+    <tr><td>02</td><td><span class="resp-tag resp-a">C</span></td><td>La <strong>Secuencia de Potter</strong> parte de la agenesia renal → ausencia de orina → oligohidramnios → compresión uterina → hipoplasia pulmonar + facies aplanada. Es el ejemplo clásico de "un defecto, múltiples consecuencias".</td></tr>
+    <tr><td>03</td><td><span class="resp-tag resp-a">D</span></td><td>La <strong>biopsia de vellosidades coriónicas</strong> se realiza entre las 10-12 semanas. La amniocentesis se hace a partir de la semana 16. La BVC es el único método invasivo temprano disponible.</td></tr>
+    <tr><td>04</td><td><span class="resp-tag resp-a">A</span></td><td>La <strong>Enfermedad de Huntington</strong> es autosómica dominante. Un progenitor afectado tiene 50% de probabilidad de transmitirla. No requiere dos copias del gen defectuoso. La anticipación genética hace que empeore en generaciones posteriores.</td></tr>
+    <tr><td>05</td><td><span class="resp-tag resp-a">E</span></td><td>La <strong>distrofina</strong> actúa como amortiguador mecánico entre la actina del citoesqueleto y la matriz extracelular. Sin ella, cada contracción rasga la membrana, causando necrosis progresiva. No es enzima, receptor ni factor de transcripción.</td></tr>
+    <tr><td>06</td><td><span class="resp-tag resp-a">B</span></td><td>La <strong>Hemofilia A</strong> se debe a deficiencia del Factor VIII. La Hemofilia B es por Factor IX. Son las dos formas ligadas al X. La distinción es clave en prova.</td></tr>
+    <tr><td>07</td><td><span class="resp-tag resp-a">C</span></td><td>El gen <strong>SRY</strong> es el interruptor maestro de masculinización. Si está ausente o no funcional, el embrión se desarrolla como femenino independientemente del cromosoma Y presente. El fenotipo sigue al gen, no al cariotipo.</td></tr>
+    <tr><td>08</td><td><span class="resp-tag resp-a">D</span></td><td>El <strong>Síndrome de Turner (45,X)</strong> se caracteriza por cuello alado, tórax en escudo, baja estatura y falla ovárica. La inteligencia es típicamente normal — eso es una pegadinha clásica. Klinefelter es 47,XXY (masculino).</td></tr>
+    <tr><td>09</td><td><span class="resp-tag resp-a">A</span></td><td>El <strong>NIPT</strong> analiza fragmentos de ADN fetal libre en sangre materna con ~99% de precisión para Síndrome de Down. Sin embargo, es solo método de rastreo — no confirma diagnóstico. La confirmación requiere método invasivo.</td></tr>
+    <tr><td>10</td><td><span class="resp-tag resp-a">B</span></td><td>Los <strong>metabolizadores lentos</strong> acumulan el fármaco porque sus enzimas tienen actividad reducida (alelos recesivos homocigotos). Esto genera toxicidad, no ineficacia. Los ultra rápidos son los que metabolizan tan rápido que el fármaco no actúa.</td></tr>
+    <tr><td>11</td><td><span class="resp-tag resp-a">D</span></td><td>La <strong>Hiperplasia Adrenal Congénita</strong> causa DDS 46,XX: genéticamente mujer, pero con sobreproducción de andrógenos suprarrenales que viriliza los genitales externos. Posee ovarios y útero. La genitalia externa es ambigua o masculinizada.</td></tr>
+    <tr><td>12</td><td><span class="resp-tag resp-a">C</span></td><td>La <strong>Hipótesis de Lyon</strong> explica la inactivación aleatoria de uno de los cromosomas X en mujeres. El X inactivado forma el corpúsculo de Barr. Evita la "sobrecarga genética" por doble dosis de genes del X.</td></tr>
+    <tr><td>13</td><td><span class="resp-tag resp-a">E</span></td><td>La <strong>asociación VATER</strong> reúne anomalías vertebrales, anales, cardíacas, traqueoesofágicas, renales y de miembros. Es una ASOCIACIÓN (no síndrome): las anomalías ocurren juntas con frecuencia mayor al azar, pero sin causa genética identificada.</td></tr>
+    <tr><td>14</td><td><span class="resp-tag resp-a">C</span></td><td>La <strong>warfarina</strong> é el ejemplo clásico de farmacogenética: el metabolizador <strong>lento acumula → hemorragia</strong>; el ultra rápido <strong>elimina antes de actuar → trombosis</strong>. El perfil genético hepático determina el resultado opuesto con la misma dosis.</td></tr>
+    <tr><td>15</td><td><span class="resp-tag resp-a">B</span></td><td>La <strong>gráfica bimodal/trimodal</strong> indica metabolismo dirigido por variantes genéticas específicas (grupos claramente separados). La campana de Gauss indica variación poligénica suave. La bimodal invalida el uso de dosis estándar universal.</td></tr>
+  </table>
+
+  <h2>Gabarito — Verdadero / Falso</h2>
+  <table class="gab-table">
+    <tr><th>Nº</th><th>Respuesta</th><th>Comentario</th></tr>
+    <tr><td>01</td><td><span class="resp-tag resp-f">FALSO</span></td><td>Las <strong>deformaciones</strong> son las que son frecuentemente corregibles en el período postnatal. Las malformaciones (errores primarios del plan genético) generalmente requieren intervención quirúrgica y no se "corrigen" espontáneamente.</td></tr>
+    <tr><td>02</td><td><span class="resp-tag resp-v">VERDADERO</span></td><td>La <strong>displasia</strong> afecta la organización celular en un tejido y suele ser sistémica. La displasia tanatofórica afecta todo el esqueleto; la ectodérmica afecta cabello, piel, dientes y uñas simultáneamente.</td></tr>
+    <tr><td>03</td><td><span class="resp-tag resp-f">FALSO</span></td><td>La <strong>amniocentesis</strong> se realiza a partir de la semana 16 (no 10-12). La biopsia de vellosidades coriónicas es la que se hace entre las semanas 10 y 12. Confundir las semanas de estos procedimientos es la pegadinha más frecuente en prova.</td></tr>
+    <tr><td>04</td><td><span class="resp-tag resp-v">VERDADEIRO</span></td><td>El varón con enfermedad ligada al X <strong>no transmite</strong> el cromosoma X a sus hijos varones (les transmite el Y). Todas sus hijas, en cambio, recibirán su X patológico y serán portadoras o afectadas. Esto es fundamental para el cálculo de riesgo de recurrencia.</td></tr>
+    <tr><td>05</td><td><span class="resp-tag resp-f">FALSO</span></td><td>La <strong>isoniazida</strong> en metabolizadores rápidos (frecuentes en asiáticos) falla porque el fármaco se degrada antes de actuar — además puede causar daño hepático. Los metabolizadores <em>lentos</em> (comunes en europeos, ~50%) son los que acumulan toxicidad. Los papeles están invertidos en el enunciado.</td></tr>
+  </table>
+
+  <h2>Gabarito — Asociación de Columnas</h2>
+  <table class="gab-table">
+    <tr><th>Nº</th><th>Asociación</th><th>Comentario</th></tr>
+    <tr><td>01</td><td><strong>1-C · 2-E · 3-A · 4-B · 5-F</strong></td><td>Malformación=error genético primario; Disrupción=factor extrínseco en desarrollo normal; Deformación=fuerza mecánica 3T; Displasia=organización celular anormal; Secuencia=cascada de un defecto único.</td></tr>
+    <tr><td>02</td><td><strong>1-D · 2-B · 3-E · 4-A · 5-C</strong></td><td>Huntington=CAG/poliglutamina; Duchenne=distrofina ausente; Hemofilia A=Factor VIII; Hemofilia B=Factor IX; X Frágil=gen FMR1/CGG.</td></tr>
+    <tr><td>03</td><td><strong>1-C · 2-E · 3-A · 4-D · 5-B</strong></td><td>Klinefelter=47,XXY; Turner=45,X; Triple X=47,XXX; Jacobs=47,XYY; Insensibilidad andrógenos=DDS 46,XY fenotipo femenino.</td></tr>
+    <tr><td>04</td><td><strong>1-C · 2-A · 3-E · 4-B · 5-D</strong></td><td>Translucencia nucal=rastreo precoz para Down; NIPT=ADN fetal libre en sangre materna; Biopsia coriónica=diagnóstico 10-12 sem; Amniocentesis=diagnóstico sem 16+; AFP elevada=defectos del tubo neural.</td></tr>
+    <tr><td>05</td><td><strong>1-D · 2-A · 3-C · 4-E · 5-B</strong></td><td>Metabolizador lento=acumulación/toxicidad; Ultra rápido=ineficacia; Curva Gauss=poligénico; Bimodal=variantes genéticas específicas; CYP450=metabolismo antidepresivos.</td></tr>
+  </table>
+
+  <div style="margin-top:2rem;padding:1.2rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
+    <div style="font-size:0.75rem;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem;">⚠️ Pegadinhas Clásicas del Material</div>
+    <ul style="color:var(--text2);font-size:0.88rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
+      <li>→ <strong style="color:var(--text)">Disrupción ≠ Malformación:</strong> La disrupción tiene plano genético NORMAL; el agente externo es el problema.</li>
+      <li>→ <strong style="color:var(--text)">BVC = 10-12 sem vs Amnio = ≥16 sem:</strong> Siempre cae en prova invertido.</li>
+      <li>→ <strong style="color:var(--text)">NIPT ≠ diagnóstico definitivo:</strong> 99% de precisión pero sigue siendo rastreo — confirmación = método invasivo.</li>
+      <li>→ <strong style="color:var(--text)">Turner = inteligencia NORMAL:</strong> El enunciado falso siempre dice "deficiencia cognitiva".</li>
+      <li>→ <strong style="color:var(--text)">Síndrome de Jacobs ≠ criminalidad:</strong> Este vínculo fue desmentido por la ciencia moderna.</li>
+      <li>→ <strong style="color:var(--text)">Huntington = autosómica DOMINANTE:</strong> No precisa dos copias; 50% de riesgo con un padre afectado.</li>
+      <li>→ <strong style="color:var(--text)">Hemofilia A = Factor VIII (la más común), B = Factor IX.</strong></li>
+      <li>→ <strong style="color:var(--text)">Metabolizador lento = TOXICIDAD; Ultra rápido = INEFICACIA.</strong> El examinador siempre invierte esto.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// DATOS
+// ══════════════════════════════════════
+const p1Data = [
+  {
+    num:"01", dif:"facil",
+    caso: null,
+    q: "Una gestante de 20 semanas tiene una ecografía que revela ausencia de extremidad distal en el feto, con tejido fibroso rodeando el muñón del miembro. La historia genética familiar es completamente negativa. ¿Cuál es la categoría más probable de esta anomalía?",
+    ops: ["A) Malformación, por tratarse de un error primario del plan genético",
+          "B) Disrupción, causada por un agente extrínseco que interrumpió un desarrollo genéticamente normal",
+          "C) Deformación, resultante de fuerzas mecánicas uterinas en el tercer trimestre",
+          "D) Displasia, por defecto en la organización celular de tejidos mesenquimales",
+          "E) Síndrome, por existir múltiples anomalías asociadas"],
+    r:1,
+    exp:"La <strong>disrupción</strong> es causada por factores extrínsecos (en este caso, bridas amnióticas) que interrumpen un proceso de desarrollo que era genéticamente perfecto. Por eso el riesgo de recurrencia es nulo — el genotipo del feto era correcto.",
+    peg:"La trampa es confundirla con malformación. La clave diferenciadora: historia familiar negativa + agente mecánico externo visible = disrupción."
+  },
+  {
+    num:"02", dif:"facil",
+    caso: null,
+    q: "La Secuencia de Potter es el ejemplo didáctico de un defecto primario que genera una cascada de eventos secundarios. ¿Cuál es el defecto inicial desencadenante de esta secuencia?",
+    ops: ["A) Hipoplasia pulmonar primaria",
+          "B) Oligohidramnios por rotura prematura de membranas",
+          "C) Agenesia renal bilateral",
+          "D) Compresión uterina por embarazo múltiple",
+          "E) Malformación cardíaca con shunt derecha-izquierda"],
+    r:2,
+    exp:"La cadena causal es: <strong>Agenesia renal → ausencia de orina fetal → oligohidramnios → compresión uterina → hipoplasia pulmonar + facies aplanada</strong>. El defecto inicial es la agenesia renal.",
+    peg:"La pegadinha es marcar 'oligohidramnios' como causa. El oligohidramnios es consecuencia, no causa. En prova de Medicina, identificar el defecto primario es la habilidad evaluada."
+  },
+  {
+    num:"03", dif:"facil",
+    caso: null,
+    q: "¿Cuál es el método de diagnóstico prenatal invasivo que puede realizarse más precozmente durante la gestación?",
+    ops: ["A) Amniocentesis, a partir de la semana 12",
+          "B) NIPT, realizado antes de la semana 10",
+          "C) Ecografía morfológica, entre las semanas 11 y 13",
+          "D) Biopsia de vellosidades coriónicas, entre las semanas 10 y 12",
+          "E) Cordocentesis, a partir de la semana 18"],
+    r:3,
+    exp:"La <strong>biopsia de vellosidades coriónicas (BVC)</strong> es el procedimiento invasivo más precoz, realizado entre las semanas 10-12. La amniocentesis solo puede realizarse a partir de la semana 16.",
+    peg:"El NIPT es no invasivo (no confirma diagnóstico). La confusión clásica es invertir las semanas de BVC y amniocentesis."
+  },
+  {
+    num:"04", dif:"facil",
+    caso: null,
+    q: "Un hombre de 45 años desarrolla movimientos involuntarios tipo corea, deterioro cognitivo progresivo y cambios conductuales severos. Su padre falleció con un cuadro similar a los 35 años, con manifestaciones más graves. ¿Cuál es el patrón de herencia de esta enfermedad?",
+    ops: ["A) Autosómica dominante con fenómeno de anticipación",
+          "B) Autosómica recesiva",
+          "C) Recesiva ligada al cromosoma X",
+          "D) Mitocondrial, de transmisión materna",
+          "E) Multifactorial sin patrón mendeliano claro"],
+    r:0,
+    exp:"<strong>Huntington</strong> es autosómica dominante. El fenómeno de anticipación explica por qué el padre tuvo síntomas a los 35 (más temprano) — en cada generación la expansión CAG aumenta.",
+    peg:"La pegadinha está en distractores como 'ligada al X'. La herencia dominante se confirma por: padre afectado, hijo afectado, inicio sin necesitar dos copias del gen."
+  },
+  {
+    num:"05", dif:"facil",
+    caso: null,
+    q: "La distrofina, cuya ausencia causa la Distrofia Muscular de Duchenne, cumple una función estructural crítica en la célula muscular. ¿Cuál es esa función?",
+    ops: ["A) Enzima que cataliza la síntesis de ATP en la mitocondria muscular",
+          "B) Receptor de señalización hormonal en la membrana del miocito",
+          "C) Factor de transcripción que regula la expresión de genes musculares",
+          "D) Factor de coagulación producido por el músculo esquelético",
+          "E) Proteína de anclaje que conecta la actina citoesquelética con la matriz extracelular a través de la membrana"],
+    r:4,
+    exp:"La <strong>distrofina</strong> actúa como amortiguador mecánico entre la actina del citoesqueleto y la lámina extracelular. Sin ella, cada contracción rasga la membrana del miocito, causando necrosis progresiva.",
+    peg:"Los distractores intentan confundir distrofina con distrofina. Es estructural, no enzimática ni receptora."
+  },
+  {
+    num:"06", dif:"medio",
+    caso: "Un niño de 5 años es llevado al médico por hematomas frecuentes y epistaxis de difícil control. La madre relata que un tío materno tuvo los mismos problemas. El examen de laboratorio muestra tiempo de sangría normal, tiempo de protrombina normal y tiempo parcial de tromboplastina (PTT) prolongado.",
+    q: "Considerando el patrón hereditario y el resultado de laboratorio, ¿cuál es el factor de coagulación más probablemente deficiente?",
+    ops: ["A) Factor VII (vía extrínseca)",
+          "B) Factor VIII (Hemofilia A)",
+          "C) Factor I (fibrinógeno)",
+          "D) Factor II (protrombina)",
+          "E) Factor X (vía común)"],
+    r:1,
+    exp:"<strong>PTT prolongado + herencia ligada al X (tío materno afectado) + hemostasia primaria normal = Hemofilia A (Factor VIII)</strong>. La Hemofilia A es la más frecuente y afecta la vía intrínseca (PTT), no la extrínseca (TP).",
+    peg:"Hemofilia A = Factor VIII (más común). Hemofilia B = Factor IX. Ambas son ligadas al X. El PTT prolongado + TP normal apunta a vía intrínseca."
+  },
+  {
+    num:"07", dif:"medio",
+    caso: null,
+    q: "Un individuo con cariotipo 46,XY presenta fenotipo completamente femenino, sin útero ni ovarios funcionales, pero con testículos internos no descendidos. Tiene niveles normales o elevados de testosterona. ¿Cuál es el mecanismo más probable?",
+    ops: ["A) Ausencia del gen SRY en el cromosoma Y",
+          "B) Mutación en el gen FMR1 causando X frágil",
+          "C) Mutación en el receptor de andrógenos que impide la acción de la testosterona en las células",
+          "D) Falla en la meiosis generando monosomia sexual",
+          "E) Inactivación del cromosoma X por la hipótesis de Lyon"],
+    r:2,
+    exp:"<strong>Síndrome de Insensibilidad a los Andrógenos</strong> (DDS 46,XY): el cuerpo produce testosterona pero el receptor está mutado y no la detecta. El desarrollo sigue la vía femenina por defecto.",
+    peg:"No confundir con ausencia de SRY. Aquí el gen SRY está presente y funciona, pero el receptor no responde. La testosterona está alta — eso elimina déficit de producción."
+  },
+  {
+    num:"08", dif:"medio",
+    caso: null,
+    q: "Una adolescente de 16 años consulta por amenorrea primaria y baja estatura. Al examen físico presenta cuello corto con pliegues laterales y tórax amplio. El cariotipo es 45,X. ¿Cuál de las siguientes afirmaciones sobre este diagnóstico es CORRECTA?",
+    ops: ["A) La paciente presenta deficiencia intelectual obligatoria",
+          "B) El Síndrome de Klinefelter tiene el mismo cariotipo",
+          "C) La fertilidad está conservada en la mayoría de los casos",
+          "D) La inteligencia es típicamente normal; la falla gonadal es el hallazgo principal",
+          "E) Los individuos con este síndrome son fenotípicamente masculinos"],
+    r:3,
+    exp:"<strong>Síndrome de Turner (45,X)</strong>: baja estatura, cuello alado, falla ovárica, infertilidad. La <strong>inteligencia es NORMAL</strong> en la mayoría. La pérdida de un X no compromete la cognición.",
+    peg:"La trampa es afirmar deficiencia cognitiva. Turner fue históricamente asociado a esto, pero la ciencia lo desmintió. Otro distractor frecuente: confundir con Klinefelter (47,XXY, masculino)."
+  },
+  {
+    num:"09", dif:"medio",
+    caso: "Una gestante de 12 semanas, 38 años, realiza el NIPT que reporta riesgo elevado para Síndrome de Down con un resultado positivo (sensibilidad declarada de 99%).",
+    q: "¿Cuál es la conducta más adecuada basada en los conceptos del material estudiado?",
+    ops: ["A) Confirmar el diagnóstico de Síndrome de Down y orientar a la familia sobre el pronóstico",
+          "B) Solicitar una segunda muestra de sangre materna para repetir el NIPT",
+          "C) Realizar biopsia de vellosidades coriónicas para confirmación diagnóstica definitiva",
+          "D) Aguardar hasta la semana 16 para realizar amniocentesis, ya que es más precisa que la BVC",
+          "E) Informar que el diagnóstico está confirmado pues 99% de precisión equivale a certeza diagnóstica"],
+    r:2,
+    exp:"El <strong>NIPT es método de RASTREO, no de diagnóstico</strong>. Ninguna anomalía genética grave se considera confirmada sin análisis de tejido fetal. A las 12 semanas, el método invasivo indicado es la <strong>BVC</strong> (10-12 sem).",
+    peg:"'99% de precisión' es la trampa principal. Alta sensibilidad en rastreo no equivale a diagnóstico definitivo. La amniocentesis solo a partir de la semana 16 — no es opción a las 12 semanas."
+  },
+  {
+    num:"10", dif:"medio",
+    caso: "Dos pacientes con tuberculosis, mismo peso, misma función renal y hepática, reciben isoniazida en dosis estándar. El paciente A, de ascendencia europea, desarrolla síntomas neurológicos por toxicidad. El paciente B, de ascendencia asiática, no mejora del cuadro infeccioso.",
+    q: "¿Cuál es la explicación farmacogenética más adecuada para las diferencias observadas?",
+    ops: ["A) El paciente A tiene resistencia bacteriana a la isoniazida; el B tiene hipersensibilidad",
+          "B) El paciente A es metabolizador lento (acumula toxicidad); el B es metabolizador rápido (elimina antes de actuar)",
+          "C) Ambos son metabolizadores rápidos, pero el A tiene falla renal subyacente",
+          "D) El perfil étnico no tiene relación con el metabolismo de fármacos",
+          "E) El paciente A tiene sobredosis por error de prescripción"],
+    r:1,
+    exp:"<strong>Metabolizadores lentos</strong> (frecuentes en europeos, ~50%) acumulan la droga → toxicidad. <strong>Metabolizadores rápidos</strong> (frecuentes en asiáticos) la degradan antes de que actúe → ineficacia. La enzima clave es la N-acetiltransferasa (NAT).",
+    peg:"El enunciado invita a marcar 'resistencia bacteriana'. Pero la pista es 'misma función renal/hepática' — el texto excluye esas variables para señalar la causa genética."
+  },
+  {
+    num:"11", dif:"dificil",
+    caso: null,
+    q: "Una recién nacida con cariotipo 46,XX presenta genitales externos ambiguos con clítoris hipertrófico. El examen interno revela útero y ovarios presentes. Los estudios hormonales muestran ACTH elevada y cortisol disminuido. ¿Cuál es el diagnóstico más probable?",
+    ops: ["A) Síndrome de Turner con mosaicismo",
+          "B) DDS 46,XY por insensibilidad a andrógenos",
+          "C) Hermafroditismo verdadero (DDS ovotesticular) por quimerismo",
+          "D) Hiperplasia Adrenal Congénita — DDS 46,XX",
+          "E) Síndrome del X frágil con virilización secundaria"],
+    r:3,
+    exp:"<strong>Hiperplasia Adrenal Congénita</strong> = falla enzimática en la suprarrenal → sobreproducción de andrógenos → virilización de genitales externos en feto XX. Útero y ovarios están presentes (genotipo y gónadas femeninas). ACTH alto + cortisol bajo = bloqueo enzimático suprarrenal.",
+    peg:"La trampa es el DDS 46,XY por insensibilidad. Diferencial clave: 46,XX (HAC) tiene ovarios + útero + ACTH elevada. 46,XY insensibilidad tiene testículos internos + fenotipo femenino + testosterona alta."
+  },
+  {
+    num:"12", dif:"dificil",
+    caso: null,
+    q: "La Hipótesis de Lyon explica un mecanismo de compensación de dosis génica en mujeres. ¿Cuál de las siguientes afirmaciones sobre este mecanismo es correcta?",
+    ops: ["A) El cromosoma X inactivado es siempre el de origen paterno",
+          "B) La inactivación del X ocurre al final del desarrollo embrionario, después de la organogénesis",
+          "C) El X inactivado se condensa formando el corpúsculo de Barr, y este proceso ocurre de forma aleatoria al inicio de la embriogénesis",
+          "D) La inactivación del X ocurre en todas las células, incluyendo los óvulos maduros",
+          "E) Los hombres también presentan corpúsculo de Barr, ya que tienen un cromosoma X"],
+    r:2,
+    exp:"La inactivación es <strong>aleatoria</strong> (puede ser el X materno o paterno), ocurre al <strong>inicio de la embriogénesis</strong>, y forma el <strong>corpúsculo de Barr</strong>. Los hombres (XY) tienen solo un X — activo, sin corpúsculo de Barr.",
+    peg:"Las trampas: 'siempre es el paterno' (es aleatoria), 'hombres también tienen' (no, tienen un solo X activo), 'ocurre al final' (es al inicio, precozmente)."
+  },
+  {
+    num:"13", dif:"dificil",
+    caso: null,
+    q: "Un neonatólogo identifica en un recién nacido: malformación vertebral, atresia anal, comunicación interventricular y atresia esofágica con fístula traqueoesofágica. No hay antecedentes familiares de ninguna de estas alteraciones individualmente. ¿Cuál es la clasificación más precisa de este conjunto de anomalías?",
+    ops: ["A) Síndrome, porque hay múltiples anomalías con causa genética definida",
+          "B) Secuencia, porque todas derivan de una malformación cardíaca primaria",
+          "C) Displasia, porque afecta múltiples tejidos con un defecto celular único",
+          "D) Disrupción, porque fue causada por un agente externo durante la organogénesis",
+          "E) Asociación VATER, porque son anomalías que coexisten con mayor frecuencia de lo esperado sin causa genética establecida"],
+    r:4,
+    exp:"<strong>Asociación VATER</strong> (Vertebral, Anal, Traqueo-Esofágica, Renal). Es una <strong>asociación</strong>, no un síndrome — las anomalías ocurren juntas más de lo esperado por azar, pero sin patrón genético identificado. No hay causa única ni cascada lógica entre ellas.",
+    peg:"Confundir 'asociación' con 'síndrome'. Síndrome = causa genética conocida. Secuencia = un defecto genera los demás. Asociación = coexistencia estadística sin causa unificadora."
+  },
+  {
+    num:"14", dif:"dificil",
+    caso: "Dos pacientes reciben la misma dosis de warfarina para prevención de trombosis. Tienen el mismo peso, edad, función renal y hepática. Días después: Paciente A presenta hemorragia interna grave. Paciente B presenta nuevo evento trombótico.",
+    q: "¿Cuál es la explicación farmacogenética para estos resultados opuestos?",
+    ops: ["A) El paciente A es metabolizador ultra rápido; el B tiene función hepática reducida no detectada",
+          "B) Ambos tienen el mismo genotipo, pero el A tuvo interacción medicamentosa no reportada",
+          "C) El paciente A es metabolizador lento (acumulación → hemorragia); el B es metabolizador ultra rápido (sin efecto → trombosis)",
+          "D) La warfarina siempre causa hemorragia — el caso B se explica por resistencia adquirida",
+          "E) El perfil de metabolización no aplica para anticoagulantes, solo para antibióticos"],
+    r:2,
+    exp:"<strong>Metabolizador lento → acumula warfarina → hemorragia</strong>. <strong>Ultra rápido → elimina antes de actuar → trombosis</strong>. Este caso ilustra que 'igual dosis para todos' es un error farmacogenético — el genotipo hepático determina el resultado.",
+    peg:"El distractor A invierte los perfiles. La warfarina es el ejemplo más citado en el material. Memorice: lento=toxicidad, rápido=ineficacia."
+  },
+  {
+    num:"15", dif:"dificil",
+    caso: null,
+    q: "Un investigador analiza la distribución de respuesta a un fármaco en una población de 10.000 pacientes. El gráfico resultante muestra dos picos claramente separados: un grupo con alta concentración plasmática del fármaco y otro con concentración indetectable. ¿Cuál es la interpretación clínica y farmacogenética correcta de este patrón?",
+    ops: ["A) El fármaco tiene un índice terapéutico estrecho y sigue distribución normal (Gaussiana)",
+          "B) El metabolismo está controlado por variantes genéticas específicas (distribución bimodal), lo que invalida el uso de una dosis estándar universal",
+          "C) La diferencia se debe a variaciones en la función renal, no en el metabolismo hepático",
+          "D) El gráfico indica que el fármaco es ineficaz en toda la población y debe ser retirado",
+          "E) La distribución bimodal es equivalente a una campana de Gauss con alta dispersión"],
+    r:1,
+    exp:"<strong>Distribución bimodal</strong> = el metabolismo está dirigido por variantes genéticas específicas con grupos claramente separados. Invalida la dosis universal. La campana de Gauss indica variación poligénica suave donde la mayoría responde al estándar.",
+    peg:"Bimodal ≠ Gaussiana. Son conceptos opuestos. La bimodal señala herencia monogénica del metabolismo (dos alelos con respuesta muy diferente); la Gaussiana señala variación continua multifactorial."
+  }
+];
+
+const p2Data = [
+  {
+    num:"01",
+    q: "Las malformaciones son las anomalías congénitas más frecuentemente corregibles en el período postnatal, ya que responden bien al tratamiento fisioterapéutico y al reposicionamiento.",
+    r: false,
+    exp:"FALSO. Las <strong>deformaciones</strong> (no las malformaciones) son corregibles en el postnatal, ya que resultan de fuerzas mecánicas sobre estructuras ya correctamente formadas. Las malformaciones son errores primarios del plan genético y generalmente requieren intervención quirúrgica.",
+    peg:"El enunciado mezcla correctamente 'corregible en postnatal' con la categoría equivocada. Clásica pegadinha de prova."
+  },
+  {
+    num:"02",
+    q: "La displasia se diferencia de la malformación por su carácter sistémico: afecta la organización celular en múltiples tejidos simultáneamente, como ocurre en la displasia ectodérmica que compromete piel, cabello, dientes y uñas.",
+    r: true,
+    exp:"VERDADERO. La displasia es un defecto en la organización celular de un tejido, generalmente causada por un único gen, pero que tiene alcance sistémico. La displasia ectodérmica es el ejemplo modelo que afecta todos los derivados ectodérmicos.",
+    peg:"Ninguna. Este es un enunciado correcto — cuidado con marcar siempre el opuesto por desconfianza."
+  },
+  {
+    num:"03",
+    q: "La amniocentesis puede realizarse a partir de la semana 10 de gestación y analiza tejido placentario, compartiendo el mismo ADN fetal, lo que la hace ideal para el diagnóstico precoz de enfermedades metabólicas.",
+    r: false,
+    exp:"FALSO. Lo descrito corresponde a la <strong>biopsia de vellosidades coriónicas</strong> (10-12 sem, tejido placentario). La <strong>amniocentesis</strong> se realiza a partir de la semana 16 y analiza células fetales descamadas en el líquido amniótico. El enunciado mezcla características de ambos procedimientos.",
+    peg:"Esta es la pegadinha más frecuente del tema. El examinador mezcla las semanas y las muestras de los dos métodos invasivos."
+  },
+  {
+    num:"04",
+    q: "Un hombre afectado por hemofilia (enfermedad recesiva ligada al X) no transmite la enfermedad a sus hijos varones, pero todas sus hijas recibirán el cromosoma X patológico.",
+    r: true,
+    exp:"VERDADEIRO. El hombre afectado tiene XᴴY: transmite Y a los hijos varones (sanos) y su único X patológico a todas las hijas (que serán portadoras). Es un principio fundamental de la herencia ligada al X.",
+    peg:"Algunos alumnos marcan falso pensando que 'puede transmitir a algún hijo varón'. Imposible — el varón hereda el Y del padre y el X de la madre."
+  },
+  {
+    num:"05",
+    q: "En la farmacogenética de la isoniazida, los metabolizadores rápidos, más frecuentes en población europea, acumulan el fármaco y presentan mayor riesgo de toxicidad hepática y neuropatía periférica.",
+    r: false,
+    exp:"FALSO. Los metabolizadores <strong>lentos</strong> son los más frecuentes en población <strong>europea</strong> (~50%) y son los que acumulan el fármaco → toxicidad. Los metabolizadores <strong>rápidos</strong> son más frecuentes en <strong>asiáticos</strong> y son los que tienen ineficacia del tratamiento. El enunciado invierte ambos conceptos.",
+    peg:"Doble trampa: invierte 'lento/rápido' y 'europeo/asiático' simultáneamente. Memorice: Europa = lento = tóxico; Asia = rápido = ineficaz."
+  }
+];
+
+const p3Data = [
+  {
+    num:"01",
+    titulo:"Categorías de Anomalías Aisladas",
+    colA:[
+      "1. Error primario en el plan genético de un órgano durante la organogénesis",
+      "2. Defecto causado por factor extrínseco que interrumpe un desarrollo genéticamente normal",
+      "3. Distorsión de una estructura correctamente formada por fuerzas mecánicas en el 3er trimestre",
+      "4. Organización anormal de células en un tejido, de carácter sistémico",
+      "5. Cascada de anomalías secundarias derivadas de un único defecto primario"
+    ],
+    colB:[
+      "(A) Deformación",
+      "(B) Displasia",
+      "(C) Malformación",
+      "(D) Síndrome",
+      "(E) Disrupción",
+      "(F) Secuencia"
+    ],
+    r: ["C","E","A","B","F"],
+    exp:"Malformación=error primario genético; Disrupción=extrínseco en genética normal; Deformación=mecánico 3T; Displasia=sistémica/celular; Secuencia=cascada de defecto único."
+  },
+  {
+    num:"02",
+    titulo:"Enfermedades Monogénicas y sus Mecanismos",
+    colA:[
+      "1. Expansión de tripletes CAG → poliglutamina tóxica → neurodegeneración",
+      "2. Ausencia de proteína de anclaje citoesquelético → necrosis muscular progresiva",
+      "3. Deficiencia del Factor VIII → PTT prolongado → sangrado incoercible",
+      "4. Deficiencia del Factor IX → coagulopatía ligada al cromosoma X",
+      "5. Expansión de tripletes CGG → metilación del gen FMR1 → deficiencia intelectual"
+    ],
+    colB:[
+      "(A) Hemofilia B",
+      "(B) Distrofia de Duchenne",
+      "(C) X Frágil",
+      "(D) Huntington",
+      "(E) Hemofilia A"
+    ],
+    r: ["D","B","E","A","C"],
+    exp:"Huntington=CAG/poliglutamina; Duchenne=distrofina; Hemofilia A=FVIII; Hemofilia B=FIX; X Frágil=FMR1/CGG."
+  },
+  {
+    num:"03",
+    titulo:"Síndromes y Aneuploidías Cromosómicas",
+    colA:[
+      "1. 47,XXY — talla alta, testículos pequeños, ginecomastia, infertilidad",
+      "2. 45,X — baja estatura, cuello alado, falla ovárica, inteligencia normal",
+      "3. 47,XXX — fenotipo femenino normal, fertilidad conservada",
+      "4. 47,XYY — estatura muy elevada, aracnodactilia, sin relación confirmada con criminalidad",
+      "5. 46,XY fenotipo femenino — receptor de andrógenos no funcional, testículos internos"
+    ],
+    colB:[
+      "(A) Triple X (Superhembra)",
+      "(B) Insensibilidad a andrógenos (DDS 46,XY)",
+      "(C) Klinefelter",
+      "(D) Jacobs (Supermacho)",
+      "(E) Turner"
+    ],
+    r: ["C","E","A","D","B"],
+    exp:"Klinefelter=47,XXY; Turner=45,X; Triple X=47,XXX; Jacobs=47,XYY; Insensibilidad andrógenos=DDS 46,XY fenotipo femenino."
+  },
+  {
+    num:"04",
+    titulo:"Métodos de Diagnóstico Prenatal",
+    colA:[
+      "1. Marcador ecográfico precoz (10-14 sem) que sugiere Síndrome de Down",
+      "2. Análisis de ADN fetal libre en sangre materna — 99% de precisión para trisomía 21",
+      "3. Método invasivo realizado entre 10-12 semanas sobre tejido placentario",
+      "4. Método invasivo a partir de la semana 16, analiza células fetales descamadas",
+      "5. Marcador sérico materno elevado que indica defecto del tubo neural"
+    ],
+    colB:[
+      "(A) NIPT",
+      "(B) Amniocentesis",
+      "(C) Translucencia nucal",
+      "(D) Alfa-fetoproteína",
+      "(E) Biopsia de vellosidades coriónicas"
+    ],
+    r: ["C","A","E","B","D"],
+    exp:"Translucencia nucal=rastreo ecográfico precoz; NIPT=ADN fetal libre; BVC=invasivo 10-12sem; Amniocentesis=invasivo ≥16sem; AFP=tubo neural."
+  },
+  {
+    num:"05",
+    titulo:"Farmacogenética — Conceptos y Perfiles",
+    colA:[
+      "1. Perfil metabólico con actividad enzimática reducida → acumulación → toxicidad",
+      "2. Perfil metabólico con actividad enzimática aumentada → eliminación precoz → ineficacia",
+      "3. Distribución de respuesta en curva de Gauss → herencia poligénica del metabolismo",
+      "4. Distribución de respuesta bimodal → metabolismo controlado por variantes genéticas específicas",
+      "5. Complejo enzimático hepático relacionado con el metabolismo de antidepresivos"
+    ],
+    colB:[
+      "(A) Metabolizador ultra rápido",
+      "(B) Citocromo P450",
+      "(C) Distribución normal/poligénica",
+      "(D) Metabolizador lento",
+      "(E) Distribución bimodal/genética"
+    ],
+    r: ["D","A","C","E","B"],
+    exp:"Lento=toxicidad; Rápido=ineficacia; Gauss=poligénico; Bimodal=variantes genéticas; CYP450=metabolismo antidepresivos."
+  }
+];
+
+// ══════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════
+let sc1ac=0,sc1re=0,sc2ac=0,sc2re=0,sc3ac=0,sc3re=0;
+
+// ══════════════════════════════════════
+// BUILD P1
+// ══════════════════════════════════════
+function buildP1(){
+  const c=document.getElementById('container-p1');
+  c.innerHTML='';
+  p1Data.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='q-wrap'; d.id='qp1-'+i;
+    d.innerHTML=`
+      <div class="q-header">
+        <span class="q-num">Q${q.num}</span>
+        <span class="q-dif ${q.dif}">${q.dif.toUpperCase()}</span>
+      </div>
+      ${q.caso?`<div class="q-caso"><strong>Caso clínico:</strong> ${q.caso}</div>`:''}
+      <div class="q-enunciado">${q.q}</div>
+      <div class="opcoes">
+        ${q.ops.map((op,j)=>`<button class="opcao" id="op1-${i}-${j}" onclick="respP1(${i},${j})">${op}</button>`).join('')}
+      </div>
+      <div class="gabarito-box" id="gab1-${i}">
+        <strong>Respuesta correcta: ${q.ops[q.r]}</strong><br><br>${q.exp}
+        <div class="pegadinha">⚠️ Trampa: ${q.peg}</div>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function respP1(qi,ri){
+  const w=document.getElementById('qp1-'+qi);
+  if(w.dataset.done) return;
+  w.dataset.done='1'; sc1re++;
+  const q=p1Data[qi];
+  if(ri===q.r){sc1ac++;w.classList.add('acertou');}else w.classList.add('errou');
+  q.ops.forEach((_,j)=>{
+    const b=document.getElementById('op1-'+qi+'-'+j);
+    b.disabled=true;
+    if(j===q.r)b.classList.add('correta');
+    else if(j===ri)b.classList.add('errada');
+  });
+  document.getElementById('gab1-'+qi).classList.add('show');
+  document.getElementById('sc1-ac').textContent=sc1ac;
+  document.getElementById('sc1-re').textContent=sc1re;
+}
+
+function resetP1(){sc1ac=0;sc1re=0;buildP1();document.getElementById('sc1-ac').textContent=0;document.getElementById('sc1-re').textContent=0;}
+
+// ══════════════════════════════════════
+// BUILD P2
+// ══════════════════════════════════════
+function buildP2(){
+  const c=document.getElementById('container-p2');
+  c.innerHTML='';
+  p2Data.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='q-wrap'; d.id='qp2-'+i;
+    d.innerHTML=`
+      <div class="q-header"><span class="q-num">V/F ${q.num}</span></div>
+      <div class="q-enunciado">${q.q}</div>
+      <div class="vf-opcoes">
+        <button class="vf-btn" id="vf-v-${i}" onclick="respP2(${i},true)">VERDADERO</button>
+        <button class="vf-btn" id="vf-f-${i}" onclick="respP2(${i},false)">FALSO</button>
+      </div>
+      <div class="gabarito-box" id="gab2-${i}">
+        <strong>Respuesta: ${q.r?'VERDADERO':'FALSO'}</strong><br><br>${q.exp}
+        <div class="pegadinha">⚠️ Trampa: ${q.peg}</div>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function respP2(qi,val){
+  const w=document.getElementById('qp2-'+qi);
+  if(w.dataset.done)return;
+  w.dataset.done='1';sc2re++;
+  const q=p2Data[qi];
+  const ok=val===q.r;
+  if(ok){sc2ac++;w.classList.add('acertou');}else w.classList.add('errou');
+  ['v','f'].forEach(t=>{
+    const b=document.getElementById('vf-'+t+'-'+qi);
+    b.disabled=true;
+    const bv=t==='v';
+    if(bv===q.r)b.classList.add('correta');
+    else if(bv===val)b.classList.add('errada');
+  });
+  document.getElementById('gab2-'+qi).classList.add('show');
+  document.getElementById('sc2-ac').textContent=sc2ac;
+  document.getElementById('sc2-re').textContent=sc2re;
+}
+
+function resetP2(){sc2ac=0;sc2re=0;buildP2();document.getElementById('sc2-ac').textContent=0;document.getElementById('sc2-re').textContent=0;}
+
+// ══════════════════════════════════════
+// BUILD P3 — ASSOCIAÇÃO
+// ══════════════════════════════════════
+function buildP3(){
+  const c=document.getElementById('container-p3');
+  c.innerHTML='';
+  p3Data.forEach((q,i)=>{
+    const d=document.createElement('div');
+    d.className='q-wrap'; d.id='qp3-'+i;
+    // Extract available letters from colB (e.g. "(A) Deformación" → "A")
+    const letters=q.colB.map(b=>b.match(/\(([A-Z])\)/)[1]);
+    let colBHtml=q.colB.map(b=>`<div class="assoc-item">${b}</div>`).join('');
+    let colAHtml=q.colA.map((a,ai)=>`
+      <div style="margin-bottom:1rem">
+        <div class="assoc-item" style="border:none;padding-bottom:0.3rem">${a}</div>
+        <div class="assoc-opcoes" id="aopts-${i}-${ai}">
+          ${letters.map(rv=>`<button class="assoc-opt" onclick="respP3(${i},${ai},'${rv}',this)">${rv}</button>`).join('')}
+        </div>
+        <div class="gabarito-box" id="gab3-${i}-${ai}"></div>
+      </div>`).join('');
+    d.innerHTML=`
+      <div class="q-header"><span class="q-num">ASSOC ${q.num}</span></div>
+      <div class="q-enunciado">${q.titulo}</div>
+      <div class="assoc-grid">
+        <div class="assoc-col"><h4>Columna A</h4>${colAHtml}</div>
+        <div class="assoc-col"><h4>Columna B</h4>${colBHtml}</div>
+      </div>`;
+    c.appendChild(d);
+  });
+}
+
+function respP3(qi,ai,val,btn){
+  const gab=document.getElementById('gab3-'+qi+'-'+ai);
+  const opts=document.getElementById('aopts-'+qi+'-'+ai);
+  if(opts.dataset.done)return;
+  opts.dataset.done='1';
+  const correct=p3Data[qi].r[ai];
+  const ok=val===correct;
+  sc3re++;
+  if(ok)sc3ac++;
+  opts.querySelectorAll('.assoc-opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===correct)b.classList.add('correta');
+    else if(b===btn&&!ok)b.classList.add('errada');
+  });
+  gab.innerHTML=ok?`<strong style="color:var(--green)">✓ Correcto</strong>`:`<strong style="color:var(--red)">✗ La respuesta correcta es ${correct}</strong>`;
+  gab.classList.add('show');
+  document.getElementById('sc3-ac').textContent=sc3ac;
+  document.getElementById('sc3-re').textContent=sc3re;
+}
+
+function resetP3(){sc3ac=0;sc3re=0;buildP3();document.getElementById('sc3-ac').textContent=0;document.getElementById('sc3-re').textContent=0;}
+
+// ══════════════════════════════════════
+// NAV
+// ══════════════════════════════════════
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// INIT
+buildP1(); buildP2(); buildP3();
+</script>
+</body>
+</html>

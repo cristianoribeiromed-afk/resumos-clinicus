@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Master — Genética P2</title>
+<style>
+  :root {
+    --bg: #080c18;
+    --bg2: #0c1220;
+    --bg3: #111828;
+    --card: #141e30;
+    --card2: #1a2540;
+    --border: #1e2d4a;
+    --border2: #253558;
+    --accent: #3b82f6;
+    --accent2: #6366f1;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #4a6080;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0c1220 0%, #111828 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 0;
+  }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px 12px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .header-title { font-size: 1.1rem; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; }
+  .header-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+
+  /* TIMER */
+  .timer-box {
+    background: var(--card2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 8px 18px; text-align: center;
+  }
+  .timer-label { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .timer-display { font-size: 1.6rem; font-weight: 900; color: var(--yellow); font-variant-numeric: tabular-nums; letter-spacing: 2px; }
+  .timer-display.urgent { color: var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+  /* NAV */
+  nav {
+    display: flex; gap: 2px; padding: 0 24px 12px; overflow-x: auto; scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    background: var(--card); border: 1px solid var(--border); color: var(--text2);
+    padding: 6px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap;
+    font-size: 0.78rem; font-weight: 600; transition: all 0.2s;
+  }
+  nav button:hover { background: var(--card2); color: var(--text); }
+  nav button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* PROGRESS */
+  .progress-bar-wrap { padding: 0 24px 0; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text2); margin-bottom: 6px; }
+  .progress-track { background: var(--card); border-radius: 4px; height: 4px; }
+  .progress-fill { background: linear-gradient(90deg, var(--accent), var(--accent2)); height: 4px; border-radius: 4px; transition: width 0.4s; }
+  .header-actions { display: flex; gap: 8px; padding: 12px 24px; }
+  .btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 700; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-secondary { background: var(--card2); color: var(--text2); border: 1px solid var(--border2); }
+  .btn-secondary:hover { color: var(--text); }
+  .btn-danger { background: #1a0a0a; color: var(--red); border: 1px solid #4a1a1a; }
+  .btn-danger:hover { background: #2a1010; }
+
+  /* PAGES */
+  .page { display: none; max-width: 820px; margin: 0 auto; padding: 24px 16px 80px; }
+  .page.active { display: block; }
+
+  /* SECTION HEADER */
+  .sec-header {
+    background: linear-gradient(90deg, var(--card2), var(--card));
+    border: 1px solid var(--border2); border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .sec-icon { font-size: 1.8rem; }
+  .sec-title { font-size: 1rem; font-weight: 800; color: var(--text); }
+  .sec-desc { font-size: 0.78rem; color: var(--text2); margin-top: 3px; }
+  .sec-badge {
+    margin-left: auto; background: var(--accent); color: #fff;
+    border-radius: 20px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px; margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .q-card.answered { border-color: var(--border2); }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .q-num { font-size: 0.72rem; font-weight: 700; color: var(--accent); background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 6px; padding: 2px 10px; }
+  .q-diff { font-size: 0.68rem; font-weight: 700; border-radius: 6px; padding: 2px 8px; }
+  .q-diff.facil { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .q-diff.media { background: rgba(234,179,8,0.1); color: var(--yellow); border: 1px solid rgba(234,179,8,0.2); }
+  .q-diff.dificil { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+  .q-text { font-size: 0.9rem; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+  .q-text em { color: var(--yellow); font-style: normal; font-weight: 600; }
+
+  /* OPTIONS */
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 9px; padding: 11px 14px; cursor: pointer;
+    transition: all 0.18s; font-size: 0.85rem; line-height: 1.5; color: var(--text2);
+  }
+  .opt:hover { border-color: var(--accent); color: var(--text); background: var(--card2); }
+  .opt-letter {
+    font-weight: 800; color: var(--accent); font-size: 0.82rem;
+    background: rgba(59,130,246,0.1); border-radius: 5px;
+    padding: 1px 7px; flex-shrink: 0; margin-top: 1px;
+  }
+  .opt.selected { border-color: var(--accent); background: rgba(59,130,246,0.08); color: var(--text); }
+  .opt.selected .opt-letter { background: var(--accent); color: #fff; }
+  .opt.correct { border-color: var(--green) !important; background: rgba(34,197,94,0.08) !important; color: var(--text) !important; }
+  .opt.correct .opt-letter { background: var(--green) !important; color: #000 !important; }
+  .opt.wrong { border-color: var(--red) !important; background: rgba(239,68,68,0.08) !important; color: var(--text2) !important; }
+  .opt.wrong .opt-letter { background: var(--red) !important; color: #fff !important; }
+  .opt.disabled { pointer-events: none; }
+
+  /* VF */
+  .vf-stmt { background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; padding: 13px 16px; margin-bottom: 10px; }
+  .vf-text { font-size: 0.87rem; line-height: 1.6; color: var(--text); margin-bottom: 10px; }
+  .vf-btns { display: flex; gap: 8px; }
+  .vf-btn {
+    flex: 1; padding: 8px; border-radius: 7px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text2); cursor: pointer;
+    font-weight: 700; font-size: 0.82rem; transition: all 0.18s;
+  }
+  .vf-btn:hover { border-color: var(--accent); color: var(--text); }
+  .vf-btn.selected-v { border-color: var(--green); background: rgba(34,197,94,0.1); color: var(--green); }
+  .vf-btn.selected-f { border-color: var(--red); background: rgba(239,68,68,0.1); color: var(--red); }
+  .vf-btn.disabled { pointer-events: none; }
+  .vf-result { display: none; font-size: 0.78rem; padding: 7px 10px; border-radius: 6px; margin-top: 8px; font-weight: 600; }
+  .vf-result.correct { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .vf-result.wrong { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+
+  /* ASSOCIATION */
+  .assoc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width:600px){ .assoc-grid { grid-template-columns: 1fr; } }
+  .assoc-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 8px; }
+  .assoc-item {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 9px 12px; font-size: 0.82rem;
+    line-height: 1.5; color: var(--text2); margin-bottom: 6px;
+  }
+  .assoc-item strong { color: var(--accent); }
+  .assoc-select {
+    width: 100%; margin-top: 6px; padding: 6px 10px;
+    background: var(--card2); border: 1px solid var(--border2);
+    border-radius: 6px; color: var(--text); font-size: 0.82rem; cursor: pointer;
+  }
+  .assoc-select:focus { outline: none; border-color: var(--accent); }
+
+  /* GABARITO */
+  .gab-section { margin-bottom: 28px; }
+  .gab-title { font-size: 0.85rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .gab-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .gab-item:last-child { border-bottom: none; }
+  .gab-num { font-size: 0.75rem; font-weight: 700; color: var(--text3); width: 28px; flex-shrink: 0; padding-top: 2px; }
+  .gab-resp { font-weight: 800; color: var(--green); font-size: 0.9rem; flex-shrink: 0; width: 30px; }
+  .gab-exp { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+  .gab-exp strong { color: var(--text); }
+  .gab-exp .dist { color: var(--red); }
+  .score-box {
+    background: linear-gradient(135deg, var(--card2), var(--card));
+    border: 1px solid var(--border2); border-radius: 14px; padding: 24px;
+    text-align: center; margin-bottom: 28px;
+  }
+  .score-num { font-size: 3rem; font-weight: 900; color: var(--accent); }
+  .score-label { font-size: 0.85rem; color: var(--text2); margin-top: 4px; }
+  .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 16px; }
+  .score-cell { background: var(--bg3); border-radius: 8px; padding: 10px; }
+  .score-cell-num { font-size: 1.2rem; font-weight: 800; }
+  .score-cell-label { font-size: 0.68rem; color: var(--text3); margin-top: 2px; }
+
+  /* HIDDEN */
+  .gab-hidden { filter: blur(6px); user-select: none; transition: filter 0.3s; cursor: pointer; }
+  .gab-hidden:hover { filter: blur(3px); }
+  .gab-locked { display: none; }
+
+  /* RESULTADO BADGE */
+  .q-result-badge { display: none; margin-top: 10px; font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 7px; }
+  .q-result-badge.acertou { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .q-result-badge.errou { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+  /* WELCOME */
+  .welcome {
+    max-width: 600px; margin: 40px auto; padding: 0 16px;
+  }
+  .welcome-card {
+    background: var(--card); border: 1px solid var(--border2);
+    border-radius: 18px; padding: 32px 28px; text-align: center;
+  }
+  .welcome-icon { font-size: 3rem; margin-bottom: 12px; }
+  .welcome-title { font-size: 1.4rem; font-weight: 900; color: var(--text); margin-bottom: 8px; }
+  .welcome-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.7; margin-bottom: 24px; }
+  .welcome-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .welcome-stat { background: var(--bg3); border-radius: 10px; padding: 14px; }
+  .welcome-stat-num { font-size: 1.4rem; font-weight: 900; color: var(--accent); }
+  .welcome-stat-label { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+  .welcome-rules { text-align: left; background: var(--bg3); border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; }
+  .welcome-rules li { font-size: 0.82rem; color: var(--text2); padding: 4px 0; list-style: none; }
+  .welcome-rules li::before { content: '→ '; color: var(--accent); font-weight: 700; }
+
+  /* FINISH OVERLAY */
+  #finish-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(8,12,24,0.95);
+    z-index: 200; align-items: center; justify-content: center;
+  }
+  #finish-overlay.show { display: flex; }
+  .finish-card {
+    background: var(--card); border: 1px solid var(--border2);
+    border-radius: 20px; padding: 40px 32px; text-align: center;
+    max-width: 440px; width: 90%;
+  }
+  .finish-icon { font-size: 3.5rem; margin-bottom: 12px; }
+  .finish-title { font-size: 1.3rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+  .finish-score { font-size: 3.5rem; font-weight: 900; color: var(--accent); margin: 12px 0; }
+  .finish-msg { font-size: 0.85rem; color: var(--text2); margin-bottom: 24px; }
+  .finish-btns { display: flex; gap: 10px; justify-content: center; }
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen" class="welcome">
+  <div class="welcome-card">
+    <div class="welcome-icon">🧬</div>
+    <div class="welcome-title">Simulado Master — Genética P2</div>
+    <div class="welcome-desc">Simulado no padrão universitário de Medicina, baseado integralmente no material da P2. Gabarito comentado liberado apenas ao finalizar.</div>
+    <div class="welcome-grid">
+      <div class="welcome-stat"><div class="welcome-stat-num">25</div><div class="welcome-stat-label">questões totais</div></div>
+      <div class="welcome-stat"><div class="welcome-stat-num">60</div><div class="welcome-stat-label">minutos</div></div>
+      <div class="welcome-stat"><div class="welcome-stat-num">3</div><div class="welcome-stat-label">partes</div></div>
+    </div>
+    <ul class="welcome-rules">
+      <li>Parte 1: 15 questões de múltipla escolha</li>
+      <li>Parte 2: 5 questões verdadeiro ou falso</li>
+      <li>Parte 3: 5 questões de associação de colunas</li>
+      <li>Gabarito com comentários liberado ao finalizar</li>
+      <li>Cronômetro regressivo de 60 minutos</li>
+    </ul>
+    <button class="btn btn-primary" style="width:100%;padding:14px;font-size:1rem;" onclick="startSimulado()">▶ Iniciar Simulado</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none;">
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="header-title">🧬 Simulado Master — Genética P2</div>
+      <div class="header-sub">Universidad Interamericana · Padrão universitário de Medicina</div>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">tempo restante</div>
+      <div class="timer-display" id="timer">60:00</div>
+    </div>
+  </div>
+  <nav>
+    <button class="active" onclick="showPage('p1',this)">📝 Parte 1 — Múltipla Escolha</button>
+    <button onclick="showPage('p2',this)">✅ Parte 2 — V ou F</button>
+    <button onclick="showPage('p3',this)">🔗 Parte 3 — Associação</button>
+    <button onclick="showPage('gab',this)" id="gab-btn" style="opacity:0.4;pointer-events:none;">📋 Gabarito</button>
+  </nav>
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="prog-text">0 de 25 respondidas</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="finishSimulado()">✔ Finalizar e Ver Gabarito</button>
+    <button class="btn btn-danger" onclick="resetSimulado()">↺ Refazer</button>
+  </div>
+</header>
+
+<!-- PARTE 1 -->
+<div class="page active" id="page-p1">
+  <div class="sec-header">
+    <div class="sec-icon">📝</div>
+    <div>
+      <div class="sec-title">Parte 1 — Múltipla Escolha</div>
+      <div class="sec-desc">Apenas uma alternativa correta. Gabarito liberado ao finalizar.</div>
+    </div>
+    <div class="sec-badge">15 questões</div>
+  </div>
+  <div id="p1-container"></div>
+</div>
+
+<!-- PARTE 2 -->
+<div class="page" id="page-p2">
+  <div class="sec-header">
+    <div class="sec-icon">✅</div>
+    <div>
+      <div class="sec-title">Parte 2 — Verdadeiro ou Falso</div>
+      <div class="sec-desc">Julgue cada afirmação como Verdadeiro (V) ou Falso (F).</div>
+    </div>
+    <div class="sec-badge">5 questões</div>
+  </div>
+  <div id="p2-container"></div>
+</div>
+
+<!-- PARTE 3 -->
+<div class="page" id="page-p3">
+  <div class="sec-header">
+    <div class="sec-icon">🔗</div>
+    <div>
+      <div class="sec-title">Parte 3 — Associação de Colunas</div>
+      <div class="sec-desc">Associe cada item da Coluna A com o correspondente da Coluna B.</div>
+    </div>
+    <div class="sec-badge">5 questões</div>
+  </div>
+  <div id="p3-container"></div>
+</div>
+
+<!-- GABARITO -->
+<div class="page" id="page-gab">
+  <div class="sec-header">
+    <div class="sec-icon">📋</div>
+    <div>
+      <div class="sec-title">Gabarito Comentado</div>
+      <div class="sec-desc">Respostas corretas com explicações e análise de distratores.</div>
+    </div>
+  </div>
+  <div id="score-display"></div>
+  <div id="gab-container"></div>
+</div>
+
+</div><!-- /main-app -->
+
+<!-- FINISH OVERLAY -->
+<div id="finish-overlay">
+  <div class="finish-card">
+    <div class="finish-icon" id="finish-icon">🎯</div>
+    <div class="finish-title">Simulado Finalizado!</div>
+    <div class="finish-score" id="finish-score">--/25</div>
+    <div class="finish-msg" id="finish-msg"></div>
+    <div class="finish-btns">
+      <button class="btn btn-primary" onclick="goToGabarito()">📋 Ver Gabarito Completo</button>
+      <button class="btn btn-secondary" onclick="resetSimulado()">↺ Refazer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const p1Data = [
+  // FÁCEIS (1-5)
+  {
+    n:1, diff:'facil',
+    q:'Qual das alternativas descreve corretamente uma <em>malformação congênita</em>?',
+    opts:[
+      'Estrutura anômala resultante de forças mecânicas que distorcem uma estrutura previamente formada de maneira normal.',
+      'Defeito estrutural primário de um órgão, originado por erro no plano genético durante a organogênese.',
+      'Anomalia resultante de fatores extrínsecos que interrompem um processo de desenvolvimento originalmente perfeito.',
+      'Organização anormal das células em um tecido, causada por defeito em um único gene de alcance sistêmico.',
+      'Cascata de eventos derivados de uma malformação inicial única que compromete estruturas secundárias.'
+    ],
+    resp: 1
+  },
+  {
+    n:2, diff:'facil',
+    q:'A <em>distrofina</em> é uma proteína estrutural muscular que atua como "amortecedor" conectando o citoesqueleto à matriz extracelular. Sua ausência está associada a qual doença?',
+    opts:[
+      'Doença de Huntington.',
+      'Síndrome do X Frágil.',
+      'Hemofilia A.',
+      'Distrofia Muscular de Duchenne.',
+      'Síndrome de Klinefelter.'
+    ],
+    resp: 3
+  },
+  {
+    n:3, diff:'facil',
+    q:'Na Hemofilia A, qual fator de coagulação está deficiente?',
+    opts:[
+      'Fator II (Protrombina).',
+      'Fator V.',
+      'Fator VII.',
+      'Fator VIII.',
+      'Fator IX.'
+    ],
+    resp: 3
+  },
+  {
+    n:4, diff:'facil',
+    q:'A Síndrome de Turner é caracterizada pelo cariotipo:',
+    opts:[
+      '47, XXY.',
+      '47, XYY.',
+      '47, XXX.',
+      '46, XY com deleção em Yq.',
+      '45, X.'
+    ],
+    resp: 4
+  },
+  {
+    n:5, diff:'facil',
+    q:'Na herança multifatorial, a fórmula que sintetiza a relação entre herança e manifestação fenotípica é:',
+    opts:[
+      'Genótipo × Ambiente = Variância.',
+      'Genótipo + Ambiente = Fenótipo.',
+      'Fenótipo − Ambiente = Genótipo.',
+      'Genótipo ÷ Ambiente = Susceptibilidade.',
+      'Fenótipo + Genótipo = Expressividade.'
+    ],
+    resp: 1
+  },
+  // INTERMEDIÁRIAS (6-10)
+  {
+    n:6, diff:'media',
+    q:'Um recém-nascido apresenta hipoplasia pulmonar, fácies achatada e ausência de produção de urina. A investigação revela ausência bilateral dos rins. Essa constelação de achados é classificada como:',
+    opts:[
+      'Síndrome de Down, pois envolve múltiplos sistemas com causa cromossômica definida.',
+      'Associação VATER, pois não há padrão genético claro entre as anomalias.',
+      'Sequência de Potter, pois a agenesia renal desencadeia uma cascada de eventos secundários.',
+      'Displasia renal, pois há organização celular anormal nos rins de alcance sistêmico.',
+      'Disrupção, pois fatores extrínsecos vasculares comprometeram o desenvolvimento renal.'
+    ],
+    resp: 2
+  },
+  {
+    n:7, diff:'media',
+    q:'Gestante de 12 semanas é encaminhada para investigação após translucência nucal aumentada na ultrassonografia. O médico esclarece que esse achado:',
+    opts:[
+      'Confirma o diagnóstico de Síndrome de Down e dispensa métodos adicionais.',
+      'É um método invasivo que permite análise direta do DNA fetal.',
+      'Representa um marcador de rastreio que situa o feto em grupo de risco, sem confirmar diagnóstico.',
+      'Exige realização imediata de amniocentese, pois constitui diagnóstico definitivo.',
+      'É exclusivo da Síndrome de Edwards e não tem relação com a Síndrome de Down.'
+    ],
+    resp: 2
+  },
+  {
+    n:8, diff:'media',
+    q:'A Doença de Huntington se manifesta entre 30 e 50 anos de idade e apresenta <em>fenômeno de antecipação</em>. Esse fenômeno significa que:',
+    opts:[
+      'A doença se manifesta mais tardiamente a cada geração devido ao acúmulo de mutações compensatórias.',
+      'A expansão do tripleto CAG aumenta a cada geração, provocando início mais precoce e curso mais grave.',
+      'A doença só se manifesta quando ambos os alelos estão mutados (homozigose).',
+      'O número de repetições CAG permanece estável, mas a penetrância aumenta com a idade.',
+      'Os filhos afetados apresentam sintomas idênticos em início e gravidade ao do progenitor afetado.'
+    ],
+    resp: 1
+  },
+  {
+    n:9, diff:'media',
+    q:'Sobre a Síndrome do X Frágil, é CORRETO afirmar que:',
+    opts:[
+      'É causada por expansão do tripleto CAG no gene HTT, levando à acumulação de poliglutamina tóxica.',
+      'Apresenta padrão de herança autossômico dominante com fenômeno de antecipação.',
+      'A mutação ocorre no gene FMR1, com expansão do tripleto CGG superior a 200 repetições, causando silenciamento gênico.',
+      'O quadro clínico inclui principalmente sinais cerebelares, ataxia e neuropatia periférica.',
+      'Afeta igualmente homens e mulheres, sem distinção de expressão clínica.'
+    ],
+    resp: 2
+  },
+  {
+    n:10, diff:'media',
+    q:'Dois pacientes com peso, idade e função renal idênticos recebem a mesma dose de varfarina. O Paciente A desenvolve hemorragia interna; o Paciente B apresenta novo trombo. A explicação farmacogenética mais adequada é:',
+    opts:[
+      'O Paciente A apresentou reação alérgica à varfarina; o Paciente B recebeu dose sub-terapêutica por erro de prescrição.',
+      'Ambos os pacientes têm metabolismo normal, mas interações alimentares distintas alteraram os resultados.',
+      'O Paciente A é metabolizador lento (acúmulo gera toxicidade); o Paciente B é metabolizador ultra-rápido (eliminação antes de agir).',
+      'A função renal subjacente é o único determinante relevante da resposta à varfarina.',
+      'A varfarina tem janela terapêutica ampla; variações nesse nível são esperadas e clinicamente irrelevantes.'
+    ],
+    resp: 2
+  },
+  // DIFÍCEIS (11-15)
+  {
+    n:11, diff:'dificil',
+    q:'Uma mulher fenotipicamente normal, com cariotipo 46,XY, apresenta ausência de útero, testículos internos não descidos e mamas desenvolvidas. O diagnóstico mais provável é:',
+    opts:[
+      'Síndrome de Turner com mosaicismo XY.',
+      'DDS 46,XX por hiperplasia adrenal congênita.',
+      'DDS ovotesticular (hermafroditismo verdadeiro) por quimerismo.',
+      'DDS 46,XY por síndrome de insensibilidade aos andrógenos.',
+      'Síndrome de Klinefelter com fenótipo feminino.'
+    ],
+    resp: 3
+  },
+  {
+    n:12, diff:'dificil',
+    q:'Na Distrofia Muscular de Duchenne, um pai afetado (X<sup>d</sup>Y) tem filhos com uma mulher normal (X<sup>N</sup>X<sup>N</sup>). Sobre a descendência, é correto afirmar:',
+    opts:[
+      '50% dos filhos varones serão afetados e 50% das filhas serão portadoras.',
+      'Todos os filhos varones serão afetados, pois herdam o X afetado do pai.',
+      'Nenhum filho varão será afetado; todas as filhas serão portadoras obrigatórias.',
+      '25% dos filhos, independente do sexo, serão afetados.',
+      'Todos os filhos, varones e fêmeas, serão afetados por ser doença dominante.'
+    ],
+    resp: 2
+  },
+  {
+    n:13, diff:'dificil',
+    q:'A curva bimodal de distribuição da resposta a um fármaco em uma população indica:',
+    opts:[
+      'Que o fármaco é seguro para a maioria da população, com apenas extremos de resposta inadequada.',
+      'Que o metabolismo do fármaco é puramente ambiental e independente de fatores genéticos.',
+      'Que o fármaco segue distribuição gaussiana normal, confirmando dosis-padrão universal.',
+      'Que o metabolismo é dirigido por variantes genéticas específicas, com grupos claramente distintos de metabolizadores, invalidando uma dose universal.',
+      'Que a eficácia do fármaco depende exclusivamente da função hepática e renal, sem componente genético.'
+    ],
+    resp: 3
+  },
+  {
+    n:14, diff:'dificil',
+    q:'Sobre o Alzheimer de início precoce (antes dos 65 anos) versus início tardio (após os 65 anos), assinale a alternativa CORRETA:',
+    opts:[
+      'Ambas as formas são puramente multifatoriais, com igual contribuição genética e ambiental.',
+      'O início precoce é altamente mendeliano, com mutações em presenilinas de penetrância quase completa; o tardio é multifatorial, associado a polimorfismos da apolipoproteína E e fatores ambientais.',
+      'O início tardio é mais determinístico geneticamente, pois os genes se acumulam ao longo da vida.',
+      'A forma precoce é associada à apolipoproteína E, enquanto a forma tardia envolve mutações na presenilina.',
+      'Ambas as formas são idênticas do ponto de vista genético; apenas o ambiente determina a idade de início.'
+    ],
+    resp: 1
+  },
+  {
+    n:15, diff:'dificil',
+    q:'Criança com retraso mental, testículos de grande volume (macroorquidia) após puberdade, orelhas proeminentes e rosto alongado. O diagnóstico mais provável e o mecanismo genético envolvido são, respectivamente:',
+    opts:[
+      'Síndrome de Down; trissomia do cromossomo 21 por não-disjunção meiótica.',
+      'Síndrome de Klinefelter; aneuploidia sexual 47,XXY por não-disjunção.',
+      'Doença de Huntington; expansão do tripleto CAG com toxicidade por poliglutamina.',
+      'Síndrome do X Frágil; expansão do tripleto CGG (>200 repetições) no gene FMR1 com silenciamento por metilação.',
+      'Síndrome de Jacobs; aneuploidia 47,XYY com manifestações neuropsiquiátricas graves.'
+    ],
+    resp: 3
+  }
+];
+
+const p2Data = [
+  {
+    n:1,
+    stmts:[
+      { t:'A deformação congênita resulta de forças mecânicas externas que distorcem uma estrutura já corretamente formada, sendo frequentemente corrigível após o nascimento.', resp:'V' },
+      { t:'A disrupção possui alto risco de recorrência familiar, pois está associada a defeito no plano genético do indivíduo.', resp:'F' },
+      { t:'A displasia se diferencia da malformação por seu caráter sistêmico, afetando um tipo de tecido em múltiplas partes do organismo devido a defeito em um único gene.', resp:'V' },
+      { t:'A Associação VATER é considerada uma síndrome porque apresenta causa genética cromossômica bem estabelecida.', resp:'F' },
+    ]
+  },
+  {
+    n:2,
+    stmts:[
+      { t:'O NIPT (Teste Pré-natal Não Invasivo) analisa fragmentos de DNA fetal no sangue materno e, ao atingir 99% de precisão para a Síndrome de Down, é considerado diagnóstico definitivo.', resp:'F' },
+      { t:'A biopsia de vilosidades coriônicas é realizada entre a 10ª e 12ª semana e permite diagnóstico definitivo por analisar diretamente o DNA do trofoblasto, que compartilha o mesmo material genético do feto.', resp:'V' },
+      { t:'A alfa-fetoproteína elevada no soro materno pode indicar defeitos do tubo neural, como a espinha bífida.', resp:'V' },
+      { t:'A amniocentese pode ser realizada a partir da 8ª semana de gestação, sendo o método invasivo mais precoce disponível.', resp:'F' },
+    ]
+  },
+  {
+    n:3,
+    stmts:[
+      { t:'A Doença de Huntington segue padrão de herança autossômico dominante, e o filho de um indivíduo afetado tem 50% de chance de herdar a mutação.', resp:'V' },
+      { t:'Na hemofilia ligada ao X recessivo, um pai afetado transmite o gene da hemofilia a todos os seus filhos varones.', resp:'F' },
+      { t:'A Distrofia Muscular de Duchenne afeta principalmente varones porque o gene da distrofina está no cromossomo X; mulheres portadoras geralmente não manifestam a doença.', resp:'V' },
+      { t:'A hemofilia B resulta da deficiência do Fator VIII de coagulação, sendo a forma mais comum de hemofilia.', resp:'F' },
+    ]
+  },
+  {
+    n:4,
+    stmts:[
+      { t:'O gen SRY, presente no cromossomo Y, atua como interruptor mestre da masculinização; sua inativação leva ao desenvolvimento de gônadas femininas mesmo em embriões XY.', resp:'V' },
+      { t:'A Síndrome de Klinefelter (47,XXY) não tem tratamento disponível e cursa obrigatoriamente com deficiência intelectual grave.', resp:'F' },
+      { t:'A hipótese de Lyon descreve a inativação aleatória de um dos cromossomos X nas mulheres durante a embriogênese, formando o corpúsculo de Barr.', resp:'V' },
+      { t:'O síndrome de Jacobs (47,XYY) é comprovadamente associado a comportamento criminoso e violento, sendo reconhecido como "síndrome do supermacho" na literatura médica atual.', resp:'F' },
+    ]
+  },
+  {
+    n:5,
+    stmts:[
+      { t:'Na herança multifatorial, o indivíduo herda a doença em si, e não apenas a susceptibilidade para desenvolvê-la.', resp:'F' },
+      { t:'No contexto da farmacogenética, a toxicidade por acúmulo de um fármaco em metabolizadores lentos é fundamentalmente diferente de uma reação alérgica, pois resulta de incapacidade enzimática e não de resposta imunológica.', resp:'V' },
+      { t:'A esquizofrenia tem prevalência de 1% na população geral, mas o risco sobe para 45% nos filhos de um progenitor afetado.', resp:'V' },
+      { t:'O Alzheimer de início tardio (após os 65 anos) segue padrão mendeliano determinístico, sendo inevitável em portadores de mutações na presenilina.', resp:'F' },
+    ]
+  }
+];
+
+const p3Data = [
+  {
+    n:1,
+    titulo:'Associe o tipo de anomalia congênita isolada ao seu mecanismo ou característica principal:',
+    colA:['1. Malformação','2. Disrupção','3. Deformação','4. Displasia'],
+    colB:[
+      '(A) Organização celular anormal de alcance sistêmico causada por defeito em um único gene',
+      '(B) Força mecânica externa que distorce estrutura já corretamente formada; corrigível pós-natal',
+      '(C) Erro primário no plano genético durante a organogênese (3ª–8ª semana)',
+      '(D) Fator extrínseco que destrói estrutura em desenvolvimento normal; risco de recorrência nulo',
+      '(E) Cascata de eventos derivada de um único defeito inicial'
+    ],
+    resp:['C','D','B','A']
+  },
+  {
+    n:2,
+    titulo:'Associe a doença monogênica ao seu respectivo mecanismo molecular:',
+    colA:['1. Doença de Huntington','2. Distrofia de Duchenne','3. Hemofilia A','4. Síndrome do X Frágil'],
+    colB:[
+      '(A) Ausência de distrofina por mutação no gene DMD ligado ao X',
+      '(B) Expansão do tripleto CGG (>200 rep.) no gene FMR1 com silenciamento por metilação',
+      '(C) Deficiência do Fator IX de coagulação',
+      '(D) Expansão do tripleto CAG no gene HTT gerando poliglutamina tóxica',
+      '(E) Deficiência do Fator VIII de coagulação'
+    ],
+    resp:['D','A','E','B']
+  },
+  {
+    n:3,
+    titulo:'Associe a aneuploidia sexual ao seu cariotipo e característica principal:',
+    colA:['1. Síndrome de Klinefelter','2. Síndrome de Turner','3. Síndrome de Jacobs','4. Síndrome Triple X'],
+    colB:[
+      '(A) 47,XXX — Fenotipo feminino normal, fertilidade conservada',
+      '(B) 45,X — Baixa estatura, pescoço alado, inteligência tipicamente normal',
+      '(C) 47,XYY — Estatura elevada, aracnodactilia; sem associação comprovada a violência',
+      '(D) 47,XXY — Ginecomastia, testículos pequenos, infertilidade; tratável com testosterona',
+      '(E) 46,XY com deleção Yq — Infertilidade masculina isolada'
+    ],
+    resp:['D','B','C','A']
+  },
+  {
+    n:4,
+    titulo:'Associe o método diagnóstico pré-natal à sua característica principal:',
+    colA:['1. Translucência nucal','2. NIPT','3. Biopsia de vilosidades coriônicas','4. Amniocentese'],
+    colB:[
+      '(A) Método invasivo realizado a partir da 16ª semana; analisa células fetais descamadas no líquido amniótico',
+      '(B) Marcador ultrassonográfico de rastreio realizado entre 10–14 semanas; suspeita de Síndrome de Down',
+      '(C) Método invasivo realizado entre 10–12 semanas; analisa DNA do trofoblasto placentário',
+      '(D) Analisa DNA fetal livre no sangue materno; precisão de 99% para Síndrome de Down; não é diagnóstico definitivo',
+      '(E) Método diagnóstico que avalia os marcadores bioquímicos alfa-fetoproteína e beta-hCG no soro materno'
+    ],
+    resp:['B','D','C','A']
+  },
+  {
+    n:5,
+    titulo:'Associe a condição clínica ao seu perfil de herança e/ou característica genética predominante:',
+    colA:['1. Diabetes Mellitus Tipo 2','2. Hipertensão arterial','3. Alzheimer início precoce (<65 anos)','4. Trastorno do Espectro Autista'],
+    colB:[
+      '(A) Herança multifatorial; hereditabilidade de até 90%; proporção 4:1 (H:M); ausência de marcador molecular definido',
+      '(B) Herança multifatorial com influência ambiental crítica; risco de 45% com ambos os pais afetados',
+      '(C) Herança altamente mendeliana; mutações em presenilinas com penetrância quase completa',
+      '(D) Herança multifatorial; estreitamente vinculada a obesidade e estilo de vida; representa a maioria dos casos',
+      '(E) Herança monogênica (MODY); representa apenas 1–2% dos casos de diabetes'
+    ],
+    resp:['D','B','C','A']
+  }
+];
+
+// ===================== STATE =====================
+let answers = {}; // p1: {q: optIdx}, p2: {q: {stmt: 'V'/'F'}}, p3: {q: {item: 'letter'}}
+let vfAnswers = {}; // {qIdx: {stmtIdx: 'V'/'F'}}
+let assocAnswers = {}; // {qIdx: {itemIdx: 'letter'}}
+let timerInterval = null;
+let timeLeft = 60 * 60;
+let finished = false;
+let totalAnswered = 0;
+
+// ===================== BUILD UI =====================
+function buildP1() {
+  const c = document.getElementById('p1-container');
+  p1Data.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q1-' + qi;
+    const diffLabel = q.diff === 'facil' ? 'Fácil' : q.diff === 'media' ? 'Intermediária' : 'Difícil';
+    div.innerHTML = `
+      <div class="q-meta">
+        <span class="q-num">Q${q.n}</span>
+        <span class="q-diff ${q.diff}">${diffLabel}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts" id="opts-${qi}">
+        ${q.opts.map((o,oi) => `<div class="opt" onclick="selectP1(${qi},${oi})"><span class="opt-letter">${String.fromCharCode(65+oi)}</span>${o}</div>`).join('')}
+      </div>
+      <div class="q-result-badge" id="badge1-${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function buildP2() {
+  const c = document.getElementById('p2-container');
+  p2Data.forEach((q, qi) => {
+    vfAnswers[qi] = {};
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q2-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Questão ${q.n}</span></div>
+      ${q.stmts.map((s, si) => `
+        <div class="vf-stmt" id="vf-${qi}-${si}">
+          <div class="vf-text"><strong>${['I','II','III','IV'][si]}.</strong> ${s.t}</div>
+          <div class="vf-btns">
+            <button class="vf-btn" id="vfv-${qi}-${si}" onclick="selectVF(${qi},${si},'V')">✓ Verdadeiro</button>
+            <button class="vf-btn" id="vff-${qi}-${si}" onclick="selectVF(${qi},${si},'F')">✗ Falso</button>
+          </div>
+          <div class="vf-result" id="vfr-${qi}-${si}"></div>
+        </div>
+      `).join('')}
+    `;
+    c.appendChild(div);
+  });
+}
+
+function buildP3() {
+  const c = document.getElementById('p3-container');
+  p3Data.forEach((q, qi) => {
+    assocAnswers[qi] = {};
+    const letters = q.colB.map(b => b.match(/\(([A-E])\)/)[1]);
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q3-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Associação ${q.n}</span></div>
+      <div class="q-text">${q.titulo}</div>
+      <div class="assoc-grid">
+        <div class="assoc-col">
+          <h4>Coluna A</h4>
+          ${q.colA.map((a, ai) => `
+            <div class="assoc-item">
+              <strong>${a}</strong>
+              <select class="assoc-select" id="sel-${qi}-${ai}" onchange="selectAssoc(${qi},${ai},this.value)">
+                <option value="">— selecione —</option>
+                ${letters.map(l => `<option value="${l}">${l}</option>`).join('')}
+              </select>
+            </div>
+          `).join('')}
+        </div>
+        <div class="assoc-col">
+          <h4>Coluna B</h4>
+          ${q.colB.map(b => `<div class="assoc-item">${b}</div>`).join('')}
+        </div>
+      </div>
+      <div class="q-result-badge" id="badge3-${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+// ===================== INTERACTIONS =====================
+function selectP1(qi, oi) {
+  if (finished) return;
+  const wasAnswered = answers[qi] !== undefined;
+  answers[qi] = oi;
+  document.querySelectorAll(`#opts-${qi} .opt`).forEach((o, i) => {
+    o.classList.toggle('selected', i === oi);
+  });
+  if (!wasAnswered) updateProgress(1);
+}
+
+function selectVF(qi, si, val) {
+  if (finished) return;
+  const wasAnswered = vfAnswers[qi][si] !== undefined;
+  vfAnswers[qi][si] = val;
+  const btnV = document.getElementById(`vfv-${qi}-${si}`);
+  const btnF = document.getElementById(`vff-${qi}-${si}`);
+  btnV.className = 'vf-btn' + (val === 'V' ? ' selected-v' : '');
+  btnF.className = 'vf-btn' + (val === 'F' ? ' selected-f' : '');
+  // Count a p2 question as answered when all 4 stmts are done
+  const allDone = p2Data[qi].stmts.every((_, i) => vfAnswers[qi][i] !== undefined);
+  if (allDone && !wasAnswered) {
+    const wasFullyAnswered = Object.values(vfAnswers[qi]).length >= p2Data[qi].stmts.length;
+    if (!wasFullyAnswered) updateProgress(1);
+  }
+}
+
+function selectAssoc(qi, ai, val) {
+  if (finished) return;
+  const wasFullyAnswered = p3Data[qi].colA.every((_, i) => assocAnswers[qi][i]);
+  assocAnswers[qi][ai] = val;
+  const nowFull = p3Data[qi].colA.every((_, i) => assocAnswers[qi][i]);
+  if (nowFull && !wasFullyAnswered) updateProgress(1);
+}
+
+let progressCount = 0;
+function updateProgress(n) {
+  progressCount += n;
+  const total = 25;
+  const pct = Math.round((progressCount / total) * 100);
+  document.getElementById('prog-text').textContent = `${progressCount} de ${total} respondidas`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ===================== TIMER =====================
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+    const s = (timeLeft % 60).toString().padStart(2,'0');
+    const el = document.getElementById('timer');
+    el.textContent = `${m}:${s}`;
+    if (timeLeft <= 300) el.classList.add('urgent');
+    if (timeLeft <= 0) { clearInterval(timerInterval); finishSimulado(); }
+  }, 1000);
+}
+
+// ===================== FINISH =====================
+function finishSimulado() {
+  if (finished) return;
+  finished = true;
+  clearInterval(timerInterval);
+
+  // Score P1
+  let correct = 0, total = 0;
+  p1Data.forEach((q, qi) => {
+    total++;
+    const ans = answers[qi];
+    const opts = document.querySelectorAll(`#opts-${qi} .opt`);
+    opts.forEach((o, oi) => {
+      o.classList.add('disabled');
+      if (oi === q.resp) o.classList.add('correct');
+      else if (oi === ans && oi !== q.resp) o.classList.add('wrong');
+    });
+    if (ans === q.resp) {
+      correct++;
+      const b = document.getElementById(`badge1-${qi}`);
+      b.className = 'q-result-badge acertou'; b.textContent = '✓ Correto!'; b.style.display = 'inline-block';
+    } else if (ans !== undefined) {
+      const b = document.getElementById(`badge1-${qi}`);
+      b.className = 'q-result-badge errou'; b.textContent = `✗ Incorreto — Gabarito: ${String.fromCharCode(65+q.resp)}`; b.style.display = 'inline-block';
+    }
+  });
+
+  // Score P2
+  p2Data.forEach((q, qi) => {
+    q.stmts.forEach((s, si) => {
+      total++;
+      const userAns = vfAnswers[qi]?.[si];
+      const r = document.getElementById(`vfr-${qi}-${si}`);
+      const btnV = document.getElementById(`vfv-${qi}-${si}`);
+      const btnF = document.getElementById(`vff-${qi}-${si}`);
+      btnV.classList.add('disabled'); btnF.classList.add('disabled');
+      if (userAns === s.resp) {
+        correct++;
+        r.className = 'vf-result correct'; r.textContent = `✓ Correto! Resposta: ${s.resp === 'V' ? 'Verdadeiro' : 'Falso'}`;
+      } else {
+        r.className = 'vf-result wrong'; r.textContent = `✗ Incorreto — Resposta correta: ${s.resp === 'V' ? 'Verdadeiro' : 'Falso'}`;
+      }
+      r.style.display = 'block';
+    });
+  });
+
+  // Score P3
+  p3Data.forEach((q, qi) => {
+    const badge = document.getElementById(`badge3-${qi}`);
+    let qCorrect = 0;
+    q.colA.forEach((_, ai) => {
+      total++;
+      const userAns = assocAnswers[qi]?.[ai];
+      const sel = document.getElementById(`sel-${qi}-${ai}`);
+      if (sel) sel.disabled = true;
+      if (userAns === q.resp[ai]) {
+        correct++; qCorrect++;
+        if (sel) sel.style.borderColor = 'var(--green)';
+      } else {
+        if (sel) sel.style.borderColor = 'var(--red)';
+        if (sel) sel.title = `Correto: ${q.resp[ai]}`;
+      }
+    });
+    if (badge) {
+      badge.className = qCorrect === q.colA.length ? 'q-result-badge acertou' : 'q-result-badge errou';
+      badge.textContent = qCorrect === q.colA.length ? `✓ Associação completa correta!` : `✗ ${qCorrect}/${q.colA.length} corretos — veja o gabarito`;
+      badge.style.display = 'inline-block';
+    }
+  });
+
+  // Unlock gabarito
+  const gabBtn = document.getElementById('gab-btn');
+  gabBtn.style.opacity = '1'; gabBtn.style.pointerEvents = 'auto';
+  buildGabarito(correct, total);
+
+  // Show overlay
+  const pct = Math.round((correct / total) * 100);
+  document.getElementById('finish-score').textContent = `${correct}/${total}`;
+  document.getElementById('finish-icon').textContent = pct >= 70 ? '🏆' : pct >= 50 ? '📚' : '💪';
+  document.getElementById('finish-msg').textContent = pct >= 70 ? 'Excelente desempenho! Continue assim para a prova.' : pct >= 50 ? 'Bom resultado. Revise os pontos errados no gabarito.' : 'Revise o material e refaça o simulado. Você chega lá!';
+  document.getElementById('finish-overlay').classList.add('show');
+}
+
+function goToGabarito() {
+  document.getElementById('finish-overlay').classList.remove('show');
+  showPage('gab', document.getElementById('gab-btn'));
+}
+
+// ===================== GABARITO =====================
+function buildGabarito(correct, total) {
+  const pct = Math.round((correct/total)*100);
+  const scoreHtml = `
+    <div class="score-box">
+      <div class="score-num">${pct}%</div>
+      <div class="score-label">Aproveitamento geral</div>
+      <div class="score-grid">
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--green)">${correct}</div><div class="score-cell-label">Acertos</div></div>
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--red)">${total-correct}</div><div class="score-cell-label">Erros</div></div>
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--text)">${total}</div><div class="score-cell-label">Total</div></div>
+      </div>
+    </div>`;
+  document.getElementById('score-display').innerHTML = scoreHtml;
+
+  const gabComments = [
+    // P1
+    { part:'Parte 1 — Múltipla Escolha', items:[
+      { n:'Q1', resp:'B', exp:'A malformação é um <strong>erro primário do plano genético</strong> durante a organogênese (3ª–8ª sem). <span class="dist">Distrator A</span> descreve a deformação; <span class="dist">C</span> descreve a disrupção; <span class="dist">D</span> descreve a displasia; <span class="dist">E</span> descreve a sequência.' },
+      { n:'Q2', resp:'D', exp:'A distrofina é a proteína ausente na <strong>Distrofia Muscular de Duchenne</strong>. Age como amortecedor entre actina e matriz extracelular. <span class="dist">Distratores</span>: Huntington = huntingtina; X Frágil = proteína FMR1; Hemofilia A = Fator VIII.' },
+      { n:'Q3', resp:'D', exp:'<strong>Hemofilia A = Fator VIII</strong>. Hemofilia B = Fator IX. Pegadinha clássica: inverter os fatores. A é mais comum.' },
+      { n:'Q4', resp:'E', exp:'Turner = <strong>45, X</strong> (monossomia X). Fenotipo feminino, baixa estatura, pescoço alado, inteligência NORMAL. <span class="dist">A</span> = Klinefelter (47,XXY); <span class="dist">B</span> = Jacobs (47,XYY).' },
+      { n:'Q5', resp:'B', exp:'<strong>Genótipo + Ambiente = Fenótipo</strong> é a fórmula central da herança multifatorial. O indivíduo herda susceptibilidade, não a doença.' },
+      { n:'Q6', resp:'C', exp:'<strong>Sequência de Potter</strong>: agenesia renal → sem urina → oligohidrâmnios → compressão → hipoplasia pulmonar + fácies achatada. É uma SEQUÊNCIA (1 defeito → cascata), não síndrome.' },
+      { n:'Q7', resp:'C', exp:'Translucência nucal é <strong>método de rastreo</strong> não-invasivo. Situa o feto em grupo de risco, NÃO confirma diagnóstico. Confirmação = BVC (10–12 sem) ou amniocentese (≥16 sem).' },
+      { n:'Q8', resp:'B', exp:'<strong>Antecipação</strong> = expansão progressiva do tripleto CAG a cada geração, causando início mais precoce e quadro mais grave nos descendentes. Não é compensação nem homozigose.' },
+      { n:'Q9', resp:'C', exp:'X Frágil = gene <strong>FMR1</strong>, expansão <strong>CGG > 200 repetições</strong>, metilação e silenciamento gênico. <span class="dist">A</span> descreve Huntington (CAG/HTT); <span class="dist">B</span> incorreto (é ligado ao X, não autossômico dominante).' },
+      { n:'Q10', resp:'C', exp:'<strong>Metabolizador lento</strong>: varfarina acumula → hemorragia. <strong>Ultra rápido</strong>: varfarina eliminada → trombose. Toxicidade farmacogenética ≠ alergia (não é resposta imunológica).' },
+      { n:'Q11', resp:'D', exp:'<strong>DDS 46,XY por insensibilidade aos andrógenos</strong>: produz testosterona, mas receptor falha → via default feminina → fenotipo feminino sem útero, com testículos internos. <span class="dist">A</span> Turner não tem mamas desenvolvidas; <span class="dist">B</span> DDS XX tem útero presente.' },
+      { n:'Q12', resp:'C', exp:'Pai XdY → filhos varones recebem Y do pai + X normal da mãe → <strong>nenhum varão afetado</strong>. Filhas recebem Xd do pai + X normal da mãe → <strong>todas portadoras</strong>. Pegadinha clássica!' },
+      { n:'Q13', resp:'D', exp:'Curva <strong>bimodal</strong> = dois grupos distintos de metabolizadores = metabolismo dirigido geneticamente = dose universal não serve. Curva gaussiana = variação normal, dose padrão adequada.' },
+      { n:'Q14', resp:'B', exp:'Alzheimer <strong>precoce (<65)</strong> = mutações em presenilinas, quase determinístico (mendeliano). <strong>Tardio (>65)</strong> = apolipoproteína E + ambiente = multifatorial. Não é determinístico.' },
+      { n:'Q15', resp:'D', exp:'Retraso mental + orelhas proeminentes + rosto alongado + <strong>macroorquidia</strong> pós-puberdade = <strong>Síndrome do X Frágil</strong>. Gene FMR1, expansão CGG >200. A macroorquidia é o marcador clínico distintivo que descarta Down e Klinefelter.' },
+    ]},
+    { part:'Parte 2 — Verdadeiro ou Falso', items:[
+      { n:'Q1', resp:'V, F, V, F', exp:'<strong>II — FALSO</strong>: disrupção tem risco de recorrência <strong>NULO</strong> (plano genético é correto). <strong>IV — FALSO</strong>: VATER é ASSOCIAÇÃO, não síndrome; não tem padrão genético definido.' },
+      { n:'Q2', resp:'F, V, V, F', exp:'<strong>I — FALSO</strong>: NIPT é rastreio não-invasivo, NÃO confirma definitivamente. <strong>IV — FALSO</strong>: amniocentese é a partir da 16ª semana, não da 8ª.' },
+      { n:'Q3', resp:'V, F, V, F', exp:'<strong>II — FALSO</strong>: pai afetado (XdY) transmite Xd <strong>somente às filhas</strong>, nunca aos filhos varones (que herdam o Y). <strong>IV — FALSO</strong>: Hemofilia B = Fator IX; A = Fator VIII (a mais comum).' },
+      { n:'Q4', resp:'V, F, V, F', exp:'<strong>II — FALSO</strong>: Klinefelter <strong>tem tratamento</strong> (testosterona exógena) e NÃO cursa com deficiência intelectual obrigatória. <strong>IV — FALSO</strong>: Jacobs (XYY) NÃO tem associação comprovada com violência — foi desmitificado.' },
+      { n:'Q5', resp:'F, V, V, F', exp:'<strong>I — FALSO</strong>: herda-se a <strong>susceptibilidade</strong>, não a doença em si. <strong>IV — FALSO</strong>: Alzheimer tardio (>65) é multifatorial, não mendeliano. Presenilina = forma precoce.' },
+    ]},
+    { part:'Parte 3 — Associação de Colunas', items:[
+      { n:'Assoc. 1', resp:'1-C · 2-D · 3-B · 4-A', exp:'Malformação = erro genético (C). Disrupção = fator extrínseco destrói o normal, recorrência zero (D). Deformação = força mecânica entorta o pronto, corrigível (B). Displasia = sistêmica, gene único (A).' },
+      { n:'Assoc. 2', resp:'1-D · 2-A · 3-E · 4-B', exp:'Huntington = CAG/HTT/poliglutamina (D). Duchenne = ausência distrofina (A). Hemofilia A = Fator VIII (E). X Frágil = CGG/FMR1 (B). <strong>Atenção</strong>: C (Fator IX) é Hemofilia B — distrator clássico.' },
+      { n:'Assoc. 3', resp:'1-D · 2-B · 3-C · 4-A', exp:'Klinefelter = 47,XXY, ginecomastia, testosterona (D). Turner = 45,X, inteligência normal (B). Jacobs = XYY, sem violência comprovada (C). Triple X = fenotipo normal, fértil (A).' },
+      { n:'Assoc. 4', resp:'1-B · 2-D · 3-C · 4-A', exp:'Translucência = rastreio ultrassonográfico 10–14 sem (B). NIPT = DNA livre, 99%, NÃO confirma (D). BVC = invasivo 10–12 sem (C). Amniocentese = invasivo ≥16 sem (A). <strong>Pegadinha</strong>: NIPT não é diagnóstico definitivo.' },
+      { n:'Assoc. 5', resp:'1-D · 2-B · 3-C · 4-A', exp:'DM2 = multifatorial, obesidade/estilo de vida (D). HAS = multifatorial, 45% risco com ambos pais afetados (B). Alzheimer precoce = mendeliano/presenilinas (C). TEA = hereditabilidade 90%, sem marcador molecular, 4:1 H:M (A).' },
+    ]}
+  ];
+
+  let html = '';
+  gabComments.forEach(sec => {
+    html += `<div class="gab-section"><div class="gab-title">${sec.part}</div>`;
+    sec.items.forEach(item => {
+      html += `
+        <div class="gab-item">
+          <div class="gab-num">${item.n}</div>
+          <div class="gab-resp">${item.resp}</div>
+          <div class="gab-exp">${item.exp}</div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('gab-container').innerHTML = html;
+}
+
+// ===================== NAVIGATION =====================
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===================== START / RESET =====================
+function startSimulado() {
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  buildP1(); buildP2(); buildP3();
+  startTimer();
+}
+
+function resetSimulado() {
+  if (!confirm('Refazer o simulado? Todo o progresso será perdido.')) return;
+  clearInterval(timerInterval);
+  finished = false;
+  answers = {}; vfAnswers = {}; assocAnswers = {};
+  timeLeft = 60 * 60;
+  progressCount = 0;
+  document.getElementById('finish-overlay').classList.remove('show');
+  document.getElementById('p1-container').innerHTML = '';
+  document.getElementById('p2-container').innerHTML = '';
+  document.getElementById('p3-container').innerHTML = '';
+  document.getElementById('gab-container').innerHTML = '';
+  document.getElementById('score-display').innerHTML = '';
+  document.getElementById('timer').textContent = '60:00';
+  document.getElementById('timer').classList.remove('urgent');
+  document.getElementById('prog-text').textContent = '0 de 25 respondidas';
+  document.getElementById('prog-pct').textContent = '0%';
+  document.getElementById('prog-fill').style.width = '0%';
+  const gabBtn = document.getElementById('gab-btn');
+  gabBtn.style.opacity = '0.4'; gabBtn.style.pointerEvents = 'none';
+  showPage('p1', document.querySelector('nav button'));
+  buildP1(); buildP2(); buildP3();
+  startTimer();
+}
+</script>
+</body>
+</html>
