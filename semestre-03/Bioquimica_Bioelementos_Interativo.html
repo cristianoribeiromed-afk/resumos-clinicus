@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Bioelementos | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">⚛️</div>
+      <div class="brand-text">
+        <h1>Bioquímica — Bioelementos</h1>
+        <span>Composição · Classificação · Elementos · Princípios Imediatos</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Bioquímica — Bioelementos, do átomo ao organismo</h2>
+    <p>Composição química da matéria viva, níveis de organização, classificação dos bioelementos e princípios imediatos — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="intro">🧪 Introdução</button>
+    <button class="tab-btn" data-tab="niveis">🔬 Níveis de Organização</button>
+    <button class="tab-btn" data-tab="classificacao">📊 Classificação</button>
+    <button class="tab-btn" data-tab="primarios">⚛️ Primários &amp; Secundários</button>
+    <button class="tab-btn" data-tab="oligo">🧬 Oligoelementos</button>
+    <button class="tab-btn" data-tab="principios">🧫 Princípios Imediatos</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- INTRODUÇÃO -->
+  <section class="panel active" id="intro">
+    <div class="block">
+      <h3>Importância da Bioquímica</h3>
+      <p>A Bioquímica é a base de uma infinidade de ciências, pois permite conhecer a <b>estrutura</b>, a <b>composição</b> e a <b>função</b> dos componentes químicos dos seres vivos. É fundamental para Medicina, Nutrição, Engenharia, Química, Biologia, Agronomia, entre outras áreas.</p>
+      <p>O conhecimento da estrutura dos ácidos nucleicos esclareceu os mecanismos de transmissão da informação genética entre gerações, e também os mecanismos de expressão dessa informação — que determina as propriedades e funções das células, tecidos, órgãos e organismos completos.</p>
+      <div class="clinico"><b>Objetivo da Bioquímica:</b> conhecer a estrutura e o comportamento das moléculas biológicas — compostos que formam as diversas partes da célula e realizam as reações químicas que permitem alimentar-se, crescer, reproduzir-se, usar e armazenar energia.</div>
+    </div>
+    <div class="block">
+      <h3>O que é um Bioelemento?</h3>
+      <p><b>BIO</b> = vida &nbsp;|&nbsp; <b>GENÉSICO</b> = origem da vida</p>
+      <p>Os elementos biogenésicos (bioelementos) são todos os elementos químicos que se encontram e formam parte da matéria viva.</p>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Bioquímica estuda estrutura+composição+função das moléculas biológicas. Bioelemento = elemento químico presente na matéria viva.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir "bioelemento" com "biomolécula" — o bioelemento é o átomo/elemento químico; a biomolécula é o composto formado por eles.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual é a origem etimológica da palavra "bioelemento genésico"?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">BIO (vida) + GENÉSICO (origem da vida) — elemento que dá origem/faz parte da vida.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o estudo dos ácidos nucleicos foi tão importante para entender a hereditariedade?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÍVEIS DE ORGANIZAÇÃO -->
+  <section class="panel" id="niveis">
+    <div class="block">
+      <h3>Sistema de classificação do corpo humano (Wang e cols., 1992)</h3>
+      <table class="quicktab">
+        <tr><th>Nível</th><th>Componentes</th></tr>
+        <tr><td><b>Atômico</b></td><td>Hidrogênio, Nitrogênio, Oxigênio, Carbono, Fósforo</td></tr>
+        <tr><td><b>Molecular</b></td><td>Água, Proteínas, Lipídios</td></tr>
+        <tr><td><b>Celular</b></td><td>Intracelular, Extracelular</td></tr>
+        <tr><td><b>Anatômico</b></td><td>Tecido muscular, adiposo, ósseo, pele, órgãos, vísceras</td></tr>
+        <tr><td><b>Corpo íntegro</b></td><td>Massa corporal, volume corporal, densidade corporal</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Detalhando cada nível</h3>
+      <h4>Nível atômico e molecular</h4>
+      <p>Elementos constituintes: Carbono, Hidrogênio, Oxigênio e Nitrogênio (com muitos outros em proporções mais baixas). Esses átomos se unem para formar moléculas, sejam inorgânicas (como a água) ou orgânicas.</p>
+      <h4>Nível celular</h4>
+      <p>A célula é a mínima unidade da vida. Todas as células humanas são <b>eucariotas</b>, assim como as de todos os animais e plantas. Todas as células compartilham elementos essenciais.</p>
+      <h4>Nível anatômico</h4>
+      <p>A histologia estuda os tecidos biológicos. Existem apenas alguns tecidos básicos: <b>epitelial, conjuntivo, muscular e nervoso</b> — com eles o organismo se relaciona, se protege, secreta substâncias, mantém sua forma, se desloca, coordena funções e se relaciona com o meio.</p>
+      <h4>Nível corpo íntegro</h4>
+      <p>Exemplo: a pele do corpo humano tem superfície de aproximadamente <b>2 m²</b>, pesa cerca de <b>5 kg</b>, e sua espessura varia de 0,05mm a 0,02mm (podendo chegar a 1mm ou mais nas palmas e plantas dos pés).</p>
+      <div class="mnemo"><b>Dica:</b> os 5 níveis seguem uma escala crescente de complexidade: átomo → molécula → célula → tecido/órgão → organismo íntegro.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>4 tecidos básicos: epitelial, conjuntivo, muscular, nervoso. Todas as células humanas são eucariotas. Pele ≈ 2m², 5kg.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Esquecer que o nível "molecular" já inclui água e proteínas — não é só sobre átomos isolados.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Quais são os 4 tecidos básicos do nível anatômico?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Epitelial, conjuntivo, muscular e nervoso.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que faz sentido que a classificação vá do nível atômico até o "corpo íntegro" numa progressão?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSIFICAÇÃO -->
+  <section class="panel" id="classificacao">
+    <div class="block">
+      <h3>Classificação dos bioelementos por frequência</h3>
+      <table class="quicktab">
+        <tr><th>Categoria</th><th>Proporção</th></tr>
+        <tr><td>Bioelementos primários (plástidos)</td><td>Maior que 1% — somam cerca de 96% do peso da matéria seca</td></tr>
+        <tr><td>Bioelementos secundários</td><td>Entre 1% e 0,005% — somam cerca de 3,9% do peso</td></tr>
+        <tr><td>Oligoelementos</td><td>Menor que 0,005% (menor que 0,01%)</td></tr>
+      </table>
+      <p><b>Composição hierárquica:</b> átomos → moléculas → biomoléculas → macromoléculas → células → tecidos → órgãos → aparelhos → sistemas → organismos.</p>
+    </div>
+    <div class="block">
+      <h3>% de bioelementos no corpo humano</h3>
+      <table class="quicktab">
+        <tr><th>Elemento</th><th>% no corpo humano</th></tr>
+        <tr><td>Oxigênio</td><td>62,81%</td></tr>
+        <tr><td>Carbono</td><td>19,37%</td></tr>
+        <tr><td>Hidrogênio</td><td>9,31%</td></tr>
+        <tr><td>Nitrogênio</td><td>5,14%</td></tr>
+        <tr><td>Cálcio</td><td>1,38%</td></tr>
+        <tr><td>Fósforo</td><td>0,64%</td></tr>
+        <tr><td>Enxofre</td><td>0,63%</td></tr>
+        <tr><td>Sódio</td><td>0,26%</td></tr>
+        <tr><td>Potássio</td><td>0,22%</td></tr>
+        <tr><td>Cloro</td><td>0,18%</td></tr>
+        <tr><td>Magnésio</td><td>0,04%</td></tr>
+        <tr><td>Flúor</td><td>0,009%</td></tr>
+        <tr><td>Ferro</td><td>0,005%</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha clássica:</b> o elemento mais abundante no corpo humano é o <b>OXIGÊNIO</b> (62,81%), não o carbono — muitos alunos assumem erroneamente que é o carbono por ele ser a "base da vida orgânica".</div>
+      <div class="mnemo"><b>Dica de memorização:</b> "O Corpo Humano Necessita" (Oxigênio, Carbono, Hidrogênio, Nitrogênio) — os 4 primários, em ordem decrescente de abundância.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Primários >1% (96% do total). Secundários 1-0,005% (3,9%). Oligoelementos <0,005%. Oxigênio é o mais abundante (62,81%).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que carbono é o elemento mais abundante — na verdade é o oxigênio.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual categoria de bioelementos representa cerca de 96% do peso da matéria seca do organismo?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Os bioelementos primários (plástidos).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o oxigênio, e não o carbono, é o elemento mais abundante no corpo, mesmo a vida sendo baseada em química orgânica (carbono)?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIMÁRIOS E SECUNDÁRIOS -->
+  <section class="panel" id="primarios">
+    <div class="block">
+      <h3>Bioelementos primários (C, H, O, N)</h3>
+      <p>Constituem cerca de 95% da massa total. Formam ligações covalentes. São indispensáveis para formar as biomoléculas orgânicas.</p>
+      <table class="quicktab">
+        <tr><th>Elemento</th><th>Função</th></tr>
+        <tr><td><b>Carbono (C)</b></td><td>Elemento muito energético, proporciona grandes quantidades de energia</td></tr>
+        <tr><td><b>Hidrogênio (H)</b></td><td>Ajuda os líquidos, tecidos e ossos do corpo</td></tr>
+        <tr><td><b>Oxigênio (O)</b></td><td>Elemento de maior abundância; o mais importante na respiração celular</td></tr>
+        <tr><td><b>Nitrogênio (N)</b></td><td>Permite a liberação de energia dentro do corpo</td></tr>
+      </table>
+      <h4>Propriedades atômicas</h4>
+      <table class="quicktab">
+        <tr><th>Elemento</th><th>Símbolo</th><th>Nº atômico</th><th>Massa atômica</th><th>Grupo / Período</th></tr>
+        <tr><td>Carbono</td><td>C</td><td>12</td><td>12,0111</td><td>IVA / 2</td></tr>
+        <tr><td>Hidrogênio</td><td>H</td><td>1</td><td>1,00794</td><td>IA / 1</td></tr>
+        <tr><td>Oxigênio</td><td>O</td><td>8</td><td>15,9994</td><td>VIA / 2</td></tr>
+        <tr><td>Nitrogênio</td><td>N</td><td>7</td><td>14,0067</td><td>VA / 2</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Bioelementos secundários (Ca, Na, K, Mg, Cl)</h3>
+      <p>Aparecem numa proporção próxima a 3,3-3,9%. Encontram-se formando sais minerais ou em forma iônica.</p>
+      <table class="quicktab">
+        <tr><th>Elemento</th><th>Função</th></tr>
+        <tr><td><b>Cálcio (Ca)</b></td><td>Regula a contração muscular. Presente em pulmões, rins, fígado, tireoide, cérebro, músculo, coração, ossos (2,45% no conjunto dos seres vivos)</td></tr>
+        <tr><td><b>Sódio (Na)</b></td><td>Regula o metabolismo celular. Mantém níveis apropriados de sangue. Presente em todos os líquidos e tecidos</td></tr>
+        <tr><td><b>Potássio (K)</b></td><td>Regula enzimas. Importante na contração muscular, na osmose (bomba de potássio) e na transmissão do impulso nervoso</td></tr>
+        <tr><td><b>Cloro (Cl)</b></td><td>Participa da osmose e da transmissão do impulso nervoso, além dos líquidos corporais</td></tr>
+        <tr><td><b>Magnésio (Mg)</b></td><td>Produz muitas enzimas; presente na molécula de clorofila; também em pulmões, rins, fígado, tireoide, cérebro, músculos e coração</td></tr>
+      </table>
+      <h4>Propriedades atômicas</h4>
+      <table class="quicktab">
+        <tr><th>Elemento</th><th>Símbolo</th><th>Nº atômico</th><th>Massa atômica</th><th>Grupo / Período</th></tr>
+        <tr><td>Cálcio</td><td>Ca</td><td>20</td><td>40,08</td><td>IIA / 4</td></tr>
+        <tr><td>Sódio</td><td>Na</td><td>11</td><td>22,9890</td><td>IA / 3</td></tr>
+        <tr><td>Potássio</td><td>K</td><td>19</td><td>39,098</td><td>IA / 4</td></tr>
+        <tr><td>Magnésio</td><td>Mg</td><td>12</td><td>24,305</td><td>IIA / 3</td></tr>
+        <tr><td>Cloro</td><td>Cl</td><td>17</td><td>35,453</td><td>VIIA / 4</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "CaNa Kimika MaGoa Clara" → Ca-Na-K-Mg-Cl, os 5 secundários em ordem de memorização.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Primários (C,H,O,N) = ligações covalentes, biomoléculas orgânicas. Secundários (Ca,Na,K,Mg,Cl) = sais minerais/forma iônica.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Trocar a função do sódio (regula metabolismo celular/volume) com a do potássio (contração muscular/impulso nervoso via bomba).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual elemento secundário está associado à "bomba" envolvida na transmissão do impulso nervoso?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O potássio (K) — bomba de potássio, envolvida em osmose e impulso nervoso.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o magnésio, mesmo sendo um elemento "secundário", é essencial para tantas enzimas diferentes?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OLIGOELEMENTOS -->
+  <section class="panel" id="oligo">
+    <div class="block">
+      <h3>O que são oligoelementos?</h3>
+      <p>São elementos químicos presentes no organismo em forma vestigial (proporções menores que 0,01%), mas indispensáveis para o desenvolvimento harmônico do organismo. Apesar de estarem em quantidades muito pequenas, desempenham funções de vital importância.</p>
+      <h4>Funções gerais dos oligoelementos</h4>
+      <ul>
+        <li>Regulam o metabolismo como parte do centro ativo de algumas enzimas</li>
+        <li>Estabilizam certas macromoléculas ou estruturas celulares, como as membranas plasmáticas</li>
+      </ul>
+      <p><b>Subgrupos:</b> essenciais (cujo déficit provoca alterações no crescimento ou na saúde) e não essenciais. Fazem parte do grupo dos essenciais: Vanádio (V), Molibdênio (Mo), Cromo (Cr), Manganês (Mn), Cobalto (Co), Níquel (Ni), Cobre (Cu), Ferro (Fe), Zinco (Zn), Silício (Si), Iodo (I), Selênio (Se) e Flúor (F).</p>
+    </div>
+    <div class="block">
+      <h3>Oligoelementos e suas funções específicas</h3>
+      <table class="quicktab">
+        <tr><th>Elemento</th><th>Função</th></tr>
+        <tr><td><b>Cobre (Cu)</b></td><td>Estimula o sistema imunitário</td></tr>
+        <tr><td><b>Zinco (Zn)</b></td><td>Metabolismo de proteínas e ácidos nucleicos; bom funcionamento do sistema imunitário; cicatrização de feridas; percepção do gosto e olfato; síntese do ADN</td></tr>
+        <tr><td><b>Flúor (F)</b></td><td>Ajuda na formação dos ossos, dando maior resistência</td></tr>
+        <tr><td><b>Iodo (I)</b></td><td>Sua carência afeta o metabolismo celular</td></tr>
+        <tr><td><b>Boro (B)</b></td><td>Manutenção da estrutura da parede celular</td></tr>
+        <tr><td><b>Silício (Si)</b></td><td>Presente em alguns tecidos conjuntivos e nas paredes celulares</td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica:</b> a deficiência de zinco pode causar retardo na cicatrização de feridas e alterações no paladar/olfato — sinal clínico clássico de exame. A deficiência de iodo é a causa mais comum de bócio (hipotireoidismo) em regiões carentes desse elemento.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Oligoelementos = <0,01% mas essenciais. Zinco = cicatrização + paladar/olfato + ADN. Iodo = metabolismo celular (tireoide).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que "quantidade pequena" significa "pouco importante" — oligoelementos são vitais apesar de vestigiais.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual oligoelemento está diretamente ligado à cicatrização de feridas e à síntese de ADN?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O zinco (Zn).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que um elemento presente em quantidade tão pequena (menos de 0,01%) pode ser essencial para funções tão importantes?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCÍPIOS IMEDIATOS -->
+  <section class="panel" id="principios">
+    <div class="block">
+      <h3>O que são princípios imediatos?</h3>
+      <p>São compostos formados pelos elementos presentes na matéria viva, que podem ser isolados por meios puramente físicos, sem modificar sua estrutura molecular. Podem ser orgânicos ou inorgânicos.</p>
+      <table class="quicktab">
+        <tr><th>Categoria</th><th>Componentes</th></tr>
+        <tr><td><b>Orgânicos</b></td><td>Glicídios, Lipídios, Prótidos, Ácidos nucleicos</td></tr>
+        <tr><td><b>Inorgânicos</b></td><td>Água, Sais minerais</td></tr>
+        <tr><td><b>Biocatalisadores</b></td><td>Vitaminas, Hormônios, Enzimas</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "GLPA" para os orgânicos (Glicídios, Lipídios, Prótidos, Ácidos nucleicos) — os 4 grupos de moléculas orgânicas da vida.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Orgânicos: glicídios, lipídios, prótidos, ácidos nucleicos. Inorgânicos: água, sais minerais. Biocatalisadores: vitaminas, hormônios, enzimas.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Classificar água como "orgânica" — a água é o principal princípio imediato INORGÂNICO.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Os hormônios e as enzimas pertencem a qual categoria de princípios imediatos?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Biocatalisadores (junto com as vitaminas).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que vitaminas, hormônios e enzimas são agrupados juntos como "biocatalisadores"?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 30 anos, vegetariana estrita há 5 anos, sem suplementação, apresenta fadiga, palidez cutânea e unhas quebradiças. Exames mostram baixos níveis de um oligoelemento essencial para o transporte de oxigênio no sangue.</div>
+      <div class="caso-q">
+        <p>1) Qual oligoelemento está provavelmente deficiente neste caso?</p>
+        <p>2) Por que esse elemento é tão importante mesmo estando presente em pequena quantidade no corpo (0,005%)?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Anemia ferropriva (deficiência de ferro).<br><b>Explicação:</b> O ferro é um oligoelemento essencial, componente fundamental da hemoglobina, responsável pelo transporte de oxigênio no sangue. Apesar de representar apenas 0,005% do peso corporal, sua deficiência tem grande impacto clínico — demonstrando que quantidade pequena não significa baixa importância biológica.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 45 anos, residente em região montanhosa sem acesso a sal iodado, apresenta aumento progressivo do volume cervical (bócio) e sintomas de lentidão metabólica (cansaço, ganho de peso, intolerância ao frio).</div>
+      <div class="caso-q">
+        <p>1) Qual oligoelemento está deficiente neste caso?</p>
+        <p>2) Por que a carência desse elemento afeta especificamente o metabolismo celular?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Bócio por deficiência de iodo (hipotireoidismo carencial).<br><b>Explicação:</b> O iodo é indispensável para a síntese dos hormônios tireoidianos, que regulam o metabolismo celular em todo o corpo. Sua carência causa lentidão metabólica generalizada e, como mecanismo compensatório, a tireoide aumenta de tamanho (bócio) na tentativa de captar mais iodo disponível.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 60 anos, com insuficiência renal crônica, apresenta parestesias (formigamento) perioral, espasmos musculares e sinal de Chvostek positivo ao exame físico. Exames laboratoriais mostram alteração de um bioelemento secundário fundamental para a contração muscular.</div>
+      <div class="caso-q">
+        <p>1) Qual bioelemento secundário está alterado neste caso, e em que direção (aumentado ou diminuído)?</p>
+        <p>2) Por que esse elemento é tão relevante especificamente para a função muscular e nervosa?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Hipocalcemia secundária à doença renal crônica.<br><b>Explicação:</b> O cálcio é o bioelemento secundário que regula a contração muscular. Na insuficiência renal crônica, há menor ativação da vitamina D e maior retenção de fósforo, levando à hipocalcemia. Os sinais clínicos (parestesias, espasmos, Chvostek positivo) refletem a hiperexcitabilidade neuromuscular causada pela baixa concentração de cálcio extracelular.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 8 anos, com história de diarreia crônica há 6 meses, é levado ao pediatra por retardo na cicatrização de uma ferida no joelho, além de relatar que "a comida não tem mais gosto" e apresentar lesões cutâneas descamativas ao redor da boca.</div>
+      <div class="caso-q">
+        <p>1) Qual oligoelemento está provavelmente deficiente neste paciente?</p>
+        <p>2) Relacione cada um dos três achados clínicos (cicatrização lenta, alteração do paladar, lesões cutâneas) com a função biológica desse elemento.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver diagnóstico e explicação</button>
+        <div class="caso-answer">
+          <b>Diagnóstico:</b> Deficiência de zinco (frequentemente secundária a perdas digestivas por diarreia crônica).<br><b>Explicação:</b> O zinco participa do metabolismo de proteínas e ácidos nucleicos, sendo essencial para a síntese de ADN e reparo tecidual — daí a cicatrização lenta. Também é fundamental para a percepção do gosto e olfato, explicando a queixa de alteração do paladar. Por fim, sua deficiência é classicamente associada a lesões cutâneas descamativas periorificiais, um achado característico da carência de zinco.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">16 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 16</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">47</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">25 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Bioquímica — Bioelementos" (Prof. Dr. Robert Vargas Bernal). Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 25 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Bioelemento", def:"Elemento químico que se encontra e forma parte da matéria viva (BIO=vida, GENÉSICO=origem da vida)."},
+  {term:"Bioelementos primários", def:"C, H, O, N — constituem ~95-96% da massa total; formam ligações covalentes; indispensáveis para biomoléculas orgânicas."},
+  {term:"Bioelementos secundários", def:"Ca, Na, K, Mg, Cl — representam ~3,9% do peso; encontram-se como sais minerais ou forma iônica."},
+  {term:"Oligoelementos", def:"Elementos presentes em proporção menor que 0,01%, mas essenciais para o desenvolvimento harmônico do organismo."},
+  {term:"Oligoelemento essencial", def:"Aquele cujo déficit provoca alterações no crescimento ou na saúde (ex: Fe, Zn, I, Cu, F)."},
+  {term:"Princípios imediatos", def:"Compostos formados por elementos da matéria viva, isoláveis por meios físicos sem alterar sua estrutura molecular."},
+  {term:"Princípios imediatos orgânicos", def:"Glicídios, lipídios, prótidos e ácidos nucleicos."},
+  {term:"Princípios imediatos inorgânicos", def:"Água e sais minerais."},
+  {term:"Biocatalisadores", def:"Vitaminas, hormônios e enzimas — regulam reações biológicas."},
+  {term:"Nível atômico", def:"Nível de organização formado por H, N, O, C, P — os átomos constituintes básicos."},
+  {term:"Nível celular", def:"A célula é a mínima unidade da vida; todas as células humanas são eucariotas."},
+  {term:"Tecidos básicos", def:"Epitelial, conjuntivo, muscular e nervoso — os 4 tecidos fundamentais do nível anatômico."},
+  {term:"Ferro (Fe)", def:"Oligoelemento essencial para o transporte de oxigênio (hemoglobina); sua deficiência causa anemia."},
+  {term:"Zinco (Zn)", def:"Oligoelemento essencial para cicatrização, síntese de ADN, paladar e olfato, e sistema imunitário."},
+  {term:"Iodo (I)", def:"Oligoelemento essencial para a síntese dos hormônios tireoidianos; sua carência causa bócio."},
+  {term:"Cálcio (Ca)", def:"Bioelemento secundário que regula a contração muscular; presente em ossos, coração, músculos."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (25) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"La Bioquímica tiene como objetivo principal conocer:", alts:["Solo la estructura de los órganos","La estructura y comportamiento de las moléculas biológicas","Únicamente la genética","Solo la anatomía celular"], correct:1, comment:"El objetivo de la Bioquímica es conocer la estructura y comportamiento de las moléculas biológicas."},
+  {tag:"Fácil", stem:"El término 'bioelemento' significa etimológicamente:", alts:["Elemento tóxico","Elemento que forma parte de la vida","Elemento sintético","Elemento radiactivo"], correct:1, comment:"BIO=vida, GENÉSICO=origen de la vida — bioelemento es el elemento químico que forma parte de la materia viviente."},
+  {tag:"Intermediária", stem:"Los bioelementos más importantes que intervienen en la conformación de los seres vivos son:", alts:["Calcio, sodio, potasio, cloro","Carbono, hidrógeno, oxígeno, nitrógeno","Hierro, zinc, cobre, yodo","Magnesio, azufre, fósforo, flúor"], correct:1, comment:"Los 4 bioelementos primarios más importantes: C, H, O, N."},
+  {tag:"Fácil", stem:"Según Wang y colaboradores (1992), el nivel molecular del cuerpo humano incluye:", alts:["Tejido muscular y óseo","Agua, proteínas, lípidos","Masa e volumen corporal","Intracelular y extracelular"], correct:1, comment:"Nivel molecular: agua, proteínas, lípidos."},
+  {tag:"Intermediária", stem:"Todas las células humanas son:", alts:["Procariotas","Eucariotas","Mixtas","Anucleadas"], correct:1, comment:"Todas las células humanas, animales y vegetales son eucariotas."},
+  {tag:"Fácil", stem:"Los 4 tejidos básicos estudiados por la histología son:", alts:["Óseo, muscular, adiposo, sanguíneo","Epitelial, conjuntivo, muscular, nervioso","Cartilaginoso, epitelial, óseo, adiposo","Muscular, nervioso, adiposo, óseo"], correct:1, comment:"Los tejidos básicos son: epitelial, conjuntivo, muscular y nervioso."},
+  {tag:"Difícil", stem:"La piel del cuerpo humano tiene una superficie aproximada de:", alts:["1 m²","2 m²","5 m²","10 m²"], correct:1, comment:"La piel tiene aproximadamente 2 m² de superficie y pesa alrededor de 5 kg."},
+  {tag:"Fácil", stem:"Los bioelementos primarios representan aproximadamente qué porcentaje del peso de la materia seca del organismo?", alts:["50%","75%","96%","99%"], correct:2, comment:"Los bioelementos primarios representan alrededor del 96% del peso de la materia seca."},
+  {tag:"Intermediária", stem:"Los bioelementos secundarios (Ca, Na, K, Mg, Cl) representan en conjunto aproximadamente:", alts:["0,5%","3,9%","10%","25%"], correct:1, comment:"Los 5 bioelementos secundarios representan en conjunto alrededor de 3,9% del peso."},
+  {tag:"Difícil", stem:"Los oligoelementos se definen como aquellos presentes en proporciones:", alts:["Mayores al 1%","Entre 1% y 0,005%","Menores al 0,01%","Iguales al 5%"], correct:2, comment:"Oligoelementos: proporciones menores al 0,01% (0,005%)."},
+  {tag:"Fácil", stem:"El elemento químico más abundante en el cuerpo humano es:", alts:["Carbono","Hidrógeno","Oxígeno","Nitrógeno"], correct:2, comment:"El oxígeno representa 62,81% del cuerpo humano — el más abundante, no el carbono."},
+  {tag:"Intermediária", stem:"El segundo elemento más abundante en el cuerpo humano es:", alts:["Hidrógeno","Carbono","Nitrógeno","Calcio"], correct:1, comment:"Carbono representa 19,37%, el segundo más abundante después del oxígeno."},
+  {tag:"Fácil", stem:"Los bioelementos primarios forman entre sí principalmente enlaces:", alts:["Iónicos","Covalentes","De hidrógeno","Metálicos"], correct:1, comment:"Los bioelementos primarios (C,H,O,N) forman enlaces covalentes."},
+  {tag:"Intermediária", stem:"La función principal del carbono como bioelemento primario es:", alts:["Regular la contracción muscular","Proporcionar grandes cantidades de energía","Transmitir el impulso nervioso","Formar sales minerales"], correct:1, comment:"El carbono es un elemento muy energético que proporciona grandes cantidades de energía."},
+  {tag:"Fácil", stem:"El oxígeno es el elemento más importante a nivel de:", alts:["La contracción muscular","La respiración celular","La transmisión nerviosa","La coagulación sanguínea"], correct:1, comment:"El oxígeno es el elemento de mayor abundancia y el más importante en la respiración celular."},
+  {tag:"Intermediária", stem:"El calcio regula principalmente:", alts:["La transmisión del impulso nervioso solamente","La contracción muscular","La síntesis de hormonas tiroideas","La cicatrización de heridas"], correct:1, comment:"El calcio regula la contracción muscular."},
+  {tag:"Fácil", stem:"El potasio (K) está relacionado principalmente con:", alts:["La formación de huesos","La regulación de enzimas y la transmisión del impulso nervioso","La síntesis de ADN","La formación de hemoglobina"], correct:1, comment:"El potasio regula enzimas e interviene en la contracción muscular y transmisión del impulso nervioso (bomba de potasio)."},
+  {tag:"Difícil", stem:"El magnesio está presente en la molécula de:", alts:["Hemoglobina","Clorofila","Insulina","Colágeno"], correct:1, comment:"El magnesio está presente en la molécula de la clorofila, además de producir muchas enzimas."},
+  {tag:"Fácil", stem:"El zinc es especialmente importante para:", alts:["La contracción muscular","La cicatrización de heridas y el sistema inmunitario","La transmisión del impulso nervioso","La formación de huesos únicamente"], correct:1, comment:"El zinc interviene en la cicatrización, el sistema inmunitario, el gusto/olfato y la síntesis de ADN."},
+  {tag:"Intermediária", stem:"La carencia de yodo afecta principalmente:", alts:["La coagulación sanguínea","El metabolismo celular","La contracción muscular","La formación de huesos"], correct:1, comment:"La carencia de yodo influye en el metabolismo celular, por su papel en las hormonas tiroideas."},
+  {tag:"Fácil", stem:"El flúor ayuda principalmente a:", alts:["La formación de los huesos, dándoles mayor resistencia","La transmisión nerviosa","La síntesis de proteínas","La regulación hormonal"], correct:0, comment:"El flúor ayuda a la formación de los huesos, dándoles mayor resistencia."},
+  {tag:"Difícil", stem:"Son ejemplos de oligoelementos esenciales, EXCEPTO:", alts:["Cobre","Zinc","Sodio","Molibdeno"], correct:2, comment:"El sodio es un bioelemento SECUNDARIO, no un oligoelemento."},
+  {tag:"Fácil", stem:"Los principios inmediatos orgánicos incluyen:", alts:["Agua y sales minerales","Glúcidos, lípidos, prótidos y ácidos nucleicos","Vitaminas y hormonas","Solo proteínas"], correct:1, comment:"Principios inmediatos orgánicos: glúcidos, lípidos, prótidos, ácidos nucleicos."},
+  {tag:"Intermediária", stem:"Los biocatalizadores incluyen:", alts:["Agua, sales minerales y glúcidos","Vitaminas, hormonas y enzimas","Lípidos, prótidos y ácidos nucleicos","Solo enzimas"], correct:1, comment:"Biocatalizadores: vitaminas, hormonas y enzimas."},
+  {tag:"Difícil", stem:"El agua se clasifica, dentro de los principios inmediatos, como:", alts:["Orgánica","Inorgánica","Biocatalizador","Oligoelemento"], correct:1, comment:"El agua es un principio inmediato INORGÁNICO, junto con las sales minerales."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Introdução e Níveis de Organização", statements:[
+    "El carbono es el elemento químico más abundante en el cuerpo humano.",
+    "Todas las células humanas son eucariotas.",
+    "Los 4 tejidos básicos son epitelial, conjuntivo, muscular y nervioso.",
+    "La piel humana pesa alrededor de 5 kg y tiene 2 m² de superficie."
+  ], answers:["F","V","V","V"], comment:"El ítem I es falso: el OXÍGENO es el más abundante (62,81%), no el carbono (19,37%)."},
+  {theme:"Classificação e Elementos Primários/Secundários", statements:[
+    "Los bioelementos primarios forman enlaces covalentes.",
+    "El calcio es un bioelemento primario.",
+    "El potasio interviene en la transmisión del impulso nervioso.",
+    "Los bioelementos secundarios representan más del 50% del peso corporal."
+  ], answers:["V","F","V","F"], comment:"El ítem II es falso: el calcio es un bioelemento SECUNDARIO, no primario. El ítem IV es falso: los secundarios representan solo ~3,9% del peso."},
+  {theme:"Oligoelementos e Princípios Imediatos", statements:[
+    "El zinc está relacionado con la cicatrización de heridas.",
+    "El agua es un principio inmediato orgánico.",
+    "Los oligoelementos representan menos del 0,01% del peso corporal.",
+    "Las vitaminas, hormonas y enzimas son consideradas biocatalizadores."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: el agua es un principio inmediato INORGÁNICO, no orgánico."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Elementos e suas funções", colA:["Carbono","Oxigênio","Cálcio","Potássio","Zinco"],
+   colB:["Elemento muito energético, base das biomoléculas orgânicas","Elemento mais abundante, essencial na respiração celular","Regula a contração muscular","Regula enzimas e a transmissão do impulso nervoso","Cicatrização, síntese de ADN, paladar e olfato"],
+   answers:["A","B","C","D","E"], comment:"Cada elemento tem uma função-assinatura que costuma ser cobrada isoladamente em prova."},
+  {title:"2. Classificação dos bioelementos", colA:["Bioelementos primários","Bioelementos secundários","Oligoelementos essenciais","Princípios imediatos orgânicos","Princípios imediatos inorgânicos"],
+   colB:["C, H, O, N — ~96% do peso seco","Ca, Na, K, Mg, Cl — ~3,9% do peso","Fe, Zn, I, Cu, F — <0,01%, déficit causa doença","Glicídios, lipídios, prótidos, ácidos nucleicos","Água e sais minerais"],
+   answers:["A","B","C","D","E"], comment:"A hierarquia primários > secundários > oligoelementos, por proporção decrescente, é a base de toda a classificação do capítulo."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
