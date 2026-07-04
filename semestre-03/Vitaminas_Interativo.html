@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Vitaminas | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+.notice{background:rgba(232,194,122,0.08);border:1px solid rgba(232,194,122,0.3);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:13px;color:var(--gold);}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">💊</div>
+      <div class="brand-text">
+        <h1>Bioquímica — Vitaminas</h1>
+        <span>Conceitos Gerais · Classificação · Terminologia · Casos</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Vitaminas — Conceitos fundamentais</h2>
+    <p>Definição, propriedades, classificação, terminologia (vitâmero/provitamina/antivitamina) e carências específicas — com casos clínicos, flashcards e quiz.</p>
+  </div>
+
+  <div class="notice">⚠️ <b>Nota importante:</b> este material do professor promete detalhar Vitamina A, C, D, B1, B2, niacina e ácido pantotênico individualmente (fontes, funções, carências), mas essa parte específica está em slides que só contêm imagens/tabelas, sem texto extraível. Este resumo cobre fielmente os <b>conceitos gerais</b> que vieram em texto — os detalhes por vitamina precisam ser complementados com o material visual original.</div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="conceito">🧪 O que são Vitaminas</button>
+    <button class="tab-btn" data-tab="classificacao">📊 Classificação</button>
+    <button class="tab-btn" data-tab="funcional">⚙️ Papel Funcional</button>
+    <button class="tab-btn" data-tab="terminologia">📖 Terminologia</button>
+    <button class="tab-btn" data-tab="carencias">🩺 Carências e Toxicidade</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- CONCEITO -->
+  <section class="panel active" id="conceito">
+    <div class="block">
+      <h3>O que são vitaminas?</h3>
+      <p>São um grupo de <b>nutrientes orgânicos</b> necessários em pequenas quantidades para diversas funções bioquímicas que, em geral, <b>não podem ser sintetizados pelo organismo</b> e, portanto, devem estar presentes na dieta.</p>
+      <p>Definição alternativa: composto orgânico necessário na dieta em pequenas quantidades para a manutenção da integridade metabólica normal.</p>
+    </div>
+    <div class="block">
+      <h3>Propriedades gerais das vitaminas</h3>
+      <ul>
+        <li>Compostos orgânicos de estrutura química variada, relativamente simples, distintos de carboidratos, lipídios ou proteínas</li>
+        <li>Estão em concentrações muito pequenas nos alimentos</li>
+        <li>Essenciais para manter a saúde e o crescimento normal</li>
+        <li>NÃO podem ser sintetizadas pelo organismo; devem ser ingeridas na dieta</li>
+        <li>Quando não são fornecidas pela dieta ou não são absorvidas no intestino, desenvolve-se um quadro patológico de carência (avitaminose)</li>
+      </ul>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Vitaminas = nutrientes orgânicos, pequenas quantidades, geralmente não sintetizados pelo corpo, essenciais via dieta.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir vitaminas com carboidratos/lipídios/proteínas — são estruturalmente distintas dessas 3 classes.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>O que acontece quando uma vitamina não é fornecida adequadamente pela dieta?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Desenvolve-se um quadro patológico de carência, chamado avitaminose.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o corpo não consegue sintetizar a maioria das vitaminas, ao contrário de outras moléculas orgânicas?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSIFICAÇÃO -->
+  <section class="panel" id="classificacao">
+    <div class="block">
+      <h3>Classificação segundo a solubilidade</h3>
+      <table class="quicktab">
+        <tr><th>Categoria</th><th>Vitaminas incluídas</th></tr>
+        <tr><td><b>Hidrossolúveis</b></td><td>Vitamina C, Complexo B</td></tr>
+        <tr><td><b>Lipossolúveis</b></td><td>Vitaminas A, D, E, K</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "A-D-E-K" (lipossolúveis) — as 4 vitaminas que "gostam de gordura" e podem se acumular no organismo, ao contrário das hidrossolúveis, que se eliminam mais facilmente na urina.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Hidrossolúveis: C e complexo B. Lipossolúveis: A, D, E, K.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Esquecer que a vitamina C faz parte das hidrossolúveis junto com o complexo B — não é lipossolúvel.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Cite as 4 vitaminas lipossolúveis.
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A, D, E e K.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que as vitaminas lipossolúveis têm maior risco de causar toxicidade por excesso do que as hidrossolúveis?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAPEL FUNCIONAL -->
+  <section class="panel" id="funcional">
+    <div class="block">
+      <h3>Papel funcional das vitaminas</h3>
+      <ul>
+        <li>NÃO desempenham funções plásticas (estruturais) nem energéticas</li>
+        <li>Ação semelhante a hormônios, enzimas e outros reguladores metabólicos</li>
+        <li>São precursoras de coenzimas (complexo B, principalmente)</li>
+        <li>Outras funções específicas variam conforme a vitamina</li>
+      </ul>
+      <p>As <b>coenzimas</b> se formam no organismo a partir das vitaminas ingeridas na dieta.</p>
+      <div class="trap"><b>Pegadinha clássica:</b> vitaminas NÃO são fonte de energia (calorias) nem material de construção (função plástica) — são REGULADORAS, funcionando como hormônios/enzimas ou precursoras de coenzimas.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Vitaminas = reguladoras, não energéticas nem plásticas. Complexo B = precursor clássico de coenzimas.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que vitaminas fornecem energia (calorias) como carboidratos/lipídios — elas não têm essa função.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual grupo de vitaminas é classicamente precursor de coenzimas?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O complexo B.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que faz sentido que vitaminas atuem "como hormônios" em vez de servir como fonte de energia?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINOLOGIA -->
+  <section class="panel" id="terminologia">
+    <div class="block">
+      <h3>3 termos-chave que a prova adora cobrar</h3>
+      <table class="quicktab">
+        <tr><th>Termo</th><th>Definição</th></tr>
+        <tr><td><b>Vitâmero</b></td><td>Substâncias diferentes com propriedades vitamínicas idênticas</td></tr>
+        <tr><td><b>Provitamina</b></td><td>Compostos presentes nos alimentos que, ao serem metabolizados no organismo, geram a vitamina correspondente</td></tr>
+        <tr><td><b>Antivitamina</b></td><td>Substâncias com estrutura química semelhante à de uma vitamina, que atuam como antagonistas metabólicos — ocupam o lugar da vitamina nos sistemas enzimáticos e bloqueiam a reação</td></tr>
+      </table>
+      <div class="clinico"><b>Exemplos farmacológicos de antivitaminas:</b> Aminopterina, Metotrexato (antagonistas do ácido fólico, usados em quimioterapia justamente por bloquear vias metabólicas dependentes de folato).</div>
+      <div class="mnemo"><b>Dica:</b> "Vitâmero = MESMO efeito, estrutura diferente. Provitamina = VIRA vitamina no corpo. Antivitamina = BLOQUEIA a vitamina."</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Vitâmero=mesma função, moléculas diferentes. Provitamina=precursor dietético. Antivitamina=antagonista (ex: metotrexato).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir "provitamina" (vira vitamina) com "vitâmero" (já tem a função vitamínica, não precisa se converter).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Cite dois exemplos farmacológicos de antivitaminas.
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Aminopterina e Metotrexato.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o metotrexato, sendo uma antivitamina, é útil no tratamento de câncer?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARÊNCIAS E TOXICIDADE -->
+  <section class="panel" id="carencias">
+    <div class="block">
+      <h3>Avitaminose / Hipovitaminose</h3>
+      <p>Quadro patológico produzido pela carência de uma ou mais vitaminas.</p>
+      <h4>Exemplos específicos citados no material</h4>
+      <table class="quicktab">
+        <tr><th>Vitamina</th><th>Doença por carência</th></tr>
+        <tr><td>Biotina</td><td>Avitaminose por biotina (citada especificamente)</td></tr>
+        <tr><td>Nicotinamida (niacina)</td><td><b>Pelagra</b></td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica:</b> a falta de nicotinamida produz a pelagra — doença clássica de carência vitamínica citada no material.</div>
+    </div>
+    <div class="block">
+      <h3>Toxicidade e requerimentos diários</h3>
+      <p>Pode haver sinais de toxicidade quando a ingestão de vitamina excede a capacidade metabólica do organismo.</p>
+      <p>As ingestões de referência ou recomendadas são estabelecidas com base no requerimento médio da população. As tabelas de ingestão de referência publicadas por diferentes autoridades nacionais e internacionais diferem entre si, devido a diferentes interpretações dos dados disponíveis e à disponibilidade de novos dados experimentais.</p>
+    </div>
+    <div class="block">
+      <h3>Ácido fólico na gravidez</h3>
+      <p>O ácido fólico tem função indispensável na gravidez. Sua função é <b>prevenir defeitos do tubo neural</b> e manter uma gestação saudável.</p>
+      <ul>
+        <li>Previne anomalias do tubo neural</li>
+        <li>Também ajuda a prevenir problemas cardiovasculares e anemia</li>
+      </ul>
+      <div class="clinico"><b>Recomendação:</b> gestantes devem tomar um complemento vitamínico de <b>400 mg</b> como parte de sua dieta (ácido fólico).</div>
+      <div class="mnemo"><b>Dica:</b> "Fólico = tubo neural fechado" — a associação mais cobrada em prova sobre essa vitamina.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Pelagra = carência de niacina. Ácido fólico na gravidez = previne defeitos do tubo neural, 400mg recomendados.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Esquecer que o ácido fólico também tem papel na prevenção de anemia e problemas cardiovasculares, não só no tubo neural.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual carência vitamínica causa a pelagra?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A carência de nicotinamida (niacina).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o ácido fólico é especialmente crítico no início da gravidez, quando o tubo neural está se formando?</div>
+      </div>
+    </div>
+    <div class="block">
+      <h3>Recomendação geral de administração</h3>
+      <p>Dieta mista, balanceada, variada, com alimentos frescos é a base. Suplementos vitamínicos apenas em casos perfeitamente justificados. A administração de vitaminas deve se apoiar em conhecimento adequado de suas propriedades e funções.</p>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Gestante de 8 semanas comparece à primeira consulta pré-natal. O médico prescreve suplementação de uma vitamina específica.</div>
+      <div class="caso-q">
+        <p>1) Qual vitamina é classicamente recomendada nesse momento da gestação, e em qual dose?</p>
+        <p>2) Qual é sua principal função preventiva?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O ácido fólico, na dose de 400 mg, é recomendado como parte da dieta da gestante. Sua principal função é prevenir defeitos do tubo neural, além de contribuir para a prevenção de problemas cardiovasculares e anemia.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Paciente com dieta extremamente restrita, baseada quase exclusivamente em milho, sem variedade proteica, desenvolve dermatite, diarreia e alterações neurológicas (demência) ao longo de meses.</div>
+      <div class="caso-q">
+        <p>1) Qual carência vitamínica é sugerida por esse quadro?</p>
+        <p>2) Qual vitamina especificamente está envolvida?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O quadro é sugestivo de <b>pelagra</b>, causada pela carência de <b>nicotinamida (niacina)</b>. Dietas baseadas quase exclusivamente em milho são classicamente associadas a essa carência, pela baixa biodisponibilidade de niacina nesse alimento.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente oncológico em tratamento quimioterápico recebe metotrexato como parte do protocolo terapêutico. O oncologista explica que o mecanismo de ação envolve interferência no metabolismo de uma vitamina específica.</div>
+      <div class="caso-q">
+        <p>1) Como o metotrexato se classifica em relação às vitaminas, segundo a terminologia estudada?</p>
+        <p>2) Explique o mecanismo geral pelo qual esse tipo de substância interfere no metabolismo celular.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O metotrexato é classificado como uma <b>antivitamina</b> — possui estrutura química semelhante à do ácido fólico e atua como antagonista metabólico. Ele ocupa o lugar da vitamina (ácido fólico) nos sistemas enzimáticos, bloqueando reações essenciais para a síntese de ADN em células de rápida divisão (como células cancerígenas), o que explica seu uso terapêutico em quimioterapia.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante uma prova prática, o professor apresenta três situações: (A) um composto presente na cenoura que se converte em vitamina A no organismo; (B) duas substâncias quimicamente diferentes, mas que exercem exatamente a mesma função vitamínica; (C) um medicamento que bloqueia a ação do ácido fólico no organismo.</div>
+      <div class="caso-q">
+        <p>1) Classifique cada situação (A, B, C) usando a terminologia correta (vitâmero, provitamina, antivitamina).</p>
+        <p>2) Justifique cada classificação com base na definição do termo.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação completa</button>
+        <div class="caso-answer">
+          <b>Classificação:</b><br>
+          <b>Situação A:</b> Provitamina — é um composto presente no alimento que, ao ser metabolizado, gera a vitamina correspondente (ex: betacaroteno → vitamina A).<br>
+          <b>Situação B:</b> Vitâmero — substâncias diferentes com propriedades vitamínicas idênticas.<br>
+          <b>Situação C:</b> Antivitamina — substância com estrutura semelhante à vitamina, que atua como antagonista metabólico, bloqueando sua ação (ex: metotrexato/aminopterina em relação ao ácido fólico).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">10 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 10</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">29</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">16 múltipla escolha + 2 blocos V/F + 1 bloco de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Vitaminas y Minerales" (Prof. Dr. Robert Vargas Bernal). Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 16 + 8 + 5;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Vitamina", def:"Nutriente orgânico necessário em pequenas quantidades, geralmente não sintetizado pelo organismo, essencial via dieta."},
+  {term:"Vitaminas hidrossolúveis", def:"Vitamina C e complexo B — solúveis em água."},
+  {term:"Vitaminas lipossolúveis", def:"Vitaminas A, D, E, K — solúveis em gordura, maior risco de acúmulo/toxicidade."},
+  {term:"Vitâmero", def:"Substâncias diferentes com propriedades vitamínicas idênticas."},
+  {term:"Provitamina", def:"Composto do alimento que, ao ser metabolizado, gera a vitamina correspondente."},
+  {term:"Antivitamina", def:"Substância com estrutura semelhante à vitamina, que atua como antagonista metabólico (ex: metotrexato, aminopterina)."},
+  {term:"Avitaminose/Hipovitaminose", def:"Quadro patológico produzido pela carência de uma ou mais vitaminas."},
+  {term:"Pelagra", def:"Doença causada pela carência de nicotinamida (niacina)."},
+  {term:"Ácido fólico na gravidez", def:"Previne defeitos do tubo neural, problemas cardiovasculares e anemia; dose recomendada de 400mg."},
+  {term:"Coenzima", def:"Molécula formada no organismo a partir de vitaminas (principalmente complexo B), necessária para reações enzimáticas."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (16) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"Las vitaminas se definen como:", alts:["Compuestos inorgánicos de alta energía","Nutrientes orgánicos necesarios en pequeñas cantidades","Macromoléculas estructurales","Ácidos grasos esenciales"], correct:1, comment:"Vitaminas = nutrientes orgánicos necesarios en pequeñas cantidades para funciones bioquímicas."},
+  {tag:"Fácil", stem:"Las vitaminas, en general:", alts:["Pueden ser sintetizadas libremente por el organismo","No pueden ser sintetizadas por el organismo, deben ingerirse en la dieta","Son sintetizadas solo por el hígado","Son idénticas a los carbohidratos"], correct:1, comment:"Las vitaminas, en general, no pueden ser sintetizadas por el organismo."},
+  {tag:"Intermediária", stem:"Estructuralmente, las vitaminas son distintas de:", alts:["Los minerales únicamente","Carbohidratos, lípidos y proteínas","Solo de los lípidos","Solo de las proteínas"], correct:1, comment:"Las vitaminas son compuestos orgánicos distintos de carbohidratos, lípidos o proteínas."},
+  {tag:"Fácil", stem:"Son vitaminas hidrosolubles:", alts:["A, D, E, K","Vitamina C y complejo B","Solo la vitamina C","Solo el complejo B"], correct:1, comment:"Hidrosolubles: vitamina C y complejo B."},
+  {tag:"Fácil", stem:"Son vitaminas liposolubles:", alts:["C y complejo B","A, D, E, K","Solo A y D","Solo E y K"], correct:1, comment:"Liposolubles: A, D, E, K."},
+  {tag:"Intermediária", stem:"Las vitaminas, en cuanto a su papel funcional:", alts:["Desempeñan función energética principal","No desempeñan funciones plásticas ni energéticas","Son la principal fuente de calorías","Sustituyen a las proteínas estructurales"], correct:1, comment:"Las vitaminas NO tienen función plástica ni energética — actúan como reguladores."},
+  {tag:"Fácil", stem:"El complejo B es clásicamente precursor de:", alts:["Ácidos grasos","Coenzimas","Aminoácidos esenciales","Glucógeno"], correct:1, comment:"El complejo B es precursor de coenzimas."},
+  {tag:"Fácil", stem:"Sustancias diferentes con idénticas propiedades vitamínicas se llaman:", alts:["Provitaminas","Antivitaminas","Vitámeros","Coenzimas"], correct:2, comment:"Vitámero: sustancias diferentes con propiedades vitamínicas idénticas."},
+  {tag:"Intermediária", stem:"Un compuesto presente en los alimentos que, al metabolizarse, genera la vitamina correspondiente se llama:", alts:["Vitámero","Provitamina","Antivitamina","Coenzima"], correct:1, comment:"Provitamina: compuesto que se convierte en la vitamina correspondiente tras metabolizarse."},
+  {tag:"Difícil", stem:"Una sustancia con estructura semejante a una vitamina, que actúa como antagonista metabólico, se llama:", alts:["Vitámero","Provitamina","Antivitamina","Hipervitaminosis"], correct:2, comment:"Antivitamina: bloquea la acción de la vitamina, ocupando su lugar en sistemas enzimáticos."},
+  {tag:"Fácil", stem:"Son ejemplos farmacológicos de antivitaminas:", alts:["Insulina y glucagón","Aminopterina y metotrexato","Vitamina C y complejo B","Adrenalina y noradrenalina"], correct:1, comment:"Aminopterina y metotrexato son antivitaminas (antagonistas del ácido fólico)."},
+  {tag:"Fácil", stem:"El cuadro patológico producido por la carencia de una o más vitaminas se llama:", alts:["Hipervitaminosis","Avitaminosis/hipovitaminosis","Vitaminosis","Provitaminosis"], correct:1, comment:"Avitaminosis o hipovitaminosis = carencia de vitaminas."},
+  {tag:"Intermediária", stem:"La falta de nicotinamida produce la enfermedad conocida como:", alts:["Escorbuto","Raquitismo","Pelagra","Beriberi"], correct:2, comment:"La falta de nicotinamida (niacina) produce la pelagra."},
+  {tag:"Fácil", stem:"El ácido fólico en el embarazo previene principalmente:", alts:["Defectos del tubo neural","Fracturas óseas","Anemia falciforme exclusivamente","Diabetes gestacional"], correct:0, comment:"El ácido fólico previene defectos del tubo neural, además de problemas cardiovasculares y anemia."},
+  {tag:"Intermediária", stem:"La dosis recomendada de suplemento de ácido fólico durante el embarazo es de:", alts:["100 mg","400 mg","1000 mg","4000 mg"], correct:1, comment:"Se recomienda un complemento de 400mg de ácido fólico durante el embarazo."},
+  {tag:"Difícil", stem:"Puede haber signos de toxicidad vitamínica cuando:", alts:["La ingestión es menor a la recomendada","La ingestión excede la capacidad metabólica del organismo","Se consume una dieta balanceada","Nunca hay riesgo de toxicidad"], correct:1, comment:"Toxicidad ocurre cuando la ingestión excede la capacidad metabólica del organismo."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (2 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Conceito e Classificação", statements:[
+    "Las vitaminas pueden ser sintetizadas libremente por el organismo en cantidad suficiente.",
+    "La vitamina C es clasificada como hidrosoluble.",
+    "Las vitaminas A, D, E y K son liposolubles.",
+    "Las vitaminas desempeñan función energética principal en el organismo."
+  ], answers:["F","V","V","F"], comment:"El ítem I es falso: en general NO pueden ser sintetizadas. El ítem IV es falso: no tienen función energética principal."},
+  {theme:"Terminologia e Carências", statements:[
+    "Un vitámero es un compuesto que se convierte en vitamina tras ser metabolizado.",
+    "El metotrexato es un ejemplo de antivitamina.",
+    "La pelagra es causada por la carencia de nicotinamida.",
+    "El ácido fólico no tiene relación con la prevención de defectos del tubo neural."
+  ], answers:["F","V","V","F"], comment:"El ítem I es falso: eso describe a la PROVITAMINA, no al vitámero. El ítem IV es falso: el ácido fólico SÍ previene defectos del tubo neural — es su función más citada."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (1 bloco x5) =====
+const assocData=[
+  {title:"1. Terminologia e conceitos das vitaminas", colA:["Vitâmero","Provitamina","Antivitamina","Avitaminose","Pelagra"],
+   colB:["Substâncias diferentes, mesma função vitamínica","Precursor dietético que vira vitamina no organismo","Antagonista metabólico (ex: metotrexato)","Quadro patológico por carência vitamínica","Doença por carência de nicotinamida"],
+   answers:["A","B","C","D","E"], comment:"Os 5 termos formam o vocabulário-base do capítulo — dominar essas definições resolve boa parte das questões conceituais de prova."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
