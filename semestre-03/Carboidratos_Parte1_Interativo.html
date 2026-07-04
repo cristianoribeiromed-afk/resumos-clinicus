@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Carboidratos Parte 1 | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🍬</div>
+      <div class="brand-text">
+        <h1>Bioquímica — Carboidratos Parte 1</h1>
+        <span>Conceito · Classificação · Monossacarídeos · Isomeria Óptica</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Carboidratos — Conceito, classificação e monossacarídeos</h2>
+    <p>Definição, classificação por complexidade, monossacarídeos e isomeria óptica — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="conceito">🧪 Conceito</button>
+    <button class="tab-btn" data-tab="classificacao">📊 Classificação</button>
+    <button class="tab-btn" data-tab="importancia">🩺 Importância Biomédica</button>
+    <button class="tab-btn" data-tab="monossacarideos">⚛️ Monossacarídeos</button>
+    <button class="tab-btn" data-tab="isomeria">🔄 Isomeria Óptica</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- CONCEITO -->
+  <section class="panel active" id="conceito">
+    <div class="block">
+      <h3>O que são carboidratos?</h3>
+      <p>Os carboidratos ou glicídios se definem, de forma simples, como <b>polihidroxialdeídos ou polihidroxicetonas e seus derivados</b>. São compostos formados por <b>C, H, O</b>. Muitos possuem a fórmula empírica <b>(CH₂O)ₙ</b>.</p>
+      <div class="mnemo"><b>Dica:</b> "Poli-hidroxi" = vários grupos hidroxila (-OH); "aldeído ou cetona" = o grupo funcional que define o tipo de açúcar.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Carboidratos = polihidroxialdeídos ou polihidroxicetonas + derivados. Fórmula (CH₂O)ₙ. Compostos de C, H, O.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que todo carboidrato segue exatamente (CH₂O)ₙ — o texto diz "muitos", não "todos" (há exceções, como derivados).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Quais 3 elementos químicos compõem os carboidratos?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Carbono (C), Hidrogênio (H) e Oxigênio (O).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a fórmula (CH₂O)ₙ sugere que os carboidratos são "hidratos de carbono"?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSIFICAÇÃO -->
+  <section class="panel" id="classificacao">
+    <div class="block">
+      <h3>Classificação segundo a complexidade</h3>
+      <table class="quicktab">
+        <tr><th>Tipo</th><th>Formados por</th><th>Características</th></tr>
+        <tr><td><b>Monossacarídeos</b></td><td>Uma única unidade de polihidroxialdeído ou polihidroxicetona</td><td>Cristais brancos, geralmente sabor doce, solúveis em água. Mais importante: <b>glicose</b></td></tr>
+        <tr><td><b>Oligossacarídeos</b></td><td>2-10 unidades de monossacarídeos unidas por ligações glicosídicas</td><td>Separáveis por hidrólise. Dissacarídeos (mais importante), trissacarídeos etc. Cristais de sabor doce, solúveis em água</td></tr>
+        <tr><td><b>Polissacarídeos</b></td><td>Mais de 10 monossacarídeos, separáveis por hidrólise</td><td>Grande tamanho, insípidos, cadeias lineares ou ramificadas, compostos amorfos, insolúveis em água</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "Oligo" (do grego) = pouco → oligossacarídeo = poucas unidades (2-10). Quanto mais unidades, menos solúvel e menos doce (do mono ao poli).</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Mono = 1 unidade. Oligo = 2-10 unidades. Poli = mais de 10. Solubilidade e sabor doce diminuem conforme aumenta a complexidade.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que polissacarídeos são solúveis em água como os monossacarídeos — são justamente o oposto: insolúveis (ou formam colóides).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Quantas unidades de monossacarídeos formam um oligossacarídeo?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Entre 2 e 10 unidades.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que os polissacarídeos, sendo tão grandes, são insípidos (sem sabor) ao contrário dos monossacarídeos?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPORTÂNCIA BIOMÉDICA -->
+  <section class="panel" id="importancia">
+    <div class="block">
+      <h3>Importância biomédica dos carboidratos</h3>
+      <ul>
+        <li>Principal combustível metabólico dos mamíferos (exceto ruminantes)</li>
+        <li>Combustível universal para o <b>feto</b></li>
+        <li>Quase todo carboidrato da dieta é absorvido como <b>glicose</b></li>
+        <li>Outros açúcares são convertidos em glicose no <b>fígado</b></li>
+        <li>Precursor de outros carboidratos: glicogênio, ribose (ARN), desoxirribose (ADN), galactose (leite)</li>
+        <li>Formam glicolipídios, glicoproteínas, proteoglicanos</li>
+      </ul>
+      <h4>Proporção na dieta e relevância clínica</h4>
+      <p>Os carboidratos são os principais fornecedores de energia: <b>50-60% das calorias</b> numa dieta equilibrada (amido e dissacarídeos vegetais).</p>
+      <table class="quicktab">
+        <tr><th>Relevância clínica</th></tr>
+        <tr><td>Grupos sanguíneos</td></tr>
+        <tr><td>Diabetes Mellitus</td></tr>
+        <tr><td>Intolerância à lactose</td></tr>
+        <tr><td>Doenças de depósito de glicogênio</td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica:</b> a glicose é o combustível universal para o feto — por isso o controle glicêmico rigoroso é essencial durante a gestação (ex.: diabetes gestacional).</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Carboidratos = 50-60% das calorias da dieta. Glicose = combustível universal do feto. Outros açúcares viram glicose no fígado.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Esquecer que os ruminantes são uma EXCEÇÃO — para eles, os carboidratos não são o principal combustível metabólico da mesma forma.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual órgão converte outros açúcares em glicose?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O fígado.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a glicose, e não outros açúcares, é a forma preferencial de absorção intestinal?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONOSSACARÍDEOS -->
+  <section class="panel" id="monossacarideos">
+    <div class="block">
+      <h3>Monossacarídeos (açúcares simples)</h3>
+      <p>São os glicídios mais simples. Constituídos quimicamente por uma única cadeia de polialcoóis com um grupo aldeído ou cetona — por isso NÃO podem ser decompostos em moléculas mais simples por hidrólise. Nomenclatura: sufixo <b>"-ose"</b>.</p>
+    </div>
+    <div class="block">
+      <h3>Classificação por número de carbonos</h3>
+      <table class="quicktab">
+        <tr><th>Nome</th><th>Nº de carbonos</th></tr>
+        <tr><td>Triose</td><td>3</td></tr>
+        <tr><td>Tetrose</td><td>4</td></tr>
+        <tr><td>Pentose</td><td>5</td></tr>
+        <tr><td>Hexose</td><td>6</td></tr>
+      </table>
+      <h4>Classificação combinada (comprimento + função)</h4>
+      <p>Segundo o comprimento da cadeia carbônica, distingue-se entre: aldo- e cetotrioses, aldo- e cetotetroses, aldo- e cetopentoses, aldo- e cetohexoses, etc.</p>
+      <div class="mnemo"><b>Dica:</b> "Tri-Tetra-Penta-Hexa" segue a contagem normal de prefixos gregos (3-4-5-6) — igual em química orgânica geral.</div>
+    </div>
+    <div class="block">
+      <h3>Carbono assimétrico e o caso do gliceraldeído</h3>
+      <p>Com exceção da di-hidroxiacetona, todos os monossacarídeos simples têm um ou vários carbonos assimétricos. No caso mais simples, o do <b>gliceraldeído</b>, há um centro de assimetria, originando duas conformações possíveis: os isômeros <b>D e L</b>.</p>
+      <div class="trap"><b>Pegadinha clássica:</b> a di-hidroxiacetona é a ÚNICA exceção sem carbono assimétrico entre os monossacarídeos simples — pergunta clássica de prova.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Sufixo "-ose" nos monossacarídeos. Tri/Tetra/Penta/Hexose = 3/4/5/6 carbonos. Gliceraldeído = 1 centro de assimetria → isômeros D/L.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que TODOS os monossacarídeos têm carbono assimétrico — a di-hidroxiacetona é exceção.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual é a única exceção entre os monossacarídeos simples sem carbono assimétrico?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A di-hidroxiacetona.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a hidrólise não consegue quebrar um monossacarídeo em moléculas menores?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ISOMERIA ÓPTICA -->
+  <section class="panel" id="isomeria">
+    <div class="block">
+      <h3>Atividade óptica</h3>
+      <table class="quicktab">
+        <tr><th>Termo</th><th>Significado</th></tr>
+        <tr><td><b>Dextrógira</b></td><td>Desvia o plano de polarização para a DIREITA — sinal (+)</td></tr>
+        <tr><td><b>Levógira</b></td><td>Desvia o plano de polarização para a ESQUERDA — sinal (−)</td></tr>
+      </table>
+      <p>No caso do gliceraldeído, a forma D é dextrógira e a forma L é levógira. MAS a rotação de muitos membros da série D é levógira, e de outros da série L é dextrógira!</p>
+      <div class="trap"><b>Pegadinha clássica (muito importante):</b> os prefixos D e L <b>NÃO indicam a rotação óptica diretamente</b> — eles apenas designam a configuração espacial do composto, comparando-a com as duas formas do gliceraldeído. Um composto "D" pode ser levógiro, e um "L" pode ser dextrógiro!</div>
+    </div>
+    <div class="block">
+      <h3>Enantiômeros e mistura racêmica</h3>
+      <p>Substâncias com rotações ópticas iguais e de sinais opostos, que são imagens especulares uma da outra (não se sobrepõem), são chamadas <b>isômeros ópticos</b>, ou <b>enantiômeros/antípodas ópticos</b>.</p>
+      <p>Quando se misturam essas duas substâncias em quantidades iguais, obtém-se uma <b>mistura racêmica</b>, que é opticamente <b>inativa</b> (as rotações se cancelam).</p>
+      <p>O instrumento usado para medir a atividade óptica é o <b>polarímetro</b>.</p>
+      <div class="mnemo"><b>Dica:</b> "D e L" = configuração espacial (comparação estrutural com gliceraldeído). "+/− ou dextro/levo" = comportamento óptico real medido no polarímetro. São coisas DIFERENTES que às vezes coincidem, às vezes não.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>D/L = configuração espacial (não é rotação óptica). Dextrógiro(+)/Levógiro(−) = rotação óptica real. Mistura racêmica = opticamente inativa.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Assumir que "D" sempre significa dextrógiro — isso é FALSO, são conceitos independentes.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Uma mistura racêmica (quantidades iguais de dois enantiômeros) é opticamente ativa ou inativa?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Inativa — as rotações ópticas opostas se cancelam.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que dois enantiômeros, sendo imagens especulares, têm rotações ópticas de sinais opostos?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Estudante de bioquímica analisa uma amostra de monossacarídeo no laboratório e observa que ela não sofre hidrólise em moléculas menores, possui sabor doce e é solúvel em água.</div>
+      <div class="caso-q">
+        <p>1) Que categoria de carboidrato está sendo analisada?</p>
+        <p>2) Por que essa substância não pode ser quebrada por hidrólise?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Trata-se de um monossacarídeo — a unidade mais simples dos carboidratos, formada por uma única cadeia de polialcoóis com grupo aldeído ou cetona. Por ser uma unidade única (não uma união de várias), não há ligação glicosídica para ser quebrada por hidrólise.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Gestante de 28 semanas realiza exame de rotina pré-natal. O obstetra explica a importância de manter a glicemia controlada, destacando que a glicose é a principal fonte de energia para o desenvolvimento fetal.</div>
+      <div class="caso-q">
+        <p>1) Por que a glicose é considerada o "combustível universal" nesse contexto específico?</p>
+        <p>2) O que acontece com outros açúcares da dieta antes de poderem ser utilizados de forma semelhante?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> A glicose é o combustível universal para o feto — a principal (e praticamente única) fonte energética utilizável pelo tecido fetal em desenvolvimento. Outros açúcares da dieta são convertidos em glicose no fígado antes de poderem contribuir de forma equivalente ao metabolismo energético.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Em um experimento de química orgânica, um pesquisador isola dois compostos com rotações ópticas exatamente opostas (+15° e −15°), que se revelam ser imagens especulares uma da outra e não se sobrepõem quando manipuladas espacialmente.</div>
+      <div class="caso-q">
+        <p>1) Como se chama essa relação entre os dois compostos?</p>
+        <p>2) Se misturados em partes iguais, qual seria o comportamento óptico resultante da mistura, e por quê?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Trata-se de <b>enantiômeros</b> (ou antípodas ópticos) — substâncias com rotações ópticas iguais em magnitude, mas de sinais opostos, que são imagens especulares não sobreponíveis. Misturados em quantidades iguais, formam uma <b>mistura racêmica</b>, que é opticamente <b>inativa</b>, pois as rotações opostas se cancelam mutuamente.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante uma prova prática, o professor apresenta dois monossacarídeos rotulados como "D-glicose" e pergunta se ambos necessariamente desviam a luz polarizada para a direita (comportamento dextrógiro), já que ambos são da série "D".</div>
+      <div class="caso-q">
+        <p>1) Essa afirmação (que "D" sempre significa dextrógiro) está correta? Justifique.</p>
+        <p>2) O que os prefixos D e L realmente indicam, se não a rotação óptica direta?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação completa</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> A afirmação está <b>incorreta</b>. Os prefixos D e L não indicam a rotação óptica — eles designam apenas a <b>configuração espacial</b> do composto, comparada às duas formas do gliceraldeído (referência histórica). A rotação óptica real (dextrógira/+ ou levógira/−) é uma propriedade medida experimentalmente no polarímetro, e pode ou não coincidir com a letra D/L: muitos membros da série D são, na prática, levógiros, e vice-versa. Essa é uma das pegadinhas mais clássicas e cobradas do tema.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">14 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 14</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">44</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">22 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Carbohidratos Parte 1" (Prof. Dr. Robert Vargas Bernal). Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 22 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Carboidrato", def:"Polihidroxialdeído ou polihidroxicetona e seus derivados; composto de C, H, O; fórmula (CH₂O)ₙ."},
+  {term:"Monossacarídeo", def:"Unidade única de polihidroxialdeído/cetona; não hidrolisável; cristal branco, doce, solúvel em água (ex: glicose)."},
+  {term:"Oligossacarídeo", def:"2-10 monossacarídeos unidos por ligações glicosídicas, separáveis por hidrólise."},
+  {term:"Polissacarídeo", def:"Mais de 10 monossacarídeos; grande, insípido, insolúvel em água, cadeias lineares ou ramificadas."},
+  {term:"Triose / Tetrose / Pentose / Hexose", def:"Monossacarídeos com 3, 4, 5 e 6 átomos de carbono, respectivamente."},
+  {term:"Carbono assimétrico", def:"Carbono com 4 substituintes diferentes, gerando isomeria; presente em quase todos os monossacarídeos, exceto a di-hidroxiacetona."},
+  {term:"Gliceraldeído", def:"Triose com 1 centro de assimetria; origem histórica dos isômeros D e L."},
+  {term:"Isômeros D e L", def:"Designam a configuração espacial do composto (comparada ao gliceraldeído) — NÃO indicam rotação óptica direta."},
+  {term:"Dextrógiro (+)", def:"Substância que desvia o plano de luz polarizada para a direita."},
+  {term:"Levógiro (−)", def:"Substância que desvia o plano de luz polarizada para a esquerda."},
+  {term:"Enantiômeros", def:"Isômeros ópticos com rotações iguais e opostas, imagens especulares não sobreponíveis (antípodas ópticos)."},
+  {term:"Mistura racêmica", def:"Mistura em partes iguais de dois enantiômeros; opticamente inativa (rotações se cancelam)."},
+  {term:"Polarímetro", def:"Instrumento usado para medir a atividade óptica (rotação da luz polarizada) de uma substância."},
+  {term:"Glicose", def:"Monossacarídeo mais importante; principal combustível metabólico e combustível universal do feto."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (22) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"Los carbohidratos se definen sencillamente como:", alts:["Ácidos grasos y derivados","Polihidroxialdehídos o polihidroxicetonas y sus derivados","Aminoácidos polimerizados","Bases nitrogenadas"], correct:1, comment:"Carbohidratos = polihidroxialdehídos o polihidroxicetonas y sus derivados."},
+  {tag:"Fácil", stem:"Los carbohidratos están compuestos principalmente por:", alts:["C, N, O","C, H, O","H, N, S","C, H, P"], correct:1, comment:"Compuestos de C, H, O — muchos con fórmula (CH2O)n."},
+  {tag:"Fácil", stem:"Los monosacáridos están formados por:", alts:["2 a 10 unidades","Más de 10 unidades","Una sola unidad de polihidroxialdehído o polihidroxicetona","Solo unidades de glucosa"], correct:2, comment:"Monosacáridos: una sola unidad, no se descomponen por hidrólisis."},
+  {tag:"Intermediária", stem:"Los oligosacáridos se caracterizan por estar formados por:", alts:["Una sola unidad","2 a 10 unidades de monosacáridos","Más de 10 unidades","Solo lípidos"], correct:1, comment:"Oligosacáridos: 2-10 unidades unidas por enlaces glucosídicos."},
+  {tag:"Fácil", stem:"Los polisacáridos se caracterizan por ser:", alts:["Solubles en agua y de sabor dulce","Insolubles en agua, insípidos y de gran tamaño","Cristales blancos de sabor dulce","Formados por 2-10 unidades"], correct:1, comment:"Polisacáridos: gran tamaño, insípidos, insolubles en agua o forman coloides."},
+  {tag:"Intermediária", stem:"El monosacárido más importante mencionado en el material es:", alts:["Fructosa","Galactosa","Glucosa","Ribosa"], correct:2, comment:"La glucosa es citada como el monosacárido más importante."},
+  {tag:"Fácil", stem:"La glucosa es considerada el combustible universal para:", alts:["El músculo esquelético únicamente","El feto","El hígado","Los eritrocitos únicamente"], correct:1, comment:"La glucosa es el combustible universal para el feto."},
+  {tag:"Intermediária", stem:"Los carbohidratos representan qué porcentaje de las calorías en una dieta equilibrada?", alts:["10-20%","30-40%","50-60%","80-90%"], correct:2, comment:"Los carbohidratos representan 50-60% de las calorías en dieta equilibrada."},
+  {tag:"Difícil", stem:"Casi todo el carbohidrato de la dieta se absorbe en forma de:", alts:["Fructosa","Galactosa","Glucosa","Sacarosa"], correct:2, comment:"Casi todo el carbohidrato de la dieta se absorbe como glucosa."},
+  {tag:"Intermediária", stem:"Los otros azúcares de la dieta se convierten en glucosa principalmente en:", alts:["El intestino","El hígado","El riñón","El páncreas"], correct:1, comment:"Otros azúcares se convierten en glucosa en el hígado."},
+  {tag:"Fácil", stem:"Los monosacáridos se nombran con el sufijo:", alts:["-asa","-osa","-ina","-ol"], correct:1, comment:"Los monosacáridos usan la nomenclatura con sufijo '-osa'."},
+  {tag:"Fácil", stem:"Una hexosa contiene en su cadena:", alts:["3 átomos de carbono","4 átomos de carbono","5 átomos de carbono","6 átomos de carbono"], correct:3, comment:"Hexosa = 6 átomos de carbono."},
+  {tag:"Intermediária", stem:"Una pentosa contiene en su cadena:", alts:["3 átomos de carbono","4 átomos de carbono","5 átomos de carbono","6 átomos de carbono"], correct:2, comment:"Pentosa = 5 átomos de carbono."},
+  {tag:"Difícil", stem:"El único monosacárido simple SIN carbono asimétrico es:", alts:["Glucosa","Gliceraldehído","Dihidroxiacetona","Fructosa"], correct:2, comment:"La dihidroxiacetona es la excepción sin carbono asimétrico entre los monosacáridos simples."},
+  {tag:"Intermediária", stem:"El gliceraldehído posee cuántos centros de asimetría?", alts:["0","1","2","3"], correct:1, comment:"El gliceraldehído tiene 1 centro de asimetría, originando los isómeros D y L."},
+  {tag:"Difícil", stem:"Los prefijos D y L en los monosacáridos indican:", alts:["La rotación óptica directamente","La configuración espacial comparada con el gliceraldehído","El número de átomos de carbono","La solubilidad en agua"], correct:1, comment:"D y L indican configuración espacial, NO la rotación óptica directamente — trampa clásica."},
+  {tag:"Fácil", stem:"Una sustancia que desvía el plano de polarización hacia la derecha se llama:", alts:["Levógira","Dextrógira","Racémica","Asimétrica"], correct:1, comment:"Dextrógira = desvía hacia la derecha, signo (+)."},
+  {tag:"Fácil", stem:"Una sustancia que desvía el plano de polarización hacia la izquierda se llama:", alts:["Levógira","Dextrógira","Racémica","Anomérica"], correct:0, comment:"Levógira = desvía hacia la izquierda, signo (−)."},
+  {tag:"Intermediária", stem:"Los isómeros ópticos que son imágenes especulares no superponibles se llaman:", alts:["Anómeros","Epímeros","Enantiómeros","Tautómeros"], correct:2, comment:"Enantiómeros (antípodas ópticos) = imágenes especulares no superponibles."},
+  {tag:"Difícil", stem:"Una mezcla en partes iguales de dos enantiómeros se denomina:", alts:["Mezcla eutéctica","Mezcla racémica","Solución isotónica","Mezcla anomérica"], correct:1, comment:"Mezcla racémica: ópticamente inactiva, ya que las rotaciones se cancelan."},
+  {tag:"Fácil", stem:"El instrumento utilizado para medir la actividad óptica de una sustancia es el:", alts:["Espectrofotómetro","Polarímetro","Microscopio","Cromatógrafo"], correct:1, comment:"El polarímetro mide la rotación óptica de las sustancias."},
+  {tag:"Difícil", stem:"Es correcto afirmar que un compuesto de la serie D:", alts:["Siempre es dextrógiro","Siempre es levógiro","Puede ser dextrógiro o levógiro, según el compuesto","No tiene actividad óptica"], correct:2, comment:"La rotación óptica real de un compuesto D puede ser dextrógira o levógira — D/L no determina la rotación."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Conceito e Classificação", statements:[
+    "Los carbohidratos están compuestos por C, H, O.",
+    "Los polisacáridos son solubles en agua y de sabor dulce.",
+    "Los monosacáridos se nombran con el sufijo '-osa'.",
+    "Los oligosacáridos están formados por 2 a 10 unidades de monosacáridos."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: los polisacáridos son INSOLUBLES en agua e insípidos — lo contrario de los monosacáridos."},
+  {theme:"Importância Biomédica", statements:[
+    "La glucosa es el combustible universal para el feto.",
+    "Los carbohidratos representan menos del 10% de las calorías en una dieta equilibrada.",
+    "Otros azúcares se convierten en glucosa en el hígado.",
+    "Casi todo el carbohidrato de la dieta se absorbe como glucosa."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: los carbohidratos representan 50-60% de las calorías, no menos del 10%."},
+  {theme:"Monossacarídeos e Isomeria Óptica", statements:[
+    "La dihidroxiacetona es el único monosacárido simple sin carbono asimétrico.",
+    "Los prefijos D y L indican directamente la rotación óptica de la sustancia.",
+    "Una mezcla racémica es ópticamente inactiva.",
+    "Los enantiómeros son imágenes especulares no superponibles."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: D y L indican configuración espacial, NO la rotación óptica directamente — un compuesto D puede ser dextrógiro o levógiro."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Classificação dos carboidratos", colA:["Monossacarídeo","Oligossacarídeo","Polissacarídeo","Triose","Hexose"],
+   colB:["1 unidade, doce, solúvel em água","2-10 unidades, separável por hidrólise","Mais de 10 unidades, insípido, insolúvel","3 átomos de carbono","6 átomos de carbono"],
+   answers:["A","B","C","D","E"], comment:"A classificação por complexidade (mono/oligo/poli) é independente da classificação por número de carbonos (tri/tetra/penta/hexose)."},
+  {title:"2. Isomeria óptica", colA:["Dextrógiro","Levógiro","Enantiômeros","Mistura racêmica","Polarímetro"],
+   colB:["Desvia a luz polarizada para a direita (+)","Desvia a luz polarizada para a esquerda (−)","Imagens especulares não sobreponíveis","Opticamente inativa (rotações se cancelam)","Instrumento que mede a rotação óptica"],
+   answers:["A","B","C","D","E"], comment:"Lembre: D/L (configuração espacial) é diferente de dextrógiro/levógiro (rotação óptica real) — não confundir os dois sistemas."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
