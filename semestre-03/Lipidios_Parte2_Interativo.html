@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Lipídios Parte 2 | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🩸</div>
+      <div class="brand-text">
+        <h1>Bioquímica — Lipídios Parte 2</h1>
+        <span>Absorção · Quilomícrons · HDL · LDL · VLDL</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Lipídios — Absorção intestinal e transporte por lipoproteínas</h2>
+    <p>Como os lipídios são absorvidos, os quilomícrons e as 3 principais lipoproteínas (HDL, LDL, VLDL) — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="absorcao">🔄 Absorção</button>
+    <button class="tab-btn" data-tab="quilomicrons">⚪ Quilomícrons</button>
+    <button class="tab-btn" data-tab="lipoproteinas">🧬 Lipoproteínas</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- ABSORÇÃO -->
+  <section class="panel active" id="absorcao">
+    <div class="block">
+      <h3>Por que a absorção de lipídios é diferente?</h3>
+      <p>A absorção de lipídios é bem diferente da absorção de moléculas hidrofílicas (monossacarídeos, vitaminas hidrossolúveis, aminoácidos). Os ácidos graxos e monoacilgliceróis resultantes da digestão são <b>hidrofóbicos</b> e pouco solúveis nas soluções aquosas extra e intracelulares.</p>
+    </div>
+    <div class="block">
+      <h3>Passo a passo da absorção</h3>
+      <table class="quicktab">
+        <tr><th>Etapa</th><th>O que ocorre</th></tr>
+        <tr><td>1. Emulsão/solubilização</td><td>Sais biliares se combinam aos produtos graxos, formando <b>micelas</b>, mantendo os lipídios em emulsão</td></tr>
+        <tr><td>2. Liberação na célula intestinal</td><td>Os produtos graxos se liberam da micela ao contatar a membrana plasmática da célula absortiva; as moléculas lipossolúveis difundem para o citoplasma</td></tr>
+        <tr><td>3. Ressíntese no Retículo Endoplasmático</td><td>Ácidos graxos + monoacilgliceróis se resintetizam com glicerol, formando triglicerídeos</td></tr>
+        <tr><td>4. Empacotamento no Complexo de Golgi</td><td>As moléculas graxas são "empacotadas" em <b>quilomícrons</b></td></tr>
+        <tr><td>5. Exocitose</td><td>Os quilomícrons deixam a célula absortiva por exocitose</td></tr>
+        <tr><td>6. Entrada no vaso linfático</td><td>Por causa do tamanho, os quilomícrons NÃO conseguem atravessar o vaso venoso — entram nos vasos linfáticos do intestino, que os transportam à circulação sanguínea</td></tr>
+      </table>
+      <div class="trap"><b>Pegadinha clássica:</b> os quilomícrons entram na circulação pela via <b>LINFÁTICA</b>, não diretamente pela veia — por causa do seu grande tamanho.</div>
+      <div class="mnemo"><b>Dica:</b> Micela → célula → RE (resíntese) → Golgi (empacota) → exocitose → linfa. Segue exatamente a via clássica de secreção celular (RE→Golgi→exocitose), só que o "produto final" aqui é o quilomícron.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Sais biliares formam micelas. RE resintetiza triglicerídeos. Golgi empacota em quilomícrons. Saída por exocitose, entrada na via LINFÁTICA (não venosa).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que os quilomícrons entram direto na veia — na verdade entram nos vasos linfáticos, por serem grandes demais para o vaso venoso.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Por que os quilomícrons não conseguem atravessar o vaso venoso diretamente?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Por causa do seu grande tamanho — por isso entram pela via linfática.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que os lipídios precisam ser "reempacotados" em triglicerídeos dentro da célula intestinal, em vez de simplesmente atravessá-la como estavam?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUILOMÍCRONS -->
+  <section class="panel" id="quilomicrons">
+    <div class="block">
+      <h3>O que são quilomícrons?</h3>
+      <p>São lipoproteínas sintetizadas no epitélio do intestino, caracterizadas por <b>baixa densidade</b> (inferior a 0,94) e <b>grande diâmetro</b> (entre 75 e 1.200 nm — as maiores partículas lipoproteicas, superando 100 nm).</p>
+      <p>São grandes partículas esféricas que recolhem, a partir do intestino delgado, os triglicerídeos, fosfolipídios e colesterol ingeridos na dieta, levando-os aos tecidos através do sistema linfático.</p>
+    </div>
+    <div class="block">
+      <h3>Composição dos quilomícrons</h3>
+      <table class="quicktab">
+        <tr><th>Componente</th><th>Proporção</th></tr>
+        <tr><td>Triglicerídeos</td><td>90%</td></tr>
+        <tr><td>Fosfolipídios</td><td>7%</td></tr>
+        <tr><td>Colesterol</td><td>1%</td></tr>
+        <tr><td>Apoproteínas (proteínas especializadas)</td><td>2%</td></tr>
+      </table>
+      <p><b>Função:</b> transportar os lipídios provenientes da dieta até o fígado e outros tecidos. Sintetizados nas células da parede intestinal, de onde passam ao plasma sanguíneo.</p>
+      <div class="mnemo"><b>Dica:</b> "90-7-1-2" — quase tudo é triglicerídeo (90%), o resto se divide entre fosfolipídio, colesterol e apoproteína.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Quilomícrons: 90% TAG, densidade <0,94, diâmetro 75-1200nm — maior lipoproteína. Transportam lipídios da DIETA.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir "baixa densidade" do quilomícron com "LDL" (que também significa baixa densidade, mas é outra partícula, sintetizada no fígado, não no intestino).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual é o componente majoritário dos quilomícrons?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Os triglicerídeos (90%).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que os quilomícrons têm baixa densidade, apesar de serem tão grandes?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIPOPROTEÍNAS -->
+  <section class="panel" id="lipoproteinas">
+    <div class="block">
+      <h3>As 3 principais lipoproteínas plasmáticas</h3>
+      <table class="quicktab">
+        <tr><th>Lipoproteína</th><th>Apelido</th><th>Função principal</th></tr>
+        <tr><td><b>HDL</b> (alta densidade)</td><td>Colesterol "bom"</td><td>Retira o excesso de colesterol das células extra-hepáticas, levando-o ao fígado para processamento em sais biliares</td></tr>
+        <tr><td><b>LDL</b> (baixa densidade)</td><td>Colesterol "ruim"</td><td>Transporta colesterol da dieta para os tecidos extra-hepáticos; relacionado à aterosclerose</td></tr>
+        <tr><td><b>VLDL</b> (muito baixa densidade)</td><td>—</td><td>Sintetizada no fígado, transporta triglicerídeos, ésteres de colesterol e fosfolipídios principalmente para tecidos extra-hepáticos</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>HDL — "colesterol bom"</h3>
+      <p>Enzima-chave: <b>LCAT</b> (Lecitina-colesterol aciltransferase) — participa da esterificação do colesterol transportado pelo HDL. A função do HDL é justamente RETIRAR o excesso de colesterol das células e levá-lo de volta ao fígado — por isso é considerado "bom".</p>
+    </div>
+    <div class="block">
+      <h3>LDL — "colesterol ruim"</h3>
+      <p>Transporta colesterol da dieta até os tecidos extra-hepáticos. É associado à aterosclerose porque, em excesso, contribui para o acúmulo de colesterol nas paredes arteriais — formando placas.</p>
+    </div>
+    <div class="block">
+      <h3>VLDL</h3>
+      <p>Complexo macromolecular sintetizado pelo <b>fígado</b>, que transporta triglicerídeos, ésteres de colesterol e fosfolipídios, principalmente para tecidos extra-hepáticos. Também considerado um tipo de colesterol "ruim", pois contribui para o acúmulo de colesterol nas paredes arteriais.</p>
+      <table class="quicktab">
+        <tr><th>Parâmetro</th><th>Valor</th></tr>
+        <tr><td>Níveis normais de colesterol VLDL</td><td>2 a 30 mg/dL</td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica:</b> níveis elevados de VLDL aumentam o risco de doenças cardíacas e AVC. A medição do VLDL faz parte do perfil lipídico, especialmente recomendado em pacientes com fatores de risco cardiovascular (obesidade, diabetes, hipertensão, história familiar).</div>
+      <div class="mnemo"><b>Dica:</b> "HDL Home (leva pra casa/fígado) = bom. LDL/VLDL Larga (deixa) nas artérias = ruim." Um jeito simples de lembrar quem é "bom" e quem é "ruim".</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>HDL=bom, retira colesterol das células, enzima LCAT. LDL=ruim, leva colesterol da dieta aos tecidos, aterosclerose. VLDL=sintetizado no fígado, transporta triglicerídeos, normal 2-30mg/dL.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que o LDL é sintetizado no fígado como o VLDL — o LDL vem principalmente da dieta/conversão do VLDL, não é sintetizado diretamente no fígado da mesma forma.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual enzima participa da função do HDL?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A LCAT (Lecitina-colesterol aciltransferase).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o HDL é considerado "bom" mesmo transportando o mesmo colesterol que o LDL transporta?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Paciente com síndrome de má absorção intestinal apresenta esteatorreia (gordura nas fezes) e dificuldade em absorver lipídios da dieta.</div>
+      <div class="caso-q">
+        <p>1) Que estrutura molecular precisa se formar corretamente para que os lipídios sejam absorvidos?</p>
+        <p>2) Que componente da bile é essencial para essa etapa?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> É necessária a formação de <b>micelas</b>, que solubilizam os produtos graxos hidrofóbicos em meio aquoso. Os <b>sais biliares</b> são essenciais para essa emulsificação — sem eles, os lipídios não se solubilizam adequadamente e são perdidos nas fezes (esteatorreia).
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 50 anos, com perfil lipídico mostrando LDL elevado e HDL baixo, é diagnosticado com risco cardiovascular aumentado.</div>
+      <div class="caso-q">
+        <p>1) Por que essa combinação específica (LDL alto + HDL baixo) é preocupante?</p>
+        <p>2) Explique o papel oposto dessas duas lipoproteínas no metabolismo do colesterol.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O LDL elevado significa mais colesterol sendo entregue aos tecidos extra-hepáticos (incluindo as paredes arteriais), favorecendo a aterosclerose. O HDL baixo significa menos capacidade de retirar esse excesso de colesterol das células e devolvê-lo ao fígado. Juntos, os dois fatores maximizam o acúmulo líquido de colesterol nas artérias — daí o risco cardiovascular aumentado.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente obeso, diabético, com hipertensão, realiza perfil lipídico de rotina que mostra VLDL de 45 mg/dL (acima do normal).</div>
+      <div class="caso-q">
+        <p>1) Qual é a faixa normal de VLDL, e por que o valor deste paciente é preocupante?</p>
+        <p>2) Considerando os fatores de risco do paciente, por que a medição do VLDL foi especialmente indicada neste caso?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> A faixa normal de VLDL é 2-30 mg/dL; 45 mg/dL está acima do normal, indicando risco aumentado de doenças cardíacas e AVC. A medição do VLDL (parte do perfil lipídico) é especialmente recomendada em pacientes com fatores de risco cardiovascular — como obesidade, diabetes e hipertensão, exatamente o perfil deste paciente.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante uma prova prática, o professor pede para descrever o trajeto completo de uma molécula de triglicerídeo da dieta, desde sua digestão no intestino até chegar à circulação sanguínea geral.</div>
+      <div class="caso-q">
+        <p>1) Descreva, em ordem, as etapas desse trajeto.</p>
+        <p>2) Por que esse trajeto usa a via linfática, e não a via venosa direta, em determinado ponto?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação completa</button>
+        <div class="caso-answer">
+          <b>Trajeto completo:</b> (1) Digestão no intestino, com formação de ácidos graxos e monoacilgliceróis; (2) Solubilização em <b>micelas</b> com sais biliares; (3) Liberação e difusão para dentro da célula absortiva intestinal; (4) Ressíntese em triglicerídeos no <b>Retículo Endoplasmático</b>; (5) Empacotamento em <b>quilomícrons</b> pelo <b>Complexo de Golgi</b>; (6) Saída da célula por <b>exocitose</b>; (7) Entrada nos <b>vasos linfáticos</b> intestinais (não nos vasos venosos, devido ao grande tamanho dos quilomícrons); (8) Transporte pela linfa até a circulação sanguínea geral.<br>
+          <b>Por que a via linfática:</b> os quilomícrons são partículas muito grandes (75-1.200 nm) para atravessar a parede dos capilares sanguíneos, mas conseguem entrar nos vasos linfáticos, que têm estrutura mais permissiva a partículas grandes.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">12 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 12</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">35</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">20 múltipla escolha + 2 blocos V/F + 1 bloco de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Lipídios Parte 2" (Prof. Dr. Robert Vargas Bernal). Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 20 + 8 + 5;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Micela", def:"Estrutura formada pela combinação de sais biliares com produtos graxos, mantendo os lipídios em emulsão para absorção."},
+  {term:"Quilomícron", def:"Lipoproteína sintetizada no intestino, baixa densidade (<0,94), grande diâmetro (75-1200nm); 90% triglicerídeos."},
+  {term:"Via linfática dos lipídios", def:"Rota de entrada dos quilomícrons na circulação, usada por serem grandes demais para os vasos venosos."},
+  {term:"Complexo de Golgi (na absorção)", def:"Empacota as moléculas graxas ressintetizadas em quilomícrons."},
+  {term:"Exocitose", def:"Processo pelo qual a célula direciona o conteúdo de suas vesículas secretoras para fora — usado para liberar os quilomícrons."},
+  {term:"HDL", def:"Lipoproteína de alta densidade; 'colesterol bom'; retira excesso de colesterol das células, leva ao fígado."},
+  {term:"LDL", def:"Lipoproteína de baixa densidade; 'colesterol ruim'; transporta colesterol da dieta aos tecidos extra-hepáticos; associado à aterosclerose."},
+  {term:"VLDL", def:"Lipoproteína de muito baixa densidade, sintetizada no fígado; transporta triglicerídeos; normal 2-30mg/dL."},
+  {term:"LCAT", def:"Lecitina-colesterol aciltransferase; enzima associada à função do HDL."},
+  {term:"Apoproteínas", def:"Proteínas especializadas presentes nos quilomícrons (≈2% de sua composição)."},
+  {term:"Aterosclerose", def:"Acúmulo de colesterol nas paredes arteriais, favorecido pelo excesso de LDL/VLDL."},
+  {term:"Perfil lipídico", def:"Exame de sangue que inclui a medição de HDL, LDL, VLDL e triglicerídeos."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (20) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"La absorción de lípidos es diferente de la absorción de monosacáridos porque los ácidos grasos son:", alts:["Hidrófilos","Hidrófobos","Iónicos","Idénticos a las proteínas"], correct:1, comment:"Los ácidos grasos y monoacilgliceroles son hidrófobos, poco solubles en soluciones acuosas."},
+  {tag:"Fácil", stem:"Las micelas se forman por la combinación de productos grasos con:", alts:["Enzimas pancreáticas","Sales biliares","Glucosa","Aminoácidos libres"], correct:1, comment:"Las sales biliares combinan con los productos grasos para formar micelas."},
+  {tag:"Intermediária", stem:"Después de liberarse de la micela, los productos grasos:", alts:["Son eliminados en las heces","Difunden al citoplasma de la célula absortiva","Permanecen en el lumen intestinal","Se destruyen inmediatamente"], correct:1, comment:"Las moléculas liposolubles difunden al citoplasma tras liberarse de la micela."},
+  {tag:"Fácil", stem:"La resíntesis de triglicéridos ocurre en:", alts:["El núcleo celular","El retículo endoplasmático","El lisosoma","La mitocondria"], correct:1, comment:"En el retículo endoplasmático se resintetizan ácidos grasos y monoacilgliceroles en triglicéridos."},
+  {tag:"Fácil", stem:"El empaquetamiento de las moléculas grasas en quilomicrones ocurre en:", alts:["El retículo endoplasmático","El aparato de Golgi","La membrana plasmática","El citoplasma libre"], correct:1, comment:"El aparato de Golgi empaqueta las moléculas grasas en quilomicrones."},
+  {tag:"Intermediária", stem:"Los quilomicrones abandonan la célula absortiva mediante:", alts:["Difusión simple","Exocitosis","Endocitosis","Transporte activo directo"], correct:1, comment:"Los quilomicrones salen de la célula por exocitosis."},
+  {tag:"Difícil", stem:"Los quilomicrones entran a la circulación general principalmente a través de:", alts:["Los vasos venosos directamente","Los vasos linfáticos","La arteria hepática","El sistema porta"], correct:1, comment:"Por su gran tamaño, los quilomicrones entran a los vasos linfáticos, no directamente a la vena."},
+  {tag:"Fácil", stem:"Los quilomicrones se caracterizan por tener:", alts:["Alta densidad y pequeño diámetro","Baja densidad y gran diámetro","Densidad media","Ausencia de lípidos"], correct:1, comment:"Quilomicrones: densidad <0,94, diámetro 75-1200nm — las partículas lipoproteicas más grandes."},
+  {tag:"Intermediária", stem:"El componente mayoritario de los quilomicrones es:", alts:["Colesterol","Fosfolípidos","Triglicéridos","Apoproteínas"], correct:2, comment:"Los quilomicrones están compuestos en un 90% por triglicéridos."},
+  {tag:"Fácil", stem:"Los quilomicrones son sintetizados en:", alts:["El hígado","El epitelio intestinal","El páncreas","Los riñones"], correct:1, comment:"Los quilomicrones se sintetizan en el epitelio del intestino."},
+  {tag:"Fácil", stem:"El HDL es conocido popularmente como:", alts:["Colesterol malo","Colesterol bueno","Colesterol neutro","Colesterol tóxico"], correct:1, comment:"HDL = colesterol 'bueno', retira el exceso de colesterol de las células."},
+  {tag:"Fácil", stem:"El LDL es conocido popularmente como:", alts:["Colesterol bueno","Colesterol malo","Colesterol neutro","Colesterol esencial"], correct:1, comment:"LDL = colesterol 'malo', asociado a la aterosclerosis."},
+  {tag:"Intermediária", stem:"La enzima asociada a la función del HDL es:", alts:["Lipasa pancreática","LCAT (lecitina-colesterol aciltransferasa)","Amilasa","Tripsina"], correct:1, comment:"LCAT (lecitina-colesterol aciltransferasa) está asociada al HDL."},
+  {tag:"Fácil", stem:"La función principal del HDL es:", alts:["Llevar colesterol de la dieta a los tejidos","Retirar el exceso de colesterol de las células hacia el hígado","Sintetizar triglicéridos","Digerir proteínas"], correct:1, comment:"HDL retira el exceso de colesterol de las células extrahepáticas hacia el hígado."},
+  {tag:"Intermediária", stem:"La VLDL es sintetizada principalmente en:", alts:["El intestino","El hígado","El páncreas","Los pulmones"], correct:1, comment:"La VLDL es sintetizada por el hígado."},
+  {tag:"Fácil", stem:"La VLDL transporta principalmente:", alts:["Aminoácidos","Triglicéridos","Glucosa","Vitaminas hidrosolubles"], correct:1, comment:"VLDL transporta principalmente triglicéridos (además de ésteres de colesterol y fosfolípidos)."},
+  {tag:"Difícil", stem:"Los niveles normales de colesterol VLDL están entre:", alts:["2-30 mg/dL","50-100 mg/dL","100-150 mg/dL","150-200 mg/dL"], correct:0, comment:"Niveles normales de VLDL: 2 a 30 mg/dL."},
+  {tag:"Intermediária", stem:"Niveles elevados de VLDL aumentan el riesgo de:", alts:["Anemia","Enfermedades cardíacas y accidentes cerebrovasculares","Diabetes tipo I exclusivamente","Osteoporosis"], correct:1, comment:"VLDL elevado aumenta el riesgo cardiovascular y de ACV."},
+  {tag:"Fácil", stem:"El análisis de VLDL se incluye en:", alts:["El hemograma completo","El perfil lipídico","La glucemia en ayuno","El perfil hepático exclusivamente"], correct:1, comment:"El VLDL se mide como parte del perfil lipídico."},
+  {tag:"Difícil", stem:"Cuál de las siguientes NO es una lipoproteína mencionada en el material?", alts:["HDL","LDL","VLDL","GDL"], correct:3, comment:"GDL no existe como lipoproteína — las mencionadas son HDL, LDL y VLDL."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (2 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Absorção e Quilomícrons", statements:[
+    "Los ácidos grasos son moléculas hidrófilas, fácilmente solubles en agua.",
+    "Las micelas se forman con la ayuda de las sales biliares.",
+    "Los quilomicrones son sintetizados en el hígado.",
+    "Los quilomicrones entran a la circulación por los vasos linfáticos."
+  ], answers:["F","V","F","V"], comment:"El ítem I es falso: los ácidos grasos son HIDRÓFOBOS. El ítem III es falso: los quilomicrones se sintetizan en el EPITELIO INTESTINAL, no en el hígado."},
+  {theme:"Lipoproteínas", statements:[
+    "El HDL es conocido como colesterol bueno.",
+    "El LDL retira el exceso de colesterol de las células hacia el hígado.",
+    "La VLDL es sintetizada por el hígado.",
+    "Los niveles normales de VLDL son de 2 a 30 mg/dL."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: quien retira el exceso de colesterol hacia el hígado es el HDL, no el LDL."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (1 bloco x5) =====
+const assocData=[
+  {title:"1. Lipoproteínas e etapas da absorção", colA:["HDL","LDL","VLDL","Micela","Quilomícron"],
+   colB:["Retira excesso de colesterol das células, leva ao fígado","Leva colesterol da dieta aos tecidos, associado à aterosclerose","Sintetizada no fígado, transporta triglicerídeos","Estrutura formada por sais biliares + produtos graxos","90% triglicerídeos, sintetizado no intestino, via linfática"],
+   answers:["A","B","C","D","E"], comment:"HDL 'bom' retira colesterol; LDL e VLDL 'ruins' entregam colesterol/triglicerídeos aos tecidos, favorecendo aterosclerose em excesso."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
