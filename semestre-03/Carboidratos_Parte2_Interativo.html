@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Carboidratos Parte 2 | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🍯</div>
+      <div class="brand-text">
+        <h1>Bioquímica — Carboidratos Parte 2</h1>
+        <span>Estruturas Cíclicas · Derivados · Glicemia · Di/Polissacarídeos</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Carboidratos — Estruturas cíclicas, derivados, glicemia e polissacarídeos</h2>
+    <p>Fórmulas de Haworth, glicosídeos, derivados dos monossacarídeos, glicemia/tolerância à glicose, dissacarídeos e polissacarídeos — com casos clínicos, flashcards e quiz com feedback imediato.</p>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="ciclicas">🔄 Estruturas Cíclicas</button>
+    <button class="tab-btn" data-tab="glicosidos">💊 Glicosídeos</button>
+    <button class="tab-btn" data-tab="derivados">🧪 Derivados</button>
+    <button class="tab-btn" data-tab="glicemia">🩸 Glicemia</button>
+    <button class="tab-btn" data-tab="dissacarideos">🍬 Dissacarídeos</button>
+    <button class="tab-btn" data-tab="polissacarideos">🧬 Polissacarídeos</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- ESTRUTURAS CÍCLICAS -->
+  <section class="panel active" id="ciclicas">
+    <div class="block">
+      <h3>Fórmulas de projeção de Haworth</h3>
+      <p>Segundo Haworth, a forma de anel de <b>6 membros</b> é chamada de <b>piranose</b>, porque o pirano possui o mesmo anel de 5 carbonos + 1 oxigênio. Haworth designou os açúcares com anéis de <b>5 membros</b> como <b>furanose</b>, porque o furano contém o mesmo anel.</p>
+      <p>As estruturas cíclicas de piranoses e furanoses propostas por Haworth representam as configurações reais dos açúcares com mais exatidão que as antigas estruturas de projeção usadas por Fischer.</p>
+      <p>Haworth propôs a representação das piranoses mediante uma fórmula em perspectiva, em forma de hexágono, cujo lado inferior é o mais próximo do leitor — habitualmente representado por linhas mais grossas.</p>
+      <div class="mnemo"><b>Dica:</b> "PIRanose = 6 (Pi de hexágono)... na verdade lembre: Piranose vem de PIRANO (anel de 6). FURanose vem de FURANO (anel de 5) — os nomes derivam diretamente dos compostos químicos de referência."</div>
+    </div>
+    <div class="block">
+      <h3>Anômeros α e β</h3>
+      <p>As estruturas cíclicas geram um novo centro de assimetria no carbono anomérico (carbono carbonílico original), originando dois anômeros: <b>α (alfa)</b> e <b>β (beta)</b>.</p>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Piranose = anel de 6 membros (como o pirano). Furanose = anel de 5 membros (como o furano). Haworth é mais preciso que Fischer para representar a forma real.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Trocar piranose com furanose — lembre que "pira" tem mais letras associadas a "6" (hexágono), enquanto "fura" é o anel menor.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Um açúcar com anel de 5 membros é chamado de que forma cíclica?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Furanose.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que as fórmulas de Haworth representam a realidade com mais exatidão que as de Fischer?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLICOSÍDEOS -->
+  <section class="panel" id="glicosidos">
+    <div class="block">
+      <h3>O que são glicosídeos?</h3>
+      <p>Quando o monossacárido envolvido é a <b>glicose</b>, os compostos são chamados <b>glicosídeos</b>; se for <b>galactose</b>, <b>galactosídeos</b>; se for <b>frutose</b>, <b>frutosídeos</b>, etc. Os monossacarídeos também estabelecem ligação glicosídica entre si, como nos oligo e polissacarídeos.</p>
+      <h4>Aglicona</h4>
+      <p>Quando a molécula unida ao carbono hemiacetálico do monossacárido NÃO tem caráter glicídico, dá-se a essa porção do glicosídeo o nome de <b>aglicona</b>. A aglicona pode ser simples, mas há um conjunto de glicosídeos de grande interesse médico — utilizados como <b>tônicos cardíacos</b> (digitálicos, ouabaína) — que têm como aglicona um tipo esteroide.</p>
+      <h4>Hemiacetal e hemicetal</h4>
+      <p>Quando um álcool se soma a um <b>aldeído</b>, o resultado se chama <b>hemiacetal</b>; quando um álcool se adiciona a uma <b>cetona</b>, o produto resultante é um <b>hemicetal</b>.</p>
+    </div>
+    <div class="block">
+      <h3>Ouabaína — correlação clínica</h3>
+      <div class="clinico"><b>Ouabaína:</b> poderoso glicosídeo cardíaco de ação rápida. Seu efeito terapêutico é muito próximo da dose tóxica, o que fez com que deixasse de ser empregada na insuficiência cardíaca congestiva — uma margem terapêutica estreita e perigosa.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Glicosídeo = monossacárido + aglicona (não-glicídica). Digitálicos/ouabaína = aglicona esteroide, usados como tônicos cardíacos.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir hemiacetal (álcool + aldeído) com hemicetal (álcool + cetona) — a diferença é só o grupo funcional de origem.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Por que a ouabaína deixou de ser usada na insuficiência cardíaca congestiva?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Porque seu efeito terapêutico é muito próximo da dose tóxica — margem de segurança estreita.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a porção não-glicídica de um glicosídeo recebe um nome especial (aglicona)?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DERIVADOS -->
+  <section class="panel" id="derivados">
+    <div class="block">
+      <h3>Produto da redução das hexoses</h3>
+      <p><b>Sorbitol, xilitol, manitol:</b> usados como edulcorantes em bebidas dietéticas, chicletes, produtos para diabéticos. Efeitos colaterais: mal-estar, gases, diarreia.</p>
+      <div class="clinico"><b>Correlação clínica importante:</b> em diabéticos, o excesso de glicose é convertido em Sorbitol, que pode se acumular no cristalino e causar <b>CATARATAS</b> — via glicose → sorbitol → catarata.</div>
+    </div>
+    <div class="block">
+      <h3>Produto da oxidação das aldoses</h3>
+      <table class="quicktab">
+        <tr><th>Local de oxidação</th><th>Produto</th></tr>
+        <tr><td>Carbono 1</td><td>Ácidos aldônicos</td></tr>
+        <tr><td>Carbono 6</td><td>Ácidos urônicos</td></tr>
+        <tr><td>Carbonos 1 e 6</td><td>Ácidos carboxílicos (aldáricos)</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Outros derivados importantes</h3>
+      <h4>Desoxiaçúcares</h4>
+      <p>Derivados dos monossacarídeos pela perda de oxigênio de um dos grupos hidroxila. Exemplo: a <b>2-desoxirribose</b>, um dos componentes fundamentais do <b>ADN</b>.</p>
+      <h4>Ésteres fosfóricos</h4>
+      <p>Formam-se por reações biológicas entre monossacarídeos + ácido fosfórico (<b>fosforilação</b>). Exemplos: di-hidroxiacetona-fosfato, D-gliceraldeído-fosfato, β-D-glicose-1-fosfato.</p>
+      <h4>Aminoaçúcares</h4>
+      <p>São açúcares que contêm um grupo <b>amino</b> no lugar de um grupo hidroxila em algum de seus radicais. Exemplo clássico: <b>glucosamina</b>.</p>
+      <div class="clinico"><b>Correlação clínica:</b> a glucosamina é utilizada com frequência no tratamento da artrite e artrose, embora sua aceitação como medicamento terapêutico seja variável.</div>
+      <div class="mnemo"><b>Dica:</b> "Redução → poliol (sorbitol) → catarata. Oxidação C1 → ácido ALDÔnico (rima com aldeído-1). Oxidação C6 → ácido URÔnico (rima com "seis-urô")."</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Redução → sorbitol → catarata (diabéticos). Oxidação C1 → ác. aldônico. Oxidação C6 → ác. urônico. 2-desoxirribose = componente do ADN.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Trocar a via da catarata — não é a oxidação, é a REDUÇÃO da glicose que gera sorbitol e leva à catarata em diabéticos.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual desoxiaçúcar é componente fundamental do ADN?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A 2-desoxirribose.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o acúmulo de sorbitol no cristalino pode levar à formação de catarata?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLICEMIA -->
+  <section class="panel" id="glicemia">
+    <div class="block">
+      <h3>Valores de glicemia</h3>
+      <table class="quicktab">
+        <tr><th>Situação</th><th>Valor</th></tr>
+        <tr><td>Jejum (sangue venoso), indivíduos normais</td><td>70-99 mg/dL</td></tr>
+        <tr><td>Hiperglicemia</td><td>Acima de 120 mg/dL</td></tr>
+        <tr><td>Hipoglicemia</td><td>Abaixo de 60 mg/dL</td></tr>
+      </table>
+      <p>Valores semelhantes para plasma, soro e sangue total.</p>
+      <h4>Período pós-prandial</h4>
+      <p>É o nível de glicose no sangue após a ingestão de alimentos. A glicemia AUMENTA, atingindo o máximo cerca de <b>30 minutos</b> após a ingestão, e se restabelece em <b>2-3 horas</b> depois.</p>
+    </div>
+    <div class="block">
+      <h3>Teste de tolerância à glicose</h3>
+      <p>É a capacidade de regular a concentração de glicose após a administração de uma dose de teste de glicose. Utilizado com fins diagnósticos.</p>
+      <div class="clinico"><b>Correlação clínica:</b> a Diabetes Mellitus tipo I (insulinodependente) caracteriza-se por DIMINUIÇÃO da tolerância à glicose, devido à diminuição da secreção de insulina pancreática.</div>
+      <div class="mnemo"><b>Dica:</b> memorize os 3 números-chave: jejum 70-99, hiperglicemia >120, hipoglicemia <60. Fica um "buraco" entre 99 e 120 (zona intermediária, pré-diabetes/tolerância diminuída).</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Jejum normal: 70-99mg/dL. Hiperglicemia: >120. Hipoglicemia: <60. Pico pós-prandial: ~30min, normaliza em 2-3h.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que hiperglicemia é definida acima de 99 (limite do jejum normal) — na verdade o corte citado é acima de 120mg/dL.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Quanto tempo após a ingestão de alimentos a glicemia atinge seu pico?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Aproximadamente 30 minutos.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a Diabetes Mellitus tipo I reduz a tolerância à glicose especificamente pela via da insulina?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DISSACARÍDEOS -->
+  <section class="panel" id="dissacarideos">
+    <div class="block">
+      <h3>O que são dissacarídeos?</h3>
+      <p>Também chamados <b>ósidos</b>, são glicídios formados pela condensação (união) de dois monossacarídeos mediante uma ligação <b>O-glicosídica</b> (com perda de uma molécula de água), pois se estabelece na forma de éter, sendo um átomo de oxigênio o que une cada par de monossacarídeos.</p>
+      <p>Fórmula molecular geral: <b>C₁₂H₂₂O₁₁</b>. A ligação covalente entre dois monossacarídeos elimina um átomo de hidrogênio de um deles e um grupo hidroxila do outro — no conjunto, elimina-se uma molécula de água (H₂O).</p>
+      <p>No intestino humano existem enzimas chamadas <b>dissacaridases</b>, que hidrolisam a ligação glicosídica entre os dois monossacarídeos, permitindo sua absorção intestinal.</p>
+    </div>
+    <div class="block">
+      <h3>Principais dissacarídeos</h3>
+      <table class="quicktab">
+        <tr><th>Dissacarídeo</th><th>Composição</th><th>Poder redutor</th></tr>
+        <tr><td><b>Sacarose</b></td><td>Glicose + Frutose (açúcar comum)</td><td>NÃO tem poder redutor</td></tr>
+        <tr><td><b>Lactose</b></td><td>Glicose + Galactose (açúcar do leite)</td><td>TEM poder redutor</td></tr>
+      </table>
+      <p><b>Poder redutor:</b> capacidade de certas biomoléculas de atuar como doadoras de elétrons ou receptoras de prótons em reações metabólicas de redução-oxidação.</p>
+      <div class="trap"><b>Pegadinha clássica:</b> a SACAROSE é o único dissacarídeo citado SEM poder redutor — todos os outros mencionados (lactose, maltose) TÊM poder redutor. É a pergunta mais repetida do tema.</div>
+      <div class="mnemo"><b>Dica:</b> "SACarose = SACa (retira) o poder redutor" — mnemônico pra lembrar que é a exceção sem poder redutor.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Sacarose = glicose+frutose, SEM poder redutor. Lactose = glicose+galactose, COM poder redutor. Fórmula geral: C12H22O11.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que todos os dissacarídeos têm poder redutor — a sacarose é a exceção clássica.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual dissacarídeo é formado pela união de glicose e galactose?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A lactose.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a formação de um dissacarídeo libera uma molécula de água?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POLISSACARÍDEOS -->
+  <section class="panel" id="polissacarideos">
+    <div class="block">
+      <h3>Classificação dos polissacarídeos (glicanos)</h3>
+      <p>Produzem numerosas moléculas (+10) do mesmo ou de diferentes monossacarídeos quando hidrolisados. Amorfos, brancos, insípidos, não redutores. Tamanho molecular muito grande ("macromoléculas"). Insolúveis em água ou formam colóides.</p>
+      <table class="quicktab">
+        <tr><th>Tipo</th><th>Característica</th><th>Exemplos</th></tr>
+        <tr><td><b>Homopolissacarídeos</b></td><td>Formados pelo mesmo tipo de monossacarídeo, tamanho variável</td><td>Amido, Glicogênio, Dextrinas, Dextrano, Inulina, Celulose, Quitina</td></tr>
+        <tr><td><b>Heteropolissacarídeos</b></td><td>Formados por mais de um tipo de monossacarídeo/derivado, frequentemente associados a proteínas</td><td>Glicosaminoglicanos (GAG)</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Amido</h3>
+      <p>Polissacarídeo de glicose com duas frações:</p>
+      <table class="quicktab">
+        <tr><th>Fração</th><th>% do amido</th><th>Estrutura</th></tr>
+        <tr><td><b>Amilose</b></td><td>~20%</td><td>Cadeia linear de glicoses com ligações α(1→4)</td></tr>
+        <tr><td><b>Amilopectina</b></td><td>~80%</td><td>Estrutura ramificada, glicoses α(1→4) unidas por pontes α(1→6); ramificações de 5-10%</td></tr>
+      </table>
+      <p>Hidrólise: amido → (amilase) → maltose (dissacarídeo) → (maltase) → glicose.</p>
+      <table class="quicktab">
+        <tr><th></th><th>Amilose</th><th>Amilopectina</th></tr>
+        <tr><td>Unidades de glicose</td><td>1.000-5.000</td><td>~600.000</td></tr>
+        <tr><td>Peso molecular</td><td>160-800 kDa</td><td>até 100 milhões kDa</td></tr>
+        <tr><td>Solução em água</td><td>Não estável</td><td>Soluções muito viscosas (gel)</td></tr>
+        <tr><td>Reação com iodo</td><td>Azul intenso</td><td>Violeta</td></tr>
+      </table>
+    </div>
+    <div class="block">
+      <h3>Celulose e Glicogênio</h3>
+      <p><b>Celulose:</b> composto orgânico mais abundante da natureza; 10.000 unidades de glicose.</p>
+      <h4>Glicogênio</h4>
+      <ul>
+        <li>Polissacarídeo de reserva dos animais</li>
+        <li>Fígado e músculos: órgãos com maior quantidade de glicogênio</li>
+        <li>Semelhante à amilopectina — ramificações em α(1→6)</li>
+        <li>Peso molecular: centenas de milhões</li>
+        <li>Ramificações separadas a cada &gt;10 glicoses → estrutura muito compacta → NÃO forma géis (não retém tanta água quanto a amilopectina); está hidratado superficialmente</li>
+        <li>NÃO é redutor</li>
+        <li>Reação com iodo: <b>vermelho caramelo (cor de mogno)</b></li>
+      </ul>
+      <div class="trap"><b>Pegadinha clássica de reação com iodo:</b> Amilose = azul intenso. Amilopectina = violeta. Glicogênio = vermelho caramelo. As 3 cores diferentes são cobradas constantemente em prova.</div>
+    </div>
+    <div class="block">
+      <h3>Glicosaminoglicanos (GAG / mucopolissacarídeos)</h3>
+      <p>Polímeros lineares de unidades repetidas de dissacarídeos formados por um ácido urônico + hexosamina (N-acetilglicosamina ou N-acetilgalactosamina). Grupos ácidos -COO⁻ e -SO₃⁻ tornam-nos "polianions".</p>
+      <table class="quicktab">
+        <tr><th>Localização</th><th>Exemplo</th></tr>
+        <tr><td>Intracelular</td><td>Heparina</td></tr>
+        <tr><td>Extracelular (tecido conectivo)</td><td>Outros GAGs</td></tr>
+      </table>
+      <h4>GAGs específicos e correlação clínica</h4>
+      <ul>
+        <li><b>Condroitina sulfato:</b> presente na cartilagem, mantém elasticidade e resistência das articulações; usado no tratamento sintomático da artrose. Formado por N-acetilgalactosamina + ácido glucurônico.</li>
+        <li><b>Queratano sulfato:</b> essencial em cartilagem, córnea e osso, com funções estruturais.</li>
+        <li><b>Dermatano sulfato:</b> presente na pele, vasos sanguíneos, tendões e tecidos conectivos, com funções estruturais e reguladoras.</li>
+      </ul>
+      <div class="clinico"><b>Correlação clínica:</b> a heparina, um GAG intracelular (armazenada em mastócitos), é amplamente utilizada como anticoagulante — sua carga fortemente aniônica (polianion) é a base do seu mecanismo de ação.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Amido: amilose(20%,linear,α1-4) + amilopectina(80%,ramificada,α1-4+α1-6). Glicogênio ~ amilopectina, mas mais compacto, cor vermelho-caramelo com iodo. GAGs = polianions (heparina, condroitina, queratano, dermatano sulfato).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Trocar as cores da reação com iodo entre amilose (azul), amilopectina (violeta) e glicogênio (vermelho-caramelo).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual GAG é classicamente usado como anticoagulante?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A heparina.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o glicogênio, sendo tão ramificado quanto a amilopectina, não forma géis como ela?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Paciente assintomático realiza exame de rotina em jejum de 8 horas. O resultado da glicemia é 85 mg/dL.</div>
+      <div class="caso-q">
+        <p>1) Esse valor está dentro da faixa normal de jejum?</p>
+        <p>2) A partir de qual valor essa glicemia seria classificada como hiperglicemia?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Sim, 85 mg/dL está dentro da faixa normal de jejum (70-99 mg/dL). A hiperglicemia é definida como valores acima de 120 mg/dL.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Paciente diabético de longa data, com controle glicêmico inadequado, desenvolve opacificação progressiva do cristalino (catarata) em ambos os olhos, mais precoce do que o esperado para a idade.</div>
+      <div class="caso-q">
+        <p>1) Qual via bioquímica relaciona a hiperglicemia crônica com a formação de catarata?</p>
+        <p>2) Que composto se acumula no cristalino nesse processo?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Em estados de hiperglicemia crônica, o excesso de glicose é reduzido a <b>sorbitol</b> (via da redução das hexoses). O sorbitol se acumula no cristalino (e em outros tecidos), causando estresse osmótico e alterações estruturais que levam à formação de catarata — uma complicação clássica e precoce do diabetes mal controlado.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente de 8 anos, previamente hígido, apresenta perda de peso, poliúria e polidipsia há 3 semanas. Realizado teste de tolerância à glicose, que mostra tolerância significativamente diminuída, com hiperglicemia mantida.</div>
+      <div class="caso-q">
+        <p>1) Qual tipo de Diabetes Mellitus é mais provável neste caso pediátrico, e por que o teste de tolerância está alterado?</p>
+        <p>2) Explique o mecanismo fisiopatológico básico por trás dessa diminuição de tolerância.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O quadro é sugestivo de <b>Diabetes Mellitus tipo I</b> (insulinodependente), típica de início na infância/adolescência. O teste de tolerância à glicose está alterado porque a Diabetes tipo I se caracteriza por diminuição da tolerância à glicose devido à <b>diminuição da secreção de insulina pancreática</b> — sem insulina suficiente, a glicose administrada no teste não é adequadamente captada pelos tecidos, mantendo a glicemia elevada por mais tempo que o esperado.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Em uma prova prática de bioquímica, o professor apresenta 3 amostras rotuladas A, B e C, cada uma reagindo com iodo de forma diferente: a amostra A fica azul intenso, a B fica violeta, e a C fica vermelho-caramelo (cor de mogno).</div>
+      <div class="caso-q">
+        <p>1) Identifique cada amostra (A, B, C) com base na cor da reação com iodo.</p>
+        <p>2) Explique estruturalmente por que o glicogênio, apesar de ser tão ramificado quanto a amilopectina, não forma géis como ela.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação completa</button>
+        <div class="caso-answer">
+          <b>Identificação:</b> Amostra A (azul intenso) = <b>Amilose</b>. Amostra B (violeta) = <b>Amilopectina</b>. Amostra C (vermelho-caramelo) = <b>Glicogênio</b>.<br>
+          <b>Explicação estrutural:</b> Embora o glicogênio tenha ramificações α(1→6) semelhantes à amilopectina, suas ramificações estão separadas por intervalos menores (a cada mais de 10 glicoses), resultando numa estrutura muito mais compacta. Essa compactação faz com que o glicogênio retenha muito menos água que a amilopectina (que forma géis viscosos) — o glicogênio fica apenas hidratado superficialmente, sem formar gel.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">18 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 18</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">50</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">28 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Carbohidratos Parte 2" (Prof. Dr. Robert Vargas Bernal). Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 28 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Piranose", def:"Forma cíclica de açúcar com anel de 6 membros (5 carbonos + 1 oxigênio), como o pirano."},
+  {term:"Furanose", def:"Forma cíclica de açúcar com anel de 5 membros, como o furano."},
+  {term:"Anômeros α e β", def:"Formas isoméricas geradas pelo novo centro de assimetria no carbono anomérico das estruturas cíclicas."},
+  {term:"Glicosídeo", def:"Composto formado quando um monossacárido (ex: glicose) se une a outra molécula (aglicona) via carbono hemiacetálico."},
+  {term:"Aglicona", def:"Porção não-glicídica de um glicosídeo (ex: esteroide nos digitálicos/ouabaína)."},
+  {term:"Hemiacetal / Hemicetal", def:"Hemiacetal = álcool + aldeído. Hemicetal = álcool + cetona."},
+  {term:"Sorbitol", def:"Poliol produzido pela redução da glicose; acúmulo em diabéticos está associado à formação de catarata."},
+  {term:"Ácidos aldônicos", def:"Produtos da oxidação de aldoses no carbono 1."},
+  {term:"Ácidos urônicos", def:"Produtos da oxidação de aldoses no carbono 6."},
+  {term:"2-desoxirribose", def:"Desoxiaçúcar componente fundamental do ADN."},
+  {term:"Glucosamina", def:"Aminoaçúcar (grupo amino no lugar de hidroxila); usada no tratamento de artrite/artrose."},
+  {term:"Hiperglicemia", def:"Concentração de glicose acima de 120 mg/dL."},
+  {term:"Hipoglicemia", def:"Concentração de glicose abaixo de 60 mg/dL."},
+  {term:"Sacarose", def:"Dissacarídeo de glicose+frutose; açúcar comum; SEM poder redutor."},
+  {term:"Lactose", def:"Dissacarídeo de glicose+galactose; açúcar do leite; COM poder redutor."},
+  {term:"Amilose e Amilopectina", def:"Frações do amido: amilose (~20%, linear, α1-4) e amilopectina (~80%, ramificada, α1-4 + α1-6)."},
+  {term:"Glicogênio", def:"Polissacarídeo de reserva animal, semelhante à amilopectina mas mais compacto; reação com iodo: vermelho-caramelo."},
+  {term:"Glicosaminoglicanos (GAG)", def:"Polímeros de dissacarídeos (ácido urônico + hexosamina), polianions; ex: heparina, condroitina sulfato."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (28) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"Según Haworth, un anillo de 6 miembros en un azúcar se llama:", alts:["Furanosa","Piranosa","Anómero","Glicósido"], correct:1, comment:"Piranosa: anillo de 6 miembros, igual al pirano."},
+  {tag:"Fácil", stem:"Un anillo de 5 miembros en un azúcar se llama:", alts:["Piranosa","Furanosa","Aglicona","Anómero"], correct:1, comment:"Furanosa: anillo de 5 miembros, igual al furano."},
+  {tag:"Intermediária", stem:"Las fórmulas de Haworth, comparadas con las de Fischer:", alts:["Son menos precisas","Representan las configuraciones reales con más exactitud","Solo se usan para polisacáridos","No representan anillos"], correct:1, comment:"Haworth representa las configuraciones reales con más exactitud que Fischer."},
+  {tag:"Fácil", stem:"Cuando el monosacárido de un glicósido es glucosa, el compuesto se llama:", alts:["Galactósido","Glucósido","Fructósido","Aglicona"], correct:1, comment:"Glucosa → glucósido; galactosa → galactósido; fructosa → fructósido."},
+  {tag:"Intermediária", stem:"La porción de un glicósido que no tiene carácter glucídico se llama:", alts:["Anómero","Aglicona","Piranosa","Hemicetal"], correct:1, comment:"Aglicona: porción no glucídica del glicósido."},
+  {tag:"Difícil", stem:"Los glicósidos cardíacos como la ouabaína tienen como aglicona un compuesto de tipo:", alts:["Aminoácido","Esteroide","Ácido graso","Base nitrogenada"], correct:1, comment:"Los digitálicos/ouabaína tienen aglicona de tipo esteroide."},
+  {tag:"Fácil", stem:"Cuando un alcohol se une a un aldehído, el producto se llama:", alts:["Hemicetal","Hemiacetal","Glicósido","Anómero"], correct:1, comment:"Alcohol + aldehído = hemiacetal. Alcohol + cetona = hemicetal."},
+  {tag:"Intermediária", stem:"En diabéticos, la vía glucosa → sorbitol se asocia clínicamente con:", alts:["Cálculos renales","Cataratas","Anemia","Bocio"], correct:1, comment:"Glucosa → sorbitol → cataratas, complicación clásica del diabético mal controlado."},
+  {tag:"Fácil", stem:"La oxidación de una aldosa en el carbono 1 produce:", alts:["Ácidos urónicos","Ácidos aldónicos","Desoxiazúcares","Aminoazúcares"], correct:1, comment:"Oxidación en C1 → ácidos aldónicos."},
+  {tag:"Intermediária", stem:"La oxidación de una aldosa en el carbono 6 produce:", alts:["Ácidos aldónicos","Ácidos urónicos","Ésteres fosfóricos","Glicósidos"], correct:1, comment:"Oxidación en C6 → ácidos urónicos."},
+  {tag:"Fácil", stem:"La 2-desoxirribosa es un componente fundamental de:", alts:["El ARN","El ADN","El glucógeno","La celulosa"], correct:1, comment:"La 2-desoxirribosa es componente fundamental del ADN."},
+  {tag:"Fácil", stem:"Un aminoazúcar de ejemplo clásico, usado en tratamientos de artritis, es:", alts:["Glucosamina","Sorbitol","Manosa","Ribulosa"], correct:0, comment:"La glucosamina es el ejemplo clásico de aminoazúcar, usada en artritis/artrosis."},
+  {tag:"Fácil", stem:"El valor normal de glucemia en ayuno (sangre venosa) es:", alts:["40-60 mg/dL","70-99 mg/dL","100-150 mg/dL","150-200 mg/dL"], correct:1, comment:"Glucemia normal en ayuno: 70-99 mg/dL."},
+  {tag:"Intermediária", stem:"Se considera hiperglicemia cuando la glucosa está por encima de:", alts:["99 mg/dL","110 mg/dL","120 mg/dL","150 mg/dL"], correct:2, comment:"Hiperglicemia: por encima de 120 mg/dL."},
+  {tag:"Fácil", stem:"Se considera hipoglicemia cuando la glucosa está por debajo de:", alts:["50 mg/dL","60 mg/dL","70 mg/dL","80 mg/dL"], correct:1, comment:"Hipoglicemia: menor de 60 mg/dL."},
+  {tag:"Difícil", stem:"El pico máximo de glicemia posprandial ocurre aproximadamente:", alts:["10 minutos después de comer","30 minutos después de comer","2 horas después de comer","6 horas después de comer"], correct:1, comment:"El máximo posprandial ocurre ≈30 minutos después de la ingesta, restableciéndose en 2-3h."},
+  {tag:"Intermediária", stem:"La diabetes mellitus tipo I se caracteriza por:", alts:["Aumento de la tolerancia a la glucosa","Disminución de la tolerancia a la glucosa por menor secreción de insulina","Exceso de secreción de insulina","Ausencia de síntomas"], correct:1, comment:"DM tipo I: disminución de tolerancia a la glucosa por menor secreción de insulina pancreática."},
+  {tag:"Fácil", stem:"La sacarosa está formada por la unión de:", alts:["Glucosa y galactosa","Glucosa y fructosa","Dos moléculas de glucosa","Fructosa y galactosa"], correct:1, comment:"Sacarosa = glucosa + fructosa."},
+  {tag:"Fácil", stem:"La lactosa está formada por la unión de:", alts:["Glucosa y fructosa","Glucosa y galactosa","Dos moléculas de galactosa","Fructosa y galactosa"], correct:1, comment:"Lactosa = glucosa + galactosa (azúcar de la leche)."},
+  {tag:"Difícil", stem:"¿Cuál de los siguientes dissacáridos NO tiene poder reductor?", alts:["Lactosa","Maltosa","Sacarosa","Todos tienen poder reductor"], correct:2, comment:"La sacarosa es el disacárido clásico SIN poder reductor — trampa clásica."},
+  {tag:"Fácil", stem:"La fórmula molecular general de los disacáridos es:", alts:["C6H12O6","C12H22O11","C5H10O5","C10H20O10"], correct:1, comment:"Fórmula molecular de disacáridos: C12H22O11."},
+  {tag:"Intermediária", stem:"Las enzimas que hidrolizan el enlace glucosídico de los disacáridos en el intestino se llaman:", alts:["Amilasas","Disacaridasas","Lipasas","Proteasas"], correct:1, comment:"Las disacaridasas hidrolizan disacáridos para su absorción intestinal."},
+  {tag:"Fácil", stem:"La amilosa representa aproximadamente qué porcentaje del almidón?", alts:["10%","20%","50%","80%"], correct:1, comment:"Amilosa: ~20% del almidón. Amilopectina: ~80%."},
+  {tag:"Intermediária", stem:"Las uniones alfa 1→6 en la amilopectina forman:", alts:["La cadena lineal principal","Los puentes de ramificación","Los enlaces con el glucógeno","Enlaces beta exclusivamente"], correct:1, comment:"Las uniones α(1→6) forman los puentes de ramificación en la amilopectina."},
+  {tag:"Difícil", stem:"La reacción con yodo del glucógeno produce un color:", alts:["Azul intenso","Violeta","Rojo caoba","Verde"], correct:2, comment:"Glucógeno + yodo = rojo caoba. Amilosa = azul intenso. Amilopectina = violeta."},
+  {tag:"Intermediária", stem:"El glucógeno, a diferencia de la amilopectina, se caracteriza por:", alts:["Formar geles muy viscosos","Ser mucho menos compacto","No formar geles, por ser más compacto","Ser soluble como un monosacárido"], correct:2, comment:"El glucógeno es más compacto que la amilopectina y no forma geles, solo se hidrata superficialmente."},
+  {tag:"Fácil", stem:"Los glicosaminoglicanos (GAG) están compuestos por unidades repetidas de:", alts:["Solo glucosa","Ácido urónico + hexosamina","Fructosa + galactosa","Solo aminoácidos"], correct:1, comment:"GAG = polímeros de disacáridos: ácido urónico + hexosamina."},
+  {tag:"Intermediária", stem:"El GAG clásicamente localizado de forma intracelular, usado como anticoagulante, es:", alts:["Condroitín sulfato","Queratán sulfato","Heparina","Dermatán sulfato"], correct:2, comment:"La heparina es el GAG intracelular clásico, usado como anticoagulante."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Estruturas Cíclicas e Glicosídeos", statements:[
+    "La piranosa es un anillo de 5 miembros.",
+    "La aglicona es la porción no glucídica de un glicósido.",
+    "Los digitálicos tienen aglicona de tipo esteroide.",
+    "Alcohol + cetona produce un hemiacetal."
+  ], answers:["F","V","V","F"], comment:"El ítem I es falso: piranosa es un anillo de 6 miembros (furanosa es de 5). El ítem IV es falso: alcohol + cetona produce un HEMICETAL, no hemiacetal."},
+  {theme:"Derivados e Glicemia", statements:[
+    "El sorbitol se asocia con la formación de cataratas en diabéticos.",
+    "La 2-desoxirribosa es componente del ARN.",
+    "La hiperglicemia se define como valores por encima de 120 mg/dL.",
+    "La Diabetes Mellitus tipo I disminuye la tolerancia a la glucosa."
+  ], answers:["V","F","V","V"], comment:"El ítem II es falso: la 2-desoxirribosa es componente del ADN, no del ARN."},
+  {theme:"Di e Polissacarídeos", statements:[
+    "La sacarosa tiene poder reductor.",
+    "La amilopectina representa aproximadamente el 80% del almidón.",
+    "El glucógeno da color azul intenso con el yodo.",
+    "La heparina es un glicosaminoglicano intracelular."
+  ], answers:["F","V","F","V"], comment:"El ítem I es falso: la sacarosa NO tiene poder reductor. El ítem III es falso: el glucógeno da color rojo caoba con el yodo (el azul intenso es de la amilosa)."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Derivados e Glicemia", colA:["Redução da glicose","Oxidação no carbono 1","Oxidação no carbono 6","2-desoxirribose","Diabetes tipo I"],
+   colB:["Produz sorbitol — associado a cataratas","Produz ácidos aldônicos","Produz ácidos urônicos","Componente do ADN","Diminui a tolerância à glicose (menos insulina)"],
+   answers:["A","B","C","D","E"], comment:"Redução vs. oxidação em carbonos diferentes é a base de toda a química dos derivados dos monossacarídeos."},
+  {title:"2. Di e Polissacarídeos", colA:["Sacarose","Lactose","Amilose","Glicogênio","Heparina"],
+   colB:["Glicose+frutose, sem poder redutor","Glicose+galactose, com poder redutor","Fração linear do amido, α(1→4), azul c/ iodo","Reserva animal, vermelho-caramelo c/ iodo","GAG intracelular, usado como anticoagulante"],
+   answers:["A","B","C","D","E"], comment:"As cores da reação com iodo (azul=amilose, violeta=amilopectina, vermelho-caramelo=glicogênio) são cobradas com frequência em provas."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
