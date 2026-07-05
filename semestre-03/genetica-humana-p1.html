@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genética Humana P1 · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#7c5cff;
+  --helix2:#00d4b5;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix2);}
+
+/* ===== HEADER ===== */
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.15rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between;}
+
+/* ===== NAV TABS ===== */
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{
+  background:var(--card); color:var(--text-dim); border:1px solid var(--border);
+  padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer;
+  transition:.2s; display:flex; align-items:center; gap:6px;
+}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+/* ===== MAIN ===== */
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px; position:relative; overflow:hidden;
+}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+/* Analogy boxes */
+.analogy{
+  background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.analogy b{color:var(--gold);}
+.clinical{
+  background:rgba(255,107,107,.08); border-left:4px solid var(--red); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.clinical b{color:var(--red);}
+.mnemo{
+  background:rgba(124,92,255,.1); border-left:4px solid var(--helix1); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.mnemo b{color:var(--helix1);}
+
+/* Tables */
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.88rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--helix2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+/* Grid cards */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--helix2); font-size:.95rem; margin-bottom:6px;}
+
+/* Chromosome visual */
+.chromo-viz{display:flex; gap:24px; flex-wrap:wrap; justify-content:center; margin:18px 0;}
+.chromo-item{text-align:center; font-size:.78rem; color:var(--text-dim);}
+.chromo-item svg{display:block; margin:0 auto 6px;}
+
+/* Accordion */
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{
+  background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between;
+  align-items:center; font-weight:600; font-size:.92rem;
+}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+/* Punnett grid */
+.punnett{display:grid; gap:2px; margin:14px auto; width:fit-content;}
+.punnett div{
+  background:var(--bg-alt); border:1px solid var(--border); width:64px; height:44px;
+  display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:600;
+}
+.punnett .hdr{background:rgba(124,92,255,.18); color:var(--helix1); font-weight:800;}
+.punnett .corner{background:transparent; border:none;}
+
+/* Flashcards */
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{
+  position:relative; width:100%; min-height:220px; cursor:pointer;
+  transform-style:preserve-3d; transition:transform .5s;
+}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:16px;
+  display:flex; align-items:center; justify-content:center; text-align:center; padding:26px;
+  border:1px solid var(--border); box-shadow:var(--shadow);
+}
+.face-front{background:linear-gradient(135deg,#1a2338,#182233); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,181,.12)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{
+  border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d1117;
+  transition:.15s;
+}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);}
+.btn-hard{background:var(--amber);}
+.btn-good{background:var(--helix2);}
+.btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+/* Quiz */
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{
+  background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:10px 22px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+/* toast */
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0;
+  background:var(--card); border:1px solid var(--helix2); color:var(--text); padding:12px 22px; border-radius:12px;
+  font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999; display:flex; gap:8px; align-items:center;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/><line x1="12" y1="8" x2="28" y2="8" stroke="#8b98ab" stroke-width="1.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#8b98ab" stroke-width="1.5"/><line x1="12" y1="32" x2="28" y2="32" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Genética Humana · P1</h1>
+        <span>Ciclo Básico · Método Prompt Master</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Genotipo → Cariotipo → Mendel → Mutaciones → Herencia → ABO → Cruzamientos → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧬 Fundamentos</button>
+    <button class="tab-btn" data-tab="cariotipo">🧫 Cariotipo</button>
+    <button class="tab-btn" data-tab="mendel">🌱 Leyes de Mendel</button>
+    <button class="tab-btn" data-tab="mutaciones">⚠️ Mutaciones</button>
+    <button class="tab-btn" data-tab="herencia">🧬 Patrones de Herencia</button>
+    <button class="tab-btn" data-tab="abo">🩸 Sistema ABO</button>
+    <button class="tab-btn" data-tab="cruces">🔀 Cruces Complejos</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO / FUNDAMENTOS ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Sesión 1 · Bases de la Genética</span>
+    <h2>Del código al rasgo visible</h2>
+    <p>Todo empieza con una pregunta simple: ¿por qué dos padres sanos pueden tener un hijo con una condición genética? La respuesta está en la diferencia entre lo que <b>llevamos escrito</b> (genotipo) y lo que <b>se muestra</b> (fenotipo). Dominar esta distinción es la base de toda la genética clínica que verás en el Revalida.</p>
+  </div>
+
+  <div class="card">
+    <h2>Genotipo vs. Fenotipo</h2>
+    <div class="analogy"><b>Analogía del recetario:</b> el <b>genotipo</b> es la receta completa guardada en el libro de cocina (el ADN). El <b>fenotipo</b> es el plato que realmente sale de la cocina, que depende de la receta pero también del cocinero, del horno y de los ingredientes disponibles (el ambiente).</div>
+    <p><b>Fórmula fundamental:</b> Fenotipo = Genotipo + Ambiente</p>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Genotipo</h4>
+        <p style="margin:0; font-size:.88rem;">El conjunto de genes o información codificada en el ADN. Es el "código fuente" del individuo, invisible a simple vista.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Fenotipo</h4>
+        <p style="margin:0; font-size:.88rem;">Las características morfológicas, bioquímicas y visibles resultantes. Es lo que un médico puede observar o medir.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Variantes genéticas y localización</h2>
+    <table>
+      <tr><th>Término</th><th>Definición</th></tr>
+      <tr><td><b>Alelo</b></td><td>Versión variante de un gen (ej: alelo de cabello rubio vs. cabello oscuro). Solo se expresa el dominante.</td></tr>
+      <tr><td><b>Locus</b> (Loci)</td><td>Ubicación física exacta de un gen dentro del cromosoma. Es su "dirección postal".</td></tr>
+      <tr><td><b>Homocigoto</b></td><td>Alelos idénticos en el mismo locus (ej: AA o aa).</td></tr>
+      <tr><td><b>Heterocigoto</b></td><td>Alelos distintos en el mismo locus (ej: Aa).</td></tr>
+    </table>
+    <div class="mnemo"><b>Mnemotecnia:</b> "HOMO = mismo, HETERO = diferente" — igual que en química, HOMOgéneo es uniforme y HETEROgéneo es mixto.</div>
+  </div>
+
+  <div class="card">
+    <h2>Estados de manifestación</h2>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Dominante</h4>
+        <p style="margin:0; font-size:.88rem;">Gen que se expresa y suprime al otro alelo presente en el mismo locus.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Recesivo</h4>
+        <p style="margin:0; font-size:.88rem;">Gen cuya expresión es anulada por un alelo dominante; solo se manifiesta en homocigosis.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Afectado</h4>
+        <p style="margin:0; font-size:.88rem;">Individuo que manifiesta físicamente la condición o rasgo.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Portador</h4>
+        <p style="margin:0; font-size:.88rem;">Posee el gen en el genotipo pero NO lo manifiesta en el fenotipo.</p>
+      </div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> No confundir portador con afectado es una de las trampas más comunes en preguntas de Revalida sobre consejería genética.</div>
+  </div>
+</section>
+
+<!-- ============ CARIOTIPO ============ -->
+<section class="section" id="cariotipo">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>El Cariotipo Humano</h2>
+    <p>El cariotipo es el mapa cromosómico completo de una persona: 46 cromosomas organizados en 23 pares, como 23 volúmenes de una enciclopedia genética.</p>
+  </div>
+
+  <div class="card">
+    <h2>Configuración estándar</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Masculino</h4><p style="margin:0;">46, XY</p></div>
+      <div class="mini-card"><h4>Femenino</h4><p style="margin:0;">46, XX</p></div>
+    </div>
+    <table>
+      <tr><th>Tipo</th><th>Pares</th><th>Función</th></tr>
+      <tr><td>Autosómicos</td><td>1 al 22</td><td>No relacionados con el sexo biológico</td></tr>
+      <tr><td>Sexuales</td><td>Par 23</td><td>Determinan el sexo biológico (XX o XY)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Anatomía del cromosoma</h2>
+    <div class="chromo-viz">
+      <div class="chromo-item">
+        <svg width="70" height="140" viewBox="0 0 70 140">
+          <path d="M35 5 C15 5,15 45,35 65 C55 45,55 5,35 5" fill="none" stroke="#7c5cff" stroke-width="4"/>
+          <path d="M35 65 C15 85,15 130,35 135 C55 130,55 85,35 65" fill="none" stroke="#00d4b5" stroke-width="4"/>
+          <circle cx="35" cy="65" r="5" fill="#ffb454"/>
+          <text x="35" y="30" fill="#8b98ab" font-size="9" text-anchor="middle">Brazo P</text>
+          <text x="35" y="105" fill="#8b98ab" font-size="9" text-anchor="middle">Brazo Q</text>
+        </svg>
+        Metacéntrico
+      </div>
+    </div>
+    <table>
+      <tr><th>Parte</th><th>Descripción</th></tr>
+      <tr><td><b>Brazo P</b></td><td>El brazo más corto</td></tr>
+      <tr><td><b>Brazo Q</b></td><td>El brazo más largo</td></tr>
+      <tr><td><b>Centrómero</b></td><td>Región central que une los dos brazos</td></tr>
+      <tr><td><b>Telómero</b></td><td>Extremo del cromosoma; indicador crítico de la edad celular</td></tr>
+    </table>
+    <div class="mnemo"><b>Mnemotecnia:</b> "P de Petit (pequeño en francés) = brazo corto"</div>
+  </div>
+
+  <div class="card">
+    <h2>Clasificación según posición del centrómero</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Metacéntrico</h4><p style="margin:0; font-size:.88rem;">P y Q del mismo tamaño, centrómero perfectamente central.</p></div>
+      <div class="mini-card"><h4>Submetacéntrico</h4><p style="margin:0; font-size:.88rem;">P y Q similares, P levemente más corto.</p></div>
+      <div class="mini-card"><h4>Acrocéntrico</h4><p style="margin:0; font-size:.88rem;">Brazo P presente pero muy pequeño frente a Q.</p></div>
+      <div class="mini-card"><h4>Telocéntrico</h4><p style="margin:0; font-size:.88rem;">Centrómero casi en el extremo; prácticamente solo hay brazo Q.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MENDEL ============ -->
+<section class="section" id="mendel">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Leyes de Mendel y su aplicación médica</h2>
+    <p>Los tres principios que explican cómo se transmiten los rasgos de padres a hijos — y por qué una enfermedad recesiva puede "saltar" generaciones.</p>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th>Ley</th><th>Concepto</th><th>Implicación clínica</th></tr>
+      <tr><td><b>1ª — Segregación</b></td><td>Dos alelos se separan durante la formación de gametos</td><td>Padres sanos (portadores) pueden tener hijos afectados; la consanguinidad aumenta el riesgo</td></tr>
+      <tr><td><b>2ª — Segregación independiente</b></td><td>Genes en distintos pares cromosómicos se heredan de forma independiente</td><td>Los rasgos no se mezclan (ej: color de cabello independiente del color de ojos)</td></tr>
+      <tr><td><b>3ª — Dominancia y uniformidad</b></td><td>Un gen dominante suprime al recesivo; la F1 puede ser uniforme</td><td>El gen recesivo no desaparece, solo está "apagado" y puede reaparecer</td></tr>
+    </table>
+    <div class="analogy"><b>Analogía del interruptor:</b> el gen recesivo es como una luz apagada, no una bombilla rota. Sigue ahí, lista para "encenderse" si se combina con otro alelo recesivo en la siguiente generación.</div>
+  </div>
+
+  <div class="card">
+    <h3>Accordion de repaso rápido</h3>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">¿Por qué dos padres sanos tienen un hijo enfermo? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Porque ambos son heterocigotos (portadores, Aa). Según la 1ª Ley, cada uno transmite un alelo al azar. Existe 25% de probabilidad de que el hijo reciba el alelo recesivo de ambos padres (aa) y manifieste la condición.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">¿El color de ojos y el de cabello están ligados? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>No necesariamente. Si los genes están en cromosomas distintos, se heredan de forma independiente (2ª Ley), por lo que las combinaciones se distribuyen al azar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MUTACIONES ============ -->
+<section class="section" id="mutaciones">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Mutaciones y Alteraciones Cromosómicas</h2>
+    <p>La mutación no es sinónimo de enfermedad: es el motor de la evolución. Pero cuando ocurre en el lugar equivocado, puede desencadenar patología.</p>
+  </div>
+
+  <div class="card">
+    <h2>Mutaciones genéticas (a nivel de bases)</h2>
+    <table>
+      <tr><th>Tipo</th><th>Mecanismo</th></tr>
+      <tr><td><b>Deleción</b></td><td>Pérdida de una base o segmento del material genético</td></tr>
+      <tr><td><b>Adición</b></td><td>Inserción de una nueva base, alterando la lectura del gen</td></tr>
+      <tr><td><b>Sustitución</b></td><td>Reemplazo de una base por otra</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Alteraciones cromosómicas</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Aneuploidía</h4><p style="margin:0; font-size:.88rem;">Ganancia o pérdida de uno o pocos cromosomas individuales.</p></div>
+      <div class="mini-card"><h4>Poliploidía</h4><p style="margin:0; font-size:.88rem;">Alteración que afecta a todo el cariotipo globalmente.</p></div>
+    </div>
+    <h3>Mecanismos estructurales</h3>
+    <table>
+      <tr><th>Mecanismo</th><th>Subtipo</th><th>Descripción</th></tr>
+      <tr><td rowspan="2"><b>Inversión</b></td><td>Paracéntrica</td><td>Ocurre en un brazo, sin incluir el centrómero</td></tr>
+      <tr><td>Pericéntrica</td><td>Incluye el centrómero</td></tr>
+      <tr><td rowspan="2"><b>Deleción</b></td><td>Terminal</td><td>En el extremo del cromosoma</td></tr>
+      <tr><td>Intrínseca</td><td>En una sección media</td></tr>
+      <tr><td><b>Translocación</b></td><td>Recíproca</td><td>Intercambio de segmentos entre cromosomas no homólogos</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Nomenclatura de cariotipos — casos clínicos clásicos</h2>
+    <table>
+      <tr><th>Condición</th><th>Notación</th><th>Interpretación</th></tr>
+      <tr><td>Cri-du-chat</td><td>46,XX,del(5p)</td><td>Deleción parcial del brazo corto del cromosoma 5</td></tr>
+      <tr><td>Síndrome de Turner</td><td>45,X</td><td>Monosomía del cromosoma sexual</td></tr>
+      <tr><td>Síndrome de Down</td><td>47,XX,+21</td><td>Trisomía 21</td></tr>
+      <tr><td>Síndrome de Edwards</td><td>47,XY,+18</td><td>Trisomía 18</td></tr>
+      <tr><td>Translocación</td><td>46,XY,t(18p;21p)</td><td>Intercambio de brazos cortos, número total conservado</td></tr>
+    </table>
+    <div class="clinical"><b>Regla nemónica clínica:</b> el número antes de la coma SIEMPRE es el total de cromosomas; +21 o +18 = trisomía; una sola X = monosomía.</div>
+  </div>
+
+  <div class="card">
+    <h2>Mosaicismo</h2>
+    <p>Coexistencia de dos o más líneas celulares con distinto genotipo en un mismo individuo, originadas de un mismo cigoto por una mutación post-fecundación.</p>
+    <div class="analogy"><b>Analogía:</b> como una gata calicó, cuyo pelaje muestra parches de distintos colores porque distintos grupos de células expresan cariotipos diferentes en distintas zonas del cuerpo. Se escribe: 46,XY / 47,XY (el predominante primero).</div>
+  </div>
+</section>
+
+<!-- ============ HERENCIA ============ -->
+<section class="section" id="herencia">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Patrones de Herencia y Errores Innatos del Metabolismo</h2>
+    <p>La localización del gen — autosómico, ligado al X o mitocondrial — cambia por completo cómo se transmite una enfermedad en el árbol genealógico.</p>
+  </div>
+
+  <div class="card">
+    <h2>Herencia autosómica</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Recesiva</h4><p style="margin:0; font-size:.88rem;">Requiere homocigosis (aa) para manifestarse. Los heterocigotos son portadores sanos.</p></div>
+      <div class="mini-card"><h4>Dominante</h4><p style="margin:0; font-size:.88rem;">Un solo alelo dominante basta para manifestar el rasgo (heterocigoto u homocigoto).</p></div>
+    </div>
+    <div class="clinical"><b>Regla crítica de examen:</b> "No confundir al portador con el afectado". En el cruce de dos portadores (Aa x Aa), 25% de riesgo de hijo homocigoto recesivo afectado.</div>
+  </div>
+
+  <div class="card">
+    <h2>Herencia ligada al cromosoma X</h2>
+    <table>
+      <tr><th>Tipo</th><th>En hombres (XY)</th><th>En mujeres (XX)</th><th>Regla de transmisión</th></tr>
+      <tr><td><b>X Recesivo</b></td><td>Los más afectados (un solo X)</td><td>Generalmente solo portadoras</td><td>El padre afectado NO transmite al hijo varón; todas sus hijas serán portadoras</td></tr>
+      <tr><td><b>X Dominante</b></td><td>Alta letalidad, raramente nacen</td><td>Más frecuentes en clínica por mayor sobrevida</td><td>Hombre afectado → todas sus hijas afectadas, todos sus hijos sanos</td></tr>
+    </table>
+    <div class="mnemo"><b>Mnemotecnia:</b> "El padre le da el Y al hijo, nunca el X" — por eso un padre con condición X-ligada nunca transmite el alelo a sus hijos varones.</div>
+  </div>
+
+  <div class="card">
+    <h2>Herencia mitocondrial</h2>
+    <p>100% de origen materno. Una madre afectada transmite la condición a TODA su descendencia (sin importar el sexo). Un padre afectado NO transmite a ningún hijo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Errores Innatos del Metabolismo (EIM)</h2>
+    <p>Bloqueo en una vía metabólica: A → B → C. El bloqueo genera acumulación de A y déficit de B/C; a veces A se desvía a una vía tóxica generando D.</p>
+    <div class="grid-3">
+      <div class="mini-card">
+        <h4>Grupo 1 — Síntesis/Catabolismo</h4>
+        <p style="margin:0; font-size:.85rem;">Síntomas permanentes y progresivos desde el nacimiento, sin gatillo. Rasgos faciales toscos, hepato/esplenomegalia, declive cognitivo.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Grupo 2 — Intoxicación</h4>
+        <p style="margin:0; font-size:.85rem;">Depende de un gatillo (proteínas, azúcares, ayuno). Vómitos, diarrea, letargia. Ej: Fenilcetonuria, Fructosemia.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Grupo 3 — Energético</h4>
+        <p style="margin:0; font-size:.85rem;">Falla en glicogenólisis/gluconeogénesis. Hipoglucemia, hipotonía, miopatía, cardiomiopatía.</p>
+      </div>
+    </div>
+    <h3>Guía rápida de diagnóstico</h3>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">¿Constante y progresivo desde el nacimiento? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>→ Grupo 1</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">¿Aparece tras comer o ayunar? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>→ Grupo 2</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">¿Falla en distribución de energía / hipotonía? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>→ Grupo 3</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABO ============ -->
+<section class="section" id="abo">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>Sistema Sanguíneo ABO e Inmunología</h2>
+    <p>Un caso real de codominancia — y la base de toda transfusión segura.</p>
+  </div>
+
+  <div class="card">
+    <h2>Genotipos y fenotipos</h2>
+    <table>
+      <tr><th>Fenotipo</th><th>Genotipos posibles</th><th>Clasificación</th></tr>
+      <tr><td>A</td><td>I<sup>A</sup>I<sup>A</sup> / I<sup>A</sup>i</td><td>Homo o Heterocigoto</td></tr>
+      <tr><td>B</td><td>I<sup>B</sup>I<sup>B</sup> / I<sup>B</sup>i</td><td>Homo o Heterocigoto</td></tr>
+      <tr><td>AB</td><td>I<sup>A</sup>I<sup>B</sup></td><td>Heterocigoto (Codominancia)</td></tr>
+      <tr><td>O</td><td>ii</td><td>Homocigoto recesivo</td></tr>
+    </table>
+    <div class="analogy"><b>Analogía:</b> en AB no hay "ganador"; A y B se expresan al mismo tiempo, como dos banderas izadas juntas en el mismo mástil.</div>
+  </div>
+
+  <div class="card">
+    <h2>Antígenos y anticuerpos</h2>
+    <table>
+      <tr><th>Tipo</th><th>Aglutinógeno (antígeno)</th><th>Aglutinina (anticuerpo)</th></tr>
+      <tr><td>A</td><td>A</td><td>Anti-B</td></tr>
+      <tr><td>B</td><td>B</td><td>Anti-A</td></tr>
+      <tr><td>AB</td><td>A y B</td><td>Ninguna</td></tr>
+      <tr><td>O</td><td>Ninguno</td><td>Anti-A y Anti-B</td></tr>
+    </table>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Donante universal</h4><p style="margin:0;">O negativo (O⁻)</p></div>
+      <div class="mini-card"><h4>Receptor universal</h4><p style="margin:0;">AB positivo (AB⁺)</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Eritroblastosis fetal</h2>
+    <p>Ocurre cuando una madre Rh negativa gesta un hijo Rh positivo. El riesgo principal se manifiesta a partir del <b>segundo</b> embarazo, tras la sensibilización materna previa.</p>
+    <h3>Otros sistemas sanguíneos relevantes</h3>
+    <p>Duffy · Kell · Kidd · MN · Diego · Lutheran</p>
+  </div>
+
+  <div class="card">
+    <h2>Glosario complementario</h2>
+    <table>
+      <tr><td><b>Farmacogenética</b></td><td>Estudia cómo el fenotipo poblacional condiciona la respuesta a fármacos</td></tr>
+      <tr><td><b>Polimorfismo</b></td><td>Variación en una secuencia de ADN</td></tr>
+      <tr><td><b>Protooncogén</b></td><td>Gen regulador del crecimiento celular que, al mutar, puede volverse oncogén</td></tr>
+      <tr><td><b>Multifactorial</b></td><td>Condición con múltiples causas subyacentes</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ CRUCES COMPLEJOS ============ -->
+<section class="section" id="cruces">
+  <div class="hero">
+    <span class="eyebrow">Sección 7</span>
+    <h2>Cruzamientos Complejos y Herencia Ligada al Sexo</h2>
+    <p>La complejidad aparente de dos genes se resuelve con dos herramientas: distribución correcta de gametos y eliminación de redundancias en el cuadro de Punnett.</p>
+  </div>
+
+  <div class="card">
+    <h2>Formación de gametos (AaBb)</h2>
+    <p>Un individuo AaBb genera 4 combinaciones de gametos posibles:</p>
+    <div class="grid-3">
+      <div class="mini-card" style="text-align:center;"><b>AB</b></div>
+      <div class="mini-card" style="text-align:center;"><b>Ab</b></div>
+      <div class="mini-card" style="text-align:center;"><b>aB</b></div>
+      <div class="mini-card" style="text-align:center;"><b>ab</b></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Optimización del cuadro de Punnett</h2>
+    <table>
+      <tr><th>Cruce</th><th>Gametos únicos</th><th>Tamaño del cuadro</th></tr>
+      <tr><td>AaBb × AaBb</td><td>4 × 4</td><td>16 posibilidades</td></tr>
+      <tr><td>AABb × AaBb</td><td>2 × 4</td><td>8 posibilidades (mitad de trabajo)</td></tr>
+      <tr><td>AABB × AABB</td><td>1 × 1</td><td>100% mismo genotipo</td></tr>
+    </table>
+    <div class="mnemo"><b>Regla de oro:</b> si un progenitor es homocigoto para un gen, ese alelo es constante en todos sus gametos — no lo repitas en el cuadro.</div>
+  </div>
+
+  <div class="card">
+    <h2>Caso combinado: daltonismo + color de ojos</h2>
+    <p>Padre: X<sup>D</sup>Y Aa (visión normal, heterocigoto ojos) &nbsp;|&nbsp; Madre: X<sup>D</sup>X<sup>d</sup> Aa (portadora daltonismo, heterocigota ojos)</p>
+    <div class="punnett" style="grid-template-columns:repeat(3,64px);">
+      <div class="corner"></div><div class="hdr">X<sup>D</sup></div><div class="hdr">X<sup>d</sup></div>
+      <div class="hdr">X<sup>D</sup></div><div>X<sup>D</sup>X<sup>D</sup></div><div>X<sup>D</sup>X<sup>d</sup></div>
+      <div class="hdr">Y</div><div>X<sup>D</sup>Y</div><div>X<sup>d</sup>Y</div>
+    </div>
+    <ul style="color:#c8d1de; font-size:.9rem;">
+      <li><b>Hijas:</b> 100% normales visualmente (aunque algunas portadoras), heredan X<sup>D</sup> del padre.</li>
+      <li><b>Hijos varones:</b> 50% daltónicos si heredan X<sup>d</sup> de la madre.</li>
+      <li><b>Ojos:</b> se heredan de forma independiente, siguiendo las leyes mendelianas autosómicas.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Cálculo de probabilidades — Regla de tres</h2>
+    <p>Si el cuadro tiene 8 celdas totales (100%) y 2 celdas presentan el rasgo buscado:</p>
+    <div class="mnemo" style="text-align:center; font-size:1rem;">(2 × 100) / 8 = <b>25%</b></div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta. Luego califica tu nivel de recuerdo — esto ajusta tu XP y te ayuda a priorizar el repaso.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back">
+          <div id="fcBack"></div>
+        </div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata. Al finalizar verás tu puntaje y una tabla resumen de referencia.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Genética Humana P1 · Elaborado con Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ STATE & PERSISTENCE ============ */
+const STORAGE_KEY = 'genetica_p1_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.flashReview = state.flashReview || {};
+state.quizDone = state.quizDone || false;
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function addXP(amount, reason){
+  state.xp += amount;
+  saveState();
+  updateHeader();
+  showToast('+' + amount + ' XP · ' + reason);
+}
+
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const totalTabs = tabIds.length;
+  const visitedCount = Object.keys(state.visited).length;
+  const pct = Math.round((visitedCount/totalTabs)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+
+/* ============ TABS ============ */
+const tabIds = ['intro','cariotipo','mendel','mutaciones','herencia','abo','cruces','flashcards','quiz'];
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){
+      state.visited[tab] = true;
+      saveState();
+      addXP(10, 'Sección explorada');
+    }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ============ ACCORDION ============ */
+function toggleAcc(head){
+  head.parentElement.classList.toggle('open');
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Fundamentos', front:'¿Qué es el genotipo?', back:'El conjunto de genes o información codificada en el ADN de un individuo.'},
+  {tag:'Fundamentos', front:'¿Qué es el fenotipo?', back:'Las características morfológicas, bioquímicas y visibles de un organismo, resultado de Genotipo + Ambiente.'},
+  {tag:'Fundamentos', front:'Diferencia entre alelo y locus', back:'Alelo = versión variante de un gen. Locus = la ubicación física de ese gen en el cromosoma.'},
+  {tag:'Fundamentos', front:'¿Qué distingue a un portador de un afectado?', back:'El portador tiene el gen en su genotipo pero NO lo manifiesta; el afectado sí manifiesta la condición.'},
+  {tag:'Cariotipo', front:'¿Cuántos cromosomas y pares tiene el ser humano?', back:'46 cromosomas organizados en 23 pares.'},
+  {tag:'Cariotipo', front:'¿Qué diferencia a un cromosoma metacéntrico de uno acrocéntrico?', back:'Metacéntrico: brazos P y Q iguales, centrómero central. Acrocéntrico: brazo P muy pequeño frente a Q.'},
+  {tag:'Cariotipo', front:'¿Qué indica el telómero?', back:'Es un indicador crítico de la edad de la célula, ubicado en el extremo del cromosoma.'},
+  {tag:'Mendel', front:'¿Qué explica la 1ª Ley de Mendel (Segregación)?', back:'Que los dos alelos de una característica se separan durante la formación de gametos, explicando por qué padres sanos portadores pueden tener hijos afectados.'},
+  {tag:'Mendel', front:'¿Qué dice la 2ª Ley de Mendel?', back:'Que genes en diferentes pares cromosómicos se heredan de forma independiente (segregación independiente).'},
+  {tag:'Mendel', front:'¿El gen recesivo "desaparece" en la F1?', back:'No. Permanece "apagado" fenotípicamente y puede reaparecer en generaciones posteriores.'},
+  {tag:'Mutaciones', front:'Diferencia entre deleción, adición y sustitución', back:'Deleción: pérdida de una base. Adición: inserción de una nueva base. Sustitución: reemplazo de una base por otra.'},
+  {tag:'Mutaciones', front:'¿Qué es una aneuploidía?', back:'Alteración numérica que afecta a cromosomas individuales (ganancia o pérdida de uno o pocos).'},
+  {tag:'Mutaciones', front:'¿Cómo se escribe el cariotipo del Síndrome de Down?', back:'47, XX, +21 (o 47, XY, +21) — trisomía del cromosoma 21.'},
+  {tag:'Mutaciones', front:'¿Qué es el mosaicismo?', back:'Coexistencia de dos o más poblaciones celulares con distinto genotipo en un mismo individuo, originadas de un mismo cigoto.'},
+  {tag:'Herencia', front:'¿Cómo se transmite una condición mitocondrial?', back:'100% por vía materna: la madre afectada transmite a toda su descendencia; el padre afectado no transmite a ningún hijo.'},
+  {tag:'Herencia', front:'Herencia X-recesiva: ¿puede un padre afectado transmitir a su hijo varón?', back:'No. El padre transmite el Y al hijo varón, nunca el X. Todas sus hijas serán portadoras.'},
+  {tag:'Herencia', front:'Fenilcetonuria: ¿a qué grupo de EIM pertenece y por qué?', back:'Grupo 2 (Intoxicación), porque depende de un gatillo: la ingesta de alimentos con fenilalanina.'},
+  {tag:'ABO', front:'¿Por qué el tipo AB se considera codominancia?', back:'Porque los alelos I^A e I^B se expresan simultáneamente con la misma penetrancia, sin que uno suprima al otro.'},
+  {tag:'ABO', front:'¿Cuál es el donante universal y por qué?', back:'O negativo, porque no posee aglutinógenos (antígenos) A, B ni factor Rh que puedan generar reacción.'},
+  {tag:'ABO', front:'¿Cuándo aumenta el riesgo de eritroblastosis fetal?', back:'A partir del segundo embarazo de una madre Rh negativa con hijo Rh positivo, tras la sensibilización previa.'},
+];
+
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+
+function initFlashcards(){
+  if(fcOrder.length === 0){
+    fcOrder = flashData.map((_,i)=>i);
+  }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+function nextCard(){
+  fcPos = (fcPos + 1) % fcOrder.length;
+  renderCard();
+}
+function prevCard(){
+  fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length;
+  renderCard();
+}
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]];
+  }
+  fcPos = 0;
+  renderCard();
+  showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6];
+  const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'Un individuo posee alelos idénticos en el mismo locus. ¿Cómo se le denomina?', options:['Heterocigoto','Homocigoto','Portador obligado','Fenotípicamente mixto'], correct:1, exp:'Homocigoto = alelos idénticos en el mismo locus.'},
+  {q:'¿Cuál es el cariotipo normal de un varón?', options:['46, XX','45, X','46, XY','47, XY, +21'], correct:2, exp:'El cariotipo masculino normal es 46, XY.'},
+  {q:'Dos padres sanos tienen un hijo con una enfermedad recesiva. ¿Qué ley de Mendel lo explica y cuál es su condición genética?', options:['3ª Ley; ambos son homocigotos dominantes','1ª Ley; ambos son heterocigotos (portadores)','2ª Ley; uno de los padres es afectado','Ninguna ley; se debe a una mutación de novo'], correct:1, exp:'La 1ª Ley (Segregación) explica que dos portadores heterocigotos (Aa) puedan tener un hijo homocigoto recesivo (aa) afectado.'},
+  {q:'¿Qué mecanismo de mutación cromosómica ocurre cuando dos cromosomas no homólogos intercambian segmentos?', options:['Inversión pericéntrica','Deleción terminal','Translocación recíproca','Aneuploidía'], correct:2, exp:'La translocación recíproca es el intercambio de segmentos entre cromosomas no homólogos.'},
+  {q:'El cariotipo 47, XY, +18 corresponde a:', options:['Síndrome de Down','Síndrome de Turner','Síndrome de Edwards','Síndrome de Klinefelter'], correct:2, exp:'47, XY, +18 = trisomía 18 = Síndrome de Edwards.'},
+  {q:'Un padre presenta una enfermedad ligada al X recesivo. ¿Qué ocurre con su descendencia?', options:['Todos sus hijos varones estarán afectados','Todas sus hijas serán portadoras y ningún hijo varón recibe el alelo del padre','Todas sus hijas estarán afectadas','La enfermedad no se transmite a ningún descendiente'], correct:1, exp:'El padre transmite el Y a los hijos varones (no reciben el alelo) y el X afectado a todas sus hijas, que serán portadoras.'},
+  {q:'Una enfermedad mitocondrial en un padre afectado:', options:['Se transmite a todos los hijos e hijas','Se transmite solo a las hijas','No se transmite a ningún hijo','Se transmite solo a los hijos varones'], correct:2, exp:'La herencia mitocondrial es 100% materna; un padre afectado no transmite la condición.'},
+  {q:'Un paciente presenta hepatomegalia, rasgos faciales toscos y declive cognitivo progresivo desde el nacimiento, sin relación con la alimentación. ¿A qué grupo de EIM corresponde?', options:['Grupo 1','Grupo 2','Grupo 3','No es un EIM'], correct:0, exp:'Síntomas permanentes y progresivos desde el nacimiento sin gatillo alimentario = Grupo 1 (síntesis/catabolismo).'},
+  {q:'¿Cuál es el genotipo de una persona con sangre tipo AB?', options:['I^A i','I^B i','I^A I^B','ii'], correct:2, exp:'El tipo AB resulta del genotipo heterocigoto I^A I^B, con codominancia.'},
+  {q:'En un cruce AaBb × AaBb, ¿cuántas combinaciones de gametos únicos produce cada progenitor?', options:['2','4','8','16'], correct:1, exp:'Un individuo doble heterocigoto (AaBb) produce 4 combinaciones de gametos: AB, Ab, aB, ab.'},
+];
+
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+
+function initQuiz(){
+  quizIndex = 0; quizScore = 0; quizLog = [];
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){
+    renderQuizResult();
+    return;
+  }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{
+    html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>';
+  });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){
+  quizIndex++;
+  renderQuiz();
+}
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+/* ============ INIT ============ */
+updateHeader();
+</script>
+</body>
+</html>

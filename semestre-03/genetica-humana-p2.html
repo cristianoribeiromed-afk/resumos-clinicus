@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genética Humana P2 · Enfermedades Comunes</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#7c5cff;
+  --helix2:#00d4b5;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix2);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.15rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{
+  background:var(--card); color:var(--text-dim); border:1px solid var(--border);
+  padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer;
+  transition:.2s; display:flex; align-items:center; gap:6px;
+}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px; position:relative; overflow:hidden;
+}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,107,107,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(124,92,255,.1); border-left:4px solid var(--helix1); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--helix1);}
+.examfocus{background:rgba(255,180,84,.1); border-left:4px solid var(--amber); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.examfocus b{color:var(--amber);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.88rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--helix2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--helix2); font-size:.95rem; margin-bottom:6px;}
+
+.spectrum{display:flex; align-items:center; gap:0; margin:20px 0; border-radius:12px; overflow:hidden; border:1px solid var(--border);}
+.spectrum div{flex:1; padding:16px 10px; text-align:center; font-size:.82rem; font-weight:700;}
+.spectrum .env{background:rgba(0,212,181,.18); color:var(--helix2);}
+.spectrum .mix{background:rgba(124,92,255,.22); color:var(--helix1);}
+.spectrum .gen{background:rgba(255,107,107,.15); color:var(--red);}
+
+.risk-bar-wrap{margin:10px 0;}
+.risk-label{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:4px;}
+.risk-track{height:18px; background:var(--bg-alt); border-radius:8px; overflow:hidden; border:1px solid var(--border);}
+.risk-fill{height:100%; background:linear-gradient(90deg,var(--helix2),var(--amber),var(--red));}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.chromo-tag{display:inline-flex; align-items:center; gap:6px; background:rgba(124,92,255,.15); border:1px solid var(--helix1); color:var(--helix1); border-radius:999px; padding:4px 12px; font-size:.78rem; font-weight:700;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1a2338,#182233); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,181,.12)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d1117; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);}
+.btn-hard{background:var(--amber);}
+.btn-good{background:var(--helix2);}
+.btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--helix2); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999; display:flex; gap:8px; align-items:center;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/><line x1="12" y1="8" x2="28" y2="8" stroke="#8b98ab" stroke-width="1.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#8b98ab" stroke-width="1.5"/><line x1="12" y1="32" x2="28" y2="32" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Genética Humana · P2</h1>
+        <span>Factores Genéticos en Enfermedades Comunes · Cap. 15</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Multifactorial → Diabetes → Crohn → HTA → Coronariopatía → Epilepsia → Neurodesarrollo → Psiquiatría → Alzheimer → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">📌 Introducción</button>
+    <button class="tab-btn" data-tab="susceptibilidad">📊 Susceptibilidad</button>
+    <button class="tab-btn" data-tab="diabetes">🩸 Diabetes</button>
+    <button class="tab-btn" data-tab="crohn-hta">❤️ Crohn / HTA / Coronariopatía</button>
+    <button class="tab-btn" data-tab="epilepsia">⚡ Epilepsia</button>
+    <button class="tab-btn" data-tab="neurodesarrollo">🧠 Autismo y Síndromes</button>
+    <button class="tab-btn" data-tab="psiquiatria">🧩 Esquizofrenia</button>
+    <button class="tab-btn" data-tab="alzheimer">🧠 Alzheimer</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 15 · Enfermedades Comunes</span>
+    <h2>No toda genética médica trata de enfermedades raras</h2>
+    <p>La mayoría de las condiciones que un médico ve todos los días —diabetes, hipertensión, epilepsia— tienen un componente genético real, aunque no sigan un patrón mendeliano simple. Esta clase es la puerta de entrada a la <b>genética de poblaciones y medicina personalizada</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>El espectro: ambiente ↔ genes</h2>
+    <div class="spectrum">
+      <div class="env">Infecciosas<br><span style="font-weight:400; font-size:.75rem;">Predominio ambiental</span></div>
+      <div class="mix">Enfermedades comunes<br><span style="font-weight:400; font-size:.75rem;">Genes + Ambiente</span></div>
+      <div class="gen">Genéticas puras<br><span style="font-weight:400; font-size:.75rem;">Predominio génico</span></div>
+    </div>
+    <div class="examfocus"><b>Idea central de la clase:</b> las enfermedades comunes NO tienen herencia simple. Son el resultado de la mezcla entre múltiples genes y el ambiente — ni un extremo ni el otro.</div>
+  </div>
+
+  <div class="card">
+    <h2>Herencia multifactorial — el concepto clave de la prueba</h2>
+    <p>Es la interacción entre <b>múltiples genes</b> (cada uno con un efecto pequeño e individual) y <b>factores ambientales</b>. Ningún gen por sí solo determina la enfermedad; es la suma de pequeños empujones genéticos más el contexto ambiental lo que decide si la enfermedad se manifiesta.</p>
+    <div class="analogy"><b>Analogía del vaso que se llena:</b> imagina un vaso donde cada gen de riesgo añade una gota de agua, y cada factor ambiental (dieta, edad, toxinas) añade otra gota. La enfermedad aparece solo cuando el vaso se desborda. Ningún gen aislado llena el vaso por sí solo.</div>
+  </div>
+</section>
+
+<!-- ============ SUSCEPTIBILIDAD ============ -->
+<section class="section" id="susceptibilidad">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Tipos de Susceptibilidad Genética</h2>
+    <p>No toda predisposición genética funciona igual. Distinguir estos tres tipos es clave para interpretar casos clínicos.</p>
+  </div>
+  <div class="card">
+    <div class="grid-3">
+      <div class="mini-card">
+        <h4>1. Directa (definida)</h4>
+        <p style="margin:0; font-size:.88rem;">Base genética clara y bien identificada.<br><b>Ej:</b> hipercolesterolemia familiar.</p>
+      </div>
+      <div class="mini-card">
+        <h4>2. Ambiental</h4>
+        <p style="margin:0; font-size:.88rem;">La expresión depende fuertemente del ambiente.<br><b>Ej:</b> deficiencia de alfa-1 antitripsina.</p>
+      </div>
+      <div class="mini-card">
+        <h4>3. Multifactorial</h4>
+        <p style="margin:0; font-size:.88rem;">El tipo más común. Combinación de genética + ambiente sin un gen único responsable.</p>
+      </div>
+    </div>
+    <div class="mnemo"><b>Mnemotecnia:</b> "DAM" — Directa, Ambiental, Multifactorial — de la más "pura" en genes a la más mixta.</div>
+  </div>
+</section>
+
+<!-- ============ DIABETES ============ -->
+<section class="section" id="diabetes">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Diabetes Mellitus: Monogénica vs. Poligénica</h2>
+    <p>El ejemplo clásico para entender la diferencia entre "un solo gen defectuoso" y "muchos genes + estilo de vida".</p>
+  </div>
+  <div class="card">
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>🔹 Monogénica</h4>
+        <p style="margin:0 0 8px 0; font-size:.88rem;">Mutación en un solo gen. Herencia autosómica dominante.</p>
+        <table style="margin:0;">
+          <tr><th>Forma</th><th>Genes</th></tr>
+          <tr><td>Diabetes neonatal</td><td>KCNJ11, ABCC8, INS</td></tr>
+          <tr><td>MODY</td><td>HNF1A, HNF4A, GCK</td></tr>
+        </table>
+      </div>
+      <div class="mini-card">
+        <h4>🔹 Poligénica</h4>
+        <p style="margin:0; font-size:.88rem;">DM1 y DM2. Influencia de varios genes combinados con factores ambientales (dieta, obesidad, sedentarismo).</p>
+      </div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> ante un paciente joven con diabetes de inicio atípico y antecedente familiar autosómico dominante, sospechar MODY en lugar de DM1/DM2 clásica.</div>
+  </div>
+</section>
+
+<!-- ============ CROHN / HTA / CORONARIOPATÍA ============ -->
+<section class="section" id="crohn-hta">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Enfermedad de Crohn, Hipertensión y Coronariopatía</h2>
+    <p>Tres condiciones poligénicas con un hilo conductor sorprendente: el cromosoma 17.</p>
+  </div>
+
+  <div class="card">
+    <h2>Enfermedad de Crohn</h2>
+    <p>Enfermedad inflamatoria intestinal crónica, con más de <b>240 variantes genéticas</b> asociadas, muchas relacionadas con el sistema inmune.</p>
+    <div class="risk-bar-wrap">
+      <div class="risk-label"><span>Riesgo con familiar afectado</span><span>5–20× mayor</span></div>
+      <div class="risk-track"><div class="risk-fill" style="width:70%;"></div></div>
+    </div>
+    <div class="clinical"><b>Importante:</b> no tiene cura, solo control de los síntomas.</div>
+  </div>
+
+  <div class="card">
+    <h2>Hipertensión Arterial</h2>
+    <div class="examfocus"><b>Enfoque de prueba:</b> fuerte componente genético con relación directa al número de padres afectados.</div>
+    <div class="risk-bar-wrap">
+      <div class="risk-label"><span>Padres normales</span><span>~4%</span></div>
+      <div class="risk-track"><div class="risk-fill" style="width:8%;"></div></div>
+    </div>
+    <div class="risk-bar-wrap">
+      <div class="risk-label"><span>1 padre hipertenso</span><span>8–28%</span></div>
+      <div class="risk-track"><div class="risk-fill" style="width:35%;"></div></div>
+    </div>
+    <div class="risk-bar-wrap">
+      <div class="risk-label"><span>2 padres hipertensos</span><span>25–45%</span></div>
+      <div class="risk-track"><div class="risk-fill" style="width:60%;"></div></div>
+    </div>
+    <p><span class="chromo-tag">Cromosoma 17</span> — asociado a la susceptibilidad genética de la hipertensión.</p>
+  </div>
+
+  <div class="card">
+    <h2>Coronariopatía</h2>
+    <p>Relacionada con genes de tres vías principales:</p>
+    <div class="grid-3">
+      <div class="mini-card" style="text-align:center;"><h4>Colesterol</h4></div>
+      <div class="mini-card" style="text-align:center;"><h4>Inflamación</h4></div>
+      <div class="mini-card" style="text-align:center;"><h4>Coagulación</h4></div>
+    </div>
+    <p style="margin-top:10px;">También ligada al <span class="chromo-tag">Cromosoma 17</span>.</p>
+    <div class="mnemo"><b>Mnemotecnia:</b> "17 es el cromosoma del corazón y la presión" — útil para asociar HTA y coronariopatía en la prueba.</div>
+  </div>
+</section>
+
+<!-- ============ EPILEPSIA ============ -->
+<section class="section" id="epilepsia">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Epilepsia</h2>
+    <p>Enfermedad neurológica crónica cuya causa combina genes específicos de canales iónicos con factores ambientales.</p>
+  </div>
+  <div class="card">
+    <h2>Genes importantes</h2>
+    <div class="grid-3">
+      <div class="mini-card" style="text-align:center;"><b>SCN1A</b></div>
+      <div class="mini-card" style="text-align:center;"><b>SCN2A</b></div>
+      <div class="mini-card" style="text-align:center;"><b>GABRA1</b></div>
+    </div>
+    <p>Puede transmitirse por dos patrones:</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Autosómica dominante</h4></div>
+      <div class="mini-card"><h4>Autosómica recesiva</h4></div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> SCN1A y SCN2A codifican canales de sodio; GABRA1 un receptor de GABA (inhibitorio). Pensar en la epilepsia como un desequilibrio entre "acelerador" (canales de sodio hiperactivos) y "freno" (GABA insuficiente) en la actividad neuronal.</div>
+  </div>
+</section>
+
+<!-- ============ NEURODESARROLLO ============ -->
+<section class="section" id="neurodesarrollo">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>Autismo y Síndromes del Neurodesarrollo</h2>
+    <p>Trastornos que afectan comunicación, conducta e interacción social, con un fuerte componente genético asociado al cromosoma 7.</p>
+  </div>
+  <div class="card">
+    <h2>Autismo</h2>
+    <p>Afecta: comunicación, conducta, interacción social.</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Sindrómico</h4><p style="margin:0; font-size:.88rem;">Asociado a un síndrome genético identificable de base.</p></div>
+      <div class="mini-card"><h4>Aislado</h4><p style="margin:0; font-size:.88rem;">Se presenta sin un síndrome genético subyacente definido.</p></div>
+    </div>
+    <p style="margin-top:10px;"><span class="chromo-tag">Cromosoma 7</span> — relacionado con el autismo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Factores ambientales relevantes en neurodesarrollo</h2>
+    <div class="grid-4">
+      <div class="mini-card" style="text-align:center; font-size:.82rem;">Edad avanzada de los padres</div>
+      <div class="mini-card" style="text-align:center; font-size:.82rem;">Complicaciones perinatales</div>
+      <div class="mini-card" style="text-align:center; font-size:.82rem;">Infecciones o toxinas</div>
+      <div class="mini-card" style="text-align:center; font-size:.82rem;">Prematuridad</div>
+    </div>
+    <div class="mini-card" style="text-align:center; font-size:.82rem; margin-top:12px;">Deficiencia de ácido fólico</div>
+  </div>
+
+  <div class="card">
+    <h2>Síndromes asociados al neurodesarrollo</h2>
+    <div class="grid-4">
+      <div class="mini-card" style="text-align:center;"><h4>X frágil</h4></div>
+      <div class="mini-card" style="text-align:center;"><h4>Rett</h4></div>
+      <div class="mini-card" style="text-align:center;"><h4>Angelman</h4></div>
+      <div class="mini-card" style="text-align:center;"><h4>Williams</h4></div>
+    </div>
+    <div class="examfocus" style="margin-top:12px;"><b>Todos son relevantes en neurodesarrollo</b> — reconocer sus nombres es suficiente para el nivel de esta clase.</div>
+  </div>
+</section>
+
+<!-- ============ PSIQUIATRÍA ============ -->
+<section class="section" id="psiquiatria">
+  <div class="hero">
+    <span class="eyebrow">Sección 7</span>
+    <h2>Esquizofrenia</h2>
+    <p>Un trastorno mental grave que suele confundirse en exámenes con una entidad de menor severidad.</p>
+  </div>
+  <div class="card">
+    <p>Trastorno mental grave que afecta el pensamiento y el comportamiento.</p>
+    <div class="clinical"><b>Trampa clásica de examen:</b> no confundir la <b>Esquizofrenia</b> (trastorno grave) con el <b>Trastorno esquizoide</b> (de personalidad, mucho menos grave).</div>
+  </div>
+</section>
+
+<!-- ============ ALZHEIMER ============ -->
+<section class="section" id="alzheimer">
+  <div class="hero">
+    <span class="eyebrow">Sección 8</span>
+    <h2>Enfermedad de Alzheimer</h2>
+    <p>La principal causa de demencia, y uno de los mejores ejemplos de cómo un mismo diagnóstico clínico puede tener orígenes genéticos completamente distintos según la edad de inicio.</p>
+  </div>
+  <div class="card">
+    <h2>Características generales</h2>
+    <p>Enfermedad neurodegenerativa caracterizada por la acumulación de proteínas anormales en el cerebro.</p>
+  </div>
+  <div class="card">
+    <h2>Tipos de Alzheimer</h2>
+    <table>
+      <tr><th>Tipo</th><th>Inicio</th><th>Herencia / Frecuencia</th><th>Genes</th></tr>
+      <tr><td><b>Inicio temprano</b></td><td>Antes de los 65 años</td><td>Genético — autosómico dominante</td><td>PSEN1, PSEN2, APP</td></tr>
+      <tr><td><b>Inicio tardío</b></td><td>Después de los 65 años</td><td>Multifactorial — el más común</td><td>—</td></tr>
+      <tr><td><b>Rápido</b></td><td>Variable</td><td>Muy raro</td><td>PRNP</td></tr>
+    </table>
+    <div class="mnemo"><b>Mnemotecnia:</b> "PSEN1, PSEN2, APP = Antes de los 65, Patrón mendeliano Puro" — asocia las tres letras clave (P) con el Alzheimer de inicio temprano.</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back">
+          <div id="fcBack"></div>
+        </div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Genética Humana P2 · Elaborado con Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'genetica_p2_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function addXP(amount, reason){
+  state.xp += amount;
+  saveState();
+  updateHeader();
+  showToast('+' + amount + ' XP · ' + reason);
+}
+
+const tabIds = ['intro','susceptibilidad','diabetes','crohn-hta','epilepsia','neurodesarrollo','psiquiatria','alzheimer','flashcards','quiz'];
+
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const totalTabs = tabIds.length;
+  const visitedCount = Object.keys(state.visited).length;
+  const pct = Math.round((visitedCount/totalTabs)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){
+      state.visited[tab] = true;
+      saveState();
+      addXP(10, 'Sección explorada');
+    }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Introducción', front:'¿Qué distingue a las "enfermedades comunes" de las genéticas puras?', back:'No tienen herencia simple; son el resultado de la combinación entre múltiples genes y factores ambientales (herencia multifactorial).'},
+  {tag:'Multifactorial', front:'¿Qué es la herencia multifactorial?', back:'La interacción de múltiples genes (cada uno con pequeño efecto) más factores ambientales, cuya suma determina la aparición de la enfermedad.'},
+  {tag:'Susceptibilidad', front:'Da un ejemplo de susceptibilidad genética directa (definida)', back:'Hipercolesterolemia familiar — tiene una base genética clara.'},
+  {tag:'Susceptibilidad', front:'Da un ejemplo de susceptibilidad ambiental', back:'Deficiencia de alfa-1 antitripsina, cuya expresión depende fuertemente del ambiente.'},
+  {tag:'Diabetes', front:'¿Qué genes se asocian a la diabetes neonatal monogénica?', back:'KCNJ11, ABCC8 e INS, con herencia autosómica dominante.'},
+  {tag:'Diabetes', front:'¿Qué genes se asocian al MODY?', back:'HNF1A, HNF4A y GCK.'},
+  {tag:'Diabetes', front:'¿DM1 y DM2 son monogénicas o poligénicas?', back:'Poligénicas — influencia de varios genes combinados con el ambiente.'},
+  {tag:'Crohn', front:'¿Cuántas variantes genéticas se asocian a la Enfermedad de Crohn?', back:'Más de 240 variantes, muchas relacionadas con el sistema inmune.'},
+  {tag:'Crohn', front:'¿Cuál es el riesgo de Crohn si hay un familiar afectado?', back:'De 5 a 20 veces mayor que en la población general.'},
+  {tag:'HTA', front:'¿Cuál es el riesgo de hipertensión si ambos padres son hipertensos?', back:'Entre 25% y 45%, frente a solo ~4% si los padres son normotensos.'},
+  {tag:'HTA', front:'¿Con qué cromosoma se relacionan la hipertensión y la coronariopatía?', back:'Ambas se relacionan con el cromosoma 17.'},
+  {tag:'Coronariopatía', front:'¿Qué tres vías genéticas se relacionan con la coronariopatía?', back:'Genes de colesterol, inflamación y coagulación.'},
+  {tag:'Epilepsia', front:'¿Qué genes clave se asocian a la epilepsia?', back:'SCN1A, SCN2A y GABRA1.'},
+  {tag:'Epilepsia', front:'¿Qué patrones de herencia puede seguir la epilepsia genética?', back:'Autosómica dominante o autosómica recesiva.'},
+  {tag:'Autismo', front:'¿Con qué cromosoma se relaciona el autismo?', back:'Cromosoma 7.'},
+  {tag:'Autismo', front:'¿Cuáles son los dos tipos de autismo mencionados?', back:'Sindrómico (asociado a un síndrome genético) y Aislado (sin síndrome de base).'},
+  {tag:'Neurodesarrollo', front:'Nombra 4 síndromes asociados al neurodesarrollo', back:'X frágil, Rett, Angelman y Williams.'},
+  {tag:'Psiquiatría', front:'¿Cuál es la diferencia entre esquizofrenia y trastorno esquizoide?', back:'La esquizofrenia es un trastorno mental grave; el trastorno esquizoide es de personalidad y mucho menos grave.'},
+  {tag:'Alzheimer', front:'¿Qué genes se asocian al Alzheimer de inicio temprano?', back:'PSEN1, PSEN2 y APP, con herencia autosómica dominante, antes de los 65 años.'},
+  {tag:'Alzheimer', front:'¿Qué tipo de Alzheimer es el más común y cómo se hereda?', back:'El de inicio tardío (después de los 65 años), de herencia multifactorial.'},
+  {tag:'Alzheimer', front:'¿Qué gen se asocia a la forma rápida y muy rara de Alzheimer?', back:'El gen PRNP.'},
+];
+
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]];
+  }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6];
+  const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Cuál es el concepto clave que define a las enfermedades comunes según esta clase?', options:['Herencia mendeliana simple','Herencia multifactorial (genes + ambiente)','Origen exclusivamente ambiental','Mutación en un solo gen'], correct:1, exp:'Las enfermedades comunes se explican por herencia multifactorial: múltiples genes de pequeño efecto combinados con el ambiente.'},
+  {q:'La hipercolesterolemia familiar es un ejemplo de susceptibilidad genética de tipo:', options:['Ambiental','Multifactorial','Directa (definida)','Poligénica pura'], correct:2, exp:'Tiene una base genética clara y bien identificada, por eso se clasifica como susceptibilidad directa.'},
+  {q:'Un paciente joven con diabetes de inicio atípico y patrón familiar autosómico dominante probablemente tiene:', options:['DM1 clásica','DM2 poligénica','MODY','Diabetes gestacional'], correct:2, exp:'El MODY es monogénico (genes HNF1A, HNF4A, GCK) con herencia autosómica dominante, a diferencia de la DM1/DM2 poligénicas.'},
+  {q:'¿Cuántas variantes genéticas se han asociado a la Enfermedad de Crohn?', options:['Menos de 10','Alrededor de 50','Más de 240','Solo 1 gen principal'], correct:2, exp:'Se han identificado más de 240 variantes genéticas, muchas relacionadas con el sistema inmune.'},
+  {q:'Si ambos padres son hipertensos, ¿cuál es el riesgo aproximado de que el hijo desarrolle hipertensión?', options:['4%','8-28%','25-45%','Prácticamente 100%'], correct:2, exp:'Con dos padres hipertensos el riesgo sube a 25-45%, frente al 4% de padres normotensos.'},
+  {q:'La hipertensión y la coronariopatía comparten una asociación genética común con el:', options:['Cromosoma 7','Cromosoma 17','Cromosoma 21','Cromosoma X'], correct:1, exp:'Ambas condiciones están relacionadas con el cromosoma 17.'},
+  {q:'¿Qué gen NO pertenece al grupo asociado a la epilepsia genética?', options:['SCN1A','SCN2A','GABRA1','APP'], correct:3, exp:'APP se asocia al Alzheimer de inicio temprano, no a la epilepsia. Los genes de epilepsia son SCN1A, SCN2A y GABRA1.'},
+  {q:'El autismo se asocia genéticamente principalmente al:', options:['Cromosoma 5','Cromosoma 7','Cromosoma 17','Cromosoma 21'], correct:1, exp:'El autismo tiene una relación descrita con el cromosoma 7.'},
+  {q:'¿Cuál es la diferencia clave entre esquizofrenia y trastorno esquizoide?', options:['No hay diferencia, son sinónimos','La esquizofrenia es un trastorno mental grave; el esquizoide es de personalidad y menos grave','El trastorno esquizoide es más grave que la esquizofrenia','La esquizofrenia solo afecta a niños'], correct:1, exp:'Es una trampa clásica de examen: la esquizofrenia es mucho más grave que el trastorno esquizoide de personalidad.'},
+  {q:'El Alzheimer de inicio temprano (antes de los 65 años) se asocia a los genes:', options:['SCN1A, SCN2A, GABRA1','KCNJ11, ABCC8, INS','PSEN1, PSEN2, APP','HNF1A, HNF4A, GCK'], correct:2, exp:'El Alzheimer de inicio temprano es genético, autosómico dominante, y se asocia a PSEN1, PSEN2 y APP.'},
+];
+
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{
+    html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>';
+  });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>

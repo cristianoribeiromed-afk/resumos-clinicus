@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genética Humana — Genética do Câncer (Cap. 14) | Plataforma Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1418; --surface:#141e24; --surface-2:#1a262e; --line:#2a3b44;
+  --text:#e9f2f5; --text-dim:#b3c4cb; --text-faint:#78909c;
+  --aqua:#4fc3e0; --aqua-deep:#2f92ac; --gold:#e8c27a; --gold-deep:#c9a227;
+  --good:#7ec98a; --good-bg:#1f2e21; --bad:#e2695f; --bad-bg:#332321; --violet:#a389d4;
+  --radius:14px; --serif:'Lora',Georgia,serif; --sans:'DM Sans',-apple-system,sans-serif; --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%, rgba(79,195,224,0.08), transparent 55%),radial-gradient(ellipse at 92% 15%, rgba(232,194,122,0.05), transparent 50%),var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px 90px;}
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,20,24,0.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:14px 20px;}
+.top-inner{max-width:940px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--aqua-deep),var(--gold-deep));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.stat-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.badge{color:var(--aqua);}
+.xp-bar-wrap{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:10px;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--aqua-deep),var(--aqua));width:0%;transition:width .5s ease;}
+
+nav.tabs{display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--sans);font-weight:600;font-size:13px;background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:all .18s ease;flex-shrink:0;}
+.tab-btn:hover{border-color:var(--aqua);color:var(--text);}
+.tab-btn.active{background:var(--aqua);border-color:var(--aqua);color:#06181d;}
+
+.hero{padding:28px 0 6px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--aqua);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(21px,4vw,28px);margin:8px 0 8px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:13.5px;max-width:680px;}
+
+.notice{background:rgba(232,194,122,0.08);border:1px solid rgba(232,194,122,0.3);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:13px;color:var(--gold);}
+
+section.panel{display:none;padding-top:16px;}
+section.panel.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.block h3{font-family:var(--serif);font-size:17px;color:var(--aqua);margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+.block h4{font-family:var(--serif);font-size:14.5px;color:var(--gold);margin:16px 0 6px;}
+.block ul{margin:6px 0 6px 18px;padding:0;font-size:13.8px;color:var(--text-dim);}
+.block li{margin-bottom:5px;}
+.block li b, .block strong{color:var(--text);}
+.block p{font-size:13.8px;color:var(--text-dim);margin:6px 0;}
+table.quicktab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+table.quicktab th{text-align:left;background:var(--surface-2);color:var(--aqua);padding:7px 10px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+table.quicktab td{padding:7px 10px;border-bottom:1px solid var(--line);color:var(--text-dim);}
+table.quicktab td b{color:var(--text);}
+.mnemo{background:var(--surface-2);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);margin:10px 0;}
+.mnemo b{color:var(--gold);}
+.clinico{background:rgba(79,195,224,0.08);border-left:3px solid var(--aqua);border-radius:8px;padding:10px 14px;font-size:13px;color:#b8e6f2;margin:10px 0;}
+.clinico b{color:var(--aqua);}
+.trap{background:rgba(226,105,95,0.08);border-left:3px solid var(--bad);border-radius:8px;padding:10px 14px;font-size:13px;color:#f0b3ac;margin:10px 0;}
+.trap b{color:var(--bad);}
+.part-intro{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;border-left:3px solid var(--aqua);padding-left:12px;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:12.8px;color:var(--text-dim);}
+.al-box .al-title{font-family:var(--serif);font-weight:700;font-size:13px;margin-bottom:6px;}
+.al-box.remember .al-title{color:var(--good);}
+.al-box.errors .al-title{color:var(--bad);}
+.al-box.quick .al-title{color:var(--aqua);}
+.al-box.self .al-title{color:var(--violet);}
+.al-box.quick .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--good);}
+.al-box.quick .qq-answer.show{display:block;}
+.qq-btn{margin-top:8px;font-size:11.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);color:var(--aqua);padding:5px 10px;border-radius:7px;cursor:pointer;}
+
+.caso-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;}
+.caso-tag{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:4px 10px;border-radius:99px;margin-bottom:10px;}
+.caso-tag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.caso-tag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.caso-tag.avancado{background:rgba(226,105,95,0.15);color:var(--bad);}
+.caso-tag.pratica{background:rgba(163,137,212,0.15);color:var(--violet);}
+.caso-hist{font-size:13.8px;color:var(--text-dim);margin-bottom:12px;}
+.caso-hist b{color:var(--text);}
+.caso-q{margin-top:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.caso-q p{font-weight:600;color:var(--text);font-size:13.5px;margin-bottom:6px;}
+.caso-reveal-btn{font-size:12px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);color:var(--aqua);padding:7px 14px;border-radius:8px;cursor:pointer;}
+.caso-answer{display:none;margin-top:10px;background:var(--surface-2);border-left:3px solid var(--good);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text-dim);}
+.caso-answer.show{display:block;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.fc-progress{font-size:12px;color:var(--text-faint);margin-bottom:14px;}
+.flashcard{width:100%;max-width:480px;height:220px;perspective:1200px;cursor:pointer;margin-bottom:18px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;}
+.fc-front{background:var(--surface);}
+.fc-front .term{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--aqua);}
+.fc-back{background:var(--surface-2);transform:rotateY(180deg);}
+.fc-back .def{font-size:14px;color:var(--text-dim);line-height:1.6;}
+.fc-hint{font-size:11px;color:var(--text-faint);margin-top:-8px;margin-bottom:16px;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.fc-btn{font-family:var(--sans);font-weight:700;font-size:13px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--text);transition:all .15s ease;}
+.fc-btn:hover{border-color:var(--aqua);}
+.fc-btn.know{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.fc-btn.review{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.qnum{font-family:var(--serif);font-weight:700;color:var(--aqua);font-size:14px;background:rgba(79,195,224,0.12);width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qtag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;padding:3px 7px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:14.5px;color:var(--text);flex-basis:100%;line-height:1.5;}
+.alts{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.alt-btn{text-align:left;font-family:var(--sans);font-size:13.5px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);padding:10px 13px;border-radius:9px;cursor:pointer;transition:all .15s ease;display:flex;gap:8px;}
+.alt-btn:hover:not(:disabled){border-color:var(--aqua);background:rgba(79,195,224,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--aqua);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.4;}
+.feedback{margin-top:12px;padding:11px 13px;border-radius:9px;font-size:13px;display:none;line-height:1.5;}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.vf-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);}
+.vf-item:first-of-type{border-top:none;}
+.vf-text{flex:1;font-size:13.6px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);font-size:12px;transition:all .15s ease;}
+.vf-btn:hover:not(:disabled){border-color:var(--aqua);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;display:block;}
+.assoc-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-family:var(--sans);font-size:13px;font-weight:600;border-radius:8px;padding:6px 8px;width:60px;flex-shrink:0;cursor:pointer;}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:12.6px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{font-family:var(--sans);font-weight:700;font-size:13px;background:var(--aqua);color:#06181d;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all .15s ease;}
+.btn:hover{background:#6fd4ee;}
+.result-hero{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px 20px;margin-bottom:20px;}
+.result-hero .big-score{font-family:var(--serif);font-size:46px;font-weight:700;color:var(--aqua);}
+.result-hero .big-score span{font-size:20px;color:var(--text-faint);}
+.result-hero .medal{font-size:40px;margin-top:8px;}
+.result-hero .medal-label{font-family:var(--serif);font-size:15px;color:var(--gold);margin-top:4px;}
+footer.note{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--text-faint);font-size:11.5px;text-align:center;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🎗️</div>
+      <div class="brand-text">
+        <h1>Genética do Câncer — Cap. 14</h1>
+        <span>Oncogênese · TSG/Protooncogenes · Genes Específicos</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill badge" id="badgePill">🥉 Iniciante</div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+  <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Plataforma interativa de estudo</div>
+    <h2>Genética do Câncer — Bases moleculares da oncogênese</h2>
+    <p>Introdução ao câncer como doença genética, tipos de câncer, oncogênese, TSG/protooncogenes/oncogenes, e os principais genes envolvidos (TP53, BRCA1/2, PTEN, RB1, APC, BRIP1) — com casos clínicos, flashcards e quiz.</p>
+  </div>
+
+  <div class="notice">⚠️ <b>Nota importante:</b> vários slides deste material (sobre translocação, miARN, mecanismo detalhado dos TSG e tratamentos) contêm apenas diagramas/imagens, sem texto extraível. Este resumo cobre fielmente os <b>conceitos que vieram em texto</b> — os mecanismos visuais específicos de cada slide precisam ser complementados com o material original.</div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="introducao">🧪 Introdução</button>
+    <button class="tab-btn" data-tab="tipos">📊 Tipos de Câncer</button>
+    <button class="tab-btn" data-tab="oncogenese">⚙️ Oncogênese</button>
+    <button class="tab-btn" data-tab="categorias">🧬 TSG · Protooncogene · Oncogene</button>
+    <button class="tab-btn" data-tab="genes">🔬 Genes Específicos</button>
+    <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="flash">🎴 Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+
+  <!-- INTRODUÇÃO -->
+  <section class="panel active" id="introducao">
+    <div class="block">
+      <h3>O câncer em números</h3>
+      <ul>
+        <li>Uma das doenças mais frequentes e graves da medicina clínica</li>
+        <li>Causa de <b>mais de 20%</b> de todos os falecimentos</li>
+        <li>Nos países desenvolvidos, responsável por <b>mais de 10%</b> do custo econômico total da assistência sanitária</li>
+      </ul>
+      <p>O diagnóstico precoce e o tratamento precoce são fundamentais, e a identificação de pessoas com risco aumentado de câncer, antes de desenvolverem a doença, é um objetivo importante da pesquisa.</p>
+      <div class="clinico"><b>Ponto-chave do capítulo:</b> o câncer é fundamentalmente uma doença GENÉTICA.</div>
+    </div>
+    <div class="block">
+      <h3>O que é câncer, afinal?</h3>
+      <p>Câncer não é uma única doença, mas um termo usado para descrever as formas mais agressivas de <b>neoplasia</b> — processo patológico caracterizado por proliferação celular incontrolada, com aparecimento de uma massa (tumor).</p>
+      <table class="quicktab">
+        <tr><th>Tipo de tumor</th><th>Comportamento</th></tr>
+        <tr><td><b>Maligno (câncer)</b></td><td>Crescimento descontrolado; infiltra tecidos adjacentes; pode metastatizar (disseminar)</td></tr>
+        <tr><td><b>Benigno</b></td><td>NÃO infiltra nem metastatiza (mas seu tamanho/localização ainda pode causar problemas graves)</td></tr>
+      </table>
+      <p>Os tumores podem ter origem genética ou ambiental.</p>
+      <div class="trap"><b>Pegadinha clássica:</b> um tumor benigno pode ser grande e perigoso pela localização (ex: comprimindo uma estrutura vital), mas NÃO é câncer, pois não invade nem metastatiza.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Câncer = neoplasia maligna (invade + metastatiza). Benigno = não invade nem metastatiza. Câncer >20% dos óbitos.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que "tumor" é sinônimo de "câncer" — todo câncer é tumor, mas nem todo tumor é câncer (tumor benigno existe).</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual é a característica que diferencia um tumor maligno de um benigno?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">A capacidade de infiltrar tecidos adjacentes e metastatizar (disseminar).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a identificação precoce de pessoas com risco aumentado de câncer é um objetivo importante da pesquisa, mesmo antes de elas adoecerem?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPOS DE CÂNCER -->
+  <section class="panel" id="tipos">
+    <div class="block">
+      <h3>Classificação dos tipos de câncer por origem tecidual</h3>
+      <table class="quicktab">
+        <tr><th>Tipo</th><th>Origem tecidual</th></tr>
+        <tr><td><b>Sarcomas</b></td><td>Ossos, músculos, tecidos conjuntivos e tecido nervoso</td></tr>
+        <tr><td><b>Carcinomas</b></td><td>Tecido epitelial (ex: intestino, brônquios, ductos mamários)</td></tr>
+        <tr><td><b>Tumores malignos hematopoiéticos e linfoides</b></td><td>Medula óssea, sistema linfático e sangue periférico</td></tr>
+      </table>
+      <div class="mnemo"><b>Dica:</b> "SARComa = SARam do esqueleto/músculo/conjuntivo. CARcinoma = CApa Epitelial." Sarcoma vem do tecido de sustentação; carcinoma do tecido de revestimento.</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Sarcoma = osso/músculo/conjuntivo/nervoso. Carcinoma = epitelial. Hematopoiético/linfoide = medula óssea/sangue/sistema linfático.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que o câncer de intestino é um sarcoma — na verdade é carcinoma, pois o intestino é revestido por tecido epitelial.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Um câncer originado nos ductos mamários é classificado como qual tipo?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Carcinoma (origem em tecido epitelial).</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que os tumores da medula óssea e do sistema linfático formam uma categoria separada de sarcomas e carcinomas?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONCOGÊNESE -->
+  <section class="panel" id="oncogenese">
+    <div class="block">
+      <h3>O que é oncogênese?</h3>
+      <p>O desenvolvimento do câncer (oncogênese) se deve a <b>mutações</b> em um ou mais dos numerosos genes que regulam o crescimento celular e a morte celular programada (apoptose). Pode ser considerada por fatores <b>internos</b> ou <b>externos</b>.</p>
+    </div>
+    <div class="block">
+      <h3>Câncer esporádico × Câncer hereditário</h3>
+      <table class="quicktab">
+        <tr><th>Forma</th><th>Origem</th></tr>
+        <tr><td><b>Esporádica</b></td><td>Aparece em um indivíduo isoladamente, como consequência de uma <b>mutação somática</b></td></tr>
+        <tr><td><b>Hereditária</b></td><td>Aparece de forma repetida em muitos indivíduos de uma família, como resultado de um <b>traço hereditário</b></td></tr>
+      </table>
+      <div class="clinico"><b>Ponto central do capítulo:</b> independentemente de aparecer esporadicamente (mutação somática) ou de forma hereditária (traço familiar), o câncer é, em sua essência, <b>uma doença genética</b>.</div>
+      <div class="mnemo"><b>Dica:</b> "Esporádica = mutação SOMÁTICA (uma célula, um indivíduo). Hereditária = mutação GERMINATIVA (transmitida na família)."</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Oncogênese = mutações em genes de crescimento/morte celular. Câncer é sempre genético — seja esporádico (mutação somática) ou hereditário (traço familiar).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que só o câncer "hereditário/familiar" é genético — o esporádico TAMBÉM é genético, só que por mutação somática adquirida, não herdada.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Um câncer que aparece em um único membro da família, sem histórico familiar, ainda é considerado uma doença genética?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Sim — é genético por mutação somática esporádica, mesmo sem ser hereditário/familiar.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que uma mutação somática (não herdada) ainda classifica o câncer como uma "doença genética"?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIAS DE GENES -->
+  <section class="panel" id="categorias">
+    <div class="block">
+      <h3>As 3 categorias-chave de genes do câncer</h3>
+      <table class="quicktab">
+        <tr><th>Categoria</th><th>Função</th></tr>
+        <tr><td><b>TSG</b> (Genes Supressores de Tumor)</td><td>Normalmente freiam o crescimento celular; sua perda de função compromete o genoma</td></tr>
+        <tr><td><b>Protooncogene</b></td><td>Versão normal do gene, que regula positivamente o crescimento celular de forma controlada</td></tr>
+        <tr><td><b>Oncogene</b></td><td>Versão mutada/ativada do protooncogene, que promove o crescimento celular de forma descontrolada</td></tr>
+      </table>
+      <h4>Funções associadas a esses genes</h4>
+      <ul>
+        <li>Proteínas pertencentes às vias de sinalização da proliferação celular</li>
+        <li>Fatores de transcrição que controlam a expressão gênica</li>
+        <li>Genes promotores do crescimento</li>
+        <li>Inibidores dos mecanismos de morte celular programada (apoptose)</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>Consequências da perda de função dos TSG</h3>
+      <p>Se os TSG perdem a função, o genoma fica comprometido, afetando:</p>
+      <ul>
+        <li>Proteínas responsáveis pela detecção e reparo de mutações</li>
+        <li>Proteínas envolvidas nas disjunções cromossômicas normais durante a mitose</li>
+        <li>Componentes do dispositivo de morte celular programada (apoptose)</li>
+      </ul>
+      <div class="trap"><b>Pegadinha clássica:</b> Protooncogene NÃO é a mesma coisa que Oncogene — o protooncogene é a versão NORMAL (controlada) do gene; o oncogene é a versão MUTADA (descontrolada). Um protooncogene "vira" oncogene através de mutação.</div>
+      <div class="mnemo"><b>Dica:</b> "TSG FREIA. Protooncogene ACELERA (controlado). Oncogene ACELERA sem freio (mutado)."</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>TSG = freio do crescimento. Protooncogene = acelerador controlado. Oncogene = acelerador sem controle (protooncogene mutado).</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Achar que TSG e protooncogene têm a mesma função — TSG FREIA o crescimento, protooncogene PROMOVE (de forma controlada) o crescimento.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>O que acontece quando um protooncogene sofre mutação?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">Ele se torna um oncogene, promovendo o crescimento celular de forma descontrolada.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que a perda de função de um TSG (que "freia" o crescimento) e o ganho de função de um oncogene (que "acelera" o crescimento) levam ao mesmo resultado final?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENES ESPECÍFICOS -->
+  <section class="panel" id="genes">
+    <div class="block">
+      <h3>Genes-chave que controlam o desenvolvimento do câncer</h3>
+      <table class="quicktab">
+        <tr><th>Gene</th><th>Proteína / Função</th></tr>
+        <tr><td><b>TP53</b></td><td>Produz a proteína <b>p53</b>, que protege o DNA da célula e pode ativar a <b>apoptose</b> (morte celular programada) se houver danos irreparáveis no DNA</td></tr>
+        <tr><td><b>BRCA1 e BRCA2</b></td><td>Produzem proteínas que ajudam a <b>reparar danos no DNA</b>. Mutações aumentam a suscetibilidade a câncer de mama, ovário e outros</td></tr>
+        <tr><td><b>PTEN</b></td><td>Produz a proteína PTEN, que regula o crescimento celular e previne a proliferação descontrolada</td></tr>
+        <tr><td><b>RB1</b></td><td>Produz a proteína RB1, que controla a divisão celular e previne a proliferação descontrolada</td></tr>
+        <tr><td><b>APC</b></td><td>Produz a proteína APC, que previne o câncer de cólon e reto, regulando o ciclo celular</td></tr>
+        <tr><td><b>BRIP1</b></td><td>Produz proteína que ajuda a reparar danos no DNA; mutações aumentam risco de câncer de mama e ovário</td></tr>
+      </table>
+      <div class="clinico"><b>Correlação clínica — TP53:</b> conhecido como o "guardião do genoma", o TP53 é o gene mais frequentemente mutado em cânceres humanos. Sua função de ativar a apoptose diante de danos irreparáveis no DNA é a principal linha de defesa contra células com mutações perigosas.</div>
+      <div class="clinico"><b>Correlação clínica — BRCA1/BRCA2:</b> mutações nesses genes são a base do rastreamento genético para câncer de mama/ovário hereditário — pacientes com mutação podem optar por vigilância intensiva ou cirurgias profiláticas.</div>
+      <div class="mnemo"><b>Dica de associação gene-câncer:</b> "BRCA = Bmama e ovário. APC = Cólon/reto. RB1 = Retinoblastoma (nome do gene já entrega). TP53 = qualquer câncer (guardião geral)."</div>
+      <div class="al-grid">
+        <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>TP53→p53→apoptose. BRCA1/2→reparo DNA→mama/ovário. PTEN/RB1→controlam divisão celular. APC→cólon/reto. BRIP1→reparo DNA→mama/ovário.</div>
+        <div class="al-box errors"><div class="al-title">⚠️ Erros comuns</div>Confundir BRIP1 com BRCA1/2 — todos aumentam risco de mama/ovário por defeito de reparo de DNA, mas são genes diferentes.</div>
+        <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Qual gene está associado à prevenção do câncer colorretal especificamente?
+          <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+          <div class="qq-answer">O gene APC.</div>
+        </div>
+        <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o TP53 é chamado de "guardião do genoma", considerando sua função na apoptose?</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS CLÍNICOS -->
+  <section class="panel" id="casos">
+    <p class="part-intro">4 casos, do mais simples ao estilo prova prática. Pense antes de revelar a resposta.</p>
+
+    <div class="caso-card">
+      <span class="caso-tag facil">Caso Fácil</span>
+      <div class="caso-hist"><b>História:</b> Exame de imagem revela uma massa no antebraço de um paciente. A biópsia mostra que o tumor não invade os tecidos vizinhos e não há sinais de disseminação a distância.</div>
+      <div class="caso-q">
+        <p>1) Esse tumor pode ser classificado como câncer?</p>
+        <p>2) Justifique com base na definição de malignidade.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Não, esse tumor NÃO é câncer — é classificado como <b>tumor benigno</b>, pois não infiltra tecidos adjacentes nem metastatiza. Para ser considerado câncer, o tumor precisa ser maligno (invadir e/ou disseminar).
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag inter">Caso Intermediário</span>
+      <div class="caso-hist"><b>História:</b> Mulher de 35 anos, com histórico familiar de câncer de mama e ovário em múltiplos parentes de primeiro grau, realiza teste genético que revela mutação patogênica em um dos genes de reparo de DNA.</div>
+      <div class="caso-q">
+        <p>1) Quais genes são classicamente investigados nesse contexto de histórico familiar de mama/ovário?</p>
+        <p>2) Por que mutações nesses genes aumentam o risco de câncer?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> Os genes classicamente investigados são <b>BRCA1 e BRCA2</b> (e também BRIP1). Esses genes produzem proteínas que ajudam a reparar danos no DNA da célula; quando mutados, esse reparo fica comprometido, permitindo o acúmulo de mutações adicionais que podem levar à transformação maligna — daí o aumento do risco de câncer de mama, ovário e outros tipos.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag avancado">Caso Avançado</span>
+      <div class="caso-hist"><b>História:</b> Paciente com síndrome de Li-Fraumeni (predisposição hereditária a múltiplos tipos de câncer em idade jovem) é encontrado ter mutação germinativa em um gene classicamente conhecido como "guardião do genoma".</div>
+      <div class="caso-q">
+        <p>1) Que gene está provavelmente envolvido, e qual proteína ele produz?</p>
+        <p>2) Explique o mecanismo pelo qual a perda de função desse gene aumenta o risco de múltiplos tipos de câncer.</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> O gene envolvido é o <b>TP53</b>, que produz a proteína <b>p53</b>. Normalmente, a p53 protege o DNA da célula e ativa a apoptose quando há danos irreparáveis. Com a perda de função do TP53, células com DNA danificado deixam de ser eliminadas por apoptose e continuam se dividindo, acumulando mutações adicionais — o que explica a predisposição a MÚLTIPLOS tipos de câncer, já que essa "rede de segurança" geral do genoma fica comprometida em todos os tecidos.
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <span class="caso-tag pratica">Caso Estilo Prova Prática</span>
+      <div class="caso-hist"><b>História:</b> Durante uma prova prática, o professor apresenta dois pacientes com câncer: o Paciente A desenvolveu câncer isoladamente, sem nenhum caso na família; o Paciente B tem múltiplos parentes com o mesmo tipo de câncer ao longo de gerações.</div>
+      <div class="caso-q">
+        <p>1) Ambos os casos podem ser classificados como "doença genética"? Justifique.</p>
+        <p>2) Que tipo de mutação (somática ou germinativa) provavelmente está envolvida em cada caso?</p>
+        <button class="caso-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver explicação completa</button>
+        <div class="caso-answer">
+          <b>Explicação:</b> SIM, ambos os casos são doenças genéticas — o câncer é fundamentalmente uma doença genética, independentemente de aparecer de forma esporádica ou hereditária. No Paciente A (caso isolado, sem histórico familiar), o câncer é provavelmente <b>esporádico</b>, resultado de uma <b>mutação somática</b> adquirida ao longo da vida, restrita às células tumorais. No Paciente B (múltiplos casos familiares), o câncer é provavelmente <b>hereditário</b>, resultado de uma <b>mutação germinativa</b> transmitida geneticamente entre gerações, presente em todas as células do corpo (incluindo as reprodutivas).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="panel" id="flash">
+    <p class="part-intro">16 termos-chave. Clique no card para virar, depois marque se você sabia ou precisa revisar.</p>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress">Card 1 de 16</div>
+      <div class="flashcard" id="flashcard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><div class="term" id="fcTerm">—</div></div>
+          <div class="fc-face fc-back"><div class="def" id="fcDef">—</div></div>
+        </div>
+      </div>
+      <div class="fc-hint">clique no card para virar</div>
+      <div class="fc-controls">
+        <button class="fc-btn review" id="fcReview">😕 Preciso revisar</button>
+        <button class="fc-btn know" id="fcKnow">✅ Eu sabia</button>
+      </div>
+      <div class="fc-controls" style="margin-top:10px;">
+        <button class="fc-btn" id="fcShuffle">🔀 Embaralhar</button>
+        <button class="fc-btn" id="fcRestart">↺ Recomeçar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="quiz">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">45</span> · <span id="resPct">0%</span></span></div>
+      <div class="medal" id="resMedal">🥉</div>
+      <div class="medal-label" id="resMedalLabel">Iniciante</div>
+    </div>
+    <p class="part-intro">25 múltipla escolha + 3 blocos V/F + 2 blocos de associação. Feedback imediato.</p>
+    <div id="mcqContainer"></div>
+    <div id="vfContainer"></div>
+    <div id="assocContainer"></div>
+  </section>
+
+  <footer class="note">Material de estudo baseado no PowerPoint "Genética Humana — Cap. 14 (Genética do Câncer)". Não substitui a revisão do material original nem orientação clínica profissional.</footer>
+</div>
+
+<script>
+let xp = 0;
+let scoreP1=0, scoreP2=0, scoreP3=0;
+const TOTAL_QUIZ = 25 + 12 + 10;
+
+function addXP(n){
+  xp += n;
+  document.getElementById('xpCount').textContent = xp;
+  const pct = Math.min(100, (xp % 500)/5);
+  document.getElementById('xpBarFill').style.width = pct + '%';
+  updateBadge();
+  updateResults();
+}
+function updateBadge(){
+  let badge = '🥉 Iniciante';
+  if(xp >= 500) badge = '👑 Mestre da Disciplina';
+  else if(xp >= 300) badge = '🥇 Avançado';
+  else if(xp >= 120) badge = '🥈 Intermediário';
+  document.getElementById('badgePill').textContent = badge;
+}
+function updateResults(){
+  const total = scoreP1+scoreP2+scoreP3;
+  document.getElementById('resScore').textContent = total;
+  const pct = Math.round((total/TOTAL_QUIZ)*100);
+  document.getElementById('resPct').textContent = pct+'%';
+  let medal='🥉', label='Iniciante';
+  if(pct>=90){medal='👑';label='Mestre da Disciplina';}
+  else if(pct>=75){medal='🥇';label='Avançado';}
+  else if(pct>=50){medal='🥈';label='Intermediário';}
+  document.getElementById('resMedal').textContent = medal;
+  document.getElementById('resMedalLabel').textContent = label;
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+// ===== FLASHCARDS =====
+const flashData=[
+  {term:"Neoplasia", def:"Processo patológico caracterizado por proliferação celular incontrolada, com aparecimento de uma massa (tumor)."},
+  {term:"Tumor maligno", def:"Tumor cujo crescimento é descontrolado, capaz de infiltrar tecidos adjacentes e metastatizar — é o câncer."},
+  {term:"Tumor benigno", def:"Tumor que não infiltra nem metastatiza, mesmo podendo causar problemas pelo tamanho/localização."},
+  {term:"Metástase", def:"Disseminação do tumor maligno para outros locais do corpo."},
+  {term:"Sarcoma", def:"Câncer originado em ossos, músculos, tecidos conjuntivos ou tecido nervoso."},
+  {term:"Carcinoma", def:"Câncer originado em tecido epitelial (intestino, brônquios, ductos mamários, etc.)."},
+  {term:"Oncogênese", def:"Desenvolvimento do câncer, por mutações em genes que regulam crescimento e morte celular programada."},
+  {term:"Câncer esporádico", def:"Câncer que aparece isoladamente em um indivíduo, por mutação somática."},
+  {term:"Câncer hereditário", def:"Câncer que aparece repetidamente em membros de uma família, por traço hereditário (mutação germinativa)."},
+  {term:"TSG (Gene Supressor de Tumor)", def:"Gene que normalmente freia o crescimento celular; sua perda de função compromete o genoma."},
+  {term:"Protooncogene", def:"Versão normal de um gene que promove o crescimento celular de forma controlada."},
+  {term:"Oncogene", def:"Versão mutada/ativada de um protooncogene, que promove crescimento celular descontrolado."},
+  {term:"TP53 / p53", def:"Gene/proteína que protege o DNA e ativa apoptose diante de danos irreparáveis — 'guardião do genoma'."},
+  {term:"BRCA1 e BRCA2", def:"Genes de reparo do DNA; mutações aumentam risco de câncer de mama, ovário e outros."},
+  {term:"APC", def:"Gene que previne câncer de cólon e reto, regulando o ciclo celular."},
+  {term:"RB1", def:"Gene que controla a divisão celular e previne proliferação descontrolada."},
+];
+let fcOrder = flashData.map((_,i)=>i);
+let fcIdx = 0;
+const flashcard=document.getElementById('flashcard');
+const fcTerm=document.getElementById('fcTerm');
+const fcDef=document.getElementById('fcDef');
+const fcProgress=document.getElementById('fcProgress');
+function renderFlash(){
+  const item = flashData[fcOrder[fcIdx]];
+  fcTerm.textContent = item.term;
+  fcDef.textContent = item.def;
+  flashcard.classList.remove('flipped');
+  fcProgress.textContent = `Card ${fcIdx+1} de ${flashData.length}`;
+}
+function nextFlash(){
+  fcIdx++;
+  if(fcIdx>=fcOrder.length) fcIdx=0;
+  renderFlash();
+}
+flashcard.onclick=()=>flashcard.classList.toggle('flipped');
+document.getElementById('fcKnow').onclick=()=>{ addXP(5); nextFlash(); };
+document.getElementById('fcReview').onclick=()=>{ nextFlash(); };
+document.getElementById('fcShuffle').onclick=()=>{
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIdx=0; renderFlash();
+};
+document.getElementById('fcRestart').onclick=()=>{ fcOrder=flashData.map((_,i)=>i); fcIdx=0; renderFlash(); };
+renderFlash();
+
+// ===== QUIZ: MCQ (25) =====
+const letters=['A','B','C','D'];
+const mcqData=[
+  {tag:"Fácil", stem:"El cáncer es responsable de aproximadamente qué porcentaje de todos los fallecimientos?", alts:["Menos del 5%","Más del 20%","Exactamente el 50%","Más del 80%"], correct:1, comment:"El cáncer es causa de más del 20% de todos los fallecimientos."},
+  {tag:"Fácil", stem:"El cáncer es fundamentalmente una enfermedad:", alts:["Infecciosa","Genética","Puramente ambiental","Autoinmune"], correct:1, comment:"El cáncer es fundamentalmente una enfermedad genética."},
+  {tag:"Intermediária", stem:"Para que un tumor sea considerado cáncer, debe ser:", alts:["Grande","Maligno (invade y puede metastatizar)","Doloroso","Visible en radiografía"], correct:1, comment:"El tumor debe ser maligno — infiltra tejidos y puede diseminarse (metástasis)."},
+  {tag:"Fácil", stem:"Los tumores que no infiltran ni metastatizan se llaman:", alts:["Malignos","Benignos","Sarcomas exclusivamente","Carcinomas exclusivamente"], correct:1, comment:"Tumores benignos: no infiltran ni metastatizan."},
+  {tag:"Fácil", stem:"Los sarcomas se originan principalmente en:", alts:["Tejido epitelial","Huesos, músculos, tejido conjuntivo y nervioso","Médula ósea exclusivamente","Sistema linfático exclusivamente"], correct:1, comment:"Sarcomas: huesos, músculos, tejidos conjuntivos y tejido nervioso."},
+  {tag:"Fácil", stem:"Los carcinomas se originan principalmente en:", alts:["Tejido óseo","Tejido epitelial","Tejido nervioso","Médula ósea"], correct:1, comment:"Carcinomas: se originan en tejido epitelial (intestino, bronquios, conductos mamarios)."},
+  {tag:"Intermediária", stem:"Los tumores malignos hematopoyéticos y linfoides afectan principalmente a:", alts:["Piel y cabello","Médula ósea, sistema linfático y sangre periférica","Solo el hígado","Solo los pulmones"], correct:1, comment:"Afectan médula ósea, sistema linfático y sangre periférica."},
+  {tag:"Fácil", stem:"El desarrollo del cáncer se llama:", alts:["Oncogénesis","Mitosis","Meiosis","Apoptosis"], correct:0, comment:"Oncogénesis = desarrollo del cáncer."},
+  {tag:"Intermediária", stem:"La oncogénesis se debe a:", alts:["Infecciones virales exclusivamente","Mutaciones en genes que regulan crecimiento y muerte celular","Deficiencias vitamínicas","Cambios hormonales exclusivamente"], correct:1, comment:"Oncogénesis: mutaciones en genes reguladores del crecimiento y muerte celular programada."},
+  {tag:"Fácil", stem:"Un cáncer que aparece esporádicamente en un individuo resulta de una mutación:", alts:["Germinativa","Somática","Mitocondrial exclusivamente","Ninguna mutación"], correct:1, comment:"Cáncer esporádico: mutación somática."},
+  {tag:"Fácil", stem:"Un cáncer que aparece repetidamente en varios individuos de una familia resulta de:", alts:["Una mutación somática aislada","Un rasgo hereditario","Exposición ambiental exclusivamente","Casualidad, sin base genética"], correct:1, comment:"Cáncer hereditario: rasgo hereditario transmitido en la familia."},
+  {tag:"Difícil", stem:"Independientemente de ser esporádico o hereditario, el cáncer es considerado:", alts:["Una enfermedad puramente ambiental","Una enfermedad genética","Una infección","Un trastorno psicológico"], correct:1, comment:"El cáncer, esporádico o hereditario, es siempre una enfermedad genética."},
+  {tag:"Fácil", stem:"Un TSG (gen supresor de tumor) tiene como función:", alts:["Acelerar el crecimiento celular","Frenar el crecimiento celular","Producir energía celular","Sintetizar hormonas exclusivamente"], correct:1, comment:"TSG: frena el crecimiento celular; su pérdida de función compromete el genoma."},
+  {tag:"Intermediária", stem:"Un protooncogén se caracteriza por:", alts:["Ser siempre una versión mutada y peligrosa","Ser la versión normal de un gen que promueve el crecimiento de forma controlada","No tener ninguna función celular","Ser exclusivo de células cancerosas"], correct:1, comment:"Protooncogén: versión normal, promueve crecimiento controlado."},
+  {tag:"Fácil", stem:"Un oncogén se forma a partir de:", alts:["Un TSG mutado","Un protooncogén mutado/activado","Una proteína estructural","Un ácido nucleico exclusivo del ARN"], correct:1, comment:"Oncogén: protooncogén mutado/activado, promueve crecimiento descontrolado."},
+  {tag:"Intermediária", stem:"La pérdida de función de los TSG puede comprometer:", alts:["Solo la producción de energía celular","Proteínas de reparo del ADN y de la muerte celular programada","Solo la síntesis de hormonas","Nada relevante"], correct:1, comment:"Pérdida de TSG compromete: reparo de mutaciones, disyunción cromosómica y apoptosis."},
+  {tag:"Fácil", stem:"El gen TP53 produce la proteína:", alts:["BRCA1","p53","PTEN","APC"], correct:1, comment:"TP53 produce la proteína p53."},
+  {tag:"Fácil", stem:"La proteína p53 desempeña un papel fundamental en:", alts:["La digestión celular","La prevención del cáncer, activando apoptosis ante daño irreparable del ADN","La síntesis de glucógeno","El transporte de oxígeno"], correct:1, comment:"p53 protege el ADN y activa apoptosis ante daño irreparable."},
+  {tag:"Intermediária", stem:"Mutaciones en BRCA1 y BRCA2 aumentan la susceptibilidad principalmente a:", alts:["Cáncer de pulmón","Cáncer de mama y ovario","Cáncer de piel exclusivamente","Cáncer de tiroides exclusivamente"], correct:1, comment:"BRCA1/BRCA2: mayor susceptibilidad a cáncer de mama, ovario y otros."},
+  {tag:"Fácil", stem:"El gen PTEN ayuda a:", alts:["Regular el crecimiento celular y prevenir proliferación descontrolada","Producir insulina","Formar hemoglobina","Sintetizar colágeno"], correct:0, comment:"PTEN regula el crecimiento celular, previniendo proliferación descontrolada."},
+  {tag:"Fácil", stem:"El gen RB1 ayuda a:", alts:["Controlar la división celular","Digerir lípidos","Producir anticuerpos","Transportar calcio"], correct:0, comment:"RB1 controla la división celular, previniendo proliferación descontrolada."},
+  {tag:"Intermediária", stem:"El gen APC está principalmente relacionado con la prevención de:", alts:["Cáncer de mama","Cáncer de colon y recto","Cáncer de pulmón","Cáncer de piel"], correct:1, comment:"APC previene el cáncer de colon y recto."},
+  {tag:"Difícil", stem:"El gen BRIP1 está relacionado con:", alts:["Reparo del ADN, aumentando riesgo de cáncer de mama y ovario si mutado","Control de la glucemia","Producción de bilis","Contracción muscular"], correct:0, comment:"BRIP1: reparo del ADN, mutaciones aumentan riesgo de cáncer de mama y ovario."},
+  {tag:"Fácil", stem:"Los posibles orígenes moleculares del cáncer citados en el material incluyen:", alts:["Translocación, miARN y problemas en los TSG","Solo mutaciones puntuales","Exclusivamente factores ambientales","Solo deficiencias nutricionales"], correct:0, comment:"Posibles orígenes: translocación, miARN y problemas en los TSG."},
+  {tag:"Difícil", stem:"Son funciones asociadas a los genes del cáncer (TSG/protooncogenes/oncogenes), EXCEPTO:", alts:["Proteínas de vías de señalización de proliferación celular","Factores de transcripción que controlan la expresión","Inhibidores de la muerte celular programada","Producción de anticuerpos específicos"], correct:3, comment:"La producción de anticuerpos no es una función citada entre las asociadas a estos genes del cáncer."},
+];
+
+const mcqContainer=document.getElementById('mcqContainer');
+mcqData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  const tagClass=q.tag==='Fácil'?'facil':(q.tag==='Intermediária'?'inter':'dificil');
+  card.innerHTML=`<div class="qhead"><div class="qnum">${qi+1}</div><span class="qtag ${tagClass}">${q.tag}</span><div class="qstem">${q.stem}</div></div><div class="alts"></div><div class="feedback"></div>`;
+  const altsDiv=card.querySelector('.alts'); const feedback=card.querySelector('.feedback');
+  q.alts.forEach((alt,ai)=>{
+    const btn=document.createElement('button'); btn.className='alt-btn';
+    btn.innerHTML=`<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick=()=>{
+      const allBtns=altsDiv.querySelectorAll('.alt-btn'); allBtns.forEach(b=>b.disabled=true);
+      const isCorrect=ai===q.correct;
+      if(isCorrect){btn.classList.add('correct'); scoreP1++; addXP(10);}
+      else{btn.classList.add('incorrect'); allBtns[q.correct].classList.add('correct');}
+      allBtns.forEach((b,i)=>{if(i!==ai && i!==q.correct) b.classList.add('dim');});
+      feedback.className='feedback show '+(isCorrect?'ok':'no');
+      feedback.innerHTML=(isCorrect?'✅ <b>¡Correcto!</b> ':'❌ <b>Incorrecto.</b> ')+q.comment;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ===== QUIZ: V/F (3 bloques x4) =====
+const romans=['I','II','III','IV'];
+const vfData=[
+  {theme:"Introdução e Tipos de Câncer", statements:[
+    "El cáncer es causa de más del 20% de todos los fallecimientos.",
+    "Un tumor benigno puede infiltrar tejidos y metastatizar.",
+    "Los sarcomas se originan en tejido epitelial.",
+    "Los carcinomas se originan en tejido epitelial."
+  ], answers:["V","F","F","V"], comment:"El ítem II es falso: tumor benigno NO infiltra ni metastatiza (eso caracteriza al maligno). El ítem III es falso: sarcomas se originan en huesos/músculos/conjuntivo, no en epitelio."},
+  {theme:"Oncogênese e Categorias de Genes", statements:[
+    "El cáncer esporádico resulta de una mutación somática.",
+    "El cáncer hereditario resulta de una mutación somática exclusivamente.",
+    "Un TSG normalmente frena el crecimiento celular.",
+    "Un oncogén es la versión normal de un protooncogén."
+  ], answers:["V","F","V","F"], comment:"El ítem II es falso: el cáncer hereditario resulta de mutación GERMINATIVA (rasgo hereditario), no solo somática. El ítem IV es falso: el oncogén es la versión MUTADA del protooncogén, no la normal."},
+  {theme:"Genes Específicos", statements:[
+    "El gen TP53 produce la proteína p53, relacionada con la apoptosis.",
+    "BRCA1 y BRCA2 están relacionados con el reparo del ADN.",
+    "El gen APC previene principalmente el cáncer de mama.",
+    "El gen RB1 ayuda a controlar la división celular."
+  ], answers:["V","V","F","V"], comment:"El ítem III es falso: el gen APC previene principalmente el cáncer de COLON Y RECTO, no de mama."},
+];
+const vfContainer=document.getElementById('vfContainer');
+vfData.forEach((q,qi)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="qhead" style="margin-bottom:4px;"><span style="font-family:var(--serif);font-weight:700;color:var(--gold);font-size:15px;">Bloco ${qi+1} — ${q.theme}</span></div><div class="vf-list"></div><div class="feedback" style="margin-top:10px;"></div>`;
+  const list=card.querySelector('.vf-list'); const comment=card.querySelector('.feedback');
+  let answeredCount=0;
+  q.statements.forEach((s,si)=>{
+    const row=document.createElement('div'); row.className='vf-item';
+    row.innerHTML=`<div style="font-weight:700;color:var(--aqua);width:22px;flex-shrink:0;font-family:var(--serif);">${romans[si]}</div><div class="vf-text">${s}</div><div class="vf-buttons"><button class="vf-btn" data-v="V">V</button><button class="vf-btn" data-v="F">F</button></div>`;
+    const btns=row.querySelectorAll('.vf-btn');
+    btns.forEach(btn=>{
+      btn.onclick=()=>{
+        btns.forEach(b=>b.disabled=true);
+        const correct=q.answers[si]; const picked=btn.getAttribute('data-v');
+        const correctBtn=[...btns].find(b=>b.getAttribute('data-v')===correct);
+        if(picked===correct){btn.classList.add('correct'); scoreP2++; addXP(5);}
+        else{btn.classList.add('incorrect'); correctBtn.classList.add('correct');}
+        answeredCount++;
+        if(answeredCount===q.statements.length){comment.className='feedback show ok'; comment.innerHTML='💡 '+q.comment;}
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ===== QUIZ: ASSOCIAÇÃO (2 blocos x5) =====
+const assocData=[
+  {title:"1. Genes específicos e sua função no câncer", colA:["TP53","BRCA1/BRCA2","PTEN","RB1","APC"],
+   colB:["Produz p53, ativa apoptose diante de dano irreparável no DNA","Reparo do DNA; câncer de mama e ovário","Regula crescimento, previne proliferação descontrolada","Controla a divisão celular","Previne câncer de cólon e reto"],
+   answers:["A","B","C","D","E"], comment:"Esses 5 genes formam o núcleo de genes supressores de tumor mais cobrados em provas de genética do câncer."},
+  {title:"2. Conceitos gerais de oncogênese", colA:["Tumor maligno","Tumor benigno","Sarcoma","Carcinoma","Câncer esporádico"],
+   colB:["Invade tecidos e pode metastatizar","Não invade nem metastatiza","Origem óssea/muscular/conjuntiva/nervosa","Origem em tecido epitelial","Mutação somática, caso isolado"],
+   answers:["A","B","C","D","E"], comment:"A distinção maligno×benigno e sarcoma×carcinoma é a base classificatória de todo o capítulo."},
+];
+const assocContainer=document.getElementById('assocContainer');
+assocData.forEach((q)=>{
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML=`<div class="assoc-title">${q.title}</div><div class="assoc-grid"><div class="assoc-col"><h4b>Coluna A</h4b><div class="colA-list"></div></div><div class="assoc-col"><h4b>Coluna B</h4b><div class="colB-list"></div></div></div><button class="btn verify-btn">Verificar</button><div class="feedback"></div>`;
+  const colAList=card.querySelector('.colA-list'); const colBList=card.querySelector('.colB-list'); const feedback=card.querySelector('.feedback');
+  const letters5=['A','B','C','D','E'];
+  q.colA.forEach((item,ai)=>{
+    const row=document.createElement('div'); row.className='assoc-row';
+    let options='<option value="">—</option>';
+    letters5.forEach(l=>{options+=`<option value="${l}">${l}</option>`;});
+    row.innerHTML=`<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text,bi)=>{
+    const item=document.createElement('div'); item.className='assoc-b-item';
+    item.textContent=`(${letters5[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+  const verifyBtn=card.querySelector('.verify-btn');
+  verifyBtn.onclick=()=>{
+    const selects=colAList.querySelectorAll('select');
+    let allAnswered=true;
+    selects.forEach(sel=>{if(!sel.value) allAnswered=false;});
+    if(!allAnswered){feedback.className='feedback show no'; feedback.innerHTML='⚠️ Complete todas as associações antes de verificar.'; return;}
+    let correctCount=0;
+    selects.forEach((sel,i)=>{
+      sel.disabled=true;
+      if(sel.value===q.answers[i]){sel.classList.add('correct'); correctCount++;}
+      else{sel.classList.add('incorrect');}
+    });
+    scoreP3+=correctCount;
+    addXP(correctCount*5);
+    verifyBtn.disabled=true;
+    feedback.className='feedback show '+(correctCount===q.colA.length?'ok':'no');
+    feedback.innerHTML=`${correctCount===q.colA.length?'✅':'📊'} <b>${correctCount}/${q.colA.length} corretas.</b> ${q.comment}`;
+    updateResults();
+  };
+  assocContainer.appendChild(card);
+});
+</script>
+</body>
+</html>
