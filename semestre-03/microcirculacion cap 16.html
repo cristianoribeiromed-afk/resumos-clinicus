@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microcirculación · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d0f16;
+  --bg-alt:#151a24;
+  --card:#1b2130;
+  --card-hover:#212940;
+  --border:#2a3348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --art:#ff5c6c;
+  --ven:#4d9fff;
+  --lymph:#ffd166;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,15,22,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.15rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+
+.vessel-flow{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.vessel-step{flex:1; min-width:110px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 8px; font-size:.76rem; font-weight:700; color:var(--text);}
+.vessel-step .diam{display:block; font-weight:400; color:var(--text-dim); font-size:.68rem; margin-top:4px;}
+.vessel-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.o2-toggle{display:flex; gap:10px; margin:16px 0; flex-wrap:wrap;}
+.o2-btn{flex:1; min-width:140px; padding:14px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-weight:700; text-align:center; transition:.2s;}
+.o2-btn:hover{background:var(--card-hover);}
+.o2-btn.active-low{background:rgba(255,92,108,.15); border-color:var(--art); color:var(--art);}
+.o2-btn.active-high{background:rgba(77,159,255,.15); border-color:var(--ven); color:var(--ven);}
+.o2-result{background:var(--bg-alt); border-radius:10px; padding:16px; margin-top:10px; text-align:center; font-size:.95rem; min-height:24px;}
+
+.starling-calc{background:var(--bg-alt); border:1px solid var(--border); border-radius:14px; padding:20px; margin:14px 0;}
+.starling-row{display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;}
+.starling-row label{flex:1; min-width:220px; font-size:.85rem; color:var(--text);}
+.starling-row input{width:100px; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:7px 10px; color:var(--text); font-size:.9rem;}
+.starling-result{text-align:center; margin-top:16px; padding:16px; border-radius:12px; background:rgba(77,159,255,.08); border:1px solid var(--ven);}
+.starling-result .val{font-size:1.8rem; font-weight:800; color:var(--ven);}
+
+.pore-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:14px 0;}
+@media(max-width:720px){.pore-grid{grid-template-columns:1fr;}}
+.pore-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.pore-card h4{color:var(--art); font-size:.92rem; margin-bottom:6px;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);}
+.btn-hard{background:var(--gold);}
+.btn-good{background:var(--ven);}
+.btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M6 20 Q12 8, 20 20 T34 20" stroke="#ff5c6c" stroke-width="2.5" fill="none"/><path d="M6 24 Q12 32, 20 24 T34 24" stroke="#4d9fff" stroke-width="2.5" fill="none"/><circle cx="20" cy="20" r="3" fill="#ffd166"/></svg>
+      <div class="logo-text">
+        <h1>Microcirculación</h1>
+        <span>Guyton & Hall · Cap. 16 · Método Prompt Master</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Fundamentos → Vasos → Poros → Vasomotilidad → Difusión → Intersticio → Starling → Linfático → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🩸 Fundamentos</button>
+    <button class="tab-btn" data-tab="vasos">🔬 Anatomía Vascular</button>
+    <button class="tab-btn" data-tab="poros">🧫 Poros Especiales</button>
+    <button class="tab-btn" data-tab="vasomotilidad">〰️ Vasomotilidad</button>
+    <button class="tab-btn" data-tab="difusion">💧 Difusión Capilar</button>
+    <button class="tab-btn" data-tab="intersticio">🕸️ Intersticio</button>
+    <button class="tab-btn" data-tab="starling">⚖️ Fuerzas de Starling</button>
+    <button class="tab-btn" data-tab="linfatico">🌊 Sistema Linfático</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 16 · Guyton & Hall</span>
+    <h2>Donde realmente ocurre la función de la circulación</h2>
+    <p>El corazón y las grandes arterias son solo el sistema de transporte. La <b>microcirculación</b> —arteriolas, capilares y vénulas— es donde la sangre finalmente entrega nutrientes y retira desechos de cada célula del cuerpo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Principales objetivos de la circulación</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>1. Intercambio</h4><p style="margin:0; font-size:.88rem;">Aporte de nutrientes y eliminación de desechos celulares.</p></div>
+      <div class="mini-card"><h4>2. Control de flujo</h4><p style="margin:0; font-size:.88rem;">Las arteriolas pequeñas controlan el flujo sanguíneo hacia cada tejido.</p></div>
+      <div class="mini-card"><h4>3. Autorregulación</h4><p style="margin:0; font-size:.88rem;">Cada tejido regula su propio flujo sanguíneo de acuerdo a sus necesidades metabólicas.</p></div>
+    </div>
+    <div class="analogy"><b>Analogía de la red de riego:</b> si las grandes arterias son las tuberías principales de una ciudad, las arteriolas son las válvulas individuales de cada jardín — cada una se abre o cierra según cuánta agua (sangre) necesita esa zona en ese momento.</div>
+  </div>
+</section>
+
+<!-- ============ VASOS ============ -->
+<section class="section" id="vasos">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Anatomía Funcional de la Microcirculación</h2>
+    <p>Desde la arteria hasta la vénula, cada segmento del recorrido tiene una función y una estructura completamente distinta.</p>
+  </div>
+
+  <div class="card">
+    <h2>La ruta de la sangre</h2>
+    <div class="vessel-flow">
+      <div class="vessel-step" style="border-color:#ff5c6c;">Arteria<span class="diam">pared gruesa</span></div>
+      <div class="vessel-arrow">→</div>
+      <div class="vessel-step" style="border-color:#ff5c6c;">Arteriola<span class="diam">10-15 μm</span></div>
+      <div class="vessel-arrow">→</div>
+      <div class="vessel-step" style="border-color:#ffd166;">Metaarteriola<span class="diam">5-9 μm</span></div>
+      <div class="vessel-arrow">→</div>
+      <div class="vessel-step" style="border-color:#ffd166;">Esfínter precapilar<span class="diam">válvula</span></div>
+      <div class="vessel-arrow">→</div>
+      <div class="vessel-step" style="border-color:var(--green);">Capilar<span class="diam">5-9 μm</span></div>
+      <div class="vessel-arrow">→</div>
+      <div class="vessel-step" style="border-color:#4d9fff;">Vénula<span class="diam">retorno</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Características de cada segmento</h2>
+    <table>
+      <tr><th>Vaso</th><th>Característica estructural</th><th>Función principal</th></tr>
+      <tr><td><b>Arteria</b></td><td>Pared gruesa y muscular</td><td>Transportar sangre oxigenada del corazón a los tejidos (excepto circulación pulmonar)</td></tr>
+      <tr><td><b>Arteriola</b></td><td>Muy muscular, diámetro 10-15 μm</td><td>Controlar el flujo sanguíneo hacia los tejidos ajustando su diámetro</td></tr>
+      <tr><td><b>Metaarteriola</b></td><td>Sin capa muscular continua, diámetro 5-9 μm</td><td>Transportar sangre de las arteriolas a los capilares verdaderos</td></tr>
+      <tr><td><b>Esfínter precapilar</b></td><td>Fibra muscular en el origen del capilar</td><td>Regular el flujo abriendo o cerrando la entrada al capilar</td></tr>
+      <tr><td><b>Capilar</b></td><td>Pared finísima, una sola capa de células endoteliales</td><td>Permitir el intercambio de nutrientes, gases y desechos</td></tr>
+      <tr><td><b>Vénula</b></td><td>Capa muscular más débil que la arteriola</td><td>Transportar sangre desoxigenada hacia las venas mayores</td></tr>
+    </table>
+    <div class="mnemo"><b>Mnemotecnia:</b> "El esfínter precapilar es el portero del capilar" — decide, vaso por vaso, si la sangre entra o no.</div>
+  </div>
+</section>
+
+<!-- ============ POROS ============ -->
+<section class="section" id="poros">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Poros Especiales según el Tejido</h2>
+    <p>No todos los capilares son iguales. El tamaño de sus poros está diseñado a la medida de la función de cada órgano.</p>
+  </div>
+  <div class="card">
+    <div class="pore-grid">
+      <div class="pore-card">
+        <h4>🧠 Cerebro</h4>
+        <p style="margin:0; font-size:.88rem;">Uniones "estrechas" (tight junctions) que solo permiten el paso de moléculas muy pequeñas como agua, oxígeno y CO₂. Es la base de la <b>barrera hematoencefálica</b>.</p>
+      </div>
+      <div class="pore-card">
+        <h4>🫘 Hígado</h4>
+        <p style="margin:0; font-size:.88rem;">Espacios amplios entre células endoteliales: casi todas las sustancias del plasma, incluidas las <b>proteínas plasmáticas</b>, pasan libremente a los tejidos hepáticos.</p>
+      </div>
+      <div class="pore-card">
+        <h4>🍽️ Tracto gastrointestinal</h4>
+        <p style="margin:0; font-size:.88rem;">Poros de tamaño <b>intermedio</b> entre el cerebro y el hígado.</p>
+      </div>
+      <div class="pore-card">
+        <h4>🫘 Riñón (glomérulo)</h4>
+        <p style="margin:0; font-size:.88rem;">Capilares glomerulares especializados en la filtración masiva de plasma para formar la orina primaria.</p>
+      </div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> esta variación explica por qué ciertos fármacos atraviesan la barrera hematoencefálica y otros no, y por qué la hipoalbuminemia hepática grave afecta rápidamente la presión oncótica plasmática.</div>
+  </div>
+</section>
+
+<!-- ============ VASOMOTILIDAD ============ -->
+<section class="section" id="vasomotilidad">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Flujo Intermitente y Vasomotilidad</h2>
+    <p>El flujo capilar no es continuo: las metaarteriolas y los esfínteres precapilares se contraen y relajan de forma intermitente, un fenómeno llamado <b>vasomotilidad</b>.</p>
+  </div>
+  <div class="card">
+    <h2>Regulación por concentración de oxígeno</h2>
+    <p>El principal regulador local de la vasomotilidad es la concentración tisular de O₂. Haz clic para explorar cada escenario:</p>
+    <div class="o2-toggle">
+      <button class="o2-btn" onclick="showO2('low')">🔴 O₂ Disminuido</button>
+      <button class="o2-btn" onclick="showO2('high')">🔵 O₂ Aumentado</button>
+    </div>
+    <div class="o2-result" id="o2Result">Selecciona un escenario para ver la respuesta vascular.</div>
+  </div>
+</section>
+
+<!-- ============ DIFUSIÓN ============ -->
+<section class="section" id="difusion">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Difusión a través de la Membrana Capilar</h2>
+    <p>"El medio más importante por el cual se transfieren sustancias entre el plasma y el líquido intersticial es la <b>difusión</b>."</p>
+  </div>
+  <div class="card">
+    <h2>Dos rutas de difusión</h2>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Sustancias liposolubles</h4>
+        <p style="margin:0; font-size:.88rem;">Difunden <b>directamente a través</b> de las membranas celulares del endotelio capilar (ej: O₂, CO₂).</p>
+      </div>
+      <div class="mini-card">
+        <h4>Sustancias hidrosolubles</h4>
+        <p style="margin:0; font-size:.88rem;">Difunden solo a través de los <b>"poros" intercelulares</b> de la membrana capilar (ej: glucosa, iones).</p>
+      </div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> las sustancias liposolubles son como el agua atravesando una esponja (pasan por cualquier parte); las hidrosolubles son como canicas que solo pasan por agujeros específicos de un colador.</div>
+    <div class="mnemo"><b>Factores adicionales importantes:</b> el tamaño de la sustancia y la diferencia de concentración entre plasma y líquido intersticial también determinan la velocidad de difusión.</div>
+  </div>
+</section>
+
+<!-- ============ INTERSTICIO ============ -->
+<section class="section" id="intersticio">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>El Intersticio y el Líquido Intersticial</h2>
+    <p>El espacio entre las células no está vacío — es un tejido estructurado que retiene el líquido de forma muy eficiente.</p>
+  </div>
+  <div class="card">
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Volumen del intersticio</h4>
+        <p style="margin:0; font-size:.88rem;">Representa aproximadamente <b>1/6 del volumen corporal total</b>.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Composición estructural</h4>
+        <p style="margin:0; font-size:.88rem;">1) Haces de fibras de <b>colágeno</b>, y 2) filamentos de <b>proteoglicano</b>.</p>
+      </div>
+    </div>
+    <div class="clinical"><b>Dato clave:</b> la cantidad de líquido verdaderamente "libre" en los tejidos normales es muy pequeña — mucho menor del 1%. La mayor parte del líquido intersticial está atrapado en el gel de proteoglicanos, lo cual previene su acumulación libre y ayuda a prevenir el edema.</div>
+  </div>
+</section>
+
+<!-- ============ STARLING ============ -->
+<section class="section" id="starling">
+  <div class="hero">
+    <span class="eyebrow">Sección 7</span>
+    <h2>Fuerzas de Starling</h2>
+    <p>El equilibrio entre cuatro presiones determina si el líquido sale del capilar (filtración) o regresa a él (reabsorción).</p>
+  </div>
+
+  <div class="card">
+    <h2>Las cuatro fuerzas</h2>
+    <table>
+      <tr><th>Fuerza</th><th>Valor típico</th><th>Efecto</th></tr>
+      <tr><td>Presión capilar — extremo arteriolar (Pc)</td><td>+30 mmHg</td><td>Empuja líquido hacia afuera (filtración)</td></tr>
+      <tr><td>Presión capilar — extremo venular (Pc)</td><td>+10 mmHg</td><td>Empuja líquido hacia afuera (menor)</td></tr>
+      <tr><td>Presión capilar — valor medio funcional</td><td>+17.3 mmHg</td><td>Promedio funcional a lo largo del capilar</td></tr>
+      <tr><td>Presión del líquido intersticial (Pif)</td><td>-3.0 mmHg</td><td>Al ser negativa, también favorece la filtración</td></tr>
+      <tr><td>Presión coloidosmótica del plasma (πp)</td><td>+28.0 mmHg</td><td>Atrae líquido hacia adentro (reabsorción)</td></tr>
+      <tr><td>Presión coloidosmótica intersticial (πif)</td><td>+8.0 mmHg</td><td>Atrae líquido hacia afuera (menor)</td></tr>
+    </table>
+    <div class="mnemo"><b>Fórmula de la Presión de Filtración Neta (PFN):</b><br>PFN = Pc − Pif − πp + πif<br>PFN = 17.3 − (−3.0) − 28.0 + 8.0 = <b>+0.3 mmHg</b> (ligera filtración neta)</div>
+  </div>
+
+  <div class="card">
+    <h2>🧮 Calculadora interactiva de PFN</h2>
+    <p>Modifica los valores y observa cómo cambia la Presión de Filtración Neta:</p>
+    <div class="starling-calc">
+      <div class="starling-row">
+        <label>Presión capilar (Pc) mmHg</label>
+        <input type="number" id="pc" value="17.3" step="0.1" oninput="calcStarling()">
+      </div>
+      <div class="starling-row">
+        <label>Presión líquido intersticial (Pif) mmHg</label>
+        <input type="number" id="pif" value="-3.0" step="0.1" oninput="calcStarling()">
+      </div>
+      <div class="starling-row">
+        <label>Presión coloidosmótica plasma (πp) mmHg</label>
+        <input type="number" id="pip" value="28.0" step="0.1" oninput="calcStarling()">
+      </div>
+      <div class="starling-row">
+        <label>Presión coloidosmótica intersticial (πif) mmHg</label>
+        <input type="number" id="piif" value="8.0" step="0.1" oninput="calcStarling()">
+      </div>
+      <div class="starling-result">
+        <div>Presión de Filtración Neta (PFN)</div>
+        <div class="val" id="pfnResult">+0.3 mmHg</div>
+        <div id="pfnInterp" style="font-size:.85rem; color:var(--text-dim); margin-top:6px;">Ligera filtración neta — favorece la salida de líquido del capilar</div>
+      </div>
+    </div>
+    <div class="clinical"><b>Aplicación clínica:</b> prueba bajar la πp a 15 (simulando hipoalbuminemia) y observa cómo la PFN aumenta drásticamente — este es el mecanismo detrás del edema en pacientes con cirrosis o síndrome nefrótico.</div>
+  </div>
+</section>
+
+<!-- ============ LINFÁTICO ============ -->
+<section class="section" id="linfatico">
+  <div class="hero">
+    <span class="eyebrow">Sección 8</span>
+    <h2>Sistema Linfático</h2>
+    <p>El drenaje de seguridad del cuerpo: recolecta el exceso de líquido y las proteínas que escapan de los capilares, devolviéndolos a la circulación.</p>
+  </div>
+  <div class="card">
+    <h2>Velocidad del flujo linfático</h2>
+    <div class="grid-3">
+      <div class="mini-card" style="text-align:center;"><h4>Conducto torácico</h4><p style="margin:0;">100 mL/h</p></div>
+      <div class="mini-card" style="text-align:center;"><h4>Otros canales</h4><p style="margin:0;">20 mL/h</p></div>
+      <div class="mini-card" style="text-align:center;"><h4>Total estimado</h4><p style="margin:0;">~120 mL/h (2-3 L/día)</p></div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> el sistema linfático funciona como el "camión de reciclaje" del cuerpo — recoge lo que el sistema de retorno venoso normal no logra reabsorber, incluyendo proteínas plasmáticas escapadas, y lo devuelve a la circulación general.</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Microcirculación (Guyton Cap. 16) · Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'microcirculacion_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+
+const tabIds = ['intro','vasos','poros','vasomotilidad','difusion','intersticio','starling','linfatico','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+function showO2(type){
+  document.querySelectorAll('.o2-btn').forEach(b=>b.classList.remove('active-low','active-high'));
+  const el = document.getElementById('o2Result');
+  if(type === 'low'){
+    document.querySelectorAll('.o2-btn')[0].classList.add('active-low');
+    el.innerHTML = '<b style="color:var(--art);">🔴 O₂ disminuido → VASODILATACIÓN.</b><br>El tejido necesita más flujo sanguíneo para recibir más oxígeno; las metaarteriolas y esfínteres precapilares se relajan.';
+  } else {
+    document.querySelectorAll('.o2-btn')[1].classList.add('active-high');
+    el.innerHTML = '<b style="color:var(--ven);">🔵 O₂ aumentado → VASOCONSTRICCIÓN.</b><br>El tejido ya tiene suficiente oxígeno; las metaarteriolas y esfínteres precapilares se contraen, reduciendo el flujo innecesario.';
+  }
+}
+
+function calcStarling(){
+  const pc = parseFloat(document.getElementById('pc').value) || 0;
+  const pif = parseFloat(document.getElementById('pif').value) || 0;
+  const pip = parseFloat(document.getElementById('pip').value) || 0;
+  const piif = parseFloat(document.getElementById('piif').value) || 0;
+  const pfn = pc - pif - pip + piif;
+  document.getElementById('pfnResult').textContent = (pfn >= 0 ? '+' : '') + pfn.toFixed(1) + ' mmHg';
+  const interp = document.getElementById('pfnInterp');
+  if (pfn > 0.5) interp.textContent = 'Filtración neta aumentada — riesgo de edema si es sostenida';
+  else if (pfn > 0) interp.textContent = 'Ligera filtración neta — favorece la salida de líquido del capilar';
+  else interp.textContent = 'Reabsorción neta — el líquido regresa predominantemente al capilar';
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Fundamentos', front:'¿Cuáles son los 3 objetivos principales de la circulación?', back:'1) Aporte de nutrientes y eliminación de desechos; 2) Las arteriolas controlan el flujo sanguíneo; 3) Cada tejido autorregula su propio flujo.'},
+  {tag:'Anatomía', front:'¿Qué distingue a la metaarteriola de la arteriola?', back:'La metaarteriola no tiene capa muscular continua y tiene un diámetro menor (5-9 μm vs 10-15 μm de la arteriola).'},
+  {tag:'Anatomía', front:'¿Cuál es la función del esfínter precapilar?', back:'Regular el flujo sanguíneo hacia los capilares, abriendo o cerrando la entrada al capilar verdadero.'},
+  {tag:'Poros', front:'¿Por qué el cerebro tiene uniones "estrechas" en sus capilares?', back:'Para formar la barrera hematoencefálica, permitiendo el paso solo de moléculas muy pequeñas (agua, O2, CO2).'},
+  {tag:'Poros', front:'¿Qué hace especiales a los capilares hepáticos?', back:'Tienen espacios amplios entre células endoteliales, permitiendo que incluso las proteínas plasmáticas pasen a los tejidos hepáticos.'},
+  {tag:'Vasomotilidad', front:'¿Qué es la vasomotilidad?', back:'La contracción intermitente de las metaarteriolas y esfínteres precapilares (y a veces arteriolas pequeñas), que genera un flujo capilar intermitente.'},
+  {tag:'Vasomotilidad', front:'¿Qué ocurre cuando el O2 tisular disminuye?', back:'Se produce vasodilatación, para aumentar el aporte de oxígeno al tejido.'},
+  {tag:'Difusión', front:'¿Cómo difunden las sustancias liposolubles a través del capilar?', back:'Directamente a través de las membranas celulares del endotelio capilar, sin necesidad de poros.'},
+  {tag:'Difusión', front:'¿Cómo difunden las sustancias hidrosolubles?', back:'Solo a través de los "poros" intercelulares de la membrana capilar.'},
+  {tag:'Intersticio', front:'¿Qué porcentaje del volumen corporal representa el intersticio?', back:'Aproximadamente 1/6 del volumen corporal total.'},
+  {tag:'Intersticio', front:'¿Cuáles son los dos componentes estructurales del intersticio?', back:'1) Haces de fibras de colágeno, y 2) filamentos de proteoglicano.'},
+  {tag:'Starling', front:'¿Cuál es la fórmula de la Presión de Filtración Neta (PFN)?', back:'PFN = Pc − Pif − πp + πif'},
+  {tag:'Starling', front:'¿Cuál es el valor medio funcional de la presión capilar (Pc)?', back:'+17.3 mmHg (siendo +30 en el extremo arteriolar y +10 en el extremo venular).'},
+  {tag:'Starling', front:'¿Cuál es el valor típico de la presión coloidosmótica del plasma (πp)?', back:'+28.0 mmHg — es la principal fuerza que favorece la reabsorción de líquido hacia el capilar.'},
+  {tag:'Starling', front:'¿Cuál es el resultado de la PFN con los valores normales de Guyton?', back:'+0.3 mmHg — una ligera filtración neta hacia el espacio intersticial.'},
+  {tag:'Linfático', front:'¿Cuál es la función principal del sistema linfático en la microcirculación?', back:'Recolectar el exceso de líquido y proteínas plasmáticas que escapan de los capilares, devolviéndolos a la circulación.'},
+  {tag:'Linfático', front:'¿Cuál es el flujo linfático total estimado por día?', back:'Aproximadamente 120 mL/h, equivalente a 2-3 litros al día.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Cuál de los siguientes NO es uno de los principales objetivos de la circulación según Guyton?', options:['Aporte de nutrientes y eliminación de desechos celulares','Las arteriolas pequeñas controlan el flujo sanguíneo','Cada tejido regula su propio flujo sanguíneo','Generar la presión arterial sistémica máxima posible en todo momento'], correct:3, exp:'Los tres objetivos centrales son el intercambio de nutrientes/desechos, el control del flujo por arteriolas, y la autorregulación tisular — no la maximización constante de la presión arterial.'},
+  {q:'¿Cuál es el diámetro típico de una arteriola?', options:['1-2 μm','5-9 μm','10-15 μm','50-100 μm'], correct:2, exp:'Las arteriolas tienen un diámetro interno de generalmente 10-15 μm y son muy musculares.'},
+  {q:'¿Qué estructura regula directamente la entrada de sangre a un capilar verdadero?', options:['La metaarteriola','El esfínter precapilar','La vénula','La arteria'], correct:1, exp:'El esfínter precapilar es la fibra muscular en el origen del capilar que abre o cierra su entrada.'},
+  {q:'¿Por qué los capilares del hígado permiten el paso de proteínas plasmáticas?', options:['Porque tienen uniones estrechas especiales','Porque poseen espacios amplios entre las células endoteliales','Porque carecen completamente de células endoteliales','Porque su diámetro es menor que el de otros capilares'], correct:1, exp:'Los capilares hepáticos tienen aperturas amplias entre las células endoteliales, permitiendo el paso incluso de proteínas plasmáticas.'},
+  {q:'La vasomotilidad se refiere a:', options:['La contracción tónica sostenida de las grandes arterias','La contracción intermitente de metaarteriolas y esfínteres precapilares','El bombeo rítmico del corazón','El retorno venoso hacia la aurícula derecha'], correct:1, exp:'Vasomotilidad = contracción intermitente de metaarteriolas y esfínteres precapilares, generando el flujo capilar intermitente.'},
+  {q:'Cuando la concentración de oxígeno en un tejido disminuye, la respuesta vascular local es:', options:['Vasoconstricción, para conservar oxígeno','Vasodilatación, para aumentar el aporte de oxígeno','Ningún cambio, ya que el O2 no regula la vasomotilidad','Cierre permanente del esfínter precapilar'], correct:1, exp:'La disminución de O2 tisular provoca vasodilatación local, aumentando el flujo sanguíneo hacia el tejido necesitado.'},
+  {q:'Las sustancias liposolubles atraviesan la membrana capilar mediante:', options:['Difusión directa a través de las células endoteliales','Transporte activo primario','Paso exclusivo por los poros intercelulares','Pinocitosis obligatoria'], correct:0, exp:'Las sustancias liposolubles difunden directamente a través de las membranas celulares del endotelio, sin necesidad de poros.'},
+  {q:'¿Qué porcentaje aproximado del volumen corporal total representa el intersticio?', options:['1/2','1/6','1/20','1/100'], correct:1, exp:'El intersticio representa aproximadamente 1/6 del volumen corporal total.'},
+  {q:'Usando los valores clásicos de Guyton (Pc=17.3, Pif=-3.0, πp=28.0, πif=8.0), la Presión de Filtración Neta (PFN) es aproximadamente:', options:['-10.7 mmHg','+0.3 mmHg','+28.0 mmHg','+56.3 mmHg'], correct:1, exp:'PFN = Pc − Pif − πp + πif = 17.3 − (−3.0) − 28.0 + 8.0 = +0.3 mmHg, una ligera filtración neta.'},
+  {q:'¿Cuál es el flujo linfático total aproximado por día en un adulto en reposo?', options:['120 mL/día','1.2 L/día','2-3 L/día','10 L/día'], correct:2, exp:'Sumando el conducto torácico (100 mL/h) y otros canales (20 mL/h), se obtiene ~120 mL/h, equivalente a 2-3 litros por día.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>
