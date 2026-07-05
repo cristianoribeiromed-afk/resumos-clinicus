@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Master — Fisiología Cardiovascular Cap. 16-19</title>
+<style>
+  :root {
+    --bg: #080c18; --bg2: #0c1220; --bg3: #111828; --card: #141e30; --card2: #1a2540;
+    --border: #1e2d4a; --border2: #253558;
+    --accent: #ff5c6c; --accent2: #4d9fff;
+    --green: #22c55e; --red: #ef4444; --yellow: #eab308;
+    --text: #e2e8f0; --text2: #94a3b8; --text3: #4a6080;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header { background: linear-gradient(135deg, #0c1220 0%, #111828 100%); border-bottom: 1px solid var(--border2); padding: 0; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px 12px; flex-wrap: wrap; gap: 12px; }
+  .header-title { font-size: 1.1rem; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; }
+  .header-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+
+  .timer-box { background: var(--card2); border: 1px solid var(--border2); border-radius: 10px; padding: 8px 18px; text-align: center; }
+  .timer-label { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .timer-display { font-size: 1.6rem; font-weight: 900; color: var(--yellow); font-variant-numeric: tabular-nums; letter-spacing: 2px; }
+  .timer-display.urgent { color: var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+  nav { display: flex; gap: 2px; padding: 0 24px 12px; overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav button { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 6px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; font-size: 0.78rem; font-weight: 600; transition: all 0.2s; }
+  nav button:hover { background: var(--card2); color: var(--text); }
+  nav button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .progress-bar-wrap { padding: 0 24px 0; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text2); margin-bottom: 6px; }
+  .progress-track { background: var(--card); border-radius: 4px; height: 4px; }
+  .progress-fill { background: linear-gradient(90deg, var(--accent), var(--accent2)); height: 4px; border-radius: 4px; transition: width 0.4s; }
+  .header-actions { display: flex; gap: 8px; padding: 12px 24px; }
+  .btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 700; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #e04555; }
+  .btn-secondary { background: var(--card2); color: var(--text2); border: 1px solid var(--border2); }
+  .btn-secondary:hover { color: var(--text); }
+  .btn-danger { background: #1a0a0a; color: var(--red); border: 1px solid #4a1a1a; }
+  .btn-danger:hover { background: #2a1010; }
+
+  .page { display: none; max-width: 820px; margin: 0 auto; padding: 24px 16px 80px; }
+  .page.active { display: block; }
+
+  .sec-header { background: linear-gradient(90deg, var(--card2), var(--card)); border: 1px solid var(--border2); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+  .sec-icon { font-size: 1.8rem; }
+  .sec-title { font-size: 1rem; font-weight: 800; color: var(--text); }
+  .sec-desc { font-size: 0.78rem; color: var(--text2); margin-top: 3px; }
+  .sec-badge { margin-left: auto; background: var(--accent); color: #fff; border-radius: 20px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; transition: border-color 0.2s; }
+  .q-card.answered { border-color: var(--border2); }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .q-num { font-size: 0.72rem; font-weight: 700; color: var(--accent); background: rgba(255,92,108,0.1); border: 1px solid rgba(255,92,108,0.2); border-radius: 6px; padding: 2px 10px; }
+  .q-cap { font-size: 0.68rem; font-weight: 700; border-radius: 6px; padding: 2px 8px; background: rgba(77,159,255,0.1); color: var(--accent2); border: 1px solid rgba(77,159,255,0.2); }
+  .q-text { font-size: 0.9rem; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt { display: flex; align-items: flex-start; gap: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; padding: 11px 14px; cursor: pointer; transition: all 0.18s; font-size: 0.85rem; line-height: 1.5; color: var(--text2); }
+  .opt:hover { border-color: var(--accent); color: var(--text); background: var(--card2); }
+  .opt-letter { font-weight: 800; color: var(--accent); font-size: 0.82rem; background: rgba(255,92,108,0.1); border-radius: 5px; padding: 1px 7px; flex-shrink: 0; margin-top: 1px; }
+  .opt.selected { border-color: var(--accent); background: rgba(255,92,108,0.08); color: var(--text); }
+  .opt.selected .opt-letter { background: var(--accent); color: #fff; }
+  .opt.correct { border-color: var(--green) !important; background: rgba(34,197,94,0.08) !important; color: var(--text) !important; }
+  .opt.correct .opt-letter { background: var(--green) !important; color: #000 !important; }
+  .opt.wrong { border-color: var(--red) !important; background: rgba(239,68,68,0.08) !important; color: var(--text2) !important; }
+  .opt.wrong .opt-letter { background: var(--red) !important; color: #fff !important; }
+  .opt.disabled { pointer-events: none; }
+
+  .vf-stmt { background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; padding: 13px 16px; margin-bottom: 10px; }
+  .vf-text { font-size: 0.87rem; line-height: 1.6; color: var(--text); margin-bottom: 10px; }
+  .vf-btns { display: flex; gap: 8px; }
+  .vf-btn { flex: 1; padding: 8px; border-radius: 7px; border: 1px solid var(--border); background: var(--card); color: var(--text2); cursor: pointer; font-weight: 700; font-size: 0.82rem; transition: all 0.18s; }
+  .vf-btn:hover { border-color: var(--accent); color: var(--text); }
+  .vf-btn.selected-v { border-color: var(--green); background: rgba(34,197,94,0.1); color: var(--green); }
+  .vf-btn.selected-f { border-color: var(--red); background: rgba(239,68,68,0.1); color: var(--red); }
+  .vf-btn.disabled { pointer-events: none; }
+  .vf-result { display: none; font-size: 0.78rem; padding: 7px 10px; border-radius: 6px; margin-top: 8px; font-weight: 600; }
+  .vf-result.correct { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .vf-result.wrong { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+
+  .assoc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width:600px){ .assoc-grid { grid-template-columns: 1fr; } }
+  .assoc-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 8px; }
+  .assoc-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 0.82rem; line-height: 1.5; color: var(--text2); margin-bottom: 6px; }
+  .assoc-item strong { color: var(--accent); }
+  .assoc-select { width: 100%; margin-top: 6px; padding: 6px 10px; background: var(--card2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-size: 0.82rem; cursor: pointer; }
+  .assoc-select:focus { outline: none; border-color: var(--accent); }
+
+  .gab-section { margin-bottom: 28px; }
+  .gab-title { font-size: 0.85rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .gab-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .gab-item:last-child { border-bottom: none; }
+  .gab-num { font-size: 0.75rem; font-weight: 700; color: var(--text3); width: 32px; flex-shrink: 0; padding-top: 2px; }
+  .gab-resp { font-weight: 800; color: var(--green); font-size: 0.85rem; flex-shrink: 0; width: 90px; }
+  .gab-exp { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+  .gab-exp strong { color: var(--text); }
+  .score-box { background: linear-gradient(135deg, var(--card2), var(--card)); border: 1px solid var(--border2); border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 28px; }
+  .score-num { font-size: 3rem; font-weight: 900; color: var(--accent); }
+  .score-label { font-size: 0.85rem; color: var(--text2); margin-top: 4px; }
+  .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 16px; }
+  .score-cell { background: var(--bg3); border-radius: 8px; padding: 10px; }
+  .score-cell-num { font-size: 1.2rem; font-weight: 800; }
+  .score-cell-label { font-size: 0.68rem; color: var(--text3); margin-top: 2px; }
+
+  .q-result-badge { display: none; margin-top: 10px; font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 7px; }
+  .q-result-badge.acertou { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .q-result-badge.errou { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+  .welcome { max-width: 600px; margin: 40px auto; padding: 0 16px; }
+  .welcome-card { background: var(--card); border: 1px solid var(--border2); border-radius: 18px; padding: 32px 28px; text-align: center; }
+  .welcome-icon { font-size: 3rem; margin-bottom: 12px; }
+  .welcome-title { font-size: 1.3rem; font-weight: 900; color: var(--text); margin-bottom: 8px; }
+  .welcome-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.7; margin-bottom: 24px; }
+  .welcome-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .welcome-stat { background: var(--bg3); border-radius: 10px; padding: 14px; }
+  .welcome-stat-num { font-size: 1.4rem; font-weight: 900; color: var(--accent); }
+  .welcome-stat-label { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+  .welcome-rules { text-align: left; background: var(--bg3); border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; }
+  .welcome-rules li { font-size: 0.82rem; color: var(--text2); padding: 4px 0; list-style: none; }
+  .welcome-rules li::before { content: '→ '; color: var(--accent); font-weight: 700; }
+
+  #finish-overlay { display: none; position: fixed; inset: 0; background: rgba(8,12,24,0.95); z-index: 200; align-items: center; justify-content: center; }
+  #finish-overlay.show { display: flex; }
+  .finish-card { background: var(--card); border: 1px solid var(--border2); border-radius: 20px; padding: 40px 32px; text-align: center; max-width: 440px; width: 90%; }
+  .finish-icon { font-size: 3.5rem; margin-bottom: 12px; }
+  .finish-title { font-size: 1.3rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+  .finish-score { font-size: 3.5rem; font-weight: 900; color: var(--accent); margin: 12px 0; }
+  .finish-msg { font-size: 0.85rem; color: var(--text2); margin-bottom: 24px; }
+  .finish-btns { display: flex; gap: 10px; justify-content: center; }
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen" class="welcome">
+  <div class="welcome-card">
+    <div class="welcome-icon">🫀</div>
+    <div class="welcome-title">Simulado Master — Fisiología Cardiovascular</div>
+    <div class="welcome-desc">Cubre integralmente los Capítulos 16 a 19 de Guyton & Hall: Microcirculación, Regulación del Flujo Sanguíneo, Regulación Nerviosa de la Presión y Regulación a Largo Plazo. Gabarito comentado liberado apenas ao finalizar.</div>
+    <div class="welcome-grid">
+      <div class="welcome-stat"><div class="welcome-stat-num">40</div><div class="welcome-stat-label">questões totais</div></div>
+      <div class="welcome-stat"><div class="welcome-stat-num">70</div><div class="welcome-stat-label">minutos</div></div>
+      <div class="welcome-stat"><div class="welcome-stat-num">3</div><div class="welcome-stat-label">partes</div></div>
+    </div>
+    <ul class="welcome-rules">
+      <li>Parte 1: 16 questões de múltipla escolha (Cap. 16-19)</li>
+      <li>Parte 2: 4 blocos de verdadeiro ou falso (16 afirmações)</li>
+      <li>Parte 3: 4 blocos de associação de colunas (20 associações)</li>
+      <li>Gabarito com comentários liberado ao finalizar</li>
+      <li>Cronômetro regressivo de 70 minutos</li>
+    </ul>
+    <button class="btn btn-primary" style="width:100%;padding:14px;font-size:1rem;" onclick="startSimulado()">▶ Iniciar Simulado</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none;">
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="header-title">🫀 Simulado Master — Fisiología Cardiovascular (Cap. 16-19)</div>
+      <div class="header-sub">Guyton & Hall · Universidad Interamericana</div>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">tempo restante</div>
+      <div class="timer-display" id="timer">70:00</div>
+    </div>
+  </div>
+  <nav>
+    <button class="active" onclick="showPage('p1',this)">📝 Parte 1 — Múltipla Escolha</button>
+    <button onclick="showPage('p2',this)">✅ Parte 2 — V ou F</button>
+    <button onclick="showPage('p3',this)">🔗 Parte 3 — Associação</button>
+    <button onclick="showPage('gab',this)" id="gab-btn" style="opacity:0.4;pointer-events:none;">📋 Gabarito</button>
+  </nav>
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="prog-text">0 de 24 respondidas</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="finishSimulado()">✔ Finalizar e Ver Gabarito</button>
+    <button class="btn btn-danger" onclick="resetSimulado()">↺ Refazer</button>
+  </div>
+</header>
+
+<!-- PARTE 1 -->
+<div class="page active" id="page-p1">
+  <div class="sec-header">
+    <div class="sec-icon">📝</div>
+    <div><div class="sec-title">Parte 1 — Múltipla Escolha</div><div class="sec-desc">Apenas uma alternativa correta. Gabarito liberado ao finalizar.</div></div>
+    <div class="sec-badge">16 questões</div>
+  </div>
+  <div id="p1-container"></div>
+</div>
+
+<!-- PARTE 2 -->
+<div class="page" id="page-p2">
+  <div class="sec-header">
+    <div class="sec-icon">✅</div>
+    <div><div class="sec-title">Parte 2 — Verdadeiro ou Falso</div><div class="sec-desc">Julgue cada afirmação como Verdadeiro (V) ou Falso (F).</div></div>
+    <div class="sec-badge">4 blocos</div>
+  </div>
+  <div id="p2-container"></div>
+</div>
+
+<!-- PARTE 3 -->
+<div class="page" id="page-p3">
+  <div class="sec-header">
+    <div class="sec-icon">🔗</div>
+    <div><div class="sec-title">Parte 3 — Associação de Colunas</div><div class="sec-desc">Associe cada item da Coluna A com o correspondente da Coluna B.</div></div>
+    <div class="sec-badge">4 blocos</div>
+  </div>
+  <div id="p3-container"></div>
+</div>
+
+<!-- GABARITO -->
+<div class="page" id="page-gab">
+  <div class="sec-header">
+    <div class="sec-icon">📋</div>
+    <div><div class="sec-title">Gabarito Comentado</div><div class="sec-desc">Respostas corretas com explicações e análise de distratores.</div></div>
+  </div>
+  <div id="score-display"></div>
+  <div id="gab-container"></div>
+</div>
+
+</div><!-- /main-app -->
+
+<!-- FINISH OVERLAY -->
+<div id="finish-overlay">
+  <div class="finish-card">
+    <div class="finish-icon" id="finish-icon">🎯</div>
+    <div class="finish-title">Simulado Finalizado!</div>
+    <div class="finish-score" id="finish-score">--/56</div>
+    <div class="finish-msg" id="finish-msg"></div>
+    <div class="finish-btns">
+      <button class="btn btn-primary" onclick="goToGabarito()">📋 Ver Gabarito Completo</button>
+      <button class="btn btn-secondary" onclick="resetSimulado()">↺ Refazer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const p1Data = [
+  // CAP 16 — MICROCIRCULACIÓN (4)
+  { n:1, cap:'Cap.16', q:'¿Cuál es el diámetro típico de una arteriola?', opts:['1-2 μm','5-9 μm','10-15 μm','50-100 μm','200-300 μm'], resp:2 },
+  { n:2, cap:'Cap.16', q:'¿Por qué los capilares hepáticos permiten el paso de proteínas plasmáticas?', opts:['Por uniones estrechas especiales','Por espacios amplios entre las células endoteliales','Porque carecen de células endoteliales','Por su diámetro reducido','Por la presencia de esfínteres precapilares'], resp:1 },
+  { n:3, cap:'Cap.16', q:'Con los valores clásicos de Guyton (Pc=17.3, Pif=-3.0, πp=28.0, πif=8.0), la Presión de Filtración Neta (PFN) es aproximadamente:', opts:['-10.7 mmHg','+0.3 mmHg','+28.0 mmHg','+56.3 mmHg','-56.3 mmHg'], resp:1 },
+  { n:4, cap:'Cap.16', q:'¿Qué porcentaje aproximado del volumen corporal total representa el intersticio?', opts:['1/2','1/6','1/20','1/100','1/3'], resp:1 },
+  // CAP 17 — REGULACIÓN DEL FLUJO (4)
+  { n:5, cap:'Cap.17', q:'La contracción del músculo liso vascular en respuesta directa al estiramiento por aumento de presión es la base de la:', opts:['Teoría metabólica','Teoría miógena','Teoría vasodilatadora','Teoría del aporte de nutrientes','Teoría de Starling'], resp:1 },
+  { n:6, cap:'Cap.17', q:'El aumento de flujo sanguíneo inmediatamente después de liberar la oclusión de una arteria se denomina:', opts:['Hiperemia activa','Autorregulación a largo plazo','Hiperemia reactiva','Vasomotilidad','Angiogénesis'], resp:2 },
+  { n:7, cap:'Cap.17', q:'El rango aproximado de presión arterial media dentro del cual el flujo sanguíneo se mantiene relativamente constante por autorregulación es:', opts:['10-50 mmHg','70-175 mmHg','200-300 mmHg','0-500 mmHg','100-120 mmHg'], resp:1 },
+  { n:8, cap:'Cap.17', q:'El NO produce relajación del músculo liso vascular mediante la vía:', opts:['AMPc','Guanilato ciclasa soluble → cGMP','Fosfolipasa C → IP3','Tirosina cinasa → MAPK','Bomba Na+/K+ ATPasa'], resp:1 },
+  // CAP 18 — REGULACIÓN NERVIOSA (4)
+  { n:9, cap:'Cap.18', q:'¿Cuál de los siguientes vasos NO posee inervación simpática?', opts:['Arteriola','Vénula','Capilar','Arteria','Vena'], resp:2 },
+  { n:10, cap:'Cap.18', q:'La zona vasoconstrictora del centro vasomotor se activa principalmente ante:', opts:['Un aumento de la presión arterial','Una disminución de la presión arterial','Un aumento de la frecuencia respiratoria','La digestión de alimentos','La hiperemia activa'], resp:1 },
+  { n:11, cap:'Cap.18', q:'Las señales de los barorreceptores del seno carotídeo llegan al bulbo raquídeo a través de:', opts:['El nervio óptico','El nervio de Hering (rama del glosofaríngeo)','El nervio hipogloso','El nervio trigémino','El nervio facial'], resp:1 },
+  { n:12, cap:'Cap.18', q:'La reacción de Cushing se caracteriza por:', opts:['Hipotensión y taquicardia','Hipertensión extrema y bradicardia refleja','Normotensión con taquicardia','Hipotensión y bradicardia','Hipertensión y taquicardia'], resp:1 },
+  // CAP 19 — REGULACIÓN A LARGO PLAZO (4)
+  { n:13, cap:'Cap.19', q:'El mecanismo renal de natriuresis por presión se caracteriza por tener una ganancia:', opts:['Nula','Baja, con error residual significativo','Teóricamente infinita','Solo aplicable en situaciones agudas','Negativa'], resp:2 },
+  { n:14, cap:'Cap.19', q:'¿Dónde se produce la conversión de angiotensina I a angiotensina II?', opts:['En el riñón','En el hígado','En el pulmón, por la enzima convertidora','En el corazón','En el bazo'], resp:2 },
+  { n:15, cap:'Cap.19', q:'El "punto de equilibrio" de la presión arterial a largo plazo se define como el punto donde:', opts:['La presión arterial es siempre 120/80 mmHg','La ingesta de sal y agua iguala a la excreción renal de sal y agua','El gasto cardíaco es máximo','La resistencia periférica es mínima','El volumen sistólico es constante'], resp:1 },
+  { n:16, cap:'Cap.19', q:'El criterio diagnóstico clásico de hipertensión arterial requiere:', opts:['Una sola medición de 130/85 mmHg','Dos mediciones ≥ 140/90 mmHg','Tres mediciones en el mismo día','Una medición ambulatoria de 24 horas obligatoria','Una sola medición de 140/90 mmHg'], resp:1 },
+];
+
+const p2Data = [
+  {
+    n:1, cap:'Cap.16 — Microcirculación',
+    stmts:[
+      { t:'El esfínter precapilar regula la entrada de sangre hacia el capilar verdadero.', resp:'V' },
+      { t:'Los capilares del cerebro poseen espacios amplios entre células endoteliales, permitiendo el paso libre de proteínas plasmáticas.', resp:'F' },
+      { t:'La disminución del oxígeno tisular provoca vasodilatación local.', resp:'V' },
+      { t:'Las sustancias hidrosolubles difunden directamente a través de las membranas celulares del endotelio, sin necesidad de poros.', resp:'F' },
+    ]
+  },
+  {
+    n:2, cap:'Cap.17 — Regulación del Flujo',
+    stmts:[
+      { t:'Según la teoría metabólica, el flujo sanguíneo es directamente proporcional a la tasa metabólica del tejido.', resp:'V' },
+      { t:'La hiperemia activa ocurre tras liberar la oclusión de una arteria, mientras que la hiperemia reactiva ocurre durante el ejercicio.', resp:'F' },
+      { t:'El principal factor angiogénico liberado en respuesta a la hipoxia tisular es el VEGF.', resp:'V' },
+      { t:'La angiotensina II es una sustancia vasodilatadora.', resp:'F' },
+    ]
+  },
+  {
+    n:3, cap:'Cap.18 — Regulación Nerviosa',
+    stmts:[
+      { t:'El sistema nervioso simpático es la rama más importante del SNA en la regulación de la circulación.', resp:'V' },
+      { t:'Las fibras vasoconstrictoras simpáticas predominan en el cerebro, corazón y músculo esquelético.', resp:'F' },
+      { t:'El tono vasomotor basal se mantiene con descargas de 0.5 a 2 impulsos por segundo.', resp:'V' },
+      { t:'El reflejo barorreceptor es el principal mecanismo de regulación de la presión arterial a largo plazo.', resp:'F' },
+    ]
+  },
+  {
+    n:4, cap:'Cap.19 — Regulación a Largo Plazo',
+    stmts:[
+      { t:'La angiotensina II provoca vasoconstricción y retención renal de sal y agua.', resp:'V' },
+      { t:'Las células yuxtaglomerulares que liberan renina se localizan en la arteriola eferente.', resp:'F' },
+      { t:'La hipertensión arterial primaria es de origen multifactorial, sin causa exacta conocida.', resp:'V' },
+      { t:'La enfermedad renal crónica no tiene relación con el desarrollo de hipertensión arterial.', resp:'F' },
+    ]
+  }
+];
+
+const p3Data = [
+  {
+    n:1, cap:'Cap.16 — Microcirculación',
+    titulo:'Associe cada vaso à sua função principal:',
+    colA:['1. Arteriola','2. Metaarteriola','3. Esfínter precapilar','4. Capilar','5. Vénula'],
+    colB:[
+      '(A) Permitir el intercambio de nutrientes, gases y desechos',
+      '(B) Controlar el flujo sanguíneo hacia los tejidos ajustando su diámetro',
+      '(C) Transportar sangre desoxigenada hacia las venas mayores',
+      '(D) Regular el flujo abriendo o cerrando la entrada al capilar',
+      '(E) Transportar sangre de las arteriolas a los capilares'
+    ],
+    resp:['B','E','D','A','C']
+  },
+  {
+    n:2, cap:'Cap.17 — Regulación del Flujo',
+    titulo:'Associe cada teoría o fenómeno a su descripción:',
+    colA:['1. Teoría metabólica','2. Teoría miógena','3. Hiperemia reactiva','4. Autorregulación','5. Óxido nítrico (NO)'],
+    colB:[
+      '(A) Aumento de flujo proporcional al tiempo de oclusión arterial previa',
+      '(B) Flujo directamente proporcional a la tasa metabólica del tejido',
+      '(C) Mantenimiento del flujo constante entre 70-175 mmHg de presión',
+      '(D) Contracción del músculo liso vascular en respuesta al estiramiento',
+      '(E) Vasodilatador producido a partir de O2 + L-Arginina en el endotelio'
+    ],
+    resp:['B','D','A','C','E']
+  },
+  {
+    n:3, cap:'Cap.18 — Regulación Nerviosa',
+    titulo:'Associe cada estructura o zona a su función:',
+    colA:['1. Zona vasoconstrictora','2. Zona vasodilatadora','3. Médula suprarrenal','4. Nervio de Hering','5. Hipotálamo anterior'],
+    colB:[
+      '(A) Libera adrenalina, reforzando al sistema simpático',
+      '(B) Se activa ante disminución de la presión arterial (vía estimulación simpática)',
+      '(C) Inhibe al centro vasomotor',
+      '(D) Transmite señales del seno carotídeo hacia el bulbo',
+      '(E) Se activa ante aumento de la presión arterial (vía inhibición simpática)'
+    ],
+    resp:['B','E','A','D','C']
+  },
+  {
+    n:4, cap:'Cap.19 — Regulación a Largo Plazo',
+    titulo:'Associe cada elemento del sistema RAAS/regulación renal a su función:',
+    colA:['1. Renina','2. Enzima convertidora','3. Angiotensina II','4. Aldosterona','5. Arteriola aferente'],
+    colB:[
+      '(A) Convierte angiotensina I en angiotensina II en el pulmón',
+      '(B) Liberada por el riñón ante descenso de la presión arterial',
+      '(C) Sitio donde las células yuxtaglomerulares detectan la presión de perfusión renal',
+      '(D) Provoca vasoconstricción y estimula la retención de sal',
+      '(E) Media la retención renal de sodio y agua'
+    ],
+    resp:['B','A','D','E','C']
+  }
+];
+
+// ===================== STATE =====================
+let answers = {};
+let vfAnswers = {};
+let assocAnswers = {};
+let timerInterval = null;
+let timeLeft = 70 * 60;
+let finished = false;
+
+// ===================== BUILD UI =====================
+function buildP1() {
+  const c = document.getElementById('p1-container');
+  p1Data.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q1-' + qi;
+    div.innerHTML = `
+      <div class="q-meta">
+        <span class="q-num">Q${q.n}</span>
+        <span class="q-cap">${q.cap}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts" id="opts-${qi}">
+        ${q.opts.map((o,oi) => `<div class="opt" onclick="selectP1(${qi},${oi})"><span class="opt-letter">${String.fromCharCode(65+oi)}</span>${o}</div>`).join('')}
+      </div>
+      <div class="q-result-badge" id="badge1-${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function buildP2() {
+  const c = document.getElementById('p2-container');
+  p2Data.forEach((q, qi) => {
+    vfAnswers[qi] = {};
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q2-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Bloco ${q.n}</span><span class="q-cap">${q.cap}</span></div>
+      ${q.stmts.map((s, si) => `
+        <div class="vf-stmt" id="vf-${qi}-${si}">
+          <div class="vf-text"><strong>${['I','II','III','IV'][si]}.</strong> ${s.t}</div>
+          <div class="vf-btns">
+            <button class="vf-btn" id="vfv-${qi}-${si}" onclick="selectVF(${qi},${si},'V')">✓ Verdadeiro</button>
+            <button class="vf-btn" id="vff-${qi}-${si}" onclick="selectVF(${qi},${si},'F')">✗ Falso</button>
+          </div>
+          <div class="vf-result" id="vfr-${qi}-${si}"></div>
+        </div>
+      `).join('')}
+    `;
+    c.appendChild(div);
+  });
+}
+
+function buildP3() {
+  const c = document.getElementById('p3-container');
+  p3Data.forEach((q, qi) => {
+    assocAnswers[qi] = {};
+    const letters = q.colB.map(b => b.match(/\(([A-E])\)/)[1]);
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q3-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Associação ${q.n}</span><span class="q-cap">${q.cap}</span></div>
+      <div class="q-text">${q.titulo}</div>
+      <div class="assoc-grid">
+        <div class="assoc-col">
+          <h4>Coluna A</h4>
+          ${q.colA.map((a, ai) => `
+            <div class="assoc-item">
+              <strong>${a}</strong>
+              <select class="assoc-select" id="sel-${qi}-${ai}" onchange="selectAssoc(${qi},${ai},this.value)">
+                <option value="">— selecione —</option>
+                ${letters.map(l => `<option value="${l}">${l}</option>`).join('')}
+              </select>
+            </div>
+          `).join('')}
+        </div>
+        <div class="assoc-col">
+          <h4>Coluna B</h4>
+          ${q.colB.map(b => `<div class="assoc-item">${b}</div>`).join('')}
+        </div>
+      </div>
+      <div class="q-result-badge" id="badge3-${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+// ===================== INTERACTIONS =====================
+function selectP1(qi, oi) {
+  if (finished) return;
+  const wasAnswered = answers[qi] !== undefined;
+  answers[qi] = oi;
+  document.querySelectorAll(`#opts-${qi} .opt`).forEach((o, i) => o.classList.toggle('selected', i === oi));
+  if (!wasAnswered) updateProgress(1);
+}
+
+function selectVF(qi, si, val) {
+  if (finished) return;
+  const wasAnswered = vfAnswers[qi][si] !== undefined;
+  vfAnswers[qi][si] = val;
+  const btnV = document.getElementById(`vfv-${qi}-${si}`);
+  const btnF = document.getElementById(`vff-${qi}-${si}`);
+  btnV.className = 'vf-btn' + (val === 'V' ? ' selected-v' : '');
+  btnF.className = 'vf-btn' + (val === 'F' ? ' selected-f' : '');
+  if (!wasAnswered) updateProgress(1);
+}
+
+function selectAssoc(qi, ai, val) {
+  if (finished) return;
+  const wasAnswered = assocAnswers[qi][ai] !== undefined;
+  assocAnswers[qi][ai] = val;
+  if (!wasAnswered) updateProgress(1);
+}
+
+let progressCount = 0;
+function updateProgress(n) {
+  progressCount += n;
+  const total = 16 + 16 + 20; // p1 + p2 stmts + p3 items = 52 individual items
+  const pct = Math.round((progressCount / total) * 100);
+  document.getElementById('prog-text').textContent = `${progressCount} de ${total} respondidas`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ===================== TIMER =====================
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+    const s = (timeLeft % 60).toString().padStart(2,'0');
+    const el = document.getElementById('timer');
+    el.textContent = `${m}:${s}`;
+    if (timeLeft <= 300) el.classList.add('urgent');
+    if (timeLeft <= 0) { clearInterval(timerInterval); finishSimulado(); }
+  }, 1000);
+}
+
+// ===================== FINISH =====================
+function finishSimulado() {
+  if (finished) return;
+  finished = true;
+  clearInterval(timerInterval);
+
+  let correct = 0, total = 0;
+  p1Data.forEach((q, qi) => {
+    total++;
+    const ans = answers[qi];
+    const opts = document.querySelectorAll(`#opts-${qi} .opt`);
+    opts.forEach((o, oi) => {
+      o.classList.add('disabled');
+      if (oi === q.resp) o.classList.add('correct');
+      else if (oi === ans && oi !== q.resp) o.classList.add('wrong');
+    });
+    if (ans === q.resp) {
+      correct++;
+      const b = document.getElementById(`badge1-${qi}`);
+      b.className = 'q-result-badge acertou'; b.textContent = '✓ Correto!'; b.style.display = 'inline-block';
+    } else if (ans !== undefined) {
+      const b = document.getElementById(`badge1-${qi}`);
+      b.className = 'q-result-badge errou'; b.textContent = `✗ Incorreto — Gabarito: ${String.fromCharCode(65+q.resp)}`; b.style.display = 'inline-block';
+    }
+  });
+
+  p2Data.forEach((q, qi) => {
+    q.stmts.forEach((s, si) => {
+      total++;
+      const userAns = vfAnswers[qi]?.[si];
+      const r = document.getElementById(`vfr-${qi}-${si}`);
+      const btnV = document.getElementById(`vfv-${qi}-${si}`);
+      const btnF = document.getElementById(`vff-${qi}-${si}`);
+      btnV.classList.add('disabled'); btnF.classList.add('disabled');
+      if (userAns === s.resp) {
+        correct++;
+        r.className = 'vf-result correct'; r.textContent = `✓ Correto! Resposta: ${s.resp === 'V' ? 'Verdadeiro' : 'Falso'}`;
+      } else {
+        r.className = 'vf-result wrong'; r.textContent = `✗ Incorreto — Resposta correta: ${s.resp === 'V' ? 'Verdadeiro' : 'Falso'}`;
+      }
+      r.style.display = 'block';
+    });
+  });
+
+  p3Data.forEach((q, qi) => {
+    const badge = document.getElementById(`badge3-${qi}`);
+    let qCorrect = 0;
+    q.colA.forEach((_, ai) => {
+      total++;
+      const userAns = assocAnswers[qi]?.[ai];
+      const sel = document.getElementById(`sel-${qi}-${ai}`);
+      if (sel) sel.disabled = true;
+      if (userAns === q.resp[ai]) {
+        correct++; qCorrect++;
+        if (sel) sel.style.borderColor = 'var(--green)';
+      } else {
+        if (sel) sel.style.borderColor = 'var(--red)';
+        if (sel) sel.title = `Correto: ${q.resp[ai]}`;
+      }
+    });
+    if (badge) {
+      badge.className = qCorrect === q.colA.length ? 'q-result-badge acertou' : 'q-result-badge errou';
+      badge.textContent = qCorrect === q.colA.length ? `✓ Associação completa correta!` : `✗ ${qCorrect}/${q.colA.length} corretos — veja o gabarito`;
+      badge.style.display = 'inline-block';
+    }
+  });
+
+  const gabBtn = document.getElementById('gab-btn');
+  gabBtn.style.opacity = '1'; gabBtn.style.pointerEvents = 'auto';
+  buildGabarito(correct, total);
+
+  const pct = Math.round((correct / total) * 100);
+  document.getElementById('finish-score').textContent = `${correct}/${total}`;
+  document.getElementById('finish-icon').textContent = pct >= 70 ? '🏆' : pct >= 50 ? '📚' : '💪';
+  document.getElementById('finish-msg').textContent = pct >= 70 ? 'Excelente desempenho! Continue assim para a prova.' : pct >= 50 ? 'Bom resultado. Revise os pontos errados no gabarito.' : 'Revise o material e refaça o simulado. Você chega lá!';
+  document.getElementById('finish-overlay').classList.add('show');
+}
+
+function goToGabarito() {
+  document.getElementById('finish-overlay').classList.remove('show');
+  showPage('gab', document.getElementById('gab-btn'));
+}
+
+// ===================== GABARITO =====================
+function buildGabarito(correct, total) {
+  const pct = Math.round((correct/total)*100);
+  const scoreHtml = `
+    <div class="score-box">
+      <div class="score-num">${pct}%</div>
+      <div class="score-label">Aproveitamento geral</div>
+      <div class="score-grid">
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--green)">${correct}</div><div class="score-cell-label">Acertos</div></div>
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--red)">${total-correct}</div><div class="score-cell-label">Erros</div></div>
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--text)">${total}</div><div class="score-cell-label">Total</div></div>
+      </div>
+    </div>`;
+  document.getElementById('score-display').innerHTML = scoreHtml;
+
+  const gabComments = [
+    { part:'Parte 1 — Múltipla Escolha', items:[
+      { n:'Q1', resp:'C', exp:'As arteríolas têm diâmetro de 10-15 μm, muito musculares, controlando o fluxo tecidual.' },
+      { n:'Q2', resp:'B', exp:'Capilares hepáticos têm espaços amplios entre células endoteliais, permitindo passagem de proteínas plasmáticas.' },
+      { n:'Q3', resp:'B', exp:'PFN = Pc − Pif − πp + πif = 17.3 − (−3.0) − 28.0 + 8.0 = +0.3 mmHg.' },
+      { n:'Q4', resp:'B', exp:'O interstício representa aproximadamente 1/6 do volume corporal total.' },
+      { n:'Q5', resp:'B', exp:'A teoria miógena explica a contração do músculo liso vascular em resposta ao estiramento.' },
+      { n:'Q6', resp:'C', exp:'Hiperemia reativa é proporcional ao tempo de oclusão arterial prévia.' },
+      { n:'Q7', resp:'B', exp:'A autorregulação mantém o fluxo estável entre aproximadamente 70-175 mmHg.' },
+      { n:'Q8', resp:'B', exp:'O NO ativa a guanilato ciclase solúvel, aumentando cGMP e relaxando o músculo liso.' },
+      { n:'Q9', resp:'C', exp:'Os capilares NÃO possuem inervação simpática — apenas arteríolas, arterías, vênulas e veias.' },
+      { n:'Q10', resp:'B', exp:'A zona vasoconstritora se ativa diante de uma diminuição da pressão arterial.' },
+      { n:'Q11', resp:'B', exp:'O nervo de Hering (ramo do glossofaríngeo) transmite os sinais do seio carotídeo.' },
+      { n:'Q12', resp:'B', exp:'A reação de Cushing = hipertensão extrema + bradicardia reflexa, diante de isquemia cerebral grave.' },
+      { n:'Q13', resp:'C', exp:'O mecanismo de natriurese por pressão tem ganho teoricamente infinito.' },
+      { n:'Q14', resp:'C', exp:'A conversão de angiotensina I em II ocorre no pulmão, pela enzima conversora.' },
+      { n:'Q15', resp:'B', exp:'O ponto de equilíbrio é onde a ingestão de sal/água iguala a excreção renal.' },
+      { n:'Q16', resp:'B', exp:'O critério clássico de hipertensão é de duas medições ≥140/90 mmHg.' },
+    ]},
+    { part:'Parte 2 — Verdadeiro ou Falso', items:[
+      { n:'Bloco 1 (Cap.16)', resp:'V, F, V, F', exp:'II-FALSO: é o FÍGADO (não o cérebro) que tem espaços amplos permitindo proteínas. IV-FALSO: são as lipossolúveis que difundem diretamente; as hidrossolúveis passam pelos poros.' },
+      { n:'Bloco 2 (Cap.17)', resp:'V, F, V, F', exp:'II-FALSO: é o inverso — hiperemia REATIVA após oclusão, ATIVA durante exercício. IV-FALSO: angiotensina II é VASOCONSTRITORA, não vasodilatadora.' },
+      { n:'Bloco 3 (Cap.18)', resp:'V, F, V, F', exp:'II-FALSO: fibras vasoconstritoras predominam em rim/intestino/pele/baço, não em cérebro/coração/músculo (que têm fibras dilatadoras). IV-FALSO: o barorreceptor é de CURTO prazo, não longo prazo.' },
+      { n:'Bloco 4 (Cap.19)', resp:'V, F, V, F', exp:'II-FALSO: as células justaglomerulares estão na arteríola AFERENTE, não na eferente. IV-FALSO: a doença renal crônica é uma das causas mais importantes de hipertensão secundária.' },
+    ]},
+    { part:'Parte 3 — Associação de Colunas', items:[
+      { n:'Assoc.1 (Cap.16)', resp:'1-B · 2-E · 3-D · 4-A · 5-C', exp:'Arteriola controla o diâmetro (B); Metaarteriola transporta às capilares (E); Esfínter regula a entrada (D); Capilar faz a troca (A); Vênula retorna o sangue (C).' },
+      { n:'Assoc.2 (Cap.17)', resp:'1-B · 2-D · 3-A · 4-C · 5-E', exp:'Metabólica=proporcional ao metabolismo (B); Miógena=estiramento (D); Hiperemia reativa=oclusão prévia (A); Autorregulação=platô de pressão (C); NO=vasodilatador endotelial (E).' },
+      { n:'Assoc.3 (Cap.18)', resp:'1-B · 2-E · 3-A · 4-D · 5-C', exp:'Zona vasoconstritora ativa com ↓PA (B); vasodilatadora com ↑PA (E); medula suprarrenal libera adrenalina (A); nervo de Hering transmite sinais (D); hipotálamo anterior inibe (C).' },
+      { n:'Assoc.4 (Cap.19)', resp:'1-B · 2-A · 3-D · 4-E · 5-C', exp:'Renina liberada pelo rim (B); enzima conversora no pulmão (A); angiotensina II vasoconstringe (D); aldosterona retém sódio (E); arteríola aferente detecta pressão (C).' },
+    ]}
+  ];
+
+  let html = '';
+  gabComments.forEach(sec => {
+    html += `<div class="gab-section"><div class="gab-title">${sec.part}</div>`;
+    sec.items.forEach(item => {
+      html += `
+        <div class="gab-item">
+          <div class="gab-num">${item.n}</div>
+          <div class="gab-resp">${item.resp}</div>
+          <div class="gab-exp">${item.exp}</div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('gab-container').innerHTML = html;
+}
+
+// ===================== NAVIGATION =====================
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===================== START / RESET =====================
+function startSimulado() {
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  buildP1(); buildP2(); buildP3();
+  startTimer();
+}
+
+function resetSimulado() {
+  if (!confirm('Refazer o simulado? Todo o progresso será perdido.')) return;
+  clearInterval(timerInterval);
+  finished = false;
+  answers = {}; vfAnswers = {}; assocAnswers = {};
+  timeLeft = 70 * 60;
+  progressCount = 0;
+  document.getElementById('finish-overlay').classList.remove('show');
+  document.getElementById('p1-container').innerHTML = '';
+  document.getElementById('p2-container').innerHTML = '';
+  document.getElementById('p3-container').innerHTML = '';
+  document.getElementById('gab-container').innerHTML = '';
+  document.getElementById('score-display').innerHTML = '';
+  document.getElementById('timer').textContent = '70:00';
+  document.getElementById('timer').classList.remove('urgent');
+  document.getElementById('prog-text').textContent = '0 de 52 respondidas';
+  document.getElementById('prog-pct').textContent = '0%';
+  document.getElementById('prog-fill').style.width = '0%';
+  const gabBtn = document.getElementById('gab-btn');
+  gabBtn.style.opacity = '0.4'; gabBtn.style.pointerEvents = 'none';
+  showPage('p1', document.querySelector('nav button'));
+  buildP1(); buildP2(); buildP3();
+  startTimer();
+}
+</script>
+</body>
+</html>
