@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regulación Nerviosa de la Presión · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --art:#ff5c6c; --ven:#4d9fff; --gold:#ffd166; --green:#4ade80;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.toggle-row{display:flex; gap:10px; margin:16px 0; flex-wrap:wrap;}
+.toggle-btn{flex:1; min-width:160px; padding:14px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text); cursor:pointer; font-weight:700; text-align:center; transition:.2s;}
+.toggle-btn:hover{background:var(--card-hover);}
+.toggle-btn.active-a{background:rgba(255,92,108,.15); border-color:var(--art); color:var(--art);}
+.toggle-btn.active-b{background:rgba(77,159,255,.15); border-color:var(--ven); color:var(--ven);}
+.toggle-result{background:var(--bg-alt); border-radius:10px; padding:16px; margin-top:10px; font-size:.92rem; min-height:24px;}
+
+.vessel-map{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+@media(max-width:720px){.vessel-map{grid-template-columns:repeat(2,1fr);}}
+.vessel-cell{text-align:center; border-radius:10px; padding:14px 8px; font-size:.82rem; font-weight:700;}
+.vessel-yes{background:rgba(255,92,108,.15); border:1px solid var(--art); color:var(--art);}
+.vessel-no{background:rgba(139,152,171,.1); border:1px solid var(--border); color:var(--text-dim);}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);} .btn-hard{background:var(--gold);} .btn-good{background:var(--ven);} .btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><circle cx="20" cy="20" r="9" fill="none" stroke="#ff5c6c" stroke-width="2"/><path d="M20 4v6M20 30v6M4 20h6M30 20h6" stroke="#4d9fff" stroke-width="2"/></svg>
+      <div class="logo-text">
+        <h1>Regulación Nerviosa de la Presión</h1>
+        <span>Guyton & Hall · Cap. 18 · Método Prompt Master</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>SNA → Inervación → Centro Vasomotor → Control Superior → Barorreceptores → Reflejos → Evidencia → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧠 Control Autónomo</button>
+    <button class="tab-btn" data-tab="inervacion">🩸 Inervación Vascular</button>
+    <button class="tab-btn" data-tab="vasomotor">⚙️ Centro Vasomotor</button>
+    <button class="tab-btn" data-tab="superior">🧬 Control Superior</button>
+    <button class="tab-btn" data-tab="baro">📡 Barorreceptores</button>
+    <button class="tab-btn" data-tab="reflejos">🔁 Otros Reflejos</button>
+    <button class="tab-btn" data-tab="evidencia">📊 Evidencia Experimental</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 18 · Guyton & Hall</span>
+    <h2>El sistema nervioso autónomo, al mando de la presión arterial</h2>
+    <p>Casi la totalidad del control de la circulación depende del <b>sistema nervioso autónomo</b> — y dentro de él, el <b>simpático</b> es, por mucho, el protagonista.</p>
+  </div>
+
+  <div class="card">
+    <h2>Simpático vs. Parasimpático en la circulación</h2>
+    <div class="toggle-row">
+      <button class="toggle-btn" onclick="showAuto('simp_est', this)">Estimulación Simpática</button>
+      <button class="toggle-btn" onclick="showAuto('simp_inh', this)">Inhibición Simpática</button>
+      <button class="toggle-btn" onclick="showAuto('para_est', this)">Estimulación Parasimpática</button>
+    </div>
+    <div class="toggle-result" id="autoResult">Selecciona una opción para ver su efecto en la circulación.</div>
+  </div>
+
+  <div class="card">
+    <h2>Funciones globales de la regulación nerviosa</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>Redistribución del flujo</h4><p style="margin:0; font-size:.86rem;">Desvía sangre entre distintas áreas del cuerpo según la prioridad del momento.</p></div>
+      <div class="mini-card"><h4>Actividad de la bomba cardíaca</h4><p style="margin:0; font-size:.86rem;">Aumenta o disminuye el gasto cardíaco según la demanda.</p></div>
+      <div class="mini-card"><h4>Control rápido de la PA</h4><p style="margin:0; font-size:.86rem;">Es el mecanismo más veloz para ajustar la presión arterial sistémica, actuando en segundos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INERVACIÓN ============ -->
+<section class="section" id="inervacion">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Inervación Simpática de los Vasos Sanguíneos</h2>
+    <p>No todos los vasos están inervados por igual — y hay una excepción clave que aman poner en los exámenes.</p>
+  </div>
+  <div class="card">
+    <h2>¿Qué vasos tienen inervación simpática?</h2>
+    <div class="vessel-map">
+      <div class="vessel-cell vessel-yes">Arterias<br>✔ Inervadas</div>
+      <div class="vessel-cell vessel-yes">Arteriolas<br>✔ Inervadas</div>
+      <div class="vessel-cell vessel-no">Capilares<br>✘ SIN inervación</div>
+      <div class="vessel-cell vessel-yes">Vénulas y Venas<br>✔ Inervadas</div>
+    </div>
+    <div class="clinical"><b>Pregunta clásica de examen:</b> "Cite las características de los capilares" — la respuesta clave en este contexto es que los capilares NO poseen inervación simpática ni músculo liso; su diámetro se regula indirectamente vía las metaarteriolas y esfínteres precapilares.</div>
+  </div>
+
+  <div class="card">
+    <h2>Sistema vasoconstrictor simpático</h2>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Fibras constrictoras</h4>
+        <p style="margin:0; font-size:.88rem;">Predominan en: <b>riñones, intestinos, piel, bazo</b> — órganos que pueden "sacrificar" flujo en situaciones de emergencia.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Fibras dilatadoras</h4>
+        <p style="margin:0; font-size:.88rem;">Predominan en: <b>cerebro, corazón, músculo esquelético</b> — órganos prioritarios que necesitan mantener o aumentar su flujo.</p>
+      </div>
+    </div>
+    <div class="mnemo"><b>Mnemotecnia:</b> "RIPE se constriñe, CCM se dilata" — Riñón-Intestino-Piel-Bazo (constricción) vs. Cerebro-Corazón-Músculo (dilatación) — el cuerpo prioriza los órganos nobles.</div>
+  </div>
+</section>
+
+<!-- ============ CENTRO VASOMOTOR ============ -->
+<section class="section" id="vasomotor">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Centro Vasomotor (Bulbo Raquídeo)</h2>
+    <p>El "cuartel general" bulbar que decide, instante a instante, si el cuerpo se contrae o se relaja vascularmente.</p>
+  </div>
+
+  <div class="card">
+    <h2>Las tres zonas del centro vasomotor</h2>
+    <table>
+      <tr><th>Zona</th><th>Efecto sobre la presión</th><th>Estímulo que la activa</th><th>Mecanismo</th></tr>
+      <tr><td><b>Vasoconstrictora</b></td><td>Aumenta la presión</td><td>Una disminución de la PA</td><td>Estimulación simpática</td></tr>
+      <tr><td><b>Vasodilatadora</b></td><td>Disminuye la presión</td><td>Un aumento de la PA</td><td>Inhibición simpática</td></tr>
+      <tr><td><b>Sensitiva (cardioinhibidora)</b></td><td>Recibe información aferente</td><td>Señales de barorreceptores/quimiorreceptores</td><td>Modula a las otras dos zonas</td></tr>
+    </table>
+    <div class="analogy"><b>Analogía:</b> imagina el centro vasomotor como un termostato — la zona sensitiva es el sensor de temperatura, la vasoconstrictora es la calefacción (sube la presión), y la vasodilatadora es el aire acondicionado (baja la presión).</div>
+  </div>
+
+  <div class="card">
+    <h2>Tono vasomotor</h2>
+    <p>El centro vasomotor emite descargas continuas de <b>0.5 a 2 impulsos por segundo</b>, manteniendo un estado basal de contracción parcial (tono) en los vasos sanguíneos, incluso en reposo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Control de la actividad cardíaca por el centro vasomotor</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Porción lateral</h4><p style="margin:0; font-size:.88rem;">Estimulación simpática → aumenta la frecuencia cardíaca y la fuerza de contracción.</p></div>
+      <div class="mini-card"><h4>Porción medial</h4><p style="margin:0; font-size:.88rem;">Estimulación parasimpática (vía núcleo dorsal del vago), inhibiendo al simpático → disminuye la frecuencia cardíaca.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTROL SUPERIOR ============ -->
+<section class="section" id="superior">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Control del Centro Vasomotor por Centros Superiores</h2>
+    <p>El bulbo no actúa solo — recibe órdenes de estructuras cerebrales superiores.</p>
+  </div>
+  <div class="card">
+    <div class="flow-steps">
+      <div class="flow-step">Corteza cerebral</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Hipotálamo (posterolateral: excita · anterior: inhibe)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Sustancia reticular (protuberancia, mesencéfalo, diencéfalo)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Centro vasomotor bulbar</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Médula suprarrenal</h2>
+    <p>Actúa como un "refuerzo hormonal" del sistema simpático: libera <b>adrenalina</b>, que estimula receptores <b>beta</b>, amplificando y prolongando los efectos de la activación simpática directa.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sistema vasodilatador simpático</h2>
+    <p>En el <b>músculo esquelético</b>, ciertas fibras simpáticas producen <b>vasodilatación</b> (no vasoconstricción) mediante estimulación adrenérgica especial. Este sistema está controlado por la <b>porción anterior del hipotálamo</b>.</p>
+    <div class="clinical"><b>Aplicación clínica — Síncope vasovagal:</b> el "desvanecimiento emocional" ocurre cuando una activación intensa de este sistema vasodilatador simpático (junto con un aumento del tono vagal) provoca una caída brusca de la presión arterial y del flujo cerebral, causando el desmayo.</div>
+  </div>
+</section>
+
+<!-- ============ BARORRECEPTORES ============ -->
+<section class="section" id="baro">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Reflejo de Barorreceptores</h2>
+    <p>El control nervioso de la presión es extremadamente rápido — este reflejo es la primera línea de defensa contra cualquier cambio brusco de presión.</p>
+  </div>
+  <div class="card">
+    <h2>Anatomía del reflejo</h2>
+    <div class="flow-steps">
+      <div class="flow-step">Seno carotídeo y cayado aórtico (barorreceptores)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Nervio de Hering (rama del glosofaríngeo, IX)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Núcleo del tracto solitario (bulbo)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Inhibe centro vasoconstrictor / excita centro vagal</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">↓ FC, ↓ contractilidad, vasodilatación</div>
+    </div>
+    <div class="clinical"><b>¿Qué es el núcleo del tracto solitario?</b> Es la estación de relevo central en el bulbo raquídeo donde llegan las señales aferentes de los barorreceptores y quimiorreceptores, y desde donde se distribuyen las señales de ajuste hacia el centro vasomotor.</div>
+  </div>
+  <div class="card">
+    <h2>Características funcionales</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Atenuación de cambios de presión</h4><p style="margin:0; font-size:.88rem;">Cuando la PA sube, los barorreceptores se activan más y desencadenan una respuesta refleja que la reduce de vuelta (y viceversa).</p></div>
+      <div class="mini-card"><h4>Regulación a CORTO plazo</h4><p style="margin:0; font-size:.88rem;">Los barorreceptores se "reajustan" (adaptan) en 1-2 días a la nueva presión — por eso NO sirven para la regulación de la presión arterial a largo plazo.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OTROS REFLEJOS ============ -->
+<section class="section" id="reflejos">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>Otros Reflejos Cardiovasculares</h2>
+    <p>Más allá del barorreceptor clásico, existen otros reflejos que el examen suele preguntar de forma aislada.</p>
+  </div>
+
+  <div class="card">
+    <h2>Reflejos auriculares</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Reflejo de volumen</h4><p style="margin:0; font-size:.88rem;">La distensión de las aurículas por aumento de volumen provoca un reflejo que aumenta la excreción renal de agua y sodio.</p></div>
+      <div class="mini-card"><h4>Reflejo de Bainbridge</h4><p style="margin:0; font-size:.88rem;">El aumento del retorno venoso distiende la aurícula derecha, lo que provoca un aumento reflejo de la frecuencia cardíaca (para evitar el represamiento de sangre).</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Respuesta isquémica del SNC — Reacción de Cushing</h2>
+    <p>Cuando el flujo sanguíneo cerebral cae drásticamente (ej: por aumento de la presión intracraneal), el centro vasomotor se activa masivamente por isquemia local, generando un aumento extremo de la presión arterial junto con <b>bradicardia refleja</b> (por activación barorreceptora secundaria).</p>
+    <div class="clinical"><b>Tríada de Cushing (relevancia clínica):</b> hipertensión + bradicardia + patrón respiratorio irregular — signo de alarma de hipertensión intracraneal grave.</div>
+  </div>
+
+  <div class="card">
+    <h2>Otros reflejos menores</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Reflejo de compresión abdominal</h4><p style="margin:0; font-size:.88rem;">La compresión de reservorios venosos abdominales ayuda a mantener el retorno venoso y la presión arterial.</p></div>
+      <div class="mini-card"><h4>Variación de la presión con la respiración</h4><p style="margin:0; font-size:.88rem;">Los cambios de presión intratorácica durante la respiración generan pequeñas oscilaciones cíclicas de la presión arterial (arritmia sinusal respiratoria).</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Relación simpático-parasimpático</h2>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Si se inhibe el simpático, ¿qué pasa con el parasimpático? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Predomina — al retirarse el "freno" simpático, el tono parasimpático basal se vuelve dominante, favoreciendo bradicardia y vasodilatación.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Si se estimula el parasimpático, ¿qué pasa con la FC y por qué? <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>La FC disminuye, porque se libera acetilcolina en las terminaciones vagales sobre el nódulo sinusal, hiperpolarizando las células marcapaso y reduciendo su frecuencia de descarga.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVIDENCIA EXPERIMENTAL ============ -->
+<section class="section" id="evidencia">
+  <div class="hero">
+    <span class="eyebrow">Sección 7 · Figura 18-4 de Guyton</span>
+    <h2>Evidencia Experimental del Tono Vasomotor</h2>
+    <p>Un experimento clásico que demuestra, de forma contundente, que el tono simpático basal es indispensable para mantener la presión arterial.</p>
+  </div>
+  <div class="card">
+    <h2>Anestesia espinal total</h2>
+    <p>Al aplicar anestesia espinal total, se bloquea toda la salida simpática hacia los vasos sanguíneos. El resultado es un <b>descenso importante de la presión arterial</b>, como consecuencia directa de la <b>pérdida del tono vasomotor</b> — los vasos, sin su estímulo simpático basal, se dilatan pasivamente.</p>
+    <div class="flow-steps">
+      <div class="flow-step">Anestesia espinal total</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Bloqueo de la salida simpática</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Pérdida del tono vasomotor</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Vasodilatación generalizada</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Caída importante de la PA</div>
+    </div>
+    <p>La inyección posterior de <b>noradrenalina</b> revierte rápidamente el cuadro, restaurando el tono vascular y la presión arterial — confirmando que el efecto se debía específicamente a la pérdida de estímulo simpático (y no a otra causa).</p>
+    <div class="clinical"><b>Relevancia clínica directa:</b> este es el mecanismo exacto detrás de la hipotensión que puede ocurrir tras una anestesia raquídea/epidural alta en la práctica clínica real.</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Regulación Nerviosa de la Presión (Guyton Cap. 18) · Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'regulacion_nerviosa_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','inervacion','vasomotor','superior','baro','reflejos','evidencia','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+const autoEffects = {
+  simp_est: '<b style="color:var(--art);">Estimulación simpática:</b> vasoconstricción generalizada + aumento de la frecuencia cardíaca.',
+  simp_inh: '<b style="color:var(--ven);">Inhibición simpática:</b> vasodilatación + disminución de la frecuencia cardíaca.',
+  para_est: '<b style="color:var(--green);">Estimulación parasimpática:</b> disminución de la frecuencia cardíaca — pero NO afecta directamente a los vasos sanguíneos periféricos (la inervación parasimpática vascular es mínima).'
+};
+function showAuto(key, btn){
+  document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active-a','active-b'));
+  btn.classList.add(key === 'para_est' ? 'active-b' : 'active-a');
+  document.getElementById('autoResult').innerHTML = autoEffects[key];
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Control Autónomo', front:'¿Cuál es la rama del SNA más importante para la regulación de la circulación?', back:'El sistema nervioso simpático. El parasimpático también contribuye, pero en menor medida.'},
+  {tag:'Control Autónomo', front:'¿Qué efecto tiene la estimulación parasimpática sobre los vasos sanguíneos?', back:'Prácticamente ninguno — la estimulación parasimpática disminuye la FC, pero no afecta significativamente a los vasos periféricos.'},
+  {tag:'Inervación', front:'¿Qué tipo de vaso NO tiene inervación simpática?', back:'El capilar. Solo arterias, arteriolas, vénulas y venas están inervados.'},
+  {tag:'Inervación', front:'¿En qué órganos predominan las fibras vasoconstrictoras simpáticas?', back:'Riñones, intestinos, piel y bazo — órganos que pueden sacrificar flujo en emergencias.'},
+  {tag:'Inervación', front:'¿En qué órganos predominan las fibras vasodilatadoras?', back:'Cerebro, corazón y músculo esquelético — órganos prioritarios.'},
+  {tag:'Centro Vasomotor', front:'¿Qué estímulo activa la zona vasoconstrictora del centro vasomotor?', back:'Una disminución de la presión arterial, mediante estimulación simpática.'},
+  {tag:'Centro Vasomotor', front:'¿Cuál es la frecuencia del tono vasomotor basal?', back:'De 0.5 a 2 impulsos por segundo.'},
+  {tag:'Centro Vasomotor', front:'¿Qué porción del centro vasomotor controla la estimulación simpática cardíaca?', back:'La porción lateral.'},
+  {tag:'Control Superior', front:'¿Qué parte del hipotálamo excita al centro vasomotor y cuál lo inhibe?', back:'La porción posterolateral excita; la porción anterior inhibe.'},
+  {tag:'Control Superior', front:'¿Qué libera la médula suprarrenal y sobre qué receptores actúa?', back:'Libera adrenalina, que actúa sobre receptores beta, reforzando al sistema simpático.'},
+  {tag:'Control Superior', front:'¿Qué es el síncope vasovagal?', back:'Un desmayo causado por activación del sistema vasodilatador simpático muscular junto con aumento del tono vagal, provocando caída brusca de presión y flujo cerebral.'},
+  {tag:'Barorreceptores', front:'¿Por qué nervio viajan las señales del seno carotídeo hacia el bulbo?', back:'Por el nervio de Hering, rama del nervio glosofaríngeo (IX par).'},
+  {tag:'Barorreceptores', front:'¿Dónde llegan las señales aferentes de barorreceptores y quimiorreceptores en el bulbo?', back:'Al núcleo del tracto solitario.'},
+  {tag:'Barorreceptores', front:'¿El reflejo barorreceptor sirve para la regulación de la presión a largo o a corto plazo?', back:'A CORTO plazo — los barorreceptores se reajustan (adaptan) en 1-2 días, por lo que no son útiles para la regulación crónica.'},
+  {tag:'Reflejos', front:'¿Qué es el reflejo de Bainbridge?', back:'El aumento del retorno venoso distiende la aurícula derecha, provocando un aumento reflejo de la frecuencia cardíaca.'},
+  {tag:'Reflejos', front:'¿Qué es la reacción de Cushing?', back:'Respuesta isquémica del SNC ante isquemia cerebral grave: hipertensión extrema + bradicardia refleja (tríada de Cushing junto con respiración irregular).'},
+  {tag:'Evidencia', front:'¿Qué ocurre con la presión arterial tras una anestesia espinal total, y por qué?', back:'Cae significativamente, por pérdida del tono vasomotor (bloqueo de la salida simpática hacia los vasos).'},
+  {tag:'Evidencia', front:'¿Qué sustancia revierte la hipotensión de la anestesia espinal total en el experimento clásico de Guyton?', back:'La noradrenalina, inyectada exógenamente.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Cuál es la rama del sistema nervioso autónomo más importante en la regulación de la circulación?', options:['El sistema nervioso parasimpático','El sistema nervioso simpático','El sistema nervioso entérico','Ambos por igual'], correct:1, exp:'El simpático es, por mucho, la rama más importante; el parasimpático solo contribuye de forma secundaria.'},
+  {q:'¿Cuál de los siguientes vasos NO posee inervación simpática?', options:['Arteriola','Vénula','Capilar','Arteria'], correct:2, exp:'Los capilares carecen de inervación simpática y de músculo liso; su flujo se regula indirectamente vía esfínteres precapilares.'},
+  {q:'Las fibras vasoconstrictoras simpáticas predominan en:', options:['Cerebro, corazón y músculo esquelético','Riñones, intestinos, piel y bazo','Solo en el corazón','Solo en el cerebro'], correct:1, exp:'Estos órganos pueden reducir su flujo temporalmente en situaciones de emergencia, redirigiendo sangre a órganos vitales.'},
+  {q:'La zona vasoconstrictora del centro vasomotor se activa principalmente ante:', options:['Un aumento de la presión arterial','Una disminución de la presión arterial','Un aumento de la frecuencia respiratoria','La digestión de alimentos'], correct:1, exp:'Una caída de la PA estimula la zona vasoconstrictora (vía estimulación simpática) para restaurarla.'},
+  {q:'¿Cuál es la frecuencia aproximada del tono vasomotor basal?', options:['0.5 a 2 impulsos por segundo','20 a 30 impulsos por segundo','100 impulsos por segundo','Ninguna, es continuo sin pausas'], correct:0, exp:'El centro vasomotor mantiene un tono basal de 0.5 a 2 impulsos por segundo.'},
+  {q:'¿Qué porción del hipotálamo, al ser estimulada, INHIBE al centro vasomotor?', options:['La porción posterolateral','La porción anterior','El núcleo supraóptico','El núcleo arcuato'], correct:1, exp:'La porción anterior del hipotálamo inhibe al centro vasomotor; la posterolateral lo excita.'},
+  {q:'La médula suprarrenal refuerza al sistema simpático liberando:', options:['Acetilcolina, actuando sobre receptores muscarínicos','Adrenalina, actuando sobre receptores beta','Dopamina, actuando sobre receptores D2','Serotonina, actuando sobre receptores 5-HT'], correct:1, exp:'La adrenalina liberada por la médula suprarrenal actúa sobre receptores beta, amplificando la respuesta simpática.'},
+  {q:'Las señales de los barorreceptores del seno carotídeo llegan al bulbo raquídeo a través de:', options:['El nervio óptico','El nervio de Hering (rama del glosofaríngeo)','El nervio hipogloso','El nervio trigémino'], correct:1, exp:'El nervio de Hering, rama del IX par (glosofaríngeo), transmite la información barorreceptora del seno carotídeo.'},
+  {q:'El reflejo barorreceptor es fundamental para la regulación de la presión arterial a:', options:['Largo plazo, ya que nunca se adapta','Corto plazo, porque se reajusta en 1-2 días','Ningún plazo, es un reflejo vestigial','Muy largo plazo, de meses a años'], correct:1, exp:'Los barorreceptores se reajustan (se adaptan) a la nueva presión en 1-2 días, por lo que no sirven para la regulación crónica de la PA.'},
+  {q:'La reacción de Cushing se caracteriza por:', options:['Hipotensión y taquicardia','Hipertensión extrema y bradicardia refleja','Normotensión con taquicardia','Hipotensión y bradicardia'], correct:1, exp:'Ante isquemia cerebral grave, el centro vasomotor genera hipertensión extrema, con bradicardia refleja secundaria por activación barorreceptora.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>

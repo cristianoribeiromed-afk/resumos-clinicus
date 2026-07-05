@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regulación del Flujo Sanguíneo · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d0f16;
+  --bg-alt:#151a24;
+  --card:#1b2130;
+  --card-hover:#212940;
+  --border:#2a3348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --art:#ff5c6c;
+  --ven:#4d9fff;
+  --gold:#ffd166;
+  --green:#4ade80;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.1rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:8px 11px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.theory-toggle{display:flex; gap:8px; margin:14px 0; flex-wrap:wrap;}
+.theory-btn{flex:1; min-width:150px; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text-dim); cursor:pointer; font-weight:700; font-size:.82rem; text-align:center; transition:.2s;}
+.theory-btn:hover{background:var(--card-hover); color:var(--text);}
+.theory-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.theory-panel{background:var(--bg-alt); border-radius:12px; padding:18px; margin-top:10px; min-height:80px; font-size:.9rem;}
+
+.autoregulation-graph{background:var(--bg-alt); border-radius:12px; padding:20px; margin:14px 0; text-align:center;}
+
+.substance-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:14px 0;}
+@media(max-width:720px){.substance-grid{grid-template-columns:1fr;}}
+.substance-col{border-radius:14px; padding:18px;}
+.substance-col.vaso{background:rgba(255,92,108,.08); border:1px solid rgba(255,92,108,.25);}
+.substance-col.dila{background:rgba(77,159,255,.08); border:1px solid rgba(77,159,255,.25);}
+.substance-col h4{margin-bottom:10px;}
+.substance-col.vaso h4{color:var(--art);}
+.substance-col.dila h4{color:var(--ven);}
+.substance-item{background:var(--card); border-radius:8px; padding:8px 12px; margin-bottom:6px; font-size:.86rem;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);}
+.btn-hard{background:var(--gold);}
+.btn-good{background:var(--ven);}
+.btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 34s-13-8-13-18a8 8 0 0 1 13-6 8 8 0 0 1 13 6c0 10-13 18-13 18z" fill="none" stroke="#ff5c6c" stroke-width="2.2"/><path d="M8 20h6l3-6 4 10 3-6h8" fill="none" stroke="#4d9fff" stroke-width="1.6"/></svg>
+      <div class="logo-text">
+        <h1>Regulación del Flujo Sanguíneo</h1>
+        <span>Guyton & Hall · Cap. 17 · Método Prompt Master</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Fundamentos → Teorías → Hiperemia → Autorregulación → Óx. Nítrico → Control → Sustancias → Angiogénesis → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🫀 Fundamentos</button>
+    <button class="tab-btn" data-tab="teorias">🔬 Teorías Locales</button>
+    <button class="tab-btn" data-tab="hiperemia">📈 Hiperemia</button>
+    <button class="tab-btn" data-tab="autorregulacion">⚖️ Autorregulación</button>
+    <button class="tab-btn" data-tab="oxidonitrico">💨 Óxido Nítrico</button>
+    <button class="tab-btn" data-tab="control">🧠 Control Nervioso/Humoral</button>
+    <button class="tab-btn" data-tab="sustancias">💊 Sustancias Vasoactivas</button>
+    <button class="tab-btn" data-tab="angiogenesis">🌱 Angiogénesis</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 17 · Guyton & Hall</span>
+    <h2>¿Por qué el cerebro nunca "espera" por sangre?</h2>
+    <p>Cada órgano recibe exactamente el flujo sanguíneo que necesita, ni más ni menos — gracias a mecanismos de control <b>local</b>, <b>nervioso</b> y <b>humoral</b> que actúan en conjunto, segundo a segundo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Distribución del gasto cardíaco en reposo</h2>
+    <p>El gasto cardíaco total (~5000 mL/min) no se reparte por igual — cada tejido recibe una fracción proporcional a su actividad metabólica.</p>
+    <table>
+      <tr><th>Órgano/Tejido</th><th>% del Gasto Cardíaco</th><th>Flujo (mL/min)</th><th>mL/min/100g tejido</th></tr>
+      <tr><td>Encéfalo</td><td>14%</td><td>700</td><td>50</td></tr>
+      <tr><td>Corazón</td><td>4%</td><td>200</td><td>70</td></tr>
+      <tr><td>Bronquios</td><td>2%</td><td>100</td><td>25</td></tr>
+      <tr><td>Riñones</td><td>22%</td><td>1100</td><td>360</td></tr>
+      <tr><td>Hígado (Portal + Arterial)</td><td>27% (21%+6%)</td><td>1350 (1050+300)</td><td>95</td></tr>
+      <tr><td>Músculo (en reposo)</td><td>15%</td><td>750</td><td>4</td></tr>
+      <tr><td>Hueso</td><td>5%</td><td>250</td><td>3</td></tr>
+      <tr><td>Piel (clima frío)</td><td>6%</td><td>300</td><td>3</td></tr>
+      <tr><td>Tiroides</td><td>1%</td><td>50</td><td>160</td></tr>
+      <tr><td>Glándulas suprarrenales</td><td>0.5%</td><td>25</td><td>300</td></tr>
+      <tr><td>Otros tejidos</td><td>3.5%</td><td>175</td><td>1.3</td></tr>
+      <tr><td><b>TOTAL</b></td><td><b>100%</b></td><td><b>5000</b></td><td>—</td></tr>
+    </table>
+    <div class="clinical"><b>Dato clave:</b> el riñón recibe 360 mL/min por cada 100g de tejido — el flujo más alto por unidad de masa de todo el cuerpo, muy superior a lo que necesita para su propio metabolismo. Esto refleja su función de <b>filtración</b>, no solo de nutrición tisular.</div>
+  </div>
+
+  <div class="card">
+    <h2>Los tres niveles de control del flujo sanguíneo</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>1. Control Local</h4><p style="margin:0; font-size:.88rem;">Mecanismos dentro del propio tejido: teorías metabólica, miógena, vasodilatadora.</p></div>
+      <div class="mini-card"><h4>2. Control Nervioso</h4><p style="margin:0; font-size:.88rem;">Reflejos barorreceptores y quimiorreceptores vía sistema nervioso autónomo.</p></div>
+      <div class="mini-card"><h4>3. Control Humoral</h4><p style="margin:0; font-size:.88rem;">Hormonas y sustancias circulantes (ADH, angiotensina II, catecolaminas).</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEORÍAS ============ -->
+<section class="section" id="teorias">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Teorías de la Regulación Aguda del Flujo Local</h2>
+    <p>Cuatro teorías complementarias explican cómo un tejido ajusta su propio flujo sanguíneo segundo a segundo.</p>
+  </div>
+  <div class="card">
+    <div class="theory-toggle">
+      <button class="theory-btn active" onclick="showTheory('metabolica', this)">Teoría Metabólica</button>
+      <button class="theory-btn" onclick="showTheory('miogena', this)">Teoría Miógena</button>
+      <button class="theory-btn" onclick="showTheory('vasodilatadora', this)">Teoría Vasodilatadora</button>
+      <button class="theory-btn" onclick="showTheory('nutrientes', this)">Aporte de Nutrientes</button>
+    </div>
+    <div class="theory-panel" id="theoryPanel"></div>
+  </div>
+</section>
+
+<!-- ============ HIPEREMIA ============ -->
+<section class="section" id="hiperemia">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Hiperemia Reactiva y Activa</h2>
+    <p>Dos fenómenos que demuestran, en la práctica, cómo el tejido "paga su deuda" de oxígeno.</p>
+  </div>
+  <div class="card">
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Hiperemia Reactiva</h4>
+        <p style="margin:0; font-size:.88rem;">Ocurre tras la <b>oclusión de una arteria</b>. Al liberar la oclusión, el flujo sanguíneo aumenta muy por encima de lo normal, proporcional al tiempo que duró la oclusión — el tejido "paga" el déficit de oxígeno acumulado.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Hiperemia Activa</h4>
+        <p style="margin:0; font-size:.88rem;">Ocurre durante la <b>estimulación/actividad muscular</b>. El flujo sanguíneo aumenta inmediatamente para satisfacer el aumento de la demanda metabólica del tejido activo.</p>
+      </div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> la hiperemia reactiva es como recuperar el aliento después de contener la respiración — cuanto más tiempo contuviste, más profundo y rápido respiras después. La hiperemia activa es como empezar a respirar más rápido apenas comienzas a correr.</div>
+  </div>
+</section>
+
+<!-- ============ AUTORREGULACIÓN ============ -->
+<section class="section" id="autorregulacion">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Autorregulación del Flujo Sanguíneo</h2>
+    <p>El mecanismo que mantiene el flujo sanguíneo relativamente constante, incluso frente a grandes cambios en la presión arterial.</p>
+  </div>
+  <div class="card">
+    <div class="autoregulation-graph">
+      <p style="margin:0 0 10px 0; font-weight:700; color:var(--ven);">Curva clásica de autorregulación</p>
+      <p style="margin:0; font-size:.85rem; color:var(--text-dim);">Entre ~70 y ~175 mmHg de presión arterial media, el flujo sanguíneo se mantiene relativamente estable ("meseta" de autorregulación) — solo fuera de este rango el flujo cambia proporcionalmente a la presión.</p>
+    </div>
+    <p>Esta autorregulación tiene un componente <b>agudo</b> (segundos a minutos, mediado por las teorías metabólica y miógena) y un componente <b>a largo plazo</b> (días a semanas, mediado principalmente por cambios estructurales como la angiogénesis).</p>
+    <div class="mnemo"><b>Mnemotecnia:</b> "Autorregulación = el tejido se autogestiona" — no depende de nervios ni hormonas externas para mantener su flujo constante dentro de ese rango de presión.</div>
+  </div>
+</section>
+
+<!-- ============ ÓXIDO NÍTRICO ============ -->
+<section class="section" id="oxidonitrico">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Óxido Nítrico (NO) — Vasodilatador Endotelial</h2>
+    <p>Uno de los descubrimientos más importantes de la fisiología vascular moderna: el endotelio no es solo un revestimiento pasivo, sino un órgano regulador activo.</p>
+  </div>
+  <div class="card">
+    <h2>Mecanismo paso a paso</h2>
+    <div class="flow-steps">
+      <div class="flow-step">Estrés de cizallamiento (shear stress) sobre el endotelio</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Activación de células endoteliales (dependiente de receptor)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">O₂ + L-Arginina → <b>NO</b> + L-Citrulina</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">NO activa la guanilato ciclasa soluble</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">GTP → cGMP</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Relajación del músculo liso vascular</div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> este es exactamente el mecanismo que fármacos como los nitratos (nitroglicerina) y los inhibidores de la PDE-5 (sildenafil) explotan farmacológicamente, actuando sobre la vía NO-GMPc.</div>
+  </div>
+</section>
+
+<!-- ============ CONTROL NERVIOSO/HUMORAL ============ -->
+<section class="section" id="control">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>Control Nervioso y Humoral a Largo Plazo</h2>
+    <p>Cuando el control local no es suficiente, el sistema nervioso autónomo y las hormonas circulantes toman el mando.</p>
+  </div>
+
+  <div class="card">
+    <h2>Reflejo barorreceptor / quimiorreceptor</h2>
+    <div class="flow-steps">
+      <div class="flow-step">Cuerpo carotídeo (quimiorreceptores) / Barorreceptores</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Nervio glosofaríngeo (IX) y Nervio vago (X)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Bulbo raquídeo (Medulla)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Ajuste de la actividad simpática/parasimpática</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Regulación humoral a largo plazo — Vasopresina (ADH)</h2>
+    <div class="flow-steps">
+      <div class="flow-step">Barorreceptores + Receptores cardiopulmonares detectan ↓ volumen/presión</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Neurona paraventricular (hipotálamo)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Hipófisis (Pituitaria) libera ADH</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Riñón: orina de flujo disminuido y concentrada</div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> el ADH es como el "modo ahorro de agua" del cuerpo — cuando detecta que el volumen circulante está bajo, le ordena al riñón que retenga más agua, concentrando la orina.</div>
+  </div>
+</section>
+
+<!-- ============ SUSTANCIAS ============ -->
+<section class="section" id="sustancias">
+  <div class="hero">
+    <span class="eyebrow">Sección 7</span>
+    <h2>Sustancias Vasoconstrictoras y Vasodilatadoras</h2>
+    <p>La lista clásica de examen — memorizar estas sustancias es esencial para el Revalida y el FSP alemán.</p>
+  </div>
+  <div class="card">
+    <div class="substance-grid">
+      <div class="substance-col vaso">
+        <h4>🔴 Vasoconstrictoras</h4>
+        <div class="substance-item">Noradrenalina</div>
+        <div class="substance-item">Adrenalina (en dosis altas / receptores α)</div>
+        <div class="substance-item">Angiotensina II</div>
+        <div class="substance-item">Vasopresina (ADH)</div>
+        <div class="substance-item">Endotelina</div>
+        <div class="substance-item">Tromboxano A2</div>
+      </div>
+      <div class="substance-col dila">
+        <h4>🔵 Vasodilatadoras</h4>
+        <div class="substance-item">Bradicinina</div>
+        <div class="substance-item">Histamina</div>
+        <div class="substance-item">Óxido nítrico (NO)</div>
+        <div class="substance-item">Prostaciclina (PGI2)</div>
+        <div class="substance-item">Adenosina</div>
+        <div class="substance-item">CO₂ e iones H⁺ (en exceso local)</div>
+      </div>
+    </div>
+    <div class="mnemo"><b>Mnemotecnia vasoconstrictores:</b> "NAVET" — Noradrenalina, Angiotensina II, Vasopresina, Endotelina, Tromboxano.<br><b>Mnemotecnia vasodilatadores:</b> "BHNPA" — Bradicinina, Histamina, NO, Prostaciclina, Adenosina.</div>
+  </div>
+</section>
+
+<!-- ============ ANGIOGÉNESIS ============ -->
+<section class="section" id="angiogenesis">
+  <div class="hero">
+    <span class="eyebrow">Sección 8</span>
+    <h2>Angiogénesis — Regulación Estructural a Largo Plazo</h2>
+    <p>Cuando un tejido necesita más flujo de forma crónica, el cuerpo literalmente construye nuevos vasos sanguíneos.</p>
+  </div>
+  <div class="card">
+    <h2>Principales factores angiogénicos</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>VEGF</h4><p style="margin:0; font-size:.85rem;">Factor de crecimiento endotelial vascular — el estímulo angiogénico más potente, liberado principalmente en respuesta a la hipoxia tisular.</p></div>
+      <div class="mini-card"><h4>FGF</h4><p style="margin:0; font-size:.85rem;">Factor de crecimiento de fibroblastos — promueve la proliferación de células endoteliales.</p></div>
+      <div class="mini-card"><h4>Angiogenina</h4><p style="margin:0; font-size:.85rem;">Estimula la formación de nuevos vasos sanguíneos en tejidos con demanda metabólica sostenida.</p></div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> este mismo mecanismo es aprovechado (patológicamente) por los tumores malignos para crear su propio suministro sanguíneo — la base de los fármacos antiangiogénicos oncológicos (ej: bevacizumab, un anti-VEGF).</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Regulación del Flujo Sanguíneo (Guyton Cap. 17) · Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'regulacion_flujo_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','teorias','hiperemia','autorregulacion','oxidonitrico','control','sustancias','angiogenesis','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+const theories = {
+  metabolica: '<b style="color:var(--ven);">Teoría Metabólica:</b> el flujo sanguíneo de un tejido es directamente proporcional a su tasa metabólica. Cuando el metabolismo aumenta, se liberan sustancias vasodilatadoras (adenosina, CO2, H+) que aumentan el flujo para satisfacer la demanda.',
+  miogena: '<b style="color:var(--ven);">Teoría Miógena:</b> el músculo liso vascular se contrae automáticamente en respuesta al estiramiento (aumento de presión) y se relaja cuando la presión disminuye. Es la base del componente rápido de la autorregulación.',
+  vasodilatadora: '<b style="color:var(--ven);">Teoría Vasodilatadora:</b> cuando disminuye el aporte de oxígeno al tejido, se liberan sustancias vasodilatadoras (especialmente adenosina) que relajan las metaarteriolas y esfínteres precapilares, aumentando el flujo local.',
+  nutrientes: '<b style="color:var(--ven);">Teoría del Aporte de Nutrientes:</b> el oxígeno es considerado el nutriente más importante en la regulación del flujo sanguíneo local — su disponibilidad (no solo su consumo) es el principal determinante del tono vascular local.'
+};
+function showTheory(key, btn){
+  document.querySelectorAll('.theory-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('theoryPanel').innerHTML = theories[key];
+}
+showTheory('metabolica', document.querySelector('.theory-btn'));
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Fundamentos', front:'¿Qué órgano recibe el mayor flujo sanguíneo por 100g de tejido?', back:'El riñón, con 360 mL/min/100g — muy superior a su necesidad metabólica, reflejando su función de filtración.'},
+  {tag:'Fundamentos', front:'¿Cuáles son los tres niveles de control del flujo sanguíneo?', back:'Control local, control nervioso y control humoral.'},
+  {tag:'Teorías', front:'Según la teoría metabólica, ¿qué relación existe entre flujo sanguíneo y tasa metabólica?', back:'Son directamente proporcionales — a mayor metabolismo, mayor flujo sanguíneo local.'},
+  {tag:'Teorías', front:'¿Qué propone la teoría miógena?', back:'Que el músculo liso vascular se contrae en respuesta al estiramiento (aumento de presión) y se relaja al disminuir la presión.'},
+  {tag:'Teorías', front:'Según la teoría vasodilatadora, ¿cuál es la principal sustancia liberada ante la falta de O2?', back:'La adenosina.'},
+  {tag:'Hiperemia', front:'¿Qué es la hiperemia reactiva?', back:'El aumento de flujo sanguíneo tras liberar una oclusión arterial, proporcional al tiempo que duró la oclusión.'},
+  {tag:'Hiperemia', front:'¿Qué es la hiperemia activa?', back:'El aumento inmediato del flujo sanguíneo durante el aumento de actividad/estimulación de un tejido (ej: músculo en ejercicio).'},
+  {tag:'Autorregulación', front:'¿En qué rango de presión arterial media el flujo sanguíneo se mantiene relativamente constante?', back:'Aproximadamente entre 70 y 175 mmHg (la "meseta" de autorregulación).'},
+  {tag:'Óxido Nítrico', front:'¿Qué reacción química produce el óxido nítrico (NO) en el endotelio?', back:'O2 + L-Arginina → NO + L-Citrulina.'},
+  {tag:'Óxido Nítrico', front:'¿Cuál es la vía intracelular activada por el NO que produce relajación del músculo liso vascular?', back:'NO activa la guanilato ciclasa soluble, que convierte GTP en cGMP, causando relajación del músculo liso.'},
+  {tag:'Control', front:'¿Qué nervios transmiten la información de los quimiorreceptores del cuerpo carotídeo al bulbo raquídeo?', back:'El nervio glosofaríngeo (IX) y el nervio vago (X).'},
+  {tag:'Control', front:'¿Qué hormona libera la hipófisis cuando los barorreceptores detectan una disminución de volumen/presión?', back:'La vasopresina (ADH), que causa retención de agua y concentración de la orina.'},
+  {tag:'Sustancias', front:'Nombra 3 sustancias vasoconstrictoras.', back:'Noradrenalina, angiotensina II y vasopresina (también: endotelina, tromboxano A2).'},
+  {tag:'Sustancias', front:'Nombra 3 sustancias vasodilatadoras.', back:'Bradicinina, histamina y óxido nítrico (también: prostaciclina, adenosina).'},
+  {tag:'Angiogénesis', front:'¿Cuál es el principal factor angiogénico liberado en respuesta a la hipoxia tisular?', back:'El VEGF (factor de crecimiento endotelial vascular).'},
+  {tag:'Angiogénesis', front:'¿Qué otro factor de crecimiento, además del VEGF, promueve la angiogénesis?', back:'El FGF (factor de crecimiento de fibroblastos) y la angiogenina.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Qué órgano presenta el mayor flujo sanguíneo por cada 100g de tejido?', options:['Encéfalo','Corazón','Riñón','Hígado'], correct:2, exp:'El riñón recibe 360 mL/min/100g, el valor más alto, reflejando su función filtradora y no solo nutricional.'},
+  {q:'Según la teoría metabólica de regulación local del flujo sanguíneo:', options:['El flujo es inversamente proporcional a la tasa metabólica','El flujo es directamente proporcional a la tasa metabólica','El flujo no depende del metabolismo tisular','El flujo depende exclusivamente de la inervación simpática'], correct:1, exp:'A mayor actividad metabólica del tejido, mayor liberación de sustancias vasodilatadoras y mayor flujo sanguíneo local.'},
+  {q:'La contracción del músculo liso vascular en respuesta directa al estiramiento por aumento de presión es la base de la:', options:['Teoría metabólica','Teoría miógena','Teoría vasodilatadora','Teoría del aporte de nutrientes'], correct:1, exp:'La teoría miógena explica la respuesta contráctil intrínseca del músculo liso vascular ante el estiramiento.'},
+  {q:'El aumento de flujo sanguíneo que ocurre inmediatamente después de liberar la oclusión de una arteria se denomina:', options:['Hiperemia activa','Autorregulación a largo plazo','Hiperemia reactiva','Vasomotilidad'], correct:2, exp:'La hiperemia reactiva es proporcional al tiempo de oclusión — el tejido "paga" el déficit de oxígeno acumulado.'},
+  {q:'El rango aproximado de presión arterial media dentro del cual el flujo sanguíneo se mantiene relativamente constante por autorregulación es:', options:['10-50 mmHg','70-175 mmHg','200-300 mmHg','0-500 mmHg'], correct:1, exp:'Entre aproximadamente 70 y 175 mmHg, el flujo se mantiene en una "meseta" relativamente estable.'},
+  {q:'La producción de óxido nítrico (NO) por el endotelio requiere la conversión de:', options:['Glucosa en piruvato','O2 + L-Arginina en NO + L-Citrulina','ATP en ADP + Pi','Colesterol en pregnenolona'], correct:1, exp:'La enzima óxido nítrico sintasa convierte O2 y L-Arginina en NO y L-Citrulina en las células endoteliales.'},
+  {q:'El NO produce relajación del músculo liso vascular mediante la vía:', options:['AMPc','Guanilato ciclasa soluble → cGMP','Fosfolipasa C → IP3','Tirosina cinasa → MAPK'], correct:1, exp:'El NO activa la guanilato ciclasa soluble, aumentando el cGMP intracelular, lo cual causa relajación del músculo liso.'},
+  {q:'Los quimiorreceptores del cuerpo carotídeo transmiten información al bulbo raquídeo principalmente a través de:', options:['El nervio óptico y el nervio facial','El nervio glosofaríngeo y el nervio vago','El nervio trigémino exclusivamente','La médula espinal directamente'], correct:1, exp:'Los nervios glosofaríngeo (IX) y vago (X) transmiten la señal de los quimiorreceptores/barorreceptores hacia el bulbo.'},
+  {q:'¿Cuál de las siguientes es una sustancia VASOCONSTRICTORA?', options:['Bradicinina','Histamina','Angiotensina II','Óxido nítrico'], correct:2, exp:'La angiotensina II es un potente vasoconstrictor. Bradicinina, histamina y NO son vasodilatadores.'},
+  {q:'El principal factor angiogénico liberado en respuesta a la hipoxia tisular crónica es:', options:['VEGF','Insulina','Cortisol','Cistatina C'], correct:0, exp:'El VEGF (factor de crecimiento endotelial vascular) es el estímulo angiogénico más potente ante la hipoxia — y también la diana de fármacos antiangiogénicos oncológicos.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>

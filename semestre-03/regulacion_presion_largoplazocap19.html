@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regulación de la Presión a Largo Plazo · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --art:#ff5c6c; --ven:#4d9fff; --gold:#ffd166; --green:#4ade80; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+.flow-step.highlight{border-color:var(--art); background:rgba(255,92,108,.1);}
+.flow-step.highlight2{border-color:var(--ven); background:rgba(77,159,255,.1);}
+
+.raas-diagram{display:flex; flex-direction:column; align-items:center; gap:8px; margin:16px 0;}
+.raas-node{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 20px; font-size:.85rem; font-weight:600; text-align:center; min-width:220px;}
+.raas-node.key{border-color:var(--art); background:rgba(255,92,108,.1); color:var(--art);}
+.raas-arrow-down{color:var(--text-dim); font-size:1.3rem;}
+.raas-branch{display:flex; gap:20px; justify-content:center; flex-wrap:wrap;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.bp-calc{background:var(--bg-alt); border:1px solid var(--border); border-radius:14px; padding:20px; margin:14px 0;}
+.bp-row{display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;}
+.bp-row label{flex:1; min-width:200px; font-size:.85rem;}
+.bp-row input{width:100px; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:7px 10px; color:var(--text); font-size:.9rem;}
+.bp-result{text-align:center; margin-top:16px; padding:16px; border-radius:12px;}
+.bp-result.normal{background:rgba(74,222,128,.1); border:1px solid var(--green);}
+.bp-result.high{background:rgba(255,92,108,.1); border:1px solid var(--art);}
+.bp-result .val{font-size:1.6rem; font-weight:800;}
+
+.risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+@media(max-width:720px){.risk-grid{grid-template-columns:repeat(2,1fr);}}
+.risk-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; font-size:.8rem;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);} .btn-hard{background:var(--gold);} .btn-good{background:var(--ven);} .btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Regulación de la Presión — Largo Plazo</h1>
+        <span>Guyton & Hall · Cap. 19 · Método Prompt Master</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Natriuresis → RAAS → Presión-Volumen → Anatomía Renal → ADH → Hipertensión → Consecuencias → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">💧 Natriuresis por Presión</button>
+    <button class="tab-btn" data-tab="raas">⚙️ Sistema RAAS</button>
+    <button class="tab-btn" data-tab="presionvolumen">📊 Presión-Volumen</button>
+    <button class="tab-btn" data-tab="anatomiarenal">🫘 Anatomía Renal</button>
+    <button class="tab-btn" data-tab="adh">💊 ADH</button>
+    <button class="tab-btn" data-tab="hipertension">🩺 Hipertensión</button>
+    <button class="tab-btn" data-tab="consecuencias">⚠️ Consecuencias</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO / NATRIURESIS ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 19 · Guyton & Hall</span>
+    <h2>El riñón, el verdadero jefe de la presión arterial crónica</h2>
+    <p>Mientras que el sistema nervioso controla la presión en <b>segundos</b>, el mecanismo renal de <b>natriuresis por presión</b> es el regulador dominante de la presión arterial a lo largo de <b>horas, días y semanas</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>El mecanismo de "ganancia infinita"</h2>
+    <p>Guyton describió este mecanismo como uno de los pocos sistemas de retroalimentación del cuerpo con <b>ganancia teóricamente infinita</b> — es decir, capaz de devolver la presión arterial exactamente a su punto de equilibrio, sin error residual, dado tiempo suficiente.</p>
+    <div class="flow-steps">
+      <div class="flow-step highlight">↑ Presión arterial</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">↑ Excreción renal de agua y sal (natriuresis y diuresis por presión)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">↓ Volumen del líquido extracelular</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">↓ Volumen sanguíneo</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight2">↓ Presión arterial (retorno al equilibrio)</div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> imagina un tanque de agua con un desagüe que se abre más cuanto mayor es la presión del agua — cuanto más sube el nivel (presión), más rápido drena, hasta volver exactamente al nivel de equilibrio. Ningún otro mecanismo del cuerpo es tan preciso a largo plazo.</div>
+  </div>
+</section>
+
+<!-- ============ RAAS ============ -->
+<section class="section" id="raas">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Sistema Renina-Angiotensina-Aldosterona (RAAS)</h2>
+    <p>El sistema hormonal más importante en la regulación de la presión arterial — y el blanco de gran parte de los fármacos antihipertensivos modernos.</p>
+  </div>
+  <div class="card">
+    <div class="raas-diagram">
+      <div class="raas-node key">Descenso de la presión arterial</div>
+      <div class="raas-arrow-down">↓</div>
+      <div class="raas-node">Renina (liberada por el riñón)</div>
+      <div class="raas-arrow-down">↓</div>
+      <div class="raas-node">Sustrato de renina (Angiotensinógeno)</div>
+      <div class="raas-arrow-down">↓</div>
+      <div class="raas-node">Angiotensina I</div>
+      <div class="raas-arrow-down">↓ Enzima convertidora (pulmón)</div>
+      <div class="raas-node key">Angiotensina II</div>
+      <div class="raas-arrow-down">↓</div>
+      <div class="raas-branch">
+        <div class="raas-node">Vasoconstricción</div>
+        <div class="raas-node">Retención renal de sal y agua (vía aldosterona)</div>
+      </div>
+      <div class="raas-arrow-down">↓</div>
+      <div class="raas-node key">Aumento de la presión arterial</div>
+    </div>
+    <div class="clinical"><b>Relevancia farmacológica directa:</b> los IECA (ej: enalapril) bloquean la enzima convertidora; los ARA-II (ej: losartán) bloquean el receptor de angiotensina II — ambos grupos atacan directamente esta cascada para tratar la hipertensión.</div>
+    <div class="mnemo"><b>Dato clave:</b> la angiotensinasa inactiva a la angiotensina II, limitando la duración de su efecto — sin este mecanismo de apagado, el sistema no podría autorregularse.</div>
+  </div>
+</section>
+
+<!-- ============ PRESIÓN-VOLUMEN ============ -->
+<section class="section" id="presionvolumen">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Relación entre Presión Arterial y Volumen Sanguíneo</h2>
+    <p>A largo plazo, la presión arterial está determinada esencialmente por el equilibrio entre el volumen de líquido en el sistema y la capacidad del riñón para excretarlo.</p>
+  </div>
+  <div class="card">
+    <h2>El punto de equilibrio renal</h2>
+    <p>El "punto de equilibrio" de la presión arterial a largo plazo es aquel en el cual la <b>ingesta de sal y agua</b> es exactamente igual a la <b>excreción renal de sal y agua</b>. Si cualquiera de estos dos factores cambia de forma sostenida, la presión arterial se reajustará hasta encontrar un nuevo punto de equilibrio.</p>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>↑ Ingesta de sal sostenida</h4>
+        <p style="margin:0; font-size:.88rem;">Requiere una presión arterial más alta para lograr la excreción renal necesaria que equilibre la ingesta — de ahí la relación entre dieta rica en sodio e hipertensión.</p>
+      </div>
+      <div class="mini-card">
+        <h4>↑ Capacidad excretora renal</h4>
+        <p style="margin:0; font-size:.88rem;">Un riñón más eficiente en excretar sal permite mantener el equilibrio con una presión arterial más baja.</p>
+      </div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> esta es la base fisiológica de por qué la enfermedad renal crónica es una de las causas más importantes de hipertensión secundaria — un riñón dañado necesita una presión sistémica más alta para excretar la misma carga de sal.</div>
+  </div>
+</section>
+
+<!-- ============ ANATOMÍA RENAL ============ -->
+<section class="section" id="anatomiarenal">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Anatomía Vascular Renal de Soporte</h2>
+    <p>La estructura vascular del riñón es la base física que permite tanto la filtración glomerular como la liberación de renina.</p>
+  </div>
+  <div class="card">
+    <div class="flow-steps">
+      <div class="flow-step">Arteria interlobular</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Arteriola aferente</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">Glomérulo (filtración)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Arteriola eferente</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Capilares peritubulares</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Vena interlobular</div>
+    </div>
+    <p>La <b>arteriola aferente</b> es precisamente el sitio donde las células yuxtaglomerulares detectan la presión de perfusión renal y liberan <b>renina</b> cuando esta disminuye, iniciando la cascada del RAAS.</p>
+  </div>
+</section>
+
+<!-- ============ ADH ============ -->
+<section class="section" id="adh">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Contribución de la Vasopresina (ADH)</h2>
+    <p>Un segundo sistema hormonal, complementario al RAAS, que también participa en la regulación de la presión a largo plazo.</p>
+  </div>
+  <div class="card">
+    <div class="flow-steps">
+      <div class="flow-step">Barorreceptores + receptores cardiopulmonares detectan ↓ volumen/presión</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Neurona paraventricular (hipotálamo)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Liberación de ADH (hipófisis posterior)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight2">Riñón: orina de flujo disminuido y concentrada</div>
+    </div>
+    <p>Al retener agua, el ADH contribuye a mantener el volumen sanguíneo y, por tanto, la presión arterial — funcionando en paralelo con la aldosterona (que retiene sodio) del sistema RAAS.</p>
+  </div>
+</section>
+
+<!-- ============ HIPERTENSIÓN ============ -->
+<section class="section" id="hipertension">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>Hipertensión Arterial Primaria (Esencial)</h2>
+    <p>La condición crónica más común en la práctica clínica — y un ejemplo perfecto de disfunción en los mecanismos que acabas de estudiar.</p>
+  </div>
+  <div class="card">
+    <h2>Definición</h2>
+    <p>También llamada <b>primaria, idiopática o esencial</b> — no se conoce una causa exacta y única; es de origen <b>multifactorial</b>.</p>
+    <h3>Factores de riesgo</h3>
+    <div class="risk-grid">
+      <div class="risk-item">Edad</div>
+      <div class="risk-item">Sedentarismo</div>
+      <div class="risk-item">Obesidad</div>
+      <div class="risk-item">Diabetes</div>
+      <div class="risk-item">Problemas renales</div>
+      <div class="risk-item">Tiempo de evolución</div>
+      <div class="risk-item">Factores genéticos</div>
+      <div class="risk-item">Factores ambientales y dieta</div>
+    </div>
+    <h3>Diagnóstico</h3>
+    <p>Se detecta generalmente en la consulta médica de rutina. Criterio clásico: <b>dos mediciones ≥ 140/90 mmHg</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>🧮 Clasificador rápido de presión arterial</h2>
+    <div class="bp-calc">
+      <div class="bp-row">
+        <label>Presión sistólica (mmHg)</label>
+        <input type="number" id="sys" value="120" oninput="calcBP()">
+      </div>
+      <div class="bp-row">
+        <label>Presión diastólica (mmHg)</label>
+        <input type="number" id="dia" value="80" oninput="calcBP()">
+      </div>
+      <div class="bp-result normal" id="bpResultBox">
+        <div>Clasificación</div>
+        <div class="val" id="bpResult">Normal</div>
+      </div>
+    </div>
+    <p style="font-size:.8rem; color:var(--text-dim);">Herramienta educativa basada en el criterio clásico de 140/90 mmHg — no sustituye guías clínicas actualizadas ni el criterio médico individual.</p>
+  </div>
+</section>
+
+<!-- ============ CONSECUENCIAS ============ -->
+<section class="section" id="consecuencias">
+  <div class="hero">
+    <span class="eyebrow">Sección 7</span>
+    <h2>Consecuencias de la Desregulación de la Presión</h2>
+    <p>Cuando estos mecanismos fallan de forma crónica, el daño se distribuye sistémicamente — la hipertensión es, ante todo, una enfermedad de órganos diana.</p>
+  </div>
+  <div class="card">
+    <div class="grid-2">
+      <div class="mini-card"><h4>❤️ Corazón</h4><p style="margin:0; font-size:.88rem;">Hipertrofia ventricular izquierda, insuficiencia cardíaca, cardiopatía isquémica.</p></div>
+      <div class="mini-card"><h4>🧠 Cerebro</h4><p style="margin:0; font-size:.88rem;">Accidente cerebrovascular (isquémico y hemorrágico), deterioro cognitivo vascular.</p></div>
+      <div class="mini-card"><h4>🫘 Riñón</h4><p style="margin:0; font-size:.88rem;">Nefroesclerosis hipertensiva, progresión a enfermedad renal crónica — creando un círculo vicioso con el propio mecanismo renal de control de la PA.</p></div>
+      <div class="mini-card"><h4>👁️ Ojo</h4><p style="margin:0; font-size:.88rem;">Retinopatía hipertensiva, con riesgo de pérdida visual en casos severos.</p></div>
+      <div class="mini-card"><h4>🩸 Vasos sanguíneos</h4><p style="margin:0; font-size:.88rem;">Aceleración de la aterosclerosis, aneurismas, disección aórtica.</p></div>
+    </div>
+    <div class="clinical"><b>Círculo vicioso clave:</b> la hipertensión daña al riñón, y el daño renal a su vez empeora la hipertensión (al alterar el mecanismo de natriuresis por presión) — por eso el control temprano de la presión arterial es tan crítico para proteger la función renal a largo plazo.</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Regulación de la Presión a Largo Plazo (Guyton Cap. 19) · Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'regulacion_largoplazo_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','raas','presionvolumen','anatomiarenal','adh','hipertension','consecuencias','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+function calcBP(){
+  const sys = parseFloat(document.getElementById('sys').value) || 0;
+  const dia = parseFloat(document.getElementById('dia').value) || 0;
+  const box = document.getElementById('bpResultBox');
+  const result = document.getElementById('bpResult');
+  if(sys >= 140 || dia >= 90){
+    box.className = 'bp-result high';
+    result.textContent = 'Hipertensión (≥140/90 mmHg)';
+  } else if(sys >= 120 || dia >= 80){
+    box.className = 'bp-result high';
+    result.textContent = 'Elevada / Pre-hipertensión';
+  } else {
+    box.className = 'bp-result normal';
+    result.textContent = 'Normal';
+  }
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Natriuresis', front:'¿Qué hace único al mecanismo renal de natriuresis por presión?', back:'Tiene una ganancia teóricamente infinita — puede devolver la PA exactamente a su punto de equilibrio, sin error residual, dado tiempo suficiente.'},
+  {tag:'Natriuresis', front:'¿Qué ocurre cuando aumenta la presión arterial, según este mecanismo?', back:'Aumenta la excreción renal de agua y sal, disminuyendo el volumen del LEC y sanguíneo, lo cual reduce la PA de vuelta al equilibrio.'},
+  {tag:'RAAS', front:'¿Qué órgano libera renina y ante qué estímulo?', back:'El riñón, ante un descenso de la presión arterial (o de perfusión renal).'},
+  {tag:'RAAS', front:'¿Dónde se encuentra la enzima convertidora de angiotensina (ECA)?', back:'Principalmente en el pulmón, donde convierte angiotensina I en angiotensina II.'},
+  {tag:'RAAS', front:'¿Cuáles son los dos efectos principales de la angiotensina II?', back:'Vasoconstricción directa y retención renal de sal y agua (esta última mediada por la aldosterona).'},
+  {tag:'RAAS', front:'¿Qué inactiva a la angiotensina II?', back:'La angiotensinasa.'},
+  {tag:'Presión-Volumen', front:'¿Cómo se define el "punto de equilibrio" de la presión arterial a largo plazo?', back:'El punto donde la ingesta de sal y agua es exactamente igual a la excreción renal de sal y agua.'},
+  {tag:'Presión-Volumen', front:'¿Por qué una dieta rica en sodio sostenida puede elevar la presión arterial?', back:'Porque se requiere una presión arterial más alta para lograr la excreción renal necesaria que equilibre la mayor ingesta de sal.'},
+  {tag:'Anatomía Renal', front:'¿Dónde se detecta la presión de perfusión renal para liberar renina?', back:'En la arteriola aferente, por las células yuxtaglomerulares.'},
+  {tag:'ADH', front:'¿Qué hormona, además de la aldosterona, contribuye a la retención de líquido en la regulación de la PA a largo plazo?', back:'La vasopresina (ADH), liberada por la hipófisis posterior.'},
+  {tag:'Hipertensión', front:'¿Cómo se denomina la hipertensión sin causa exacta conocida?', back:'Primaria, idiopática o esencial — de origen multifactorial.'},
+  {tag:'Hipertensión', front:'¿Cuál es el criterio diagnóstico clásico de hipertensión?', back:'Dos mediciones ≥ 140/90 mmHg.'},
+  {tag:'Hipertensión', front:'Nombra 4 factores de riesgo para hipertensión primaria.', back:'Edad, sedentarismo, obesidad, diabetes (también: problemas renales, factores genéticos, ambientales, dieta).'},
+  {tag:'Consecuencias', front:'¿Por qué la hipertensión y la enfermedad renal crónica forman un círculo vicioso?', back:'La hipertensión daña al riñón, y el daño renal altera el mecanismo de natriuresis por presión, empeorando aún más la hipertensión.'},
+  {tag:'Consecuencias', front:'Nombra 3 órganos diana clásicos de la hipertensión no controlada.', back:'Corazón (hipertrofia/insuficiencia), cerebro (ACV) y riñón (nefroesclerosis) — también ojo y vasos sanguíneos.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'El mecanismo renal de natriuresis por presión se caracteriza por tener una ganancia:', options:['Nula','Baja, con error residual significativo','Teóricamente infinita','Solo aplicable en situaciones agudas'], correct:2, exp:'Guyton lo describió como uno de los pocos sistemas con ganancia teóricamente infinita, devolviendo la PA a su punto de equilibrio exacto.'},
+  {q:'Un aumento sostenido de la presión arterial provoca, vía natriuresis por presión:', options:['Retención renal de sal y agua','Aumento de la excreción renal de sal y agua','Ningún cambio en la función renal','Liberación masiva de renina'], correct:1, exp:'El aumento de PA incrementa la excreción renal de sal y agua, reduciendo el volumen sanguíneo y devolviendo la PA al equilibrio.'},
+  {q:'¿Dónde se produce la conversión de angiotensina I a angiotensina II?', options:['En el riñón','En el hígado','En el pulmón, por la enzima convertidora','En el corazón'], correct:2, exp:'La enzima convertidora de angiotensina (ECA), ubicada principalmente en el endotelio pulmonar, realiza esta conversión.'},
+  {q:'¿Cuáles son los dos efectos principales de la angiotensina II sobre la presión arterial?', options:['Vasodilatación y excreción renal de sal','Vasoconstricción y retención renal de sal y agua','Bradicardia y vasodilatación','Ninguno, es inactiva biológicamente'], correct:1, exp:'La angiotensina II provoca vasoconstricción directa y retención renal de sal y agua (esta última vía aldosterona).'},
+  {q:'El "punto de equilibrio" de la presión arterial a largo plazo se define como el punto donde:', options:['La presión arterial es siempre 120/80 mmHg','La ingesta de sal y agua iguala a la excreción renal de sal y agua','El gasto cardíaco es máximo','La resistencia periférica es mínima'], correct:1, exp:'Este es el concepto central de Guyton: el equilibrio a largo plazo depende del balance entre ingesta y excreción renal de sal/agua.'},
+  {q:'Las células yuxtaglomerulares que liberan renina se localizan en:', options:['La arteriola eferente','La arteriola aferente','El túbulo colector','La vena renal'], correct:1, exp:'La arteriola aferente es el sitio donde se detecta la presión de perfusión renal y se libera renina cuando esta disminuye.'},
+  {q:'Además de la aldosterona, ¿qué otra hormona contribuye a la retención de agua en la regulación de la PA a largo plazo?', options:['Insulina','Cortisol','Vasopresina (ADH)','Tiroxina'], correct:2, exp:'La ADH, liberada por la hipófisis posterior, retiene agua a nivel renal, complementando el efecto de la aldosterona.'},
+  {q:'La hipertensión arterial primaria (esencial) se caracteriza por:', options:['Tener siempre una causa única identificable','Ser de origen multifactorial, sin causa exacta conocida','Ser exclusiva de pacientes jóvenes','Deberse solo a problemas cardíacos'], correct:1, exp:'La hipertensión primaria/esencial es multifactorial, sin una causa única identificable.'},
+  {q:'El criterio diagnóstico clásico de hipertensión arterial requiere:', options:['Una sola medición de 130/85 mmHg','Dos mediciones ≥ 140/90 mmHg','Tres mediciones en el mismo día','Una medición ambulatoria de 24 horas obligatoria'], correct:1, exp:'El criterio clásico presentado es de dos mediciones ≥ 140/90 mmHg.'},
+  {q:'¿Por qué la hipertensión y la enfermedad renal crónica forman un círculo vicioso?', options:['No existe relación entre ambas condiciones','La hipertensión daña al riñón, y el daño renal altera la natriuresis por presión, empeorando la hipertensión','La enfermedad renal siempre cura la hipertensión','El riñón no participa en la regulación de la presión arterial'], correct:1, exp:'El daño renal compromete el mecanismo de natriuresis por presión, dificultando aún más el control de la presión arterial — un círculo vicioso clínicamente muy relevante.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>
