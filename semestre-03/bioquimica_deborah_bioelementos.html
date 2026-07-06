@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Prof. Deborah · Bioelementos</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green2); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.prof-tag{display:inline-flex; align-items:center; gap:8px; background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.35); color:var(--gold); border-radius:999px; padding:5px 14px; font-size:.78rem; font-weight:700; margin-bottom:14px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-5{display:grid; grid-template-columns:repeat(5,1fr); gap:10px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;} .grid-5{grid-template-columns:repeat(2,1fr);}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+
+.level-flow{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.level-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:700; color:var(--text);}
+.level-step span{display:block; font-weight:400; color:var(--text-dim); font-size:.7rem; margin-top:4px;}
+.level-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.element-badge{display:inline-flex; flex-direction:column; align-items:center; justify-content:center; width:64px; height:64px; border-radius:10px; font-weight:800; margin:4px;}
+.pct-bar-wrap{margin:8px 0;}
+.pct-label{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:3px;}
+.pct-track{height:14px; background:var(--bg-alt); border-radius:7px; overflow:hidden; border:1px solid var(--border);}
+.pct-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2));}
+
+.exercise-box{background:var(--bg-alt); border:2px dashed var(--border); border-radius:12px; padding:18px; margin:14px 0;}
+.exercise-box h4{color:var(--gold); margin-bottom:10px;}
+.fill-input{background:var(--card); border:1px solid var(--border); border-radius:6px; color:var(--text); padding:6px 10px; font-size:.85rem; width:100%; margin-top:4px;}
+.check-btn{background:var(--green2); color:#0d0f16; border:none; padding:8px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:.85rem; margin-top:10px;}
+.check-btn:hover{background:var(--green1);}
+.exercise-result{margin-top:10px; padding:10px 14px; border-radius:8px; font-size:.85rem; display:none;}
+.exercise-result.show{display:block;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(107,191,89,.16),rgba(163,216,74,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);} .btn-hard{background:var(--gold);} .btn-good{background:var(--blue);} .btn-easy{background:var(--green2);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--green2);}
+.option.correct{background:rgba(74,222,128,.18); border-color:#4ade80;}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid #4ade80; color:#4ade80;}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:#4ade80; font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--green2); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><circle cx="14" cy="14" r="6" fill="none" stroke="#6bbf59" stroke-width="2"/><circle cx="28" cy="14" r="4" fill="none" stroke="#a3d84a" stroke-width="2"/><circle cx="20" cy="28" r="5" fill="none" stroke="#ffd166" stroke-width="2"/><line x1="14" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/><line x1="28" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Bioquímica — Prof. Deborah</h1>
+        <span>Bioelementos · Q.F. Deborah Michelle Jurowski</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Importancia → Niveles → Clasificación → % Corporal → Deficiencias → Ejercicios → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧪 Importancia</button>
+    <button class="tab-btn" data-tab="niveles">🧬 Niveles de Organización</button>
+    <button class="tab-btn" data-tab="clasificacion">⚛️ Clasificación</button>
+    <button class="tab-btn" data-tab="porcentaje">📊 % Corporal</button>
+    <button class="tab-btn" data-tab="deficiencias">⚠️ Deficiencias</button>
+    <button class="tab-btn" data-tab="ejercicios">✍️ Ejercicios (estilo Deborah)</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="prof-tag">⚠️ Materia de la Prof. Deborah — nivel de detalle exigido</span>
+    <h2>Bioelementos: la base de todo lo que vendrá después</h2>
+    <p>Antes de estudiar biomoléculas, hay que entender de qué están hechas — literalmente, qué átomos las componen. La Prof. Deborah suele profundizar en las clasificaciones exactas y los porcentajes, así que este módulo respeta ese nivel de detalle.</p>
+  </div>
+
+  <div class="card">
+    <h2>Importancia de la Bioquímica</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>1. Base de otras ciencias</h4><p style="margin:0; font-size:.86rem;">Permite conocer la estructura, composición y función de los componentes químicos de los seres vivos.</p></div>
+      <div class="mini-card"><h4>2. Aplicación práctica</h4><p style="margin:0; font-size:.86rem;">Conocer el metabolismo es esencial para Medicina, Nutrición, Ingeniería Química, Agronomía, Veterinaria, etc.</p></div>
+      <div class="mini-card"><h4>3. Objetivo central</h4><p style="margin:0; font-size:.86rem;">Conocer la estructura y comportamiento de las moléculas biológicas que permiten crecer, alimentarse, reproducirse, usar y almacenar energía.</p></div>
+    </div>
+    <div class="criterio"><b>Pregunta típica de la Prof. Deborah:</b> "Describa la importancia de la Bioquímica" — espera los 3 puntos completos, no solo uno.</div>
+  </div>
+
+  <div class="card">
+    <h2>¿Qué comparten todos los seres vivos, además de la vida?</h2>
+    <p style="font-size:1.05rem; text-align:center; font-weight:700; color:var(--green2);">Que estamos formados por los mismos elementos.</p>
+    <p>De todos los elementos que se hallan en la naturaleza, <b>solo unos 25 son componentes de los seres vivos</b> — se les denomina <b>Bioelementos</b>.</p>
+  </div>
+</section>
+
+<!-- ============ NIVELES ============ -->
+<section class="section" id="niveles">
+  <div class="hero">
+    <span class="eyebrow">Sistema de Wang y Col. (1992)</span>
+    <h2>Niveles de Organización del Cuerpo Humano</h2>
+    <p>Clasificación de los componentes constituyentes del cuerpo humano, según sus niveles de organización estructural.</p>
+  </div>
+  <div class="card">
+    <div class="level-flow">
+      <div class="level-step">Nivel Atómico<span>H, N, O, C, P</span></div>
+      <div class="level-arrow">→</div>
+      <div class="level-step">Nivel Molecular<span>agua, proteínas, lípidos, hidroxiapatita</span></div>
+      <div class="level-arrow">→</div>
+      <div class="level-step">Nivel Celular<span>intracelular, extracelular</span></div>
+      <div class="level-arrow">→</div>
+      <div class="level-step">Nivel Anatómico<span>tejido muscular, adiposo, óseo, piel, órganos</span></div>
+      <div class="level-arrow">→</div>
+      <div class="level-step">Cuerpo Íntegro<span>masa, volumen, densidad corporal</span></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Nivel Atómico y Molecular — detalle <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Sus elementos constitutivos son H, O, C y N, presentándose otros muchos elementos en proporciones más bajas. Estos átomos se unen entre sí para formar moléculas, ya sean inorgánicas (como el agua) u orgánicas.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Nivel Celular — detalle <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>La célula es la mínima unidad de la vida. Todas las células humanas son eucariotas, como las de todos los animales y plantas. Todas las células comparten unos elementos esenciales, y la célula es una unidad Vital, Anatómica, Fisiológica y Genética.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Nivel Anatómico — detalle <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>La Histología se ocupa del estudio de los tejidos biológicos. Existen solo unos pocos tejidos básicos: epitelial, conjuntivo, muscular y nervioso — con los que el organismo se relaciona, se protege, secreta sustancias, mantiene su forma, se desplaza y coordina sus funciones con el medio.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Nivel Cuerpo Íntegro — dato curioso <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>La piel del cuerpo humano tiene una superficie aproximada de 2 m², con espesor entre 0,5 mm (párpados) y 4 mm (talones). Si la vida en la Tierra surgió hace "24 horas" en escala simbólica, el Homo sapiens apenas ha vivido los últimos 3 segundos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLASIFICACIÓN ============ -->
+<section class="section" id="clasificacion">
+  <div class="hero">
+    <span class="eyebrow">Clasificación funcional</span>
+    <h2>Clasificación de los Bioelementos</h2>
+    <p>Tres grandes grupos, según su abundancia y función estructural en el organismo.</p>
+  </div>
+
+  <div class="card">
+    <h2>1. Bioelementos Primarios o Plásticos</h2>
+    <p>Elementos más abundantes en los seres vivos — presentes en un <b>96%</b> del organismo. Importantes para la formación de biomoléculas. Forman enlaces covalentes, pudiendo compartir más de un par de electrones (enlaces simples, dobles y triples).</p>
+    <table>
+      <tr><th>Elemento</th><th>Función principal</th></tr>
+      <tr><td><b>Carbono (C)</b></td><td>Elemento muy energético; proporciona grandes cantidades de energía. Necesario para formar moléculas complejas como el ADN y las proteínas.</td></tr>
+      <tr><td><b>Hidrógeno (H)</b></td><td>Ayuda a tejidos, líquidos y huesos; mantiene articulaciones lubricadas; componente del agua; sirve para la producción de ATP.</td></tr>
+      <tr><td><b>Oxígeno (O)</b></td><td>Elemento de mayor abundancia; participación especial en la respiración celular; componente del agua.</td></tr>
+      <tr><td><b>Nitrógeno (N)</b></td><td>Permite la liberación de energía; parte fundamental de aminoácidos, proteínas, ácidos nucleicos y algunas enzimas.</td></tr>
+      <tr><td><b>Fósforo (P)</b></td><td>Formación de huesos y dientes; el cuerpo lo necesita para producir energía; ayuda a neuronas y membranas celulares (favorece la memoria).</td></tr>
+      <tr><td><b>Azufre (S)</b></td><td>Necesario para la formación de colágeno y queratina; parte de aminoácidos como cisteína y metionina; acción antioxidante; ayuda al hígado en la secreción de bilis.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>2. Bioelementos Secundarios</h2>
+    <p>Representan un <b>3,9%</b> de un ser vivo.</p>
+    <table>
+      <tr><th>Elemento</th><th>Función principal</th></tr>
+      <tr><td><b>Calcio (Ca)</b></td><td>Regula la contracción muscular; forma y mantiene huesos/dientes; coagulación sanguínea; señales nerviosas; ritmo cardíaco normal.</td></tr>
+      <tr><td><b>Sodio (Na)</b></td><td>Regula el metabolismo celular; mantiene niveles de sangre; controla presión arterial y volumen sanguíneo; equilibrio de nervios/músculos; controla la acidez digestiva.</td></tr>
+      <tr><td><b>Potasio (K)</b></td><td>Regula enzimas; contracción muscular, ósmosis y transmisión de impulsos nerviosos; buen funcionamiento renal/cardíaco. Niveles bajos → ritmos cardíacos anormales.</td></tr>
+      <tr><td><b>Cloro (Cl)</b></td><td>Ósmosis y transmisión de impulsos nerviosos; equilibrio ácido-base; eliminación hepática de tóxicos; producción de jugo gástrico; equilibrio de líquidos intra/extracelular.</td></tr>
+      <tr><td><b>Magnesio (Mg)</b></td><td>Produce muchas enzimas; principal cofactor del metabolismo de la vitamina D; soporte inmunitario; regula azúcar en sangre; huesos; reduce cansancio/fatiga; formación de proteínas.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>3. Bioelementos Oligoelementos</h2>
+    <p>Representan un <b>0,1%</b> de un ser vivo. Presentes de forma vestigial, pero indispensables para el desarrollo armónico del organismo.</p>
+    <table>
+      <tr><th>Elemento</th><th>Función principal</th></tr>
+      <tr><td><b>Hierro (Fe)</b></td><td>Forma parte de hemoglobina, mioglobina y proteínas; produce enzimas; transporte de O2 al cerebro; mejora procesos cognitivos; respiración mitocondrial.</td></tr>
+      <tr><td><b>Cobre (Cu)</b></td><td>Desarrollo cerebral; estimula sistema inmune y nervioso; antioxidante (reduce radicales libres); ayuda en la absorción del Fe.</td></tr>
+      <tr><td><b>Zinc (Zn)</b></td><td>Metabolismo de proteínas y ácidos nucleicos; funcionamiento del sistema nervioso; cicatrización de heridas; percepción del gusto y olfato.</td></tr>
+      <tr><td><b>Flúor (F)</b></td><td>Mineralización de huesos y dientes (no detallado en la clase, pero clásico de examen).</td></tr>
+      <tr><td><b>Yodo (I)</b></td><td>Producción de hormonas tiroideas; metabolismo celular; funcionamiento normal del sistema nervioso.</td></tr>
+      <tr><td><b>Boro (B)</b></td><td>Mantenimiento de la pared celular; efectos antiinflamatorios.</td></tr>
+      <tr><td><b>Silicio (Si)</b></td><td>Presente en tejidos conjuntivos y pared celular; antioxidante; contribuye a la fijación del Ca en los huesos.</td></tr>
+    </table>
+    <div class="mnemo"><b>Mnemotecnia (oligoelementos):</b> "Fe-Cu-Zn-F-I-B-Si" → "FeCu ZnFI Bien Sí" — una frase absurda pero fácil de recordar en orden.</div>
+  </div>
+</section>
+
+<!-- ============ PORCENTAJE ============ -->
+<section class="section" id="porcentaje">
+  <div class="hero">
+    <span class="eyebrow">Segunda clasificación — muy exigida por la Prof. Deborah</span>
+    <h2>Clasificación por Porcentaje Corporal</h2>
+    <p>Un criterio de clasificación DISTINTO al anterior — no confundir "primario/secundario/oligoelemento" con "mayoritario/traza/ultratraza".</p>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>Categoría</th><th>Rango</th><th>Ejemplos</th></tr>
+      <tr><td><b>Mayoritarios</b></td><td>Superior al 0,1% del peso corporal</td><td>O, C, H, N, etc.</td></tr>
+      <tr><td><b>Trazas</b></td><td>Entre 0,1% y 0,0001% del peso corporal</td><td>Si, Mg, Cu, etc.</td></tr>
+      <tr><td><b>Ultratrazas</b></td><td>Inferior al 0,0001% del peso corporal</td><td>I, Co, etc.</td></tr>
+    </table>
+    <div class="clinical"><b>Trampa clásica de examen:</b> el Magnesio es un bioelemento SECUNDARIO (por función), pero está en la categoría de TRAZAS (por porcentaje) — son dos clasificaciones distintas que se cruzan, ¡no son sinónimos!</div>
+  </div>
+
+  <div class="card">
+    <h2>Relación exacta de los bioelementos en el cuerpo humano (%)</h2>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Oxígeno (O)</span><span>62,81%</span></div><div class="pct-track"><div class="pct-fill" style="width:100%;"></div></div></div>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Carbono (C)</span><span>19,37%</span></div><div class="pct-track"><div class="pct-fill" style="width:31%;"></div></div></div>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Hidrógeno (H)</span><span>9,31%</span></div><div class="pct-track"><div class="pct-fill" style="width:15%;"></div></div></div>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Nitrógeno (N)</span><span>5,14%</span></div><div class="pct-track"><div class="pct-fill" style="width:8%;"></div></div></div>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Calcio (Ca)</span><span>1,38%</span></div><div class="pct-track"><div class="pct-fill" style="width:2.2%;"></div></div></div>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Fósforo (P)</span><span>0,64%</span></div><div class="pct-track"><div class="pct-fill" style="width:1%;"></div></div></div>
+    <div class="pct-bar-wrap"><div class="pct-label"><span>Azufre (S)</span><span>0,63%</span></div><div class="pct-track"><div class="pct-fill" style="width:1%;"></div></div></div>
+    <table style="margin-top:16px;">
+      <tr><th>Elemento</th><th>%</th><th>Elemento</th><th>%</th></tr>
+      <tr><td>Sodio (Na)</td><td>0,26</td><td>Flúor (F)</td><td>0,009</td></tr>
+      <tr><td>Potasio (K)</td><td>0,22</td><td>Hierro (Fe)</td><td>0,005</td></tr>
+      <tr><td>Cloro (Cl)</td><td>0,18</td><td>Aluminio (Al)</td><td>0,001</td></tr>
+      <tr><td>Magnesio (Mg)</td><td>0,04</td><td>Manganeso (Mn)</td><td>0,0001</td></tr>
+    </table>
+    <div class="criterio"><b>Detalle que la Prof. Deborah suele preguntar:</b> el orden exacto de los primeros 4 (O &gt; C &gt; H &gt; N) y saber que el Ca es el 5º más abundante — memorice ese orden con precisión.</div>
+  </div>
+</section>
+
+<!-- ============ DEFICIENCIAS ============ -->
+<section class="section" id="deficiencias">
+  <div class="hero">
+    <span class="eyebrow">Correlación clínica</span>
+    <h2>Deficiencias de Bioelementos y Enfermedades</h2>
+    <p>Tabla directa de la clase — alta probabilidad de caer en la prueba tal cual.</p>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>Bioelemento(s)</th><th>Enfermedades asociadas</th><th>Consecuencia</th></tr>
+      <tr><td>H, Na, K, Mg</td><td>Raquitismo, escorbuto, enfermedades del corazón, estreñimiento, problemas digestivos, aumento del colesterol</td><td>Muerte</td></tr>
+      <tr><td>O</td><td>Deshidratación, insuficiencia respiratoria, colapso pulmonar</td><td>Muerte</td></tr>
+      <tr><td>N</td><td>Raquitismo, escorbuto, marasmo, beriberi, pelagra</td><td>Muerte</td></tr>
+      <tr><td>P, Ca</td><td>Artritis reumatoide, cáncer de colon, enfermedades cardiovasculares, Alzheimer</td><td>Muerte</td></tr>
+      <tr><td>C</td><td>Constipación, síndrome del colon irritable, obesidad, diabetes, enfermedades del corazón</td><td>Muerte</td></tr>
+      <tr><td>I</td><td>Bocio, hipotiroidismo, retraso mental</td><td>Muerte</td></tr>
+    </table>
+    <div class="clinical"><b>Nota de estudio:</b> esta tabla es tal cual la dio la profesora — memorice las asociaciones exactas de fila (no mezcle enfermedades entre bioelementos distintos).</div>
+  </div>
+</section>
+
+<!-- ============ EJERCICIOS ESTILO DEBORAH ============ -->
+<section class="section" id="ejercicios">
+  <div class="hero">
+    <span class="eyebrow">Práctica dirigida</span>
+    <h2>Ejercicios estilo Prof. Deborah</h2>
+    <p>Los mismos ejercicios de completar que ella deja al final de la clase — practique aquí antes de la prueba.</p>
+  </div>
+
+  <div class="card">
+    <div class="exercise-box">
+      <h4>Ejercicio 1 — Complete según la clasificación por cantidad</h4>
+      <p style="font-size:.9rem;">a) Se presentan en cantidades inferiores a 0,0001% (ej: I, Co): <input class="fill-input" id="ex1a" placeholder="Escriba su respuesta"></p>
+      <p style="font-size:.9rem;">b) Se presentan en cantidades superiores a 0,1% (ej: C, H, O): <input class="fill-input" id="ex1b" placeholder="Escriba su respuesta"></p>
+      <p style="font-size:.9rem;">c) Proporción entre 0,1% y 0,0001% (ej: Si, Mg, Cu): <input class="fill-input" id="ex1c" placeholder="Escriba su respuesta"></p>
+      <button class="check-btn" onclick="checkEx1()">Verificar</button>
+      <div class="exercise-result" id="ex1result"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="exercise-box">
+      <h4>Ejercicio 2 — Bioelementos primarios: complete la función</h4>
+      <p style="font-size:.9rem;">C → <input class="fill-input" id="ex2c" placeholder="Función del Carbono"></p>
+      <p style="font-size:.9rem;">H → <input class="fill-input" id="ex2h" placeholder="Función del Hidrógeno"></p>
+      <p style="font-size:.9rem;">O → <input class="fill-input" id="ex2o" placeholder="Función del Oxígeno"></p>
+      <p style="font-size:.9rem;">N → <input class="fill-input" id="ex2n" placeholder="Función del Nitrógeno"></p>
+      <p style="font-size:.9rem;">P → <input class="fill-input" id="ex2p" placeholder="Función del Fósforo"></p>
+      <p style="font-size:.9rem;">S → <input class="fill-input" id="ex2s" placeholder="Función del Azufre"></p>
+      <button class="check-btn" onclick="showAnswers2()">Ver respuestas del profesor</button>
+      <div class="exercise-result" id="ex2result"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="exercise-box">
+      <h4>Ejercicio 3 — Deficiencias: nombre 2 enfermedades por carencia</h4>
+      <p style="font-size:.9rem;">a) Deficiencia de H, Na, K y Mg: <input class="fill-input" id="ex3a" placeholder="2 enfermedades"></p>
+      <p style="font-size:.9rem;">b) Deficiencia de O: <input class="fill-input" id="ex3b" placeholder="2 enfermedades"></p>
+      <p style="font-size:.9rem;">c) Deficiencia de N: <input class="fill-input" id="ex3c" placeholder="2 enfermedades"></p>
+      <p style="font-size:.9rem;">d) Deficiencia de P y Ca: <input class="fill-input" id="ex3d" placeholder="2 enfermedades"></p>
+      <p style="font-size:.9rem;">e) Deficiencia de C: <input class="fill-input" id="ex3e" placeholder="2 enfermedades"></p>
+      <p style="font-size:.9rem;">f) Deficiencia de I: <input class="fill-input" id="ex3f" placeholder="2 enfermedades"></p>
+      <button class="check-btn" onclick="showAnswers3()">Ver respuestas del profesor</button>
+      <div class="exercise-result" id="ex3result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz — nivel Prof. Deborah</h2>
+    <p>10 preguntas de opción múltiple, con el nivel de detalle que ella suele exigir.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Bioquímica — Prof. Deborah (Bioelementos) · Método Prompt Master</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'bioquimica_deborah_bioelementos_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','niveles','clasificacion','porcentaje','deficiencias','ejercicios','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+function checkEx1(){
+  const a = document.getElementById('ex1a').value.trim().toLowerCase();
+  const b = document.getElementById('ex1b').value.trim().toLowerCase();
+  const c = document.getElementById('ex1c').value.trim().toLowerCase();
+  let score = 0;
+  if(a.includes('ultratraza')) score++;
+  if(b.includes('mayoritario')) score++;
+  if(c.includes('traza')) score++;
+  const r = document.getElementById('ex1result');
+  r.className = 'exercise-result show';
+  r.innerHTML = `<b>Respuestas correctas:</b> a) Ultratrazas · b) Mayoritarios · c) Trazas<br>Acertaste ${score}/3.`;
+  addXP(5*score, 'Ejercicio 1');
+}
+function showAnswers2(){
+  const r = document.getElementById('ex2result');
+  r.className = 'exercise-result show';
+  r.innerHTML = `<b>Respuestas del profesor:</b><br>
+  C: energía + formación de ADN/proteínas<br>
+  H: tejidos/líquidos/huesos, articulaciones, agua, ATP<br>
+  O: mayor abundancia, respiración celular, componente del agua<br>
+  N: liberación de energía, aminoácidos/proteínas/ácidos nucleicos/enzimas<br>
+  P: huesos/dientes, energía, neuronas/membranas (memoria)<br>
+  S: colágeno/queratina, cisteína/metionina, antioxidante, secreción biliar`;
+  addXP(15, 'Ejercicio 2 revisado');
+}
+function showAnswers3(){
+  const r = document.getElementById('ex3result');
+  r.className = 'exercise-result show';
+  r.innerHTML = `<b>Respuestas del profesor:</b><br>
+  a) H,Na,K,Mg: enfermedades del corazón, estreñimiento<br>
+  b) O: deshidratación, insuficiencia respiratoria<br>
+  c) N: escorbuto, pelagra<br>
+  d) P,Ca: artritis reumatoide, Alzheimer<br>
+  e) C: obesidad, diabetes<br>
+  f) I: bocio, retraso mental`;
+  addXP(15, 'Ejercicio 3 revisado');
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Importancia', front:'¿Cuáles son los 3 puntos clave de la importancia de la Bioquímica?', back:'1) Base de otras ciencias (estructura/composición/función); 2) Esencial para Medicina, Nutrición, Ingeniería, Agronomía, Veterinaria; 3) Objetivo: estructura y comportamiento de moléculas biológicas.'},
+  {tag:'Niveles', front:'¿Cuáles son los 5 niveles de organización de Wang y Col. (1992)?', back:'Atómico, Molecular, Celular, Anatómico y Cuerpo Íntegro.'},
+  {tag:'Niveles', front:'¿Qué elementos componen el nivel atómico según Wang y Col.?', back:'Hidrógeno, Nitrógeno, Oxígeno, Carbono y Fósforo.'},
+  {tag:'Clasificación', front:'¿Qué porcentaje del organismo representan los bioelementos primarios?', back:'96%.'},
+  {tag:'Clasificación', front:'¿Qué porcentaje representan los bioelementos secundarios?', back:'3,9%.'},
+  {tag:'Clasificación', front:'¿Qué porcentaje representan los oligoelementos?', back:'0,1%.'},
+  {tag:'Clasificación', front:'Nombra los 6 bioelementos primarios.', back:'Carbono, Hidrógeno, Oxígeno, Nitrógeno, Fósforo y Azufre.'},
+  {tag:'Clasificación', front:'Nombra los 5 bioelementos secundarios.', back:'Calcio, Sodio, Potasio, Cloro y Magnesio.'},
+  {tag:'% Corporal', front:'¿Cuál es el elemento más abundante en el cuerpo humano y su %?', back:'Oxígeno, con 62,81%.'},
+  {tag:'% Corporal', front:'Ordena los 4 elementos más abundantes del cuerpo humano.', back:'Oxígeno (62,81%) > Carbono (19,37%) > Hidrógeno (9,31%) > Nitrógeno (5,14%).'},
+  {tag:'% Corporal', front:'¿Cómo se clasifican los bioelementos que representan menos de 0,0001% del peso corporal?', back:'Ultratrazas (ej: I, Co).'},
+  {tag:'% Corporal', front:'¿El Magnesio es traza o ultratraza por porcentaje corporal?', back:'Traza (entre 0,1% y 0,0001%) — aunque por función se clasifique como bioelemento secundario.'},
+  {tag:'Deficiencias', front:'¿Qué enfermedad clásica se asocia a la deficiencia de Yodo?', back:'Bocio, hipotiroidismo y retraso mental.'},
+  {tag:'Deficiencias', front:'¿Qué deficiencia se asocia a artritis reumatoide, cáncer de colon y Alzheimer?', back:'Deficiencia de Fósforo (P) y Calcio (Ca).'},
+  {tag:'Función', front:'¿Qué bioelemento es el principal cofactor del metabolismo de la vitamina D?', back:'El Magnesio.'},
+  {tag:'Función', front:'¿Qué bioelemento ayuda en la absorción del Hierro?', back:'El Cobre.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Cuántos elementos, de todos los que existen en la naturaleza, son considerados Bioelementos?', options:['10','25','50','96','120'], correct:1, exp:'Solo unos 25 elementos de todos los que existen en la naturaleza son componentes de los seres vivos.'},
+  {q:'Según Wang y Col. (1992), ¿qué nivel de organización incluye el agua, las proteínas, los lípidos y la hidroxiapatita?', options:['Nivel atómico','Nivel molecular','Nivel celular','Nivel anatómico','Nivel de cuerpo íntegro'], correct:1, exp:'El nivel molecular incluye agua, proteínas, lípidos e hidroxiapatita.'},
+  {q:'¿Qué porcentaje del organismo representan los bioelementos primarios o plásticos?', options:['3,9%','0,1%','96%','50%','25%'], correct:2, exp:'Los bioelementos primarios representan el 96% del organismo.'},
+  {q:'¿Cuál es el elemento más abundante en el cuerpo humano?', options:['Carbono','Hidrógeno','Nitrógeno','Oxígeno','Calcio'], correct:3, exp:'El Oxígeno representa el 62,81% del cuerpo humano, el más abundante.'},
+  {q:'El Magnesio, el Calcio, el Sodio, el Potasio y el Cloro pertenecen a la categoría funcional de:', options:['Bioelementos primarios','Bioelementos secundarios','Oligoelementos','Bioelementos ultratrazas','Bioelementos mayoritarios exclusivamente'], correct:1, exp:'Ca, Na, K, Cl y Mg son los 5 bioelementos secundarios, representando el 3,9% del organismo.'},
+  {q:'Según la clasificación por porcentaje corporal (no por función), el Yodo y el Cobalto se consideran:', options:['Mayoritarios','Trazas','Ultratrazas','Primarios','Secundarios'], correct:2, exp:'I y Co están presentes en cantidades inferiores al 0,0001% del peso corporal — se clasifican como ultratrazas.'},
+  {q:'¿Qué bioelemento actúa como principal cofactor del metabolismo de la vitamina D?', options:['Calcio','Fósforo','Magnesio','Zinc','Hierro'], correct:2, exp:'El Magnesio es el principal cofactor del metabolismo de la vitamina D.'},
+  {q:'La deficiencia de Yodo se asocia clásicamente a:', options:['Escorbuto y beriberi','Bocio, hipotiroidismo y retraso mental','Artritis reumatoide y Alzheimer','Constipación y obesidad','Deshidratación e insuficiencia respiratoria'], correct:1, exp:'La deficiencia de Yodo provoca bocio, hipotiroidismo y retraso mental.'},
+  {q:'¿Qué bioelemento es necesario para la formación de colágeno y queratina, y forma parte de la cisteína y metionina?', options:['Fósforo','Azufre','Calcio','Sodio','Potasio'], correct:1, exp:'El Azufre es necesario para colágeno/queratina y forma parte de aminoácidos como cisteína y metionina.'},
+  {q:'¿Cuál es la diferencia entre la clasificación "primario/secundario/oligoelemento" y la clasificación "mayoritario/traza/ultratraza"?', options:['Son exactamente lo mismo, solo cambia el nombre','La primera es por función estructural y abundancia relativa; la segunda es estrictamente por porcentaje del peso corporal','La primera clasifica solo metales; la segunda solo no metales','No existe ninguna diferencia relevante para el examen','La segunda clasificación no se usa en bioquímica'], correct:1, exp:'Son dos sistemas de clasificación distintos y complementarios — un elemento puede ser "secundario" por función pero "traza" por porcentaje (ej: Magnesio).'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>
