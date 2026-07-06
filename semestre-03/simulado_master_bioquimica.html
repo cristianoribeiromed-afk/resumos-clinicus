@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Master — Bioquímica I</title>
+<style>
+  :root {
+    --bg: #0a0e14; --bg2: #0e1420; --bg3: #131c2b; --card: #17202f; --card2: #1d2a3d;
+    --border: #223045; --border2: #2a3b57;
+    --accent: #f0a83c; --accent2: #4dc9b0;
+    --green: #22c55e; --red: #ef4444; --yellow: #eab308;
+    --text: #e2e8f0; --text2: #94a3b8; --text3: #4a6080;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header { background: linear-gradient(135deg, #0e1420 0%, #131c2b 100%); border-bottom: 1px solid var(--border2); padding: 0; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px 12px; flex-wrap: wrap; gap: 12px; }
+  .header-title { font-size: 1.1rem; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; }
+  .header-sub { font-size: 0.75rem; color: var(--text2); margin-top: 2px; }
+
+  .timer-box { background: var(--card2); border: 1px solid var(--border2); border-radius: 10px; padding: 8px 18px; text-align: center; }
+  .timer-label { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .timer-display { font-size: 1.6rem; font-weight: 900; color: var(--yellow); font-variant-numeric: tabular-nums; letter-spacing: 2px; }
+  .timer-display.urgent { color: var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+  nav { display: flex; gap: 2px; padding: 0 24px 12px; overflow-x: auto; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav button { background: var(--card); border: 1px solid var(--border); color: var(--text2); padding: 6px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; font-size: 0.78rem; font-weight: 600; transition: all 0.2s; }
+  nav button:hover { background: var(--card2); color: var(--text); }
+  nav button.active { background: var(--accent); color: #1a1400; border-color: var(--accent); }
+
+  .progress-bar-wrap { padding: 0 24px 0; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text2); margin-bottom: 6px; }
+  .progress-track { background: var(--card); border-radius: 4px; height: 4px; }
+  .progress-fill { background: linear-gradient(90deg, var(--accent), var(--accent2)); height: 4px; border-radius: 4px; transition: width 0.4s; }
+  .header-actions { display: flex; gap: 8px; padding: 12px 24px; }
+  .btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.82rem; font-weight: 700; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #1a1400; }
+  .btn-primary:hover { background: #d99326; }
+  .btn-secondary { background: var(--card2); color: var(--text2); border: 1px solid var(--border2); }
+  .btn-secondary:hover { color: var(--text); }
+  .btn-danger { background: #1a0a0a; color: var(--red); border: 1px solid #4a1a1a; }
+  .btn-danger:hover { background: #2a1010; }
+
+  .page { display: none; max-width: 820px; margin: 0 auto; padding: 24px 16px 80px; }
+  .page.active { display: block; }
+
+  .sec-header { background: linear-gradient(90deg, var(--card2), var(--card)); border: 1px solid var(--border2); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+  .sec-icon { font-size: 1.8rem; }
+  .sec-title { font-size: 1rem; font-weight: 800; color: var(--text); }
+  .sec-desc { font-size: 0.78rem; color: var(--text2); margin-top: 3px; }
+  .sec-badge { margin-left: auto; background: var(--accent); color: #1a1400; border-radius: 20px; padding: 4px 12px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; transition: border-color 0.2s; }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .q-num { font-size: 0.72rem; font-weight: 700; color: var(--accent); background: rgba(240,168,60,0.1); border: 1px solid rgba(240,168,60,0.2); border-radius: 6px; padding: 2px 10px; }
+  .q-cap { font-size: 0.68rem; font-weight: 700; border-radius: 6px; padding: 2px 8px; background: rgba(77,201,176,0.1); color: var(--accent2); border: 1px solid rgba(77,201,176,0.2); }
+  .q-text { font-size: 0.9rem; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+
+  .opts { display: flex; flex-direction: column; gap: 8px; }
+  .opt { display: flex; align-items: flex-start; gap: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; padding: 11px 14px; cursor: pointer; transition: all 0.18s; font-size: 0.85rem; line-height: 1.5; color: var(--text2); }
+  .opt:hover { border-color: var(--accent); color: var(--text); background: var(--card2); }
+  .opt-letter { font-weight: 800; color: var(--accent); font-size: 0.82rem; background: rgba(240,168,60,0.1); border-radius: 5px; padding: 1px 7px; flex-shrink: 0; margin-top: 1px; }
+  .opt.selected { border-color: var(--accent); background: rgba(240,168,60,0.08); color: var(--text); }
+  .opt.selected .opt-letter { background: var(--accent); color: #1a1400; }
+  .opt.correct { border-color: var(--green) !important; background: rgba(34,197,94,0.08) !important; color: var(--text) !important; }
+  .opt.correct .opt-letter { background: var(--green) !important; color: #000 !important; }
+  .opt.wrong { border-color: var(--red) !important; background: rgba(239,68,68,0.08) !important; color: var(--text2) !important; }
+  .opt.wrong .opt-letter { background: var(--red) !important; color: #fff !important; }
+  .opt.disabled { pointer-events: none; }
+
+  .vf-stmt { background: var(--bg3); border: 1px solid var(--border); border-radius: 9px; padding: 13px 16px; margin-bottom: 10px; }
+  .vf-text { font-size: 0.87rem; line-height: 1.6; color: var(--text); margin-bottom: 10px; }
+  .vf-btns { display: flex; gap: 8px; }
+  .vf-btn { flex: 1; padding: 8px; border-radius: 7px; border: 1px solid var(--border); background: var(--card); color: var(--text2); cursor: pointer; font-weight: 700; font-size: 0.82rem; transition: all 0.18s; }
+  .vf-btn:hover { border-color: var(--accent); color: var(--text); }
+  .vf-btn.selected-v { border-color: var(--green); background: rgba(34,197,94,0.1); color: var(--green); }
+  .vf-btn.selected-f { border-color: var(--red); background: rgba(239,68,68,0.1); color: var(--red); }
+  .vf-btn.disabled { pointer-events: none; }
+  .vf-result { display: none; font-size: 0.78rem; padding: 7px 10px; border-radius: 6px; margin-top: 8px; font-weight: 600; }
+  .vf-result.correct { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .vf-result.wrong { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+
+  .assoc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width:600px){ .assoc-grid { grid-template-columns: 1fr; } }
+  .assoc-col h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 8px; }
+  .assoc-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 0.82rem; line-height: 1.5; color: var(--text2); margin-bottom: 6px; }
+  .assoc-item strong { color: var(--accent); }
+  .assoc-select { width: 100%; margin-top: 6px; padding: 6px 10px; background: var(--card2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-size: 0.82rem; cursor: pointer; }
+  .assoc-select:focus { outline: none; border-color: var(--accent); }
+
+  .gab-section { margin-bottom: 28px; }
+  .gab-title { font-size: 0.85rem; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .gab-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .gab-item:last-child { border-bottom: none; }
+  .gab-num { font-size: 0.75rem; font-weight: 700; color: var(--text3); width: 90px; flex-shrink: 0; padding-top: 2px; }
+  .gab-resp { font-weight: 800; color: var(--green); font-size: 0.85rem; flex-shrink: 0; width: 110px; }
+  .gab-exp { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+  .gab-exp strong { color: var(--text); }
+  .score-box { background: linear-gradient(135deg, var(--card2), var(--card)); border: 1px solid var(--border2); border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 28px; }
+  .score-num { font-size: 3rem; font-weight: 900; color: var(--accent); }
+  .score-label { font-size: 0.85rem; color: var(--text2); margin-top: 4px; }
+  .score-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 16px; }
+  .score-cell { background: var(--bg3); border-radius: 8px; padding: 10px; }
+  .score-cell-num { font-size: 1.2rem; font-weight: 800; }
+  .score-cell-label { font-size: 0.68rem; color: var(--text3); margin-top: 2px; }
+
+  .q-result-badge { display: none; margin-top: 10px; font-size: 0.78rem; font-weight: 700; padding: 6px 12px; border-radius: 7px; }
+  .q-result-badge.acertou { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .q-result-badge.errou { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+  .welcome { max-width: 600px; margin: 40px auto; padding: 0 16px; }
+  .welcome-card { background: var(--card); border: 1px solid var(--border2); border-radius: 18px; padding: 32px 28px; text-align: center; }
+  .welcome-icon { font-size: 3rem; margin-bottom: 12px; }
+  .welcome-title { font-size: 1.3rem; font-weight: 900; color: var(--text); margin-bottom: 8px; }
+  .welcome-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.7; margin-bottom: 24px; }
+  .welcome-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .welcome-stat { background: var(--bg3); border-radius: 10px; padding: 14px; }
+  .welcome-stat-num { font-size: 1.4rem; font-weight: 900; color: var(--accent); }
+  .welcome-stat-label { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+  .welcome-rules { text-align: left; background: var(--bg3); border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; }
+  .welcome-rules li { font-size: 0.82rem; color: var(--text2); padding: 4px 0; list-style: none; }
+  .welcome-rules li::before { content: '→ '; color: var(--accent); font-weight: 700; }
+
+  #finish-overlay { display: none; position: fixed; inset: 0; background: rgba(10,14,20,0.95); z-index: 200; align-items: center; justify-content: center; }
+  #finish-overlay.show { display: flex; }
+  .finish-card { background: var(--card); border: 1px solid var(--border2); border-radius: 20px; padding: 40px 32px; text-align: center; max-width: 440px; width: 90%; }
+  .finish-icon { font-size: 3.5rem; margin-bottom: 12px; }
+  .finish-title { font-size: 1.3rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+  .finish-score { font-size: 3.5rem; font-weight: 900; color: var(--accent); margin: 12px 0; }
+  .finish-msg { font-size: 0.85rem; color: var(--text2); margin-bottom: 24px; }
+  .finish-btns { display: flex; gap: 10px; justify-content: center; }
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcome-screen" class="welcome">
+  <div class="welcome-card">
+    <div class="welcome-icon">⚗️</div>
+    <div class="welcome-title">Simulado Master — Bioquímica I</div>
+    <div class="welcome-desc">Cubre integralmente Bioelementos, Carboidratos (P1 e P2), Lipídios (P1 e P2) e Vitaminas. Gabarito comentado liberado apenas ao finalizar.</div>
+    <div class="welcome-grid">
+      <div class="welcome-stat"><div class="welcome-stat-num">52</div><div class="welcome-stat-label">itens totais</div></div>
+      <div class="welcome-stat"><div class="welcome-stat-num">70</div><div class="welcome-stat-label">minutos</div></div>
+      <div class="welcome-stat"><div class="welcome-stat-num">3</div><div class="welcome-stat-label">partes</div></div>
+    </div>
+    <ul class="welcome-rules">
+      <li>Parte 1: 16 questões de múltipla escolha</li>
+      <li>Parte 2: 4 blocos de verdadeiro ou falso (16 afirmações)</li>
+      <li>Parte 3: 4 blocos de associação de colunas (20 associações)</li>
+      <li>Gabarito com comentários liberado ao finalizar</li>
+      <li>Cronômetro regressivo de 70 minutos</li>
+    </ul>
+    <button class="btn btn-primary" style="width:100%;padding:14px;font-size:1rem;" onclick="startSimulado()">▶ Iniciar Simulado</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none;">
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="header-title">⚗️ Simulado Master — Bioquímica I</div>
+      <div class="header-sub">Bioelementos · Carboidratos · Lipídios · Vitaminas</div>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">tempo restante</div>
+      <div class="timer-display" id="timer">70:00</div>
+    </div>
+  </div>
+  <nav>
+    <button class="active" onclick="showPage('p1',this)">📝 Parte 1 — Múltipla Escolha</button>
+    <button onclick="showPage('p2',this)">✅ Parte 2 — V ou F</button>
+    <button onclick="showPage('p3',this)">🔗 Parte 3 — Associação</button>
+    <button onclick="showPage('gab',this)" id="gab-btn" style="opacity:0.4;pointer-events:none;">📋 Gabarito</button>
+  </nav>
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span id="prog-text">0 de 52 respondidas</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="finishSimulado()">✔ Finalizar e Ver Gabarito</button>
+    <button class="btn btn-danger" onclick="resetSimulado()">↺ Refazer</button>
+  </div>
+</header>
+
+<!-- PARTE 1 -->
+<div class="page active" id="page-p1">
+  <div class="sec-header">
+    <div class="sec-icon">📝</div>
+    <div><div class="sec-title">Parte 1 — Múltipla Escolha</div><div class="sec-desc">Apenas uma alternativa correta. Gabarito liberado ao finalizar.</div></div>
+    <div class="sec-badge">16 questões</div>
+  </div>
+  <div id="p1-container"></div>
+</div>
+
+<!-- PARTE 2 -->
+<div class="page" id="page-p2">
+  <div class="sec-header">
+    <div class="sec-icon">✅</div>
+    <div><div class="sec-title">Parte 2 — Verdadeiro ou Falso</div><div class="sec-desc">Julgue cada afirmação como Verdadeiro (V) ou Falso (F).</div></div>
+    <div class="sec-badge">4 blocos</div>
+  </div>
+  <div id="p2-container"></div>
+</div>
+
+<!-- PARTE 3 -->
+<div class="page" id="page-p3">
+  <div class="sec-header">
+    <div class="sec-icon">🔗</div>
+    <div><div class="sec-title">Parte 3 — Associação de Colunas</div><div class="sec-desc">Associe cada item da Coluna A com o correspondente da Coluna B.</div></div>
+    <div class="sec-badge">4 blocos</div>
+  </div>
+  <div id="p3-container"></div>
+</div>
+
+<!-- GABARITO -->
+<div class="page" id="page-gab">
+  <div class="sec-header">
+    <div class="sec-icon">📋</div>
+    <div><div class="sec-title">Gabarito Comentado</div><div class="sec-desc">Respostas corretas com explicações e análise de distratores.</div></div>
+  </div>
+  <div id="score-display"></div>
+  <div id="gab-container"></div>
+</div>
+
+</div><!-- /main-app -->
+
+<!-- FINISH OVERLAY -->
+<div id="finish-overlay">
+  <div class="finish-card">
+    <div class="finish-icon" id="finish-icon">🎯</div>
+    <div class="finish-title">Simulado Finalizado!</div>
+    <div class="finish-score" id="finish-score">--/52</div>
+    <div class="finish-msg" id="finish-msg"></div>
+    <div class="finish-btns">
+      <button class="btn btn-primary" onclick="goToGabarito()">📋 Ver Gabarito Completo</button>
+      <button class="btn btn-secondary" onclick="resetSimulado()">↺ Refazer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const p1Data = [
+  // BIOELEMENTOS (4)
+  { n:1, cap:'Bioelementos', q:'¿Cuál es el elemento con mayor porcentaje en el cuerpo humano?', opts:['Carbono (19.37%)','Hidrógeno (9.31%)','Oxígeno (62.81%)','Nitrógeno (5.14%)','Calcio (1.38%)'], resp:2 },
+  { n:2, cap:'Bioelementos', q:'Los bioelementos primarios (C, H, O, N) representan aproximadamente qué proporción del peso de la materia seca corporal:', opts:['Menos del 1%','Alrededor del 50%','Alrededor del 96%','Exactamente el 100%','Alrededor del 3.9%'], resp:2 },
+  { n:3, cap:'Bioelementos', q:'Según el sistema de clasificación de Wang y colaboradores (1992), ¿en qué nivel se ubican las proteínas y los lípidos?', opts:['Nivel atómico','Nivel molecular','Nivel celular','Nivel anatómico','Nivel de cuerpo íntegro'], resp:1 },
+  { n:4, cap:'Bioelementos', q:'¿Cómo se definen los oligoelementos?', opts:['Elementos que representan más del 1% del peso corporal','Elementos que representan menos del 0.005% del peso corporal','Elementos exclusivos del sistema óseo','Elementos formadores de proteínas exclusivamente','Elementos que solo existen en forma de gas'], resp:1 },
+  // CARBOIDRATOS (4)
+  { n:5, cap:'Carboidratos', q:'La sacarosa está compuesta por:', opts:['Glucosa + Galactosa','Glucosa + Fructosa','Fructosa + Galactosa','Glucosa + Glucosa','Galactosa + Galactosa'], resp:1 },
+  { n:6, cap:'Carboidratos', q:'¿La sacarosa posee poder reductor?', opts:['Sí, siempre','No, no posee poder reductor','Solo en presencia de ácidos','Solo a altas temperaturas','Solo si está hidrolizada'], resp:1 },
+  { n:7, cap:'Carboidratos', q:'Un valor de glicemia en ayunas de 130 mg/dL en sangre venosa se clasifica como:', opts:['Hipoglicemia','Valor normal','Hiperglicemia','Valor indeterminado','Diabetes tipo 1 confirmada'], resp:2 },
+  { n:8, cap:'Carboidratos', q:'Un monosacárido de 6 carbonos se denomina:', opts:['Triosa','Tetrosa','Pentosa','Hexosa','Heptosa'], resp:3 },
+  // LIPÍDIOS (4)
+  { n:9, cap:'Lipídios', q:'Los lípidos insaponificables se caracterizan por:', opts:['Contener ácidos grasos unidos por enlaces éster','NO contener ácidos grasos en su estructura','Ser exclusivamente triacilglicéridos','Ser hidrosolubles','Formar únicamente ceras'], resp:1 },
+  { n:10, cap:'Lipídios', q:'¿Cuál es el componente mayoritario de los quilomicrones?', opts:['Colesterol (90%)','Fosfolípidos (90%)','Triglicéridos (90%)','Apoproteínas (90%)','Ácidos biliares (90%)'], resp:2 },
+  { n:11, cap:'Lipídios', q:'La lipoproteína conocida como "colesterol malo", relacionada con la aterosclerosis, es:', opts:['HDL','LDL','VLDL','Quilomicrón','Albúmina'], resp:1 },
+  { n:12, cap:'Lipídios', q:'Respecto a la solubilidad de los lípidos, es correcto afirmar que son:', opts:['Solubles en agua e insolubles en solventes orgánicos','Insolubles en agua y solubles en solventes orgánicos (éter, cloroformo)','Solubles tanto en agua como en solventes orgánicos','Insolubles en cualquier tipo de solvente','Solubles solo en soluciones ácidas'], resp:1 },
+  // VITAMINAS (4)
+  { n:13, cap:'Vitaminas', q:'Las vitaminas A, D, E y K se clasifican como:', opts:['Hidrosolubles','Liposolubles','Vitámeros','Provitaminas','Antivitaminas'], resp:1 },
+  { n:14, cap:'Vitaminas', q:'Sustancias diferentes con propiedades vitamínicas idénticas se denominan:', opts:['Provitaminas','Antivitaminas','Vitámeros','Coenzimas','Oligoelementos'], resp:2 },
+  { n:15, cap:'Vitaminas', q:'Una sustancia con estructura química similar a una vitamina, que actúa como antagonista metabólico bloqueando su acción, se denomina:', opts:['Provitamina','Vitámero','Antivitamina','Coenzima','Apoenzima'], resp:2 },
+  { n:16, cap:'Vitaminas', q:'La enfermedad clásica por carencia de niacina (nicotinamida) es:', opts:['Escorbuto','Beriberi','Pelagra','Raquitismo','Xeroftalmia'], resp:2 },
+];
+
+const p2Data = [
+  {
+    n:1, cap:'Bioelementos',
+    stmts:[
+      { t:'Los bioelementos secundarios representan entre 1% y 0.005% del peso corporal.', resp:'V' },
+      { t:'El Carbono es el elemento más abundante en el cuerpo humano, superando al Oxígeno.', resp:'F' },
+      { t:'El nivel anatómico de organización incluye tejido muscular, adiposo, óseo, piel, órganos y vísceras.', resp:'V' },
+      { t:'Los oligoelementos representan más del 1% del peso corporal.', resp:'F' },
+    ]
+  },
+  {
+    n:2, cap:'Carboidratos',
+    stmts:[
+      { t:'Los monosacáridos son solubles en agua y de sabor generalmente dulce.', resp:'V' },
+      { t:'La lactosa está compuesta por glucosa y fructosa.', resp:'F' },
+      { t:'Un valor de glicemia en ayunas por debajo de 60 mg/dL se clasifica como hipoglicemia.', resp:'V' },
+      { t:'Los polisacáridos están formados por menos de 10 unidades de monosacáridos.', resp:'F' },
+    ]
+  },
+  {
+    n:3, cap:'Lipídios',
+    stmts:[
+      { t:'Los esteroides y las prostaglandinas son ejemplos de lípidos insaponificables.', resp:'V' },
+      { t:'La HDL transporta colesterol de la dieta hacia los tejidos extrahepáticos, favoreciendo la aterosclerosis.', resp:'F' },
+      { t:'Los sales biliares forman micelas para mantener los lípidos en emulsión durante la digestión.', resp:'V' },
+      { t:'Los lípidos complejos contienen únicamente carbono, hidrógeno y oxígeno.', resp:'F' },
+    ]
+  },
+  {
+    n:4, cap:'Vitaminas',
+    stmts:[
+      { t:'La vitamina C y el complejo B son ejemplos de vitaminas hidrosolubles.', resp:'V' },
+      { t:'Una provitamina es una sustancia que bloquea la acción metabólica de una vitamina.', resp:'F' },
+      { t:'El ácido fólico tiene especial relevancia en la prevención de defectos congénitos durante el embarazo.', resp:'V' },
+      { t:'La toxicidad por exceso de vitaminas solo puede ocurrir con las vitaminas hidrosolubles, nunca con las liposolubles.', resp:'F' },
+    ]
+  }
+];
+
+const p3Data = [
+  {
+    n:1, cap:'Bioelementos',
+    titulo:'Associe cada elemento à sua porcentagem aproximada no corpo humano:',
+    colA:['1. Oxigênio','2. Carbono','3. Hidrogênio','4. Nitrogênio','5. Cálcio'],
+    colB:[
+      '(A) 19,37%',
+      '(B) 9,31%',
+      '(C) 62,81%',
+      '(D) 1,38%',
+      '(E) 5,14%'
+    ],
+    resp:['C','A','B','E','D']
+  },
+  {
+    n:2, cap:'Carboidratos',
+    titulo:'Associe cada termo à sua definição correta:',
+    colA:['1. Triose','2. Tetrose','3. Pentose','4. Hexose','5. Sacarose'],
+    colB:[
+      '(A) Monossacarídeo de 4 carbonos',
+      '(B) Monossacarídeo de 3 carbonos',
+      '(C) Composta por glicose + frutose, sem poder redutor',
+      '(D) Monossacarídeo de 6 carbonos',
+      '(E) Monossacarídeo de 5 carbonos'
+    ],
+    resp:['B','A','E','D','C']
+  },
+  {
+    n:3, cap:'Lipídios',
+    titulo:'Associe cada lipoproteína/componente à sua função:',
+    colA:['1. HDL','2. LDL','3. VLDL','4. Quilomícrons','5. Sais biliares'],
+    colB:[
+      '(A) Sintetizada no fígado, transporta triglicerídeos endógenos',
+      '(B) Retira o excesso de colesterol das células, levando-o ao fígado',
+      '(C) Formam micelas para emulsionar os lipídios durante a digestão',
+      '(D) Transporta colesterol da dieta aos tecidos; associada à aterosclerose',
+      '(E) Transportam lipídios da dieta absorvidos no intestino (90% triglicerídeos)'
+    ],
+    resp:['B','D','A','E','C']
+  },
+  {
+    n:4, cap:'Vitaminas',
+    titulo:'Associe cada termo à sua definição:',
+    colA:['1. Vitâmero','2. Provitamina','3. Antivitamina','4. Vitaminas hidrossolúveis','5. Vitaminas lipossolúveis'],
+    colB:[
+      '(A) Bloqueia a ação metabólica de uma vitamina, ocupando seu lugar enzimático',
+      '(B) Substâncias diferentes com propriedades vitamínicas idênticas',
+      '(C) Composto que, ao ser metabolizado, gera a vitamina correspondente',
+      '(D) Vitaminas A, D, E e K',
+      '(E) Vitamina C e complexo B'
+    ],
+    resp:['B','C','A','E','D']
+  }
+];
+
+// ===================== STATE =====================
+let answers = {};
+let vfAnswers = {};
+let assocAnswers = {};
+let timerInterval = null;
+let timeLeft = 70 * 60;
+let finished = false;
+let progressCount = 0;
+
+// ===================== BUILD UI =====================
+function buildP1() {
+  const c = document.getElementById('p1-container');
+  p1Data.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q1-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Q${q.n}</span><span class="q-cap">${q.cap}</span></div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts" id="opts-${qi}">
+        ${q.opts.map((o,oi) => `<div class="opt" onclick="selectP1(${qi},${oi})"><span class="opt-letter">${String.fromCharCode(65+oi)}</span>${o}</div>`).join('')}
+      </div>
+      <div class="q-result-badge" id="badge1-${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function buildP2() {
+  const c = document.getElementById('p2-container');
+  p2Data.forEach((q, qi) => {
+    vfAnswers[qi] = {};
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q2-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Bloco ${q.n}</span><span class="q-cap">${q.cap}</span></div>
+      ${q.stmts.map((s, si) => `
+        <div class="vf-stmt" id="vf-${qi}-${si}">
+          <div class="vf-text"><strong>${['I','II','III','IV'][si]}.</strong> ${s.t}</div>
+          <div class="vf-btns">
+            <button class="vf-btn" id="vfv-${qi}-${si}" onclick="selectVF(${qi},${si},'V')">✓ Verdadeiro</button>
+            <button class="vf-btn" id="vff-${qi}-${si}" onclick="selectVF(${qi},${si},'F')">✗ Falso</button>
+          </div>
+          <div class="vf-result" id="vfr-${qi}-${si}"></div>
+        </div>
+      `).join('')}
+    `;
+    c.appendChild(div);
+  });
+}
+
+function buildP3() {
+  const c = document.getElementById('p3-container');
+  p3Data.forEach((q, qi) => {
+    assocAnswers[qi] = {};
+    const letters = q.colB.map(b => b.match(/\(([A-E])\)/)[1]);
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q3-' + qi;
+    div.innerHTML = `
+      <div class="q-meta"><span class="q-num">Associação ${q.n}</span><span class="q-cap">${q.cap}</span></div>
+      <div class="q-text">${q.titulo}</div>
+      <div class="assoc-grid">
+        <div class="assoc-col">
+          <h4>Coluna A</h4>
+          ${q.colA.map((a, ai) => `
+            <div class="assoc-item">
+              <strong>${a}</strong>
+              <select class="assoc-select" id="sel-${qi}-${ai}" onchange="selectAssoc(${qi},${ai},this.value)">
+                <option value="">— selecione —</option>
+                ${letters.map(l => `<option value="${l}">${l}</option>`).join('')}
+              </select>
+            </div>
+          `).join('')}
+        </div>
+        <div class="assoc-col">
+          <h4>Coluna B</h4>
+          ${q.colB.map(b => `<div class="assoc-item">${b}</div>`).join('')}
+        </div>
+      </div>
+      <div class="q-result-badge" id="badge3-${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+// ===================== INTERACTIONS =====================
+function selectP1(qi, oi) {
+  if (finished) return;
+  const wasAnswered = answers[qi] !== undefined;
+  answers[qi] = oi;
+  document.querySelectorAll(`#opts-${qi} .opt`).forEach((o, i) => o.classList.toggle('selected', i === oi));
+  if (!wasAnswered) updateProgress(1);
+}
+
+function selectVF(qi, si, val) {
+  if (finished) return;
+  const wasAnswered = vfAnswers[qi][si] !== undefined;
+  vfAnswers[qi][si] = val;
+  const btnV = document.getElementById(`vfv-${qi}-${si}`);
+  const btnF = document.getElementById(`vff-${qi}-${si}`);
+  btnV.className = 'vf-btn' + (val === 'V' ? ' selected-v' : '');
+  btnF.className = 'vf-btn' + (val === 'F' ? ' selected-f' : '');
+  if (!wasAnswered) updateProgress(1);
+}
+
+function selectAssoc(qi, ai, val) {
+  if (finished) return;
+  const wasAnswered = assocAnswers[qi][ai] !== undefined;
+  assocAnswers[qi][ai] = val;
+  if (!wasAnswered) updateProgress(1);
+}
+
+function updateProgress(n) {
+  progressCount += n;
+  const total = 16 + 16 + 20;
+  const pct = Math.round((progressCount / total) * 100);
+  document.getElementById('prog-text').textContent = `${progressCount} de ${total} respondidas`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ===================== TIMER =====================
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+    const s = (timeLeft % 60).toString().padStart(2,'0');
+    const el = document.getElementById('timer');
+    el.textContent = `${m}:${s}`;
+    if (timeLeft <= 300) el.classList.add('urgent');
+    if (timeLeft <= 0) { clearInterval(timerInterval); finishSimulado(); }
+  }, 1000);
+}
+
+// ===================== FINISH =====================
+function finishSimulado() {
+  if (finished) return;
+  finished = true;
+  clearInterval(timerInterval);
+
+  let correct = 0, total = 0;
+  p1Data.forEach((q, qi) => {
+    total++;
+    const ans = answers[qi];
+    const opts = document.querySelectorAll(`#opts-${qi} .opt`);
+    opts.forEach((o, oi) => {
+      o.classList.add('disabled');
+      if (oi === q.resp) o.classList.add('correct');
+      else if (oi === ans && oi !== q.resp) o.classList.add('wrong');
+    });
+    if (ans === q.resp) {
+      correct++;
+      const b = document.getElementById(`badge1-${qi}`);
+      b.className = 'q-result-badge acertou'; b.textContent = '✓ Correto!'; b.style.display = 'inline-block';
+    } else if (ans !== undefined) {
+      const b = document.getElementById(`badge1-${qi}`);
+      b.className = 'q-result-badge errou'; b.textContent = `✗ Incorreto — Gabarito: ${String.fromCharCode(65+q.resp)}`; b.style.display = 'inline-block';
+    }
+  });
+
+  p2Data.forEach((q, qi) => {
+    q.stmts.forEach((s, si) => {
+      total++;
+      const userAns = vfAnswers[qi]?.[si];
+      const r = document.getElementById(`vfr-${qi}-${si}`);
+      const btnV = document.getElementById(`vfv-${qi}-${si}`);
+      const btnF = document.getElementById(`vff-${qi}-${si}`);
+      btnV.classList.add('disabled'); btnF.classList.add('disabled');
+      if (userAns === s.resp) {
+        correct++;
+        r.className = 'vf-result correct'; r.textContent = `✓ Correto! Resposta: ${s.resp === 'V' ? 'Verdadeiro' : 'Falso'}`;
+      } else {
+        r.className = 'vf-result wrong'; r.textContent = `✗ Incorreto — Resposta correta: ${s.resp === 'V' ? 'Verdadeiro' : 'Falso'}`;
+      }
+      r.style.display = 'block';
+    });
+  });
+
+  p3Data.forEach((q, qi) => {
+    const badge = document.getElementById(`badge3-${qi}`);
+    let qCorrect = 0;
+    q.colA.forEach((_, ai) => {
+      total++;
+      const userAns = assocAnswers[qi]?.[ai];
+      const sel = document.getElementById(`sel-${qi}-${ai}`);
+      if (sel) sel.disabled = true;
+      if (userAns === q.resp[ai]) {
+        correct++; qCorrect++;
+        if (sel) sel.style.borderColor = 'var(--green)';
+      } else {
+        if (sel) sel.style.borderColor = 'var(--red)';
+        if (sel) sel.title = `Correto: ${q.resp[ai]}`;
+      }
+    });
+    if (badge) {
+      badge.className = qCorrect === q.colA.length ? 'q-result-badge acertou' : 'q-result-badge errou';
+      badge.textContent = qCorrect === q.colA.length ? `✓ Associação completa correta!` : `✗ ${qCorrect}/${q.colA.length} corretos — veja o gabarito`;
+      badge.style.display = 'inline-block';
+    }
+  });
+
+  const gabBtn = document.getElementById('gab-btn');
+  gabBtn.style.opacity = '1'; gabBtn.style.pointerEvents = 'auto';
+  buildGabarito(correct, total);
+
+  const pct = Math.round((correct / total) * 100);
+  document.getElementById('finish-score').textContent = `${correct}/${total}`;
+  document.getElementById('finish-icon').textContent = pct >= 70 ? '🏆' : pct >= 50 ? '📚' : '💪';
+  document.getElementById('finish-msg').textContent = pct >= 70 ? 'Excelente desempenho! Continue assim para a prova.' : pct >= 50 ? 'Bom resultado. Revise os pontos errados no gabarito.' : 'Revise o material e refaça o simulado. Você chega lá!';
+  document.getElementById('finish-overlay').classList.add('show');
+}
+
+function goToGabarito() {
+  document.getElementById('finish-overlay').classList.remove('show');
+  showPage('gab', document.getElementById('gab-btn'));
+}
+
+// ===================== GABARITO =====================
+function buildGabarito(correct, total) {
+  const pct = Math.round((correct/total)*100);
+  const scoreHtml = `
+    <div class="score-box">
+      <div class="score-num">${pct}%</div>
+      <div class="score-label">Aproveitamento geral</div>
+      <div class="score-grid">
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--green)">${correct}</div><div class="score-cell-label">Acertos</div></div>
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--red)">${total-correct}</div><div class="score-cell-label">Erros</div></div>
+        <div class="score-cell"><div class="score-cell-num" style="color:var(--text)">${total}</div><div class="score-cell-label">Total</div></div>
+      </div>
+    </div>`;
+  document.getElementById('score-display').innerHTML = scoreHtml;
+
+  const gabComments = [
+    { part:'Parte 1 — Múltipla Escolha', items:[
+      { n:'Q1 (Bioelementos)', resp:'C', exp:'O Oxigênio corresponde a 62,81% do corpo humano, o elemento mais abundante.' },
+      { n:'Q2 (Bioelementos)', resp:'C', exp:'Os bioelementos primários (C,H,O,N) somam cerca de 96% do peso da matéria seca corporal.' },
+      { n:'Q3 (Bioelementos)', resp:'B', exp:'Proteínas e lipídios pertencem ao nível MOLECULAR de organização, segundo Wang e cols.' },
+      { n:'Q4 (Bioelementos)', resp:'B', exp:'Oligoelementos representam menos de 0,005% do peso corporal.' },
+      { n:'Q5 (Carboidratos)', resp:'B', exp:'Sacarose = Glicose + Frutose (o "açúcar comum").' },
+      { n:'Q6 (Carboidratos)', resp:'B', exp:'A sacarose NÃO possui poder redutor — diferente da lactose, que possui.' },
+      { n:'Q7 (Carboidratos)', resp:'C', exp:'Valores acima de 120 mg/dL (ou mesmo >99 conforme referência da aula) caracterizam hiperglicemia.' },
+      { n:'Q8 (Carboidratos)', resp:'D', exp:'Hexose = monossacarídeo de 6 carbonos (ex: glicose).' },
+      { n:'Q9 (Lipídios)', resp:'B', exp:'Lipídios insaponificáveis (esteroides, terpenos, prostaglandinas) NÃO contêm ácidos graxos.' },
+      { n:'Q10 (Lipídios)', resp:'C', exp:'Os quilomícrons são compostos por 90% de triglicerídeos.' },
+      { n:'Q11 (Lipídios)', resp:'B', exp:'LDL = "colesterol ruim", transporta colesterol da dieta aos tecidos, associado à aterosclerose.' },
+      { n:'Q12 (Lipídios)', resp:'B', exp:'Lipídios são insolúveis em água e solúveis em solventes orgânicos (éter, clorofórmio, benzeno, álcool).' },
+      { n:'Q13 (Vitaminas)', resp:'B', exp:'A, D, E, K são as vitaminas LIPOSSOLÚVEIS clássicas.' },
+      { n:'Q14 (Vitaminas)', resp:'C', exp:'Vitâmero = substâncias diferentes com propriedades vitamínicas idênticas.' },
+      { n:'Q15 (Vitaminas)', resp:'C', exp:'Antivitamina = bloqueia a ação metabólica da vitamina, ocupando seu lugar enzimático.' },
+      { n:'Q16 (Vitaminas)', resp:'C', exp:'A Pelagra é a doença clássica por carência de niacina (nicotinamida).' },
+    ]},
+    { part:'Parte 2 — Verdadeiro ou Falso', items:[
+      { n:'Bloco 1 (Bioelementos)', resp:'V, F, V, F', exp:'II-FALSO: o Oxigênio (62,81%) é mais abundante que o Carbono (19,37%). IV-FALSO: oligoelementos representam MENOS de 0,005%, não mais de 1%.' },
+      { n:'Bloco 2 (Carboidratos)', resp:'V, F, V, F', exp:'II-FALSO: lactose = glicose + GALACTOSE, não frutose (essa é a sacarose). IV-FALSO: polissacarídeos têm MAIS de 10 unidades, não menos.' },
+      { n:'Bloco 3 (Lipídios)', resp:'V, F, V, F', exp:'II-FALSO: é a LDL (não a HDL) que transporta colesterol da dieta e favorece aterosclerose; a HDL faz o processo inverso. IV-FALSO: lipídios complexos contêm outros elementos além de C,H,O (N, P, S) ou outra biomolécula.' },
+      { n:'Bloco 4 (Vitaminas)', resp:'V, F, V, F', exp:'II-FALSO: é a definição de ANTIVITAMINA, não de provitamina (que gera a vitamina, não a bloqueia). IV-FALSO: a toxicidade por excesso é mais associada justamente às vitaminas LIPOSSOLÚVEIS, que se acumulam no tecido adiposo.' },
+    ]},
+    { part:'Parte 3 — Associação de Colunas', items:[
+      { n:'Assoc.1 (Bioelementos)', resp:'1-C · 2-A · 3-B · 4-E · 5-D', exp:'Oxigênio 62,81% (C); Carbono 19,37% (A); Hidrogênio 9,31% (B); Nitrogênio 5,14% (E); Cálcio 1,38% (D).' },
+      { n:'Assoc.2 (Carboidratos)', resp:'1-B · 2-A · 3-E · 4-D · 5-C', exp:'Triose=3C (B); Tetrose=4C (A); Pentose=5C (E); Hexose=6C (D); Sacarose=glicose+frutose sem poder redutor (C).' },
+      { n:'Assoc.3 (Lipídios)', resp:'1-B · 2-D · 3-A · 4-E · 5-C', exp:'HDL retira excesso de colesterol (B); LDL leva colesterol aos tecidos/aterosclerose (D); VLDL transporta TG do fígado (A); Quilomícrons=90% TG da dieta (E); Sais biliares formam micelas (C).' },
+      { n:'Assoc.4 (Vitaminas)', resp:'1-B · 2-C · 3-A · 4-E · 5-D', exp:'Vitâmero=propriedades idênticas (B); Provitamina=gera a vitamina (C); Antivitamina=bloqueia a vitamina (A); Hidrossolúveis=C e complexo B (E); Lipossolúveis=A,D,E,K (D).' },
+    ]}
+  ];
+
+  let html = '';
+  gabComments.forEach(sec => {
+    html += `<div class="gab-section"><div class="gab-title">${sec.part}</div>`;
+    sec.items.forEach(item => {
+      html += `
+        <div class="gab-item">
+          <div class="gab-num">${item.n}</div>
+          <div class="gab-resp">${item.resp}</div>
+          <div class="gab-exp">${item.exp}</div>
+        </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('gab-container').innerHTML = html;
+}
+
+// ===================== NAVIGATION =====================
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===================== START / RESET =====================
+function startSimulado() {
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  buildP1(); buildP2(); buildP3();
+  startTimer();
+}
+
+function resetSimulado() {
+  if (!confirm('Refazer o simulado? Todo o progresso será perdido.')) return;
+  clearInterval(timerInterval);
+  finished = false;
+  answers = {}; vfAnswers = {}; assocAnswers = {};
+  timeLeft = 70 * 60;
+  progressCount = 0;
+  document.getElementById('finish-overlay').classList.remove('show');
+  document.getElementById('p1-container').innerHTML = '';
+  document.getElementById('p2-container').innerHTML = '';
+  document.getElementById('p3-container').innerHTML = '';
+  document.getElementById('gab-container').innerHTML = '';
+  document.getElementById('score-display').innerHTML = '';
+  document.getElementById('timer').textContent = '70:00';
+  document.getElementById('timer').classList.remove('urgent');
+  document.getElementById('prog-text').textContent = '0 de 52 respondidas';
+  document.getElementById('prog-pct').textContent = '0%';
+  document.getElementById('prog-fill').style.width = '0%';
+  const gabBtn = document.getElementById('gab-btn');
+  gabBtn.style.opacity = '0.4'; gabBtn.style.pointerEvents = 'none';
+  showPage('p1', document.querySelector('nav button'));
+  buildP1(); buildP2(); buildP3();
+  startTimer();
+}
+</script>
+</body>
+</html>
