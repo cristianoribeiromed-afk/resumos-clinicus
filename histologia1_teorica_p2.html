@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Histología I — Teórica P2</title>
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#3f8fd8; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#102a3f 0%,var(--bg) 55%);color:var(--text);line-height:1.55;}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:7px 10px;border-radius:20px;cursor:pointer;font-size:.75em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2a6ba8);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;color:var(--text);}
+.hot{background:rgba(63,143,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.82em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+.badge{display:inline-block;background:var(--gold);color:#111;font-size:.68em;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:6px;}
+ul{margin:6px 0;padding-left:20px;}
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.qitem .qtxt{font-weight:600;margin-bottom:8px;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:4px 8px;border-radius:6px;margin-bottom:3px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#2a3850;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.just{display:none;margin-top:8px;padding:8px 10px;background:#0f1726;border-radius:8px;font-size:.83em;color:var(--text-dim);border-left:3px solid var(--accent2);}
+.just.show{display:block;}
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.05em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1a4a6b,#102a3f);color:#e0f4ff;transform:rotateY(180deg);font-weight:500;font-size:.95em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🔬 Histología I — Teórica P2</h1>
+  <p>Epitelios · Conectivo · Cartílago · Óseo · Adiposo · Muscular · Nervioso · Sangre/Hematopoyético</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 / 0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">🔥 Puntos clave</button>
+  <button data-p="p1">🧫 Epitelio de Revestimiento</button>
+  <button data-p="p2">🧬 Epitelio Glandular</button>
+  <button data-p="p3">🧱 Conectivo (Embrionario/PPD)</button>
+  <button data-p="p4">🦵 Cartilaginoso</button>
+  <button data-p="p5">🦴 Óseo</button>
+  <button data-p="p6">🟡 Adiposo</button>
+  <button data-p="p7">💪 Muscular</button>
+  <button data-p="p8">🧠 Nervioso</button>
+  <button data-p="p9">🩸 Sangre y Hematopoyético</button>
+  <button data-p="p10">🃏 Flashcards</button>
+  <button data-p="p11">✅ Banco de Preguntas</button>
+  <button data-p="p12">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- P0 HOT -->
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🔥 Los puntos que más generan confusión en P2</h2>
+    <div class="hot"><b>Pseudoestratificado SIEMPRE es cilíndrico</b> — no existe pseudoestratificado plano ni cúbico.</div>
+    <div class="hot"><b>Membrana basal</b> = colágeno tipo IV, con 3 capas: lámina lúcida, lámina densa y lámina reticular.</div>
+    <div class="hot"><b>Estereocilios</b> son inmóviles (a pesar del nombre "cilios") — solo el oído interno y epidídimo los tienen. Los verdaderos cilios SÍ son móviles (tracto respiratorio, trompas uterinas).</div>
+    <div class="hot"><b>3 tipos de condrocitos progenitores:</b> Condroprogenitora (precursora, en pericondrio) → Condroblasto (síntesis activa, crecimiento APOSICIONAL) → Condrocito (mantiene matriz, crecimiento INTERSTICIAL). El fibrocartílago es el ÚNICO sin pericondrio.</div>
+    <div class="hot"><b>3 subtipos funcionales de osteocitos</b> (más detallado que P1): Latentes (monitorean), Formadores (activan osteoblastos), De reabsorción (activan osteoclastos). Los osteoclastos son los ÚNICOS de linaje hematopoyético (monocitos/macrófagos).</div>
+    <div class="hot"><b>Tejido adiposo pardo (multilocular)</b> tiene MUCHAS mitocondrias (por eso el color pardo) y núcleo CENTRAL — más presente en recién nacidos, produce calor. El blanco (unilocular) tiene núcleo PERIFÉRICO aplanado.</div>
+    <div class="hot"><b>Endomisio-Perimisio-Epimisio:</b> Endo=cada fibra individual, Peri=fascículo (grupo de fibras), Epi=todo el músculo (conecta con tendón).</div>
+    <div class="hot"><b>Granulocitos = "-FILOS"</b> (neutrófilo, eosinófilo, basófilo). <b>Agranulocitos = "-CITOS"</b> (monocito, linfocito). Truco de nomenclatura muy útil.</div>
+    <div class="hot"><b>Corpúsculo de Barr</b> aparece en neutrófilos de sexo FEMENINO (cromatina sexual inactiva en forma de "palillo de tambor").</div>
+    <div class="hot"><b>Sinapsis eléctrica</b> (gap junctions) es RÁPIDA y BIDIRECCIONAL — presente en encéfalo fetal y retina. <b>Sinapsis química</b> es más lenta y UNIDIRECCIONAL (la más común en el adulto).</div>
+  </div>
+</section>
+
+<!-- P1 TER -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🧫 Tejido Epitelial de Revestimiento (TER)</h2>
+    <ul>
+      <li>Reviste grandes (mesotelio) y pequeñas (endotelio) cavidades</li>
+      <li>Células yuxtapuestas: uniones laterales (oclusión, adherente, desmosoma, comunicante) + unión basal (hemidesmosoma)</li>
+      <li>Avascular pero MUY inervado</li>
+      <li>Sostenido por membrana basal (colágeno tipo IV): lámina lúcida, densa y reticular</li>
+      <li>Nutrición por difusión desde el tejido conectivo subyacente</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>📐 Clasificación completa</h2>
+    <table>
+      <tr><th>Criterio</th><th>Tipos</th></tr>
+      <tr><td>Morfología</td><td>Plano/pavimentoso/escamoso, Cúbico, Cilíndrico, Transición (urotelio)</td></tr>
+      <tr><td>Capas</td><td>Simple (1 capa), Estratificado (2+), Pseudoestratificado (falso estratificado — SIEMPRE cilíndrico)</td></tr>
+      <tr><td>Especializaciones apicales</td><td>Estereocilios, Cilios, Microvellosidades</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🔬 Especializaciones apicales</h2>
+    <table>
+      <tr><th>Tipo</th><th>Movilidad</th><th>Longitud</th><th>Función</th><th>Ejemplo</th></tr>
+      <tr><td>Estereocilios</td><td>Inmóviles</td><td>Largos</td><td>Captación sensorial / secreción</td><td>Oído interno, epidídimo</td></tr>
+      <tr><td>Cilios</td><td>Móviles</td><td>Largos</td><td>Transporte de partículas</td><td>Tracto respiratorio, trompas uterinas</td></tr>
+      <tr><td>Microvellosidades</td><td>Inmóviles</td><td>Cortas</td><td>Aumentan superficie de absorción</td><td>Intestino delgado, túbulos renales</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>📋 Tipos por morfología y capas</h2>
+    <table>
+      <tr><th>Tipo</th><th>Simple</th><th>Estratificado</th><th>Pseudoestratificado</th></tr>
+      <tr><td>Plano</td><td>Endotelio (vasos), Mesotelio (pleura/peritoneo/pericardio/tún.vaginal), pulmón</td><td>Cavidad oral, vagina, faringe, esófago (puede queratinizarse — epidermis)</td><td>No existe</td></tr>
+      <tr><td>Cúbico</td><td>Túbulos renales</td><td>Raro — unión anorrectal</td><td>No existe</td></tr>
+      <tr><td>Cilíndrico</td><td>Intestino delgado, estómago, vesícula biliar</td><td>Raro — canal anal</td><td>Vías aéreas, epidídimo (con células caliciformes, cilios y estereocilios)</td></tr>
+      <tr><td>Transición (urotelio)</td><td>Tracto urinario — ápice celular redondeado</td><td>-</td><td>-</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P2 GLANDULAR -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🧬 Estructura de la glándula exocrina</h2>
+    <table>
+      <tr><th>Componente</th><th>Descripción</th></tr>
+      <tr><td>Parénquima</td><td>Parte funcional — células secretoras</td></tr>
+      <tr><td>Estroma</td><td>Parte estructural — TC que envuelve el parénquima</td></tr>
+      <tr><td>Conducto excretor</td><td>Transporta la secreción al medio externo</td></tr>
+      <tr><td>Adenómero</td><td>Porción secretora/excretora</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>📊 Clasificación de glándulas exocrinas</h2>
+    <table>
+      <tr><th>Criterio</th><th>Tipos</th></tr>
+      <tr><td>N° de células</td><td>Unicelular (célula caliciforme), Multicelular (tubular/acinar/alveolar)</td></tr>
+      <tr><td>Modo de secreción</td><td>Merocrina/ecrina (sudoríparas — solo secreción), Apocrina (mamarias — secreción+parte de citoplasma), Holocrina (sebáceas — secreción+célula entera)</td></tr>
+      <tr><td>Morfología</td><td>Tubular (simple/ramificada/enrollada), Acinar (simple/ramificada — célula triangular), Alveolar (simple/ramificada)</td></tr>
+      <tr><td>Sustancia secretada</td><td>Serosa (núcleo central, citoplasma "coloreado"), Mucosa (núcleo basal, citoplasma blanquecino), Mixta</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P3 CONECTIVO -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🧱 Tejido conectivo embrionario</h2>
+    <table>
+      <tr><th>Tipo</th><th>Células</th><th>MEC</th><th>Ubicación</th></tr>
+      <tr><td>Mesénquima</td><td>Células mesenquimales (estrelladas núcleo grande o fusiformes núcleo ovalado)</td><td>Sustancia amorfa + colágeno tipo III</td><td>Entre capas germinativas, alrededor de vasos, cresta neural — precursoras de TC PPD, músculo, hueso, cartílago, adiposo</td></tr>
+      <tr><td>Mucoso</td><td>Fibroblastos</td><td>Rica en ácido hialurónico + colágeno III</td><td>Cordón umbilical (gelatina de Wharton — evita colapso de vena/arterias), pulpa dental joven</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧩 Tejido conectivo propiamente dicho (PPD)</h2>
+    <table>
+      <tr><th>Categoría</th><th>Célula</th></tr>
+      <tr><td rowspan="5">Residentes/fijas</td><td>Fibroblastos</td></tr>
+      <tr><td>Macrófagos</td></tr>
+      <tr><td>Mastocitos</td></tr>
+      <tr><td>Adipocitos</td></tr>
+      <tr><td>Células mesenquimales</td></tr>
+      <tr><td rowspan="6">Errantes/transitorias</td><td>Linfocitos</td></tr>
+      <tr><td>Plasmocitos</td></tr>
+      <tr><td>Neutrófilos</td></tr>
+      <tr><td>Eosinófilos</td></tr>
+      <tr><td>Basófilos</td></tr>
+      <tr><td>Monocitos</td></tr>
+    </table>
+    <table>
+      <tr><th></th><th>Laxo</th><th>Denso</th></tr>
+      <tr><td>Células</td><td>Más células</td><td>Menos células</td></tr>
+      <tr><td>MEC</td><td>Menos MEC</td><td>Más MEC</td></tr>
+      <tr><td>Organización</td><td>-</td><td>Modelado (fibras organizadas) o No modelado (desorganizadas)</td></tr>
+      <tr><td>Ubicación</td><td>Subcutáneo, debajo del TER, alrededor de nervios/vasos</td><td>Tendones, ligamentos, aponeurosis</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P4 CARTILAGINOSO -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>🦵 Generalidades</h2>
+    <p>Funciones: soporte de tejidos blandos, revestimiento de superficies articulares, formación del esqueleto fetal. Es <b>avascular</b> y <b>no inervado</b>. Tipos: hialino, elástico, fibroso.</p>
+  </div>
+  <div class="card">
+    <h2>🔬 Linaje celular del cartílago <span class="badge">clave P2</span></h2>
+    <table>
+      <tr><th>Célula</th><th>Origen/Estado</th><th>Función</th><th>Ubicación</th></tr>
+      <tr><td>Condroprogenitora</td><td>Célula mesenquimática — precursora</td><td>Da nuevos condroblastos (crecimiento/reparo)</td><td>Pericondrio (hialino/elástico)</td></tr>
+      <tr><td>Condroblasto</td><td>Maduración de la progenitora</td><td>Síntesis ACTIVA de MEC (colágeno II, proteoglicanos, GAGs) — crecimiento APOSICIONAL</td><td>Pericondrio condrogénico, superficie de cartílago fetal/en regeneración</td></tr>
+      <tr><td>Condrocito</td><td>Derivado del condroblasto</td><td>Mantiene la matriz — crecimiento INTERSTICIAL</td><td>Grupos isógenos dentro de la matriz</td></tr>
+    </table>
+    <div class="mnemo">💡 Orden: Progenitora → Blasto (activo, forma matriz) → Cito (maduro, mantiene). Igual patrón que en hueso y sangre.</div>
+  </div>
+  <div class="card">
+    <h2>🧱 Pericondrio</h2>
+    <table>
+      <tr><th>Capa</th><th>Composición</th></tr>
+      <tr><td>Pericondrio fibroso (externo)</td><td>TC PPD denso NO modelado</td></tr>
+      <tr><td>Pericondrio condrogénico (medio)</td><td>Células condroprogenitoras y condroblastos</td></tr>
+    </table>
+    <div class="hot">El <b>fibrocartílago NO tiene pericondrio</b> — es la excepción entre los 3 tipos.</div>
+    <p>Organización de condrocitos: grupo isógeno axial y coronal (hialino y elástico) vs fila india (fibroso).</p>
+  </div>
+</section>
+
+<!-- P5 OSEO -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🦴 Compacto vs Esponjoso</h2>
+    <table>
+      <tr><th></th><th>Compacto/Cortical</th><th>Trabecular/Esponjoso</th></tr>
+      <tr><td>Ubicación</td><td>Superficie de huesos esponjosos, diáfisis</td><td>Epífisis, huesos planos</td></tr>
+      <tr><td>Estructura</td><td>Osteonas (sistema de Havers)</td><td>Red de trabéculas</td></tr>
+      <tr><td>Médula</td><td>Amarilla (canal medular)</td><td>Roja (hematopoyesis)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧪 Linaje celular óseo completo <span class="badge">clave P2</span></h2>
+    <table>
+      <tr><th>Célula</th><th>Origen</th><th>Función</th></tr>
+      <tr><td>Osteoprogenitora</td><td>Mesenquimal — periostio/endostio/médula</td><td>Da origen a osteoblastos</td></tr>
+      <tr><td>Osteoblasto</td><td>De la progenitora</td><td>Síntesis de matriz ósea, mineralización — en superficie ósea</td></tr>
+      <tr><td>Osteocito latente</td><td>Osteoblasto atrapado</td><td>Monitorea la salud del hueso</td></tr>
+      <tr><td>Osteocito formador</td><td>Osteoblasto atrapado</td><td>Activa osteoblastos (formación en zona dañada)</td></tr>
+      <tr><td>Osteocito de reabsorción</td><td>Osteoblasto atrapado</td><td>Activa osteoclastos (remoción de hueso dañado)</td></tr>
+      <tr><td>Osteoclasto</td><td><b>Línea hematopoyética</b> (monocitos/macrófagos)</td><td>Multinucleado — degrada y remueve hueso dañado</td></tr>
+    </table>
+    <div class="hot">Los 3 subtipos de osteocitos (latente/formador/reabsorción) son un detalle que P1 NO cubría con este nivel — memorícelos para P2.</div>
+  </div>
+  <div class="card">
+    <h2>🧱 Matriz ósea y estructuras</h2>
+    <table>
+      <tr><th>Componente</th><th>%</th><th>Detalle</th></tr>
+      <tr><td>Orgánico</td><td>35%</td><td>Colágeno tipo I (calcificado por hidroxiapatita), osteocalcina (regula mineralización/metabolismo), osteonectina (une colágeno a minerales), osteopontina (adhesión celular/remodelación)</td></tr>
+      <tr><td>Inorgánico</td><td>65%</td><td>Hidroxiapatita — dureza y rigidez</td></tr>
+    </table>
+    <table>
+      <tr><th>Estructura</th><th>Función</th></tr>
+      <tr><td>Periostio</td><td>TC denso (externo) + capa de células óseas (interno)</td></tr>
+      <tr><td>Osteoplastos</td><td>Lagunas de los osteocitos</td></tr>
+      <tr><td>Osteoide</td><td>Porción NO mineralizada de la matriz</td></tr>
+      <tr><td>Canal de Havers</td><td>Paquete vasculonervioso — centro de la osteona</td></tr>
+      <tr><td>Láminas concéntricas</td><td>Matriz mineralizada que envuelve la osteona</td></tr>
+      <tr><td>Canal de Volkmann</td><td>Conecta canales de Havers TRANSVERSALMENTE</td></tr>
+      <tr><td>Canalículos</td><td>Conectan lagunas de osteocitos entre sí y con el canal de Havers</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>📈 Crecimiento óseo</h2>
+    <table>
+      <tr><th>Tipo</th><th>Huesos</th><th>Submodos</th></tr>
+      <tr><td>Endocondral</td><td>Largos</td><td>Intersticial (longitud) + Aposicional (anchura)</td></tr>
+      <tr><td>Intramembranoso</td><td>Planos</td><td>Crecimiento uniforme</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P6 ADIPOSO -->
+<section class="panel" id="p6">
+  <div class="card">
+    <h2>🟡 Blanco (unilocular) vs Pardo (multilocular)</h2>
+    <table>
+      <tr><th></th><th>Blanco/Unilocular</th><th>Pardo/Multilocular</th></tr>
+      <tr><td>Frecuencia</td><td>Más común en adultos</td><td>Más presente en recién nacidos</td></tr>
+      <tr><td>Color</td><td>Amarillento (beta caroteno)</td><td>Pardo (muchas mitocondrias)</td></tr>
+      <tr><td>Gotas de lípido</td><td>Una gota grande</td><td>Varias gotas pequeñas</td></tr>
+      <tr><td>Núcleo</td><td>Periférico, aplanado</td><td>Centralizado</td></tr>
+      <tr><td>Función</td><td>Mantiene calor corporal, secreta hormonas</td><td>Produce calor, quema grasa</td></tr>
+    </table>
+    <div class="mnemo">💡 Proteína UCP1 puede transformar unilocular en multilocular y viceversa.</div>
+  </div>
+  <div class="card">
+    <h2>⚙️ Funciones y hormonas (adipocinas)</h2>
+    <ul>
+      <li>Almacenamiento de grasa, aislante térmico, homeostasis energética</li>
+      <li><b>Leptina:</b> regula saciedad</li>
+      <li><b>Adiponectina:</b> sensibilidad a la insulina</li>
+    </ul>
+    <p>Origen mesodérmico. Células muy vascularizadas y grandes. MEC: colágeno tipo III (fibras reticulares) para organizar las células adiposas.</p>
+  </div>
+</section>
+
+<!-- P7 MUSCULAR -->
+<section class="panel" id="p7">
+  <div class="card">
+    <h2>💪 Los 3 tipos musculares</h2>
+    <table>
+      <tr><th></th><th>Esquelético</th><th>Cardíaco</th><th>Liso</th></tr>
+      <tr><td>Control</td><td>Voluntario</td><td>Involuntario</td><td>Involuntario</td></tr>
+      <tr><td>Estriaciones</td><td>Sí</td><td>Sí</td><td>No</td></tr>
+      <tr><td>Núcleo</td><td>Periférico, multinucleado</td><td>Central, máx 2 núcleos</td><td>Central, alargado, uninuclear</td></tr>
+      <tr><td>Forma célula</td><td>Larga, cilíndrica</td><td>Corta, ramificada/bifurcada</td><td>Fusiforme</td></tr>
+      <tr><td>Especial</td><td>-</td><td>Discos intercalares (conducción eléctrica + adhesión)</td><td>-</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧵 Organización del músculo esquelético (TC)</h2>
+    <table>
+      <tr><th>Capa</th><th>Rodea</th></tr>
+      <tr><td>Endomisio</td><td>Cada fibra muscular individual</td></tr>
+      <tr><td>Perimisio</td><td>Grupo de fibras (fascículo)</td></tr>
+      <tr><td>Epimisio</td><td>Todo el músculo — conecta con tendón y fascia</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P8 NERVIOSO -->
+<section class="panel" id="p8">
+  <div class="card">
+    <h2>🧠 Origen y estructura neuronal</h2>
+    <p>Origen: ectodermo → neuroectodermo. Tubo neural → SNC (soma). Cresta neural → SNP (axón).</p>
+    <p>Neurona: cuerpo celular (soma), dendritas, axón, terminaciones sinápticas. MEC escasa — neuropilo.</p>
+  </div>
+  <div class="card">
+    <h2>🧬 Células gliales</h2>
+    <table>
+      <tr><th>Sistema</th><th>Célula</th><th>Función</th></tr>
+      <tr><td rowspan="4">SNC</td><td>Oligodendrocitos</td><td>Mielinización de axones (aislante)</td></tr>
+      <tr><td>Astrocitos</td><td>Soporte a vasos sanguíneos + barrera hematoencefálica</td></tr>
+      <tr><td>Microglía</td><td>Defensa inmunológica ("macrófago" del SNC)</td></tr>
+      <tr><td>Ependimocitos</td><td>TER cilíndrico simple con microvellosidades — forma/mantiene/circula LCR</td></tr>
+      <tr><td>SNP</td><td>Células de Schwann</td><td>Mielinización periférica</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>⚡ Sinapsis</h2>
+    <table>
+      <tr><th></th><th>Eléctrica</th><th>Química</th></tr>
+      <tr><td>Mecanismo</td><td>Uniones gap (gap junctions)</td><td>Neurotransmisores (acetilcolina, GABA, glutamato)</td></tr>
+      <tr><td>Velocidad</td><td>Rápida</td><td>Más lenta</td></tr>
+      <tr><td>Dirección</td><td>Bidireccional</td><td>Unidireccional</td></tr>
+      <tr><td>Ubicación</td><td>Encéfalo fetal, retina</td><td>La más común en el adulto</td></tr>
+    </table>
+    <p>Morfología sináptica: axodendrítica, axosomática, axoaxónica, dendrodendrítica, somatosomática, dendrosomática, neuroefectora (axón + célula muscular/glandular).</p>
+  </div>
+</section>
+
+<!-- P9 SANGRE -->
+<section class="panel" id="p9">
+  <div class="card">
+    <h2>🩸 Médula ósea y clasificación hematopoyética</h2>
+    <table>
+      <tr><th>Médula</th><th>Función</th></tr>
+      <tr><td>Roja</td><td>Producción de células sanguíneas (célula troncal hematopoyética)</td></tr>
+      <tr><td>Amarilla</td><td>Almacenamiento de grasa, producción de cartílago óseo</td></tr>
+    </table>
+    <table>
+      <tr><th>Línea</th><th>Produce</th></tr>
+      <tr><td>Mieloide</td><td>Eritrocitos, plaquetas, neutrófilos/eosinófilos/basófilos/monocitos</td></tr>
+      <tr><td>Linfoide</td><td>Linfocitos (incl. NK)</td></tr>
+      <tr><td>Errantes</td><td>Células que se desplazan de un lugar a otro</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>💧 Plasma (composición)</h2>
+    <table>
+      <tr><th>Componente</th><th>%</th></tr>
+      <tr><td>Agua</td><td>92%</td></tr>
+      <tr><td>Proteínas (albúmina, globulina, fibrinógeno)</td><td>7%</td></tr>
+      <tr><td>Sales minerales, nutrientes, gases, hormonas, residuos metabólicos</td><td>1%</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧬 Leucocitos — la tabla más importante para memorizar</h2>
+    <div class="mnemo">💡 Granulocitos = "-FILOS" (neutrófilo, eosinófilo, basófilo). Agranulocitos = "-CITOS" (monocito, linfocito).</div>
+    <table>
+      <tr><th>Célula</th><th>Tipo</th><th>% en sangre</th><th>Vida útil</th><th>Función</th></tr>
+      <tr><td>Neutrófilo</td><td>Granulocito</td><td>50-70% (más abundante)</td><td>2-3 días</td><td>Fagocita bacterias; corpúsculo de Barr en mujeres; en cayado o segmentado</td></tr>
+      <tr><td>Eosinófilo</td><td>Granulocito</td><td>1-4%</td><td>6-12 horas en sangre</td><td>Parásitos, alergias, resolución de inflamación</td></tr>
+      <tr><td>Basófilo</td><td>Granulocito</td><td>0-1%</td><td>1-2 días</td><td>Libera histamina y heparina</td></tr>
+      <tr><td>Monocito</td><td>Agranulocito</td><td>2-8%</td><td>8-10 horas (sangre)</td><td>Migra a tejidos → macrófago</td></tr>
+      <tr><td>Linfocito</td><td>Agranulocito</td><td>20-40%</td><td>1-3 meses</td><td>B = anticuerpos + plasmocitos; T = destruye células infectadas/tumorales</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🔴 Eritrocitos y Plaquetas</h2>
+    <table>
+      <tr><th>Célula</th><th>Detalle</th></tr>
+      <tr><td>Eritrocito (hemácia)</td><td>Anucleado, disco bicóncavo, 7-8 µm, hemoglobina (transporta O2/CO2), vida útil 120 días, el más numeroso</td></tr>
+      <tr><td>Plaqueta (trombocito)</td><td>NO es célula — fragmento celular, anucleada, vida útil 7-10 días, producida por megacariocitos, clave en coagulación</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P10 FLASHCARDS -->
+<section class="panel" id="p10">
+  <div class="card">
+    <h2>🃏 Flashcards — toque para virar</h2>
+    <div class="fc-wrap">
+      <div class="fc-counter" id="fcCounter">1 / 28</div>
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls">
+        <button class="fc-btn" id="fcPrev">◀ Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar 🔄</button>
+        <button class="fc-btn" id="fcNext">Próxima ▶</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- P11 BANCO -->
+<section class="panel" id="p11">
+  <div class="card">
+    <h2>✅ Banco de preguntas — Histología P2</h2>
+    <p class="progresslabel">Toque las opciones o vea la justificación.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- P12 QUIZ -->
+<section class="panel" id="p12">
+  <div class="card">
+    <h2>🎮 Quiz Rápido (15 preguntas aleatorias)</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>Resumen elaborado para Dr. Cristiano Ribeiro da Silva — Histología I, Teórica P2 (UCP, primer semestre). Uso exclusivamente académico.</footer>
+</div>
+
+<script>
+const bank = [
+{n:1, q:"¿Qué tipo de epitelio es SIEMPRE cilíndrico por definición?", opts:["Plano estratificado","Cúbico simple","Pseudoestratificado","Transición"], correct:2, just:"El pseudoestratificado (falso estratificado) es siempre de tipo cilíndrico — no existe pseudoestratificado plano ni cúbico."},
+{n:2, q:"¿De qué colágeno está compuesta la membrana basal?", opts:["Tipo I","Tipo II","Tipo III","Tipo IV"], correct:3, just:"La membrana basal está formada por colágeno tipo IV, organizado en lámina lúcida, lámina densa y lámina reticular."},
+{n:3, q:"¿Cuál es la diferencia entre estereocilios y cilios verdaderos?", opts:["No hay diferencia","Estereocilios son móviles, cilios inmóviles","Estereocilios son inmóviles, cilios son móviles","Ambos son inmóviles"], correct:2, just:"A pesar del nombre, los estereocilios son INMÓVILES (oído interno, epidídimo); los cilios verdaderos SÍ son móviles (tracto respiratorio, trompas uterinas)."},
+{n:4, q:"¿Dónde se encuentra el epitelio de transición (urotelio)?", opts:["Intestino delgado","Tracto urinario","Esófago","Pulmón"], correct:1, just:"El urotelio (epitelio de transición) reviste el tracto urinario, con ápice celular redondeado."},
+{n:5, q:"La glándula sebácea es un ejemplo de secreción:", opts:["Merocrina","Apocrina","Holocrina","Mixta"], correct:2, just:"Las glándulas sebáceas son holocrinas: tanto la secreción como toda la célula son expulsadas."},
+{n:6, q:"¿Qué caracteriza a la secreción serosa?", opts:["Núcleo basal, citoplasma blanquecino","Núcleo central, citoplasma 'coloreado'","Sin núcleo","Ambos tipos de célula juntos"], correct:1, just:"La célula serosa tiene núcleo centralizado y citoplasma más 'coloreado' (denso), a diferencia de la mucosa (núcleo basal, citoplasma blanquecino)."},
+{n:7, q:"¿De qué deriva todo el tejido conectivo embrionario (mesénquima)?", opts:["Ectodermo","Mesodermo y cresta neural","Endodermo","Solo del endodermo"], correct:1, just:"El mesénquima deriva del mesodermo y también de la cresta neural."},
+{n:8, q:"¿Dónde se encuentra el tejido conectivo mucoso?", opts:["Tendones","Cordón umbilical (gelatina de Wharton)","Hueso compacto","Cartílago hialino"], correct:1, just:"El TC mucoso, rico en ácido hialurónico, forma la gelatina de Wharton del cordón umbilical, evitando el colapso de la vena y arterias umbilicales."},
+{n:9, q:"¿Qué significa que el TC denso sea 'modelado'?", opts:["Fibras desorganizadas","Fibras organizadas en haces paralelos","Ausencia de fibras","Presencia de cartílago"], correct:1, just:"'Modelado' = fibras organizadas (tendones, ligamentos). 'No modelado' = fibras desorganizadas (dermis, cápsulas)."},
+{n:10, q:"¿Cuál es la célula precursora del linaje cartilaginoso?", opts:["Condrocito","Condroblasto","Condroprogenitora","Osteoblasto"], correct:2, just:"La condroprogenitora es la célula mesenquimática precursora, ubicada en el pericondrio, que da origen a nuevos condroblastos."},
+{n:11, q:"¿Qué célula del cartílago realiza el crecimiento APOSICIONAL?", opts:["Condroprogenitora","Condroblasto","Condrocito","Osteocito"], correct:1, just:"El condroblasto, con síntesis activa de matriz, es responsable del crecimiento aposicional (desde la superficie)."},
+{n:12, q:"¿Qué célula del cartílago realiza el crecimiento INTERSTICIAL?", opts:["Condroprogenitora","Condroblasto","Condrocito","Osteoclasto"], correct:2, just:"El condrocito, ya maduro y dentro de la matriz (en grupos isógenos), realiza el crecimiento intersticial (desde el interior)."},
+{n:13, q:"¿Cuál de los 3 tipos de cartílago NO tiene pericondrio?", opts:["Hialino","Elástico","Fibroso (fibrocartílago)","Todos tienen"], correct:2, just:"El fibrocartílago es la única excepción — no posee pericondrio."},
+{n:14, q:"¿Cuáles son los 3 subtipos funcionales de osteocitos?", opts:["Activos, inactivos y muertos","Latentes, formadores y de reabsorción","Alfa, beta y gamma","Primarios, secundarios y terciarios"], correct:1, just:"Osteocitos latentes (monitorean), formadores (activan osteoblastos) y de reabsorción (activan osteoclastos)."},
+{n:15, q:"¿De qué línea celular derivan los osteoclastos?", opts:["Mesenquimal, igual que los demás","Línea hematopoyética (monocitos/macrófagos)","Línea epitelial","Línea neural"], correct:1, just:"A diferencia de osteoprogenitoras/osteoblastos/osteocitos (mesenquimales), los osteoclastos derivan de la línea hematopoyética."},
+{n:16, q:"¿Qué porcentaje de la matriz ósea es inorgánico (hidroxiapatita)?", opts:["30%","50%","65%","90%"], correct:2, just:"El componente inorgánico (hidroxiapatita) representa el 65% de la matriz ósea; el orgánico (colágeno I y proteínas) el 35%."},
+{n:17, q:"¿Qué conecta los canales de Havers entre sí de forma transversal?", opts:["Canalículos","Canales de Volkmann","Lagunas","Osteoplastos"], correct:1, just:"Los canales de Volkmann conectan los canales de Havers transversalmente."},
+{n:18, q:"¿Qué tipo de crecimiento óseo forma los huesos largos?", opts:["Intramembranoso","Endocondral","Perióstico","Articular"], correct:1, just:"El crecimiento endocondral (intersticial=longitud + aposicional=anchura) forma los huesos largos."},
+{n:19, q:"¿Qué diferencia el tejido adiposo blanco del pardo?", opts:["No hay diferencia","Blanco=una gota grande/núcleo periférico; Pardo=varias gotas/núcleo central","Blanco tiene más mitocondrias","Pardo es más común en adultos"], correct:1, just:"El blanco (unilocular) tiene una gota grande de lípido y núcleo periférico aplanado; el pardo (multilocular) tiene varias gotas y núcleo central, con muchas mitocondrias."},
+{n:20, q:"¿Qué hormona adipocina regula la saciedad?", opts:["Adiponectina","Leptina","Insulina","Cortisol"], correct:1, just:"La leptina, producida por el tejido adiposo, regula la saciedad."},
+{n:21, q:"¿Qué capa de tejido conectivo rodea cada fibra muscular individual?", opts:["Epimisio","Perimisio","Endomisio","Pericondrio"], correct:2, just:"El endomisio rodea cada fibra muscular individualmente; el perimisio rodea el fascículo; el epimisio rodea todo el músculo."},
+{n:22, q:"¿Qué caracteriza al músculo cardíaco respecto al esquelético?", opts:["Núcleo periférico multinucleado","Núcleo central, máx. 2 núcleos, discos intercalares","Sin estriaciones","Control voluntario"], correct:1, just:"El músculo cardíaco tiene núcleo central (máximo 2 por célula), fibras bifurcadas y discos intercalares — a diferencia del esquelético (periférico, multinucleado)."},
+{n:23, q:"¿De dónde deriva el SNC y de dónde el SNP?", opts:["Ambos del tubo neural","Tubo neural=SNC; Cresta neural=SNP","Ambos de la cresta neural","Del mesodermo"], correct:1, just:"El tubo neural da origen al SNC (soma); la cresta neural da origen al SNP (axón)."},
+{n:24, q:"¿Qué célula glial forma la barrera hematoencefálica?", opts:["Oligodendrocito","Astrocito","Microglía","Ependimocito"], correct:1, just:"Los astrocitos dan soporte a los vasos sanguíneos y forman la barrera hematoencefálica."},
+{n:25, q:"¿Qué célula glial produce y mantiene el LCR?", opts:["Microglía","Oligodendrocito","Ependimocito","Célula de Schwann"], correct:2, just:"Los ependimocitos (TER cilíndrico simple con microvellosidades) forman, mantienen y hacen circular el líquido cefalorraquídeo."},
+{n:26, q:"¿Qué célula mieliniza los axones en el SNP?", opts:["Oligodendrocito","Astrocito","Célula de Schwann","Microglía"], correct:2, just:"Las células de Schwann mielinizan los axones en el sistema nervioso periférico (los oligodendrocitos lo hacen en el SNC)."},
+{n:27, q:"¿Qué tipo de sinapsis es rápida y bidireccional?", opts:["Química","Eléctrica (gap junctions)","Neuroefectora","Axoaxónica"], correct:1, just:"La sinapsis eléctrica, mediante uniones gap, es rápida y bidireccional — presente en encéfalo fetal y retina."},
+{n:28, q:"¿Cuál es el leucocito más abundante en sangre?", opts:["Linfocito","Monocito","Neutrófilo","Eosinófilo"], correct:2, just:"El neutrófilo representa 50-70% de los leucocitos, siendo el más abundante."},
+{n:29, q:"¿En qué célula sanguínea aparece el corpúsculo de Barr?", opts:["Linfocito","Neutrófilo (sexo femenino)","Eritrocito","Plaqueta"], correct:1, just:"El corpúsculo de Barr (cromatina X inactiva) puede observarse en neutrófilos de individuos de sexo femenino."},
+{n:30, q:"¿Cuál es la vida útil aproximada de un eritrocito?", opts:["2-3 días","8-10 horas","120 días","7-10 días"], correct:2, just:"Los eritrocitos tienen una vida útil de aproximadamente 120 días."},
+{n:31, q:"¿Cuál es la vida útil aproximada de una plaqueta?", opts:["120 días","7-10 días","1-3 meses","2-3 días"], correct:1, just:"Las plaquetas tienen una vida útil de 7-10 días, siendo producidas por los megacariocitos."},
+{n:32, q:"¿Qué linfocito produce anticuerpos?", opts:["Linfocito T","Linfocito B","Linfocito NK","Monocito"], correct:1, just:"El linfocito B produce anticuerpos y puede diferenciarse en plasmocito."},
+{n:33, q:"¿En qué se convierten los monocitos al migrar a los tejidos?", opts:["Linfocitos","Macrófagos","Neutrófilos","Plasmocitos"], correct:1, just:"Los monocitos migran a los tejidos y se transforman en macrófagos."},
+{n:34, q:"¿Qué porcentaje aproximado de agua tiene el plasma sanguíneo?", opts:["70%","80%","92%","99%"], correct:2, just:"El plasma está compuesto por aproximadamente 92% de agua, 7% de proteínas y 1% de otros solutos."},
+{n:35, q:"¿Qué diferencia hay entre granulocitos y agranulocitos en su nomenclatura?", opts:["No hay regla","Granulocitos terminan en '-filo'; agranulocitos en '-cito'","Es al revés","Ambos terminan igual"], correct:1, just:"Truco de nomenclatura: granulocitos = neutrófilo/eosinófilo/basófilo ('-filo'); agranulocitos = monocito/linfocito ('-cito')."},
+];
+
+const flashcards = [
+{f:"¿Qué tipo de epitelio es siempre cilíndrico?", b:"El pseudoestratificado — no existe versión plana ni cúbica."},
+{f:"¿De qué está hecha la membrana basal?", b:"Colágeno tipo IV — con lámina lúcida, densa y reticular."},
+{f:"¿Estereocilios son móviles o inmóviles?", b:"Inmóviles (a pesar del nombre) — oído interno y epidídimo."},
+{f:"¿Cuáles son los 3 tipos de secreción según el mecanismo?", b:"Merocrina (solo secreción), Apocrina (secreción+parte del citoplasma), Holocrina (secreción+célula entera)."},
+{f:"¿Cuál es la secuencia del linaje cartilaginoso?", b:"Condroprogenitora → Condroblasto (crecimiento aposicional) → Condrocito (crecimiento intersticial)."},
+{f:"¿Qué tipo de cartílago no tiene pericondrio?", b:"El fibrocartílago (fibroso)."},
+{f:"¿Cuáles son los 3 subtipos funcionales de osteocitos?", b:"Latentes (monitorean), Formadores (activan osteoblastos), De reabsorción (activan osteoclastos)."},
+{f:"¿De qué línea celular derivan los osteoclastos?", b:"De la línea hematopoyética (monocitos/macrófagos) — únicos entre las células óseas."},
+{f:"¿Qué conecta los canales de Havers transversalmente?", b:"Los canales de Volkmann."},
+{f:"¿Cuál es la diferencia entre tejido adiposo blanco y pardo?", b:"Blanco: una gota grande, núcleo periférico. Pardo: varias gotas, núcleo central, muchas mitocondrias (recién nacidos)."},
+{f:"¿Qué proteína transforma adiposo unilocular en multilocular?", b:"La proteína UCP1."},
+{f:"¿Qué diferencia endomisio, perimisio y epimisio?", b:"Endo: cada fibra. Peri: fascículo (grupo de fibras). Epi: todo el músculo (conecta con tendón)."},
+{f:"¿Qué caracteriza al músculo cardíaco?", b:"Núcleo central, máximo 2 núcleos, fibras bifurcadas, discos intercalares."},
+{f:"¿De dónde derivan el SNC y el SNP?", b:"SNC del tubo neural (soma); SNP de la cresta neural (axón)."},
+{f:"¿Qué hace el astrocito?", b:"Da soporte a vasos sanguíneos y forma la barrera hematoencefálica."},
+{f:"¿Qué célula forma y mantiene el LCR?", b:"El ependimocito (TER cilíndrico simple con microvellosidades)."},
+{f:"¿Qué célula mieliniza en el SNP?", b:"La célula de Schwann (el oligodendrocito lo hace en el SNC)."},
+{f:"¿Qué diferencia la sinapsis eléctrica de la química?", b:"Eléctrica: gap junctions, rápida, bidireccional. Química: neurotransmisores, más lenta, unidireccional."},
+{f:"¿Cuál es el leucocito más abundante?", b:"El neutrófilo (50-70%)."},
+{f:"¿Dónde aparece el corpúsculo de Barr?", b:"En neutrófilos de sexo femenino (cromatina X inactiva)."},
+{f:"¿Cuál es la vida útil del eritrocito?", b:"120 días."},
+{f:"¿Cuál es la vida útil de la plaqueta y quién la produce?", b:"7-10 días — producida por los megacariocitos."},
+{f:"¿Qué diferencia el linfocito B del T?", b:"B: produce anticuerpos (se diferencia en plasmocito). T: destruye células infectadas/tumorales."},
+{f:"¿En qué se convierte el monocito al migrar a tejidos?", b:"En macrófago."},
+{f:"¿Cuál es la composición aproximada del plasma?", b:"92% agua, 7% proteínas (albúmina, globulina, fibrinógeno), 1% otros solutos."},
+{f:"¿Qué termina en '-filo' y qué en '-cito'?", b:"Granulocitos en '-filo' (neutrófilo/eosinófilo/basófilo); Agranulocitos en '-cito' (monocito/linfocito)."},
+{f:"¿Qué son los grupos isógenos?", b:"Grupos de condrocitos derivados de una misma célula madre, organizados axial/coronal (hialino/elástico) o en fila india (fibroso)."},
+{f:"¿Cuál es la composición de la médula ósea roja vs amarilla?", b:"Roja: produce células sanguíneas. Amarilla: almacena grasa y produce cartílago óseo."},
+];
+
+const list = document.getElementById('gabaritoList');
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `<div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${String.fromCharCode(97+i)}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver justificación</button>
+    <div class="just" id="just-${idx}">${item.just}</div>`;
+  list.appendChild(div);
+});
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('just-'+qi).classList.toggle('show');
+  }
+});
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+let fcIdx = 0;
+const fcCard = document.getElementById('fcCard');
+function renderFc(){
+  fcCard.classList.remove('flipped');
+  document.getElementById('fcFront').textContent = flashcards[fcIdx].f;
+  document.getElementById('fcBack').textContent = flashcards[fcIdx].b;
+  document.getElementById('fcCounter').textContent = (fcIdx+1)+' / '+flashcards.length;
+}
+fcCard.addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcFlip').addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcNext').addEventListener('click', ()=>{ fcIdx=(fcIdx+1)%flashcards.length; renderFc(); addXP(1); });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIdx=(fcIdx-1+flashcards.length)%flashcards.length; renderFc(); });
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]).slice(0,15);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} correctas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pregunta ${quizIdx+1}/${quizSet.length}</p>
+    <p class="qtxt">${item.n}. ${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${String.fromCharCode(97+i)}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+</script>
+</body>
+</html>

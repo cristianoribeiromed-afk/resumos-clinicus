@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Histología I — Teórica P1</title>
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#d88a3f; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#3a2410 0%,var(--bg) 55%);color:var(--text);line-height:1.55;}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header h1{margin:0 0 6px;font-size:1.45em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.92em;}
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:8px 11px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#a8622a);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;color:var(--text);}
+.hot{background:rgba(216,138,63,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.83em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+.badge{display:inline-block;background:var(--gold);color:#111;font-size:.68em;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:6px;}
+ul{margin:6px 0;padding-left:20px;}
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.qitem .qtxt{font-weight:600;margin-bottom:8px;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:4px 8px;border-radius:6px;margin-bottom:3px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#2a3850;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.just{display:none;margin-top:8px;padding:8px 10px;background:#0f1726;border-radius:8px;font-size:.83em;color:var(--text-dim);border-left:3px solid var(--accent2);}
+.just.show{display:block;}
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.05em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#5a3a17,#3a2410);color:#fff2e0;transform:rotateY(180deg);font-weight:500;font-size:.95em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🔬 Histología I — Teórica P1</h1>
+  <p>Técnicas · Microscopio · Epitelio Glandular · Conectivo · Muscular · Óseo · Cartilaginoso</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 / 0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">🔥 Puntos clave</button>
+  <button data-p="p1">🧪 Técnicas y Microscopio</button>
+  <button data-p="p2">🎨 Colorantes</button>
+  <button data-p="p3">🧬 Epitelio Glandular</button>
+  <button data-p="p4">🧱 Tejido Conectivo</button>
+  <button data-p="p5">💪 Tejido Muscular</button>
+  <button data-p="p6">🦴 Tejido Óseo</button>
+  <button data-p="p7">🦵 Tejido Cartilaginoso</button>
+  <button data-p="p8">🃏 Flashcards</button>
+  <button data-p="p9">✅ Banco de Preguntas</button>
+  <button data-p="p10">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- P0 HOT -->
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🔥 Los puntos que más generan confusión</h2>
+    <div class="hot"><b>Hematoxilina = básica</b> pero tiñe estructuras <b>ácidas/basófilas</b> (núcleo, ADN/ARN) de azul-morado. <b>Eosina = ácida</b> pero tiñe estructuras <b>básicas/acidófilas</b> (citoplasma, proteínas) de rosa. El nombre del colorante es "al revés" de lo que tiñe — trampa clásica.</div>
+    <div class="hot"><b>Fijación es el primer paso "real"</b> — la obtención de la muestra NO se cuenta como paso técnico propiamente dicho.</div>
+    <div class="hot"><b>Xilol/tolueno</b> aparece DOS VECES en el proceso: en el aclaramiento (antes de la parafina) y en la desparafinización (antes de teñir) — no confundir las dos etapas.</div>
+    <div class="hot"><b>Glándulas endocrinas</b> pierden su conducto excretor durante el desarrollo (por eso vierten directo a sangre). Las <b>apocrinas</b> pierden PARTE del citoplasma (no toda la célula, eso es holocrina).</div>
+    <div class="hot"><b>Tejido conectivo denso "modelado/no modelado"</b> es terminología EXCLUSIVA del denso (regular=modelado, irregular=no modelado) — NO se aplica al laxo.</div>
+    <div class="hot"><b>Fibroblasto vs Fibrocito:</b> fibroblasto = activo, forma estrellada, RER abundante (basófilo). Fibrocito = forma de reposo, más alargado, menos basófilo — pero PUEDE reactivarse.</div>
+    <div class="hot"><b>Osteoclastos derivan de MONOCITOS</b> (línea hematopoyética/mieloide) — NO de células mesenquimales como los demás tipos óseos (osteoprogenitoras, osteoblastos, osteocitos).</div>
+    <div class="hot"><b>Periostio ES vascularizado</b> (rico en vasos y nervios) — trampa común decir que es avascular.</div>
+    <div class="hot"><b>Hueso esponjoso SÍ tiene médula ósea roja</b> en sus espacios trabeculares — otra trampa de V/F.</div>
+    <div class="hot"><b>Osificación endocondral</b> = a partir de un molde de CARTÍLAGO (huesos largos). <b>Intramembranosa</b> = directo del MESÉNQUIMA, sin cartílago (huesos planos del cráneo).</div>
+  </div>
+</section>
+
+<!-- P1 TECNICAS -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🧪 Los 8 pasos de la técnica histológica</h2>
+    <div class="mnemo">Fijación → Deshidratación → Aclaramiento (diafanización) → Inclusión → Corte (microtomía) → Desparafinización/Rehidratación → Tinción → Montaje</div>
+    <table>
+      <tr><th>Paso</th><th>Química</th><th>Propósito</th></tr>
+      <tr><td>Fijación</td><td>Formalina 37% (formol bufferado); glutaraldehído (ME); alcohol etílico (citología)</td><td>Detener autólisis, prevenir bacterias, preservar estructura</td></tr>
+      <tr><td>Deshidratación</td><td>Alcohol etílico creciente (70%→100%)</td><td>Eliminar agua para permitir inclusión</td></tr>
+      <tr><td>Aclaramiento (diafanización)</td><td>Xilol o tolueno</td><td>Tejido translúcido; sustituye alcohol, miscible con parafina</td></tr>
+      <tr><td>Inclusión</td><td>Parafina (ME: resinas epóxicas)</td><td>Endurecer para cortes finos</td></tr>
+      <tr><td>Corte (microtomía)</td><td>Ninguna</td><td>Secciones de 5-15 µm con microtomo</td></tr>
+      <tr><td>Desparafinización/Rehidratación</td><td>Xilol → alcohol decreciente → agua</td><td>Preparar para tinción acuosa</td></tr>
+      <tr><td>Tinción</td><td>H&E, Masson, Ziehl-Neelsen, PAS</td><td>Resaltar estructuras</td></tr>
+      <tr><td>Montaje</td><td>Bálsamo de Canadá, albúmina, Entellan</td><td>Preservar y proteger con cubreobjetos</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🔬 Partes del microscopio óptico</h2>
+    <table>
+      <tr><th>Sistema</th><th>Componentes</th><th>Función</th></tr>
+      <tr><td>Óptico</td><td>Oculares (10-15x), objetivos (4x,10x,40x,100x), condensador, diafragma</td><td>Formación y ampliación de imagen</td></tr>
+      <tr><td>Mecánico</td><td>Base, brazo, platina, revólver, tornillo macro/micrométrico</td><td>Estructura y movilidad</td></tr>
+      <tr><td>Iluminación</td><td>Fuente de luz, condensador con lente colectora, diafragma de iris</td><td>Iluminar la muestra</td></tr>
+      <tr><td>Soporte</td><td>Tubo óptico, cabezal, portaobjetos/cubreobjetos</td><td>Conectar y sostener</td></tr>
+    </table>
+    <div class="mnemo">💡 Tornillo MACROmétrico = enfoque grueso (4x-10x). Tornillo MICROmétrico = enfoque fino (40x-100x).</div>
+  </div>
+</section>
+
+<!-- P2 COLORANTES -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🎨 Hematoxilina y Eosina (H&E)</h2>
+    <table>
+      <tr><th></th><th>Hematoxilina</th><th>Eosina</th></tr>
+      <tr><td>Naturaleza química</td><td>Colorante BÁSICO</td><td>Colorante ÁCIDO</td></tr>
+      <tr><td>Tiñe estructuras</td><td>Ácidas/basófilas (núcleo, ADN/ARN)</td><td>Básicas/acidófilas (citoplasma, proteínas)</td></tr>
+      <tr><td>Color resultante</td><td>Azul / morado</td><td>Rosa / rojo</td></tr>
+    </table>
+    <div class="mnemo">💡 "El colorante básico tiñe lo ácido; el colorante ácido tiñe lo básico" — es contraintuitivo, memorícelo así.</div>
+  </div>
+  <div class="card">
+    <h2>🧪 Otros colorantes importantes</h2>
+    <table>
+      <tr><th>Colorante</th><th>Tipo</th><th>Color</th><th>Uso</th></tr>
+      <tr><td>Fucsina ácida</td><td>Ácido</td><td>Rojo intenso</td><td>Colágeno (tricrómica de Masson)</td></tr>
+      <tr><td>Alizarina roja S</td><td>Ácido</td><td>Rojo</td><td>Depósitos de calcio (hueso/cartílago)</td></tr>
+      <tr><td>Ácido pícrico</td><td>Ácido</td><td>Amarillo</td><td>Van Gieson (fibras musculares/colágeno)</td></tr>
+      <tr><td>Azul de toluidina</td><td>Básico</td><td>Azul/púrpura</td><td>Mastocitos (metacromasia)</td></tr>
+      <tr><td>Fucsina básica</td><td>Básico</td><td>Rojo/fucsia</td><td>Ziehl-Neelsen (M. tuberculosis)</td></tr>
+      <tr><td>Cristal violeta</td><td>Básico</td><td>Violeta</td><td>Tinción de Gram (1er colorante)</td></tr>
+      <tr><td>Safranina</td><td>Básico</td><td>Rojo/rosado</td><td>Contratinción de Gram-negativas</td></tr>
+      <tr><td>Rojo neutro</td><td>Básico</td><td>Rojo</td><td>Células vivas en cultivo</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P3 EPITELIO GLANDULAR -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🧬 Clasificación de las glándulas</h2>
+    <table>
+      <tr><th>Criterio</th><th>Tipos</th></tr>
+      <tr><td>Forma de liberar</td><td>Exocrina (conductos), Endocrina (sangre), Mixta (páncreas, gónadas)</td></tr>
+      <tr><td>Número de células</td><td>Unicelular (célula caliciforme), Multicelular</td></tr>
+      <tr><td>Producto secretado</td><td>Serosa (acuosa, enzimas), Mucosa (moco), Mixta</td></tr>
+      <tr><td>Mecanismo de secreción</td><td>Merocrina (exocitosis, sin pérdida), Apocrina (pierde parte del citoplasma), Holocrina (célula entera se destruye)</td></tr>
+      <tr><td>Morfología (exocrinas)</td><td>Tubular, Acinosa, Tubuloacinosa</td></tr>
+    </table>
+    <div class="mnemo">💡 Merocrina = sudoríparas. Apocrina = mamarias. Holocrina = sebáceas. "M-A-H" en orden de menos a más destructivo.</div>
+  </div>
+  <div class="card">
+    <h2>🩺 Aplicación clínica</h2>
+    <ul>
+      <li>Hiperplasia prostática benigna (exceso de tejido glandular)</li>
+      <li>Adenocarcinomas (cánceres de origen glandular)</li>
+      <li>Hiper/hiposecreción hormonal en glándulas endocrinas</li>
+    </ul>
+  </div>
+</section>
+
+<!-- P4 CONECTIVO -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>🧱 Componentes del tejido conectivo</h2>
+    <table>
+      <tr><th>Componente</th><th>Detalle</th></tr>
+      <tr><td>Fibroblastos</td><td>Célula más abundante — sintetiza fibras y sustancia fundamental</td></tr>
+      <tr><td>Macrófagos</td><td>Fagocitan desechos/patógenos</td></tr>
+      <tr><td>Mastocitos</td><td>Liberan histamina — alergias</td></tr>
+      <tr><td>Adipocitos</td><td>Almacenan lípidos</td></tr>
+      <tr><td>Fibras colágenas</td><td>Resistencia y flexibilidad</td></tr>
+      <tr><td>Fibras elásticas</td><td>Elasticidad (elastina)</td></tr>
+      <tr><td>Fibras reticulares</td><td>Redes de soporte (órganos linfoides)</td></tr>
+      <tr><td>Sustancia fundamental</td><td>Gel de proteoglicanos y glucoproteínas</td></tr>
+    </table>
+    <div class="hot">Todo el tejido conectivo se origina del <b>mesodermo</b> (mesénquima embrionario).</div>
+  </div>
+  <div class="card">
+    <h2>🧩 Clasificación completa</h2>
+    <table>
+      <tr><th>Categoría</th><th>Subtipo</th><th>Característica clave</th><th>Ubicación</th></tr>
+      <tr><td rowspan="2">Embrionario</td><td>Mesenquimatoso</td><td>Origen de todo el tej. conectivo</td><td>Embrión</td></tr>
+      <tr><td>Mucoso</td><td>Sustancia fundamental gelatinosa</td><td>Cordón umbilical</td></tr>
+      <tr><td rowspan="4">Propiamente dicho</td><td>Laxo (areolar)</td><td>Muchas células, pocas fibras</td><td>Bajo epitelios, alrededor de vasos</td></tr>
+      <tr><td>Denso regular (modelado)</td><td>Fibras paralelas ordenadas</td><td>Tendones, ligamentos</td></tr>
+      <tr><td>Denso irregular (no modelado)</td><td>Fibras entrelazadas desordenadas</td><td>Dermis, cápsulas de órganos</td></tr>
+      <tr><td>Reticular</td><td>Fibras reticulares en red</td><td>Ganglios, bazo, médula ósea</td></tr>
+      <tr><td rowspan="5">Especializado</td><td>Adiposo</td><td>Adipocitos — unilocular/multilocular</td><td>Hipodermis, alrededor de órganos</td></tr>
+      <tr><td>Cartilaginoso</td><td>Condrocitos en lagunas — avascular</td><td>Articulaciones, nariz, tráquea</td></tr>
+      <tr><td>Óseo</td><td>Osteocitos, matriz mineralizada</td><td>Huesos</td></tr>
+      <tr><td>Sangre</td><td>Células en plasma líquido</td><td>Vasos sanguíneos</td></tr>
+      <tr><td>Hematopoyético</td><td>Forma células sanguíneas</td><td>Médula ósea</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧬 Fibroblasto vs Fibrocito</h2>
+    <table>
+      <tr><th></th><th>Fibroblasto</th><th>Fibrocito</th></tr>
+      <tr><td>Actividad</td><td>Alta — sintetiza matriz activamente</td><td>Baja — estado de reposo</td></tr>
+      <tr><td>Forma</td><td>Estrellada/fusiforme, con prolongaciones</td><td>Alargada, menos prolongaciones</td></tr>
+      <tr><td>Núcleo</td><td>Ovalado, cromatina laxa, nucléolo prominente</td><td>Pequeño, alargado, cromatina densa</td></tr>
+      <tr><td>Citoplasma</td><td>Basófilo (mucho RER)</td><td>Menos basófilo (poco RER)</td></tr>
+      <tr><td>Rol en reparación</td><td>Protagonista de la cicatrización</td><td>Puede reactivarse a fibroblasto si hay lesión</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🩺 Enfermedades del tejido conectivo</h2>
+    <ul>
+      <li><b>Síndrome de Marfan:</b> alteración de la fibrilina → afecta elasticidad</li>
+      <li><b>Escorbuto:</b> déficit de vitamina C → síntesis inadecuada de colágeno, sangrado</li>
+    </ul>
+  </div>
+</section>
+
+<!-- P5 MUSCULAR -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>💪 Los 3 tipos de tejido muscular</h2>
+    <table>
+      <tr><th></th><th>Esquelético</th><th>Cardíaco</th><th>Liso</th></tr>
+      <tr><td>Células</td><td>Largas, cilíndricas, multinucleadas (periférico)</td><td>Cortas, ramificadas, uninucleadas (central)</td><td>Pequeñas, fusiformes, uninucleadas (central)</td></tr>
+      <tr><td>Estriaciones</td><td>Sí, marcadas</td><td>Sí, menos evidentes</td><td>No</td></tr>
+      <tr><td>Control</td><td>Voluntario (somático)</td><td>Involuntario (autónomo + hormonal)</td><td>Involuntario (autónomo)</td></tr>
+      <tr><td>Especial</td><td>Fascículos con tejido conectivo</td><td>Discos intercalares (uniones + gap junctions)</td><td>Capas o haces</td></tr>
+      <tr><td>Ubicación</td><td>Unido a huesos</td><td>Miocardio</td><td>Vísceras, vasos, vías respiratorias, iris</td></tr>
+    </table>
+    <div class="mnemo">💡 Las 4 propiedades del músculo: Excitabilidad, Contractilidad, Extensibilidad, Elasticidad.</div>
+  </div>
+  <div class="card">
+    <h2>🧬 El sarcómero — unidad contráctil</h2>
+    <table>
+      <tr><th>Estructura</th><th>Descripción</th></tr>
+      <tr><td>Banda A</td><td>Oscura — actina + miosina superpuestas</td></tr>
+      <tr><td>Banda I</td><td>Clara — solo actina</td></tr>
+      <tr><td>Línea Z</td><td>Delimita el sarcómero — ancla actina</td></tr>
+      <tr><td>Zona H</td><td>Centro de banda A — solo miosina</td></tr>
+      <tr><td>Línea M</td><td>Divide zona H — ancla miosina</td></tr>
+    </table>
+    <p>Contracción: los filamentos de actina se DESLIZAN sobre los de miosina, acortando el sarcómero.</p>
+  </div>
+  <div class="card">
+    <h2>🧠 Inervación</h2>
+    <ul>
+      <li><b>Esquelético:</b> neuronas motoras somáticas (voluntario)</li>
+      <li><b>Cardíaco y liso:</b> sistema nervioso autónomo (involuntario); cardíaco también modulado por hormonas</li>
+    </ul>
+  </div>
+</section>
+
+<!-- P6 OSEO -->
+<section class="panel" id="p6">
+  <div class="card">
+    <h2>🦴 Células óseas</h2>
+    <table>
+      <tr><th>Célula</th><th>Origen</th><th>Función</th></tr>
+      <tr><td>Osteoprogenitoras</td><td>Mesénquima</td><td>Células madre — originan osteoblastos</td></tr>
+      <tr><td>Osteoblastos</td><td>Osteoprogenitoras</td><td>Sintetizan matriz ósea (osteoide) y colágeno tipo I</td></tr>
+      <tr><td>Osteocitos</td><td>Osteoblastos atrapados en lagunas</td><td>Mantienen matriz, detectan tensión mecánica</td></tr>
+      <tr><td>Osteoclastos</td><td><b>Monocitos</b> (línea hematopoyética/mieloide)</td><td>Resorción ósea — multinucleados</td></tr>
+    </table>
+    <div class="hot">Los osteoclastos son la ÚNICA célula ósea que NO viene de la línea mesenquimal — vienen de monocitos.</div>
+  </div>
+  <div class="card">
+    <h2>🧱 Matriz ósea y estructura</h2>
+    <table>
+      <tr><th>Componente</th><th>%</th><th>Detalle</th></tr>
+      <tr><td>Orgánico</td><td>30%</td><td>Colágeno tipo I + osteocalcina/osteonectina</td></tr>
+      <tr><td>Inorgánico</td><td>70%</td><td>Hidroxiapatita (fosfato de calcio) — da dureza</td></tr>
+    </table>
+    <table>
+      <tr><th>Estructura</th><th>Función</th></tr>
+      <tr><td>Periostio</td><td>Membrana externa, VASCULARIZADA — nutrición y crecimiento en espesor</td></tr>
+      <tr><td>Endostio</td><td>Recubre cavidades internas — remodelación</td></tr>
+      <tr><td>Canal de Havers</td><td>Central de la osteona — vasos y nervios</td></tr>
+      <tr><td>Canal de Volkmann</td><td>Transversal — conecta canales de Havers</td></tr>
+      <tr><td>Osteona</td><td>Unidad estructural del hueso compacto — laminillas concéntricas + canal de Havers</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>📈 Osteogénesis — 2 tipos</h2>
+    <table>
+      <tr><th>Tipo</th><th>Mecanismo</th><th>Ejemplo</th></tr>
+      <tr><td>Endocondral</td><td>Molde de cartílago hialino reemplazado por hueso</td><td>Huesos largos (fémur, húmero)</td></tr>
+      <tr><td>Intramembranosa</td><td>Directo desde mesénquima, sin cartílago</td><td>Huesos planos (cráneo, mandíbula)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🔬 Osteoclasto en detalle</h2>
+    <ul>
+      <li>Se adhiere vía integrinas → forma zona sellada + borde rugoso</li>
+      <li>Secreta HCl + enzimas proteolíticas (catepsinas)</li>
+      <li>Disuelve hidroxiapatita y degrada colágeno</li>
+      <li>Actúa en las <b>lagunas de Howship</b></li>
+    </ul>
+    <div class="hot"><b>Exceso de osteoclastos</b> → osteoporosis. <b>Osteoclastos disfuncionales</b> → osteopetrosis (hueso demasiado denso y frágil).</div>
+  </div>
+</section>
+
+<!-- P7 CARTILAGINOSO -->
+<section class="panel" id="p7">
+  <div class="card">
+    <h2>🦵 Los 3 tipos de cartílago</h2>
+    <table>
+      <tr><th>Tipo</th><th>Matriz</th><th>Ubicación</th></tr>
+      <tr><td>Hialino</td><td>Homogénea, colágeno tipo II</td><td>Nariz, tráquea, superficies articulares, esqueleto fetal</td></tr>
+      <tr><td>Elástico</td><td>Red densa de fibras elásticas</td><td>Pabellón auricular, epiglotis</td></tr>
+      <tr><td>Fibroso (fibrocartílago)</td><td>Colágeno tipo I y II, SIN pericondrio</td><td>Discos intervertebrales, meniscos, sínfisis púbica</td></tr>
+    </table>
+    <div class="mnemo">💡 El fibrocartílago es el ÚNICO tipo sin pericondrio.</div>
+  </div>
+  <div class="card">
+    <h2>🔬 Crecimiento del cartílago</h2>
+    <table>
+      <tr><th>Tipo</th><th>Mecanismo</th></tr>
+      <tr><td>Intersticial</td><td>División de condrocitos desde el interior</td></tr>
+      <tr><td>Aposicional</td><td>Diferenciación de células del pericondrio desde la superficie</td></tr>
+    </table>
+    <p>Condrocitos viven en <b>lagunas (condroplastos)</b>. El cartílago es AVASCULAR — se nutre por difusión desde el pericondrio o líquido sinovial.</p>
+  </div>
+</section>
+
+<!-- P8 FLASHCARDS -->
+<section class="panel" id="p8">
+  <div class="card">
+    <h2>🃏 Flashcards — toque para virar</h2>
+    <div class="fc-wrap">
+      <div class="fc-counter" id="fcCounter">1 / 25</div>
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls">
+        <button class="fc-btn" id="fcPrev">◀ Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar 🔄</button>
+        <button class="fc-btn" id="fcNext">Próxima ▶</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- P9 BANCO -->
+<section class="panel" id="p9">
+  <div class="card">
+    <h2>✅ Banco de preguntas (incluye gabarito de glándulas y hueso resuelto)</h2>
+    <p class="progresslabel">Las preguntas de glándulas y hueso no tenían respuesta en su documento original — las resolví como profesor con justificación.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- P10 QUIZ -->
+<section class="panel" id="p10">
+  <div class="card">
+    <h2>🎮 Quiz Rápido (12 preguntas aleatorias)</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>Resumen elaborado para Dr. Cristiano Ribeiro da Silva — Histología I, Teórica P1 (UCP, primer semestre). Uso exclusivamente académico.</footer>
+</div>
+
+<script>
+const bank = [
+{n:1, q:"¿Cuál es el primer paso propiamente dicho de la técnica histológica?", opts:["Obtención de la muestra","Fijación","Deshidratación","Tinción"], correct:1, just:"La obtención de la muestra (biopsia/necropsia) no se considera un paso técnico aparte; la fijación es el primer paso real del procesamiento."},
+{n:2, q:"¿Qué sustancia se usa típicamente para la fijación de tejidos generales?", opts:["Xilol","Formalina al 37%","Parafina","Bálsamo de Canadá"], correct:1, just:"La formalina al 37% (formol bufferado) es el fijador más común para tejidos generales."},
+{n:3, q:"¿Qué agente se usa en el aclaramiento (diafanización)?", opts:["Alcohol etílico","Xilol o tolueno","Formalina","Hematoxilina"], correct:1, just:"El xilol (o tolueno) sustituye al alcohol y hace el tejido translúcido, siendo miscible con la parafina."},
+{n:4, q:"¿Cuál es el grosor típico de un corte para microscopía óptica?", opts:["0.5-1 µm","5-15 µm","50-100 µm","1-2 mm"], correct:1, just:"Los cortes para microscopía óptica miden entre 5 y 15 micrómetros, obtenidos con un microtomo."},
+{n:5, q:"¿Qué tiñe la hematoxilina y de qué color?", opts:["Citoplasma, rosa","Núcleo (estructuras basófilas), azul-morado","Colágeno, rojo","Grasa, amarillo"], correct:1, just:"La hematoxilina, aunque es un colorante básico, tiñe estructuras ácidas/basófilas (como el ADN nuclear) de azul-morado."},
+{n:6, q:"¿Qué tiñe la eosina y de qué color?", opts:["Núcleo, azul","Citoplasma (estructuras acidófilas), rosa","Calcio, rojo","Bacterias, violeta"], correct:1, just:"La eosina, colorante ácido, tiñe estructuras básicas/acidófilas como el citoplasma, en tonos rosados."},
+{n:7, q:"¿Qué colorante se usa para detectar Mycobacterium tuberculosis?", opts:["Azul de toluidina","Fucsina básica (Ziehl-Neelsen)","Safranina","Rojo neutro"], correct:1, just:"La fucsina básica es el colorante principal de la tinción de Ziehl-Neelsen para bacilos ácido-alcohol resistentes."},
+{n:8, q:"¿Qué colorante identifica depósitos de calcio en hueso/cartílago?", opts:["Alizarina roja S","Azul de metileno","Cristal violeta","Eosina"], correct:0, just:"La alizarina roja S es un colorante ácido usado específicamente para identificar depósitos de calcio."},
+{n:9, q:"¿Cuál es la principal función del tejido epitelial glandular?", opts:["Protección","Transporte","Secreción","Contracción"], correct:2, just:"El tejido epitelial glandular está especializado en la secreción de sustancias."},
+{n:10, q:"¿Qué tipo de glándula secreta directamente al torrente sanguíneo?", opts:["Exocrina","Endocrina","Mixta","Sudorípara"], correct:1, just:"Las glándulas endocrinas vierten sus productos (hormonas) directamente a la sangre, sin conducto excretor."},
+{n:11, q:"¿Cuál de las siguientes es una glándula de tipo mixto (seromucosa)?", opts:["Tiroides","Parótida","Glándula submandibular","Glándula sebácea"], correct:2, just:"La glándula submandibular combina secreción serosa y mucosa, siendo un ejemplo clásico de glándula mixta."},
+{n:12, q:"La secreción por destrucción total de la célula se llama:", opts:["Merocrina","Apocrina","Holocrina","Endocrina"], correct:2, just:"La secreción holocrina implica la desintegración completa de la célula (ej. glándulas sebáceas)."},
+{n:13, q:"La célula caliciforme es un ejemplo de glándula:", opts:["Multicelular exocrina","Unicelular endocrina","Unicelular exocrina","Mixta multicelular"], correct:2, just:"La célula caliciforme (productora de moco intestinal) es el ejemplo clásico de glándula unicelular exocrina."},
+{n:14, q:"¿Cuál es la forma más común de secreción de las glándulas exocrinas?", opts:["Apocrina","Holocrina","Merocrina","Mixta"], correct:2, just:"La secreción merocrina (por exocitosis, sin pérdida celular) es la más frecuente entre las glándulas exocrinas."},
+{n:15, q:"¿Qué estructura pierden las glándulas endocrinas durante su formación?", opts:["Conducto excretor","Citoplasma","Núcleo","Membrana basal"], correct:0, just:"Las glándulas endocrinas pierden el conducto excretor en su desarrollo, por eso vierten directo a la sangre."},
+{n:16, q:"Las glándulas apocrinas secretan por exocitosis sin pérdida de citoplasma (V/F)", opts:["Verdadero","Falso"], correct:1, just:"Falso — las apocrinas SÍ pierden parte del citoplasma junto con la secreción; la que secreta sin pérdida es la merocrina."},
+{n:17, q:"Las glándulas sudoríparas son ejemplo de secreción holocrina (V/F)", opts:["Verdadero","Falso"], correct:1, just:"Falso — las sudoríparas (ecrinas) son merocrinas; solo algunas sudoríparas apocrinas (axilares) pierden parte del citoplasma."},
+{n:18, q:"¿Cuál es la célula más abundante del tejido conectivo?", opts:["Macrófago","Fibroblasto","Mastocito","Adipocito"], correct:1, just:"El fibroblasto es la célula más abundante, responsable de sintetizar y mantener la matriz extracelular."},
+{n:19, q:"¿De qué capa embrionaria derivan todos los tipos de tejido conectivo?", opts:["Ectodermo","Mesodermo","Endodermo","Neuroectodermo"], correct:1, just:"Todo el tejido conectivo se origina del mesodermo (mesénquima embrionario)."},
+{n:20, q:"Los términos 'modelado' y 'no modelado' se aplican a:", opts:["Tejido conectivo laxo","Tejido conectivo denso","Tejido adiposo","Tejido reticular"], correct:1, just:"'Modelado' (regular) y 'no modelado' (irregular) son terminología exclusiva del tejido conectivo DENSO, no del laxo."},
+{n:21, q:"¿Dónde se encuentra el tejido conectivo denso regular (modelado)?", opts:["Dermis","Tendones y ligamentos","Ganglios linfáticos","Médula ósea"], correct:1, just:"El denso regular, con fibras de colágeno paralelas, forma tendones (músculo-hueso) y ligamentos (hueso-hueso)."},
+{n:22, q:"¿Qué diferencia principal hay entre fibroblasto y fibrocito?", opts:["No hay diferencia","El fibroblasto es activo/sintetizador; el fibrocito está en reposo","El fibrocito es más grande","El fibroblasto no tiene núcleo"], correct:1, just:"El fibroblasto sintetiza activamente matriz (RER abundante, basófilo); el fibrocito es la forma madura de reposo, con menor actividad."},
+{n:23, q:"¿Qué enfermedad se debe a alteración de la fibrilina?", opts:["Escorbuto","Síndrome de Marfan","Osteoporosis","Osteopetrosis"], correct:1, just:"El síndrome de Marfan se debe a una alteración de la fibrilina, afectando la elasticidad de los tejidos."},
+{n:24, q:"¿Qué caracteriza al tejido muscular cardíaco?", opts:["Células multinucleadas periféricas","Discos intercalares y núcleo central","Ausencia de estriaciones","Control voluntario"], correct:1, just:"El músculo cardíaco tiene discos intercalares (uniones adherentes + gap junctions) y núcleo central único, con control involuntario."},
+{n:25, q:"¿Cuál es la unidad funcional de la contracción muscular?", opts:["Miofibrilla","Sarcómero","Miocito","Línea Z"], correct:1, just:"El sarcómero, delimitado por dos líneas Z, es la unidad funcional básica de la contracción."},
+{n:26, q:"Durante la contracción, ¿qué ocurre con los filamentos?", opts:["La miosina se acorta","La actina se desliza sobre la miosina","Ambos se destruyen","No hay movimiento"], correct:1, just:"Los filamentos de actina se deslizan sobre los de miosina, acortando el sarcómero (teoría del filamento deslizante)."},
+{n:27, q:"¿Qué célula ósea deriva de monocitos (no de mesénquima)?", opts:["Osteoblasto","Osteocito","Osteoclasto","Osteoprogenitora"], correct:2, just:"El osteoclasto es la única célula ósea que deriva de monocitos (línea hematopoyética/mieloide), no de células mesenquimales."},
+{n:28, q:"¿Cuál es el componente inorgánico principal de la matriz ósea?", opts:["Colágeno tipo I","Hidroxiapatita","Elastina","Osteocalcina"], correct:1, just:"La hidroxiapatita (fosfato de calcio) constituye el 70% inorgánico de la matriz, dándole dureza."},
+{n:29, q:"¿El periostio es vascularizado?", opts:["Sí, es rico en vasos y nervios","No, es completamente avascular","Solo en niños","Solo el endostio lo es"], correct:0, just:"El periostio ES vascularizado — contiene vasos y nervios importantes para la nutrición ósea."},
+{n:30, q:"¿El hueso esponjoso tiene médula ósea roja?", opts:["Sí, en sus espacios trabeculares","No, solo el compacto la tiene","Solo en fetos","Nunca"], correct:0, just:"El hueso esponjoso SÍ contiene médula ósea roja en los espacios entre trabéculas."},
+{n:31, q:"¿Qué tipo de osificación forma los huesos largos?", opts:["Intramembranosa","Endocondral","Ambas por igual","Ninguna, ya nacen formados"], correct:1, just:"La osificación endocondral, a partir de un molde de cartílago hialino, forma los huesos largos."},
+{n:32, q:"¿Qué tipo de osificación forma los huesos planos del cráneo?", opts:["Endocondral","Intramembranosa","Perióstica","Articular"], correct:1, just:"La osificación intramembranosa forma huesos planos directamente desde el mesénquima, sin molde de cartílago."},
+{n:33, q:"¿Cuál es la unidad estructural del hueso compacto?", opts:["Trabécula","Osteona (sistema de Havers)","Condroplasto","Laguna de Howship"], correct:1, just:"La osteona (sistema de Havers) es la unidad estructural, con laminillas concéntricas alrededor de un canal de Havers."},
+{n:34, q:"¿Qué conecta los canales de Havers entre sí?", opts:["Canalículos","Canales de Volkmann","Lagunas","Laminillas"], correct:1, just:"Los canales de Volkmann son transversales/oblicuos y conectan los canales de Havers entre sí."},
+{n:35, q:"¿Cuál de los siguientes tipos de cartílago NO tiene pericondrio?", opts:["Hialino","Elástico","Fibrocartílago","Todos tienen pericondrio"], correct:2, just:"El fibrocartílago es el único tipo de cartílago que carece de pericondrio."},
+{n:36, q:"¿Dónde se encuentra el cartílago elástico?", opts:["Tráquea","Pabellón auricular y epiglotis","Discos intervertebrales","Superficies articulares"], correct:1, just:"El cartílago elástico, con abundantes fibras elásticas, se encuentra en el pabellón auricular y la epiglotis."},
+{n:37, q:"¿Cómo se llama el espacio donde viven los condrocitos?", opts:["Laguna de Howship","Laguna o condroplasto","Canal de Havers","Canalículo"], correct:1, just:"Los condrocitos residen en cavidades llamadas lagunas o condroplastos dentro de la matriz cartilaginosa."},
+{n:38, q:"¿Cómo se nutre el cartílago si es avascular?", opts:["Por vasos propios","Por difusión desde el pericondrio o líquido sinovial","No se nutre","Por el periostio"], correct:1, just:"Al ser avascular, el cartílago se nutre por difusión desde los capilares del pericondrio o desde el líquido sinovial articular."},
+{n:39, q:"¿Qué tipo de crecimiento del cartílago ocurre por división de condrocitos desde el interior?", opts:["Aposicional","Intersticial","Endocondral","Intramembranoso"], correct:1, just:"El crecimiento intersticial ocurre desde el interior por división de condrocitos ya existentes."},
+{n:40, q:"¿En qué fase se aloja el osteoclasto para resorber hueso?", opts:["Canal de Havers","Laguna de Howship","Condroplasto","Canalículo"], correct:1, just:"El osteoclasto actúa en las lagunas de Howship, formando un borde rugoso sobre la superficie ósea."},
+];
+
+const flashcards = [
+{f:"¿Cuál es el orden correcto de los pasos de la técnica histológica?", b:"Fijación → Deshidratación → Aclaramiento → Inclusión → Corte → Desparafinización → Tinción → Montaje."},
+{f:"¿Qué tiñe la hematoxilina y qué color resulta?", b:"Tiñe estructuras basófilas (núcleo/ADN) de azul-morado."},
+{f:"¿Qué tiñe la eosina y qué color resulta?", b:"Tiñe estructuras acidófilas (citoplasma/proteínas) de rosa."},
+{f:"¿Qué agente se usa en el aclaramiento (diafanización)?", b:"Xilol o tolueno — hace el tejido translúcido y es miscible con la parafina."},
+{f:"¿Qué diferencia hay entre glándula exocrina y endocrina?", b:"Exocrina: secreta por conductos hacia superficie externa/interna. Endocrina: secreta directo a la sangre (sin conducto)."},
+{f:"¿Qué es la secreción holocrina? Da un ejemplo.", b:"Toda la célula se destruye para liberar su contenido. Ejemplo: glándulas sebáceas."},
+{f:"¿Qué es la secreción apocrina?", b:"Parte del citoplasma se pierde junto con la secreción. Ejemplo: glándulas mamarias."},
+{f:"¿Cuál es la célula más abundante del tejido conectivo?", b:"El fibroblasto, responsable de sintetizar y mantener la matriz extracelular."},
+{f:"¿De qué capa embrionaria deriva todo el tejido conectivo?", b:"Del mesodermo (mesénquima)."},
+{f:"¿Dónde se aplican los términos 'modelado' y 'no modelado'?", b:"Exclusivamente al tejido conectivo DENSO (regular=modelado, irregular=no modelado)."},
+{f:"¿Cuál es la diferencia principal entre fibroblasto y fibrocito?", b:"Fibroblasto: activo, sintetiza matriz, RER abundante. Fibrocito: en reposo, menos activo, pero puede reactivarse."},
+{f:"¿Qué son las bandas A e I del sarcómero?", b:"Banda A: oscura, actina+miosina superpuestas. Banda I: clara, solo actina."},
+{f:"¿Qué ocurre con actina y miosina durante la contracción?", b:"Los filamentos de actina se deslizan sobre los de miosina, acortando el sarcómero."},
+{f:"¿Cuáles son las 4 propiedades del tejido muscular?", b:"Excitabilidad, Contractilidad, Extensibilidad, Elasticidad."},
+{f:"¿Qué son los discos intercalares?", b:"Uniones especializadas del músculo cardíaco (uniones adherentes + gap junctions) que sincronizan la contracción."},
+{f:"¿De dónde derivan los osteoclastos?", b:"De monocitos (línea hematopoyética/mieloide) — a diferencia de las demás células óseas que vienen del mesénquima."},
+{f:"¿Cuál es el componente inorgánico principal del hueso y qué función tiene?", b:"Hidroxiapatita (fosfato de calcio) — da dureza y resistencia (70% de la matriz)."},
+{f:"¿Qué es la osteona?", b:"Unidad estructural del hueso compacto, formada por laminillas concéntricas alrededor de un canal de Havers."},
+{f:"¿Qué diferencia hay entre canal de Havers y canal de Volkmann?", b:"Havers: central de la osteona (longitudinal). Volkmann: transversal, conecta los canales de Havers entre sí."},
+{f:"¿Qué diferencia hay entre osificación endocondral e intramembranosa?", b:"Endocondral: a partir de molde de cartílago (huesos largos). Intramembranosa: directo del mesénquima (huesos planos)."},
+{f:"¿Es el periostio vascularizado?", b:"Sí — es rico en vasos y nervios, esencial para la nutrición y crecimiento en espesor del hueso."},
+{f:"¿Qué son las lagunas de Howship?", b:"Depresiones en la superficie ósea donde se alojan los osteoclastos durante la resorción."},
+{f:"¿Cuáles son los 3 tipos de cartílago y sus ubicaciones típicas?", b:"Hialino: articulaciones/tráquea. Elástico: oreja/epiglotis. Fibrocartílago: discos intervertebrales/meniscos."},
+{f:"¿Cuál es el único tipo de cartílago sin pericondrio?", b:"El fibrocartílago (fibroso)."},
+{f:"¿Cuáles son los 2 tipos de crecimiento del cartílago?", b:"Intersticial (división interna de condrocitos) y Aposicional (desde el pericondrio hacia afuera)."},
+];
+
+const list = document.getElementById('gabaritoList');
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `<div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${String.fromCharCode(97+i)}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver justificación</button>
+    <div class="just" id="just-${idx}">${item.just}</div>`;
+  list.appendChild(div);
+});
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('just-'+qi).classList.toggle('show');
+  }
+});
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+let fcIdx = 0;
+const fcCard = document.getElementById('fcCard');
+function renderFc(){
+  fcCard.classList.remove('flipped');
+  document.getElementById('fcFront').textContent = flashcards[fcIdx].f;
+  document.getElementById('fcBack').textContent = flashcards[fcIdx].b;
+  document.getElementById('fcCounter').textContent = (fcIdx+1)+' / '+flashcards.length;
+}
+fcCard.addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcFlip').addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcNext').addEventListener('click', ()=>{ fcIdx=(fcIdx+1)%flashcards.length; renderFc(); addXP(1); });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIdx=(fcIdx-1+flashcards.length)%flashcards.length; renderFc(); });
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]).slice(0,12);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} correctas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pregunta ${quizIdx+1}/${quizSet.length}</p>
+    <p class="qtxt">${item.n}. ${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${String.fromCharCode(97+i)}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+</script>
+</body>
+</html>
