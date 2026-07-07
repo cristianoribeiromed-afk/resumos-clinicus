@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulado de Excelencia — Citoplasma, Citoesqueleto, Organelas y Superficie Celular</title>
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#8b6fd8; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#26193f 0%,var(--bg) 55%);color:var(--text);line-height:1.55;}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header h1{margin:0 0 6px;font-size:1.45em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.92em;}
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:8px 11px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#5a3fa8);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;color:var(--text);}
+.hot{background:rgba(139,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.83em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+.badge{display:inline-block;background:var(--gold);color:#111;font-size:.68em;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:6px;}
+.badge.new{background:var(--accent2);color:#0e1420;}
+ul{margin:6px 0;padding-left:20px;}
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.qitem .qtxt{font-weight:600;margin-bottom:8px;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:4px 8px;border-radius:6px;margin-bottom:3px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#2a3850;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.just{display:none;margin-top:8px;padding:8px 10px;background:#0f1726;border-radius:8px;font-size:.83em;color:var(--text-dim);border-left:3px solid var(--accent2);}
+.just.show{display:block;}
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+select#quizFilter{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.85em;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🧬 Simulado de Excelencia — Biología Celular</h1>
+  <p>Citoplasma · Citoesqueleto · Organelas · Superficie Celular (uniones)</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 / 0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">🔥 Puntos clave</button>
+  <button data-p="p1">🧫 Citoplasma y Calidad Proteica</button>
+  <button data-p="p2">🕸️ Citoesqueleto</button>
+  <button data-p="p3">🏭 Organelas (RE/Golgi/Endosomas)</button>
+  <button data-p="p4">⚡ Mitocondrias y Peroxisomas</button>
+  <button data-p="p5">🔗 Superficie Celular (Uniones)</button>
+  <button data-p="p9">✅ Banco de Preguntas (55)</button>
+  <button data-p="p10">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- P0 HOT -->
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🔥 Los errores más comunes en sus simulados anteriores</h2>
+    <div class="hot"><b>Filamentos intermedios NO transportan nada</b> — solo dan resistencia mecánica. Los únicos que transportan son actina (con miosina) y microtúbulos (con quinesina/dineína).</div>
+    <div class="hot"><b>Laminofilamentos</b> son los ÚNICOS filamentos intermedios dentro del núcleo (forman la lámina nuclear). Los demás (queratina, desmina, vimentina, neurofilamentos, GFAP) están en el citoplasma.</div>
+    <div class="hot"><b>Filamentos gliales (GFAP)</b> están en astrocitos/células de Schwann — NO en músculo (ahí está la desmina).</div>
+    <div class="hot"><b>Hemidesmosomas NO unen células entre sí</b> — unen la célula epitelial a la LÁMINA BASAL. Quien une células entre sí con queratina son los desmosomas.</div>
+    <div class="hot"><b>Contactos focales:</b> integrinas + actina + FIBRONECTINA (hacia matriz con colágeno). <b>Hemidesmosomas:</b> integrinas + filamento intermedio de queratina + LAMININA (hacia colágeno tipo IV de la lámina basal). No confundir fibronectina con laminina.</div>
+    <div class="hot"><b>Mitocondrias y peroxisomas NO se dividen por mitosis</b> — se reproducen por fisión binaria (mitocondria) o fisión/brotación desde el REL (peroxisoma).</div>
+    <div class="hot"><b>Lisosomas y peroxisomas tienen UNA SOLA membrana</b> (no doble) — la doble membrana es exclusiva de mitocondrias (y núcleo).</div>
+    <div class="hot"><b>Peroxisomas NO tienen ADN propio</b> — a diferencia de la mitocondria, que sí tiene ADN circular materno.</div>
+    <div class="hot"><b>PRS (partícula de reconocimiento de señal)</b> detiene la síntesis temporalmente; la <b>riboforina</b> es el receptor del ribosoma en el RER — no confundir sus roles.</div>
+  </div>
+</section>
+
+<!-- P1 CITOPLASMA -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🧫 Citosol, inclusiones y citoesqueleto</h2>
+    <table>
+      <tr><th>Componente</th><th>Qué es</th></tr>
+      <tr><td>Citosol</td><td>Parte líquida del citoplasma — contiene enzimas, macromoléculas y el citoesqueleto</td></tr>
+      <tr><td>Inclusiones citoplasmáticas</td><td>Depósitos NO membranosos: glucógeno (hepatocitos/músculo), grasa, pigmentos, cristales</td></tr>
+      <tr><td>Organelas</td><td>Mitocondrias, RE, Golgi, lisosomas, peroxisomas...</td></tr>
+    </table>
+    <p>Funciones del citoplasma: transporte intracelular, soporte estructural, medio de reacciones metabólicas (ej. glucólisis).</p>
+  </div>
+  <div class="card">
+    <h2>🧭 Control de calidad de proteínas — la secuencia completa</h2>
+    <div class="mnemo">Ribosoma sintetiza → <b>Péptido señal</b> dirige al destino → <b>Chaperona hsp70</b> evita plegamiento prematuro → si necesita replegarse, <b>hsp60</b> actúa → si está dañada sin remedio, <b>Ubiquitina</b> la marca → <b>Proteasoma</b> la degrada</div>
+    <table>
+      <tr><th>Elemento</th><th>Función específica</th></tr>
+      <tr><td>Péptido señal</td><td>Secuencia N-terminal que dirige la proteína a su destino (RER, mitocondria, núcleo, peroxisoma)</td></tr>
+      <tr><td>Chaperona hsp70</td><td>Se une a proteínas NACIENTES para evitar plegamiento prematuro <span class="badge new">detalle</span></td></tr>
+      <tr><td>Chaperona hsp60</td><td>Interviene cuando una proteína YA sintetizada necesita REPLEGARSE correctamente <span class="badge new">detalle</span></td></tr>
+      <tr><td>Ubiquitina</td><td>Pequeña proteína que MARCA proteínas dañadas/innecesarias</td></tr>
+      <tr><td>Proteasoma</td><td>Complejo cilíndrico de proteasas que DEGRADA lo marcado por ubiquitina</td></tr>
+    </table>
+    <div class="hot"><b>Importante:</b> proteínas destinadas al núcleo y peroxisomas YA deben estar plegadas ANTES de entrar (se pliegan en el citosol) — no se pliegan dentro de esos organelos.</div>
+  </div>
+</section>
+
+<!-- P2 CITOESQUELETO -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🕸️ Los 3 tipos de filamentos</h2>
+    <table>
+      <tr><th>Filamento</th><th>Proteína</th><th>¿Transporta?</th><th>Función</th></tr>
+      <tr><td>Microfilamentos (actina)</td><td>Actina + Miosina (motor)</td><td>Sí</td><td>Movimiento, contracción, transporte</td></tr>
+      <tr><td>Microtúbulos</td><td>Tubulina α/β + Quinesina/Dineína (motores)</td><td>Sí</td><td>Transporte de vesículas, huso mitótico, cilios/flagelos</td></tr>
+      <tr><td>Filamentos intermedios</td><td>Varía según célula (ver tabla abajo)</td><td>NO</td><td>Resistencia mecánica, integridad estructural</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧬 Filamentos intermedios por tipo celular <span class="badge new">tabla ampliada</span></h2>
+    <table>
+      <tr><th>Tipo de filamento</th><th>Ubicación celular</th></tr>
+      <tr><td>Queratina (tonofilamentos)</td><td>Células epiteliales</td></tr>
+      <tr><td>Desmina</td><td>Células musculares (liso y estriado)</td></tr>
+      <tr><td>Vimentina</td><td>Células de origen mesenquimal</td></tr>
+      <tr><td>Neurofilamentos</td><td>Neuronas</td></tr>
+      <tr><td>Filamentos gliales (GFAP)</td><td>Astrocitos y células de Schwann</td></tr>
+      <tr><td>Laminofilamentos</td><td>Núcleo — forman la lámina nuclear (únicos intranucleares)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🎯 Microtúbulos — estructura y motores</h2>
+    <ul>
+      <li>Se originan en el <b>centrosoma</b></li>
+      <li>Subunidades: tubulina <b>α y β</b> (dímeros)</li>
+      <li>Motores: <b>quinesina</b> (transporte anterógrado) y <b>dineína</b> (retrógrado)</li>
+      <li>Axonema de cilios/flagelos: disposición <b>9+2</b> (9 pares periféricos + 2 centrales)</li>
+      <li>Centríolos: 9 <b>tripletes</b> de microtúbulos</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>🔀 Funciones en común: actina y microtúbulos</h2>
+    <ul>
+      <li>Transporte intracelular de vesículas y organelos</li>
+      <li>División celular (huso mitótico = microtúbulos; anillo contráctil = actina)</li>
+    </ul>
+    <div class="mnemo">💡 Pregunta trampa clásica: "¿cuál filamento NO es vía de transporte?" → Filamentos intermedios (los otros dos SÍ lo son).</div>
+  </div>
+</section>
+
+<!-- P3 ORGANELAS -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🏭 Sistema de endomembranas</h2>
+    <p>Incluye: <b>RER, REL, Golgi, endosomas, lisosomas y envoltura nuclear</b>. NO incluye mitocondrias ni ribosomas libres (aunque ribosomas se adhieren al RER).</p>
+  </div>
+  <div class="card">
+    <h2>🧬 Retículo endoplasmático</h2>
+    <table>
+      <tr><th></th><th>RER</th><th>REL</th></tr>
+      <tr><td>Ribosomas</td><td>Sí, adheridos</td><td>No</td></tr>
+      <tr><td>Función</td><td>Síntesis de proteínas (membrana, secreción, lisosomas)</td><td>Síntesis de lípidos, detoxificación, <b>depósito principal de calcio</b>, síntesis de esteroides (suprarrenales/gónadas)</td></tr>
+    </table>
+    <div class="hot"><b>Riboforina</b> = receptor del RIBOSOMA en el RER (no de membranas). <b>PRS</b> (partícula de reconocimiento de señal) = detiene temporalmente la síntesis hasta que el ribosoma se une al RER.</div>
+    <p>Si una proteína no tiene señal de anclaje en el RER → entra al LUMEN del retículo (no se inserta en la membrana).</p>
+  </div>
+  <div class="card">
+    <h2>📦 Aparato de Golgi</h2>
+    <ul>
+      <li>Unidad funcional: <b>dictiosoma</b> (cisternas)</li>
+      <li>Cara <b>cis</b>: recibe del RER. Cara <b>trans</b>: emite vesículas</li>
+      <li>3 tipos de secreción: <b>constitutiva</b> (continua, sin señal), <b>regulada</b> (ante estímulo, ej. insulina), <b>lisosomal</b> (enzimas hidrolíticas empaquetadas)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>🔄 Endosomas y Lisosomas</h2>
+    <table>
+      <tr><th>Estructura</th><th>Ubicación/Función</th></tr>
+      <tr><td>Endosoma temprano</td><td>Cerca de la membrana — recibe por endocitosis</td></tr>
+      <tr><td>Endosoma tardío (secundario)</td><td>Más profundo — se fusiona con enzimas del Golgi → se convierte en <b>lisosoma secundario</b></td></tr>
+      <tr><td>Endosoma reciclador</td><td>Devuelve componentes útiles a la membrana</td></tr>
+      <tr><td>Lisosoma</td><td>Enzimas hidrolíticas ácidas (nucleasas, proteasas, lipasas, glucosidasas) — una sola membrana</td></tr>
+    </table>
+    <div class="mnemo">💡 Ruta clásica: RER → Golgi → Endosoma → Lisosoma secundario. La <b>pinocitosis regulada</b> es mediada por receptores (específica); la fagocitosis y pinocitosis simple son inespecíficas.</div>
+  </div>
+  <div class="card">
+    <h2>⚙️ Ribosomas</h2>
+    <table>
+      <tr><th>Tipo</th><th>Producto</th></tr>
+      <tr><td>Ribosomas libres</td><td>Proteínas para uso INTRACELULAR</td></tr>
+      <tr><td>Ribosomas del RER</td><td>Proteínas de EXPORTACIÓN o de membrana</td></tr>
+    </table>
+    <p>Formados por ARN ribosómico + proteínas.</p>
+  </div>
+</section>
+
+<!-- P4 MITOCONDRIAS PEROXISOMAS -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>⚡ Mitocondria — estructura y ADN</h2>
+    <table>
+      <tr><th>Región</th><th>Contenido/Función</th></tr>
+      <tr><td>Membrana externa</td><td>Lisa</td></tr>
+      <tr><td>Membrana interna</td><td>Con crestas — cadena de transporte de electrones</td></tr>
+      <tr><td>Espacio intermembranoso</td><td>Proteínas para gradiente de protones</td></tr>
+      <tr><td>Matriz mitocondrial</td><td>Enzimas del ciclo de Krebs, ADN mitocondrial, ribosomas propios</td></tr>
+    </table>
+    <div class="hot"><b>ADN mitocondrial:</b> circular, SIN histonas, origen MATERNO, codifica algunas proteínas propias (la mayoría vienen del núcleo). Se reproduce por FISIÓN BINARIA (no mitosis).</div>
+  </div>
+  <div class="card">
+    <h2>🧪 Peroxisoma</h2>
+    <ul>
+      <li>Membrana ÚNICA (a diferencia de la mitocondria)</li>
+      <li>NO tiene ADN propio</li>
+      <li>Enzima principal: <b>catalasa</b> (degrada H₂O₂)</li>
+      <li>Función: β-oxidación de ácidos grasos, detoxificación</li>
+      <li>Se reproduce por fisión o brotación desde el <b>REL</b></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>📊 Lisosoma vs Peroxisoma — comparación directa <span class="badge new">tabla nueva</span></h2>
+    <table>
+      <tr><th>Característica</th><th>Lisosoma</th><th>Peroxisoma</th></tr>
+      <tr><td>Membrana</td><td>Única</td><td>Única</td></tr>
+      <tr><td>ADN propio</td><td>No</td><td>No</td></tr>
+      <tr><td>Origen</td><td>Golgi + endosoma secundario</td><td>Fisión / brotación del REL</td></tr>
+      <tr><td>Enzimas</td><td>Hidrolasas ácidas (pH bajo)</td><td>Oxidativas (catalasa)</td></tr>
+      <tr><td>Función</td><td>Digestión intracelular, autofagia</td><td>β-oxidación, detoxificación de H₂O₂</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- P5 SUPERFICIE CELULAR -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🔗 Uniones entre células</h2>
+    <table>
+      <tr><th>Unión</th><th>Proteínas</th><th>Se conecta con</th><th>Función</th></tr>
+      <tr><td>Zonula occludens (oclusiva)</td><td>Claudinas + Ocludinas</td><td>-</td><td>Sella el espacio — impermeabilidad (epitelios)</td></tr>
+      <tr><td>Zonula adherens (cinturón adhesivo)</td><td>Cadherinas</td><td>Filamentos de actina</td><td>Soporte mecánico, contractilidad (ej. intestino)</td></tr>
+      <tr><td>Desmosomas</td><td>Cadherinas</td><td>Filamentos intermedios de QUERATINA</td><td>Anclaje fuerte — tejidos con tensión (vejiga, corazón, piel)</td></tr>
+      <tr><td>Uniones gap (comunicantes)</td><td>Conexinas → forman conexones</td><td>-</td><td>Paso de iones/moléculas pequeñas — sincronización eléctrica (miocardio)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🧱 Uniones célula-matriz extracelular</h2>
+    <table>
+      <tr><th>Unión</th><th>Proteínas</th><th>Filamento interno</th><th>Proteína de matriz</th></tr>
+      <tr><td>Hemidesmosomas</td><td>Integrinas</td><td>Filamentos intermedios de queratina</td><td><b>Laminina</b> → colágeno tipo IV (lámina basal)</td></tr>
+      <tr><td>Contactos focales</td><td>Integrinas</td><td>Filamentos de actina</td><td><b>Fibronectina</b> → colágeno de la matriz</td></tr>
+    </table>
+    <div class="hot"><b>No confundir:</b> Hemidesmosoma = queratina + laminina + lámina basal. Contacto focal = actina + fibronectina + matriz extracelular general. Ambos usan integrinas, pero con distinto filamento y distinta proteína adaptadora.</div>
+  </div>
+</section>
+
+<!-- P9 BANCO -->
+<section class="panel" id="p9">
+  <div class="card">
+    <h2>✅ Banco de 55 preguntas — consolidado + ampliado</h2>
+    <p class="progresslabel">Preguntas de sus 8 simulados originales (deduplicadas) + preguntas nuevas de refuerzo (marcadas <span class="badge new">nueva</span>).</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- P10 QUIZ -->
+<section class="panel" id="p10">
+  <div class="card">
+    <h2>🎮 Quiz Rápido (15 preguntas aleatorias)</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>Simulado elaborado para Dr. Cristiano Ribeiro da Silva — Biología I (semestre 1). Uso exclusivamente académico.</footer>
+</div>
+
+<script>
+const bank = [
+{n:1, q:"¿Qué parte del citoplasma contiene enzimas, macromoléculas y el citoesqueleto?", opts:["Retículo endoplasmático","Inclusiones citoplasmáticas","Citosol","Aparato de Golgi"], correct:2, just:"El citosol es la parte líquida del citoplasma donde se encuentran enzimas, macromoléculas y el citoesqueleto."},
+{n:2, q:"¿Qué tipo de inclusión citoplasmática es común en hepatocitos y músculo estriado?", opts:["Gotas de grasa","Gránulos de glucógeno","Pigmentos","Cristales"], correct:1, just:"Los gránulos de glucógeno son inclusiones típicas de hepatocitos y células musculares, sirviendo como reserva energética rápida."},
+{n:3, q:"¿Qué molécula dirige a las proteínas hacia su destino celular?", opts:["Ubiquitina","ARNm","Péptido señal","ADN"], correct:2, just:"El péptido señal es una secuencia de aminoácidos en el extremo N-terminal que dirige la proteína a su destino."},
+{n:4, q:"¿Cuál es la función específica de la chaperona hsp70?", opts:["Degradar proteínas dañadas","Evitar el plegamiento prematuro de proteínas nacientes","Transportar proteínas al núcleo","Formar el proteasoma"], correct:1, just:"La hsp70 se une a proteínas recién sintetizadas (nacientes) para evitar que se plieguen antes de llegar a su destino final."},
+{n:5, q:"¿Cuándo actúa la chaperona hsp60?", opts:["Antes de la síntesis proteica","Cuando una proteína ya sintetizada necesita replegarse correctamente","Solo en el núcleo","Nunca, es un mito"], correct:1, just:"La hsp60 interviene en el REPLEGAMIENTO de proteínas que ya fueron sintetizadas pero se plegaron mal."},
+{n:6, q:"Las proteínas que van al núcleo y a los peroxisomas:", opts:["Se pliegan dentro de esos organelos","Ya deben estar plegadas antes de entrar","Nunca se pliegan","Se degradan al entrar"], correct:1, just:"A diferencia de las proteínas destinadas al RE/mitocondrias, las que van a núcleo y peroxisomas deben estar plegadas ANTES de ingresar."},
+{n:7, q:"¿Qué degrada el proteasoma?", opts:["ADN dañado","Proteínas marcadas por ubiquitina","Lípidos de membrana","ARN mensajero"], correct:1, just:"El proteasoma es un complejo cilíndrico de proteasas que degrada proteínas marcadas específicamente por la ubiquitina."},
+{n:8, q:"¿Cuál de estos NO es un tipo de filamento del citoesqueleto?", opts:["Microtúbulos","Filamentos intermedios","Filamentos de colágeno","Filamentos de actina"], correct:2, just:"El colágeno pertenece a la matriz extracelular, no al citoesqueleto celular."},
+{n:9, q:"¿Qué filamentos intermedios se encuentran exclusivamente en el núcleo?", opts:["Neurofilamentos","Laminofilamentos","Filamentos gliales","Tonofilamentos (queratina)"], correct:1, just:"Los laminofilamentos son los únicos filamentos intermedios ubicados en el núcleo, formando la lámina nuclear."},
+{n:10, q:"¿Dónde se encuentran los filamentos de desmina?", opts:["Células epiteliales","Astrocitos","Células musculares","Neuronas"], correct:2, just:"La desmina es el filamento intermedio característico de células musculares (liso y estriado)."},
+{n:11, q:"¿Qué filamento intermedio caracteriza a los astrocitos y células de Schwann?", opts:["Vimentina","Desmina","Filamentos gliales (GFAP)","Queratina"], correct:2, just:"Los filamentos gliales (GFAP) son propios de astrocitos y células de Schwann, NO de músculo."},
+{n:12, q:"¿Cuál es la proteína motora que actúa sobre microfilamentos de actina?", opts:["Quinesina","Dineína","Miosina","Tubulina"], correct:2, just:"La miosina es la proteína motora asociada a los filamentos de actina, transportando organelos."},
+{n:13, q:"¿Cuál es el principal componente proteico de los microtúbulos?", opts:["Actina G","Tubulina (α y β)","Miosina","Vimentina"], correct:1, just:"Los microtúbulos están formados por dímeros de tubulina alfa y beta."},
+{n:14, q:"¿Qué disposición estructural tiene el axonema de cilios y flagelos?", opts:["9+0","9+1","9+2","3+3"], correct:2, just:"El axonema presenta la clásica disposición 9+2: 9 pares periféricos + 2 microtúbulos centrales."},
+{n:15, q:"¿Qué proteínas motoras se desplazan sobre microtúbulos?", opts:["Miosina y actina","Quinesina y dineína","Actina y tubulina","Laminina y colágeno"], correct:1, just:"Quinesina (transporte anterógrado) y dineína (retrógrado) son las proteínas motoras de los microtúbulos."},
+{n:16, q:"¿Dónde se originan los microtúbulos citoplasmáticos?", opts:["Membrana plasmática","Lisosomas","Centrosoma","Retículo endoplasmático"], correct:2, just:"Los microtúbulos se organizan y extienden desde el centrosoma."},
+{n:17, q:"¿Cuál es la función principal de los filamentos intermedios?", opts:["Iniciar la mitosis","Formar cilios","Mantener la forma celular y resistir tensión","Sintetizar proteínas"], correct:2, just:"A diferencia de actina y microtúbulos, los filamentos intermedios NO transportan — su función es dar resistencia mecánica."},
+{n:18, q:"¿Cuál de estos filamentos NO participa en el transporte intracelular?", opts:["Actina", "Microtúbulos", "Filamentos intermedios", "Ninguno, todos transportan"], correct:2, just:"Los filamentos intermedios son los únicos sin función de transporte; solo actina y microtúbulos transportan vesículas/organelos."},
+{n:19, q:"¿Cuántos tripletes de microtúbulos forman un centríolo?", opts:["7", "9", "11", "13"], correct:1, just:"Los centríolos están formados por 9 tripletes de microtúbulos dispuestos en cilindro."},
+{n:20, q:"¿Cuál es la unidad funcional del aparato de Golgi?", opts:["Lisosoma","Dictiosoma","Ribosoma","Cromatina"], correct:1, just:"El dictiosoma (conjunto de cisternas apiladas) es la unidad funcional del Golgi."},
+{n:21, q:"¿Qué estructura regula el paso de sustancias entre núcleo y citoplasma?", opts:["REL","Poros nucleares","Nucléolo","Ribosoma"], correct:1, just:"Los poros nucleares, en la envoltura nuclear, regulan el intercambio entre núcleo y citoplasma."},
+{n:22, q:"¿Qué estructura nuclear forma las subunidades ribosómicas?", opts:["Nucléolo","Cromatina","Nucleoplasma","Poros nucleares"], correct:0, just:"El nucléolo sintetiza ARN ribosómico (ARNr) y ensambla las subunidades de los ribosomas."},
+{n:23, q:"¿Qué caras tiene el aparato de Golgi y qué hace cada una?", opts:["Cis (emite) y trans (recibe)","Cis (recibe del RER) y trans (emite vesículas)","Solo tiene una cara funcional","Norte y sur"], correct:1, just:"Cara CIS: recibe material del RER. Cara TRANS: emite vesículas de secreción."},
+{n:24, q:"¿Cuáles son los 3 tipos de secreción del aparato de Golgi?", opts:["Rápida, lenta y mixta","Constitutiva, regulada y lisosomal","Activa, pasiva y facilitada","Endocítica, exocítica y fagocítica"], correct:1, just:"Constitutiva (continua, sin señal), Regulada (ante estímulo, ej. insulina) y Lisosomal (enzimas empaquetadas para lisosomas)."},
+{n:25, q:"¿Qué ocurre si una proteína en el RER no tiene señal de anclaje a la membrana?", opts:["Se incorpora a la membrana del núcleo","Se inserta en la membrana del RER","Entra al lumen del retículo","Es degradada inmediatamente"], correct:2, just:"Sin señal de anclaje a membrana, la proteína entra al lumen (cavidad interna) del RER en lugar de insertarse en la membrana."},
+{n:26, q:"¿Qué componente detiene temporalmente la síntesis de proteínas hasta que el ribosoma se une al RER?", opts:["Riboforina","PRS (partícula de reconocimiento de señal)","Vesícula","Cadherina"], correct:1, just:"La PRS reconoce el péptido señal y detiene la traducción hasta que el complejo ribosoma-PRS se une al receptor (riboforina) del RER."},
+{n:27, q:"¿Qué es la riboforina?", opts:["Una enzima lisosomal","El receptor de ribosomas en la membrana del RER","Una proteína motora","Un tipo de colágeno"], correct:1, just:"La riboforina es la proteína integral de membrana del RER que actúa como receptor para los ribosomas (vía PRS)."},
+{n:28, q:"¿Cuál es la ruta clásica de una enzima hidrolítica desde su síntesis hasta su acción?", opts:["RER → Golgi → Membrana → Nucleolo","Ribosoma libre → REL → Mitocondria","RER → Golgi → Endosoma → Lisosoma secundario","REL → Ribosoma → Lisosoma"], correct:2, just:"Las enzimas hidrolíticas siguen la ruta: RER (síntesis) → Golgi (empaquetado) → Endosoma → se convierte en Lisosoma secundario."},
+{n:29, q:"¿Qué tipo de endocitosis es específica y mediada por receptores?", opts:["Fagocitosis","Pinocitosis inespecífica","Pinocitosis regulada","Exocitosis"], correct:2, just:"La pinocitosis regulada es selectiva, mediada por receptores específicos en la membrana."},
+{n:30, q:"¿Qué organela se forma a partir de endosomas secundarios + enzimas del Golgi?", opts:["Peroxisoma","Lisosoma","Ribosoma","Nucléolo"], correct:1, just:"El endosoma tardío (secundario) recibe enzimas hidrolíticas del Golgi y se convierte en lisosoma secundario."},
+{n:31, q:"¿Qué caracteriza al REL (retículo endoplasmático liso)?", opts:["Tiene ribosomas adheridos","Sintetiza lípidos, detoxifica y almacena calcio","Solo está en células vegetales","Degrada proteínas"], correct:1, just:"El REL, sin ribosomas, se especializa en síntesis de lípidos, detoxificación y es el principal depósito de calcio intracelular."},
+{n:32, q:"¿Dónde se sintetizan las hormonas esteroideas (ej. en glándulas suprarrenales)?", opts:["RER","REL","Lisosoma","Núcleo"], correct:1, just:"El REL contiene las enzimas necesarias para la síntesis de esteroides en órganos como suprarrenales, ovarios y testículos."},
+{n:33, q:"¿Cuál es la diferencia entre ribosomas libres y ribosomas del RER?", opts:["No hay diferencia","Libres = proteínas intracelulares; RER = proteínas de exportación/membrana","Libres = lípidos; RER = proteínas","RER no existe"], correct:1, just:"Ribosomas libres sintetizan proteínas de uso intracelular; los del RER sintetizan proteínas de exportación o de membrana."},
+{n:34, q:"¿Qué organelo contiene ADN propio, circular y de origen materno?", opts:["Lisosoma","Mitocondria","Peroxisoma","Aparato de Golgi"], correct:1, just:"Las mitocondrias tienen ADN circular, sin histonas, de herencia materna, y se reproducen por fisión binaria."},
+{n:35, q:"¿Dónde se encuentran las enzimas del ciclo de Krebs?", opts:["Membrana externa mitocondrial","Espacio intermembranoso","Matriz mitocondrial","Membrana plasmática"], correct:2, just:"La matriz mitocondrial contiene las enzimas del ciclo de Krebs, además de ADN, ARN y ribosomas propios."},
+{n:36, q:"¿Dónde está la cadena de transporte de electrones en la mitocondria?", opts:["Matriz","Membrana externa","Membrana interna (crestas)","Espacio intermembranoso"], correct:2, just:"La cadena respiratoria está en la membrana interna, plegada en crestas para aumentar la superficie."},
+{n:37, q:"¿Cómo se reproducen las mitocondrias?", opts:["Mitosis","Meiosis","Fisión binaria","Gemación"], correct:2, just:"Las mitocondrias se duplican por fisión binaria, similar a las bacterias (coherente con la teoría endosimbiótica)."},
+{n:38, q:"¿Qué enzima principal degrada el peróxido de hidrógeno en el peroxisoma?", opts:["Peroxidasa","Hidrolasa","Catalasa","Riboforina"], correct:2, just:"La catalasa es la enzima característica del peroxisoma, encargada de degradar H₂O₂."},
+{n:39, q:"¿El peroxisoma tiene ADN propio?", opts:["Sí, circular","Sí, lineal","No tiene ADN propio","Solo en células vegetales"], correct:2, just:"A diferencia de la mitocondria, el peroxisoma NO posee ADN propio."},
+{n:40, q:"¿Cómo se reproduce el peroxisoma?", opts:["Mitosis","Fisión binaria como bacteria","Fisión o brotación desde el REL","No se reproduce"], correct:2, just:"Los peroxisomas se forman por fisión o brotación a partir del retículo endoplasmático liso (REL)."},
+{n:41, q:"¿Cuántas membranas tienen el lisosoma y el peroxisoma?", opts:["Doble membrana ambos","Una sola membrana ambos","Lisosoma doble, peroxisoma simple","Peroxisoma doble, lisosoma simple"], correct:1, just:"Tanto lisosomas como peroxisomas tienen una única membrana — la doble membrana es exclusiva de mitocondrias (y núcleo)."},
+{n:42, q:"¿Cuál de las siguientes proteínas forma parte de los contactos focales?", opts:["Conexinas","Ocludinas","Integrinas","Cadherinas"], correct:2, just:"Las integrinas son las proteínas transmembrana clave en los contactos focales, conectando actina con fibronectina de la matriz."},
+{n:43, q:"Los hemidesmosomas anclan las células epiteliales a:", opts:["La matriz extracelular fluida","Las células vecinas","La lámina basal","El núcleo celular"], correct:2, just:"Los hemidesmosomas conectan la célula epitelial a la lámina basal (NO a otras células, ese es el error más común)."},
+{n:44, q:"¿Qué filamento se asocia a los hemidesmosomas en su interior celular?", opts:["Filamentos de actina","Microtúbulos","Filamentos intermedios de queratina","Filamentos gliales"], correct:2, just:"Los hemidesmosomas se conectan internamente con filamentos intermedios de queratina, igual que los desmosomas."},
+{n:45, q:"¿Qué uniones forman una barrera que impide el paso de sustancias entre células epiteliales?", opts:["Uniones gap","Desmosomas","Cinturón adhesivo","Uniones oclusivas (zonula occludens)"], correct:3, just:"La zonula occludens sella completamente el espacio intercelular, formada por claudinas y ocludinas."},
+{n:46, q:"¿Qué proteínas forman los canales de las uniones comunicantes (gap)?", opts:["Claudinas","Cadherinas","Conexinas","Integrinas"], correct:2, just:"Las conexinas forman los conexones, canales de las uniones gap."},
+{n:47, q:"¿Qué proteína conecta las integrinas del hemidesmosoma con el colágeno tipo IV?", opts:["Fibronectina","Claudina","Laminina","Conexina"], correct:2, just:"La laminina es la proteína adaptadora entre integrinas y colágeno tipo IV en la lámina basal (hemidesmosomas)."},
+{n:48, q:"¿Qué proteína conecta las integrinas de los contactos focales con el colágeno de la matriz?", opts:["Laminina","Fibronectina","Conexina","Cadherina"], correct:1, just:"La fibronectina conecta las integrinas de los contactos focales con el colágeno de la matriz extracelular (a diferencia de la laminina en hemidesmosomas)."},
+{n:49, q:"En los desmosomas, ¿con qué filamento se asocian las cadherinas?", opts:["Actina","Microtúbulos","Queratina","Vimentina"], correct:2, just:"En los desmosomas, las cadherinas se conectan con filamentos intermedios de queratina mediante una placa discoidal."},
+{n:50, q:"¿En qué tipo de unión participan las cadherinas conectadas a actina cortical?", opts:["Hemidesmosomas","Desmosomas","Cinturón adhesivo (zonula adherens)","Uniones gap"], correct:2, just:"El cinturón adhesivo usa cadherinas unidas a filamentos de actina — clave en epitelios con actividad contráctil (ej. intestino)."},
+{n:51, q:"¿Dónde son más abundantes los desmosomas?", opts:["Solo en el cerebro","Tejidos sometidos a tensión/fricción (piel, corazón, vejiga)","Solo en el hígado","En ningún tejido específico"], correct:1, just:"Los desmosomas son especialmente abundantes en tejidos sujetos a estrés mecánico: piel, corazón, vejiga, cuello uterino."},
+{n:52, q:"¿Cuál es la diferencia funcional entre contactos focales y hemidesmosomas?", opts:["No hay diferencia","Contactos focales usan actina+fibronectina; hemidesmosomas usan queratina+laminina","Ambos usan queratina","Ambos usan actina"], correct:1, just:"Contacto focal: integrina + actina + fibronectina (matriz general). Hemidesmosoma: integrina + queratina + laminina (lámina basal)."},
+{n:53, q:"¿Qué elemento NO forma parte del citoplasma?", opts:["Citoesqueleto","Inclusiones citoplasmáticas","ADN nuclear","Organelas"], correct:2, just:"El ADN nuclear está dentro del núcleo, no forma parte del citoplasma."},
+{n:54, q:"¿Las mitocondrias están presentes solo en células animales?", opts:["Verdadero","Falso — también están en células vegetales y hongos"], correct:1, just:"Las mitocondrias están presentes en prácticamente todas las células eucariotas, incluyendo vegetales y hongos."},
+{n:55, q:"¿El citoplasma participa en funciones metabólicas de la célula?", opts:["Sí, por ejemplo la glucólisis ocurre allí","No, es solo relleno estructural"], correct:0, just:"El citoplasma es un medio activo donde ocurren procesos metabólicos importantes como la glucólisis."},
+];
+
+const list = document.getElementById('gabaritoList');
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `<div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${String.fromCharCode(97+i)}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver justificación</button>
+    <div class="just" id="just-${idx}">${item.just}</div>`;
+  list.appendChild(div);
+});
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('just-'+qi).classList.toggle('show');
+  }
+});
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]).slice(0,15);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} correctas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pregunta ${quizIdx+1}/${quizSet.length}</p>
+    <p class="qtxt">${item.n}. ${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${String.fromCharCode(97+i)}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+</script>
+</body>
+</html>
