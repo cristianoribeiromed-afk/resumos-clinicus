@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Final — Bioquímica I | Prof. Deborah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1712;
+  --bg-panel:#152119;
+  --bg-card:#1a2a20;
+  --gold:#d4af37;
+  --gold-soft:#e8cf7a;
+  --green:#4caf6e;
+  --green-soft:#7fd39c;
+  --text:#eef3ee;
+  --text-dim:#a9bdae;
+  --border:#2a3d30;
+  --danger:#e0705a;
+  --info:#5aa9e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:radial-gradient(circle at top left, #16241a, #0e1712 60%);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.6;
+  padding:20px;
+  min-height:100vh;
+}
+.wrap{max-width:900px;margin:0 auto;}
+h1,h2,h3{font-family:'Lora',serif;}
+header{
+  background:linear-gradient(135deg, #1c2e21, #14201a);
+  border:1px solid var(--gold);
+  border-radius:16px;
+  padding:24px 28px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:16px;
+}
+header h1{font-size:1.5rem;color:var(--gold-soft);}
+header p{color:var(--text-dim);font-size:0.88rem;margin-top:4px;}
+.xp-badge{
+  background:var(--bg-card);
+  border:1px solid var(--gold);
+  border-radius:12px;
+  padding:10px 18px;
+  text-align:center;
+  min-width:140px;
+}
+.xp-badge .lvl{font-family:'Lora',serif;font-weight:700;color:var(--gold-soft);font-size:1.05rem;}
+.panel{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+}
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 18px;
+  margin-bottom:14px;
+}
+.card h3{color:var(--green-soft);font-size:1.05rem;margin-bottom:8px;}
+ul{margin:8px 0 8px 20px;color:var(--text-dim);}
+li{margin-bottom:6px;}
+.box{
+  border-radius:12px;
+  padding:14px 18px;
+  margin:14px 0;
+  border-left:4px solid var(--gold);
+  background:rgba(212,175,55,.08);
+}
+.box .label{color:var(--gold-soft);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.action-btn{
+  background:linear-gradient(135deg,#2c4c37,#1f3628);
+  border:1px solid var(--gold);
+  color:var(--gold-soft);
+  padding:12px 24px;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-weight:700;
+  font-size:.95rem;
+  transition:all .2s;
+}
+.action-btn:hover{background:linear-gradient(135deg,#38624a,#294a34);}
+.action-btn:disabled{opacity:.4;cursor:not-allowed;}
+.quiz-progress{display:flex;justify-content:space-between;color:var(--text-dim);font-size:.85rem;margin-bottom:14px;}
+.quiz-progress .bar-wrap{width:100%;height:8px;background:#0e1712;border-radius:4px;margin-top:8px;overflow:hidden;}
+.quiz-progress .bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .3s;}
+.tag{
+  display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  padding:3px 10px;border-radius:20px;margin-bottom:10px;
+}
+.tag.mcq{background:rgba(90,169,224,.15);color:var(--info);border:1px solid var(--info);}
+.tag.vf{background:rgba(212,175,55,.15);color:var(--gold-soft);border:1px solid var(--gold);}
+.tag.match{background:rgba(76,175,110,.15);color:var(--green-soft);border:1px solid var(--green);}
+.quiz-q{font-family:'Lora',serif;font-size:1.15rem;color:var(--text);margin-bottom:16px;}
+.opt{
+  display:block;width:100%;text-align:left;
+  background:#16241a;border:1px solid var(--border);color:var(--text);
+  padding:11px 14px;border-radius:8px;margin-bottom:9px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:.92rem;
+}
+.opt:hover{border-color:var(--green-soft);}
+.opt.disabled{cursor:default;}
+.opt.correct{background:rgba(76,175,110,.25);border-color:var(--green);}
+.opt.wrong{background:rgba(224,112,90,.25);border-color:var(--danger);}
+.vf-row{display:flex;gap:10px;}
+.vf-row .opt{flex:1;text-align:center;}
+.feedback{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:.88rem;}
+.feedback.correct{background:rgba(76,175,110,.12);color:var(--green-soft);border-left:3px solid var(--green);}
+.feedback.wrong{background:rgba(224,112,90,.12);color:var(--danger);border-left:3px solid var(--danger);}
+.match-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;margin-bottom:10px;flex-wrap:wrap;
+}
+.match-term{font-weight:700;color:var(--gold-soft);min-width:160px;}
+.match-row select{
+  flex:1;min-width:200px;background:#16241a;border:1px solid var(--border);color:var(--text);
+  padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--danger);}
+.nav-row{display:flex;justify-content:flex-end;margin-top:18px;gap:10px;}
+.result-box{text-align:center;}
+.result-box .score{font-family:'Lora',serif;font-size:2.4rem;color:var(--gold-soft);margin:10px 0;}
+.summary-table{width:100%;border-collapse:collapse;margin-top:18px;font-size:.85rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border);padding:8px 10px;text-align:left;}
+.summary-table th{background:#1e3327;color:var(--gold-soft);font-family:'Lora',serif;}
+.summary-table td.ok{color:var(--green-soft);}
+.summary-table td.bad{color:var(--danger);}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;margin-top:24px;padding:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Simulado Final — Bioquímica I</h1>
+    <p>Bioelementos · Aminoácidos · Lipídios · Vitaminas (A–B2) · Prof. Deborah Michelle Jurowski</p>
+  </div>
+  <div class="xp-badge">
+    <div class="lvl" id="lvlLabel">Nivel 1</div>
+    <div style="font-size:.75rem;color:var(--text-dim);margin-top:4px;" id="xpLabel">0 XP</div>
+  </div>
+</header>
+
+<div class="panel" id="mainPanel">
+
+  <div id="introScreen">
+    <div class="box">
+      <div class="label">Formato del simulado</div>
+      <strong>40 preguntas</strong> — 25 de múltiple elección, 10 de Verdadero/Falso y 5 de asociar (relacionar columnas) — cubriendo todo el material de Bioquímica I con el estilo exigente de la Prof. Deborah: clasificaciones exactas, excepciones y detalles finos.
+    </div>
+    <div class="card">
+      <h3>Temas cubiertos</h3>
+      <ul>
+        <li>Bioelementos</li>
+        <li>Aminoácidos</li>
+        <li>Lípidos</li>
+        <li>Vitaminas A, D, B6, B9, B12, C, K, B1 y B2</li>
+      </ul>
+    </div>
+    <button class="action-btn" onclick="startQuiz()">Comenzar simulado</button>
+  </div>
+
+  <div id="quizScreen" style="display:none;"></div>
+
+</div>
+
+</div>
+
+<footer>Resumos Clinicus e Simulados · Bioquímica I · Semestre 3 · Simulado Final (Prof. Deborah)</footer>
+
+<script>
+/* ---------- XP SYSTEM ---------- */
+let xp = parseInt(localStorage.getItem('simuladoDeborah_xp') || '0');
+function updateXP(){
+  const lvl = Math.floor(xp/100)+1;
+  document.getElementById('lvlLabel').innerText = 'Nivel ' + lvl;
+  document.getElementById('xpLabel').innerText = xp + ' XP';
+  localStorage.setItem('simuladoDeborah_xp', xp);
+}
+function addXP(n){ xp += n; updateXP(); }
+updateXP();
+
+/* ---------- QUIZ DATA (40 preguntas: 25 mcq + 10 vf + 5 match) ---------- */
+const quizData = [
+  // 1
+  {type:'mcq', topic:'Bioelementos', q:'¿Cuántos elementos, de todos los que existen en la naturaleza, son considerados bioelementos?', opts:['10','25','50','96'], correct:1},
+  // 2
+  {type:'mcq', topic:'Bioelementos', q:'¿Cuál es el elemento más abundante en el cuerpo humano?', opts:['Carbono','Hidrógeno','Oxígeno','Calcio'], correct:2},
+  // 3
+  {type:'mcq', topic:'Bioelementos', q:'¿Qué bioelemento actúa como principal cofactor del metabolismo de la vitamina D?', opts:['Calcio','Fósforo','Magnesio','Zinc'], correct:2},
+  // 4
+  {type:'vf', topic:'Bioelementos', q:'Los bioelementos primarios o plásticos representan el 96% del organismo.', correct:true},
+  // 5 - MATCH
+  {type:'match', topic:'Bioelementos', prompt:'Relacione cada elemento/grupo con su característica correspondiente.',
+    pairs:[
+      {term:'Oxígeno', def:'Elemento más abundante del cuerpo humano (62,81%)'},
+      {term:'Yodo', def:'Su deficiencia causa bocio, hipotiroidismo y retraso mental'},
+      {term:'Azufre', def:'Forma parte de la cisteína y metionina; esencial para colágeno y queratina'},
+      {term:'Magnesio', def:'Principal cofactor del metabolismo de la vitamina D'},
+      {term:'Ca, Na, K, Cl y Mg', def:'Bioelementos secundarios, representan el 3,9% del organismo'}
+    ]},
+  // 6
+  {type:'mcq', topic:'Aminoácidos', q:'¿Cuáles son los 4 componentes que se unen al carbono α de un aminoácido?', opts:['Amino, carboxilo, R e hidrógeno','Amino, fosfato, R y azúcar','Carboxilo, azúcar, base nitrogenada e hidrógeno','Amino, lípido, R y azufre'], correct:0},
+  // 7
+  {type:'mcq', topic:'Aminoácidos', q:'¿Por qué la Glicina es el único aminoácido que no presenta actividad óptica?', opts:['Porque no tiene carbono α','Porque su cadena lateral R es un átomo de hidrógeno, sin 4 grupos diferentes','Porque no tiene grupo carboxilo','Porque es un aminoácido básico'], correct:1},
+  // 8
+  {type:'mcq', topic:'Aminoácidos', q:'La Prolina es clasificada como iminoácido porque:', opts:['No tiene carbono α','Tiene el grupo α-amino sustituido por su propia cadena lateral, formando un anillo pirrolidínico','Contiene azufre en su estructura','Es el único aminoácido básico'], correct:1},
+  // 9
+  {type:'vf', topic:'Aminoácidos', q:'Los aminoácidos aromáticos (Phe, Tyr, Trp) absorben luz UV en torno a 280 nm.', correct:true},
+  // 10 - MATCH
+  {type:'match', topic:'Aminoácidos', prompt:'Relacione cada aminoácido (o grupo) con su clasificación/característica.',
+    pairs:[
+      {term:'Glicina', def:'Único aminoácido sin actividad óptica (R = H)'},
+      {term:'Prolina', def:'Iminoácido, forma un anillo pirrolidínico'},
+      {term:'Arginina', def:'Aminoácido básico con grupo guanidino'},
+      {term:'Histidina', def:'Aminoácido básico con grupo imidazol, catiónico (+)'},
+      {term:'Treonina y Serina', def:'Hidroxiaminoácidos, con grupo alcohólico en la cadena lateral'}
+    ]},
+  // 11
+  {type:'mcq', topic:'Lípidos', q:'¿Cuáles son las 3 unidades que forman la molécula de un triglicérido?', opts:['1 glicerol + 3 ácidos grasos','2 glicerol + 2 ácidos grasos','3 glicerol + 1 ácido graso','1 colesterol + 3 ácidos grasos'], correct:0},
+  // 12
+  {type:'mcq', topic:'Lípidos', q:'Los lípidos comparten en común que son biosintetizados a partir de:', opts:['Piruvato','Acetil-CoA','Glucosa-6-fosfato','Oxalacetato'], correct:1},
+  // 13
+  {type:'mcq', topic:'Lípidos', q:'¿Cuál es el esqueleto fundamental de los esteroides?', opts:['Isopreno','Ciclopentanoperhidrofenantreno','Ácido araquidónico','Glicerol'], correct:1},
+  // 14
+  {type:'vf', topic:'Lípidos', q:'Los glucocerebrósidos se encuentran característicamente en el tejido nervioso.', correct:false},
+  // 15 - MATCH
+  {type:'match', topic:'Lípidos', prompt:'Relacione cada tipo de lípido con su característica correspondiente.',
+    pairs:[
+      {term:'Triglicérido', def:'1 glicerol + 3 ácidos grasos'},
+      {term:'Gangliósidos', def:'Se encuentran principalmente en el sistema nervioso central'},
+      {term:'Terpenos', def:'Formados por unidades de isopreno (5 carbonos)'},
+      {term:'Esteroides', def:'Esqueleto ciclopentanoperhidrofenantreno'},
+      {term:'Ácidos biliares', def:'Emulsionan las grasas en el intestino'}
+    ]},
+  // 16
+  {type:'mcq', topic:'Vitamina A', q:'¿Cuál es el precursor de la vitamina A?', opts:['Colesterol','Betacaroteno','Ácido araquidónico','Ergosterol'], correct:1},
+  // 17
+  {type:'mcq', topic:'Vitamina A', q:'¿Dónde se almacena el 90% del retinol en el organismo?', opts:['Riñón','Hígado','Tejido adiposo','Músculo'], correct:1},
+  // 18
+  {type:'vf', topic:'Vitamina A', q:'Las vitaminas liposolubles son A, D, E y K.', correct:true},
+  // 19
+  {type:'mcq', topic:'Vitamina D', q:'¿Cuál es la forma hormonalmente activa de la vitamina D?', opts:['Colecalciferol','Calcidiol','Calcitriol','Ergocalciferol'], correct:2},
+  // 20
+  {type:'mcq', topic:'Vitamina D', q:'¿Qué enfermedad ósea afecta principalmente a niños por déficit de vitamina D?', opts:['Osteoporosis','Osteomalacia','Raquitismo','Osteoartritis'], correct:2},
+  // 21
+  {type:'vf', topic:'Vitamina D', q:'La vitamina D3 (colecalciferol) es de origen vegetal.', correct:false},
+  // 22
+  {type:'mcq', topic:'Vitamina B6', q:'¿Cuál es la forma activa de la vitamina B6?', opts:['Piridoxina','Piridoxal fosfato (PLP)','Ácido piridóxico','Piridoxamina'], correct:1},
+  // 23
+  {type:'mcq', topic:'Vitamina B6', q:'¿Qué tipo de anemia se asocia específicamente a la deficiencia de vitamina B6?', opts:['Anemia ferropénica','Anemia perniciosa','Anemia sideroblástica','Anemia hemolítica'], correct:2},
+  // 24
+  {type:'vf', topic:'Vitamina B6', q:'Junto con la B6, las vitaminas B12 y B9 controlan el nivel de homocisteína en sangre.', correct:true},
+  // 25
+  {type:'mcq', topic:'Vitamina B9', q:'¿Cuáles son los dos defectos congénitos más comunes asociados a la deficiencia de vitamina B9?', opts:['Labio leporino y paladar hendido','Espina bífida y anencefalia','Síndrome de Down y Turner','Raquitismo y osteomalacia'], correct:1},
+  // 26
+  {type:'mcq', topic:'Vitamina B9', q:'¿Cuál es la ventana crítica para la prevención de defectos del tubo neural con ácido fólico?', opts:['Solo durante el tercer trimestre','Antes de la concepción y durante el primer trimestre','Solo después del parto','Durante toda la lactancia'], correct:1},
+  // 27
+  {type:'vf', topic:'Vitamina B9', q:'El exceso de ácido fólico presenta alta toxicidad.', correct:false},
+  // 28 - MATCH
+  {type:'match', topic:'Vitaminas A–B12', prompt:'Relacione cada vitamina con su dato clave correspondiente.',
+    pairs:[
+      {term:'Vitamina A', def:'Su precursor es el betacaroteno'},
+      {term:'Vitamina D', def:'Su forma hormonalmente activa es el calcitriol'},
+      {term:'Vitamina B6', def:'Su forma activa es el piridoxal fosfato (PLP)'},
+      {term:'Vitamina B9', def:'Su deficiencia se asocia a espina bífida y anencefalia'},
+      {term:'Vitamina B12', def:'Contiene cobalto en el centro de su molécula'}
+    ]},
+  // 29
+  {type:'mcq', topic:'Vitamina B12', q:'¿Cuál es el metal presente en el centro de la molécula de cobalamina?', opts:['Hierro','Cobalto','Zinc','Magnesio'], correct:1},
+  // 30
+  {type:'mcq', topic:'Vitamina B12', q:'¿Cuál es la tríada clínica clásica de la deficiencia de vitamina B12?', opts:['Fiebre, tos y disnea','Palidez flavínica, glositis y parestesias','Ictericia, prurito y coluria','Cefalea, fotofobia y rigidez de nuca'], correct:1},
+  // 31
+  {type:'vf', topic:'Vitamina B12', q:'La vitamina B12 puede obtenerse tanto de fuentes animales como vegetales en cantidades equivalentes.', correct:false},
+  // 32
+  {type:'mcq', topic:'Vitamina C', q:'¿Cuál es el nombre químico de la vitamina C?', opts:['Tocoferol','Ácido ascórbico','Retinol','Calciferol'], correct:1},
+  // 33
+  {type:'mcq', topic:'Vitamina C', q:'¿Qué enfermedad es desencadenada por la carencia de vitamina C?', opts:['Raquitismo','Beriberi','Escorbuto','Pelagra'], correct:2},
+  // 34
+  {type:'vf', topic:'Vitamina C', q:'La vitamina C es termolábil: no soporta gran variación de temperatura.', correct:true},
+  // 35
+  {type:'mcq', topic:'Vitamina K', q:'¿De dónde deriva el nombre "vitamina K"?', opts:['Del latín "kalium"','De "Koagulation vitamin", alemán','Del apellido de su descubridor','Del griego "kinesis"'], correct:1},
+  // 36
+  {type:'mcq', topic:'Vitamina K', q:'¿Cuál es la forma activa de la vitamina K?', opts:['Vitamina KO (epóxido)','Hidroquinona (KH2)','Menadiona sulfato','Ácido fítico'], correct:1},
+  // 37
+  {type:'vf', topic:'Vitamina K', q:'Los derivados bisulfíticos de la vitamina K3 son solubles en agua, a pesar de que la K3 es liposoluble.', correct:true},
+  // 38
+  {type:'mcq', topic:'Vitamina B1', q:'¿Quién observó la polineuritis relacionada al beriberi en pollos alimentados con arroz descascarillado, en Java?', opts:['Robert Koch','Christian Eijkman','Louis Pasteur','Alexander Fleming'], correct:1},
+  // 39
+  {type:'mcq', topic:'Vitamina B2', q:'¿Cuáles son las dos verdaderas coenzimas derivadas de la riboflavina?', opts:['NAD y NADP','FAD y FMN','CoA y ACP','TPP y PLP'], correct:1},
+  // 40 - MATCH
+  {type:'match', topic:'Vitaminas C–B2', prompt:'Relacione cada vitamina con su dato clave correspondiente.',
+    pairs:[
+      {term:'Vitamina C', def:'Su carencia causa escorbuto'},
+      {term:'Vitamina K', def:'Su nombre deriva de "Koagulation vitamin"'},
+      {term:'Vitamina B1', def:'Su carencia causa beriberi'},
+      {term:'Vitamina B2', def:'Sus coenzimas activas son FAD y FMN'}
+    ]}
+];
+
+let qIndex = 0, score = 0, answered = false, log = [];
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = [];
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const area = document.getElementById('quizScreen');
+  if(qIndex >= quizData.length){ renderResult(); return; }
+  const item = quizData[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/quizData.length)*100);
+  let html = `<div class="quiz-progress"><span>Pregunta ${qIndex+1} / ${quizData.length}</span><span>Puntaje: ${score}</span></div>`;
+  html += `<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:${pct}%"></div></div>`;
+  html += `<div class="tag ${item.type}">${item.type === 'mcq' ? 'Múltiple elección' : item.type === 'vf' ? 'Verdadero / Falso' : 'Asociar'} · ${item.topic}</div>`;
+  html += `<div class="quiz-q">${item.q || item.prompt}</div>`;
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += `<button class="opt" data-idx="${i}" onclick="answerMCQ(this,${i})">${opt}</button>`;
+    });
+  } else if(item.type === 'vf'){
+    html += `<div class="vf-row">
+      <button class="opt" data-val="true" onclick="answerVF(this,true)">Verdadero</button>
+      <button class="opt" data-val="false" onclick="answerVF(this,false)">Falso</button>
+    </div>`;
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += `<div id="matchBlock">`;
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += `<div class="match-row" data-idx="${i}">
+        <span class="match-term">${p.term}</span>
+        <select onchange="matchSelected()">
+          <option value="">— Seleccione —</option>
+          ${shuffled.map(d=>`<option value="${escapeHtml(d)}">${d}</option>`).join('')}
+        </select>
+      </div>`;
+    });
+    html += `</div>`;
+    html += `<button class="action-btn" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>`;
+  }
+
+  html += `<div id="feedbackArea"></div>`;
+  html += `<div class="nav-row"><button class="action-btn" id="nextBtn" disabled onclick="nextQuestion()">Siguiente →</button></div>`;
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  const allFilled = [...selects].every(s=>s.value !== '');
+  document.getElementById('checkMatchBtn').disabled = !allFilled;
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = `<div class="feedback ${allCorrect?'correct':'wrong'}">${correctCount} / ${item.pairs.length} pares correctos.</div>`;
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct){
+  const item = quizData[qIndex];
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = `<div class="feedback ${correct?'correct':'wrong'}">${correct ? '✔ Correcto' : '✘ Incorrecto'}</div>`;
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  log.push({q: item.q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizScreen');
+  const pct = Math.round((score/quizData.length)*100);
+  let html = `<div class="result-box"><div class="score">${score} / ${quizData.length}</div>`;
+  html += `<p style="font-size:1.1rem;">${pct}% de aciertos</p>`;
+  html += pct >= 80
+    ? `<p style="color:var(--green-soft);">¡Excelente! Dominio sólido de todo el contenido de Bioquímica I.</p>`
+    : pct >= 50
+    ? `<p style="color:var(--gold-soft);">Buen resultado — revisa los temas marcados como incorrectos abajo.</p>`
+    : `<p style="color:var(--danger);">Vale la pena repasar los módulos completos antes de la prueba.</p>`;
+  html += `<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>`;
+  log.forEach(l=>{
+    html += `<tr><td>${l.q}</td><td class="${l.correct?'ok':'bad'}">${l.correct?'Correcto':'Incorrecto'}</td></tr>`;
+  });
+  html += `</table>`;
+  html += `<div class="nav-row" style="justify-content:center;margin-top:20px;"><button class="action-btn" onclick="startQuiz()">Reintentar simulado</button></div></div>`;
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
