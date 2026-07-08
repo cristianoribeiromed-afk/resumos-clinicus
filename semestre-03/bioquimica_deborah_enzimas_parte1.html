@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Prof. Deborah · Enzimas</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green2); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.prof-tag{display:inline-flex; align-items:center; gap:8px; background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.35); color:var(--gold); border-radius:999px; padding:5px 14px; font-size:.78rem; font-weight:700; margin-bottom:14px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.84rem;}
+th,td{border:1px solid var(--border); padding:8px 11px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+
+.struct-flow{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.struct-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:700; color:var(--text);}
+.struct-step span{display:block; font-weight:400; color:var(--text-dim); font-size:.7rem; margin-top:4px;}
+.struct-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+
+.exercise-box{background:var(--bg-alt); border:2px dashed var(--border); border-radius:12px; padding:18px; margin:14px 0;}
+.exercise-box h4{color:var(--gold); margin-bottom:10px;}
+.check-btn{background:var(--green2); color:#0d0f16; border:none; padding:8px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:.85rem; margin-top:10px;}
+.check-btn:hover{background:var(--green1);}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(107,191,89,.16),rgba(163,216,74,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);} .btn-hard{background:var(--gold);} .btn-good{background:var(--blue);} .btn-easy{background:var(--green2);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--green2);}
+.option.correct{background:rgba(74,222,128,.18); border-color:#4ade80;}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid #4ade80; color:#4ade80;}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:#4ade80; font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--green2); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><circle cx="14" cy="14" r="6" fill="none" stroke="#6bbf59" stroke-width="2"/><circle cx="28" cy="14" r="4" fill="none" stroke="#a3d84a" stroke-width="2"/><circle cx="20" cy="28" r="5" fill="none" stroke="#ffd166" stroke-width="2"/><line x1="14" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/><line x1="28" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Bioquímica — Prof. Deborah</h1>
+        <span>Enzimas · Q.F. Deborah Michelle Jurowski</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Intro → Energía → Centro Activo → Especificidad → Cofactores → Factores → Inhibición → Vías → Ejercicios → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">⚗️ Introducción</button>
+    <button class="tab-btn" data-tab="energia">⚡ Energía de Activación</button>
+    <button class="tab-btn" data-tab="centroactivo">🎯 Centro Activo y Ecuación</button>
+    <button class="tab-btn" data-tab="especificidad">🔑 Especificidad</button>
+    <button class="tab-btn" data-tab="cofactores">🧩 Cofactores y Coenzimas</button>
+    <button class="tab-btn" data-tab="factores">🌡️ Factores que Influyen</button>
+    <button class="tab-btn" data-tab="inhibicion">🚫 Inhibición Enzimática</button>
+    <button class="tab-btn" data-tab="vias">🔄 Vías Metabólicas</button>
+    <button class="tab-btn" data-tab="ejercicios">✍️ Ejercicios (estilo Deborah)</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="prof-tag">⚠️ Materia de la Prof. Deborah — nivel de detalle exigido</span>
+    <h2>Enzimas: los biocatalizadores de la vida</h2>
+    <p>Después de proteínas, este es el módulo donde la Deborah más cobra distinciones finas: competitiva vs no competitiva, absoluta vs relativa, cofactor vs coenzima.</p>
+  </div>
+
+  <div class="card">
+    <h2>Concepto de Enzima</h2>
+    <p>Químicamente corresponden a <b>proteínas globulares</b> (en su mayoría). Se conocen como <b>biocatalizadores</b>: aceleran la velocidad de las reacciones químicas, pero <b>NO modifican el sentido de los equilibrios químicos</b>.</p>
+    <div class="criterio"><b>Frase textual que la profesora usa (memorizar el orden lógico):</b> "Toda enzima es una proteína, pero ni toda proteína es una enzima." La enzima acelera reacciones del metabolismo; la proteína, en general, es responsable de todo lo que el cuerpo hace y produce — toda proteína es funcional, pero no toda función es catalítica.</div>
+  </div>
+
+  <div class="card">
+    <h2>Características de las enzimas</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>No sufren cambios durante la reacción</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">No son consumidas — son REUTILIZABLES.</p></div>
+      <div class="mini-card"><h4>Específicas a un sustrato</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Cada enzima actúa sobre un sustrato particular (o grupo semejante).</p></div>
+      <div class="mini-card"><h4>Actúan a cierta temperatura y pH</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Tienen condiciones óptimas específicas.</p></div>
+      <div class="mini-card"><h4>Unidades funcionales del metabolismo celular</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Prácticamente todas las reacciones metabólicas son catalizadas por enzimas.</p></div>
+    </div>
+    <div class="mnemo"><b>Dato numérico exacto:</b> las enzimas aceleran en media 100 a 1000 veces la velocidad de la reacción, transformando de 100 a 1000 moléculas de sustrato en producto por minuto.</div>
+  </div>
+</section>
+
+<!-- ============ ENERGIA ============ -->
+<section class="section" id="energia">
+  <div class="hero">
+    <span class="eyebrow">El concepto más preguntado</span>
+    <h2>Energía de Activación (Ea)</h2>
+    <p>Es la energía mínima que los reactivos necesitan para alcanzar el estado de transición y que la reacción química empiece.</p>
+  </div>
+
+  <div class="card">
+    <h2>Relación energía-velocidad</h2>
+    <table>
+      <tr><th>Energía de activación</th><th>Efecto en la reacción</th></tr>
+      <tr><td>Mayor Ea</td><td>Reacción MÁS LENTA — aumenta la dificultad para que el proceso ocurra</td></tr>
+      <tr><td>Menor Ea</td><td>Reacción MÁS RÁPIDA — menor "barrera" de energía, más colisiones efectivas</td></tr>
+    </table>
+    <div class="clinical"><b>Punto que la Deborah cobra como trampa:</b> la enzima NO cambia la energía de los reactivos ni de los productos, y NO altera el equilibrio de la reacción — SOLO disminuye la energía de activación (Ea), acelerando la velocidad con la que se alcanza ese mismo equilibrio.</div>
+  </div>
+
+  <div class="card">
+    <h2>¿Cómo actúan las enzimas? (3 pasos)</h2>
+    <div class="struct-flow">
+      <div class="struct-step">1. Unión<span>El sustrato se une al sitio activo</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">2. Estabilización<span>La enzima estabiliza el estado de transición</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">3. Liberación<span>Se forman los productos; la enzima queda libre</span></div>
+    </div>
+    <div class="mnemo"><b>Ejemplos de enzimas citados en el material:</b> lactasa, amilasa, ADN polimerasa, catalasa, hexoquinasa, anhidrasa carbónica.</div>
+  </div>
+</section>
+
+<!-- ============ CENTRO ACTIVO ============ -->
+<section class="section" id="centroactivo">
+  <div class="hero">
+    <span class="eyebrow">Estructura funcional</span>
+    <h2>Centro Activo (Sitio Activo) y Ecuación de Michaelis-Menten</h2>
+  </div>
+
+  <div class="card">
+    <h2>¿Por qué solo una parte de la enzima actúa?</h2>
+    <p>Las enzimas son proteínas globulares de <b>grandes dimensiones</b> comparadas con las moléculas del sustrato. Esto permite entender que solo una <b>pequeña parte</b> de la enzima está involucrada en el proceso catalítico.</p>
+    <div class="criterio"><b>Definición exacta que la profesora exige:</b> el conjunto restringido de aminoácidos involucrados en la acción catalítica se denomina <b>Centro Activo</b> o <b>Sitio Activo</b> — es la región a la que se une el sustrato.</div>
+  </div>
+
+  <div class="card">
+    <h2>La ecuación fundamental de la enzimología</h2>
+    <div class="struct-flow">
+      <div class="struct-step">E<span>Enzima</span></div>
+      <div class="struct-arrow">+</div>
+      <div class="struct-step">S<span>Sustrato</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">ES<span>Complejo enzima-sustrato</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">E + P<span>Enzima libre + Producto</span></div>
+    </div>
+    <div class="mnemo"><b>Atribución que la Deborah pregunta por nombre:</b> esta ecuación (E + S → ES → E + P) es atribuida a <b>Michaelis y Menten</b>.</div>
+    <p>La enzima se liga TEMPORALMENTE al sustrato, formando el complejo enzima-sustrato (estado de transición/complejo activado). Posteriormente se liberan los productos, y la <b>enzima permanece inalterada</b> — lista para un nuevo ciclo.</p>
+  </div>
+</section>
+
+<!-- ============ ESPECIFICIDAD ============ -->
+<section class="section" id="especificidad">
+  <div class="hero">
+    <span class="eyebrow">Lo que distingue a las enzimas de otros catalizadores</span>
+    <h2>Especificidad de Acción</h2>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>Tipo</th><th>Definición</th></tr>
+      <tr><td>Especificidad absoluta</td><td>La enzima actúa SOLAMENTE sobre UN sustrato</td></tr>
+      <tr><td>Especificidad relativa</td><td>La enzima puede actuar sobre un GRUPO de sustancias químicamente semejantes</td></tr>
+    </table>
+    <div class="clinical"><b>Excepción de examen:</b> no confunda "específica" con "actúa sobre un único sustrato SIEMPRE" — la especificidad relativa es igualmente válida y común; ambas son formas de especificidad, no una regla vs una excepción.</div>
+  </div>
+</section>
+
+<!-- ============ COFACTORES ============ -->
+<section class="section" id="cofactores">
+  <div class="hero">
+    <span class="eyebrow">Estructuras NO proteicas</span>
+    <h2>Cofactor, Coenzima, Apoenzima y Holoenzima</h2>
+    <p>Algunas enzimas actúan con la ayuda de estructuras no proteicas — la Deborah pregunta mucho esta cadena de 4 términos.</p>
+  </div>
+
+  <div class="card">
+    <h2>Cofactor vs Coenzima</h2>
+    <table>
+      <tr><th>Término</th><th>Naturaleza</th><th>Ejemplos</th></tr>
+      <tr><td>Cofactor</td><td>Iones o moléculas INORGÁNICAS</td><td>Co²⁺, Fe²⁺, Cu²⁺, K⁺, Mn²⁺, Mg²⁺</td></tr>
+      <tr><td>Coenzima</td><td>Molécula ORGÁNICA</td><td>Muchas VITAMINAS funcionan como coenzimas</td></tr>
+    </table>
+    <div class="clinical"><b>Pregunta trampa clásica de la profesora:</b> las deficiencias por falta de vitaminas NO ocurren porque "falte la vitamina en sí", sino porque el cuerpo NO PUEDE SINTETIZAR una determinada enzima en la cual esa vitamina actúa como coenzima. El mecanismo real es la falta de la enzima funcional, no un déficit directo de la vitamina como sustancia aislada.</div>
+  </div>
+
+  <div class="card">
+    <h2>Apoenzima y Holoenzima</h2>
+    <div class="struct-flow">
+      <div class="struct-step">Cofactor<span>inorgánico</span></div>
+      <div class="struct-arrow">+</div>
+      <div class="struct-step">Coenzima<span>orgánico</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">Apoenzima<span>parte proteica sola</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">Holoenzima<span>enzima completa y activa</span></div>
+    </div>
+    <div class="mnemo"><b>Orden exacto que la profesora exige:</b> Apoenzima = la parte proteica de la enzima SIN su cofactor/coenzima (inactiva). Holoenzima = Apoenzima + Cofactor/Coenzima = enzima COMPLETA y funcionalmente activa.</div>
+  </div>
+</section>
+
+<!-- ============ FACTORES ============ -->
+<section class="section" id="factores">
+  <div class="hero">
+    <span class="eyebrow">5 factores — todos entran en la prueba</span>
+    <h2>Factores que Influyen en la Actividad Enzimática</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="mini-card"><h4>Concentración enzimática</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">A mayor concentración de enzima, mayor formación de productos (mientras haya sustrato disponible).</p></div>
+    <div class="mini-card"><h4>Concentración del sustrato</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Aumenta la velocidad hasta un límite de saturación de la enzima.</p></div>
+    <div class="mini-card"><h4>Temperatura</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Ver detalle abajo — tiene un óptimo, no es "cuanto más caliente, mejor".</p></div>
+    <div class="mini-card"><h4>pH</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Cada enzima tiene su pH óptimo específico.</p></div>
+    <div class="mini-card"><h4>Cofactores</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Algunas enzimas necesitan ayuda extra (iones, vitaminas) para funcionar al máximo.</p></div>
+  </div>
+
+  <div class="card">
+    <h2>🌡️ Efecto de la temperatura — el más preguntado</h2>
+    <table>
+      <tr><th>Condición</th><th>Qué pasa con la enzima</th><th>Por qué</th></tr>
+      <tr><td>Baja temperatura</td><td>Queda INACTIVA (pero NO desnaturalizada)</td><td>Falta energía de activación para provocar el choque efectivo entre moléculas</td></tr>
+      <tr><td>Temperatura óptima (37-45°C en humanos)</td><td>Actividad MÁXIMA</td><td>Condiciones ideales para el choque molecular</td></tr>
+      <tr><td>Alta temperatura</td><td>Queda INACTIVA por DESNATURALIZACIÓN</td><td>Pierde la configuración de su centro activo</td></tr>
+    </table>
+    <div class="clinical"><b>Excepción/distinción MUY importante para la prueba:</b> a baja temperatura la enzima queda inactiva pero SIGUE ÍNTEGRA (reversible al calentar). A alta temperatura, la inactivación es por DESNATURALIZACIÓN — un cambio estructural que generalmente NO es reversible. No son el mismo tipo de "inactividad".</div>
+    <p>La mayoría de las enzimas del cuerpo humano tiene temperatura óptima de <b>37°C</b> y se desnaturalizan a temperaturas más altas.</p>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Efecto del pH — valores exactos que la profesora pide</h2>
+    <table>
+      <tr><th>Enzima</th><th>pH óptimo</th></tr>
+      <tr><td>Pepsina</td><td>1.5</td></tr>
+      <tr><td>Tripsina</td><td>7.7</td></tr>
+      <tr><td>Catalasa</td><td>7.6</td></tr>
+    </table>
+    <div class="mnemo"><b>Dato clave:</b> valores de pH fuera del rango óptimo pueden causar desde alteración del sitio activo hasta la desnaturalización completa de la enzima — la pepsina, por ejemplo, funciona en un ambiente extremadamente ácido (estómago), muy diferente al de la tripsina (intestino).</div>
+  </div>
+</section>
+
+<!-- ============ INHIBICION ============ -->
+<section class="section" id="inhibicion">
+  <div class="hero">
+    <span class="eyebrow">La distinción MÁS cobrada del módulo</span>
+    <h2>Regulación e Inhibición Enzimática</h2>
+    <p>Compuestos fisiológicos o sintéticos pueden ser activadores (aumentan la afinidad enzima-sustrato) o inhibidores (reducen la velocidad de reacción).</p>
+  </div>
+
+  <div class="card">
+    <h2>Los 3 tipos de inhibición — tabla resumen definitiva</h2>
+    <table>
+      <tr><th>Tipo</th><th>¿Dónde se une el inhibidor?</th><th>¿Compite con el sustrato?</th><th>¿Se supera aumentando sustrato?</th><th>¿Es reversible?</th></tr>
+      <tr><td>Competitiva (reversible)</td><td>Sitio activo (mismo lugar que el sustrato)</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+      <tr><td>No competitiva / Acompetitiva (reversible)</td><td>Sitio alostérico (lugar diferente)</td><td>No</td><td>No</td><td>Sí</td></tr>
+      <tr><td>Irreversible</td><td>Sitio activo o esencial (enlace covalente)</td><td>No</td><td>No</td><td>No</td></tr>
+    </table>
+    <div class="clinical"><b>La trampa favorita de la Deborah:</b> en la inhibición NO competitiva, aumentar la concentración de sustrato NO revierte la inhibición (porque el inhibidor no compite por el mismo sitio) — solo se revierte si el inhibidor SE SEPARA de la enzima. En la competitiva, sí basta con aumentar el sustrato.</div>
+  </div>
+
+  <div class="card">
+    <h2>Inhibición competitiva — mecanismo</h2>
+    <p>El sustrato y el inhibidor <b>compiten por el sitio activo</b> de la enzima. Si el inhibidor lo ocupa, el sustrato no puede entrar y no se forma producto. Con una concentración suficientemente alta de sustrato, este puede "desbancar" al inhibidor y recuperar la actividad enzimática.</p>
+  </div>
+
+  <div class="card">
+    <h2>Inhibición no competitiva (acompetitiva) — mecanismo</h2>
+    <p>El inhibidor se une a un <b>sitio alostérico</b> (diferente del sitio activo). Al unirse, cambia la FORMA de la enzima, alterando el sitio activo, de modo que el sustrato ya no puede convertirse en producto — aunque siga uniéndose. Es reversible SOLO si el inhibidor se separa (no por exceso de sustrato).</p>
+  </div>
+
+  <div class="card">
+    <h2>Inhibición irreversible — mecanismo</h2>
+    <p>El inhibidor se fija <b>permanentemente</b> a la enzima, de manera <b>covalente</b>, dañándola o desnaturalizándola. La enzima queda inutilizable para siempre; la única solución es que la célula produzca nuevas enzimas.</p>
+    <div class="mnemo"><b>Otra causa de inhibición irreversible mencionada:</b> temperatura (desnaturalización térmica también puede considerarse una forma de inactivación permanente/irreversible).</div>
+  </div>
+</section>
+
+<!-- ============ VIAS ============ -->
+<section class="section" id="vias">
+  <div class="hero">
+    <span class="eyebrow">Integración de conceptos</span>
+    <h2>Control de las Vías Metabólicas</h2>
+  </div>
+  <div class="card">
+    <p>Cada célula posee un número de enzimas que catalizan, en cada momento, un número elevado de reacciones químicas. Generalmente estas reacciones <b>no ocurren de forma aislada</b>, sino de forma <b>secuencial</b>: el producto de una reacción es el sustrato de la próxima, y así sucesivamente hasta el producto final.</p>
+    <div class="criterio"><b>Definición exacta:</b> una cadena de reacciones de este tipo se denomina <b>vía metabólica</b>.</div>
+  </div>
+  <div class="card">
+    <h2>Mapa conceptual — cómo se conecta todo</h2>
+    <div class="struct-flow">
+      <div class="struct-step">Enzimas<span>proteínas especializadas</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">Catalizadores biológicos<span>regulan la velocidad de reacción</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">Sitio activo<span>se une el sustrato</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">Complejo E-S<span>disminuye Ea, aumenta velocidad</span></div>
+    </div>
+    <p>Algunas enzimas requieren coenzimas o cofactores — ejemplos citados: <b>anhidrasa carbónica</b> y <b>amilasa</b>.</p>
+  </div>
+</section>
+
+<!-- ============ EJERCICIOS ============ -->
+<section class="section" id="ejercicios">
+  <div class="hero">
+    <span class="eyebrow">Los 14 ejercicios del material — resueltos</span>
+    <h2>Ejercicios estilo Deborah</h2>
+    <p>El material original no traía gabarito — aquí están las 14 respuestas completas.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>1. ¿Qué es energía de activación?</h4>
+    <p style="color:#c8d1de;">Es la energía mínima que necesitan los reactivos para alcanzar el estado de transición y que la reacción química ocurra (formación del complejo activado).</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>2. ¿Por qué las enzimas son conocidas como catalizadores biológicos?</h4>
+    <p style="color:#c8d1de;">Porque son sustancias de origen biológico (proteínas en su mayoría) que aceleran la velocidad de las reacciones químicas sin ser consumidas ni modificarse, y sin alterar el sentido de los equilibrios químicos.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>3. ¿Cuál es la relación entre enzima y energía de activación?</h4>
+    <p style="color:#c8d1de;">La enzima DISMINUYE la energía de activación necesaria para que la reacción ocurra, permitiendo que sea más rápida — sin cambiar la energía de reactivos/productos ni el equilibrio.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>4. "Las enzimas son proteínas globulares de grandes dimensiones comparadas con las moléculas del sustrato". ¿Qué permite tal afirmación?</h4>
+    <p style="color:#c8d1de;">Permite entender que solo una pequeña parte de la enzima (el <b>centro activo</b>) está involucrada directamente en el proceso catalítico — no toda la molécula participa de la unión al sustrato.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>5. Describa la ecuación enzimática.</h4>
+    <p style="color:#c8d1de;"><b>E + S → ES → E + P</b> (Enzima + Sustrato → Complejo enzima-sustrato → Enzima libre + Producto). Es la ecuación fundamental de la enzimología, atribuida a Michaelis y Menten.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>6. Las enzimas se diferencian de los demás catalizadores en muchos aspectos, pero uno es especialmente importante. ¿Cuál?</h4>
+    <p style="color:#c8d1de;">La <b>especificidad de acción catalítica</b> (absoluta o relativa).</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>7. ¿Cuál es la diferencia entre especificidad absoluta y relativa?</h4>
+    <p style="color:#c8d1de;"><b>Absoluta:</b> la enzima actúa solamente sobre un único sustrato. <b>Relativa:</b> la enzima puede actuar sobre un grupo de sustancias químicamente semejantes.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>8. ¿Cuáles son los factores que influyen en la actividad enzimática?</h4>
+    <p style="color:#c8d1de;">Concentración enzimática, concentración del sustrato, temperatura, pH y cofactores.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>9. ¿Qué ocurre cuando las enzimas están bajo baja temperatura?</h4>
+    <p style="color:#c8d1de;">Quedan INACTIVAS, debido a la falta de energía de activación suficiente para provocar el choque efectivo entre las moléculas participantes (pero no se desnaturalizan).</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>10. ¿Qué ocurre cuando las enzimas están bajo alta temperatura?</h4>
+    <p style="color:#c8d1de;">Quedan INACTIVAS debido a la DESNATURALIZACIÓN — pierden la configuración de su centro activo (cambio estructural generalmente no reversible).</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>11. ¿Cuál es la diferencia entre el efecto activador y el efecto inhibidor?</h4>
+    <p style="color:#c8d1de;"><b>Activador:</b> aumenta la afinidad de la enzima por el sustrato, aumentando la velocidad de reacción. <b>Inhibidor:</b> reduce la velocidad de la reacción.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>12. Defina inhibición reversible competitiva y no competitiva.</h4>
+    <p style="color:#c8d1de;"><b>Competitiva:</b> el sustrato y el inhibidor compiten por el MISMO sitio activo; se supera aumentando la concentración de sustrato. <b>No competitiva (acompetitiva):</b> el inhibidor se une a un sitio ALOSTÉRICO diferente, cambiando la forma de la enzima; NO se supera aumentando sustrato, solo si el inhibidor se separa.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>13. Defina inhibición irreversible.</h4>
+    <p style="color:#c8d1de;">El inhibidor se une de forma PERMANENTE (covalente) al sitio activo o a un sitio esencial de la enzima, dañándola o desnaturalizándola. No se puede revertir con más sustrato ni esperando — solo con la producción de nuevas enzimas.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>14. Concepto de vías metabólicas.</h4>
+    <p style="color:#c8d1de;">Cadena secuencial de reacciones químicas catalizadas por enzimas, en la que el producto de una reacción es el sustrato de la siguiente, hasta obtener el producto final.</p>
+  </div>
+
+  <button class="check-btn" onclick="addXP(35,'Ejercicios revisados'); showToast('+35 XP · Ejercicios completos')">Marcar como revisado (+35 XP)</button>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards — Enzimas</h2>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <div class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span> · Dominadas: <span id="fcMastered">0</span></div>
+      <button style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;" onclick="shuffleCards()">🔀 Mezclar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front"><span class="flash-tag" id="fcTag"></span><span id="fcFront"></span><span class="flash-hint">Toque para ver la respuesta</span></div>
+        <div class="face face-back"><span class="flash-tag">Respuesta</span><span id="fcBack"></span></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">◀ Anterior</button>
+      <button onclick="nextCard()">Próxima ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz — Enzimas</h2>
+  </div>
+  <div class="card">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Bioquímica — Prof. Deborah · Módulo Enzimas · Elaborado para Dr. Cristiano Ribeiro da Silva · Uso académico</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'bioquimica_deborah_enzimas_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','energia','centroactivo','especificidad','cofactores','factores','inhibicion','vias','ejercicios','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Concepto', front:'¿Cómo se define una enzima?', back:'Proteína globular (en su mayoría) que actúa como biocatalizador — acelera reacciones químicas sin modificar el sentido del equilibrio.'},
+  {tag:'Concepto', front:'¿Toda proteína es enzima?', back:'No. Toda enzima es proteína, pero ni toda proteína es enzima — solo las especializadas en catálisis.'},
+  {tag:'Concepto', front:'¿Cuánto aceleran las enzimas las reacciones, en promedio?', back:'De 100 a 1000 veces la velocidad de la reacción.'},
+  {tag:'Energía', front:'¿Qué es la energía de activación (Ea)?', back:'La energía mínima que los reactivos necesitan para alcanzar el estado de transición y que la reacción ocurra.'},
+  {tag:'Energía', front:'¿Qué hace la enzima con la Ea?', back:'La disminuye, permitiendo que la reacción sea más rápida — sin cambiar el equilibrio ni la energía de reactivos/productos.'},
+  {tag:'Centro Activo', front:'¿Qué es el centro activo (sitio activo)?', back:'El conjunto restringido de aminoácidos de la enzima involucrados en la catálisis — es donde se une el sustrato.'},
+  {tag:'Ecuación', front:'¿Cuál es la ecuación fundamental de la enzimología y a quién se atribuye?', back:'E + S → ES → E + P, atribuida a Michaelis y Menten.'},
+  {tag:'Especificidad', front:'¿Qué diferencia la especificidad absoluta de la relativa?', back:'Absoluta: actúa sobre un único sustrato. Relativa: actúa sobre un grupo de sustancias químicamente semejantes.'},
+  {tag:'Cofactores', front:'¿Qué diferencia un cofactor de una coenzima?', back:'Cofactor: ion o molécula inorgánica (Fe²⁺, Mg²⁺, etc.). Coenzima: molécula orgánica (muchas vitaminas actúan como coenzimas).'},
+  {tag:'Cofactores', front:'¿Qué es apoenzima y qué es holoenzima?', back:'Apoenzima: parte proteica sin su cofactor/coenzima (inactiva). Holoenzima: apoenzima + cofactor/coenzima = enzima completa y activa.'},
+  {tag:'Cofactores', front:'¿Por qué la falta de vitaminas causa deficiencias enzimáticas?', back:'Porque el cuerpo no puede sintetizar una determinada enzima en la que esa vitamina actúa como coenzima — no es un déficit directo de la vitamina en sí.'},
+  {tag:'Temperatura', front:'¿Qué le pasa a la enzima a baja temperatura?', back:'Queda inactiva (pero íntegra) por falta de energía para el choque efectivo entre moléculas — reversible al calentar.'},
+  {tag:'Temperatura', front:'¿Qué le pasa a la enzima a alta temperatura?', back:'Queda inactiva por DESNATURALIZACIÓN — pierde la configuración de su centro activo (generalmente irreversible).'},
+  {tag:'pH', front:'¿Cuáles son los pH óptimos de pepsina, tripsina y catalasa?', back:'Pepsina: 1.5. Tripsina: 7.7. Catalasa: 7.6.'},
+  {tag:'Inhibición', front:'¿Dónde se une el inhibidor en la inhibición competitiva?', back:'En el sitio activo — mismo lugar que el sustrato, compitiendo con él.'},
+  {tag:'Inhibición', front:'¿Se puede revertir la inhibición competitiva aumentando el sustrato?', back:'Sí — el exceso de sustrato puede desbancar al inhibidor del sitio activo.'},
+  {tag:'Inhibición', front:'¿Dónde se une el inhibidor en la inhibición no competitiva (acompetitiva)?', back:'En un sitio alostérico, diferente del sitio activo — cambia la forma de la enzima.'},
+  {tag:'Inhibición', front:'¿Se puede revertir la inhibición no competitiva aumentando el sustrato?', back:'No. Solo se revierte si el inhibidor se separa de la enzima (sigue siendo reversible, pero no por exceso de sustrato).'},
+  {tag:'Inhibición', front:'¿Qué caracteriza a la inhibición irreversible?', back:'El inhibidor se une de forma PERMANENTE (covalente) a la enzima, dañándola. Solo se resuelve produciendo nuevas enzimas.'},
+  {tag:'Vías', front:'¿Qué es una vía metabólica?', back:'Una cadena secuencial de reacciones catalizadas por enzimas, donde el producto de una reacción es el sustrato de la siguiente.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Qué son las enzimas químicamente, en su mayoría?', options:['Lípidos', 'Proteínas globulares', 'Carbohidratos', 'Ácidos nucleicos'], correct:1, exp:'Las enzimas corresponden, en su mayoría, a proteínas globulares que actúan como biocatalizadores.'},
+  {q:'¿Qué es la energía de activación?', options:['La energía total liberada en la reacción','La energía mínima que necesitan los reactivos para alcanzar el estado de transición','La energía del producto final','La energía que consume la enzima'], correct:1, exp:'Es la energía mínima necesaria para que la reacción alcance el estado de transición y ocurra.'},
+  {q:'¿Qué efecto tiene la enzima sobre la energía de activación?', options:['La aumenta','La disminuye','No tiene efecto','La elimina completamente'], correct:1, exp:'La enzima disminuye la Ea, acelerando la reacción sin alterar el equilibrio químico.'},
+  {q:'¿Cómo se llama la región de la enzima donde se une el sustrato?', options:['Apoenzima','Centro activo (sitio activo)','Holoenzima','Cofactor'], correct:1, exp:'El centro activo es el conjunto restringido de aminoácidos donde ocurre la unión con el sustrato.'},
+  {q:'¿A quién se atribuye la ecuación E + S → ES → E + P?', options:['Darwin','Michaelis y Menten','Mendel','Watson y Crick'], correct:1, exp:'Es la ecuación fundamental de la enzimología, atribuida a Michaelis y Menten.'},
+  {q:'Una enzima que actúa solo sobre un único sustrato presenta:', options:['Especificidad relativa','Especificidad absoluta','Inhibición competitiva','Inhibición irreversible'], correct:1, exp:'La especificidad absoluta implica actuar exclusivamente sobre un sustrato.'},
+  {q:'¿Qué es un cofactor?', options:['Una molécula orgánica','Un ion o molécula inorgánica','Una vitamina siempre','Un tipo de sustrato'], correct:1, exp:'El cofactor es de naturaleza inorgánica (iones como Fe²⁺, Mg²⁺, etc.), a diferencia de la coenzima (orgánica).'},
+  {q:'¿Qué es la holoenzima?', options:['La enzima sin su cofactor','La apoenzima + cofactor/coenzima = enzima completa y activa','Un tipo de inhibidor','Un sustrato modificado'], correct:1, exp:'La holoenzima es la enzima completa y funcionalmente activa, resultado de unir la apoenzima con su cofactor o coenzima.'},
+  {q:'¿Qué le sucede a una enzima a baja temperatura?', options:['Se desnaturaliza permanentemente','Queda inactiva pero íntegra, por falta de energía de activación','Aumenta su actividad al máximo','No se ve afectada'], correct:1, exp:'A baja temperatura la enzima queda inactiva, pero mantiene su estructura — es reversible al calentar.'},
+  {q:'¿Qué le sucede a una enzima a alta temperatura?', options:['Queda inactiva por desnaturalización, perdiendo la configuración del centro activo','Aumenta indefinidamente su actividad','No cambia nada','Se activa más rápido sin límite'], correct:0, exp:'A alta temperatura ocurre desnaturalización, un cambio estructural que generalmente no es reversible.'},
+  {q:'¿Cuál es el pH óptimo de la pepsina?', options:['7.7','7.6','1.5','9.0'], correct:2, exp:'La pepsina, que actúa en el estómago (ambiente ácido), tiene un pH óptimo de 1.5.'},
+  {q:'En la inhibición competitiva, el inhibidor se une:', options:['A un sitio alostérico','Al mismo sitio activo que el sustrato','De forma covalente permanente','A la coenzima'], correct:1, exp:'En la inhibición competitiva, sustrato e inhibidor compiten por el mismo sitio activo.'},
+  {q:'¿Cómo se revierte la inhibición no competitiva (acompetitiva)?', options:['Aumentando la concentración de sustrato','Solo si el inhibidor se separa de la enzima','Nunca se puede revertir','Aumentando la temperatura'], correct:1, exp:'A diferencia de la competitiva, aumentar el sustrato NO revierte la inhibición no competitiva — solo la separación del inhibidor lo hace.'},
+  {q:'¿Qué caracteriza a la inhibición irreversible?', options:['El inhibidor se une temporalmente','El inhibidor se une de forma covalente y permanente, dañando la enzima','Se revierte fácilmente con sustrato','Es igual a la competitiva'], correct:1, exp:'En la inhibición irreversible, el inhibidor se fija permanentemente (covalentemente), inutilizando la enzima para siempre.'},
+  {q:'¿Qué es una vía metabólica?', options:['Una única reacción aislada','Una cadena secuencial de reacciones donde el producto de una es el sustrato de la siguiente','Un tipo de cofactor','Un sitio activo alternativo'], correct:1, exp:'Una vía metabólica es una secuencia de reacciones enzimáticas encadenadas, hasta llegar al producto final.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>
