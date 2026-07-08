@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROMPT MASTER — Bioquímica Prof. Deborah | Revisión de Alta Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1712; --bg-panel:#152119; --bg-card:#1a2a20;
+  --gold:#d4af37; --gold-soft:#e8cf7a; --green:#4caf6e; --green-soft:#7fd39c;
+  --text:#eef3ee; --text-dim:#a9bdae; --border:#2a3d30;
+  --danger:#e0705a; --info:#5aa9e0; --purple:#a78bfa;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(circle at top left, #16241a, #0e1712 60%);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.55;padding:20px;min-height:100vh;}
+.wrap{max-width:1000px;margin:0 auto;}
+h1,h2,h3{font-family:'Lora',serif;}
+header{background:linear-gradient(135deg,#1c2e21,#14201a);border:1px solid var(--gold);border-radius:16px;padding:22px 26px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+header h1{font-size:1.4rem;color:var(--gold-soft);}
+header p{color:var(--text-dim);font-size:.85rem;margin-top:4px;}
+.xp-badge{background:var(--bg-card);border:1px solid var(--gold);border-radius:12px;padding:8px 16px;text-align:center;min-width:120px;}
+.xp-badge .lvl{font-family:'Lora',serif;font-weight:700;color:var(--gold-soft);font-size:1rem;}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+nav button{background:var(--bg-card);border:1px solid var(--border);color:var(--text-dim);padding:8px 12px;border-radius:9px;font-size:.78rem;cursor:pointer;transition:.2s;}
+nav button:hover{border-color:var(--green-soft);color:var(--text);}
+nav button.active{background:linear-gradient(135deg,#294a34,#1e3527);border-color:var(--gold);color:var(--gold-soft);font-weight:700;}
+section.tab{display:none;background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:22px 24px;animation:fadein .3s ease;}
+section.tab.active{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+h2.tab-title{color:var(--gold-soft);font-size:1.3rem;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;}
+h3.sub{color:var(--green-soft);font-size:1.02rem;margin:16px 0 8px;}
+p{margin-bottom:8px;color:var(--text);font-size:.92rem;}
+ul,ol{margin:6px 0 10px 18px;color:var(--text-dim);font-size:.9rem;}
+li{margin-bottom:4px;}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px;}
+.box{border-radius:10px;padding:10px 14px;margin:10px 0;border-left:4px solid;font-size:.88rem;}
+.box.alta{background:rgba(212,175,55,.1);border-color:var(--gold);}
+.box.alta .lbl{color:var(--gold-soft);font-weight:700;}
+.box.pega{background:rgba(224,112,90,.1);border-color:var(--danger);}
+.box.pega .lbl{color:var(--danger);font-weight:700;}
+.box.macete{background:rgba(167,139,250,.1);border-color:var(--purple);}
+.box.macete .lbl{color:var(--purple);font-weight:700;}
+.box.confunde{background:rgba(90,169,224,.1);border-color:var(--info);}
+.box.confunde .lbl{color:var(--info);font-weight:700;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.83rem;}
+th,td{border:1px solid var(--border);padding:7px 9px;text-align:left;}
+th{background:#1e3327;color:var(--gold-soft);}
+td{color:var(--text-dim);}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+.relampago{display:flex;justify-content:space-between;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:9px 14px;margin-bottom:7px;font-size:.85rem;gap:10px;}
+.relampago .q{color:var(--text);font-weight:600;}
+.relampago .a{color:var(--green-soft);font-weight:700;white-space:nowrap;}
+.flashcard-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.flashcard{width:100%;max-width:520px;height:190px;perspective:1200px;cursor:pointer;}
+.flashcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+.face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;border:1px solid var(--gold);font-size:.98rem;}
+.face.front{background:linear-gradient(135deg,#1c2e21,#152119);color:var(--gold-soft);font-family:'Lora',serif;}
+.face.back{background:linear-gradient(135deg,#213a29,#1a2a20);color:var(--text);transform:rotateY(180deg);font-size:.88rem;}
+.tag{position:absolute;top:8px;left:12px;font-size:.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;}
+.flash-nav{display:flex;gap:10px;align-items:center;}
+.flash-nav button,.action-btn{background:linear-gradient(135deg,#2c4c37,#1f3628);border:1px solid var(--gold);color:var(--gold-soft);padding:8px 16px;border-radius:9px;cursor:pointer;font-weight:700;font-size:.8rem;}
+.flash-counter{color:var(--text-dim);font-size:.8rem;}
+.plano-item{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:10px;}
+.plano-item .tempo{color:var(--gold-soft);font-family:'Lora',serif;font-weight:700;font-size:1rem;}
+.bolso{background:var(--bg-card);border:1px solid var(--gold);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:.82rem;}
+.bolso b{color:var(--gold-soft);}
+footer{text-align:center;color:var(--text-dim);font-size:.78rem;margin-top:20px;padding:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>🧠 PROMPT MASTER — Bioquímica Prof. Deborah</h1>
+    <p>Revisión de alta performance · Todo el temario · Léelo pocas horas antes del examen</p>
+  </div>
+  <div class="xp-badge">
+    <div class="lvl" id="lvlLabel">Nivel 1</div>
+    <div style="font-size:.7rem;color:var(--text-dim);margin-top:3px;" id="xpLabel">0 XP</div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="t0">🎯 Cómo usar</button>
+  <button class="tab-btn" data-tab="t1">🧪 Bioelementos</button>
+  <button class="tab-btn" data-tab="t2">🔗 Aminoácidos</button>
+  <button class="tab-btn" data-tab="t3">🧴 Lipídios</button>
+  <button class="tab-btn" data-tab="t4">🥩 Proteínas</button>
+  <button class="tab-btn" data-tab="t5">⚗️ Enzimas</button>
+  <button class="tab-btn" data-tab="t6">💊 Vitaminas</button>
+  <button class="tab-btn" data-tab="t7">🚨 Confusiones</button>
+  <button class="tab-btn" data-tab="t8">⚡ Relámpago</button>
+  <button class="tab-btn" data-tab="t9">🗂️ Flashcards</button>
+  <button class="tab-btn" data-tab="t10">😈 Prof. Maldoso</button>
+  <button class="tab-btn" data-tab="t11">📅 Plan de Revisión</button>
+  <button class="tab-btn" data-tab="t12">📋 Resumen de Bolsillo</button>
+</nav>
+
+<!-- ===== T0 - COMO USAR ===== -->
+<section class="tab active" id="t0">
+  <h2 class="tab-title">Cómo usar este material</h2>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia en pruebas</div>Contenido con altísima probabilidad de caer — prioriza esto si el tiempo es corto.</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha clásica</div>Errores en que la mayoría de los alumnos cae — reconocidos y neutralizados.</div>
+  <div class="box macete"><div class="lbl">🧠 Macete de memorización</div>Mnemónicos y asociaciones para fijar el concepto de forma permanente.</div>
+  <div class="box confunde"><div class="lbl">🚨 Concepto frecuentemente confundido</div>Pares de términos que se mezclan en la cabeza — aquí se separan en 5 segundos.</div>
+  <div class="card">
+    <h3 class="sub">Orden sugerido de lectura (pocas horas antes de la prueba)</h3>
+    <ol>
+      <li>Empieza por <b>Resumen de Bolsillo</b> (t12) — visión general de 2 minutos</li>
+      <li>Pasa por <b>Confusiones</b> (t7) y <b>Prof. Maldoso</b> (t10) — donde se pierden puntos</li>
+      <li>Repasa <b>Flashcards</b> (t9) y <b>Relámpago</b> (t8) para activar la memoria rápida</li>
+      <li>Si sobra tiempo, entra en cada tópico (t1-t6) para reforzar detalles</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===== T1 - BIOELEMENTOS ===== -->
+<section class="tab" id="t1">
+  <h2 class="tab-title">🧪 Bioelementos — Mapa de la Prueba</h2>
+  <div class="box alta"><div class="lbl">⭐ Los 20% que generan 80% de las preguntas</div>
+    <ul style="margin-top:6px;">
+      <li>25 elementos de la naturaleza son bioelementos</li>
+      <li>Oxígeno = elemento más abundante (62,81%)</li>
+      <li>Bioelementos primarios = 96% del organismo</li>
+      <li>Ca, Na, K, Cl, Mg = los 5 bioelementos secundarios (3,9%)</li>
+      <li>Magnesio = cofactor principal del metabolismo de la vitamina D</li>
+      <li>Yodo → bocio/hipotiroidismo; Azufre → colágeno/queratina, cisteína/metionina</li>
+    </ul>
+  </div>
+  <div class="box confunde"><div class="lbl">🚨 Confusión clásica</div>Clasificación por FUNCIÓN (primario/secundario/oligoelemento) ≠ clasificación por PORCENTAJE corporal (mayoritario/traza/ultratraza). El Magnesio es "secundario" por función, pero puede aparecer como "traza" por porcentaje — son sistemas distintos y complementarios.</div>
+  <div class="box macete"><div class="lbl">🧠 Macete</div>"OCHO-N-Ca-P" — Oxígeno, Carbono, Hidrógeno, Nitrógeno, Calcio, Fósforo son los bioelementos primarios más citados. Para el Oxígeno: piensa "más de la mitad de ti es aire respirado" (62,81% ≈ "casi 2/3").</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha</div>Yodo y Cobalto están en cantidades ínfimas (&lt;0,0001%) — son ULTRATRAZAS, no "trazas" simples. La prueba adora esta distinción fina.</div>
+
+  <h3 class="sub">⚡ Perguntas-relámpago</h3>
+  <div class="relampago"><span class="q">¿Elemento más abundante del cuerpo?</span><span class="a">Oxígeno</span></div>
+  <div class="relampago"><span class="q">¿% de bioelementos primarios?</span><span class="a">96%</span></div>
+  <div class="relampago"><span class="q">¿Cofactor del metabolismo de vit. D?</span><span class="a">Magnesio</span></div>
+  <div class="relampago"><span class="q">¿Deficiencia de Yodo causa?</span><span class="a">Bocio/hipotiroidismo</span></div>
+  <div class="relampago"><span class="q">¿Azufre forma parte de qué aminoácidos?</span><span class="a">Cisteína y metionina</span></div>
+</section>
+
+<!-- ===== T2 - AMINOACIDOS ===== -->
+<section class="tab" id="t2">
+  <h2 class="tab-title">🔗 Aminoácidos — Mapa de la Prueba</h2>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia</div>
+    <ul style="margin-top:6px;">
+      <li>Carbono α: amino + carboxilo + H + grupo R</li>
+      <li>Glicina = único sin actividad óptica (R = H)</li>
+      <li>Prolina = iminoácido (anillo pirrolidínico, amino sustituido)</li>
+      <li>Aromáticos (Phe, Tyr, Trp) absorben UV a 280 nm</li>
+      <li>Arginina = guanidino · Histidina = imidazol · Lisina = amino (los 3 básicos)</li>
+      <li>Treonina/Serina = hidroxiaminoácidos (grupo -OH)</li>
+    </ul>
+  </div>
+  <div class="box confunde"><div class="lbl">🚨 Confusión clásica</div>Glutamina (Q) es la AMIDA del ácido glutámico (E); Asparragina (N) es la amida del ácido aspártico (D). Invertir esto es un error frecuente.</div>
+  <div class="box macete"><div class="lbl">🧠 Macete</div>"Glicina es el AA sin espejo" — no tiene actividad óptica porque su R=H no le da 4 grupos diferentes, no forma quiralidad (imagina un espejo que no refleja nada diferente).</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha</div>Prolina rompe la regla: NO tiene un grupo amino libre como los demás — es imino, no amino. Si la pregunta dice "el único que forma anillo con su propio grupo amino", es Prolina.</div>
+
+  <h3 class="sub">⚡ Perguntas-relámpago</h3>
+  <div class="relampago"><span class="q">¿AA sin actividad óptica?</span><span class="a">Glicina</span></div>
+  <div class="relampago"><span class="q">¿AA clasificado como iminoácido?</span><span class="a">Prolina</span></div>
+  <div class="relampago"><span class="q">¿nm de absorción UV de aromáticos?</span><span class="a">280 nm</span></div>
+  <div class="relampago"><span class="q">¿Grupo guanidino pertenece a?</span><span class="a">Arginina</span></div>
+  <div class="relampago"><span class="q">¿Amida del ác. glutámico?</span><span class="a">Glutamina</span></div>
+</section>
+
+<!-- ===== T3 - LIPIDIOS ===== -->
+<section class="tab" id="t3">
+  <h2 class="tab-title">🧴 Lipídios — Mapa de la Prueba</h2>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia</div>
+    <ul style="margin-top:6px;">
+      <li>Triglicérido = 1 glicerol + 3 ácidos grasos</li>
+      <li>Todos los lípidos se biosintetizan a partir de Acetil-CoA</li>
+      <li>Esteroides: esqueleto ciclopentanoperhidrofenantreno; colesterol = esterol precursor de hormonas y ácidos biliares</li>
+      <li>Terpenos: unidades de isopreno (mono=1, sesqui=3, tetra=8 — pigmentos vegetales)</li>
+      <li>Saponificación = reacción exclusiva de lípidos saponificables (tienen ácidos grasos)</li>
+    </ul>
+  </div>
+  <div class="box confunde"><div class="lbl">🚨 Confusión clásica</div>Glucocerebrósidos → tejidos NO nerviosos. Galactocerebrósidos → SÍ tejido nervioso. Gangliósidos → sistema nervioso central. Es fácil invertir "gluco" con "galacto".</div>
+  <div class="box macete"><div class="lbl">🧠 Macete</div>"GALACTO va al cerebro" (rima con "cerebro" mentalmente) — galactocerebrósido = nervioso. Por eliminación, glucocerebrósido = todo lo demás (no nervioso).</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha</div>Saponificable ≠ tiene jabón — significa que CONTIENE ácidos grasos y por eso PUEDE reaccionar formando jabón (saponificación). Los insaponificables (esteroides, terpenos) no tienen ácidos grasos.</div>
+
+  <h3 class="sub">⚡ Perguntas-relámpago</h3>
+  <div class="relampago"><span class="q">¿De qué se biosintetizan los lípidos?</span><span class="a">Acetil-CoA</span></div>
+  <div class="relampago"><span class="q">¿Esqueleto de los esteroides?</span><span class="a">Ciclopentanoperhidrofenantreno</span></div>
+  <div class="relampago"><span class="q">¿Esterol precursor de hormonas?</span><span class="a">Colesterol</span></div>
+  <div class="relampago"><span class="q">¿Dónde están los gangliósidos?</span><span class="a">Sistema nervioso central</span></div>
+</section>
+
+<!-- ===== T4 - PROTEINAS ===== -->
+<section class="tab" id="t4">
+  <h2 class="tab-title">🥩 Proteínas — Mapa de la Prueba</h2>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia</div>
+    <ul style="margin-top:6px;">
+      <li>Nitrógeno (~16%) distingue químicamente las proteínas</li>
+      <li>Enlace peptídico (condensación, libera agua) une los aminoácidos</li>
+      <li>Mínimo 50 aminoácidos para llamarse proteína (menos = péptido)</li>
+      <li>Estructura primaria = secuencia lineal; determina todo lo demás</li>
+      <li>Puente disulfuro = ÚNICO enlace COVALENTE de la estructura terciaria</li>
+      <li>Cuaternaria solo existe con 2+ cadenas (ej: hemoglobina, 4 subunidades)</li>
+      <li>Fibrosas = insolubles (queratina, colágeno) · Globulares = solubles</li>
+      <li>Simples: hidrólisis → solo AA · Conjugadas: AA + grupo prostético</li>
+    </ul>
+  </div>
+  <div class="box confunde"><div class="lbl">🚨 Confusión clásica</div>Colágeno SÍ se transforma en gelatina por ebullición prolongada; Elastina NO — a pesar de que ambas son proteínas fibrosas de tejido elástico/conectivo.</div>
+  <div class="box macete"><div class="lbl">🧠 Macete</div>"Marasmo es MAGRO, Kwashiorkor es KWA-inchado" — marasmo: cuerpo escuálido sin edema (falta calórica global). Kwashiorkor: vientre distendido con edema (falta de proteína específicamente).</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha</div>Caquexia ≠ marasmo/kwashiorkor: estas últimas son por FALTA de ingesta; la caquexia es por AUMENTO de la degradación proteica (cáncer, SIDA) — mecanismo opuesto, no solo "otro tipo de desnutrición".</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha</div>Proteína desnaturalizada que era soluble se vuelve INSOLUBLE (precipita) — muchos marcan "más soluble" por error de lógica inversa.</div>
+
+  <h3 class="sub">⚡ Perguntas-relámpago</h3>
+  <div class="relampago"><span class="q">¿Enlace entre aminoácidos?</span><span class="a">Peptídico</span></div>
+  <div class="relampago"><span class="q">¿Único enlace covalente terciario?</span><span class="a">Puente disulfuro</span></div>
+  <div class="relampago"><span class="q">¿Mínimo de AA para ser proteína?</span><span class="a">50</span></div>
+  <div class="relampago"><span class="q">¿Proteínas de la contracción muscular?</span><span class="a">Actina y miosina</span></div>
+  <div class="relampago"><span class="q">¿Técnica para carga eléctrica de proteínas?</span><span class="a">Electroforesis</span></div>
+  <div class="relampago"><span class="q">¿Kwashiorkor se distingue por?</span><span class="a">Edema/vientre distendido</span></div>
+</section>
+
+<!-- ===== T5 - ENZIMAS ===== -->
+<section class="tab" id="t5">
+  <h2 class="tab-title">⚗️ Enzimas (Partes 1 y 2) — Mapa de la Prueba</h2>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia — Fundamentos</div>
+    <ul style="margin-top:6px;">
+      <li>Enzimas = mayoritariamente proteínas globulares (biocatalizadores)</li>
+      <li>Energía de activación (Ea) = mínima necesaria para el estado de transición; la enzima la DISMINUYE (no elimina)</li>
+      <li>Centro activo = donde se une el sustrato</li>
+      <li>Ecuación de Michaelis-Menten: E + S → ES → E + P</li>
+      <li>Especificidad absoluta = actúa sobre UN solo sustrato</li>
+      <li>Cofactor = inorgánico (Fe²⁺, Mg²⁺...) · Coenzima = orgánica (vitaminas)</li>
+      <li>Holoenzima = apoenzima + cofactor/coenzima = forma activa completa</li>
+      <li>pH óptimo pepsina = 1,5 (estómago, ácido)</li>
+    </ul>
+  </div>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia — Inhibición</div>
+    <ul style="margin-top:6px;">
+      <li>Competitiva: inhibidor compite por el MISMO sitio activo → se revierte aumentando sustrato</li>
+      <li>No competitiva: NO se revierte con más sustrato, solo si el inhibidor se separa</li>
+      <li>Irreversible: unión covalente permanente, inutiliza la enzima para siempre</li>
+    </ul>
+  </div>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia — Clasificación (6 clases) y Diagnóstico</div>
+    <table>
+      <tr><th>Clase</th><th>Catalizan</th><th>Ejemplo</th></tr>
+      <tr><td>Oxidorreductasas</td><td>Óxido-reducción</td><td>Deshidrogenasa</td></tr>
+      <tr><td>Transferasas</td><td>Transfieren grupo químico</td><td>Aminotransferasa</td></tr>
+      <tr><td>Hidrolasas</td><td>Hidrólisis (con agua)</td><td>Lactasa</td></tr>
+      <tr><td>Liasas</td><td>Ruptura sin agua</td><td>Descarboxilasa</td></tr>
+      <tr><td>Isomerasas</td><td>Interconversión de isómeros</td><td>—</td></tr>
+      <tr><td>Ligasas</td><td>Unión con gasto de ATP/GTP</td><td>Piruvato carboxilasa</td></tr>
+    </table>
+    <ul style="margin-top:6px;">
+      <li>TGO/TGP: infarto → TGO sube tras 12h, pico 24-36h</li>
+      <li>Fosfatasa alcalina: elevación FISIOLÓGICA en infancia y embarazo</li>
+      <li>GGT: indicador clásico de daño hepático por alcoholismo</li>
+    </ul>
+  </div>
+  <div class="box confunde"><div class="lbl">🚨 Confusión clásica — Fisher × Koshland</div>Fisher = llave-cerradura (sitio activo RÍGIDO). Koshland = encaje inducido (sitio activo FLEXIBLE, se ajusta al sustrato).</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha — Ligasa × Liasa</div>Nombres casi idénticos, conceptos distintos: si la pregunta menciona "hidrólisis simultánea de ATP/GTP", la respuesta es LIGASA. Liasa rompe sin gasto de ATP.</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha — Fosfatasa alcalina</div>Elevada en niño o embarazada = NO es enfermedad, es FISIOLÓGICO. La trampa clásica marca "patología" cuando el contexto (edad/embarazo) indica normalidad.</div>
+  <div class="box macete"><div class="lbl">🧠 Macete</div>"GGT = Gente que Gusta del Trago" — asociación directa con alcoholismo/hígado. Para cofactor vs coenzima: "COfactor = COsa inorgánica" (ambos empiezan con CO, pero cofactor es mineral/ion).</div>
+
+  <h3 class="sub">⚡ Perguntas-relámpago</h3>
+  <div class="relampago"><span class="q">¿Efecto de la enzima sobre la Ea?</span><span class="a">La disminuye</span></div>
+  <div class="relampago"><span class="q">¿Apoenzima + cofactor = ?</span><span class="a">Holoenzima</span></div>
+  <div class="relampago"><span class="q">¿pH óptimo de la pepsina?</span><span class="a">1,5</span></div>
+  <div class="relampago"><span class="q">¿Se revierte con sustrato la inhib. competitiva?</span><span class="a">Sí</span></div>
+  <div class="relampago"><span class="q">¿Enzima indicadora de alcoholismo?</span><span class="a">GGT</span></div>
+  <div class="relampago"><span class="q">¿Pico de TGO post-infarto?</span><span class="a">24-36 horas</span></div>
+  <div class="relampago"><span class="q">¿Clase que gasta ATP/GTP?</span><span class="a">Ligasas</span></div>
+</section>
+
+<!-- ===== T6 - VITAMINAS ===== -->
+<section class="tab" id="t6">
+  <h2 class="tab-title">💊 Vitaminas (A-B2) — Mapa de la Prueba</h2>
+  <div class="box alta"><div class="lbl">⭐ Alta incidencia — dato clave por vitamina</div>
+    <table>
+      <tr><th>Vitamina</th><th>Dato de mayor incidencia</th></tr>
+      <tr><td>A</td><td>Precursor: betacaroteno · 90% almacenado en hígado</td></tr>
+      <tr><td>D</td><td>Forma activa: calcitriol · deficiencia infantil = raquitismo</td></tr>
+      <tr><td>B6</td><td>Forma activa: PLP · deficiencia = anemia SIDEROBLÁSTICA</td></tr>
+      <tr><td>B9</td><td>Deficiencia = espina bífida y anencefalia · ventana crítica preconcepcional</td></tr>
+      <tr><td>B12</td><td>Contiene COBALTO · tríada: palidez flavínica + glositis + parestesias</td></tr>
+      <tr><td>C</td><td>Ácido ascórbico · deficiencia = escorbuto · termolábil</td></tr>
+      <tr><td>K</td><td>Nombre = "Koagulation vitamin" (1926) · forma activa = hidroquinona (KH2)</td></tr>
+      <tr><td>B1</td><td>Descubierta por Eijkman (Java, pollos) · deficiencia = beriberi</td></tr>
+      <tr><td>B2</td><td>Coenzimas = FAD y FMN</td></tr>
+    </table>
+  </div>
+  <div class="box confunde"><div class="lbl">🚨 Confusión clásica</div>Mácula LÚTEA/fóvea (retina, visión) ≠ mácula DENSA (riñón, aparato yuxtaglomerular) — nombres parecidos, sistemas totalmente distintos (esto es de Anatomía/Fisiología, pero cae junto en integradas).</div>
+  <div class="box pega"><div class="lbl">🔥 Pegadinha</div>K1 y K2 NO tienen toxicidad conocida por exceso; SOLO la K3 sintética tiene dosis restringida y puede ser tóxica (daño hepático, anemia hemolítica, ictericia en RN).</div>
+  <div class="box macete"><div class="lbl">🧠 Macete</div>"B6-B9-B12 = trío de la HOMOCISTEÍNA" — las 3 juntas controlan el nivel de homocisteína en sangre; si falta una, sube el riesgo cardiovascular.</div>
+
+  <h3 class="sub">⚡ Perguntas-relámpago</h3>
+  <div class="relampago"><span class="q">¿Precursor de la vitamina A?</span><span class="a">Betacaroteno</span></div>
+  <div class="relampago"><span class="q">¿Forma activa de vit. D?</span><span class="a">Calcitriol</span></div>
+  <div class="relampago"><span class="q">¿Metal en la vit. B12?</span><span class="a">Cobalto</span></div>
+  <div class="relampago"><span class="q">¿Nombre químico de vit. C?</span><span class="a">Ácido ascórbico</span></div>
+  <div class="relampago"><span class="q">¿Forma activa de vit. K?</span><span class="a">Hidroquinona (KH2)</span></div>
+  <div class="relampago"><span class="q">¿Coenzimas de la B2?</span><span class="a">FAD y FMN</span></div>
+</section>
+
+<!-- ===== T7 - CONFUSIONES ===== -->
+<section class="tab" id="t7">
+  <h2 class="tab-title">🚨 Tabla de Confusiones Clásicas</h2>
+  <table>
+    <tr><th>Concepto</th><th>Confunde con</th><th>Cómo diferenciar en 5 segundos</th></tr>
+    <tr><td>Bioelemento secundario (función)</td><td>Bioelemento traza (%)</td><td>Función = rol biológico; % = cantidad corporal. Mg es secundario por función, puede ser traza por %.</td></tr>
+    <tr><td>Glicina (sin actividad óptica)</td><td>Prolina (iminoácido)</td><td>Glicina: R=H, sin quiralidad. Prolina: anillo pirrolidínico, sin amino libre.</td></tr>
+    <tr><td>Glucocerebrósido</td><td>Galactocerebrósido</td><td>GALACTO va al cerebro (nervioso); GLUCO va a todo lo demás.</td></tr>
+    <tr><td>Colágeno</td><td>Elastina</td><td>Colágeno → gelatina por ebullición. Elastina → NO se gelifica.</td></tr>
+    <tr><td>Marasmo</td><td>Kwashiorkor</td><td>Marasmo = sin edema (déficit calórico global). Kwashiorkor = CON edema (déficit proteico).</td></tr>
+    <tr><td>Marasmo/Kwashiorkor</td><td>Caquexia</td><td>Los primeros = falta de ingesta. Caquexia = AUMENTO de degradación proteica (cáncer/SIDA).</td></tr>
+    <tr><td>Modelo de Fisher</td><td>Modelo de Koshland</td><td>Fisher = llave-cerradura (rígido). Koshland = encaje inducido (flexible).</td></tr>
+    <tr><td>Ligasa</td><td>Liasa</td><td>Ligasa = gasta ATP/GTP (unión). Liasa = rompe SIN gastar ATP.</td></tr>
+    <tr><td>Cofactor</td><td>Coenzima</td><td>Cofactor = inorgánico (ion). Coenzima = orgánica (derivado de vitamina).</td></tr>
+    <tr><td>Inhibición competitiva</td><td>Inhibición no competitiva</td><td>Competitiva se revierte con más sustrato; no competitiva, no se revierte así.</td></tr>
+    <tr><td>Fosfatasa alcalina alta (niño/embarazada)</td><td>Fosfatasa alcalina alta (patológica)</td><td>Contexto de edad/embarazo = fisiológico normal, NO enfermedad.</td></tr>
+    <tr><td>Vitamina K1/K2</td><td>Vitamina K3</td><td>K1/K2 = sin toxicidad conocida. K3 sintética = sí tiene dosis restringida/tóxica.</td></tr>
+  </table>
+</section>
+
+<!-- ===== T8 - RELAMPAGO GERAL ===== -->
+<section class="tab" id="t8">
+  <h2 class="tab-title">⚡ Todas las Preguntas-Relámpago Juntas</h2>
+  <p style="margin-bottom:12px;">Léelas en voz alta, tapa la respuesta, intenta contestar en menos de 3 segundos.</p>
+  <div class="relampago"><span class="q">Elemento más abundante del cuerpo</span><span class="a">Oxígeno</span></div>
+  <div class="relampago"><span class="q">% de bioelementos primarios</span><span class="a">96%</span></div>
+  <div class="relampago"><span class="q">Cofactor del metabolismo de vit. D</span><span class="a">Magnesio</span></div>
+  <div class="relampago"><span class="q">AA sin actividad óptica</span><span class="a">Glicina</span></div>
+  <div class="relampago"><span class="q">AA iminoácido</span><span class="a">Prolina</span></div>
+  <div class="relampago"><span class="q">nm de absorción UV aromáticos</span><span class="a">280 nm</span></div>
+  <div class="relampago"><span class="q">Origen biosintético de los lípidos</span><span class="a">Acetil-CoA</span></div>
+  <div class="relampago"><span class="q">Esterol precursor de hormonas</span><span class="a">Colesterol</span></div>
+  <div class="relampago"><span class="q">Enlace entre aminoácidos</span><span class="a">Peptídico</span></div>
+  <div class="relampago"><span class="q">Único enlace covalente terciario</span><span class="a">Puente disulfuro</span></div>
+  <div class="relampago"><span class="q">Proteínas de la contracción muscular</span><span class="a">Actina y miosina</span></div>
+  <div class="relampago"><span class="q">Kwashiorkor se distingue por</span><span class="a">Edema/vientre distendido</span></div>
+  <div class="relampago"><span class="q">Efecto de la enzima sobre la Ea</span><span class="a">La disminuye</span></div>
+  <div class="relampago"><span class="q">Apoenzima + cofactor</span><span class="a">Holoenzima</span></div>
+  <div class="relampago"><span class="q">pH óptimo de la pepsina</span><span class="a">1,5</span></div>
+  <div class="relampago"><span class="q">Enzima indicadora de alcoholismo</span><span class="a">GGT</span></div>
+  <div class="relampago"><span class="q">Pico de TGO post-infarto</span><span class="a">24-36 horas</span></div>
+  <div class="relampago"><span class="q">Clase enzimática que gasta ATP</span><span class="a">Ligasas</span></div>
+  <div class="relampago"><span class="q">Precursor de la vitamina A</span><span class="a">Betacaroteno</span></div>
+  <div class="relampago"><span class="q">Forma activa de vit. D</span><span class="a">Calcitriol</span></div>
+  <div class="relampago"><span class="q">Metal en la vitamina B12</span><span class="a">Cobalto</span></div>
+  <div class="relampago"><span class="q">Nombre químico de vit. C</span><span class="a">Ácido ascórbico</span></div>
+  <div class="relampago"><span class="q">Forma activa de vit. K</span><span class="a">Hidroquinona (KH2)</span></div>
+  <div class="relampago"><span class="q">Coenzimas de la vit. B2</span><span class="a">FAD y FMN</span></div>
+</section>
+
+<!-- ===== T9 - FLASHCARDS ===== -->
+<section class="tab" id="t9">
+  <h2 class="tab-title">🗂️ Flashcards Anki — Solo alto rendimiento</h2>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-inner" id="flashInner">
+        <div class="face front"><span class="tag" id="fcTag"></span><span id="fcFront"></span></div>
+        <div class="face back"><span id="fcBack"></span></div>
+      </div>
+    </div>
+    <div class="flash-nav">
+      <button onclick="prevCard()">◀ Anterior</button>
+      <span class="flash-counter" id="flashCounter"></span>
+      <button onclick="nextCard()">Siguiente ▶</button>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-dim);">Toca la tarjeta para ver la respuesta.</p>
+  </div>
+</section>
+
+<!-- ===== T10 - PROFESSOR MALDOSO ===== -->
+<section class="tab" id="t10">
+  <h2 class="tab-title">😈 Nível Professor Maldoso — Las peores pegadinhas</h2>
+  <p style="margin-bottom:14px;">Si fueras la profesora y quisieras reprobar a los desatentos, así armarías las preguntas:</p>
+
+  <div class="card">
+    <p><b>Pregunta maldosa 1:</b> "Un paciente presenta elevación de fosfatasa alcalina. Está embarazada de 20 semanas. ¿Cuál es la interpretación correcta?"</p>
+    <div class="box pega"><div class="lbl">🔥 La trampa</div>Las alternativas ofrecen "enfermedad hepática obstructiva" como opción tentadora. La respuesta correcta es: <b>aumento fisiológico normal del embarazo</b> — sin el contexto (embarazo), sería patológico; con el contexto, es normal.</div>
+  </div>
+
+  <div class="card">
+    <p><b>Pregunta maldosa 2:</b> "Una enzima cataliza la unión de dos sustratos con hidrólisis simultánea de ATP. ¿A qué clase pertenece?"</p>
+    <div class="box pega"><div class="lbl">🔥 La trampa</div>La alternativa "Liasa" está ahí a propósito, por el nombre parecido. La respuesta correcta es <b>Ligasa</b> — el gasto de ATP/GTP es la palabra clave que define la clase.</div>
+  </div>
+
+  <div class="card">
+    <p><b>Pregunta maldosa 3:</b> "Un paciente presenta pérdida de peso severa, sin edema, con aspecto escuálido, secundaria a inanición prolongada. ¿Cuál es el diagnóstico?"</p>
+    <div class="box pega"><div class="lbl">🔥 La trampa</div>"Kwashiorkor" es una alternativa tentadora por ser el término más "famoso" de desnutrición. La ausencia de edema es la palabra clave que indica <b>Marasmo</b>, no Kwashiorkor.</div>
+  </div>
+
+  <div class="card">
+    <p><b>Pregunta maldosa 4:</b> "¿Cuál de las siguientes vitaminas presenta riesgo real de toxicidad por exceso de consumo: K1, K2 o K3?"</p>
+    <div class="box pega"><div class="lbl">🔥 La trampa</div>Muchos marcan "todas" o "K1" por asociación general de "vitamina liposoluble = siempre acumula y es tóxica". La respuesta correcta es <b>solo K3</b> (sintética).</div>
+  </div>
+
+  <div class="card">
+    <p><b>Pregunta maldosa 5:</b> "Un aminoácido tiene su grupo α-amino sustituido por su propia cadena lateral, formando un anillo. Este aminoácido NO presenta un grupo amino libre típico. ¿Cuál es?"</p>
+    <div class="box pega"><div class="lbl">🔥 La trampa</div>Los alumnos piensan en Glicina (por ser "la excepción" más citada), pero la característica descrita (anillo, sin amino libre) es exclusiva de la <b>Prolina</b>.</div>
+  </div>
+
+  <div class="box macete"><div class="lbl">🧠 Cómo no caer en estas trampas</div>Lee el enunciado buscando la PALABRA CLAVE de contexto (edad, embarazo, ausencia/presencia de algo) antes de mirar las alternativas — la mayoría de las pegadinhas se resuelven identificando ese detalle contextual, no memorizando más datos.</div>
+</section>
+
+<!-- ===== T11 - PLANO DE REVISAO ===== -->
+<section class="tab" id="t11">
+  <h2 class="tab-title">📅 Plan de Revisión de Largo Plazo</h2>
+  <div class="plano-item"><span class="tempo">24 horas después de estudiar</span>
+    <p style="margin-top:4px;">Revisa solo las cajas ⭐ Alta incidencia de cada tópico + Perguntas-relámpago completas (t8). ~15 min.</p>
+  </div>
+  <div class="plano-item"><span class="tempo">3 días después</span>
+    <p style="margin-top:4px;">Repite las Flashcards (t9) completas + la Tabla de Confusiones (t7). Marca mentalmente cuáles fallaste.</p>
+  </div>
+  <div class="plano-item"><span class="tempo">7 días después</span>
+    <p style="margin-top:4px;">Resuelve el Nível Professor Maldoso (t10) sin mirar las respuestas primero. Solo después revisa dónde fallaste.</p>
+  </div>
+  <div class="plano-item"><span class="tempo">15 días después</span>
+    <p style="margin-top:4px;">Vuelve a los tópicos completos (t1-t6) — esta vez lee también las explicaciones que quedaron en los quizzes de cada módulo en la plataforma.</p>
+  </div>
+  <div class="plano-item"><span class="tempo">30 días después (o víspera de la prueba)</span>
+    <p style="margin-top:4px;">Solo el Resumen de Bolsillo (t12) + Perguntas-relámpago (t8) + Prof. Maldoso (t10). Esto es lo que debe estar fresco en tu cabeza al entrar al examen.</p>
+  </div>
+</section>
+
+<!-- ===== T12 - RESUMEN DE BOLSILLO ===== -->
+<section class="tab" id="t12">
+  <h2 class="tab-title">📋 Resumen de Bolsillo — Solo lo indispensable</h2>
+  <div class="bolso"><b>Bioelementos:</b> 25 elementos · O = más abundante (62,81%) · primarios = 96% · Ca,Na,K,Cl,Mg = secundarios · Mg = cofactor vit. D · I → bocio · S → colágeno/queratina</div>
+  <div class="bolso"><b>Aminoácidos:</b> Glicina = sin actividad óptica · Prolina = iminoácido · aromáticos absorben a 280nm · Arg=guanidino, His=imidazol · Gln=amida del Glu</div>
+  <div class="bolso"><b>Lipídios:</b> triglicérido = glicerol+3 AG · todo viene de Acetil-CoA · esteroides = ciclopentanoperhidrofenantreno · colesterol = precursor hormonal · galactocerebrósido=nervioso / glucocerebrósido=no nervioso</div>
+  <div class="bolso"><b>Proteínas:</b> N~16% las distingue · enlace peptídico · mín. 50 AA · disulfuro=único covalente terciario · cuaternaria=2+ cadenas · fibrosas insolubles/globulares solubles · marasmo=sin edema, kwashiorkor=con edema, caquexia=↑degradación</div>
+  <div class="bolso"><b>Enzimas:</b> disminuyen Ea · E+S→ES→E+P (Michaelis-Menten) · cofactor=inorgánico/coenzima=orgánica · holoenzima=apo+cofactor · pepsina pH 1,5 · competitiva se revierte con sustrato, no competitiva no · 6 clases (oxidorreductasa, transferasa, hidrolasa, liasa, isomerasa, ligasa=gasta ATP) · TGO pico 24-36h post-infarto · GGT=alcoholismo · fosfatasa alcalina alta en niño/embarazada=normal</div>
+  <div class="bolso"><b>Vitaminas:</b> A=betacaroteno/hígado · D=calcitriol/raquitismo · B6=PLP/anemia sideroblástica · B9=espina bífida · B12=cobalto/tríada clínica · C=ác.ascórbico/escorbuto · K="Koagulation"/KH2/solo K3 tóxica · B1=Eijkman/beriberi · B2=FAD y FMN</div>
+  <div class="box alta" style="margin-top:14px;"><div class="lbl">⭐ Si solo puedes recordar 5 cosas</div>
+    <ol style="margin-top:6px;">
+      <li>Fosfatasa alcalina alta en niño/embarazada = FISIOLÓGICO, no enfermedad</li>
+      <li>Ligasa gasta ATP; Liasa no</li>
+      <li>Marasmo sin edema; Kwashiorkor con edema; Caquexia = degradación aumentada (no falta de ingesta)</li>
+      <li>Solo la vitamina K3 tiene toxicidad real por exceso</li>
+      <li>Glicina = sin actividad óptica; Prolina = sin amino libre (iminoácido)</li>
+    </ol>
+  </div>
+</section>
+
+</div>
+<footer>ClinicusMed · Bioquímica I · Prof. Deborah · Prompt Master de Alta Performance</footer>
+
+<script>
+let xp = parseInt(localStorage.getItem('promptmaster_deborah_xp') || '0');
+function updateXP(){
+  document.getElementById('xpLabel').textContent = xp + ' XP';
+  document.getElementById('lvlLabel').textContent = 'Nivel ' + (Math.floor(xp/100)+1);
+  localStorage.setItem('promptmaster_deborah_xp', xp);
+}
+function addXP(n){ xp+=n; updateXP(); }
+updateXP();
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    addXP(5);
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+const flashcards = [
+  {tag:'Bioelementos', front:'¿Cofactor principal del metabolismo de la vitamina D?', back:'Magnesio.'},
+  {tag:'Bioelementos', front:'¿% de bioelementos primarios en el organismo?', back:'96%.'},
+  {tag:'Aminoácidos', front:'¿Por qué la Glicina no tiene actividad óptica?', back:'Su cadena lateral R=H, no genera 4 grupos diferentes en el carbono α (sin quiralidad).'},
+  {tag:'Aminoácidos', front:'¿Por qué la Prolina es un iminoácido?', back:'Su grupo α-amino está sustituido por su propia cadena lateral, formando un anillo pirrolidínico.'},
+  {tag:'Lipídios', front:'¿Precursor común de todos los lípidos?', back:'Acetil-CoA.'},
+  {tag:'Lipídios', front:'Galactocerebrósido vs. Glucocerebrósido: ¿cuál va al tejido nervioso?', back:'Galactocerebrósido → tejido nervioso. Glucocerebrósido → tejidos NO nerviosos.'},
+  {tag:'Proteínas', front:'¿Único enlace covalente de la estructura terciaria?', back:'Puente disulfuro (entre dos cisteínas).'},
+  {tag:'Proteínas', front:'Marasmo vs. Kwashiorkor: ¿diferencia clínica clave?', back:'Kwashiorkor presenta edema (vientre distendido); marasmo no.'},
+  {tag:'Proteínas', front:'¿Qué distingue a la caquexia del marasmo/kwashiorkor?', back:'Es causada por un AUMENTO en la degradación proteica (cáncer, SIDA), no por falta de ingesta.'},
+  {tag:'Enzimas', front:'¿Diferencia entre cofactor y coenzima?', back:'Cofactor = inorgánico (ion). Coenzima = orgánica (derivada de vitamina).'},
+  {tag:'Enzimas', front:'¿Cómo se revierte la inhibición competitiva?', back:'Aumentando la concentración de sustrato.'},
+  {tag:'Enzimas', front:'¿Qué clase enzimática gasta ATP/GTP?', back:'Ligasas (no confundir con Liasas, que no gastan ATP).'},
+  {tag:'Enzimas', front:'¿Qué significa fosfatasa alcalina elevada en un niño o embarazada?', back:'Es un hallazgo FISIOLÓGICO normal, no patológico.'},
+  {tag:'Enzimas', front:'¿Enzima indicadora clásica de alcoholismo?', back:'GGT (Gama Glutamil Transpeptidasa).'},
+  {tag:'Vitaminas', front:'¿Cuál de las vitaminas K tiene riesgo real de toxicidad?', back:'Solo la K3 (sintética). K1 y K2 no tienen toxicidad conocida.'},
+  {tag:'Vitaminas', front:'¿Tríada clínica de la deficiencia de B12?', back:'Palidez flavínica, glositis y parestesias.'},
+  {tag:'Vitaminas', front:'¿Qué tipo de anemia causa la deficiencia de B6?', back:'Anemia sideroblástica.'},
+];
+let fcIndex=0;
+function renderFlash(){
+  document.getElementById('fcTag').textContent = flashcards[fcIndex].tag;
+  document.getElementById('fcFront').textContent = flashcards[fcIndex].front;
+  document.getElementById('fcBack').textContent = flashcards[fcIndex].back;
+  document.getElementById('flashCounter').textContent = (fcIndex+1)+' / '+flashcards.length;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); addXP(2); }
+function nextCard(){ fcIndex=(fcIndex+1)%flashcards.length; renderFlash(); }
+function prevCard(){ fcIndex=(fcIndex-1+flashcards.length)%flashcards.length; renderFlash(); }
+renderFlash();
+</script>
+</body>
+</html>
