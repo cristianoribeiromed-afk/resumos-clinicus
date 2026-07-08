@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enzimas — Parte 2 | Bioquímica Prof. Deborah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1a14;
+  --bg-panel:#122720;
+  --bg-card:#16302a;
+  --border:#254a3d;
+  --gold:#e0b84b;
+  --gold-soft:#c9a24d;
+  --green:#3fa17e;
+  --green-soft:#57c294;
+  --text:#eef3ef;
+  --text-dim:#a9c2b6;
+  --danger:#e0715a;
+  --info:#5aa9e0;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:radial-gradient(circle at top left,#123024,var(--bg) 60%);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.6;
+  padding-bottom:60px;
+}
+h1,h2,h3,h4{font-family:'Lora',serif;color:var(--gold);margin-top:0;}
+.container{max-width:960px;margin:0 auto;padding:20px;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:28px 20px;
+  background:linear-gradient(135deg,#0f2b21,#1a3d2f);
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:20px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;top:-40%;right:-10%;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(224,184,75,0.15),transparent 70%);
+}
+.header h1{font-size:2rem;margin-bottom:4px;}
+.header p.sub{color:var(--text-dim);font-style:italic;margin:0;}
+.header p.docente{color:var(--green-soft);font-size:0.9rem;margin-top:10px;}
+
+/* XP BAR */
+.xp-panel{
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 16px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.xp-badge{
+  font-family:'Lora',serif;font-weight:700;color:#0d1a14;
+  background:linear-gradient(135deg,var(--gold),#f3d78a);
+  border-radius:50%;width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.xp-info{flex:1;min-width:180px;}
+.xp-info .label{font-size:0.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;}
+.xp-bar-track{background:#0a1a14;border-radius:8px;height:10px;overflow:hidden;margin-top:4px;border:1px solid var(--border);}
+.xp-bar-fill{background:linear-gradient(90deg,var(--green),var(--gold));height:100%;width:0%;transition:width .4s ease;}
+.xp-count{font-size:0.8rem;color:var(--gold-soft);white-space:nowrap;}
+
+/* TABS */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.tab-btn{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  padding:9px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.85rem;
+  transition:all .2s;
+}
+.tab-btn:hover{color:var(--text);border-color:var(--green-soft);}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--green),#2b6f56);
+  color:#fff;border-color:var(--green-soft);
+  font-weight:700;
+}
+
+.tab-content{display:none;animation:fadeIn .3s ease;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* CARDS */
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:16px;
+}
+.card h3{font-size:1.15rem;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;}
+.card p{color:var(--text);margin:8px 0;}
+.card ul{margin:8px 0;padding-left:20px;}
+.card li{margin-bottom:6px;}
+
+/* Special boxes */
+.box{
+  border-radius:10px;
+  padding:14px 16px;
+  margin:14px 0;
+  border-left:4px solid var(--green);
+  background:rgba(63,161,126,0.08);
+}
+.box.criterio{border-left-color:var(--gold);background:rgba(224,184,75,0.08);}
+.box.clinical{border-left-color:var(--danger);background:rgba(224,113,90,0.08);}
+.box.info{border-left-color:var(--info);background:rgba(90,169,224,0.08);}
+.box-title{
+  font-family:'Lora',serif;font-weight:700;font-size:0.85rem;
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.box.criterio .box-title{color:var(--gold);}
+.box.clinical .box-title{color:var(--danger);}
+.box.info .box-title{color:var(--info);}
+.box.green-box .box-title{color:var(--green-soft);}
+
+/* diagram */
+.diagram{
+  background:#0d211a;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  margin:14px 0;
+}
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;font-family:'DM Sans',sans-serif;}
+.flow-box{
+  background:var(--bg-panel);border:1px solid var(--green-soft);
+  border-radius:10px;padding:10px 16px;font-size:0.9rem;color:var(--text);
+  min-width:90px;
+}
+.flow-arrow{color:var(--gold);font-size:1.3rem;}
+
+/* table */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem;}
+th,td{border:1px solid var(--border);padding:9px 10px;text-align:left;}
+th{background:var(--bg-panel);color:var(--gold);font-family:'Lora',serif;}
+tr:nth-child(even){background:rgba(255,255,255,0.02);}
+
+/* Flashcards */
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+.flashcard{
+  perspective:1000px;height:150px;cursor:pointer;
+}
+.flashcard-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .5s;transform-style:preserve-3d;
+}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+.flashcard-face{
+  position:absolute;width:100%;height:100%;
+  backface-visibility:hidden;
+  border-radius:12px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:16px;font-size:0.92rem;
+}
+.flashcard-front{background:linear-gradient(135deg,#16302a,#1c3a32);color:var(--gold);font-family:'Lora',serif;font-weight:600;}
+.flashcard-back{background:linear-gradient(135deg,#1c3a32,#255043);color:var(--text);transform:rotateY(180deg);font-size:0.85rem;}
+
+/* Quiz */
+.quiz-progress{color:var(--text-dim);font-size:0.85rem;margin-bottom:10px;}
+.q-block{margin-bottom:22px;}
+.q-text{font-weight:600;margin-bottom:10px;color:var(--text);}
+.opt{
+  display:block;width:100%;text-align:left;
+  background:var(--bg-panel);border:1px solid var(--border);
+  color:var(--text);padding:10px 14px;border-radius:8px;
+  margin-bottom:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.9rem;
+  transition:all .15s;
+}
+.opt:hover{border-color:var(--green-soft);}
+.opt.correct{background:rgba(63,161,126,0.25);border-color:var(--green);}
+.opt.wrong{background:rgba(224,113,90,0.2);border-color:var(--danger);}
+.opt:disabled{cursor:default;}
+.fill-input{
+  background:#0a1a14;border:1px solid var(--border);color:var(--text);
+  padding:8px 10px;border-radius:6px;font-family:'DM Sans',sans-serif;
+  width:220px;max-width:100%;
+}
+.fill-input.correct{border-color:var(--green);}
+.fill-input.wrong{border-color:var(--danger);}
+.check-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  color:#12241d;border:none;padding:8px 16px;border-radius:8px;
+  font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;
+}
+.check-btn:hover{filter:brightness(1.08);}
+.feedback{font-size:0.85rem;margin-top:6px;min-height:18px;}
+.feedback.ok{color:var(--green-soft);}
+.feedback.bad{color:var(--danger);}
+.quiz-result{
+  text-align:center;padding:20px;background:var(--bg-panel);
+  border-radius:12px;border:1px solid var(--gold);margin-top:10px;display:none;
+}
+.quiz-result h3{color:var(--gold);}
+
+.reset-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  padding:6px 12px;border-radius:8px;font-size:0.8rem;cursor:pointer;margin-top:20px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>🧬 ENZIMAS — Parte 2</h1>
+    <p class="sub">Centro activo, modelos de acción, clasificación y enzimas de diagnóstico</p>
+    <p class="docente">Docente: Qca. Fca. Deborah Michelle Jurowski</p>
+  </div>
+
+  <div class="xp-panel">
+    <div class="xp-badge" id="levelBadge">1</div>
+    <div class="xp-info">
+      <div class="label">Nivel <span id="levelNum">1</span> — Estudiante de Bioquímica</div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+    </div>
+    <div class="xp-count"><span id="xpCount">0</span> / <span id="xpMax">100</span> XP</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="intro">1. Introducción</button>
+    <button class="tab-btn" data-tab="estructura">2. Centro Activo</button>
+    <button class="tab-btn" data-tab="interaccion">3. Interacción E-S</button>
+    <button class="tab-btn" data-tab="holo">4. Holoenzimas</button>
+    <button class="tab-btn" data-tab="saturacion">5. Saturación</button>
+    <button class="tab-btn" data-tab="modelos">6. Modelos</button>
+    <button class="tab-btn" data-tab="clasificacion">7. Clasificación</button>
+    <button class="tab-btn" data-tab="diagnostico">8. Diagnóstico Clínico</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz</button>
+  </div>
+
+  <!-- 1. INTRO -->
+  <div class="tab-content active" id="intro">
+    <div class="card">
+      <h3>¿Qué son las enzimas?</h3>
+      <p>Las enzimas son <strong>catalizadores específicos de naturaleza proteica</strong>: cada enzima cataliza un solo tipo de reacción, y casi siempre actúa sobre un <strong>único sustrato</strong>.</p>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Detalle que la profesora exige</div>
+        <p>No basta con decir "catalizador". Ella espera que menciones <strong>naturaleza proteica</strong> + <strong>especificidad</strong> (un solo tipo de reacción, casi siempre un único sustrato). Es la definición completa, no la resumida.</p>
+      </div>
+      <p>Las enzimas son proteínas "especialistas" y controlan <strong>TODAS</strong> las reacciones químicas de nuestro cuerpo. Hay enzimas en todo lo que está vivo. Cada enzima actúa sobre una sustancia concreta, como una <strong>llave y una cerradura</strong> — analogía que sirve de base para el Modelo de Fisher (tab 6).</p>
+    </div>
+  </div>
+
+  <!-- 2. ESTRUCTURA / CENTRO ACTIVO -->
+  <div class="tab-content" id="estructura">
+    <div class="card">
+      <h3>Estructura de las enzimas</h3>
+      <p>La enzima posee una pequeña región complementaria a la configuración espacial del sustrato: el <strong>CENTRO ACTIVO</strong> (también llamado SITIO ACTIVO).</p>
+      <div class="diagram">
+        <div class="flow">
+          <div class="flow-box">Sustratos<br>(S₁ + S₂)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Enzima<br>(centro activo)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Complejo<br>enzima-sustrato</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Enzima libre<br>+ Producto</div>
+        </div>
+      </div>
+      <h3 style="margin-top:20px;">Características del centro activo</h3>
+      <ul>
+        <li>Ocupan una <strong>pequeña parte</strong> del volumen total de la enzima.</li>
+        <li>Generalmente corresponden a una <strong>cavidad o hendidura</strong> existente en la estructura proteica.</li>
+        <li>La <strong>especificidad</strong> de la unión con el sustrato depende de la disposición de los átomos en el C.A.</li>
+        <li>El <strong>número de centros activos es variable</strong> (no es siempre uno solo).</li>
+      </ul>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Exceção que ela adora cobrar</div>
+        <p>Mucha gente asume que cada enzima tiene <em>un único</em> centro activo — ¡error! El número de centros activos es <strong>variable</strong> según la enzima. Esta es exactamente el tipo de "excepción que huye de la regla general" que la profesora marca en las pruebas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. INTERACCION -->
+  <div class="tab-content" id="interaccion">
+    <div class="card">
+      <h3>Interacción enzima-sustrato</h3>
+      <p><strong>Recordar:</strong> en el centro activo se establecen las uniones intermoleculares con el sustrato → se activa el complejo → termina la reacción enzima-sustrato → la enzima queda <strong>libre</strong> y puede actuar sobre otro sustrato, mientras se liberan los productos formados.</p>
+      <div class="box green-box">
+        <div class="box-title">🔁 Punto clave</div>
+        <p>La enzima <strong>no se consume</strong> en la reacción — sale intacta, libre para un nuevo ciclo catalítico.</p>
+      </div>
+      <h3 style="margin-top:20px;">Dos tipos de reacción</h3>
+      <table>
+        <tr><th>Tipo</th><th>Definición</th><th>Ejemplo de patrón</th></tr>
+        <tr>
+          <td><strong>A — Anabolismo</strong><br>(reacción de síntesis)</td>
+          <td>Del griego <em>ana</em> = para arriba, <em>ballein</em> = lanzar. Parte del metabolismo que conduce a la <strong>síntesis de moléculas complejas</strong> a partir de moléculas más simples.</td>
+          <td>S₁ + S₂ → Enzima → Producto único (más complejo)</td>
+        </tr>
+        <tr>
+          <td><strong>B — Catabolismo</strong><br>(reacción de análisis)</td>
+          <td>Proceso inverso: <strong>ruptura</strong> de una molécula compleja en productos más simples.</td>
+          <td>Sustrato único → Enzima → varios productos simples</td>
+        </tr>
+      </table>
+      <div class="box info">
+        <div class="box-title">💡 Después de actuar…</div>
+        <p>La enzima queda libre y puede unirse a nuevas moléculas de sustrato — el ciclo se repite indefinidamente mientras haya sustrato disponible.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. HOLOENZIMAS -->
+  <div class="tab-content" id="holo">
+    <div class="card">
+      <h3>Holoenzimas</h3>
+      <p>Una <strong>holoenzima</strong> es una enzima formada por una parte proteica llamada <strong>apoenzima</strong>, combinada con una molécula no proteica llamada <strong>COFACTOR o COENZIMA</strong>.</p>
+      <div class="diagram">
+        <div class="flow">
+          <div class="flow-box">Apoenzima<br>(proteína)<br><em>inactiva</em></div>
+          <div class="flow-arrow">+</div>
+          <div class="flow-box">Cofactor /<br>Coenzima<br>(no proteica)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box">Holoenzima<br>(enzima entera)<br><strong>activa</strong></div>
+        </div>
+      </div>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Detalle que ella cobra en la prueba</div>
+        <p>Ni la apoenzima ni el cofactor/coenzima son activos <strong>por separado</strong>. Solo funcionan cuando están <strong>acoplados</strong>. Si en la prueba preguntan "¿la apoenzima sola tiene actividad catalítica?" la respuesta correcta es <strong>NO</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. SATURACION -->
+  <div class="tab-content" id="saturacion">
+    <div class="card">
+      <h3>Punto de saturación enzimática</h3>
+      <p>Cuando <strong>todas las enzimas están ocupadas</strong> con sustrato, aunque siga aumentando la concentración de sustrato, como ya no existen enzimas libres, la <strong>velocidad de la reacción no aumenta más</strong> — se alcanza una meseta (plateau).</p>
+      <div class="box clinical">
+        <div class="box-title">🧪 Fórmula conceptual clave</div>
+        <p>Velocidad de formación del Complejo ES = Velocidad de separación de la enzima con el producto.</p>
+      </div>
+      <div class="box info">
+        <div class="box-title">💡 Cómo recordarlo</div>
+        <p>Imagina una fila de cajas registradoras (enzimas) todas ocupadas: por más clientes (sustrato) que lleguen, la velocidad de atención total ya no sube — todas las "cajas" están trabajando al máximo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MODELOS -->
+  <div class="tab-content" id="modelos">
+    <div class="card">
+      <h3>Modelos enzimáticos</h3>
+      <table>
+        <tr><th>Modelo</th><th>Autor</th><th>Idea central</th></tr>
+        <tr>
+          <td><strong>Llave-cerradura</strong></td>
+          <td>Emil Fisher</td>
+          <td>La estructura del sustrato y la del sitio activo son <strong>exactamente complementarias</strong>, como una llave que encaja en una cerradura — geometría rígida y fija.</td>
+        </tr>
+        <tr>
+          <td><strong>Encaje inducido</strong></td>
+          <td>Koshland</td>
+          <td>El sitio activo es <strong>mucho más flexible</strong>. La interacción física entre enzima y sustrato produce un <strong>cambio en la geometría</strong> del centro activo (distorsión de las superficies moleculares), lo que impone cierta tensión a las moléculas reaccionantes y facilita aún más la reacción.</td>
+        </tr>
+      </table>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Diferencia exacta que ella pregunta</div>
+        <p>No es solo "cuál es cuál" — la pregunta clásica es <strong>la diferencia conceptual</strong>: Fisher = complementariedad <strong>rígida y estática</strong>; Koshland = complementariedad <strong>dinámica</strong>, el centro activo se <strong>ajusta/deforma</strong> al recibir el sustrato. Koshland es el modelo posterior y más aceptado actualmente.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. CLASIFICACION -->
+  <div class="tab-content" id="clasificacion">
+    <div class="card">
+      <h3>Clasificación de las enzimas</h3>
+      <p>Las enzimas se clasifican según el <strong>tipo de reacción específica</strong> que catalizan. Son 6 clases:</p>
+      <table>
+        <tr><th>Clase</th><th>Qué catalizan</th><th>Ejemplo</th></tr>
+        <tr><td><strong>Oxidorreductasas</strong></td><td>Reacciones de óxido-reducción: transferencia de electrones o átomos de hidrógeno de un sustrato a otro.</td><td>Deshidrogenasa, oxidasa</td></tr>
+        <tr><td><strong>Transferasas</strong></td><td>Transferencia de un grupo químico específico (diferente del hidrógeno) de un sustrato a otro.</td><td>Glucoquinasa, aspartato aminotransferasa</td></tr>
+        <tr><td><strong>Hidrolasas</strong></td><td>Reacciones de hidrólisis (ruptura de moléculas orgánicas mediante moléculas de agua).</td><td>Lactasa</td></tr>
+        <tr><td><strong>Liasas</strong></td><td>Ruptura o "soldadura" de sustratos.</td><td>Acetato descarboxilasa</td></tr>
+        <tr><td><strong>Isomerasas</strong></td><td>Interconversión de isómeros: convierten una molécula en su variante geométrica tridimensional.</td><td>—</td></tr>
+        <tr><td><strong>Ligasas</strong></td><td>Catálisis de reacciones específicas de unión de sustratos, mediante hidrólisis simultánea de nucleótidos de trifosfato (ATP, GTP).</td><td>Piruvato carboxilasa</td></tr>
+      </table>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Trampa clásica de prueba</div>
+        <p>Transferasas vs. Hidrolasas se confunden fácil: <strong>Transferasa</strong> mueve un grupo químico de un sustrato a otro (nada se pierde en agua). <strong>Hidrolasa</strong> rompe con participación de <strong>agua</strong>. Y <strong>Ligasas</strong> siempre involucran gasto de ATP/GTP — si la pregunta menciona "hidrólisis simultánea de ATP", la respuesta es Ligasa, no Liasa (¡nombres parecidos, conceptos distintos!).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. DIAGNOSTICO -->
+  <div class="tab-content" id="diagnostico">
+    <div class="card">
+      <h3>Enzimas importantes en diagnóstico clínico</h3>
+      <div class="box clinical">
+        <div class="box-title">🩺 Transaminasas — TGO / TGP</div>
+        <p>Enzimas presentes en las células del hígado, corazón, músculo esquelético, riñones y páncreas. Pueden indicar un <strong>infarto agudo de miocardio</strong>: la TGO se eleva después de <strong>12 horas</strong>, alcanzando su pico entre <strong>24 y 36 horas</strong>.</p>
+      </div>
+      <div class="box clinical">
+        <div class="box-title">🩺 Fosfatasa Alcalina</div>
+        <p>La mayoría se encuentra en el <strong>hígado, huesos y sistema digestivo</strong>. Su aumento <strong>fisiológico</strong> (normal, no patológico) se observa en la <strong>infancia</strong> y en el <strong>embarazo</strong>. Relacionada con disturbios óseos y enfermedad hepática obstructiva.</p>
+      </div>
+      <div class="box clinical">
+        <div class="box-title">🩺 GGT — Gama Glutamil Transpeptidasa</div>
+        <p>Presente en todo el cuerpo, principalmente en el <strong>hígado</strong>. Cuando el hígado está dañado, la GGT se filtra a la sangre. Niveles altos = signo de enfermedad hepática o daño en las vías biliares. Es el <strong>indicador clásico de alcoholismo</strong>.</p>
+      </div>
+      <div class="box criterio">
+        <div class="box-title">⚠️ El detalle que separa quien estudió de quien no</div>
+        <p>Fosfatasa Alcalina elevada en niño o embarazada <strong>NO es patológico</strong> — es fisiológico. Si la pregunta da ese contexto (edad/embarazo) y pide "interpretación", la trampa es marcar "enfermedad" cuando la respuesta correcta es "aumento fisiológico normal".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="tab-content" id="flashcards">
+    <div class="card">
+      <h3>🗂️ Flashcards — clic para girar</h3>
+      <div class="flash-grid" id="flashGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="tab-content" id="quiz">
+    <div class="card">
+      <h3>📝 Quiz final</h3>
+      <p class="quiz-progress" id="quizProgress">0 / 0 respondidas</p>
+      <div id="quizContainer"></div>
+      <div class="quiz-result" id="quizResult">
+        <h3>¡Módulo completado!</h3>
+        <p id="quizScoreText"></p>
+      </div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetProgress()">↺ Reiniciar progreso</button>
+</div>
+
+<script>
+/* ---------- XP SYSTEM ---------- */
+const STORAGE_KEY = 'enzimas_parte2_xp';
+const XP_PER_LEVEL = 100;
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"xp":0,"answered":{}}');
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function addXP(amount, key){
+  if(key && state.answered[key]) return; // avoid double XP
+  if(key) state.answered[key] = true;
+  state.xp += amount;
+  saveState();
+  renderXP();
+}
+
+function renderXP(){
+  const level = Math.floor(state.xp / XP_PER_LEVEL) + 1;
+  const xpInLevel = state.xp % XP_PER_LEVEL;
+  document.getElementById('levelBadge').textContent = level;
+  document.getElementById('levelNum').textContent = level;
+  document.getElementById('xpCount').textContent = xpInLevel;
+  document.getElementById('xpMax').textContent = XP_PER_LEVEL;
+  document.getElementById('xpBarFill').style.width = xpInLevel + '%';
+}
+
+function resetProgress(){
+  if(confirm('¿Reiniciar todo tu progreso y XP de este módulo?')){
+    localStorage.removeItem(STORAGE_KEY);
+    state = {xp:0, answered:{}};
+    renderXP();
+    document.querySelectorAll('.flashcard').forEach(f=>f.classList.remove('flipped'));
+    buildQuiz();
+  }
+}
+
+/* ---------- TABS ---------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    addXP(2, 'tab_'+btn.dataset.tab);
+  });
+});
+
+/* ---------- FLASHCARDS ---------- */
+const flashcards = [
+  {f:"¿Qué es el centro activo?", b:"Pequeña región de la enzima complementaria a la configuración espacial del sustrato, también llamada sitio activo."},
+  {f:"¿El número de centros activos por enzima es fijo?", b:"No — es variable según la enzima."},
+  {f:"¿Qué es una holoenzima?", b:"Enzima formada por apoenzima (parte proteica) + cofactor/coenzima (parte no proteica), activa solo cuando ambos están acoplados."},
+  {f:"¿Cuándo hay saturación enzimática?", b:"Cuando todas las enzimas están ocupadas con sustrato y la velocidad ya no aumenta aunque suba más la concentración de sustrato."},
+  {f:"Modelo de Fisher", b:"Llave-cerradura: complementariedad rígida y exacta entre sustrato y sitio activo."},
+  {f:"Modelo de Koshland", b:"Encaje inducido: el sitio activo es flexible y se deforma al interactuar con el sustrato."},
+  {f:"Enzima indicadora de alcoholismo/daño hepático", b:"GGT (Gama Glutamil Transpeptidasa)."},
+  {f:"TGO en infarto agudo de miocardio", b:"Se eleva después de 12 horas, con pico entre 24-36 horas."},
+  {f:"Fosfatasa Alcalina elevada en niño o embarazada", b:"Es un aumento FISIOLÓGICO normal, no indica enfermedad."},
+  {f:"Ligasas — característica única", b:"Catalizan uniones de sustratos con hidrólisis simultánea de ATP o GTP."},
+];
+
+const flashGrid = document.getElementById('flashGrid');
+flashcards.forEach((card, i)=>{
+  const div = document.createElement('div');
+  div.className = 'flashcard';
+  div.innerHTML = `<div class="flashcard-inner">
+      <div class="flashcard-face flashcard-front">${card.f}</div>
+      <div class="flashcard-face flashcard-back">${card.b}</div>
+    </div>`;
+  div.addEventListener('click', ()=>{
+    div.classList.toggle('flipped');
+    if(div.classList.contains('flipped')) addXP(3, 'flash_'+i);
+  });
+  flashGrid.appendChild(div);
+});
+
+/* ---------- QUIZ ---------- */
+const quizData = [
+  {
+    type:'mcq',
+    q:'¿Qué diferencia principal separa el modelo de Fisher del modelo de Koshland?',
+    options:[
+      'Fisher propone un sitio activo flexible; Koshland uno rígido',
+      'Fisher propone complementariedad rígida (llave-cerradura); Koshland propone un sitio activo flexible que se ajusta al sustrato (encaje inducido)',
+      'No hay diferencia, son sinónimos',
+      'Fisher habla de cofactores; Koshland de coenzimas'
+    ],
+    correct:1
+  },
+  {
+    type:'vf',
+    q:'Cada enzima posee siempre un único centro activo.',
+    correct:false,
+    explanation:'Falso — el número de centros activos es variable.'
+  },
+  {
+    type:'vf',
+    q:'La apoenzima, por sí sola, tiene actividad catalítica.',
+    correct:false,
+    explanation:'Falso — ni la apoenzima ni el cofactor son activos por separado; deben acoplarse.'
+  },
+  {
+    type:'fill',
+    q:'La enzima indicadora clásica de daño hepático por alcoholismo es la _______.',
+    answer:'GGT',
+    accept:['ggt','gama glutamil transpeptidasa']
+  },
+  {
+    type:'fill',
+    q:'El aumento fisiológico (normal) de la Fosfatasa Alcalina ocurre en la infancia y en el _______.',
+    answer:'embarazo',
+    accept:['embarazo']
+  },
+  {
+    type:'mcq',
+    q:'Una reacción donde una molécula compleja se rompe en productos más simples se llama:',
+    options:['Anabolismo','Catabolismo','Saturación enzimática','Holoenzima'],
+    correct:1
+  },
+  {
+    type:'fill',
+    q:'Las enzimas que catalizan reacciones de unión de sustratos mediante hidrólisis simultánea de ATP/GTP se llaman _______.',
+    answer:'Ligasas',
+    accept:['ligasas','ligasa']
+  },
+  {
+    type:'vf',
+    q:'La TGO alcanza su pico entre 24 y 36 horas después de un infarto agudo de miocardio.',
+    correct:true,
+    explanation:'Verdadero — se eleva tras 12h y alcanza pico entre 24-36h.'
+  },
+  {
+    type:'mcq',
+    q:'¿Cuál es la clase de enzimas responsable de la interconversión de isómeros?',
+    options:['Hidrolasas','Transferasas','Isomerasas','Oxidorreductasas'],
+    correct:2
+  },
+  {
+    type:'fill',
+    q:'La molécula no proteica que se combina con la apoenzima para formar una holoenzima activa se llama cofactor o _______.',
+    answer:'coenzima',
+    accept:['coenzima','coenzimas']
+  }
+];
+
+let quizScore = 0;
+let quizAnswered = 0;
+
+function buildQuiz(){
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizScore = 0;
+  quizAnswered = 0;
+  document.getElementById('quizResult').style.display = 'none';
+  updateQuizProgress();
+
+  quizData.forEach((item, idx)=>{
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    let inner = `<div class="q-text">${idx+1}. ${item.q}</div>`;
+
+    if(item.type === 'mcq'){
+      inner += item.options.map((opt,i)=>
+        `<button class="opt" data-idx="${i}">${opt}</button>`).join('');
+    } else if(item.type === 'vf'){
+      inner += `<button class="opt" data-val="true">Verdadero</button>
+                 <button class="opt" data-val="false">Falso</button>`;
+    } else if(item.type === 'fill'){
+      inner += `<input type="text" class="fill-input" placeholder="Escribe tu respuesta...">
+                 <button class="check-btn">Verificar</button>`;
+    }
+    inner += `<div class="feedback" id="fb-${idx}"></div>`;
+    block.innerHTML = inner;
+    container.appendChild(block);
+
+    if(item.type === 'mcq'){
+      block.querySelectorAll('.opt').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(block.dataset.done) return;
+          block.dataset.done = '1';
+          const chosen = parseInt(btn.dataset.idx);
+          const fb = document.getElementById('fb-'+idx);
+          block.querySelectorAll('.opt').forEach((b,i)=>{
+            b.disabled = true;
+            if(i === item.correct) b.classList.add('correct');
+            else if(i === chosen) b.classList.add('wrong');
+          });
+          if(chosen === item.correct){
+            fb.textContent = '¡Correcto!'; fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+          } else {
+            fb.textContent = 'Incorrecto. La respuesta correcta está marcada en verde.'; fb.className='feedback bad';
+          }
+          quizAnswered++; updateQuizProgress();
+        });
+      });
+    } else if(item.type === 'vf'){
+      block.querySelectorAll('.opt').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(block.dataset.done) return;
+          block.dataset.done = '1';
+          const chosen = btn.dataset.val === 'true';
+          const fb = document.getElementById('fb-'+idx);
+          block.querySelectorAll('.opt').forEach(b=>{
+            b.disabled = true;
+            const bVal = b.dataset.val === 'true';
+            if(bVal === item.correct) b.classList.add('correct');
+            else if(b === btn) b.classList.add('wrong');
+          });
+          if(chosen === item.correct){
+            fb.textContent = '¡Correcto! ' + (item.explanation||''); fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+          } else {
+            fb.textContent = 'Incorrecto. ' + (item.explanation||''); fb.className='feedback bad';
+          }
+          quizAnswered++; updateQuizProgress();
+        });
+      });
+    } else if(item.type === 'fill'){
+      const input = block.querySelector('.fill-input');
+      const btn = block.querySelector('.check-btn');
+      btn.addEventListener('click', ()=>{
+        if(block.dataset.done) return;
+        const val = input.value.trim().toLowerCase();
+        const fb = document.getElementById('fb-'+idx);
+        const isCorrect = item.accept.some(a => val === a);
+        block.dataset.done = '1';
+        input.disabled = true; btn.disabled = true;
+        if(isCorrect){
+          input.classList.add('correct');
+          fb.textContent = '¡Correcto!'; fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+        } else {
+          input.classList.add('wrong');
+          fb.textContent = `Incorrecto. Respuesta esperada: "${item.answer}"`; fb.className='feedback bad';
+        }
+        quizAnswered++; updateQuizProgress();
+      });
+    }
+  });
+}
+
+function updateQuizProgress(){
+  document.getElementById('quizProgress').textContent = `${quizAnswered} / ${quizData.length} respondidas`;
+  if(quizAnswered === quizData.length){
+    const result = document.getElementById('quizResult');
+    result.style.display = 'block';
+    document.getElementById('quizScoreText').textContent = `Puntaje: ${quizScore} / ${quizData.length}`;
+    addXP(15, 'quiz_complete');
+  }
+}
+
+/* ---------- INIT ---------- */
+renderXP();
+buildQuiz();
+</script>
+</body>
+</html>

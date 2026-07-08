@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Prof. Deborah · Proteínas</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green2); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.prof-tag{display:inline-flex; align-items:center; gap:8px; background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.35); color:var(--gold); border-radius:999px; padding:5px 14px; font-size:.78rem; font-weight:700; margin-bottom:14px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.84rem;}
+th,td{border:1px solid var(--border); padding:8px 11px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+
+.struct-flow{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.struct-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:700; color:var(--text);}
+.struct-step span{display:block; font-weight:400; color:var(--text-dim); font-size:.7rem; margin-top:4px;}
+.struct-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:800px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.toggle-row{display:flex; gap:8px; margin:14px 0; flex-wrap:wrap;}
+.toggle-btn{flex:1; min-width:150px; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text-dim); cursor:pointer; font-weight:700; font-size:.82rem; text-align:center; transition:.2s;}
+.toggle-btn:hover{background:var(--card-hover); color:var(--text);}
+.toggle-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.toggle-panel{background:var(--bg-alt); border-radius:12px; padding:18px; margin-top:10px; min-height:60px; font-size:.9rem;}
+
+.exercise-box{background:var(--bg-alt); border:2px dashed var(--border); border-radius:12px; padding:18px; margin:14px 0;}
+.exercise-box h4{color:var(--gold); margin-bottom:10px;}
+.fill-input{background:var(--card); border:1px solid var(--border); border-radius:6px; color:var(--text); padding:6px 10px; font-size:.85rem; width:100%; margin-top:4px;}
+.check-btn{background:var(--green2); color:#0d0f16; border:none; padding:8px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:.85rem; margin-top:10px;}
+.check-btn:hover{background:var(--green1);}
+.exercise-result{margin-top:10px; padding:10px 14px; border-radius:8px; font-size:.85rem; display:none; background:rgba(163,216,74,.08); border:1px solid var(--green2);}
+.exercise-result.show{display:block;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(107,191,89,.16),rgba(163,216,74,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);} .btn-hard{background:var(--gold);} .btn-good{background:var(--blue);} .btn-easy{background:var(--green2);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--green2);}
+.option.correct{background:rgba(74,222,128,.18); border-color:#4ade80;}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid #4ade80; color:#4ade80;}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:#4ade80; font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--green2); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><circle cx="14" cy="14" r="6" fill="none" stroke="#6bbf59" stroke-width="2"/><circle cx="28" cy="14" r="4" fill="none" stroke="#a3d84a" stroke-width="2"/><circle cx="20" cy="28" r="5" fill="none" stroke="#ffd166" stroke-width="2"/><line x1="14" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/><line x1="28" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Bioquímica — Prof. Deborah</h1>
+        <span>Proteínas · Q.F. Deborah Michelle Jurowski</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Intro → Formación → Estructura → Clasificación → Desnaturalización → Propiedades → Funciones → Patologías → Ejercicios → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧬 Introducción</button>
+    <button class="tab-btn" data-tab="formacion">🔗 Formación</button>
+    <button class="tab-btn" data-tab="estructura">🏗️ Estructura</button>
+    <button class="tab-btn" data-tab="clasificacion">📋 Clasificación</button>
+    <button class="tab-btn" data-tab="desnaturalizacion">🌡️ Desnaturalización</button>
+    <button class="tab-btn" data-tab="propiedades">⚗️ Propiedades</button>
+    <button class="tab-btn" data-tab="funciones">⚙️ Funciones</button>
+    <button class="tab-btn" data-tab="patologias">🩺 Patologías</button>
+    <button class="tab-btn" data-tab="ejercicios">✍️ Ejercicios (estilo Deborah)</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="prof-tag">⚠️ Materia de la Prof. Deborah — nivel de detalle exigido</span>
+    <h2>Proteínas: las moléculas más complejas de la vida</h2>
+    <p>Después de dominar los aminoácidos, ahora toca entender cómo se organizan en las estructuras más sofisticadas y funcionalmente diversas de la bioquímica.</p>
+  </div>
+
+  <div class="card">
+    <h2>¿Qué son las proteínas?</h2>
+    <p>Son las <b>moléculas más complejas</b> que se encuentran en los seres vivos, pero a la vez desempeñan un <b>papel fundamental para la vida</b>.</p>
+    <div class="criterio"><b>Origen del nombre:</b> "Proteína" viene del griego <i>"proteios"</i>, que significa "primario", por la cantidad de formas que pueden tomar.</div>
+  </div>
+
+  <div class="card">
+    <h2>¿Qué las distingue de carbohidratos y lípidos?</h2>
+    <p>Se distinguen por contener <b>nitrógeno en su composición</b> — aproximadamente un <b>16%</b>. Ni los carbohidratos ni los lípidos contienen nitrógeno como parte fundamental de su estructura.</p>
+    <div class="mnemo"><b>Dato exacto que la profesora cobra:</b> el porcentaje de nitrógeno (16%) es la base del método de Kjeldahl para calcular proteína en alimentos — memorice el número, no solo el concepto.</div>
+  </div>
+
+  <div class="card">
+    <h2>Naturaleza química</h2>
+    <p>Químicamente son <b>polímeros de elevada masa molecular</b> cuyos monómeros son los aminoácidos.</p>
+    <div class="grid-3">
+      <div class="mini-card"><h4>300</h4><p style="margin:0;color:var(--text-dim);font-size:.82rem;">Aminoácidos existentes en la naturaleza</p></div>
+      <div class="mini-card"><h4>20</h4><p style="margin:0;color:var(--text-dim);font-size:.82rem;">Forman las proteínas</p></div>
+      <div class="mini-card"><h4>10</h4><p style="margin:0;color:var(--text-dim);font-size:.82rem;">Son esenciales para el ser humano</p></div>
+    </div>
+    <div class="clinical"><b>Excepción que la Deborah adora preguntar:</b> "300 → 20 → 10" es la cascada que reduce el universo de aminoácidos naturales a los que forman proteínas, y de esos, a los esenciales. No confunda estos 3 números entre sí.</div>
+  </div>
+
+  <div class="card">
+    <h2>Elementos que forman las proteínas</h2>
+    <table>
+      <tr><th>Categoría</th><th>Elementos</th></tr>
+      <tr><td>Principalmente</td><td>Carbono, Hidrógeno, Oxígeno, Nitrógeno</td></tr>
+      <tr><td>En menor cantidad</td><td>Hierro, Zinc, Cobre, Magnesio</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ FORMACION ============ -->
+<section class="section" id="formacion">
+  <div class="hero">
+    <span class="eyebrow">Química de la unión</span>
+    <h2>¿Cómo se forman las proteínas?</h2>
+    <p>Las proteínas se forman por medio de reacciones químicas de <b>condensación</b> de los aminoácidos.</p>
+  </div>
+
+  <div class="card">
+    <h2>El enlace peptídico</h2>
+    <p>En estas reacciones, cada par de aminoácidos se une <b>eliminando una molécula de agua</b>. El enlace que se establece se denomina <b>enlace peptídico</b>.</p>
+    <div class="struct-flow">
+      <div class="struct-step">Aminoácido 1<span>-COOH libre</span></div>
+      <div class="struct-arrow">+</div>
+      <div class="struct-step">Aminoácido 2<span>-NH2 libre</span></div>
+      <div class="struct-arrow">→</div>
+      <div class="struct-step">Dipéptido<span>enlace peptídico</span></div>
+      <div class="struct-arrow">+</div>
+      <div class="struct-step">H2O<span>agua liberada</span></div>
+    </div>
+    <div class="mnemo"><b>Reacción inversa:</b> para romper el enlace peptídico (digestión), se necesita AGREGAR agua — esa reacción se llama hidrólisis, exactamente lo opuesto a la condensación.</div>
+  </div>
+
+  <div class="card">
+    <h2>Tamaño mínimo: proteína vs péptido</h2>
+    <div class="clinical"><b>Excepción/límite exacto que la profesora cobra:</b> una proteína se forma con un MÍNIMO de 50 moléculas de aminoácidos. Las estructuras con MENOS de 50 aminoácidos son llamadas péptidos, no proteínas.</div>
+    <table>
+      <tr><th>Ejemplo</th><th>N° de aminoácidos</th><th>Categoría</th></tr>
+      <tr><td>Glutatión</td><td>3 (tripéptido: cisteína, ácido glutámico y glicina)</td><td>Péptido</td></tr>
+      <tr><td>Insulina</td><td>51</td><td>Proteína</td></tr>
+      <tr><td>Actina</td><td>354</td><td>Proteína</td></tr>
+      <tr><td>Hemoglobina</td><td>574</td><td>Proteína</td></tr>
+      <tr><td>Miosina</td><td>2100</td><td>Proteína</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ ESTRUCTURA ============ -->
+<section class="section" id="estructura">
+  <div class="hero">
+    <span class="eyebrow">Los 4 niveles</span>
+    <h2>Estructura de las Proteínas</h2>
+    <p>Cada nivel se construye sobre el anterior — perder un nivel intermedio significa perder la función completa de la proteína.</p>
+  </div>
+
+  <div class="card">
+    <h2>Estructura Primaria</h2>
+    <p>Es el nivel más simple y fundamental. Consiste en la <b>secuencia lineal y específica de aminoácidos</b> en la cadena polipeptídica, unidos por enlaces peptídicos (formados por condensación).</p>
+    <div class="criterio"><b>Punto de examen:</b> cada proteína tiene una secuencia de aminoácidos ÚNICA que determina TODOS los niveles estructurales superiores. Un solo aminoácido cambiado en la primaria puede alterar toda la función (ej. anemia falciforme).</div>
+  </div>
+
+  <div class="card">
+    <h2>Estructura Secundaria</h2>
+    <p>Es la disposición espacial de la cadena en regiones localizadas, estabilizada por <b>puentes de hidrógeno entre átomos del esqueleto principal</b> (no de los grupos R).</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Alfa-hélice</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Espiral compacta y dextrógira. Puentes de H entre aminoácidos cada 4 residuos.</p></div>
+      <div class="mini-card"><h4>Lámina beta (plegada)</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Cadena en zigzag; puentes de H con otras cadenas o tramos cercanos. Grupos R proyectados arriba/abajo del plano.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Estructura Terciaria</h2>
+    <p>Conformación tridimensional COMPLETA de una única cadena polipeptídica — resulta del plegamiento de estructuras secundarias, giros y bucles.</p>
+    <div class="criterio"><b>Las 5 interacciones que la estabilizan (Deborah pide TODAS, no solo 2 o 3):</b></div>
+    <table>
+      <tr><th>Interacción</th><th>Descripción</th></tr>
+      <tr><td>Puentes disulfuro</td><td>Enlaces COVALENTES entre dos residuos de cisteína</td></tr>
+      <tr><td>Puentes de hidrógeno</td><td>Entre grupos R polares</td></tr>
+      <tr><td>Interacciones iónicas</td><td>Atracción electrostática entre grupos R de carga opuesta</td></tr>
+      <tr><td>Interacciones hidrofóbicas</td><td>Grupos R no polares se agrupan en el interior, lejos del agua</td></tr>
+      <tr><td>Fuerzas de Van der Waals</td><td>Atracciones débiles entre grupos R no polares cercanos</td></tr>
+    </table>
+    <div class="mnemo"><b>Excepción importante:</b> el puente disulfuro es el ÚNICO de estos 5 que es un enlace COVALENTE (fuerte); los otros 4 son interacciones débiles/no covalentes.</div>
+    <p>Existen 2 tipos de estructura terciaria: <b>globular</b> y <b>fibrosa</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Estructura Cuaternaria</h2>
+    <p>Solo existe en proteínas compuestas por <b>2 o más cadenas polipeptídicas (subunidades)</b>. Describe cómo se asocian y organizan en el espacio para formar la proteína funcional.</p>
+    <div class="clinical"><b>Excepción de examen:</b> se estabiliza por las MISMAS interacciones que la terciaria (puentes de hidrógeno, iónicas, hidrofóbicas, disulfuro) — NO tiene un mecanismo propio distinto.</div>
+    <p>Ejemplo clásico: <b>hemoglobina</b>, compuesta por 4 subunidades polipeptídicas.</p>
+  </div>
+
+  <div class="card">
+    <h2>Cuadro resumen — los 4 niveles</h2>
+    <table>
+      <tr><th>Estructura</th><th>Características</th></tr>
+      <tr><td>Primaria</td><td>Sucesión lineal de aminoácidos — indica cuáles y en qué orden</td></tr>
+      <tr><td>Secundaria</td><td>Dirección de los AA: hélice o lámina plegada</td></tr>
+      <tr><td>Terciaria</td><td>La molécula se enrolla sobre sí misma (ovillo). Globular o fibrosa</td></tr>
+      <tr><td>Cuaternaria</td><td>Unión de varias cadenas polipeptídicas (idénticas o no) por enlaces débiles</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ CLASIFICACION ============ -->
+<section class="section" id="clasificacion">
+  <div class="hero">
+    <span class="eyebrow">2 criterios distintos</span>
+    <h2>Clasificación de las Proteínas</h2>
+    <p>La Prof. Deborah suele mezclar los dos criterios en la misma pregunta — separe siempre "forma" de "composición química".</p>
+  </div>
+
+  <div class="card">
+    <h2>Según su FORMA</h2>
+    <table>
+      <tr><th>Tipo</th><th>Características</th><th>Ejemplos</th></tr>
+      <tr><td>Fibrosas</td><td>Cadenas polipeptídicas largas, estructura secundaria atípica. INSOLUBLES en agua y disoluciones acuosas.</td><td>Queratina de las uñas, colágeno, fibroína de la seda</td></tr>
+      <tr><td>Globulares</td><td>Cadenas dobladas en forma esférica compacta; grupos hidrófobos hacia adentro, hidrófilos hacia afuera. SOLUBLES en disolventes polares como el agua.</td><td>La mayoría de enzimas, anticuerpos, algunas hormonas, proteínas de transporte, albúmina del huevo, caseína, actina, miosina</td></tr>
+      <tr><td>Mixtas</td><td>Poseen una parte fibrilar (comúnmente en el centro) y otra parte globular (en los extremos)</td><td>-</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Según su composición QUÍMICA</h2>
+    <table>
+      <tr><th>Tipo</th><th>Característica</th><th>Ejemplos</th></tr>
+      <tr><td>Simples</td><td>Su hidrólisis SOLO produce aminoácidos</td><td>Insulina, colágeno (pueden ser globulares o fibrosas)</td></tr>
+      <tr><td>Conjugadas (heteroproteínas)</td><td>Su hidrólisis produce aminoácidos Y otras sustancias no proteicas, con un grupo prostético</td><td>-</td></tr>
+    </table>
+    <div class="mnemo"><b>Punto que confunde:</b> "simple/conjugada" es un criterio QUÍMICO (qué produce la hidrólisis); "fibrosa/globular/mixta" es un criterio de FORMA. Una proteína simple puede ser fibrosa o globular al mismo tiempo — no son categorías excluyentes entre sí.</div>
+  </div>
+
+  <div class="card">
+    <h2>Proteínas más frecuentes (clasificación clásica adicional)</h2>
+    <table>
+      <tr><th>Proteína</th><th>Característica</th><th>Ejemplo</th></tr>
+      <tr><td>Albúminas</td><td>Solubles en agua; al calentarse coagulan (se solidifican)</td><td>Clara de huevo</td></tr>
+      <tr><td>Globulinas</td><td>Insolubles en agua, pero se disuelven en soluciones iónicas</td><td>Fibrinógeno (coagulación), anticuerpos</td></tr>
+      <tr><td>Colágenos</td><td>En piel, huesos, cartílagos y tejido conjuntivo. Por ebullición prolongada se transforman en gelatina/cola</td><td>-</td></tr>
+      <tr><td>Elastinas</td><td>Tejidos elásticos de arterias y tendones. NO se transforman en gelatina (a diferencia del colágeno)</td><td>-</td></tr>
+      <tr><td>Queratinas</td><td>Forman pelos, plumas, uñas y cascos</td><td>-</td></tr>
+    </table>
+    <div class="clinical"><b>Excepción clave:</b> Colágeno y Elastina se parecen (ambos en tejido conjuntivo elástico), pero SOLO el colágeno se transforma en gelatina por ebullición prolongada — la elastina no. Es la pregunta favorita para diferenciarlos.</div>
+  </div>
+</section>
+
+<!-- ============ DESNATURALIZACION ============ -->
+<section class="section" id="desnaturalizacion">
+  <div class="hero">
+    <span class="eyebrow">Pérdida de estructura</span>
+    <h2>Desnaturalización</h2>
+    <p>Un proceso que toda proteína puede sufrir — y que puede o no ser reversible.</p>
+  </div>
+
+  <div class="card">
+    <h2>¿Qué la provoca?</h2>
+    <p>Se puede producir por <b>cambios de temperatura</b> (ej. huevo cocido o frito) y <b>variaciones del pH</b>. Estos cambios rompen las fuerzas que mantienen la forma tridimensional, y la proteína se despliega.</p>
+  </div>
+
+  <div class="card">
+    <h2>Renaturalización</h2>
+    <p>En algunos casos, si las condiciones se restablecen, una proteína desnaturalizada puede volver a su plegamiento/conformación anterior — proceso llamado <b>renaturalización</b>.</p>
+    <div class="clinical"><b>Excepción de examen:</b> NO todas las desnaturalizaciones son reversibles — el huevo cocido, por ejemplo, NO renaturaliza. Solo bajo ciertas condiciones controladas es posible.</div>
+  </div>
+
+  <div class="card">
+    <h2>Características de las proteínas desnaturalizadas</h2>
+    <ul style="color:#c8d1de;">
+      <li>Todas tienen la MISMA conformación: muy abierta</li>
+      <li>Interacción MÁXIMA con el disolvente</li>
+      <li>Una proteína soluble en agua, al desnaturalizarse, se hace <b>insoluble</b> y <b>precipita</b></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PROPIEDADES ============ -->
+<section class="section" id="propiedades">
+  <div class="hero">
+    <span class="eyebrow">4 propiedades clave</span>
+    <h2>Propiedades de las Proteínas</h2>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>Propiedad</th><th>Descripción</th></tr>
+      <tr><td>Solubilidad</td><td>Se mantiene mientras los enlaces fuertes y débiles estén presentes. Aumento de temperatura y pH → se pierde la solubilidad</td></tr>
+      <tr><td>Capacidad electrolítica</td><td>Se determina por electroforesis: si la proteína se traslada al polo positivo, su molécula tiene carga negativa (y viceversa)</td></tr>
+      <tr><td>Especificidad</td><td>Cada proteína tiene una función específica, determinada por su estructura primaria</td></tr>
+      <tr><td>Amortiguador de pH (efecto tampón)</td><td>Carácter anfótero: pueden comportarse como ácidos (donando electrones/protones) o como bases (aceptando)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>¿Dónde se encuentran las proteínas?</h2>
+    <p>Los alimentos más ricos son carne, pescado, huevos, leche y derivados, leguminosas y frutos secos. Pero prácticamente TODOS los alimentos contienen algo de proteína.</p>
+    <div class="clinical"><b>Dato exacto de examen:</b> un plátano, una coliflor o una espinaca no son fuentes importantes, pero contienen 2-3% de proteína. Los cereales (compuestos principalmente por almidón) contienen alrededor de 10% de proteína.</div>
+  </div>
+</section>
+
+<!-- ============ FUNCIONES ============ -->
+<section class="section" id="funciones">
+  <div class="hero">
+    <span class="eyebrow">7 funciones — memorizar TODAS</span>
+    <h2>Funciones de las Proteínas</h2>
+    <p>La Deborah pregunta con ejemplos cruzados — sepa asociar cada ejemplo a su función exacta, no solo la lista.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="mini-card"><h4>🔬 Enzimática</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Biocatalizadores de reacciones metabólicas. Ej: proteasa (digiere proteína), lipasa (digiere grasas), amilasa (digiere carbohidratos).</p></div>
+    <div class="mini-card"><h4>🏗️ Estructural</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Membranas celulares, colágeno, elastina, queratina — dan fuerza/flexibilidad a piel, ligamentos, huesos, uñas, cabello.</p></div>
+    <div class="mini-card"><h4>💉 Hormonal</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Insulina y glucagón (regulan glucosa); hormona del crecimiento y calcitonina (hipófisis).</p></div>
+    <div class="mini-card"><h4>🚚 Transporte</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Forman parte de membranas biológicas; transportan sustancias por fluidos biológicos. Ej: hemoglobina transporta oxígeno.</p></div>
+    <div class="mini-card"><h4>🏃 Movimiento</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Contracción muscular = interacción actina-miosina. Movimiento de cilios/flagelos = proteína dineína.</p></div>
+    <div class="mini-card"><h4>🍼 Reserva</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Ovoalbúmina (clara de huevo), lactoalbúmina (leche), gliadina (trigo), hordeína (cebada) — reserva de AA para el desarrollo del embrión.</p></div>
+    <div class="mini-card"><h4>⚖️ Reguladora</h4><p style="margin:0;color:var(--text-dim);font-size:.85rem;">Materia prima de jugos digestivos, hormonas, proteínas plasmáticas, hemoglobina, vitaminas y enzimas.</p></div>
+  </div>
+
+  <div class="card" style="margin-top:18px;">
+    <h2>Tabla de asociación función ↔ ejemplo (formato de examen)</h2>
+    <table>
+      <tr><th>Función</th><th>Ejemplo textual usado por la profesora</th></tr>
+      <tr><td>Reserva</td><td>"Constituye una reserva de AA para el desarrollo del embrión"</td></tr>
+      <tr><td>Transporte</td><td>"Forman parte de las membranas biológicas y actúan transportando sustancias de un lado a otro de esas membranas"</td></tr>
+      <tr><td>Enzimática</td><td>"Actúan como biocatalizadores de las reacciones químicas del metabolismo celular"</td></tr>
+      <tr><td>Movimiento</td><td>"La contracción de los músculos resulta de la interacción entre la actina y la miosina"</td></tr>
+      <tr><td>Reguladora</td><td>"Son materia prima para la formación de jugos digestivos, hormonas, proteínas plasmáticas, hemoglobinas, vitaminas"</td></tr>
+      <tr><td>Hormonal</td><td>"Algunas hormonas son de naturaleza proteica como la insulina y el glucagón que regula los niveles de glucosa en la sangre"</td></tr>
+      <tr><td>Estructural</td><td>"La elastina y la queratina permiten la elasticidad y la resistencia en órganos y tejidos"</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ PATOLOGIAS ============ -->
+<section class="section" id="patologias">
+  <div class="hero">
+    <span class="eyebrow">3 cuadros clínicos</span>
+    <h2>Patologías por deficiencia de proteínas</h2>
+    <p>La deficiencia de proteína es una causa importante de enfermedad y muerte en el tercer mundo, y puede causar inteligencia reducida o retardo mental.</p>
+  </div>
+
+  <div class="card">
+    <h2>Marasmo</h2>
+    <p>Deficiencia SEVERA de proteínas Y calorías. Afecta a bebés y niños muy pequeños. Resulta en deshidratación y pérdida de peso; puede llevar a mortalidad por falta de nutrientes esenciales.</p>
+    <div class="clinical"><b>Signos característicos:</b> apariencia ósea con poco tejido muscular, pérdida de cabello, fisionomía de "anciano", piel pegajosa, masa muscular muy diminuida.</div>
+  </div>
+
+  <div class="card">
+    <h2>Kwashiorkor</h2>
+    <p>Deficiencia SEVERA de proteína en dietas con calorías principalmente de carbohidratos (arroz, plátanos). Afecta generalmente a niños MAYORES (a diferencia del marasmo).</p>
+    <div class="clinical"><b>Signos característicos:</b> descamación de la piel, retención de líquidos (edema/fóvea) — el signo distintivo es el <b>vientre distendido</b> (por retención de líquidos), a diferencia del marasmo donde el abdomen es escuálido.</div>
+  </div>
+
+  <div class="card">
+    <h2>Caquexia</h2>
+    <p>Deficiencia de proteína + agotamiento de músculos esqueléticos + aumento de la tasa de DEGRADACIÓN de proteínas (a diferencia de marasmo/kwashiorkor, que son más por falta de ingesta).</p>
+    <p>Asociada a: cáncer (estómago, colon, hígado, tracto biliar, páncreas), SIDA, insuficiencia renal crónica, EPOC, artritis reumatoide.</p>
+    <div class="mnemo"><b>Síntomas comunes de los 3 cuadros:</b> fatiga, irritabilidad, diarrea, crecimiento deteriorado, deterioro de la cognición y salud mental.</div>
+  </div>
+
+  <div class="card">
+    <h2>Cuadro comparativo</h2>
+    <table>
+      <tr><th></th><th>Marasmo</th><th>Kwashiorkor</th><th>Caquexia</th></tr>
+      <tr><td>Causa principal</td><td>Déficit de proteínas Y calorías</td><td>Déficit de proteínas (calorías de carbohidratos)</td><td>Aumento de degradación proteica</td></tr>
+      <tr><td>Edad típica</td><td>Bebés/niños muy pequeños</td><td>Niños mayores</td><td>Adultos con enfermedad de base</td></tr>
+      <tr><td>Signo distintivo</td><td>Cuerpo escuálido, sin edema</td><td>Vientre distendido (edema)</td><td>Pérdida de masa muscular esquelética</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ EJERCICIOS ============ -->
+<section class="section" id="ejercicios">
+  <div class="hero">
+    <span class="eyebrow">Los 11 ejercicios del material — resueltos</span>
+    <h2>Ejercicios estilo Deborah</h2>
+    <p>El material original no traía gabarito — aquí están las 11 respuestas completas, en el nivel de detalle que ella exige.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>1. ¿En qué se diferencian las proteínas de los carbohidratos y de los lípidos?</h4>
+    <p style="color:#c8d1de;">Se diferencian por contener <b>nitrógeno en su composición</b> (~16%), elemento que carbohidratos y lípidos no poseen como parte fundamental.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>2. ¿Cómo se forman las proteínas? ¿Cuál es el nombre del enlace?</h4>
+    <p style="color:#c8d1de;">Se forman por <b>reacciones químicas de condensación</b> de los aminoácidos, eliminando una molécula de agua en cada unión. El enlace se llama <b>enlace peptídico</b>.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>3. Complete con el tipo de estructura correspondiente:</h4>
+    <p style="color:#c8d1de;">
+    a. <b>Terciaria</b> (globular o fibrosa) — se enrolla sobre sí misma como un ovillo.<br>
+    b. <b>Primaria</b> — sucesión lineal de aminoácidos.<br>
+    c. <b>Cuaternaria</b> — unión de varias cadenas polipeptídicas por enlaces débiles.<br>
+    d. <b>Secundaria</b> — hélice o lámina plegada.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>4. ¿Cómo se produce la desnaturalización de una proteína?</h4>
+    <p style="color:#c8d1de;">Por cambios de temperatura o variaciones de pH, que rompen las fuerzas que mantienen la forma tridimensional de la proteína, haciendo que se despliegue.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>5. ¿Cuáles son las características comunes de las proteínas desnaturalizadas?</h4>
+    <p style="color:#c8d1de;">Conformación muy abierta, con interacción máxima con el disolvente. Una proteína soluble en agua se vuelve insoluble y precipita al desnaturalizarse.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>6. ¿Cuáles son las propiedades de las proteínas?</h4>
+    <p style="color:#c8d1de;">Solubilidad, Capacidad electrolítica, Especificidad, y Amortiguador de pH (efecto tampón/carácter anfótero).</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>7. Identifique el tipo de proteína:</h4>
+    <p style="color:#c8d1de;">
+    a. <b>Elastinas</b> — tejidos elásticos de arterias y tendones.<br>
+    b. <b>Albúminas</b> — solubles en agua, coagulan al calentarse.<br>
+    c. <b>Globulinas</b> — insolubles en agua, se disuelven en soluciones iónicas.<br>
+    d. <b>Queratinas</b> — forman pelos, uñas, cascos, plumas.<br>
+    e. <b>Colágenos</b> — piel, huesos, cartílagos y tejidos conjuntivos.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>8. ¿Cómo se clasifican las proteínas según su forma?</h4>
+    <p style="color:#c8d1de;"><b>Fibrosas:</b> cadenas largas, estructura secundaria atípica, insolubles en agua (queratina, colágeno, fibroína).<br>
+    <b>Globulares:</b> cadenas dobladas en esfera compacta, grupos hidrófobos adentro/hidrófilos afuera, solubles en agua (enzimas, anticuerpos, hormonas, albúmina, caseína, actina, miosina).<br>
+    <b>Mixtas:</b> parte fibrilar (centro) + parte globular (extremos).</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>9. ¿Cómo se clasifican según su composición química?</h4>
+    <p style="color:#c8d1de;"><b>Simples:</b> su hidrólisis solo produce aminoácidos (insulina, colágeno).<br>
+    <b>Conjugadas (heteroproteínas):</b> su hidrólisis produce aminoácidos + otras sustancias no proteicas, con grupo prostético.</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>10. Relacione cada función con su afirmación:</h4>
+    <p style="color:#c8d1de;">
+    ( C ) Función enzimática<br>
+    ( G ) Función Estructural<br>
+    ( F ) Función Hormonal<br>
+    ( B ) Función de transporte<br>
+    ( D ) Función de movimiento<br>
+    ( A ) Función de reserva<br>
+    ( E ) Función Reguladora</p>
+  </div>
+
+  <div class="exercise-box">
+    <h4>11. Cite 3 patologías relacionadas a deficiencia de proteínas.</h4>
+    <p style="color:#c8d1de;"><b>Marasmo, Kwashiorkor y Caquexia.</b></p>
+  </div>
+
+  <button class="check-btn" onclick="addXP(30,'Ejercicios revisados'); showToast('+30 XP · Ejercicios completos')">Marcar como revisado (+30 XP)</button>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards — Proteínas</h2>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <div class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span> · Dominadas: <span id="fcMastered">0</span></div>
+      <button class="nav-flash" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;" onclick="shuffleCards()">🔀 Mezclar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front"><span class="flash-tag" id="fcTag"></span><span id="fcFront"></span><span class="flash-hint">Toque para ver la respuesta</span></div>
+        <div class="face face-back"><span class="flash-tag">Respuesta</span><span id="fcBack"></span></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">◀ Anterior</button>
+      <button onclick="nextCard()">Próxima ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz — Proteínas</h2>
+  </div>
+  <div class="card">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Bioquímica — Prof. Deborah · Módulo Proteínas · Elaborado para Dr. Cristiano Ribeiro da Silva · Uso académico</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'bioquimica_deborah_proteinas_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','formacion','estructura','clasificacion','desnaturalizacion','propiedades','funciones','patologias','ejercicios','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Definición', front:'¿Qué son las proteínas?', back:'Las moléculas más complejas de los seres vivos, con papel fundamental para la vida. Del griego "proteios" = primario.'},
+  {tag:'Composición', front:'¿Qué elemento distingue a las proteínas de carbohidratos y lípidos, y en qué porcentaje?', back:'Nitrógeno, aproximadamente un 16% de su composición.'},
+  {tag:'Composición', front:'¿Cuál es la cascada 300 → 20 → 10?', back:'300 aminoácidos existen en la naturaleza → 20 forman las proteínas → 10 son esenciales para el ser humano.'},
+  {tag:'Formación', front:'¿Cómo se forman las proteínas y qué molécula se libera?', back:'Por reacciones de condensación entre aminoácidos, liberando una molécula de agua en cada unión (enlace peptídico).'},
+  {tag:'Formación', front:'¿Cuál es el tamaño mínimo de una proteína?', back:'50 aminoácidos. Menos de eso se llama péptido.'},
+  {tag:'Formación', front:'¿Cuántos aminoácidos tiene la insulina? ¿Y el glutatión?', back:'Insulina: 51 AA (proteína). Glutatión: 3 AA (tripéptido, no es proteína).'},
+  {tag:'Estructura', front:'¿Qué estabiliza la estructura secundaria?', back:'Puentes de hidrógeno entre átomos del esqueleto principal (no de los grupos R) — forma alfa-hélice o lámina beta.'},
+  {tag:'Estructura', front:'¿Cuáles son las 5 interacciones que estabilizan la estructura terciaria?', back:'Puentes disulfuro (covalente), puentes de hidrógeno, interacciones iónicas, interacciones hidrofóbicas, fuerzas de Van der Waals.'},
+  {tag:'Estructura', front:'¿Cuál de las 5 interacciones terciarias es la única covalente?', back:'El puente disulfuro (entre dos residuos de cisteína).'},
+  {tag:'Estructura', front:'¿Cuándo existe estructura cuaternaria?', back:'Solo en proteínas con 2 o más cadenas polipeptídicas (subunidades). Ej: hemoglobina, con 4 subunidades.'},
+  {tag:'Clasificación', front:'¿Cuáles son los 3 tipos de proteína según su forma?', back:'Fibrosas (insolubles, cadenas largas), Globulares (solubles, forma esférica), Mixtas (parte fibrilar + parte globular).'},
+  {tag:'Clasificación', front:'¿Cuáles son los 2 tipos según composición química?', back:'Simples (hidrólisis solo da aminoácidos) y Conjugadas/heteroproteínas (hidrólisis da aminoácidos + grupo prostético).'},
+  {tag:'Clasificación', front:'¿Qué diferencia al colágeno de la elastina?', back:'Ambos están en tejido conjuntivo, pero solo el colágeno se transforma en gelatina por ebullición prolongada; la elastina no.'},
+  {tag:'Desnaturalización', front:'¿Qué provoca la desnaturalización de una proteína?', back:'Cambios de temperatura o variaciones de pH, que rompen las fuerzas que mantienen la forma tridimensional.'},
+  {tag:'Desnaturalización', front:'¿Qué es la renaturalización?', back:'El retorno de una proteína desnaturalizada a su plegamiento original, si se restablecen las condiciones (no siempre es posible).'},
+  {tag:'Propiedades', front:'¿Cómo se determina la capacidad electrolítica de una proteína?', back:'Por electroforesis: si se traslada al polo positivo, tiene carga negativa (y viceversa).'},
+  {tag:'Propiedades', front:'¿Por qué las proteínas actúan como amortiguadores de pH?', back:'Por su carácter anfótero: pueden comportarse como ácidos (donando) o bases (aceptando electrones/protones).'},
+  {tag:'Funciones', front:'Nombra las 7 funciones de las proteínas.', back:'Enzimática, Estructural, Hormonal, Transporte, Movimiento, Reserva, Reguladora.'},
+  {tag:'Funciones', front:'¿Qué función cumple la hemoglobina?', back:'Transporte — lleva oxígeno a través del citoplasma de las células.'},
+  {tag:'Funciones', front:'¿Qué proteínas intervienen en la contracción muscular y en el movimiento ciliar?', back:'Actina y miosina (contracción muscular); dineína (movimiento de cilios y flagelos).'},
+  {tag:'Patologías', front:'¿Cuál es la diferencia principal entre marasmo y kwashiorkor?', back:'Marasmo: déficit de proteínas Y calorías, en bebés, sin edema. Kwashiorkor: déficit de proteínas con calorías de carbohidratos, en niños mayores, CON vientre distendido (edema).'},
+  {tag:'Patologías', front:'¿Qué caracteriza a la caquexia?', back:'Deficiencia de proteína + agotamiento muscular esquelético + AUMENTO de la degradación proteica; asociada a cáncer, SIDA, insuficiencia renal crónica, EPOC.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿En qué se diferencian químicamente las proteínas de los carbohidratos y lípidos?', options:['Contienen fósforo','Contienen nitrógeno (~16%)','No contienen carbono','Son siempre solubles en grasa'], correct:1, exp:'El nitrógeno, presente en ~16% de su composición, es el elemento distintivo de las proteínas.'},
+  {q:'¿Cómo se llama el enlace que une a los aminoácidos en una proteína?', options:['Enlace glucosídico','Enlace fosfodiéster','Enlace peptídico','Enlace disulfuro'], correct:2, exp:'El enlace peptídico se forma por condensación entre el grupo carboxilo de un aminoácido y el grupo amino del siguiente, liberando agua.'},
+  {q:'¿Cuál es el número MÍNIMO de aminoácidos para considerarse proteína?', options:['10','25','50','100'], correct:2, exp:'Por debajo de 50 aminoácidos se les llama péptidos, no proteínas.'},
+  {q:'¿Qué estructura proteica es la secuencia lineal de aminoácidos?', options:['Primaria','Secundaria','Terciaria','Cuaternaria'], correct:0, exp:'La estructura primaria es la sucesión lineal de aminoácidos que determina todos los niveles superiores.'},
+  {q:'¿Cuál de las siguientes interacciones de la estructura terciaria es un enlace COVALENTE?', options:['Puente de hidrógeno','Interacción hidrofóbica','Puente disulfuro','Fuerzas de Van der Waals'], correct:2, exp:'El puente disulfuro, entre dos residuos de cisteína, es el único enlace covalente entre las 5 interacciones terciarias.'},
+  {q:'¿Cuándo existe estructura cuaternaria en una proteína?', options:['Siempre','Solo si tiene 2 o más cadenas polipeptídicas','Solo en proteínas fibrosas','Nunca en proteínas globulares'], correct:1, exp:'La estructura cuaternaria solo existe en proteínas con 2 o más subunidades polipeptídicas, como la hemoglobina (4 subunidades).'},
+  {q:'¿Cuál es la diferencia de solubilidad entre proteínas fibrosas y globulares?', options:['Fibrosas solubles, globulares insolubles','Ambas son solubles','Fibrosas insolubles, globulares solubles en agua','Ninguna es soluble'], correct:2, exp:'Las fibrosas son insolubles en agua (queratina, colágeno); las globulares son solubles por tener grupos hidrófilos hacia afuera.'},
+  {q:'¿Qué diferencia a las proteínas simples de las conjugadas?', options:['Las simples tienen grupo prostético','Las conjugadas producen solo aminoácidos en la hidrólisis','Las simples producen SOLO aminoácidos en la hidrólisis; las conjugadas producen aminoácidos + grupo no proteico','No hay diferencia'], correct:2, exp:'Simples: hidrólisis → solo aminoácidos (insulina, colágeno). Conjugadas: hidrólisis → aminoácidos + sustancia no proteica (grupo prostético).'},
+  {q:'¿Qué proteína, a diferencia del colágeno, NO se transforma en gelatina por ebullición prolongada?', options:['Queratina','Elastina','Albúmina','Globulina'], correct:1, exp:'La elastina constituye tejidos elásticos igual que el colágeno, pero no se transforma en gelatina — diferencia clave entre ambas.'},
+  {q:'¿Qué provoca la desnaturalización de una proteína?', options:['Solo cambios de pH','Solo cambios de temperatura','Cambios de temperatura y variaciones de pH','La adición de agua'], correct:2, exp:'Ambos factores (temperatura y pH) rompen las fuerzas que mantienen la forma tridimensional de la proteína.'},
+  {q:'Una proteína desnaturalizada, si era soluble en agua, se vuelve:', options:['Más soluble','Insoluble y precipita','Igual de soluble','Gaseosa'], correct:1, exp:'Al desnaturalizarse, la conformación abierta con máxima interacción con el disolvente hace que una proteína soluble se vuelva insoluble y precipite.'},
+  {q:'¿Cómo se determina la capacidad electrolítica de las proteínas?', options:['Por cromatografía','Por electroforesis','Por espectrofotometría','Por centrifugación'], correct:1, exp:'La electroforesis determina hacia qué polo se desplaza la proteína, revelando su carga neta.'},
+  {q:'¿Qué proteínas participan directamente en la contracción muscular?', options:['Colágeno y elastina','Actina y miosina','Queratina y fibrina','Albúmina y globulina'], correct:1, exp:'La función de movimiento de las proteínas se ejemplifica con la interacción actina-miosina en la contracción muscular.'},
+  {q:'¿Cuál es la diferencia clínica principal entre marasmo y kwashiorkor?', options:['No hay diferencia','Marasmo tiene edema, kwashiorkor no','Kwashiorkor presenta vientre distendido (edema); marasmo no','Ambos afectan solo a adultos'], correct:2, exp:'El kwashiorkor se distingue por el vientre distendido (retención de líquidos); el marasmo presenta un cuerpo escuálido sin edema.'},
+  {q:'¿Qué caracteriza específicamente a la caquexia frente al marasmo/kwashiorkor?', options:['Es exclusiva de bebés','Se debe a un AUMENTO en la tasa de degradación de proteínas, asociada a enfermedades como cáncer o SIDA','No afecta la masa muscular','Siempre es reversible con dieta'], correct:1, exp:'A diferencia de las otras dos (más ligadas a falta de ingesta), la caquexia implica un aumento activo de la degradación proteica, típicamente en enfermedades crónicas graves.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>
