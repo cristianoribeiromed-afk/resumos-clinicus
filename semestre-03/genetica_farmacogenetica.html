@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmacogenética · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#7c5cff;
+  --helix2:#00d4b5;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix2);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.15rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{
+  background:var(--card); color:var(--text-dim); border:1px solid var(--border);
+  padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer;
+  transition:.2s; display:flex; align-items:center; gap:6px;
+}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px; position:relative; overflow:hidden;
+}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{
+  background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.analogy b{color:var(--gold);}
+.clinical{
+  background:rgba(255,107,107,.08); border-left:4px solid var(--red); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.clinical b{color:var(--red);}
+.mnemo{
+  background:rgba(124,92,255,.1); border-left:4px solid var(--helix1); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.mnemo b{color:var(--helix1);}
+.caso{
+  background:rgba(0,212,181,.08); border:1px solid rgba(0,212,181,.25); border-radius:12px;
+  padding:18px 20px; margin:14px 0;
+}
+.caso h4{color:var(--helix2); margin-bottom:8px;}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.88rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--helix2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--helix2); font-size:.95rem; margin-bottom:6px;}
+
+/* Metabolic curve visual */
+.curve-viz{display:flex; align-items:flex-end; justify-content:center; gap:6px; height:120px; margin:20px 0; padding:0 20px;}
+.curve-viz .bar{width:14px; background:linear-gradient(180deg,var(--helix1),var(--helix2)); border-radius:4px 4px 0 0;}
+
+/* Flashcards */
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{
+  position:relative; width:100%; min-height:220px; cursor:pointer;
+  transform-style:preserve-3d; transition:transform .5s;
+}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:16px;
+  display:flex; align-items:center; justify-content:center; text-align:center; padding:26px;
+  border:1px solid var(--border); box-shadow:var(--shadow);
+}
+.face-front{background:linear-gradient(135deg,#1a2338,#182233); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,181,.12)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{
+  border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d1117;
+  transition:.15s;
+}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);}
+.btn-hard{background:var(--amber);}
+.btn-good{background:var(--helix2);}
+.btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+/* Quiz */
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{
+  background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:10px 22px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0;
+  background:var(--card); border:1px solid var(--helix2); color:var(--text); padding:12px 22px; border-radius:12px;
+  font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999; display:flex; gap:8px; align-items:center;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/><line x1="12" y1="8" x2="28" y2="8" stroke="#8b98ab" stroke-width="1.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#8b98ab" stroke-width="1.5"/><line x1="12" y1="32" x2="28" y2="32" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Farmacogenética</h1>
+        <span>Genética Humana · Cómo los genes definen la respuesta a fármacos</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Fundamentos → Perfiles → Casos Clínicos → Conclusiones → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧬 Fundamentos</button>
+    <button class="tab-btn" data-tab="perfiles">📊 Perfiles Metabólicos</button>
+    <button class="tab-btn" data-tab="casos">💊 Casos Clínicos</button>
+    <button class="tab-btn" data-tab="conclusiones">🎯 Conclusiones</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO / FUNDAMENTOS ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Fundamentos</span>
+    <h2>No existe la "dosis estándar" universal</h2>
+    <p>La respuesta de un individuo a un fármaco está intrínsecamente ligada a su perfil genético. El metabolismo de los fármacos no es universal — está <b>programado genéticamente</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>Farmacogenética vs. Farmacocinética</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Farmacogenética</h4><p style="margin:0;font-size:.88rem;">Ciencia que analiza cómo los genes influyen en la eficacia y toxicidad de un fármaco en el organismo.</p></div>
+      <div class="mini-card"><h4>Farmacocinética</h4><p style="margin:0;font-size:.88rem;">Rama que analiza los procesos a los que se somete el medicamento en el cuerpo.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Las 4 etapas de la farmacocinética</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>1. Absorción</h4><p style="margin:0;font-size:.88rem;">Entrada del fármaco al sistema.</p></div>
+      <div class="mini-card"><h4>2. Distribución</h4><p style="margin:0;font-size:.88rem;">Transporte a través de la corriente sanguínea.</p></div>
+      <div class="mini-card"><h4>3. Metabolización</h4><p style="margin:0;font-size:.88rem;">Procesamiento del fármaco, generalmente en el hígado.</p></div>
+    </div>
+    <div class="mini-card" style="margin-top:14px;"><h4>4. Excreción</h4><p style="margin:0;font-size:.88rem;">Eliminación del fármaco a través de la orina o las heces.</p></div>
+  </div>
+</section>
+
+<!-- ============ PERFILES METABÓLICOS ============ -->
+<section class="section" id="perfiles">
+  <div class="hero">
+    <span class="eyebrow">Variabilidad poblacional</span>
+    <h2>Representación gráfica y clasificación</h2>
+    <p>El procesamiento de medicamentos en una población no siempre sigue una distribución uniforme.</p>
+  </div>
+
+  <div class="card">
+    <h2>Curva de Gauss vs. gráficos bimodales/trimodales</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Curva de Gauss (campana)</h4><p style="margin:0;font-size:.88rem;">Respuesta continua; la mayoría de la población reacciona de forma estándar. Característica de la herencia poligénica.</p></div>
+      <div class="mini-card"><h4>Gráficos bimodales/trimodales</h4><p style="margin:0;font-size:.88rem;">El metabolismo está dirigido por variantes genéticas específicas: la población se divide entre metabolizadores muy rápidos o muy lentos.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Los 3 perfiles metabólicos fundamentales</h2>
+    <table>
+      <tr><th>Perfil</th><th>Actividad enzimática</th><th>Consecuencia de una dosis estándar</th></tr>
+      <tr><td><b>Lento / Débil</b></td><td>Baja o nula</td><td>El fármaco no se procesa y se acumula, generando toxicidad</td></tr>
+      <tr><td><b>Normal</b></td><td>Equilibrada (mayoría de la población)</td><td>Concentración estable, efecto esperado</td></tr>
+      <tr><td><b>Ultrarrápido</b></td><td>Hiperactiva o acelerada</td><td>El fármaco se descompone tan rápido que no alcanza niveles terapéuticos; riesgo de lesión hepática</td></tr>
+    </table>
+    <div class="mnemo"><b>Punto clave:</b> tanto el metabolizador lento como el ultrarrápido pueden fallar terapéuticamente — por motivos opuestos (acumulación tóxica vs. eliminación demasiado rápida).</div>
+  </div>
+</section>
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="section" id="casos">
+  <div class="hero">
+    <span class="eyebrow">Evidencia clínica</span>
+    <h2>3 casos donde la dosis estándar falla</h2>
+    <p>Medicamentos críticos donde la dosificación precisa es vital para la supervivencia del paciente.</p>
+  </div>
+
+  <div class="caso">
+    <h4>💊 4.1 — Varfarina (Anticoagulante)</h4>
+    <p>Utilizada para prevenir la trombosis. Ilustra el fallo de la dosis estándar en pacientes con perfiles genéticos distintos, incluso compartiendo edad, peso y función renal:</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Paciente A — Metabolizador lento</h4><p style="margin:0;font-size:.88rem;">Desarrolla hemorragia interna grave por acumulación del fármaco.</p></div>
+      <div class="mini-card"><h4>Paciente B — Metabolizador ultrarrápido</h4><p style="margin:0;font-size:.88rem;">Presenta una nueva trombosis, porque el medicamento se procesó antes de surtir efecto.</p></div>
+    </div>
+  </div>
+
+  <div class="caso">
+    <h4>💊 4.2 — Isoniazida (Tratamiento de la Tuberculosis)</h4>
+    <p>Su metabolismo depende de la enzima hepática <b>N-acetiltransferasa (NAT)</b>. La población mundial presenta una división marcada:</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Metabolizadores lentos</h4><p style="margin:0;font-size:.88rem;">Homocigotos para un alelo recesivo. El fármaco se vuelve tóxico. Afecta al <b>50% de los occidentales y europeos</b>.</p></div>
+      <div class="mini-card"><h4>Metabolizadores rápidos</h4><p style="margin:0;font-size:.88rem;">Enzima hiperactiva que degrada la droga antes de actuar sobre la bacteria. Común en poblaciones <b>asiáticas</b>; puede causar lesión hepática.</p></div>
+    </div>
+  </div>
+
+  <div class="caso">
+    <h4>💊 4.3 — Antidepresivos y Citocromo P450</h4>
+    <p>El procesamiento de los antidepresivos está vinculado a enzimas del grupo <b>citocromo P450</b>. Individuos con defectos en estas enzimas actúan como metabolizadores muy bajos, lo que provoca que la dosis estándar no surta el efecto terapéutico deseado.</p>
+  </div>
+</section>
+
+<!-- ============ CONCLUSIONES ============ -->
+<section class="section" id="conclusiones">
+  <div class="hero">
+    <span class="eyebrow">Implicaciones médicas</span>
+    <h2>La respuesta a fármacos es predecible, no azarosa</h2>
+    <p>El análisis de la farmacogenética permite concluir que la respuesta a los medicamentos es un proceso biológico predecible mediante el estudio genético.</p>
+  </div>
+
+  <div class="card">
+    <h2>3 conclusiones clave para la práctica clínica</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>Individualidad hepática</h4><p style="margin:0;font-size:.88rem;">Es un error clínico asumir que todos los hígados funcionan igual. El metabolismo es individual y genéticamente programado.</p></div>
+      <div class="mini-card"><h4>Naturaleza de la toxicidad</h4><p style="margin:0;font-size:.88rem;">Es crucial distinguir entre reacción alérgica y toxicidad por acumulación metabólica.</p></div>
+      <div class="mini-card"><h4>Eficacia terapéutica</h4><p style="margin:0;font-size:.88rem;">La ineficacia de un tratamiento no siempre es culpa del medicamento — puede ser un metabolizador ultrarrápido que lo elimina antes de tiempo.</p></div>
+    </div>
+  </div>
+
+  <div class="clinical"><b>Farmacogenética ≠ alergia:</b> la toxicidad por acumulación es una incapacidad metabólica del individuo, no una reacción inmunológica. Esta distinción es un punto de examen clásico.</div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards</h2>
+    <p>Repasa los conceptos clave. Toca la tarjeta para ver la respuesta.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+      <button style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;" onclick="shuffleCards()">🔀 Mezclar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <span class="flash-tag" id="fcTag"></span>
+          <span id="fcFront"></span>
+          <span class="flash-hint">Toca para voltear</span>
+        </div>
+        <div class="face face-back">
+          <span id="fcBack"></span>
+        </div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">◀ Anterior</button>
+      <button onclick="nextCard()">Siguiente ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz — Farmacogenética</h2>
+    <p>10 preguntas sobre perfiles metabólicos y casos clínicos.</p>
+  </div>
+  <div class="card">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+<footer>ClinicusMed · Genética Humana · Semestre 3 · Farmacogenética</footer>
+
+<script>
+/* ============ STATE & PERSISTENCE ============ */
+const STORAGE_KEY = 'genetica_farmaco_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function addXP(amount, reason){
+  state.xp += amount;
+  saveState();
+  updateHeader();
+  showToast('+' + amount + ' XP · ' + reason);
+}
+
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const totalTabs = tabIds.length;
+  const visitedCount = Object.keys(state.visited).length;
+  const pct = Math.round((visitedCount/totalTabs)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+
+/* ============ TABS ============ */
+const tabIds = ['intro','perfiles','casos','conclusiones','flashcards','quiz'];
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){
+      state.visited[tab] = true;
+      saveState();
+      addXP(10, 'Sección explorada');
+    }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Fundamentos', front:'¿Qué es la Farmacogenética?', back:'Ciencia que analiza cómo los genes influyen en la eficacia y la toxicidad de un fármaco en el organismo.'},
+  {tag:'Fundamentos', front:'¿Cuáles son las 4 etapas de la farmacocinética?', back:'Absorción, distribución, metabolización (hígado) y excreción (orina/heces).'},
+  {tag:'Perfiles', front:'¿Qué representa la Curva de Gauss en el metabolismo de fármacos?', back:'Una respuesta continua y poligénica, donde la mayoría de la población reacciona de forma estándar.'},
+  {tag:'Perfiles', front:'¿Qué indican los gráficos bimodales o trimodales?', back:'Que el metabolismo está dirigido por variantes genéticas específicas, dividiendo a la población en grupos claros (rápidos/lentos).'},
+  {tag:'Perfiles', front:'¿Qué ocurre en un metabolizador lento/débil ante una dosis estándar?', back:'El fármaco no se procesa y se acumula, generando toxicidad.'},
+  {tag:'Perfiles', front:'¿Qué ocurre en un metabolizador ultrarrápido ante una dosis estándar?', back:'El fármaco se descompone tan rápido que no alcanza niveles terapéuticos; hay riesgo de lesión hepática.'},
+  {tag:'Casos', front:'En el caso de la Varfarina, ¿qué le ocurre a un metabolizador lento?', back:'Desarrolla hemorragia interna grave, por acumulación del fármaco.'},
+  {tag:'Casos', front:'En el caso de la Varfarina, ¿qué le ocurre a un metabolizador ultrarrápido?', back:'Presenta una nueva trombosis, porque el medicamento se procesó antes de surtir efecto.'},
+  {tag:'Casos', front:'¿De qué enzima depende el metabolismo de la Isoniazida?', back:'De la N-acetiltransferasa (NAT), enzima hepática.'},
+  {tag:'Casos', front:'¿Qué porcentaje de occidentales/europeos son metabolizadores lentos de Isoniazida?', back:'Aproximadamente el 50%.'},
+  {tag:'Casos', front:'¿En qué población es común el metabolismo rápido de Isoniazida, y qué riesgo conlleva?', back:'En poblaciones de origen asiático; puede provocar lesión hepática, ya que la droga se degrada antes de actuar sobre la bacteria.'},
+  {tag:'Casos', front:'¿Qué grupo enzimático procesa los antidepresivos?', back:'El citocromo P450.'},
+  {tag:'Conclusiones', front:'¿Es correcto asumir que todos los hígados funcionan de la misma manera?', back:'No — es un error clínico. El metabolismo es individual y está programado genéticamente.'},
+  {tag:'Conclusiones', front:'¿En qué se diferencia la toxicidad por acumulación metabólica de una reacción alérgica?', back:'La toxicidad por acumulación es una incapacidad metabólica del individuo para procesar el fármaco; no es una reacción inmunológica como la alergia.'},
+];
+
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+
+function initFlashcards(){
+  if(fcOrder.length === 0){
+    fcOrder = flashData.map((_,i)=>i);
+  }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+function nextCard(){
+  fcPos = (fcPos + 1) % fcOrder.length;
+  renderCard();
+}
+function prevCard(){
+  fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length;
+  renderCard();
+}
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]];
+  }
+  fcPos = 0;
+  renderCard();
+  showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6];
+  const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Qué diferencia hay entre farmacogenética y farmacocinética?', options:['Son sinónimos','Farmacogenética estudia la influencia génica en la respuesta al fármaco; farmacocinética estudia absorción/distribución/metabolización/excreción','Farmacocinética solo aplica a antibióticos','Farmacogenética no tiene relación con el hígado'], correct:1, exp:'Son ciencias complementarias: una analiza el "por qué genético", la otra el "recorrido" del fármaco en el cuerpo.'},
+  {q:'¿Cuáles son las 4 etapas clásicas de la farmacocinética?', options:['Ingestión, digestión, absorción, excreción','Absorción, distribución, metabolización, excreción','Producción, transporte, activación, eliminación','Síntesis, unión, transporte, degradación'], correct:1, exp:'Las 4 etapas son: absorción, distribución, metabolización (hígado) y excreción (orina/heces).'},
+  {q:'Un gráfico bimodal en el metabolismo de un fármaco sugiere:', options:['Que toda la población responde igual','Que existen variantes genéticas específicas que dividen a la población en grupos claramente distintos','Un error de medición','Que el fármaco no tiene metabolismo hepático'], correct:1, exp:'Los gráficos bimodales/trimodales reflejan subgrupos genéticamente definidos (ej. lentos vs. rápidos).'},
+  {q:'Un paciente metabolizador LENTO recibe una dosis estándar de un fármaco. ¿Qué riesgo corre?', options:['Ineficacia total del fármaco','Acumulación del fármaco y toxicidad','Ninguno, es el perfil ideal','Excreción acelerada'], correct:1, exp:'La baja actividad enzimática impide procesar el fármaco, que se acumula y genera toxicidad.'},
+  {q:'Un paciente metabolizador ULTRARRÁPIDO recibe una dosis estándar. ¿Qué puede ocurrir?', options:['Toxicidad hepática por acumulación','El fármaco no alcanza niveles terapéuticos, con riesgo de lesión hepática por hiperactividad enzimática','Nada, siempre es beneficioso','Hemorragia por acumulación'], correct:1, exp:'La enzima hiperactiva descompone el fármaco antes de que actúe.'},
+  {q:'En el caso de la Varfarina, ¿qué le ocurre a un metabolizador lento?', options:['Nueva trombosis','Hemorragia interna grave por acumulación','Ninguna reacción','Reacción alérgica cutánea'], correct:1, exp:'El anticoagulante se acumula, aumentando el riesgo de sangrado.'},
+  {q:'¿De qué enzima depende el metabolismo de la Isoniazida?', options:['Citocromo P450 exclusivamente','N-acetiltransferasa (NAT)','ECA (enzima convertidora de angiotensina)','Colinesterasa'], correct:1, exp:'La NAT hepática determina si el paciente es metabolizador lento o rápido de isoniazida.'},
+  {q:'¿Qué porcentaje aproximado de occidentales/europeos son metabolizadores lentos de Isoniazida?', options:['10%','25%','50%','90%'], correct:2, exp:'Aproximadamente el 50% de la población occidental/europea son metabolizadores lentos.'},
+  {q:'¿Qué grupo de enzimas metaboliza los antidepresivos?', options:['N-acetiltransferasa','Citocromo P450','Fosfatasa alcalina','Amilasa'], correct:1, exp:'Las enzimas del citocromo P450 son clave en el metabolismo de los antidepresivos.'},
+  {q:'¿Cuál es la diferencia clave entre toxicidad por acumulación metabólica y una reacción alérgica?', options:['Son exactamente lo mismo','La toxicidad por acumulación es una incapacidad metabólica genética, no una reacción inmunológica como la alergia','La alergia siempre es más grave','La toxicidad por acumulación solo ocurre en niños'], correct:1, exp:'Distinguir ambos conceptos es esencial para el razonamiento clínico correcto en farmacogenética.'},
+];
+
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+
+function initQuiz(){
+  quizIndex = 0; quizScore = 0; quizLog = [];
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){
+    renderQuizResult();
+    return;
+  }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{
+    html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>';
+  });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){
+  quizIndex++;
+  renderQuiz();
+}
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+/* ============ INIT ============ */
+updateHeader();
+</script>
+</body>
+</html>

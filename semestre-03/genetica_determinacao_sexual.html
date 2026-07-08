@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herencia Sexual y Cromosómica · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#7c5cff;
+  --helix2:#00d4b5;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix2);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.15rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{
+  background:var(--card); color:var(--text-dim); border:1px solid var(--border);
+  padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer;
+  transition:.2s; display:flex; align-items:center; gap:6px;
+}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px; position:relative; overflow:hidden;
+}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{
+  background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.analogy b{color:var(--gold);}
+.clinical{
+  background:rgba(255,107,107,.08); border-left:4px solid var(--red); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.clinical b{color:var(--red);}
+.mnemo{
+  background:rgba(124,92,255,.1); border-left:4px solid var(--helix1); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.mnemo b{color:var(--helix1);}
+.update-box{
+  background:rgba(0,212,181,.08); border-left:4px solid var(--helix2); border-radius:8px;
+  padding:14px 18px; margin:14px 0; font-size:.92rem;
+}
+.update-box b{color:var(--helix2);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.88rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--helix2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--helix2); font-size:.95rem; margin-bottom:6px;}
+
+/* Flashcards */
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{
+  position:relative; width:100%; min-height:220px; cursor:pointer;
+  transform-style:preserve-3d; transition:transform .5s;
+}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:16px;
+  display:flex; align-items:center; justify-content:center; text-align:center; padding:26px;
+  border:1px solid var(--border); box-shadow:var(--shadow);
+}
+.face-front{background:linear-gradient(135deg,#1a2338,#182233); font-size:1.15rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,181,.12)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{
+  border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d1117;
+  transition:.15s;
+}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--red);}
+.btn-hard{background:var(--amber);}
+.btn-good{background:var(--helix2);}
+.btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+/* Quiz */
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{
+  background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:10px 22px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0;
+  background:var(--card); border:1px solid var(--helix2); color:var(--text); padding:12px 22px; border-radius:12px;
+  font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999; display:flex; gap:8px; align-items:center;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/><line x1="12" y1="8" x2="28" y2="8" stroke="#8b98ab" stroke-width="1.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#8b98ab" stroke-width="1.5"/><line x1="12" y1="32" x2="28" y2="32" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Herencia Sexual y Cromosómica</h1>
+        <span>Genética Humana · Determinación del sexo, X Frágil, Aneuploidías y DDS</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>SRY/Lyon → X Frágil → Aneuploidías → DDS → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧬 Determinación del Sexo</button>
+    <button class="tab-btn" data-tab="xfragil">🧩 X Frágil</button>
+    <button class="tab-btn" data-tab="aneuploidias">🔢 Aneuploidías</button>
+    <button class="tab-btn" data-tab="dds">⚖️ Trastornos DDS</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO — DETERMINACIÓN DEL SEXO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Fundamentos</span>
+    <h2>El interruptor maestro: gen SRY</h2>
+    <p>La determinación del sexo humano, aunque generalmente sigue el patrón cromosómico XX (femenino) y XY (masculino), depende críticamente de una cascada hormonal y molecular. El sexo genético <b>no siempre coincide</b> con el sexo fenotípico.</p>
+  </div>
+
+  <div class="card">
+    <h2>El rol crítico del cromosoma Y y el gen SRY</h2>
+    <p>El cromosoma Y es descrito como pequeño, "pobre" en genes y estructuralmente "atrofiado" en comparación con el X. Dentro de él, el gen <b>SRY (Sex-determining Region Y)</b> es el responsable de la caracterización masculina.</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>SRY activo</h4><p style="margin:0;font-size:.88rem;">Induce la formación de testículos a partir de las gónadas embrionarias.</p></div>
+      <div class="mini-card"><h4>SRY inactivo/ausente</h4><p style="margin:0;font-size:.88rem;">La gónada se desarrolla como tejido ovárico, incluso en presencia de un cromosoma Y.</p></div>
+    </div>
+    <div class="clinical"><b>Disociación genético-fenotípica:</b> en el 99% de los casos, el sexo genético define el sexo visible. Sin embargo, fallos hormonales o moleculares pueden resultar en individuos 46,XY con características físicas enteramente femeninas (ausencia de útero, testículos internos).</div>
+  </div>
+
+  <div class="card">
+    <h2>El cromosoma X y la Hipótesis de Lyon</h2>
+    <p>El cromosoma X es esencial para la vida y mucho más complejo que el Y. Como las mujeres poseen dos X y los hombres solo uno, el cuerpo utiliza un mecanismo de compensación de dosis.</p>
+    <div class="mnemo"><b>Hipótesis de Lyon:</b> al inicio de la embriogénesis femenina, uno de los dos cromosomas X (materno o paterno) se silencia y se condensa, formando el <b>corpúsculo de Barr</b>. Esto evita una sobreexposición genética nociva.</div>
+  </div>
+</section>
+
+<!-- ============ X FRÁGIL ============ -->
+<section class="section" id="xfragil">
+  <div class="hero">
+    <span class="eyebrow">FMR1 · Expansión CGG</span>
+    <h2>Síndrome del Cromosoma X Frágil</h2>
+    <p>Es la causa hereditaria más común de deficiencia intelectual, con estrecha relación con el espectro autista (grados 2 y 3).</p>
+  </div>
+
+  <div class="card">
+    <h2>Mecanismo genético</h2>
+    <p>Ocurre un error en el gen <b>FMR1</b>, encargado de la neurogénesis. Se produce una expansión de la repetición del triplete <b>CGG</b> (Citosina-Guanina-Guanina).</p>
+    <table>
+      <tr><th>Condición</th><th>Nº de repeticiones CGG</th></tr>
+      <tr><td>Normal</td><td>10 a 50 repeticiones</td></tr>
+      <tr><td><b>X Frágil</b></td><td>Más de 200 repeticiones → metilación y silenciamiento del gen</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Manifestaciones clínicas (principalmente en varones)</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>Retraso mental</h4><p style="margin:0;font-size:.88rem;">Y del desarrollo.</p></div>
+      <div class="mini-card"><h4>Rasgos físicos</h4><p style="margin:0;font-size:.88rem;">Rostro alargado, orejas grandes.</p></div>
+      <div class="mini-card"><h4>Macroorquidia</h4><p style="margin:0;font-size:.88rem;">Testículos de tamaño incrementado tras la pubertad.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ANEUPLOIDÍAS ============ -->
+<section class="section" id="aneuploidias">
+  <div class="hero">
+    <span class="eyebrow">Disyunción meiótica</span>
+    <h2>Aneuploidías de los Cromosomas Sexuales</h2>
+    <p>Alteraciones en el número normal de cromosomas, generalmente causadas por fallos en la disyunción meiótica durante la formación de gametos.</p>
+  </div>
+
+  <div class="card">
+    <h2>Los 4 síndromes clásicos</h2>
+    <table>
+      <tr><th>Síndrome</th><th>Cariotipo</th><th>Fenotipo</th><th>Características principales</th></tr>
+      <tr><td><b>Klinefelter</b></td><td>47, XXY</td><td>Masculino</td><td>Estatura elevada, testículos pequeños, ginecomastia, infertilidad (azospermia), ausencia de vello corporal, voz aguda</td></tr>
+      <tr><td><b>Turner</b></td><td>45, X</td><td>Femenino</td><td>Baja estatura, cuello alado, tórax en escudo, insuficiencia ovárica (infertilidad). Inteligencia normal</td></tr>
+      <tr><td><b>Triple X</b> (Superhembra)</td><td>47, XXX</td><td>Femenino</td><td>Estatura elevada, fertilidad normal, ligera reducción del CI, inserción social normal</td></tr>
+      <tr><td><b>Jacobs</b> (Supermacho)</td><td>47, XYY</td><td>Masculino</td><td>Estatura muy elevada, aracnodactilia, fertilidad e inteligencia normales</td></tr>
+    </table>
+  </div>
+
+  <div class="update-box"><b>Actualización científica importante:</b> antiguamente se asociaba erróneamente el síndrome de Jacobs con la agresividad, y el de Turner con deficiencia cognitiva. La ciencia actual confirma que estas percepciones eran <b>incorrectas</b>.</div>
+
+  <div class="card">
+    <h2>Tratabilidad</h2>
+    <p>Condiciones como el síndrome de <b>Klinefelter</b> pueden gestionarse eficazmente mediante <b>reposición de testosterona</b>.</p>
+  </div>
+</section>
+
+<!-- ============ DDS ============ -->
+<section class="section" id="dds">
+  <div class="hero">
+    <span class="eyebrow">Terminología actualizada</span>
+    <h2>Trastornos del Desarrollo Sexual (DDS)</h2>
+    <p>Anteriormente denominados hermafroditismo o intersexualidad (términos ahora considerados peyorativos), los DDS ocurren cuando hay discordancia entre el sexo cromosómico, gonadal y anatómico.</p>
+  </div>
+
+  <div class="card">
+    <h2>DDS 46,XY — Pseudohermafroditismo masculino</h2>
+    <p>El caso más representativo es el <b>Síndrome de Insensibilidad a los Andrógenos</b>.</p>
+    <div class="clinical"><b>Causa:</b> una mutación en el cromosoma X afecta a los receptores de testosterona. <b>Resultado:</b> aunque los testículos producen testosterona, el cuerpo no puede "leerla". El desarrollo sigue la vía femenina por defecto: la persona desarrolla mamas y vagina, pero carece de útero y los testículos permanecen internos.</div>
+  </div>
+
+  <div class="card">
+    <h2>DDS 46,XX — Pseudohermafroditismo femenino</h2>
+    <p>Relacionado frecuentemente con la <b>Hiperplasia Adrenal Congénita</b>.</p>
+    <div class="clinical"><b>Causa:</b> un error enzimático en las glándulas suprarrenales provoca sobreproducción de hormonas masculinizantes en el feto XX. <b>Resultado:</b> presencia de ovarios y útero, pero con genitales externos virilizados o ambiguos.</div>
+  </div>
+
+  <div class="card">
+    <h2>DDS Ovotesticular — Hermafroditismo verdadero</h2>
+    <p>Es la forma más rara de estas condiciones.</p>
+    <div class="clinical"><b>Causa:</b> generalmente asociada al <b>quimerismo</b>. <b>Resultado:</b> el individuo posee tanto tejido ovárico como testicular. Puede presentar, por ejemplo, un falo bien formado pero con gónadas que contienen ambos tipos de tejido.</div>
+  </div>
+
+  <div class="card">
+    <h2>Conclusiones principales</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Flexibilidad del sexo genético</h4><p style="margin:0;font-size:.88rem;">El sexo cromosómico no es infalible; el desarrollo final depende de la interacción correcta de genes (SRY), receptores y hormonas.</p></div>
+      <div class="mini-card"><h4>Revisión de paradigmas</h4><p style="margin:0;font-size:.88rem;">Muchas variaciones cromosómicas no comprometen la capacidad intelectual ni dictan el comportamiento social.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards</h2>
+    <p>Repasa los conceptos clave. Toca la tarjeta para ver la respuesta.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+      <button style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;cursor:pointer;" onclick="shuffleCards()">🔀 Mezclar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <span class="flash-tag" id="fcTag"></span>
+          <span id="fcFront"></span>
+          <span class="flash-hint">Toca para voltear</span>
+        </div>
+        <div class="face face-back">
+          <span id="fcBack"></span>
+        </div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">◀ Anterior</button>
+      <button onclick="nextCard()">Siguiente ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz — Herencia Sexual y Cromosómica</h2>
+    <p>12 preguntas sobre SRY, X Frágil, aneuploidías sexuales y DDS.</p>
+  </div>
+  <div class="card">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+<footer>ClinicusMed · Genética Humana · Semestre 3 · Herencia Sexual y Cromosómica</footer>
+
+<script>
+/* ============ STATE & PERSISTENCE ============ */
+const STORAGE_KEY = 'genetica_sexual_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function addXP(amount, reason){
+  state.xp += amount;
+  saveState();
+  updateHeader();
+  showToast('+' + amount + ' XP · ' + reason);
+}
+
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const totalTabs = tabIds.length;
+  const visitedCount = Object.keys(state.visited).length;
+  const pct = Math.round((visitedCount/totalTabs)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+
+/* ============ TABS ============ */
+const tabIds = ['intro','xfragil','aneuploidias','dds','flashcards','quiz'];
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){
+      state.visited[tab] = true;
+      saveState();
+      addXP(10, 'Sección explorada');
+    }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'SRY', front:'¿Qué gen actúa como "interruptor maestro" de la masculinización?', back:'El gen SRY (Sex-determining Region Y), ubicado en el cromosoma Y.'},
+  {tag:'SRY', front:'¿Qué ocurre si el SRY está inactivo o ausente, incluso con cromosoma Y presente?', back:'La gónada se desarrolla como tejido ovárico — el desarrollo femenino es la vía "por defecto".'},
+  {tag:'SRY', front:'¿En qué porcentaje de casos el sexo genético define el sexo visible?', back:'En el 99% de los casos. El 1% restante puede presentar disociación genético-fenotípica.'},
+  {tag:'Lyon', front:'¿Qué establece la Hipótesis de Lyon?', back:'Que uno de los dos cromosomas X en la mujer se silencia y condensa al inicio de la embriogénesis, formando el corpúsculo de Barr — un mecanismo de compensación de dosis.'},
+  {tag:'X Frágil', front:'¿Qué gen está mutado en el Síndrome del X Frágil?', back:'El gen FMR1, encargado de la neurogénesis.'},
+  {tag:'X Frágil', front:'¿Qué triplete se expande en el X Frágil y cuántas repeticiones indican la enfermedad?', back:'Expansión del triplete CGG. Normal: 10-50 repeticiones. X Frágil: más de 200 repeticiones (causa metilación y silenciamiento del gen).'},
+  {tag:'X Frágil', front:'¿Cuál es la manifestación física característica del X Frágil tras la pubertad?', back:'Macroorquidia (testículos de tamaño incrementado), además de rostro alargado y orejas grandes.'},
+  {tag:'Aneuploidías', front:'Cariotipo y fenotipo del Síndrome de Klinefelter', back:'47, XXY — fenotipo masculino con testículos pequeños, ginecomastia e infertilidad (azospermia).'},
+  {tag:'Aneuploidías', front:'Cariotipo y fenotipo del Síndrome de Turner', back:'45, X — fenotipo femenino con baja estatura, cuello alado e insuficiencia ovárica. Inteligencia normal.'},
+  {tag:'Aneuploidías', front:'Cariotipo y apodo del síndrome 47,XYY', back:'Síndrome de Jacobs ("Supermacho") — estatura muy elevada, aracnodactilia, fertilidad e inteligencia normales.'},
+  {tag:'Aneuploidías', front:'Cariotipo y apodo del síndrome 47,XXX', back:'Triple X ("Superhembra") — estatura elevada, fertilidad normal, ligera reducción del CI.'},
+  {tag:'Aneuploidías', front:'¿Es correcto asociar el síndrome de Jacobs con agresividad y el de Turner con deficiencia cognitiva?', back:'No. Es una percepción antigua e incorrecta, desmentida por la ciencia actual.'},
+  {tag:'DDS', front:'¿Cuál es el mecanismo del DDS 46,XY (Síndrome de Insensibilidad a los Andrógenos)?', back:'Mutación en el cromosoma X que afecta a los receptores de testosterona; los testículos producen testosterona pero el cuerpo no puede "leerla", y el desarrollo sigue la vía femenina.'},
+  {tag:'DDS', front:'¿Con qué condición se relaciona frecuentemente el DDS 46,XX?', back:'Con la Hiperplasia Adrenal Congénita — sobreproducción de hormonas masculinizantes en un feto XX, causando genitales externos virilizados.'},
+  {tag:'DDS', front:'¿Cuál es la causa típica del DDS Ovotesticular (hermafroditismo verdadero)?', back:'Generalmente el quimerismo. El individuo posee tanto tejido ovárico como testicular.'},
+];
+
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+
+function initFlashcards(){
+  if(fcOrder.length === 0){
+    fcOrder = flashData.map((_,i)=>i);
+  }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+function nextCard(){
+  fcPos = (fcPos + 1) % fcOrder.length;
+  renderCard();
+}
+function prevCard(){
+  fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length;
+  renderCard();
+}
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]];
+  }
+  fcPos = 0;
+  renderCard();
+  showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6];
+  const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Qué gen actúa como interruptor maestro de la masculinización?', options:['FMR1','SRY','HTT','DMD'], correct:1, exp:'El gen SRY, ubicado en el cromosoma Y, induce la formación de testículos.'},
+  {q:'Si el SRY está ausente o inactivo, incluso con un cromosoma Y presente, la gónada se desarrolla como:', options:['Testículo atrófico','Tejido ovárico','Gónada mixta obligatoriamente','No se desarrolla gónada'], correct:1, exp:'La vía femenina es la "vía por defecto" cuando el SRY no está activo.'},
+  {q:'La Hipótesis de Lyon explica:', options:['La expansión del triplete CGG','La inactivación de un cromosoma X en la mujer, formando el corpúsculo de Barr','La producción de testosterona fetal','La transmisión mitocondrial'], correct:1, exp:'Uno de los dos X se silencia al inicio de la embriogénesis femenina, formando el corpúsculo de Barr.'},
+  {q:'El Síndrome del X Frágil es causado por una mutación en el gen:', options:['SRY','HTT','FMR1','DMD'], correct:2, exp:'El gen FMR1, encargado de la neurogénesis, sufre expansión del triplete CGG.'},
+  {q:'¿Cuántas repeticiones del triplete CGG se consideran patológicas en el X Frágil?', options:['Más de 10','Más de 50','Más de 200','Más de 1000'], correct:2, exp:'Más de 200 repeticiones CGG causan metilación y silenciamiento del gen FMR1.'},
+  {q:'¿Cuál es el cariotipo del Síndrome de Klinefelter?', options:['45, X','47, XXY','47, XYY','47, XXX'], correct:1, exp:'Klinefelter es 47, XXY — fenotipo masculino con infertilidad y ginecomastia.'},
+  {q:'¿Cuál es el cariotipo del Síndrome de Turner y su característica de inteligencia?', options:['47, XXY; discapacidad intelectual obligatoria','45, X; inteligencia normal','47, XXX; discapacidad intelectual leve','45, Y; inteligencia normal'], correct:1, exp:'Turner es 45, X, con inteligencia normal — la asociación antigua con déficit cognitivo es incorrecta.'},
+  {q:'El Síndrome de Jacobs (47, XYY) se asociaba erróneamente con:', options:['Baja estatura','Agresividad','Infertilidad total','Retraso mental severo'], correct:1, exp:'La ciencia actual desmiente la asociación histórica entre XYY y agresividad.'},
+  {q:'En el DDS 46,XY por Insensibilidad a los Andrógenos, ¿qué ocurre?', options:['Los testículos no producen testosterona','Los testículos producen testosterona pero los receptores no la reconocen, y el desarrollo sigue la vía femenina','El individuo desarrolla siempre genitales masculinos típicos','Hay ausencia total de gónadas'], correct:1, exp:'Es un fallo de receptor, no de producción hormonal; el fenotipo resultante es femenino con testículos internos.'},
+  {q:'El DDS 46,XX se relaciona frecuentemente con:', options:['Síndrome de Turner','Hiperplasia Adrenal Congénita','Síndrome de Klinefelter','Deleción del gen SRY'], correct:1, exp:'Un error enzimático suprarrenal causa exceso de hormonas masculinizantes en un feto XX.'},
+  {q:'¿Cuál es la causa típica del DDS Ovotesticular (hermafroditismo verdadero)?', options:['Trisomía del cromosoma 21','Quimerismo, con tejido ovárico y testicular coexistiendo','Monosomía del X','Expansión CGG en FMR1'], correct:1, exp:'El quimerismo explica la coexistencia de tejido gonadal de ambos tipos.'},
+  {q:'¿Qué tratamiento es eficaz en el manejo del Síndrome de Klinefelter?', options:['Reposición de estrógenos','Reposición de testosterona','Quimioterapia','No existe tratamiento'], correct:1, exp:'La terapia de reposición de testosterona es el manejo estándar en Klinefelter.'},
+];
+
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+
+function initQuiz(){
+  quizIndex = 0; quizScore = 0; quizLog = [];
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){
+    renderQuizResult();
+    return;
+  }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{
+    html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>';
+  });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){
+  quizIndex++;
+  renderQuiz();
+}
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+/* ============ INIT ============ */
+updateHeader();
+</script>
+</body>
+</html>
