@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Final — Genética Humana · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#7c5cff;
+  --helix2:#00d4b5;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix2);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.1rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;
+}
+.hero h2{font-size:1.7rem; margin-bottom:.3em;}
+ul{margin:8px 0 8px 20px; color:#c8d1de;}
+li{margin-bottom:6px;}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:12px 26px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(0,212,181,.12); color:var(--helix2); border:1px solid rgba(0,212,181,.3);}
+.tag.type{background:rgba(124,92,255,.12); color:var(--helix1); border:1px solid rgba(124,92,255,.3);}
+.quiz-q{font-size:1.08rem; font-weight:700; margin-bottom:16px; font-family:'Lora',serif;}
+
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;}
+.vf-row .option{flex:1; text-align:center;}
+
+.match-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin-bottom:10px; flex-wrap:wrap;
+}
+.match-term{font-weight:700; color:var(--helix2); min-width:200px; font-size:.9rem;}
+.match-row select{
+  flex:1; min-width:220px; background:#0d1117; border:1px solid var(--border); color:var(--text);
+  padding:9px 10px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--red);}
+
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-family:'Lora',serif; font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--helix2);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/><line x1="12" y1="8" x2="28" y2="8" stroke="#8b98ab" stroke-width="1.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#8b98ab" stroke-width="1.5"/><line x1="12" y1="32" x2="28" y2="32" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Simulado Final — Genética Humana</h1>
+        <span>Todos los módulos: P1, P2 (+ Parkinson), Gestacional, Monogénica, Sexual, Farmacogenética, Cáncer</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato del simulado</span>
+    <h2>40 preguntas — todo el temario</h2>
+    <p>25 de múltiple elección, 10 de Verdadero/Falso y 5 de asociar columnas — cubriendo los 7 grandes bloques de Genética Humana.</p>
+  </div>
+  <div class="card">
+    <h2>Bloques cubiertos</h2>
+    <ul>
+      <li>Fundamentos, Cariotipo, Mendel, Mutaciones, Herencia, ABO (P1)</li>
+      <li>Herencia Multifactorial: Diabetes, HTA, Crohn, Epilepsia, TEA, Esquizofrenia, <b>Parkinson</b>, Alzheimer (P2)</li>
+      <li>Alteraciones Gestacionales: Malformación, Disrupción, Deformación, Displasia</li>
+      <li>Herencia Monogénica: Huntington, Duchenne, Hemofilia</li>
+      <li>Herencia Sexual y Cromosómica: SRY, Lyon, X Frágil, Aneuploidías, DDS</li>
+      <li>Farmacogenética: perfiles metabólicos, casos clínicos</li>
+      <li>Genética del Cáncer: TSG, protooncogenes, oncogenes, genes específicos</li>
+    </ul>
+  </div>
+  <button class="btn-primary" onclick="startQuiz()">Comenzar simulado</button>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="card">
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>ClinicusMed · Genética Humana · Semestre 3 · Simulado Final (40 preguntas)</footer>
+
+<script>
+/* ============ XP ============ */
+let xp = parseInt(localStorage.getItem('genetica_simulado_final_xp') || '0');
+function updateXP(){
+  document.getElementById('xpCount').textContent = xp;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + (Math.floor(xp/100)+1);
+  localStorage.setItem('genetica_simulado_final_xp', xp);
+}
+function addXP(n){ xp += n; updateXP(); }
+updateXP();
+
+/* ============ QUIZ DATA (40: 25 mcq + 10 vf + 5 match) ============ */
+const quizData = [
+// ===== MCQ (25) =====
+{type:'mcq', topic:'Mendel', q:'Dos padres sanos tienen un hijo con una enfermedad recesiva. ¿Qué ley de Mendel lo explica y cuál es la condición genética de los padres?', opts:['3ª Ley; ambos homocigotos dominantes','1ª Ley; ambos heterocigotos (portadores)','2ª Ley; uno de los padres es afectado','Ninguna ley; mutación de novo'], correct:1},
+{type:'mcq', topic:'Mendel', q:'La 2ª Ley de Mendel (Segregación Independiente) explica que:', opts:['Los alelos se separan durante la formación de gametos','Genes en diferentes pares cromosómicos se heredan de forma independiente entre sí','Los genes recesivos desaparecen en la F1','Todos los genes están ligados'], correct:1},
+{type:'mcq', topic:'ABO', q:'¿Por qué el tipo de sangre AB se considera codominancia?', opts:['Porque el alelo i es dominante','Porque los alelos I^A e I^B se expresan simultáneamente, sin que uno suprima al otro','Porque no existen antígenos','Porque solo se hereda por vía materna'], correct:1},
+{type:'mcq', topic:'Cariotipo', q:'El cariotipo 47, XY, +18 corresponde a:', opts:['Síndrome de Down','Síndrome de Turner','Síndrome de Edwards','Síndrome de Klinefelter'], correct:2},
+{type:'mcq', topic:'Mutaciones', q:'¿Qué es el mosaicismo?', opts:['Pérdida de un cromosoma completo','Coexistencia de dos o más poblaciones celulares con distinto genotipo en un mismo individuo, originadas del mismo cigoto','Intercambio de segmentos entre cromosomas no homólogos','Expansión de un triplete de nucleótidos'], correct:1},
+{type:'mcq', topic:'Multifactorial', q:'Un paciente joven con diabetes de inicio atípico y patrón familiar autosómico dominante probablemente tiene:', opts:['DM1 clásica','DM2 poligénica','MODY','Diabetes gestacional'], correct:2},
+{type:'mcq', topic:'Multifactorial', q:'Sobre la Epilepsia en el contexto de herencia multifactorial, los disparadores ambientales (como estimulantes o nootrópicos):', opts:['No tienen ningún efecto en individuos predispuestos','Pueden inducir la manifestación en individuos con predisposición genética latente','Solo afectan a pacientes sin ningún componente genético','Curan la condición'], correct:1},
+{type:'mcq', topic:'Multifactorial', q:'¿Cuál es la trampa clásica de examen entre Esquizofrenia y Trastorno Esquizoide?', opts:['Son exactamente la misma entidad clínica','La Esquizofrenia es un trastorno grave; el Trastorno Esquizoide es de personalidad, mucho menos grave','El Trastorno Esquizoide es más grave que la Esquizofrenia','Ambos son enfermedades exclusivamente ambientales'], correct:1},
+{type:'mcq', topic:'Multifactorial', q:'Sobre la Enfermedad de Parkinson:', opts:['Es siempre puramente mendeliana','La mayoría de los casos son idiopáticos, pero existe agregación familiar que aumenta el riesgo en generaciones sucesivas','Nunca presenta componente familiar','Es genéticamente idéntica al Alzheimer de inicio precoz'], correct:1},
+{type:'mcq', topic:'Multifactorial', q:'El Alzheimer de Inicio Precoz (antes de los 65 años) se caracteriza por:', opts:['Ser puramente multifactorial','Ser altamente mendeliano, con mutaciones en los genes PS, manifestación casi obligatoria','No tener ningún componente genético','Ser más común que el de inicio tardío'], correct:1},
+{type:'mcq', topic:'Gestacionales', q:'Una malformación se define como:', opts:['Un defecto causado por una fuerza mecánica externa en el 3er trimestre','Un "error de proyecto" — defecto estructural primario de origen genético/intrínseco durante la organogénesis','Una estructura anómala causada por bridas amnióticas','Una organización celular anormal sistémica'], correct:1},
+{type:'mcq', topic:'Gestacionales', q:'Para el diagnóstico prenatal, ¿cuál de los siguientes es un método INVASIVO de confirmación diagnóstica?', opts:['Ultrasonografía','NIPT (test prenatal no invasivo)','Amniocentesis','Ecografía Doppler'], correct:2},
+{type:'mcq', topic:'Gestacionales', q:'Las bridas amnióticas, que pueden causar amputación de extremidades, son un ejemplo de:', opts:['Malformación','Disrupción','Deformación','Displasia'], correct:1},
+{type:'mcq', topic:'Monogénica', q:'El mecanismo genético de la enfermedad de Huntington involucra:', opts:['Deleción del gen HTT','Expansión de tripletes CAG que codifican glutamina, formando poliglutamina tóxica','Deficiencia del Factor VIII','Ausencia de distrofina'], correct:1},
+{type:'mcq', topic:'Monogénica', q:'¿Cuál es la función de la distrofina, ausente en la Distrofia Muscular de Duchenne?', opts:['Coagular la sangre','Conectar la actina del citoesqueleto con la matriz extracelular, amortiguando la contracción muscular','Producir poliglutamina','Activar el gen SRY'], correct:1},
+{type:'mcq', topic:'Monogénica', q:'¿Cuál es el patrón de herencia de la Hemofilia?', opts:['Autosómica dominante','Recesiva ligada al cromosoma X','Mitocondrial','Codominante'], correct:1},
+{type:'mcq', topic:'Sexual', q:'El gen SRY, ubicado en el cromosoma Y, funciona como:', opts:['Un gen de reparación del ADN','El interruptor maestro que induce la formación de testículos','Un gen exclusivo de la determinación de grupos sanguíneos','Un regulador del metabolismo hepático'], correct:1},
+{type:'mcq', topic:'Sexual', q:'La Hipótesis de Lyon explica:', opts:['La expansión del triplete CGG','La inactivación de un cromosoma X en la mujer, formando el corpúsculo de Barr','La producción de testosterona fetal','La herencia mitocondrial'], correct:1},
+{type:'mcq', topic:'Sexual', q:'El Síndrome del X Frágil es causado por una mutación en el gen:', opts:['SRY','HTT','FMR1','DMD'], correct:2},
+{type:'mcq', topic:'Sexual', q:'¿Cuál es el cariotipo del Síndrome de Klinefelter?', opts:['45, X','47, XXY','47, XYY','47, XXX'], correct:1},
+{type:'mcq', topic:'Farmacogenética', q:'Un paciente metabolizador ULTRARRÁPIDO recibe una dosis estándar de un fármaco. ¿Qué puede ocurrir?', opts:['Toxicidad hepática por acumulación','El fármaco no alcanza niveles terapéuticos, con riesgo de lesión hepática por hiperactividad enzimática','Nada, siempre es beneficioso','Hemorragia por acumulación'], correct:1},
+{type:'mcq', topic:'Farmacogenética', q:'¿De qué enzima depende el metabolismo de la Isoniazida, dividiendo a la población mundial en lentos y rápidos?', opts:['Citocromo P450 exclusivamente','N-acetiltransferasa (NAT)','ECA','Colinesterasa'], correct:1},
+{type:'mcq', topic:'Cáncer', q:'¿Cuál es la diferencia fundamental entre un TSG (gen supresor de tumor) y un protooncogene?', opts:['Son sinónimos','El TSG frena el crecimiento celular; el protooncogene lo promueve de forma controlada','El protooncogene siempre causa cáncer','El TSG solo actúa en el hígado'], correct:1},
+{type:'mcq', topic:'Cáncer', q:'El gen TP53, conocido como "guardián del genoma", produce la proteína p53, cuya función es:', opts:['Reparar directamente el ADN dañado','Proteger el ADN y activar la apoptosis ante daños irreparables','Producir anticuerpos','Sintetizar colágeno'], correct:1},
+{type:'mcq', topic:'Cáncer', q:'Mutaciones en BRCA1 y BRCA2 aumentan la susceptibilidad principalmente a:', opts:['Cáncer de pulmón','Cáncer de mama y ovario','Cáncer de piel exclusivamente','Cáncer de tiroides exclusivamente'], correct:1},
+
+// ===== VF (10) =====
+{type:'vf', topic:'ABO', q:'El tipo de sangre O es el donante universal porque no posee antígenos A, B ni factor Rh.', correct:true},
+{type:'vf', topic:'Herencia', q:'Una condición mitocondrial se transmite en un 100% por vía materna.', correct:true},
+{type:'vf', topic:'Multifactorial', q:'El Alzheimer de inicio tardío (después de los 65 años) es altamente mendeliano.', correct:false},
+{type:'vf', topic:'Multifactorial', q:'La Esquizofrenia y el Trastorno Esquizoide de la personalidad son la misma entidad clínica.', correct:false},
+{type:'vf', topic:'Gestacionales', q:'Las deformaciones son frecuentemente corregibles en el periodo posnatal mediante intervenciones físicas, como el uso de yesos.', correct:true},
+{type:'vf', topic:'Monogénica', q:'Un hombre hemofílico transmite la enfermedad a todos sus hijos varones.', correct:false},
+{type:'vf', topic:'Sexual', q:'En el 99% de los casos, el sexo genético (cromosómico) define el sexo fenotípico.', correct:true},
+{type:'vf', topic:'Sexual', q:'La ciencia actual confirma que el síndrome de Jacobs (47, XYY) se asocia comprobadamente a mayor agresividad.', correct:false},
+{type:'vf', topic:'Farmacogenética', q:'Existe una "dosis estándar" de fármacos válida y segura para todos los pacientes, independientemente de su genética.', correct:false},
+{type:'vf', topic:'Cáncer', q:'El protooncogene es la versión mutada y descontrolada del oncogene.', correct:false},
+
+// ===== MATCH (5) =====
+{type:'match', topic:'Cariotipo', prompt:'Relacione cada síndrome con su cariotipo correspondiente.',
+  pairs:[
+    {term:'Síndrome de Down', def:'47, XX (o XY), +21'},
+    {term:'Síndrome de Edwards', def:'47, XY, +18'},
+    {term:'Síndrome de Turner', def:'45, X'},
+    {term:'Cri-du-chat', def:'46, XX, del(5p)'}
+  ]},
+{type:'match', topic:'Monogénica', prompt:'Relacione cada enfermedad monogénica con su mecanismo/característica.',
+  pairs:[
+    {term:'Huntington', def:'Autosómica dominante; expansión CAG; poliglutamina tóxica'},
+    {term:'Duchenne', def:'Recesiva ligada al X; ausencia de distrofina'},
+    {term:'Hemofilia A', def:'Deficiencia del Factor VIII (la más frecuente)'},
+    {term:'Hemofilia B', def:'Deficiencia del Factor IX'}
+  ]},
+{type:'match', topic:'Gestacionales', prompt:'Relacione cada categoría de anomalía con su definición.',
+  pairs:[
+    {term:'Malformación', def:'Error de proyecto de origen genético/intrínseco durante la organogénesis'},
+    {term:'Disrupción', def:'Factor externo que interrumpe un desarrollo originalmente normal (ej. bridas amnióticas)'},
+    {term:'Deformación', def:'Fuerza mecánica que distorsiona una estructura ya formada correctamente (ej. pie zambo posicional)'},
+    {term:'Displasia', def:'Organización celular anormal de origen monogénico, con efecto sistémico'}
+  ]},
+{type:'match', topic:'Cáncer', prompt:'Relacione cada gen con su función en la genética del cáncer.',
+  pairs:[
+    {term:'TP53', def:'Produce p53; activa apoptosis ante daño irreparable del ADN — "guardián del genoma"'},
+    {term:'BRCA1 / BRCA2', def:'Reparan el ADN; mutados aumentan el riesgo de cáncer de mama y ovario'},
+    {term:'RB1', def:'Controla la división celular, previene la proliferación descontrolada'},
+    {term:'APC', def:'Asociado clásicamente al cáncer colorrectal'}
+  ]},
+{type:'match', topic:'Farmacogenética', prompt:'Relacione cada situación con su consecuencia clínica.',
+  pairs:[
+    {term:'Metabolizador lento (general)', def:'El fármaco se acumula, con riesgo de toxicidad'},
+    {term:'Metabolizador ultrarrápido (general)', def:'El fármaco se elimina antes de alcanzar niveles terapéuticos'},
+    {term:'Isoniazida en metabolizador lento (NAT)', def:'Afecta a ~50% de occidentales/europeos, riesgo de toxicidad hepática'},
+    {term:'Varfarina en metabolizador lento', def:'Riesgo de hemorragia interna grave por acumulación'}
+  ]}
+];
+
+let qIndex = 0, score = 0, answered = false, log = [];
+let topicStats = {};
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = []; topicStats = {};
+  renderQuiz();
+}
+
+function typeLabel(t){ return t==='mcq' ? 'Múltiple elección' : t==='vf' ? 'Verdadero / Falso' : 'Asociar columnas'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIndex >= quizData.length){ renderResult(); return; }
+  const item = quizData[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/quizData.length)*100);
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (qIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + score + '</span></div>';
+  html += '<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="tag-row"><span class="tag topic">' + item.topic + '</span><span class="tag type">' + typeLabel(item.type) + '</span></div>';
+  html += '<div class="quiz-q">' + (item.q || item.prompt) + '</div>';
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else if(item.type === 'vf'){
+    html += '<div class="vf-row">'
+      + '<button class="option" data-val="true" onclick="answerVF(this,true)">Verdadero</button>'
+      + '<button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button>'
+      + '</div>';
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += '<div id="matchBlock">';
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += '<div class="match-row" data-idx="'+i+'">'
+        + '<span class="match-term">' + p.term + '</span>'
+        + '<select onchange="matchSelected()"><option value="">— Seleccione —</option>'
+        + shuffled.map(d=>'<option value="'+escapeHtml(d)+'">'+d+'</option>').join('')
+        + '</select></div>';
+    });
+    html += '</div>';
+    html += '<button class="btn-primary" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>';
+  }
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function registerTopic(topic, correct){
+  if(!topicStats[topic]) topicStats[topic] = {total:0, correct:0};
+  topicStats[topic].total++;
+  if(correct) topicStats[topic].correct++;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct, item.topic, item.q);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct, item.topic, item.q);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  document.getElementById('checkMatchBtn').disabled = ![...selects].every(s=>s.value !== '');
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (allCorrect?'correct':'incorrect') + '">' + correctCount + ' / ' + item.pairs.length + ' pares correctos.</div>';
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  registerTopic(item.topic, allCorrect);
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct, topic, q){
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto!' : '✗ Incorrecto') + '</div>';
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic, correct);
+  log.push({q: q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((score/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + score + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  html += pct >= 80 ? '<p style="color:var(--green);">¡Excelente dominio de toda la Genética Humana!</p>'
+    : pct >= 50 ? '<p style="color:var(--gold);">Buen resultado — revisa los bloques con más errores abajo.</p>'
+    : '<p style="color:var(--red);">Vale la pena repasar los módulos completos antes de la prueba.</p>';
+
+  html += '<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{
+    const s = topicStats[t];
+    html += '<div class="bd-item"><div class="n">' + s.correct + '/' + s.total + '</div><div class="l">' + t + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  log.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Reintentar simulado</button></div></div>';
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
