@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Final — Fisiología Cardiovascular | Cap. 1-19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1712;
+  --bg-panel:#152119;
+  --bg-card:#1a2a20;
+  --gold:#d4af37;
+  --gold-soft:#e8cf7a;
+  --green:#4caf6e;
+  --green-soft:#7fd39c;
+  --text:#eef3ee;
+  --text-dim:#a9bdae;
+  --border:#2a3d30;
+  --danger:#e0705a;
+  --info:#5aa9e0;
+  --easy:#7fd39c;
+  --med:#e8cf7a;
+  --hard:#e0705a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:radial-gradient(circle at top left, #16241a, #0e1712 60%);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.6;
+  padding:20px;
+  min-height:100vh;
+}
+.wrap{max-width:900px;margin:0 auto;}
+h1,h2,h3{font-family:'Lora',serif;}
+header{
+  background:linear-gradient(135deg, #1c2e21, #14201a);
+  border:1px solid var(--gold);
+  border-radius:16px;
+  padding:24px 28px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:16px;
+}
+header h1{font-size:1.4rem;color:var(--gold-soft);}
+header p{color:var(--text-dim);font-size:0.86rem;margin-top:4px;}
+.xp-badge{
+  background:var(--bg-card);
+  border:1px solid var(--gold);
+  border-radius:12px;
+  padding:10px 18px;
+  text-align:center;
+  min-width:140px;
+}
+.xp-badge .lvl{font-family:'Lora',serif;font-weight:700;color:var(--gold-soft);font-size:1.05rem;}
+.panel{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+}
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 18px;
+  margin-bottom:14px;
+}
+.card h3{color:var(--green-soft);font-size:1.05rem;margin-bottom:8px;}
+ul{margin:8px 0 8px 20px;color:var(--text-dim);}
+li{margin-bottom:6px;}
+.box{
+  border-radius:12px;
+  padding:14px 18px;
+  margin:14px 0;
+  border-left:4px solid var(--gold);
+  background:rgba(212,175,55,.08);
+}
+.box .label{color:var(--gold-soft);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.action-btn{
+  background:linear-gradient(135deg,#2c4c37,#1f3628);
+  border:1px solid var(--gold);
+  color:var(--gold-soft);
+  padding:12px 24px;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-weight:700;
+  font-size:.95rem;
+  transition:all .2s;
+}
+.action-btn:hover{background:linear-gradient(135deg,#38624a,#294a34);}
+.quiz-progress{display:flex;justify-content:space-between;color:var(--text-dim);font-size:.85rem;margin-bottom:14px;}
+.quiz-progress .bar-wrap{width:100%;height:8px;background:#0e1712;border-radius:4px;margin-top:8px;overflow:hidden;}
+.quiz-progress .bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .3s;}
+.tag-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.tag{
+  display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  padding:3px 10px;border-radius:20px;
+}
+.tag.topic{background:rgba(90,169,224,.15);color:var(--info);border:1px solid var(--info);}
+.tag.diff-facil{background:rgba(127,211,156,.15);color:var(--easy);border:1px solid var(--easy);}
+.tag.diff-intermedia{background:rgba(232,207,122,.15);color:var(--med);border:1px solid var(--med);}
+.tag.diff-dificil{background:rgba(224,112,90,.15);color:var(--hard);border:1px solid var(--hard);}
+.quiz-q{font-family:'Lora',serif;font-size:1.1rem;color:var(--text);margin-bottom:16px;}
+.opt{
+  display:block;width:100%;text-align:left;
+  background:#16241a;border:1px solid var(--border);color:var(--text);
+  padding:11px 14px;border-radius:8px;margin-bottom:9px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:.9rem;
+}
+.opt:hover{border-color:var(--green-soft);}
+.opt.disabled{cursor:default;}
+.opt.correct{background:rgba(76,175,110,.25);border-color:var(--green);}
+.opt.wrong{background:rgba(224,112,90,.25);border-color:var(--danger);}
+.vf-row{display:flex;gap:10px;}
+.vf-row .opt{flex:1;text-align:center;}
+.feedback{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:.86rem;}
+.feedback.correct{background:rgba(76,175,110,.12);color:var(--green-soft);border-left:3px solid var(--green);}
+.feedback.wrong{background:rgba(224,112,90,.12);color:var(--danger);border-left:3px solid var(--danger);}
+.nav-row{display:flex;justify-content:flex-end;margin-top:18px;gap:10px;}
+.result-box{text-align:center;}
+.result-box .score{font-family:'Lora',serif;font-size:2.4rem;color:var(--gold-soft);margin:10px 0;}
+.summary-table{width:100%;border-collapse:collapse;margin-top:18px;font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border);padding:7px 9px;text-align:left;}
+.summary-table th{background:#1e3327;color:var(--gold-soft);font-family:'Lora',serif;}
+.summary-table td.ok{color:var(--green-soft);}
+.summary-table td.bad{color:var(--danger);}
+.breakdown{display:flex;gap:10px;justify-content:center;margin:16px 0;flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;text-align:center;min-width:90px;}
+.breakdown .bd-item .n{font-family:'Lora',serif;font-size:1.3rem;color:var(--gold-soft);}
+.breakdown .bd-item .l{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;margin-top:24px;padding:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Simulado Final — Fisiología Cardiovascular</h1>
+    <p>Cap. 1 a 19 (Guyton &amp; Hall) — énfasis en ECG/Eje Eléctrico y Sistema Renina-Angiotensina-Aldosterona</p>
+  </div>
+  <div class="xp-badge">
+    <div class="lvl" id="lvlLabel">Nivel 1</div>
+    <div style="font-size:.75rem;color:var(--text-dim);margin-top:4px;" id="xpLabel">0 XP</div>
+  </div>
+</header>
+
+<div class="panel" id="mainPanel">
+
+  <div id="introScreen">
+    <div class="box">
+      <div class="label">Formato del simulado</div>
+      <strong>50 preguntas</strong> — 40 de múltiple elección y 10 de Verdadero/Falso, con dificultad mixta (fácil, intermedia, difícil), cubriendo todo el material de Fisiología disponible en la plataforma.
+    </div>
+    <div class="card">
+      <h3>Distribución por bloque</h3>
+      <ul>
+        <li><strong>Cap. 1-8</strong> (Homeostasis, membrana, potenciales, contracción muscular) — 12 preguntas</li>
+        <li><strong>Cap. 9-15</strong> (Ciclo cardíaco, ECG básico, hemodinámica) — 18 preguntas</li>
+        <li><strong>Cap. 16-19</strong> (Microcirculación, autorregulación, barorreceptores, <u>eje eléctrico del ECG</u> y <u>sistema RAAS</u>) — 20 preguntas</li>
+      </ul>
+    </div>
+    <div class="box" style="border-color:var(--info);background:rgba(90,169,224,.08);">
+      <div class="label" style="color:var(--info);">Aviso</div>
+      Este bloque de Cap. 16-19 tiene énfasis reforzado en <strong>diagnóstico del eje eléctrico (DI + aVF)</strong> y en la <strong>cascada renina → angiotensina I → angiotensina II → aldosterona</strong>, que fue tema de la última prueba.
+    </div>
+    <button class="action-btn" onclick="startQuiz()">Comenzar simulado</button>
+  </div>
+
+  <div id="quizScreen" style="display:none;"></div>
+
+</div>
+
+</div>
+
+<footer>Resumos Clinicus e Simulados · Fisiología Cardiovascular · Semestre 3 · Simulado Final (50 preguntas)</footer>
+
+<script>
+/* ---------- XP SYSTEM ---------- */
+let xp = parseInt(localStorage.getItem('simuladoFisio50_xp') || '0');
+function updateXP(){
+  const lvl = Math.floor(xp/100)+1;
+  document.getElementById('lvlLabel').innerText = 'Nivel ' + lvl;
+  document.getElementById('xpLabel').innerText = xp + ' XP';
+  localStorage.setItem('simuladoFisio50_xp', xp);
+}
+function addXP(n){ xp += n; updateXP(); }
+updateXP();
+
+/* ---------- QUIZ DATA (50 preguntas: 40 mcq + 10 vf) ---------- */
+const quizData = [
+// ===== BLOQUE A — CAP. 1-8 (12 preguntas) =====
+{type:'mcq', topic:'Cap.1-8 · Homeostasis', diff:'facil', q:'La homeostasis se refiere a:', opts:['La producción de energía celular','El mantenimiento del equilibrio interno del organismo','La eliminación de residuos','La síntesis de proteínas'], correct:1},
+{type:'mcq', topic:'Cap.1-8 · Compartimentos', diff:'facil', q:'¿Cuál es el mayor compartimiento de agua corporal?', opts:['Plasma','Líquido intersticial','Líquido intracelular (LIC)','Líquido extracelular (LEC)'], correct:2},
+{type:'mcq', topic:'Cap.1-8 · Retroalimentación', diff:'intermedia', q:'¿Cuál de los siguientes es un ejemplo clásico de retroalimentación POSITIVA?', opts:['Regulación de la temperatura corporal','Regulación de la presión arterial','El parto','Contracción muscular isométrica'], correct:2},
+{type:'mcq', topic:'Cap.1-8 · Potencial de membrana', diff:'facil', q:'El potencial de reposo típico de muchas neuronas es de aproximadamente:', opts:['+30 mV','0 mV','−70 mV','−10 mV'], correct:2},
+{type:'mcq', topic:'Cap.1-8 · Potencial de acción', diff:'intermedia', q:'Durante la despolarización ocurre principalmente:', opts:['Entrada de K⁺','Salida de Na⁺','Entrada de Na⁺','Entrada de Cl⁻'], correct:2},
+{type:'mcq', topic:'Cap.1-8 · Potencial de acción', diff:'intermedia', q:'La repolarización ocurre principalmente por:', opts:['Entrada de sodio','Salida de potasio','Entrada de calcio','Entrada de cloro'], correct:1},
+{type:'mcq', topic:'Cap.1-8 · Transporte', diff:'dificil', q:'La bomba Na⁺/K⁺-ATPasa transporta, por cada ciclo:', opts:['2 Na⁺ hacia afuera y 3 K⁺ hacia adentro','3 Na⁺ hacia afuera y 2 K⁺ hacia adentro','3 K⁺ hacia afuera y 2 Na⁺ hacia adentro','1 Na⁺ hacia afuera y 1 K⁺ hacia adentro'], correct:1},
+{type:'mcq', topic:'Cap.1-8 · Nernst', diff:'dificil', q:'El potencial de Nernst del potasio (K⁺) es aproximadamente:', opts:['+61 mV','−94 mV','−70 mV','+35 mV'], correct:1},
+{type:'mcq', topic:'Cap.1-8 · Conducción nerviosa', diff:'intermedia', q:'La conducción saltatoria ocurre en:', opts:['Fibras sin mielina','Fibras mielinizadas, saltando entre nodos de Ranvier','Exclusivamente en el músculo cardíaco','Exclusivamente en el músculo liso'], correct:1},
+{type:'mcq', topic:'Cap.1-8 · Potencial cardíaco', diff:'dificil', q:'El potencial de acción cardíaco se diferencia del neuronal principalmente por:', opts:['Ser mucho más rápido','Tener una fase de meseta (platô) prolongada por entrada sostenida de Ca²⁺','No presentar repolarización','No depender de canales de Na⁺'], correct:1},
+{type:'vf', topic:'Cap.1-8 · Potencial de membrana', diff:'facil', q:'El interior de la célula es negativo respecto al exterior en el estado de reposo.', correct:true},
+{type:'vf', topic:'Cap.1-8 · Músculo', diff:'intermedia', q:'La hipertrofia muscular aumenta el número de fibras musculares.', correct:false},
+
+// ===== BLOQUE B — CAP. 9-15 (18 preguntas) =====
+{type:'mcq', topic:'Cap.9-15 · Potencial cardíaco', diff:'intermedia', q:'¿Cuál es la principal diferencia entre el potencial de acción ventricular y el del músculo esquelético?', opts:['El potencial ventricular es más corto y no presenta fase de meseta','El potencial ventricular posee una fase de meseta (Fase 2) mediada por entrada de Ca²⁺, durando cerca de 15 veces más','El músculo esquelético depende de Ca²⁺ para la despolarización inicial','Ambos tienen duración y fases idénticas'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Potencial cardíaco', diff:'facil', q:'En la Fase 0 del potencial de acción ventricular, ¿qué ion es responsable de la rápida despolarización?', opts:['Ca²⁺','K⁺','Na⁺','Cl⁻'], correct:2},
+{type:'mcq', topic:'Cap.9-15 · Nodo sinusal', diff:'dificil', q:'El nodo sinusal actúa como marcapasos primario. ¿Cuál es su frecuencia intrínseca aproximada y por qué depende del Ca²⁺ para despolarizar?', opts:['40-60 lpm; porque el Na⁺ no cruza la membrana del nodo sinusal','70-80 lpm; porque los canales rápidos de Na⁺ están inactivados en estas células (umbral −40 mV) y la despolarización es mediada por canales lentos de Ca²⁺','100-120 lpm; porque el Ca²⁺ tiene valencia 2+','50-70 lpm; porque el retículo sarcoplasmático libera Ca²⁺ espontáneamente'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Nodo AV', diff:'intermedia', q:'¿Cuál es la función fisiológica del retraso en el Nodo AV (~0,09 s)?', opts:['Acelerar la conducción para que los ventrículos se contraigan antes que las aurículas','Permitir el llenado ventricular completo antes de la contracción ventricular, optimizando el volumen sistólico','Prevenir la propagación retrógrada de los ventrículos a las aurículas','Aumentar la refractariedad de las fibras de Purkinje'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Fibras de Purkinje', diff:'intermedia', q:'¿Cuál de las siguientes afirmaciones sobre las fibras de Purkinje es correcta?', opts:['Son las fibras más lentas del sistema de conducción (0,5 m/s)','Conducen el impulso a 4 m/s gracias a la abundancia de discos intercalados','Inician el potencial de acción cardíaco con frecuencia de 70-80 lpm','Se localizan en el Nodo AV y producen el retraso de conducción'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Ciclo cardíaco', diff:'dificil', q:'Durante el ciclo cardíaco, ¿qué representa la contracción isovolumétrica?', opts:['Fase en que el volumen ventricular aumenta sin variación de presión','Fase inmediatamente después del cierre de las válvulas semilunares','Fase en que la presión ventricular aumenta bruscamente mientras el volumen permanece constante, con todas las válvulas cerradas','Período de eyección máxima de sangre hacia la aorta'], correct:2},
+{type:'mcq', topic:'Cap.9-15 · Volúmenes cardíacos', diff:'intermedia', q:'El Volumen Sistólico (VS) se calcula por la diferencia entre:', opts:['Volumen residual y volumen corriente','Volumen telediastólico (120 ml) y volumen telesistólico (50 ml), resultando ~70 ml','Volumen de eyección y volumen residual funcional','Volumen telesistólico y volumen de llenado rápido'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Frank-Starling', diff:'intermedia', q:'Según el Principio de Frank-Starling, ¿qué sucede con la fuerza de contracción cardíaca cuando aumenta el retorno venoso?', opts:['La fuerza disminuye para proteger al miocardio de sobredistensión','La fuerza permanece constante','La fuerza aumenta proporcionalmente al estiramiento de las fibras (precarga), aumentando el gasto cardíaco','La frecuencia cardíaca disminuye reflejamente'], correct:2},
+{type:'mcq', topic:'Cap.9-15 · ECG básico', diff:'facil', q:'En el ECG, la onda T representa:', opts:['La repolarización auricular','La despolarización del septo interventricular','La repolarización ventricular','El cierre de las válvulas auriculoventriculares'], correct:2},
+{type:'mcq', topic:'Cap.9-15 · ECG básico', diff:'intermedia', q:'En un ECG con velocidad estándar de 25 mm/s, ¿cuánto tiempo corresponde a 5 mm (un cuadro grande)?', opts:['0,04 s','0,12 s','0,20 s','0,40 s'], correct:2},
+{type:'mcq', topic:'Cap.9-15 · Ritmo sinusal', diff:'dificil', q:'¿Cuál es la definición completa de Ritmo Sinusal Normal en el ECG?', opts:['FC 60-100 lpm, con onda P antes de cada QRS, P positiva en DII y aVF, negativa en aVR, PR entre 0,12-0,20 s','FC 60-100 lpm, ausencia de onda P, QRS ancho >0,12 s','FC >100 lpm con onda P invertida en DII','Cualquier ritmo regular con QRS estrecho'], correct:0},
+{type:'mcq', topic:'Cap.9-15 · Hemodinámica', diff:'dificil', q:'Según la Ley de Poiseuille, el flujo sanguíneo varía con el radio del vaso elevado a la 4ª potencia. Si el radio de una arteriola se duplica, el flujo:', opts:['Se duplica (×2)','Se cuadruplica (×4)','Aumenta 8 veces (×8)','Aumenta 16 veces (×16)'], correct:3},
+{type:'mcq', topic:'Cap.9-15 · Hemodinámica', diff:'facil', q:'Según la Ley de Ohm aplicada a la hemodinámica, la relación entre flujo, presión y resistencia es:', opts:['Flujo = Resistencia × ΔP','Flujo = ΔP / Resistencia','Resistencia = Flujo × ΔP','ΔP = Flujo / Resistencia'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Sistema venoso', diff:'intermedia', q:'Las venas son descritas como "reservorios de sangre". ¿Qué porcentaje del volumen sanguíneo total contienen y cómo se compara su complacencia con la de las arterias?', opts:['~15% del volumen total; complacencia igual a las arterias','~64% del volumen total; complacencia ~24 veces mayor que las arterias','~50% del volumen total; complacencia ~10 veces mayor','~30% del volumen total; complacencia 5 veces menor'], correct:1},
+{type:'mcq', topic:'Cap.9-15 · Hematócrito', diff:'facil', q:'El valor normal aproximado del hematócrito es:', opts:['~25%','~40%','~55%','~70%'], correct:1},
+{type:'vf', topic:'Cap.9-15 · ECG básico', diff:'facil', q:'La onda T del ECG representa la despolarización auricular.', correct:false},
+{type:'vf', topic:'Cap.9-15 · Nodo AV', diff:'intermedia', q:'El nodo AV retrasa el impulso cardíaco aproximadamente 0,09 s para permitir el llenado ventricular completo.', correct:true},
+{type:'vf', topic:'Cap.9-15 · Purkinje', diff:'dificil', q:'Las fibras de Purkinje son las más lentas del sistema de conducción cardíaco.', correct:false},
+
+// ===== BLOQUE C — CAP. 16-19 (20 preguntas, énfasis ECG/eje y RAAS) =====
+{type:'mcq', topic:'Cap.16-19 · Eje eléctrico', diff:'facil', q:'En el método rápido de determinación del eje eléctrico (DI + aVF), DI(+) y aVF(+) indican:', opts:['Desvío del eje a la izquierda','Desvío del eje a la derecha','Eje eléctrico normal (−30° a +110°)','Eje indeterminado/extremo'], correct:2},
+{type:'mcq', topic:'Cap.16-19 · Eje eléctrico', diff:'intermedia', q:'DI(+) y aVF(−) en el método rápido del eje eléctrico indican:', opts:['Eje normal','Desvío a la izquierda (HBAE, HVI)','Desvío a la derecha (HVD, TEP)','Desvío extremo'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · Eje eléctrico', diff:'intermedia', q:'DI(−) y aVF(+) en el método rápido del eje eléctrico indican:', opts:['Eje normal','Desvío a la izquierda','Desvío a la derecha (HVD, TEP, EPOC)','Desvío extremo'], correct:2},
+{type:'mcq', topic:'Cap.16-19 · Eje eléctrico', diff:'dificil', q:'DI(−) y aVF(−) en el método rápido del eje eléctrico indican:', opts:['Eje normal','Desvío a la izquierda','Desvío a la derecha','Desvío extremo / indeterminado'], correct:3},
+{type:'mcq', topic:'Cap.16-19 · Caso clínico ECG', diff:'dificil', q:'Paciente de 60 años con ECG mostrando DI negativo y aVF positivo. ¿Cuál es el diagnóstico del eje y dónde está la mayor voltaje?', opts:['Eje normal; mayor voltaje en DII','Desvío a la izquierda; mayor voltaje en DI','Desvío a la derecha; mayor voltaje en DIII (+120°), isodifásica en aVR','Eje indeterminado; mayor voltaje en aVR'], correct:2},
+{type:'mcq', topic:'Cap.16-19 · Territorios ECG', diff:'facil', q:'Las derivaciones DII, DIII y aVF corresponden al territorio de la pared:', opts:['Anterior, irrigada por la Descendente Anterior','Inferior, irrigada por la Coronaria Derecha','Lateral, irrigada por la Circunfleja','Septal, irrigada por la DA proximal'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · Territorios ECG', diff:'intermedia', q:'Las derivaciones DI, aVL, V5 y V6 corresponden al territorio de la pared:', opts:['Inferior, Coronaria Derecha','Lateral, arteria Circunfleja','Anterior, Descendente Anterior','Septal, DA proximal'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · Territorios ECG', diff:'intermedia', q:'Las derivaciones V3 y V4 corresponden al territorio de la pared:', opts:['Inferior, Coronaria Derecha','Lateral, Circunfleja','Anterior, Descendente Anterior (DA)','Cavidad interna, Tronco'], correct:2},
+{type:'mcq', topic:'Cap.16-19 · Derivaciones ECG', diff:'facil', q:'El ECG estándar de 12 derivaciones se divide en dos grupos:', opts:['6 precordiales y 6 de miembros aumentadas únicamente','6 derivaciones de miembros (plano frontal) y 6 precordiales (plano horizontal)','12 derivaciones precordiales solamente','6 bipolares y 6 unipolares de miembros solamente'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · Derivaciones ECG', diff:'dificil', q:'Las derivaciones bipolares DI, DII y DIII forman parte de:', opts:['El triángulo de Einthoven','Las derivaciones precordiales','Las derivaciones aumentadas unipolares','El plano horizontal'], correct:0},
+{type:'mcq', topic:'Cap.16-19 · RAAS', diff:'facil', q:'La renina es liberada por el riñón ante:', opts:['Un aumento de la presión arterial','Una disminución de la presión (o perfusión renal)','Un aumento del volumen sanguíneo','La ingesta excesiva de sodio'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · RAAS', diff:'intermedia', q:'¿Dónde se produce principalmente la conversión de angiotensina I a angiotensina II?', opts:['En el riñón','En el hígado','En el pulmón, por la enzima convertidora (ECA)','En el corazón'], correct:2},
+{type:'mcq', topic:'Cap.16-19 · RAAS', diff:'intermedia', q:'¿Cuáles son los dos efectos principales de la angiotensina II sobre la presión arterial?', opts:['Vasodilatación y excreción renal de sal','Vasoconstricción directa y retención renal de sal y agua (vía aldosterona)','Bradicardia y vasodilatación','Ninguno, es biológicamente inactiva'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · RAAS', diff:'dificil', q:'¿Qué sustancia inactiva a la angiotensina II, limitando la duración de su efecto?', opts:['La renina','La angiotensinasa','La aldosterona','La ECA'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · Anatomía renal', diff:'dificil', q:'¿Dónde se localizan las células yuxtaglomerulares que detectan la presión de perfusión renal y liberan renina?', opts:['En la arteriola eferente','En la arteriola aferente','En el túbulo colector','En la vena renal'], correct:1},
+{type:'mcq', topic:'Cap.16-19 · Autorregulación', diff:'intermedia', q:'¿Cuál es el rango aproximado de presión arterial media dentro del cual el flujo sanguíneo se mantiene relativamente constante por autorregulación?', opts:['10-50 mmHg','70-175 mmHg','200-300 mmHg','100-120 mmHg'], correct:1},
+{type:'vf', topic:'Cap.16-19 · Farmacología RAAS', diff:'facil', q:'Los IECA (ej: enalapril) actúan bloqueando la enzima convertidora de angiotensina.', correct:true},
+{type:'vf', topic:'Cap.16-19 · Farmacología RAAS', diff:'intermedia', q:'Los ARA-II (ej: losartán) bloquean el receptor de angiotensina II.', correct:true},
+{type:'vf', topic:'Cap.16-19 · Control renal PA', diff:'dificil', q:'El mecanismo renal de natriuresis por presión tiene, a largo plazo, una ganancia teóricamente infinita.', correct:true},
+{type:'vf', topic:'Cap.16-19 · Diagnóstico HTA', diff:'intermedia', q:'El criterio diagnóstico clásico de hipertensión arterial se establece con una única medición aislada de 140/90 mmHg.', correct:false}
+];
+
+let qIndex = 0, score = 0, answered = false, log = [];
+let diffStats = {facil:{total:0,correct:0}, intermedia:{total:0,correct:0}, dificil:{total:0,correct:0}};
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = [];
+  diffStats = {facil:{total:0,correct:0}, intermedia:{total:0,correct:0}, dificil:{total:0,correct:0}};
+  renderQuiz();
+}
+
+function diffLabel(d){ return d==='facil' ? 'Fácil' : d==='intermedia' ? 'Intermedia' : 'Difícil'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizScreen');
+  if(qIndex >= quizData.length){ renderResult(); return; }
+  const item = quizData[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/quizData.length)*100);
+  let html = `<div class="quiz-progress"><span>Pregunta ${qIndex+1} / ${quizData.length}</span><span>Puntaje: ${score}</span></div>`;
+  html += `<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:${pct}%"></div></div>`;
+  html += `<div class="tag-row"><span class="tag topic">${item.topic}</span><span class="tag diff-${item.diff}">${diffLabel(item.diff)}</span><span class="tag topic">${item.type==='mcq'?'Múltiple elección':'V/F'}</span></div>`;
+  html += `<div class="quiz-q">${item.q}</div>`;
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += `<button class="opt" data-idx="${i}" onclick="answerMCQ(this,${i})">${opt}</button>`;
+    });
+  } else if(item.type === 'vf'){
+    html += `<div class="vf-row">
+      <button class="opt" data-val="true" onclick="answerVF(this,true)">Verdadero</button>
+      <button class="opt" data-val="false" onclick="answerVF(this,false)">Falso</button>
+    </div>`;
+  }
+
+  html += `<div id="feedbackArea"></div>`;
+  html += `<div class="nav-row"><button class="action-btn" id="nextBtn" disabled onclick="nextQuestion()">Siguiente →</button></div>`;
+  area.innerHTML = html;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct);
+}
+
+function finishAnswer(correct){
+  const item = quizData[qIndex];
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = `<div class="feedback ${correct?'correct':'wrong'}">${correct ? '✔ Correcto' : '✘ Incorrecto'}</div>`;
+  if(correct){ score++; addXP(item.diff==='dificil'?18:item.diff==='intermedia'?12:8); } else { addXP(2); }
+  diffStats[item.diff].total++;
+  if(correct) diffStats[item.diff].correct++;
+  log.push({q: item.q, topic: item.topic, diff: item.diff, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizScreen');
+  const pct = Math.round((score/quizData.length)*100);
+  let html = `<div class="result-box"><div class="score">${score} / ${quizData.length}</div>`;
+  html += `<p style="font-size:1.1rem;">${pct}% de aciertos</p>`;
+  html += pct >= 80
+    ? `<p style="color:var(--green-soft);">¡Excelente! Dominio sólido de todo el contenido de Fisiología Cardiovascular.</p>`
+    : pct >= 50
+    ? `<p style="color:var(--gold-soft);">Buen resultado — revisa los temas marcados como incorrectos, especialmente eje eléctrico y RAAS.</p>`
+    : `<p style="color:var(--danger);">Vale la pena repasar el material completo, sobre todo Cap. 16-19 (eje eléctrico y RAAS).</p>`;
+
+  html += `<div class="breakdown">
+    <div class="bd-item"><div class="n">${diffStats.facil.correct}/${diffStats.facil.total}</div><div class="l">Fácil</div></div>
+    <div class="bd-item"><div class="n">${diffStats.intermedia.correct}/${diffStats.intermedia.total}</div><div class="l">Intermedia</div></div>
+    <div class="bd-item"><div class="n">${diffStats.dificil.correct}/${diffStats.dificil.total}</div><div class="l">Difícil</div></div>
+  </div>`;
+
+  html += `<table class="summary-table"><tr><th>Tema</th><th>Dificultad</th><th>Resultado</th></tr>`;
+  log.forEach(l=>{
+    html += `<tr><td>${l.q}</td><td>${diffLabel(l.diff)}</td><td class="${l.correct?'ok':'bad'}">${l.correct?'Correcto':'Incorrecto'}</td></tr>`;
+  });
+  html += `</table>`;
+  html += `<div class="nav-row" style="justify-content:center;margin-top:20px;"><button class="action-btn" onclick="startQuiz()">Reintentar simulado</button></div></div>`;
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
