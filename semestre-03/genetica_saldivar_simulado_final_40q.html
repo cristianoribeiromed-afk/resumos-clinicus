@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Final — Genética (Dr. Saldivar) · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#7c5cff;
+  --helix2:#00d4b5;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix2);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.1rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;
+}
+.hero h2{font-size:1.7rem; margin-bottom:.3em;}
+ul{margin:8px 0 8px 20px; color:#c8d1de;}
+li{margin-bottom:6px;}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:12px 26px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(0,212,181,.12); color:var(--helix2); border:1px solid rgba(0,212,181,.3);}
+.tag.type{background:rgba(124,92,255,.12); color:var(--helix1); border:1px solid rgba(124,92,255,.3);}
+.quiz-q{font-size:1.08rem; font-weight:700; margin-bottom:16px; font-family:'Lora',serif;}
+
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;}
+.vf-row .option{flex:1; text-align:center;}
+
+.match-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin-bottom:10px; flex-wrap:wrap;
+}
+.match-term{font-weight:700; color:var(--helix2); min-width:200px; font-size:.9rem;}
+.match-row select{
+  flex:1; min-width:220px; background:#0d1117; border:1px solid var(--border); color:var(--text);
+  padding:9px 10px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--red);}
+
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-family:'Lora',serif; font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--helix2);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/><line x1="12" y1="8" x2="28" y2="8" stroke="#8b98ab" stroke-width="1.5"/><line x1="10" y1="20" x2="30" y2="20" stroke="#8b98ab" stroke-width="1.5"/><line x1="12" y1="32" x2="28" y2="32" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Simulado Final — Genética (Dr. Saldivar)</h1>
+        <span>Genoma, Ácidos Nucleicos, Mutaciones, Epigenética, Variabilidad Genética y más</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato del simulado</span>
+    <h2>40 preguntas — todo el temario del Dr. Saldivar</h2>
+    <p>25 de múltiple elección, 10 de Verdadero/Falso y 5 de asociar columnas — cubriendo los 3 módulos completos de la materia.</p>
+  </div>
+  <div class="card">
+    <h2>Bloques cubiertos</h2>
+    <ul>
+      <li>Leyes de Mendel, Genotipo/Fenotipo, Codominancia</li>
+      <li>ADN/ARN, Genoma nuclear, Organización cromosómica</li>
+      <li>ADN Mitocondrial (estructura detallada, herencia materna)</li>
+      <li>Duplicación, Transcripción y Traducción</li>
+      <li>Mutaciones y Aneuploidías (trisomías, síndromes)</li>
+      <li>Epigenética: Impronta Genómica (Prader-Willi/Angelman)</li>
+      <li>Reproducción Asistida (FIV, ICSI)</li>
+      <li>Bases Púricas y Pirimídicas, Ácidos Nucleicos</li>
+      <li>Tipos de Secuencias del ADN, Empaquetamiento Cromosómico</li>
+      <li>Variabilidad Genética y Selección Natural (Darwin)</li>
+      <li>Hereditariedad y Farmacogenética</li>
+    </ul>
+    <button class="btn-primary" onclick="startQuiz()">Comenzar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>Resumos Clinicus · Simulado Final — Genética (Dr. Saldivar) · 40 preguntas</footer>
+
+<script>
+const quizData = [{"type": "mcq", "topic": "Mendel", "q": "La codominancia se ejemplifica clásicamente con:", "opts": ["El grupo sanguíneo O", "El grupo sanguíneo AB", "La hemofilia", "El daltonismo"], "correct": 1}, {"type": "mcq", "topic": "Estructura del ADN", "q": "¿Cuántos pares de cromosomas autosómicos tiene el ser humano?", "opts": ["21", "22", "23", "24"], "correct": 1}, {"type": "mcq", "topic": "ADN Mitocondrial", "q": "¿Cuál de las siguientes NO es una característica del ADN mitocondrial?", "opts": ["Es circular", "Está asociado a histonas", "Es prácticamente 100% codificante", "Su herencia es exclusivamente materna"], "correct": 1}, {"type": "mcq", "topic": "Procesos Moleculares", "q": "¿Cuál es el codón de inicio en la traducción de proteínas?", "opts": ["UAA", "AUG", "UAG", "GCU"], "correct": 1}, {"type": "mcq", "topic": "Mutaciones", "q": "Una trisomía en la que sobra un cromosoma del par 21 corresponde al:", "opts": ["Síndrome de Edwards", "Síndrome de Patau", "Síndrome de Down", "Síndrome de Turner"], "correct": 2}, {"type": "mcq", "topic": "Epigenética", "q": "El Síndrome de Angelman se produce por:", "opts": ["Exceso de contribución materna", "Falta de contribución materna o exceso de información paterna", "Trisomía del cromosoma 21", "Disomía uniparental del cromosoma 13"], "correct": 1}, {"type": "mcq", "topic": "Reproducción Asistida", "q": "¿Cuál es la diferencia principal entre FIV e ICSI?", "opts": ["No hay ninguna diferencia real", "FIV fecunda en medio de cultivo; ICSI inyecta un espermatozoide directamente en el óvulo", "ICSI es más antigua que la FIV", "FIV solo se usa en animales"], "correct": 1}, {"type": "mcq", "topic": "Bases Nitrogenadas", "q": "¿Cuáles bases nitrogenadas son púricas?", "opts": ["Citosina y Timina", "Adenina y Guanina", "Uracilo y Citosina", "Timina y Uracilo"], "correct": 1}, {"type": "mcq", "topic": "Ácidos Nucleicos", "q": "¿Cuál es la diferencia de azúcar entre el ADN y el ARN?", "opts": ["ADN tiene ribosa, ARN tiene desoxirribosa", "ADN tiene desoxirribosa, ARN tiene ribosa", "Ambos tienen el mismo azúcar", "Ninguno tiene azúcar"], "correct": 1}, {"type": "mcq", "topic": "Secuencias del ADN", "q": "¿Qué porcentaje aproximado del genoma humano corresponde a secuencias de copia única?", "opts": ["10-20%", "30-40%", "60-70%", "90-100%"], "correct": 2}, {"type": "mcq", "topic": "Replicación del ADN", "q": "¿Qué enzima separa la doble hélice del ADN durante la replicación?", "opts": ["ADN Polimerasa", "ADN Ligasa", "ADN Helicasa", "ARN Polimerasa II"], "correct": 2}, {"type": "mcq", "topic": "Replicación del ADN", "q": "¿Qué caracteriza a la síntesis de la hebra retrasada durante la replicación?", "opts": ["Es continua y no requiere fragmentos", "Se sintetiza en fragmentos de Okazaki, unidos por ADN ligasa", "No requiere ninguna enzima", "Ocurre en dirección 3' a 5'"], "correct": 1}, {"type": "mcq", "topic": "Empaquetamiento Cromosómico", "q": "¿Cuáles son los 3 niveles de enrollamiento del empaquetamiento cromosómico?", "opts": ["Nuclear, citoplasmático, mitocondrial", "Primario, secundario, terciario", "Exón, intrón, promotor", "Codón, anticodón, ribosoma"], "correct": 1}, {"type": "mcq", "topic": "ADN Mitocondrial", "q": "¿Cuántos genes en total codifica el ADN mitocondrial?", "opts": ["10", "23", "37", "46"], "correct": 2}, {"type": "mcq", "topic": "Transcripción", "q": "¿Qué enzima cataliza la transcripción del ADN a ARNm en eucariotas?", "opts": ["ADN Polimerasa", "ARN Polimerasa II", "ADN Ligasa", "Peptidil transferasa"], "correct": 1}, {"type": "mcq", "topic": "Traducción", "q": "¿Qué molécula transporta aminoácidos específicos durante la traducción?", "opts": ["ARN mensajero (ARNm)", "ARN ribosómico (ARNr)", "ARN de transferencia (ARNt)", "ADN polimerasa"], "correct": 2}, {"type": "mcq", "topic": "Variabilidad Genética", "q": "¿Qué mide la variabilidad genética?", "opts": ["El número total de cromosomas de una especie", "La tendencia de diferentes alelos de un gen a variar entre sí en una población", "Solo las mutaciones espontáneas", "La velocidad de replicación del ADN"], "correct": 1}, {"type": "mcq", "topic": "Variabilidad Genética", "q": "¿Cuál de las siguientes NO es un origen reconocido de la variabilidad genética?", "opts": ["Selección natural", "Deriva génica", "Fosforilación oxidativa", "Migración"], "correct": 2}, {"type": "mcq", "topic": "Selección Natural", "q": "Según Darwin, ¿por qué el número de individuos de una especie se mantiene relativamente constante entre generaciones?", "opts": ["Porque todos los descendientes sobreviven", "Porque solo una pequeña parte de los descendientes llega a la vida adulta", "Porque no hay reproducción sexual", "Porque las mutaciones son raras"], "correct": 1}, {"type": "mcq", "topic": "Leyes de Mendel", "q": "¿Qué herramienta se usa clásicamente para predecir los genotipos resultantes de un cruce genético?", "opts": ["El cuadro de Punnett", "La ecuación de Nernst", "El ciclo de Krebs", "La escala de Ebbinghaus"], "correct": 0}, {"type": "mcq", "topic": "Hereditariedad", "q": "¿Qué es la hereditariedad?", "opts": ["Solo la transmisión de enfermedades genéticas", "El conjunto de procesos biológicos que aseguran la transmisión de información génica mediante la reproducción", "Un sinónimo de mutación", "La producción de proteínas en el ribosoma"], "correct": 1}, {"type": "mcq", "topic": "Farmacogenética", "q": "¿Cuál es la importancia clínica de la farmacogenética?", "opts": ["No tiene aplicación clínica real", "Permite hacer el tratamiento farmacológico más seguro y eficaz según el genotipo del paciente", "Solo se aplica a enfermedades genéticas raras", "Reemplaza completamente la necesidad de diagnóstico clínico"], "correct": 1}, {"type": "mcq", "topic": "Genes", "q": "¿Qué son los intrones?", "opts": ["Secuencias codificantes que contienen información genética", "Secuencias no codificantes que separan los exones", "Proteínas histónicas", "Enzimas de la replicación"], "correct": 1}, {"type": "mcq", "topic": "Mutaciones", "q": "¿Cuál es la diferencia entre euploidía y aneuploidía?", "opts": ["No hay diferencia real", "Euploidía afecta el juego completo de cromosomas; aneuploidía afecta un par específico", "Aneuploidía siempre es letal; euploidía nunca lo es", "Euploidía solo ocurre en plantas"], "correct": 1}, {"type": "mcq", "topic": "Impronta Genómica", "q": "¿Qué locus comparten los síndromes de Prader-Willi y Angelman?", "opts": ["Cromosoma 21", "Cromosoma 15 (q10-13)", "Cromosoma X", "Cromosoma 13"], "correct": 1}, {"type": "vf", "topic": "ADN Mitocondrial", "q": "El ADN mitocondrial es de herencia exclusivamente materna.", "correct": true}, {"type": "vf", "topic": "Bases Nitrogenadas", "q": "La Timina es una base púrica.", "correct": false}, {"type": "vf", "topic": "Replicación del ADN", "q": "La replicación del ADN es un proceso semiconservador: cada molécula hija tiene una cadena vieja y una nueva.", "correct": true}, {"type": "vf", "topic": "Secuencias del ADN", "q": "Las secuencias repetitivas del ADN se transcriben predominantemente, igual que las de copia única.", "correct": false}, {"type": "vf", "topic": "Empaquetamiento Cromosómico", "q": "El nucleosoma se forma en el enrollamiento primario del ADN.", "correct": false}, {"type": "vf", "topic": "Variabilidad Genética", "q": "La migración es uno de los orígenes reconocidos de la variabilidad genética.", "correct": true}, {"type": "vf", "topic": "Selección Natural", "q": "Según Darwin, todos los individuos de una especie son genéticamente idénticos.", "correct": false}, {"type": "vf", "topic": "Leyes de Mendel", "q": "Distintos autores pueden numerar las Leyes de Mendel de forma diferente, aunque el contenido biológico sea el mismo.", "correct": true}, {"type": "vf", "topic": "Disomía Uniparental", "q": "La disomía uniparental ocurre cuando un individuo recibe ambos cromosomas de un par del mismo progenitor.", "correct": true}, {"type": "vf", "topic": "Reproducción Asistida", "q": "La transferencia de embriones es la única etapa de la reproducción asistida que culmina de forma natural (implantación endometrial).", "correct": true}, {"type": "match", "topic": "ADN Mitocondrial", "prompt": "Una cada componente del ADN mitocondrial con su cantidad.", "pairs": [{"term": "Tamaño total", "def": "16,6 kb"}, {"term": "Genes en total", "def": "37"}, {"term": "ARN de transferencia", "def": "22"}, {"term": "Subunidades proteicas", "def": "13"}]}, {"type": "match", "topic": "Enzimas de Replicación", "prompt": "Una cada enzima con su función en la replicación del ADN.", "pairs": [{"term": "ADN Helicasa", "def": "Separa la doble hélice del ADN"}, {"term": "ADN Polimerasa", "def": "Cataliza la síntesis de nuevas cadenas de ADN"}, {"term": "ADN Ligasa", "def": "Une los fragmentos de Okazaki en la hebra retrasada"}, {"term": "ARN Polimerasa II", "def": "Cataliza la transcripción del ADN a ARNm"}]}, {"type": "match", "topic": "Bases Nitrogenadas", "prompt": "Una cada base nitrogenada con su clasificación.", "pairs": [{"term": "Adenina", "def": "Purina (2 anillos)"}, {"term": "Guanina", "def": "Purina (2 anillos)"}, {"term": "Citosina", "def": "Pirimidina (1 anillo)"}, {"term": "Uracilo", "def": "Pirimidina, exclusiva del ARN"}]}, {"type": "match", "topic": "Empaquetamiento Cromosómico", "prompt": "Una cada nivel de enrollamiento con su descripción.", "pairs": [{"term": "Enrollamiento primario", "def": "Doble hélice del ADN, forma de escalera"}, {"term": "Enrollamiento secundario", "def": "ADN enrollado en histonas, formando nucleosomas"}, {"term": "Enrollamiento terciario", "def": "Fibras de cromatina que forman el cromosoma visible"}, {"term": "Solenoide", "def": "Nucleosomas y cromatina espaciadora dispuestos en espiral"}]}, {"type": "match", "topic": "Orígenes de Variabilidad Genética", "prompt": "Una cada origen de variabilidad genética con su mecanismo.", "pairs": [{"term": "Selección natural", "def": "El ambiente favorece a los individuos más aptos"}, {"term": "Mutaciones", "def": "Cambios espontáneos o inducidos en el material genético"}, {"term": "Reproducción sexuada", "def": "Recombinación génica durante la meiosis"}, {"term": "Deriva génica", "def": "Cambios aleatorios en la frecuencia de alelos"}]}];
+
+let qIndex = 0, score = 0, answered = false, log = [];
+let topicStats = {};
+let xp = 0;
+
+function addXP(n){ xp += n; document.getElementById('xpCount').textContent = xp; document.getElementById('levelBadge').textContent = 'Nivel ' + (Math.floor(xp/100)+1); }
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = []; topicStats = {};
+  renderQuiz();
+}
+
+function typeLabel(t){ return t==='mcq' ? 'Múltiple elección' : t==='vf' ? 'Verdadero / Falso' : 'Asociar columnas'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIndex >= quizData.length){ renderResult(); return; }
+  const item = quizData[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/quizData.length)*100);
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (qIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + score + '</span></div>';
+  html += '<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="tag-row"><span class="tag topic">' + item.topic + '</span><span class="tag type">' + typeLabel(item.type) + '</span></div>';
+  html += '<div class="quiz-q">' + (item.q || item.prompt) + '</div>';
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else if(item.type === 'vf'){
+    html += '<div class="vf-row">'
+      + '<button class="option" data-val="true" onclick="answerVF(this,true)">Verdadero</button>'
+      + '<button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button>'
+      + '</div>';
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += '<div id="matchBlock">';
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += '<div class="match-row" data-idx="'+i+'">'
+        + '<span class="match-term">' + p.term + '</span>'
+        + '<select onchange="matchSelected()"><option value="">— Seleccione —</option>'
+        + shuffled.map(d=>'<option value="'+escapeHtml(d)+'">'+d+'</option>').join('')
+        + '</select></div>';
+    });
+    html += '</div>';
+    html += '<button class="btn-primary" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>';
+  }
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function registerTopic(topic, correct){
+  if(!topicStats[topic]) topicStats[topic] = {total:0, correct:0};
+  topicStats[topic].total++;
+  if(correct) topicStats[topic].correct++;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct, item.topic, item.q);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct, item.topic, item.q);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  document.getElementById('checkMatchBtn').disabled = ![...selects].every(s=>s.value !== '');
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (allCorrect?'correct':'incorrect') + '">' + correctCount + ' / ' + item.pairs.length + ' pares correctos.</div>';
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  registerTopic(item.topic, allCorrect);
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct, topic, q){
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto!' : '✗ Incorrecto') + '</div>';
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic, correct);
+  log.push({q: q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((score/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + score + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  html += pct >= 80 ? '<p style="color:var(--green);">¡Excelente dominio de toda la Genética del Dr. Saldivar!</p>'
+    : pct >= 50 ? '<p style="color:var(--gold);">Buen resultado — revisa los bloques con más errores abajo.</p>'
+    : '<p style="color:var(--red);">Vale la pena repasar los módulos completos antes de la prueba.</p>';
+
+  html += '<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{
+    const s = topicStats[t];
+    html += '<div class="bd-item"><div class="n">' + s.correct + '/' + s.total + '</div><div class="l">' + t + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  log.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Reintentar simulado</button></div></div>';
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
