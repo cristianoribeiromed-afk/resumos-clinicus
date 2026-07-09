@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compartimientos del Líquido Corporal · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --art:#ff5c6c; --ven:#4d9fff; --gold:#ffd166; --green:#4ade80; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+.flow-step.highlight{border-color:var(--art); background:rgba(255,92,108,.1);}
+.flow-step.highlight2{border-color:var(--ven); background:rgba(77,159,255,.1);}
+
+.compart-bar{display:flex; flex-direction:column; gap:2px; max-width:340px; margin:0 auto;}
+.compart-seg{border-radius:8px; padding:14px 12px; text-align:center; font-size:.82rem; font-weight:700;}
+.seg-plasma{background:rgba(77,159,255,.22); border:1px solid var(--ven); color:var(--ven);}
+.seg-intersticial{background:rgba(167,139,250,.20); border:1px solid var(--purple); color:var(--purple);}
+.seg-intracelular{background:rgba(74,222,128,.16); border:1px solid var(--green); color:var(--green); padding:28px 12px;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.tonic-calc{background:var(--bg-alt); border:1px solid var(--border); border-radius:14px; padding:20px; margin:14px 0;}
+.tonic-row{display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;}
+.tonic-row label{flex:1; min-width:220px; font-size:.85rem;}
+.tonic-row select{background:var(--card); border:1px solid var(--border); border-radius:8px; padding:7px 10px; color:var(--text); font-size:.9rem;}
+.tonic-result{text-align:center; margin-top:16px; padding:16px; border-radius:12px;}
+.tonic-result.normal{background:rgba(74,222,128,.1); border:1px solid var(--green);}
+.tonic-result.warn{background:rgba(255,92,108,.1); border:1px solid var(--art);}
+.tonic-result .val{font-size:1.3rem; font-weight:800;}
+
+.risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+@media(max-width:720px){.risk-grid{grid-template-columns:repeat(2,1fr);}}
+.risk-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; font-size:.8rem;}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);} .btn-hard{background:var(--gold);} .btn-good{background:var(--ven);} .btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Compartimientos del Líquido Corporal</h1>
+        <span>Guyton & Hall · Cap. 25 · Fisiología I</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Ingresos/Pérdidas → Compartimientos → Constituyentes → Tonicidad → Alteraciones → Edema → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">💧 Ingresos y Pérdidas</button>
+    <button class="tab-btn" data-tab="compartimientos">🧪 Compartimientos</button>
+    <button class="tab-btn" data-tab="constituyentes">⚛️ Constituyentes</button>
+    <button class="tab-btn" data-tab="tonicidad">🧫 Tonicidad</button>
+    <button class="tab-btn" data-tab="alteraciones">🩺 Hipo/Hipernatremia</button>
+    <button class="tab-btn" data-tab="edema">💦 Edema</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 25 · Guyton & Hall</span>
+    <h2>El equilibrio invisible que sostiene la homeostasis</h2>
+    <p>Mantener un volumen relativamente constante y una composición estable de los líquidos corporales es esencial para la vida. Muchos de los problemas más importantes de la práctica médica se deben, precisamente, a fallas en los sistemas que mantienen esta constancia.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ingresos diarios de agua</h2>
+    <p>El agua ingresa al organismo por <b>2 fuentes</b>:</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>💧 Ingerida</h4><p style="margin:0; font-size:.88rem;">Líquidos o parte de los alimentos sólidos → <b>≈2100 ml/día</b>.</p></div>
+      <div class="mini-card"><h4>🔥 Sintetizada</h4><p style="margin:0; font-size:.88rem;">Resultado de la oxidación de los hidratos de carbono → <b>≈200 ml/día</b>.</p></div>
+    </div>
+    <p style="margin-top:10px;"><b>Ingreso total: ≈2300 ml/día</b> — muy variable de persona a persona y de un día a otro, dependiendo del clima, costumbres y ejercicio.</p>
+  </div>
+
+  <div class="card">
+    <h2>Pérdidas diarias de agua</h2>
+    <div class="flow-steps">
+      <div class="flow-step highlight">Pérdida insensible<br>700 ml/día</div>
+      <div class="flow-step">Sudor<br>≈100 ml/día</div>
+      <div class="flow-step">Heces<br>≈100 ml/día</div>
+      <div class="flow-step highlight2">Riñones<br>variable (0,5 a 20 L/día)</div>
+    </div>
+    <h3>Pérdida insensible (700 ml/día)</h3>
+    <p>Ocurre <b>sin que el individuo sea consciente</b> de ella y es continua:</p>
+    <ul>
+      <li><b>Por evaporación</b> (aparato respiratorio) → 300 a 400 ml/día (promedio 350)</li>
+      <li><b>Por difusión</b> (a través de la piel) → 300 a 400 ml/día (promedio 350)</li>
+    </ul>
+    <div class="clinical"><b>Atención — no es sudor:</b> la pérdida insensible por la piel existe incluso en personas sin glándulas sudoríparas; es minimizada por la capa córnea de la piel, cargada de colesterol. En quemados extensos (sin capa córnea) puede aumentar hasta <b>10x (4 a 5 L/día)</b>.</div>
+    <h3>Otras pérdidas</h3>
+    <ul>
+      <li><b>Sudor:</b> normalmente ≈100 ml/día; en clima muy cálido o ejercicio intenso, 1 a 2 L/hora.</li>
+      <li><b>Heces:</b> ≈100 ml/día, aumentando a varios litros en diarrea intensa.</li>
+      <li><b>Riñones:</b> el medio <b>más importante</b> de regulación del equilibrio hídrico y electrolítico — el volumen de orina puede ir de 0,5 L/día (deshidratado) a 20 L/día (ingesta hídrica enorme).</li>
+    </ul>
+    <div class="mnemo"><b>Punto clave:</b> los riñones ajustan la excreción de agua y electrolitos (Na, Cl, K) para igualar los ingresos y compensar las pérdidas patológicas — son el "editor final" del balance hídrico.</div>
+  </div>
+</section>
+
+<!-- ============ COMPARTIMIENTOS ============ -->
+<section class="section" id="compartimientos">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Distribución del agua corporal</h2>
+    <p>En un adulto normal de 70 kg, el agua corporal total representa el <b>60% del peso</b> (≈42 L) — este porcentaje varía con edad, sexo y grado de obesidad.</p>
+  </div>
+
+  <div class="card">
+    <div class="grid-2">
+      <div class="compart-bar">
+        <div class="compart-seg seg-plasma">Plasma — 3 L</div>
+        <div class="compart-seg seg-intersticial">Intersticial — 11 L</div>
+        <div class="compart-seg seg-intracelular">Intracelular — 28 L</div>
+      </div>
+      <div>
+        <table>
+          <tr><th>Compartimiento</th><th>% peso</th><th>Volumen</th></tr>
+          <tr><td>Agua corporal total</td><td>60%</td><td>42 L</td></tr>
+          <tr><td>Líquido intracelular</td><td>40%</td><td>28 L</td></tr>
+          <tr><td>Líquido extracelular</td><td>20%</td><td>14 L</td></tr>
+          <tr><td>&nbsp;&nbsp;↳ Intersticial</td><td>—</td><td>11 L (3/4)</td></tr>
+          <tr><td>&nbsp;&nbsp;↳ Plasma</td><td>—</td><td>3 L (1/4)</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="analogy"><b>Analogía:</b> imagina 3 baldes conectados por tuberías finas — el más grande (intracelular) representa el 40% del peso; los otros dos, más pequeños (intersticial y plasma), forman juntos el extracelular. El agua se mueve entre ellos constantemente, buscando equilibrio.</div>
+    <div class="mnemo"><b>Nota:</b> existe además el <b>líquido transcelular</b> (1 a 2 L) — espacios sinovial, peritoneal, pericárdico, intraocular y cefalorraquídeo.</div>
+    <div class="clinical"><b>Variación por sexo:</b> con el aumento de la edad, el % de agua corporal disminuye (aumenta el % de grasa). Las mujeres tienen más grasa que los varones y, por tanto, menos líquido corporal proporcionalmente.</div>
+  </div>
+
+  <div class="card">
+    <h2>Volumen sanguíneo y hematocrito</h2>
+    <p>La sangre contiene líquido extracelular (plasma) y líquido intracelular (hematíes), pero se considera un compartimiento <b>separado</b> por estar alojado en su propia cámara (aparato circulatorio).</p>
+    <ul>
+      <li>Constituye ≈7% del peso corporal → <b>5 L</b> (60% plasma + 40% hematíes)</li>
+      <li><b>Hematocrito:</b> fracción de la sangre formada por hematíes</li>
+    </ul>
+    <div class="grid-3">
+      <div class="mini-card"><h4>♂️ Varones</h4><p style="margin:0;">≈40%</p></div>
+      <div class="mini-card"><h4>♀️ Mujeres</h4><p style="margin:0;">≈36%</p></div>
+      <div class="mini-card"><h4>Extremos</h4><p style="margin:0; font-size:.85rem;">Anemia intensa → ↓10% · Policitemia → ↑65%</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONSTITUYENTES ============ -->
+<section class="section" id="constituyentes">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Composición de los líquidos extra e intracelular</h2>
+    <p>El líquido intracelular está separado del extracelular por una membrana celular selectiva, muy permeable al agua pero no a la mayoría de los electrolitos.</p>
+  </div>
+
+  <div class="card">
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>🧂 Líquido extracelular</h4>
+        <ul style="margin:0; padding-left:18px; font-size:.88rem;">
+          <li>Gran cantidad de <b>Na⁺ y Cl⁻</b></li>
+          <li>Cantidades bastante grandes de <b>bicarbonato</b></li>
+          <li>Poco: K⁺, Ca²⁺, Mg²⁺, P y ácidos orgánicos</li>
+        </ul>
+      </div>
+      <div class="mini-card">
+        <h4>🧬 Líquido intracelular</h4>
+        <ul style="margin:0; padding-left:18px; font-size:.88rem;">
+          <li>Grandes cantidades de <b>K⁺ y P</b></li>
+          <li>Cantidades moderadas de Mg²⁺ y sulfato</li>
+          <li>Pequeñas cantidades de Na⁺, Cl⁻ · casi nada de Ca²⁺</li>
+          <li>4x más proteínas que el plasma</li>
+        </ul>
+      </div>
+    </div>
+    <h3>Efecto Donnan</h3>
+    <p>Las composiciones iónicas del plasma y el líquido intersticial son similares (más proteínas en el plasma). Debido al <b>efecto Donnan</b>, la concentración de cationes es ligeramente mayor (2%) en el plasma que en el intersticial.</p>
+    <div class="analogy"><b>Analogía:</b> las proteínas plasmáticas cargadas negativamente actúan como un "imán" que atrae y retiene cationes (Na⁺, K⁺) dentro del plasma — y, a la inversa, "repele" a los aniones hacia el líquido intersticial.</div>
+    <h3>Regulación del intercambio de líquidos</h3>
+    <ul>
+      <li>Plasma ↔ intersticio: equilibrio de fuerzas <b>hidrostáticas y coloidosmóticas</b> a través de la membrana capilar.</li>
+      <li>Intracelular ↔ extracelular: acción osmótica de solutos pequeños (<b>Na⁺ y Cl⁻</b>) a través de la membrana celular.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ TONICIDAD ============ -->
+<section class="section" id="tonicidad">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Líquidos isotónicos, hipotónicos e hipertónicos</h2>
+    <p>El equilibrio osmótico entre los líquidos intra y extracelular se alcanza rápidamente (segundos a minutos) — vía tubo digestivo y sangre, en ≈30 minutos.</p>
+  </div>
+
+  <div class="card">
+    <div class="grid-3">
+      <div class="mini-card"><h4>⚖️ Isotónica</h4><p style="margin:0; font-size:.86rem;">Osmolaridad ≈282 mOsm/L. La célula <b>no</b> cambia de volumen. Ej: NaCl 0,9% o glucosa 5%.</p></div>
+      <div class="mini-card"><h4>⬇️ Hipotónica</h4><p style="margin:0; font-size:.86rem;">Menos solutos no difusibles. El agua <b>entra</b> a la célula → se hincha.</p></div>
+      <div class="mini-card"><h4>⬆️ Hipertónica</h4><p style="margin:0; font-size:.86rem;">Más solutos no difusibles. El agua <b>sale</b> de la célula → se encoge.</p></div>
+    </div>
+    <div class="mnemo"><b>Isotónico ≠ isosmótico:</b> tonicidad depende de solutos <b>no difusibles</b>; isosmolaridad solo compara la osmolaridad total, sin importar si los solutos atraviesan la membrana.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧮 Simulador: agregar solución al líquido extracelular</h2>
+    <div class="tonic-calc">
+      <div class="tonic-row">
+        <label>Tipo de solución agregada al LEC</label>
+        <select id="tonicType" onchange="calcTonic()">
+          <option value="iso">Salina isotónica</option>
+          <option value="hiper">Hipertónica</option>
+          <option value="hipo">Hipotónica</option>
+        </select>
+      </div>
+      <div class="tonic-result normal" id="tonicResultBox">
+        <div>Efecto sobre los compartimientos</div>
+        <div class="val" id="tonicResult">Cargando...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ALTERACIONES ============ -->
+<section class="section" id="alteraciones">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Hiponatremia e Hipernatremia</h2>
+    <p>Alteraciones clínicas frecuentes de la regulación del volumen y la osmolaridad de los líquidos corporales.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔻 Hiponatremia</h2>
+    <p>Concentración de sodio plasmático <b>&lt; 142 mEq/L</b>.</p>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)"><span>Causas principales</span><span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <ul>
+          <li>Pérdida de NaCl del LEC (deshidratación hiposmótica) — típico de <b>diarrea y vómitos</b></li>
+          <li>Diuréticos en exceso → inhiben la retención renal de sodio</li>
+          <li><b>Enfermedad de Addison</b> → menor secreción de aldosterona</li>
+          <li>Exceso de retención de agua (secreción excesiva de ADH) → sobrehidratación hiposmótica</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔺 Hipernatremia</h2>
+    <p>Concentración de sodio plasmático <b>por encima</b> del valor normal.</p>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)"><span>Causas principales</span><span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <ul>
+          <li>Pérdida de agua por deshidratación hiperosmótica — falta de ADH → <b>diabetes insípida</b> (orina diluida abundante)</li>
+          <li>Sudoración en ejercicio intenso sin reposición de agua</li>
+          <li>Exceso de NaCl agregado al LEC → sobrehidratación hiperosmótica</li>
+          <li>Secreción excesiva de <b>aldosterona</b> → retención de sodio</li>
+        </ul>
+      </div>
+    </div>
+    <div class="clinical"><b>Relevancia clínica:</b> distinguir hipo/hipernatremia por pérdida de agua vs. de sodio es clave para elegir el tipo correcto de fluidoterapia de reposición.</div>
+  </div>
+</section>
+
+<!-- ============ EDEMA ============ -->
+<section class="section" id="edema">
+  <div class="hero">
+    <span class="eyebrow">Sección 6</span>
+    <h2>Edema</h2>
+    <p>Exceso de líquido en los tejidos corporales — en la mayoría de los casos en el espacio extracelular, pero también puede ocurrir en el intracelular.</p>
+  </div>
+
+  <div class="card">
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>🔵 Edema intracelular</h4>
+        <p style="margin:0; font-size:.88rem;">Ocurre por: <b>1)</b> depresión de los sistemas metabólicos tisulares; <b>2)</b> falta de nutrición celular suficiente. La bomba de iones falla, el Na⁺ se acumula dentro de la célula y arrastra agua por ósmosis. También ocurre en la <b>inflamación</b> (↑permeabilidad de membrana).</p>
+      </div>
+      <div class="mini-card">
+        <h4>🟣 Edema extracelular</h4>
+        <p style="margin:0; font-size:.88rem;">Retención excesiva en el espacio extracelular, por <b>2 causas</b>: <b>1)</b> salida anormal de líquido del plasma al intersticio vía capilares (más frecuente); <b>2)</b> fracaso linfático para retornar el exceso de líquido intersticial a la circulación.</p>
+      </div>
+    </div>
+    <div class="mnemo"><b>Dato clave para la prueba:</b> la causa <b>más frecuente</b> de edema extracelular es la salida anormal de líquido desde los capilares, no el fallo linfático.</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Compartimientos del Líquido Corporal (Guyton Cap. 25)</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'compartimientos_liquidos_cap25_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','compartimientos','constituyentes','tonicidad','alteraciones','edema','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    if(tab === 'tonicidad') calcTonic();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+function calcTonic(){
+  const type = document.getElementById('tonicType').value;
+  const box = document.getElementById('tonicResultBox');
+  const result = document.getElementById('tonicResult');
+  if(type === 'iso'){
+    box.className = 'tonic-result normal';
+    result.textContent = 'Osmolaridad NO cambia. Solo ↑ volumen del LEC.';
+  } else if(type === 'hiper'){
+    box.className = 'tonic-result warn';
+    result.textContent = '↑ Volumen LEC, ↓ Volumen intracelular, ↑ Osmolaridad en ambos.';
+  } else {
+    box.className = 'tonic-result warn';
+    result.textContent = '↓ Osmolaridad en ambos, ↑ Volumen en ambos (principalmente intracelular).';
+  }
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Ingresos/Pérdidas', front:'¿Cuáles son las 2 fuentes de ingreso de agua y cuánto aportan?', back:'Agua ingerida (≈2100 ml/día) + agua sintetizada por oxidación de H.C. (≈200 ml/día) = ≈2300 ml/día total.'},
+  {tag:'Ingresos/Pérdidas', front:'¿Cuánto es la pérdida insensible total diaria y cómo se divide?', back:'700 ml/día: ≈350 ml por evaporación respiratoria + ≈350 ml por difusión a través de la piel.'},
+  {tag:'Ingresos/Pérdidas', front:'¿La pérdida insensible por la piel es sudor?', back:'No. Ocurre incluso sin glándulas sudoríparas y es minimizada por la capa córnea cargada de colesterol.'},
+  {tag:'Ingresos/Pérdidas', front:'¿Cuál es el órgano más importante para regular el equilibrio de agua y electrolitos?', back:'Los riñones — ajustan la excreción para igualar ingresos y compensar pérdidas patológicas.'},
+  {tag:'Compartimientos', front:'¿Qué % del peso corporal representa el agua total y cuánto es en un adulto de 70 kg?', back:'60% del peso → 42 L.'},
+  {tag:'Compartimientos', front:'¿Qué % y volumen corresponden al líquido intracelular vs extracelular?', back:'Intracelular: 40% (28 L). Extracelular: 20% (14 L), dividido en intersticial 3/4 (11 L) y plasma 1/4 (3 L).'},
+  {tag:'Compartimientos', front:'¿Qué es el líquido transcelular y cuánto mide?', back:'1 a 2 L; comprende espacios sinovial, peritoneal, pericárdico, intraocular y cefalorraquídeo.'},
+  {tag:'Compartimientos', front:'¿Cuál es el hematocrito normal en varones y mujeres?', back:'Varones ≈40%, mujeres ≈36%. Puede caer a 10% en anemia intensa o subir a 65% en policitemia.'},
+  {tag:'Constituyentes', front:'¿Cuáles son los principales electrolitos del líquido extracelular?', back:'Grandes cantidades de Na⁺ y Cl⁻; bastante bicarbonato; poco K⁺, Ca²⁺, Mg²⁺, P y ácidos orgánicos.'},
+  {tag:'Constituyentes', front:'¿Cuáles son los principales electrolitos del líquido intracelular?', back:'Grandes cantidades de K⁺ y P; moderado Mg²⁺ y sulfato; poco Na⁺/Cl⁻; casi nada de Ca²⁺; 4x más proteínas que el plasma.'},
+  {tag:'Constituyentes', front:'¿Qué es el efecto Donnan?', back:'Las proteínas plasmáticas cargadas negativamente retienen más cationes (Na⁺, K⁺) en el plasma, haciendo que su concentración sea ~2% mayor que en el intersticio.'},
+  {tag:'Tonicidad', front:'¿Qué le pasa a una célula en solución isotónica (≈282 mOsm/L)?', back:'No se encoge ni se hincha — las concentraciones intra y extracelular son iguales.'},
+  {tag:'Tonicidad', front:'¿Qué diferencia hay entre tonicidad e isosmolaridad?', back:'Tonicidad depende de los solutos NO difusibles; isosmolaridad solo compara osmolaridad total, sin importar si los solutos atraviesan la membrana.'},
+  {tag:'Tonicidad', front:'¿Qué ocurre si se agrega una solución hipertónica al LEC?', back:'Sale agua de las células hacia el LEC → ↑volumen extracelular, ↓volumen intracelular, ↑osmolaridad en ambos.'},
+  {tag:'Alteraciones', front:'¿Cuál es el valor de corte para hiponatremia?', back:'Sodio plasmático por debajo de 142 mEq/L.'},
+  {tag:'Alteraciones', front:'Nombra 2 causas clásicas de hiponatremia por pérdida de NaCl.', back:'Diarrea y vómitos.'},
+  {tag:'Alteraciones', front:'¿Qué causa hipernatremia por falta de ADH?', back:'Diabetes insípida — los riñones excretan gran cantidad de orina diluida, deshidratando y concentrando el NaCl del LEC.'},
+  {tag:'Edema', front:'¿Cuáles son las 2 causas de edema intracelular?', back:'1) Depresión de los sistemas metabólicos tisulares; 2) falta de nutrición celular suficiente (falla la bomba de iones, Na⁺ se acumula).'},
+  {tag:'Edema', front:'¿Cuál es la causa más frecuente de edema extracelular?', back:'Salida anormal de líquido desde el plasma al intersticio a través de los capilares.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿Cuál es el ingreso diario total aproximado de agua en el organismo?', options:['1000 ml/día','2300 ml/día','3500 ml/día','500 ml/día'], correct:1, exp:'≈2100 ml de agua ingerida + ≈200 ml sintetizada por oxidación de H.C. = ≈2300 ml/día.'},
+  {q:'La pérdida insensible de agua ocurre principalmente por:', options:['Sudor y heces','Evaporación respiratoria y difusión cutánea','Solo por la orina','Solo por las heces'], correct:1, exp:'La pérdida insensible (700 ml/día) se divide en evaporación respiratoria (≈350 ml) y difusión a través de la piel (≈350 ml) — y no es sudor.'},
+  {q:'¿Cuál es el órgano más importante en la regulación del equilibrio de agua y electrolitos?', options:['El pulmón','La piel','Los riñones','El intestino'], correct:2, exp:'Los riñones ajustan la excreción de agua y electrolitos para igualar los ingresos y compensar pérdidas patológicas.'},
+  {q:'En un adulto de 70 kg, el agua corporal total representa aproximadamente:', options:['40% del peso (28 L)','60% del peso (42 L)','80% del peso (56 L)','20% del peso (14 L)'], correct:1, exp:'El agua corporal total es ≈60% del peso corporal, es decir, ≈42 L en un adulto de 70 kg.'},
+  {q:'Del líquido extracelular (14 L), ¿cómo se distribuye entre intersticial y plasma?', options:['50% y 50%','3/4 intersticial (11 L) y 1/4 plasma (3 L)','1/4 intersticial y 3/4 plasma','Todo es plasma'], correct:1, exp:'El líquido intersticial representa 3/4 (11 L) y el plasma 1/4 (3 L) del líquido extracelular total.'},
+  {q:'¿Qué caracteriza al efecto Donnan?', options:['Los aniones se concentran más en el plasma','Las proteínas plasmáticas retienen más cationes en el plasma (≈2% más)','No hay diferencia iónica entre plasma e intersticio','Solo afecta al líquido intracelular'], correct:1, exp:'Las proteínas plasmáticas, cargadas negativamente, atraen y retienen cationes (Na⁺, K⁺), haciendo su concentración ligeramente mayor (2%) en el plasma.'},
+  {q:'¿Cuál es el principal electrolito intracelular?', options:['Sodio (Na⁺)','Cloruro (Cl⁻)','Potasio (K⁺)','Calcio (Ca²⁺)'], correct:2, exp:'El líquido intracelular contiene grandes cantidades de K⁺ y fósforo, a diferencia del extracelular, rico en Na⁺ y Cl⁻.'},
+  {q:'Una solución con osmolaridad de ≈282 mOsm/L colocada sobre una célula produce:', options:['Hinchazón celular (hipotónica)','Encogimiento celular (hipertónica)','Ningún cambio de volumen (isotónica)','Lisis celular inmediata'], correct:2, exp:'A esa osmolaridad la solución es isotónica — no hay cambio de volumen celular, ya que las concentraciones intra y extracelular son iguales.'},
+  {q:'La hiponatremia se define como una concentración plasmática de sodio:', options:['Por encima de 142 mEq/L','Por debajo de 142 mEq/L','Exactamente en 142 mEq/L','No tiene relación con el sodio'], correct:1, exp:'Hiponatremia = sodio plasmático por debajo de lo normal (142 mEq/L), causada por pérdida de NaCl o exceso de agua.'},
+  {q:'¿Cuál es la causa más frecuente de edema extracelular?', options:['Fallo linfático','Salida anormal de líquido del plasma al intersticio a través de los capilares','Exceso de proteínas plasmáticas','Aumento de la presión oncótica intersticial'], correct:1, exp:'La causa más frecuente es la salida anormal de líquido desde el plasma hacia el espacio intersticial a través de los capilares.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+calcTonic();
+</script>
+</body>
+</html>
