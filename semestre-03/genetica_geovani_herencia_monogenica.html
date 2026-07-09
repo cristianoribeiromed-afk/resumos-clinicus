@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herencia Monogénica: Huntington, Duchenne y Hemofilia · Plataforma de Estudio</title>
+<style>
+
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --art:#ff5c6c; --ven:#4d9fff; --gold:#ffd166; --green:#4ade80; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+.flow-step.highlight{border-color:var(--art); background:rgba(255,92,108,.1);}
+.flow-step.highlight2{border-color:var(--ven); background:rgba(77,159,255,.1);}
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:700px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+.risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+@media(max-width:720px){.risk-grid{grid-template-columns:repeat(2,1fr);}}
+.risk-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; font-size:.8rem;}
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);} .btn-hard{background:var(--gold);} .btn-good{background:var(--ven);} .btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Herencia Monogénica: Huntington, Duchenne y Hemofilia</h1>
+        <span>Prof. Geovani · Genética Médica · Genética Humana</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span></span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="fundamentos">🧬 Fundamentos</button>
+    <button class="tab-btn" data-tab="huntington">🧠 Enfermedad de Huntington</button>
+    <button class="tab-btn" data-tab="duchenne">💪 Distrofia Muscular de Duchenne</button>
+    <button class="tab-btn" data-tab="hemofilia">🩸 Hemofilia</button>
+    <button class="tab-btn" data-tab="historia">👑 El "Gen Real"</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ FUNDAMENTOS ============ -->
+<section class="section active" id="fundamentos">
+  <div class="hero">
+    <span class="eyebrow">Prof. Geovani · Genética Médica</span>
+    <h2>Herencia monogénica: el poder de un solo gen</h2>
+    <p>A diferencia de las enfermedades multifactoriales, en la herencia monogénica basta la alteración de un único gen para determinar el destino biológico de un individuo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Naturaleza determinista</h2>
+    <p>La herencia monogénica resulta de un <b>"defecto catastrófico único"</b> — la ausencia o mal funcionamiento de una sola proteína es suficiente para causar la enfermedad.</p>
+    <table>
+      <tr><th>Modelo</th><th>Características</th><th>Analogía</th></tr>
+      <tr><td>Multifactorial</td><td>Interacción de múltiples genes y factores ambientales</td><td>Accidente aéreo por múltiples fallas concurrentes</td></tr>
+      <tr><td>Monogénica</td><td>Mutación en un gen específico que afecta una proteína esencial</td><td>Accidente aéreo causado exclusivamente por la explosión de un motor</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>3 características clave</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>1️⃣ Impacto directo</h4><p style="margin:0; font-size:.85rem;">Una proteína defectuosa o ausente basta para comprometer la salud.</p></div>
+      <div class="mini-card"><h4>2️⃣ Recurrencia</h4><p style="margin:0; font-size:.85rem;">Alta probabilidad de manifestarse en los descendientes según el patrón de herencia.</p></div>
+      <div class="mini-card"><h4>3️⃣ Fidelidad mendeliana</h4><p style="margin:0; font-size:.85rem;">Sigue los patrones de herencia clásicos y directos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HUNTINGTON ============ -->
+<section class="section" id="huntington">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Enfermedad de Huntington: toxicidad y anticipación</h2>
+    <p>Trastorno neurodegenerativo hereditario grave — similar al Alzheimer, pero con origen genético directo e inicio más temprano.</p>
+  </div>
+
+  <div class="card">
+    <h2>Manifestaciones clínicas</h2>
+    <div class="grid-3">
+      <div class="mini-card"><h4>Corea</h4><p style="margin:0; font-size:.85rem;">Movimientos involuntarios e incontrolables, similares a una coreografía.</p></div>
+      <div class="mini-card"><h4>Declive cognitivo</h4><p style="margin:0; font-size:.85rem;">Pérdida de memoria y funciones ejecutivas.</p></div>
+      <div class="mini-card"><h4>Alteraciones emocionales</h4><p style="margin:0; font-size:.85rem;">Cambios drásticos de personalidad, incluyendo episodios de violencia.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Mecanismo genético</h2>
+    <ul>
+      <li>Enfermedad <b>autosómica dominante</b> ligada a la proteína Huntingtina (HTT).</li>
+      <li>Se produce por una <b>expansión de la secuencia CAG</b> (Citosina-Adenina-Guanina), que codifica el aminoácido glutamina.</li>
+      <li>La acumulación de poliglutamina genera una función tóxica que ataca el sistema nervioso central.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Fenómeno de anticipación (mutación dinámica)</h2>
+    <div class="clinical"><b>Concepto clave:</b> el defecto en el ADN aumenta de tamaño con cada generación — la enfermedad aparece de forma más severa y a edades más tempranas en los hijos que en los padres.</div>
+    <p>Aunque el gen se hereda en la fecundación, los síntomas suelen aparecer entre los <b>30 y 50 años</b>, debido a la acumulación progresiva de agregados proteicos tóxicos.</p>
+  </div>
+</section>
+
+<!-- ============ DUCHENNE ============ -->
+<section class="section" id="duchenne">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Distrofia Muscular de Duchenne: fragilidad estructural</h2>
+    <p>Miopatía severa con atrofia muscular progresiva, que afecta casi exclusivamente a los varones.</p>
+  </div>
+
+  <div class="card">
+    <h2>La proteína distrofina</h2>
+    <p>Funciona como un <b>"amortiguador" celular</b> que conecta la actina del citoesqueleto con la matriz extracelular a través de la membrana muscular.</p>
+    <div class="clinical"><b>Consecuencia de su ausencia:</b> sin distrofina, cada contracción muscular desgarra la membrana de la propia célula, provocando muerte celular progresiva y sustitución del músculo por tejido no funcional.</div>
+  </div>
+
+  <div class="card">
+    <h2>Progresión de la enfermedad</h2>
+    <ul>
+      <li>Los pacientes suelen perder la capacidad de caminar alrededor de los <b>11 años</b>.</li>
+      <li>La muerte suele ocurrir al inicio de la fase adulta, por fallas cardiorrespiratorias — los músculos respiratorios también se degradan.</li>
+    </ul>
+    <h3>Patrón de herencia</h3>
+    <p><b>Recesiva ligada al cromosoma X</b> — generalmente de origen materno (madres portadoras sanas que transmiten el gen a sus hijos varones).</p>
+  </div>
+</section>
+
+<!-- ============ HEMOFILIA ============ -->
+<section class="section" id="hemofilia">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Hemofilia: la cascada de coagulación interrumpida</h2>
+    <p>Trastorno de la coagulación que impide la formación de coágulos de fibrina, exponiendo al paciente a hemorragias prolongadas.</p>
+  </div>
+
+  <div class="card">
+    <h2>Tipos y factores</h2>
+    <table>
+      <tr><th>Tipo</th><th>Deficiencia</th><th>Frecuencia</th></tr>
+      <tr><td>Hemofilia A</td><td>Factor VIII</td><td>La más común</td></tr>
+      <tr><td>Hemofilia B</td><td>Factor IX</td><td>Menos frecuente</td></tr>
+    </table>
+    <div class="analogy"><b>Analogía:</b> la coagulación funciona como un efecto dominó enzimático. La falta de uno de estos factores equivale a retirar piezas de una hilera de fichas de dominó — la cascada se detiene y el sangrado no se detiene espontáneamente. Puede provocar hemartrosis (sangrado articular), destruyendo progresivamente la movilidad del paciente.</div>
+  </div>
+
+  <div class="card">
+    <h2>Dinámica del cromosoma X</h2>
+    <ul>
+      <li><b>Herencia ligada al X recesiva:</b> los hombres manifiestan la enfermedad con una sola copia del gen defectuoso (heredada de la madre).</li>
+      <li><b>Manifestación en mujeres:</b> para ser hemofílica, la mujer debe tener el defecto en ambos cromosomas X. Con solo uno, es portadora sana.</li>
+      <li><b>Transmisión:</b> un hombre afectado no transmite la enfermedad a sus hijos varones, pero convierte a todas sus hijas en portadoras.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ HISTORIA ============ -->
+<section class="section" id="historia">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Contexto histórico: el "gen real"</h2>
+    <p>Un ejemplo real de cómo la herencia monogénica cambió el curso de la historia europea.</p>
+  </div>
+
+  <div class="card">
+    <h2>La Reina Victoria y la hemofilia</h2>
+    <p>La Reina Victoria del Reino Unido era una <b>portadora sana</b> de hemofilia (mutación en el cromosoma X). Transmitió el gen a sus hijas, quienes a su vez lo introdujeron en las familias reales de <b>Rusia, España y Prusia</b>.</p>
+    <div class="clinical"><b>Consecuencias geopolíticas:</b> la enfermedad diezmó los linajes masculinos de estas casas reales. El caso del heredero al trono ruso (el zarévich Alexei) es notable por la intervención de Rasputín, quien supuestamente "curó" al niño simplemente deteniendo la administración de aspirina — fármaco que, paradójicamente, agravaba las hemorragias del joven hemofílico.</div>
+    <p><b>Interconexión:</b> debido a los matrimonios entre parientes, el gen se propagó de tal forma que se ha llegado a describir la Primera Guerra Mundial, en parte, como un conflicto entre primos que compartían este legado genético.</p>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Genética — Herencia Monogénica: Huntington, Duchenne y Hemofilia (Prof. Geovani)</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'genetica_geovani_herencia_monogenica_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['fundamentos','huntington','duchenne','hemofilia','historia','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+
+/* ============ FLASHCARDS ============ */
+const flashData = [{"tag": "Fundamentos", "front": "¿Cuál es la diferencia fundamental entre herencia monogénica y multifactorial?", "back": "Monogénica: un solo gen defectuoso basta para causar la enfermedad (defecto catastrófico único). Multifactorial: interacción de múltiples genes + ambiente."}, {"tag": "Fundamentos", "front": "¿Cuáles son las 3 características clave de la herencia monogénica?", "back": "1) Impacto directo (una proteína defectuosa basta); 2) alta recurrencia en descendientes; 3) fidelidad a los patrones mendelianos clásicos."}, {"tag": "Huntington", "front": "¿Cuál es el mecanismo genético de la Enfermedad de Huntington?", "back": "Enfermedad autosómica dominante por expansión de la secuencia CAG en el gen HTT, causando acumulación tóxica de poliglutamina en el sistema nervioso central."}, {"tag": "Huntington", "front": "¿Qué es el fenómeno de anticipación (mutación dinámica)?", "back": "El defecto en el ADN aumenta de tamaño con cada generación, haciendo que la enfermedad aparezca más severa y a edades más tempranas en los hijos que en los padres."}, {"tag": "Huntington", "front": "¿Cuáles son las 3 manifestaciones clínicas principales de Huntington?", "back": "Corea (movimientos involuntarios), declive cognitivo, y alteraciones emocionales/de personalidad."}, {"tag": "Duchenne", "front": "¿Cuál es la función de la distrofina y qué ocurre en su ausencia?", "back": "Actúa como amortiguador celular conectando actina con la matriz extracelular. Sin ella, cada contracción muscular desgarra la membrana celular, causando muerte progresiva de la fibra muscular."}, {"tag": "Duchenne", "front": "¿Cuál es el patrón de herencia de la Distrofia Muscular de Duchenne?", "back": "Recesiva ligada al cromosoma X, generalmente de origen materno (madre portadora sana)."}, {"tag": "Duchenne", "front": "¿A qué edad suelen los pacientes con Duchenne perder la capacidad de caminar, y cuál es la causa habitual de muerte?", "back": "≈11 años pierden la capacidad de caminar. La muerte suele ocurrir en la fase adulta temprana por fallas cardiorrespiratorias."}, {"tag": "Hemofilia", "front": "¿Cuál es la diferencia entre Hemofilia A y B?", "back": "Hemofilia A: deficiencia del Factor VIII (más común). Hemofilia B: deficiencia del Factor IX."}, {"tag": "Hemofilia", "front": "¿Qué debe ocurrir para que una mujer sea hemofílica?", "back": "Debe poseer el defecto en ambos cromosomas X. Con solo uno, es portadora sana."}, {"tag": "Hemofilia", "front": "Si un hombre hemofílico tiene hijos, ¿qué ocurre con la transmisión?", "back": "No transmite la enfermedad a sus hijos varones, pero convierte a todas sus hijas en portadoras."}, {"tag": "Historia", "front": "¿Qué papel jugó la Reina Victoria en la historia de la hemofilia?", "back": "Era portadora sana de hemofilia; transmitió el gen a sus hijas, quienes lo introdujeron en las familias reales de Rusia, España y Prusia."}];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+
+
+/* ============ QUIZ ============ */
+const quizData = [{"q": "¿Cuál es la principal diferencia entre herencia monogénica y multifactorial?", "options": ["No hay diferencia real", "Monogénica: un solo gen defectuoso basta; Multifactorial: múltiples genes + ambiente", "Monogénica siempre es más leve", "Multifactorial siempre es hereditaria de un solo padre"], "correct": 1, "exp": "La herencia monogénica resulta de un defecto catastrófico único en un solo gen, mientras que la multifactorial involucra la interacción de múltiples genes y factores ambientales."}, {"q": "La Enfermedad de Huntington es causada por:", "options": ["Deficiencia de distrofina", "Expansión de la secuencia CAG en el gen HTT", "Deficiencia del factor VIII", "Mutación en el gen SRY"], "correct": 1, "exp": "Huntington es una enfermedad autosómica dominante causada por la expansión de repeticiones CAG en el gen HTT, que codifica la proteína huntingtina."}, {"q": "¿Qué es el fenómeno de anticipación en la Enfermedad de Huntington?", "options": ["La enfermedad desaparece en generaciones sucesivas", "El defecto genético aumenta de tamaño y se manifiesta más temprano y severo en cada generación", "Solo afecta a la primera generación", "No tiene relación con el número de repeticiones CAG"], "correct": 1, "exp": "La anticipación es el fenómeno donde la mutación dinámica (expansión CAG) aumenta con cada generación, causando aparición más temprana y severa de la enfermedad."}, {"q": "¿Cuál es la función de la distrofina en el músculo esquelético?", "options": ["Producir energía mitocondrial", "Actuar como amortiguador conectando actina con la matriz extracelular", "Transportar oxígeno", "Sintetizar colágeno"], "correct": 1, "exp": "La distrofina conecta el citoesqueleto de actina con la matriz extracelular, protegiendo la membrana muscular durante la contracción."}, {"q": "¿Cuál es el patrón de herencia de la Distrofia Muscular de Duchenne?", "options": ["Autosómica dominante", "Autosómica recesiva", "Recesiva ligada al cromosoma X", "Mitocondrial"], "correct": 2, "exp": "La Duchenne es una enfermedad recesiva ligada al cromosoma X, generalmente transmitida por madres portadoras sanas."}, {"q": "¿Cuál es la diferencia entre Hemofilia A y Hemofilia B?", "options": ["A afecta solo mujeres, B solo hombres", "A es deficiencia del Factor VIII, B del Factor IX", "No hay diferencia real", "B es más común que A"], "correct": 1, "exp": "La Hemofilia A (más común) es causada por deficiencia del Factor VIII; la Hemofilia B, por deficiencia del Factor IX."}, {"q": "¿Qué se requiere para que una mujer manifieste hemofilia?", "options": ["Un solo cromosoma X con el defecto", "El defecto en ambos cromosomas X", "Ninguna condición especial, siempre la manifiestan", "Solo herencia materna, nunca paterna"], "correct": 1, "exp": "Las mujeres necesitan el defecto en ambos cromosomas X para manifestar la enfermedad; con solo uno, son portadoras sanas."}, {"q": "Un hombre hemofílico tiene hijos. ¿Qué ocurre con sus hijas?", "options": ["Ninguna será portadora", "Todas serán portadoras del gen", "Todas manifestarán la enfermedad", "Solo la mitad serán portadoras"], "correct": 1, "exp": "Un hombre hemofílico transmite el cromosoma X (con el defecto) a todas sus hijas, convirtiéndolas en portadoras."}, {"q": "¿Qué papel histórico jugó la Reina Victoria en la genética de la hemofilia?", "options": ["Fue la primera paciente diagnosticada", "Era portadora sana y transmitió el gen a las familias reales de Rusia, España y Prusia", "No tuvo relación con la hemofilia", "Desarrolló la enfermedad activamente"], "correct": 1, "exp": "La Reina Victoria era portadora sana de hemofilia y transmitió el gen a sus hijas, quienes lo introdujeron en varias familias reales europeas."}, {"q": "¿A qué edad suelen aparecer los síntomas de la Enfermedad de Huntington, a pesar de heredarse el gen desde la fecundación?", "options": ["En la infancia (0-10 años)", "Entre los 30 y 50 años", "Después de los 80 años", "Nunca se manifiesta clínicamente"], "correct": 1, "exp": "Aunque el gen se hereda desde la fecundación, los síntomas de Huntington suelen aparecer entre los 30 y 50 años, por acumulación progresiva de proteína tóxica."}];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+
+updateHeader();
+</script>
+</body>
+</html>
