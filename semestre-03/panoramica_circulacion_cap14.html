@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorámica de la Circulación · Plataforma de Estudio</title>
+<style>
+
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --art:#ff5c6c; --ven:#4d9fff; --gold:#ffd166; --green:#4ade80; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+.flow-step.highlight{border-color:var(--art); background:rgba(255,92,108,.1);}
+.flow-step.highlight2{border-color:var(--ven); background:rgba(77,159,255,.1);}
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:700px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+.risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+@media(max-width:720px){.risk-grid{grid-template-columns:repeat(2,1fr);}}
+.risk-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; font-size:.8rem;}
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);} .btn-hard{background:var(--gold);} .btn-good{background:var(--ven);} .btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Panorámica de la Circulación</h1>
+        <span>Guyton & Hall · Cap. 14 · Fisiología I — Prof. Lisandro</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span></span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="partes">🩸 Partes de la Circulación</button>
+    <button class="tab-btn" data-tab="volumenes">📊 Volúmenes y Presiones</button>
+    <button class="tab-btn" data-tab="leyohm">⚙️ Ley de Ohm</button>
+    <button class="tab-btn" data-tab="poiseuille">🌀 Ley de Poiseuille</button>
+    <button class="tab-btn" data-tab="viscosidad">🩸 Viscosidad y Hematocrito</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ PARTES ============ -->
+<section class="section active" id="partes">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 14 · Guyton & Hall</span>
+    <h2>Panorámica de la circulación</h2>
+    <p>La función de la circulación es simple en su enunciado y esencial en su ejecución: satisfacer las necesidades de los tejidos manteniendo la homeostasis.</p>
+  </div>
+
+  <div class="card">
+    <h2>Funciones de cada parte funcional</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>🔴 Arterias</h4><p style="margin:0; font-size:.86rem;">Transportan sangre a presión elevada — paredes fuertes, flujo rápido.</p></div>
+      <div class="mini-card"><h4>🔀 Arteriolas</h4><p style="margin:0; font-size:.86rem;">Conductos de control — pared muscular fuerte, capacidad de cerrar o dilatar según necesidad tisular.</p></div>
+      <div class="mini-card"><h4>🔵 Capilares</h4><p style="margin:0; font-size:.86rem;">Intercambio de líquidos, nutrientes, electrolitos y hormonas — paredes delgadas y porosas.</p></div>
+      <div class="mini-card"><h4>🟣 Vénulas</h4><p style="margin:0; font-size:.86rem;">Recogen la sangre de los capilares.</p></div>
+      <div class="mini-card"><h4>🟢 Venas</h4><p style="margin:0; font-size:.86rem;">Transporte de retorno al corazón + reservorio fundamental de sangre.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Área transversal y velocidad del flujo</h2>
+    <div class="analogy"><b>Principio clave:</b> la velocidad del flujo sanguíneo es <b>inversamente proporcional</b> al área transversal total del segmento vascular.</div>
+    <table>
+      <tr><th>Segmento</th><th>Velocidad</th></tr>
+      <tr><td>Aorta (reposo)</td><td>≈33 cm/seg</td></tr>
+      <tr><td>Capilares</td><td>≈0,3 mm/seg (1/1000 de la aorta)</td></tr>
+    </table>
+    <p>El área transversal de las venas es <b>4x mayor</b> que la de las arterias — por eso el sistema venoso funciona como el gran almacén de sangre del cuerpo. Los capilares miden solo 0,3 a 1 mm — la sangre permanece en ellos solo 1 a 3 segundos, tiempo en que debe ocurrir toda la difusión de nutrientes.</p>
+  </div>
+</section>
+
+<!-- ============ VOLÚMENES ============ -->
+<section class="section" id="volumenes">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Distribución de volúmenes y presiones</h2>
+    <p>La sangre no se distribuye uniformemente — y esta desigualdad es funcionalmente inteligente.</p>
+  </div>
+
+  <div class="card">
+    <h2>Distribución del volumen sanguíneo total</h2>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>🔵 Circulación sistémica (84%)</h4>
+        <ul style="margin:0; padding-left:18px; font-size:.86rem;">
+          <li>Venas: 64%</li>
+          <li>Arterias: 13%</li>
+          <li>Arteriolas y capilares: 7%</li>
+        </ul>
+      </div>
+      <div class="mini-card">
+        <h4>🔴 Corazón y pulmones (16%)</h4>
+        <ul style="margin:0; padding-left:18px; font-size:.86rem;">
+          <li>Corazón: 7%</li>
+          <li>Vasos pulmonares: 9%</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Presiones en la circulación sistémica</h2>
+    <table>
+      <tr><th>Ubicación</th><th>Presión</th></tr>
+      <tr><td>Aorta (media)</td><td>≈100 mmHg</td></tr>
+      <tr><td>Sistólica</td><td>120 mmHg</td></tr>
+      <tr><td>Diastólica</td><td>80 mmHg</td></tr>
+      <tr><td>Capilares (extremo arteriolar)</td><td>35 mmHg</td></tr>
+      <tr><td>Capilares (extremo venoso)</td><td>10 mmHg</td></tr>
+      <tr><td>Presión funcional media capilar</td><td>17 mmHg</td></tr>
+      <tr><td>Aurícula derecha</td><td>≈0 mmHg</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Circulación pulmonar — presiones bajas por diseño</h2>
+    <table>
+      <tr><th>Ubicación</th><th>Presión</th></tr>
+      <tr><td>Sistólica pulmonar</td><td>≈25 mmHg</td></tr>
+      <tr><td>Diastólica pulmonar</td><td>8 mmHg</td></tr>
+      <tr><td>Media pulmonar</td><td>16 mmHg</td></tr>
+      <tr><td>Capilar pulmonar</td><td>7 mmHg</td></tr>
+    </table>
+    <div class="clinical"><b>¿Por qué presiones tan bajas en el pulmón?</b> Solo se necesita exponer la sangre al O2 y otros gases, en distancias muy cortas — no se requiere la fuerza propulsora que sí necesita la circulación sistémica.</div>
+  </div>
+
+  <div class="card">
+    <h2>3 principios de control circulatorio</h2>
+    <div class="flow-steps">
+      <div class="flow-step highlight">1. Flujo local según necesidad tisular</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">2. Gasto cardíaco = suma de flujos tisulares</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight2">3. PA regulada independientemente (reflejos + riñón)</div>
+    </div>
+    <div class="mnemo"><b>Dato impresionante:</b> los tejidos activos pueden necesitar 20-30x más flujo, pero el corazón solo aumenta su gasto 4-7x — el sistema redistribuye flujo, no solo lo aumenta.</div>
+  </div>
+</section>
+
+<!-- ============ LEY DE OHM ============ -->
+<section class="section" id="leyohm">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Ley de Ohm aplicada a la circulación</h2>
+    <p>El flujo, la presión y la resistencia están relacionados por una fórmula tan simple como poderosa.</p>
+  </div>
+
+  <div class="card">
+    <div class="analogy"><b>Fórmula fundamental:</b><br>F = ΔP / R<br>Donde F = flujo sanguíneo, ΔP = diferencia de presión entre los 2 extremos del vaso, R = resistencia vascular.</div>
+    <p>La diferencia de presión entre los 2 extremos del vaso —no la presión absoluta— es lo que determina la velocidad del flujo.</p>
+
+    <h3>Flujo sanguíneo (gasto cardíaco)</h3>
+    <p>Cantidad de sangre que pasa por un punto en un período dado. En el adulto: <b>≈5000 ml/min</b> — también llamado <b>Gasto Cardíaco</b>.</p>
+
+    <h3>Flujo laminar vs. turbulento</h3>
+    <div class="grid-2">
+      <div class="mini-card"><h4>➡️ Flujo laminar</h4><p style="margin:0; font-size:.86rem;">Velocidad constante, corrientes rectilíneas, capas paralelas a la pared (perfil parabólico — centro más rápido).</p></div>
+      <div class="mini-card"><h4>🌀 Flujo turbulento</h4><p style="margin:0; font-size:.86rem;">Sangre fluye en todas direcciones, mezclándose continuamente dentro del vaso.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Resistencia y conductancia</h2>
+    <p><b>Unidad de resistencia periférica (PRU):</b> si ΔP = 1 mmHg y F = 1 mL/seg → resistencia = 1 PRU.</p>
+    <table>
+      <tr><th>Sistema</th><th>Cálculo</th><th>Resistencia</th></tr>
+      <tr><td>Sistémico</td><td>ΔP=100 mmHg / F=100 mL/seg</td><td>1 PRU</td></tr>
+      <tr><td>Pulmonar</td><td>ΔP=14 mmHg / F=100 mL/seg</td><td>0,14 PRU</td></tr>
+    </table>
+    <div class="mnemo"><b>Conductancia = 1/Resistencia.</b> Pequeños cambios en el diámetro del vaso producen enormes cambios en su capacidad de conducir sangre: Conductancia α Diámetro⁴.</div>
+  </div>
+</section>
+
+<!-- ============ POISEUILLE ============ -->
+<section class="section" id="poiseuille">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Ley de Poiseuille (ley de la cuarta potencia)</h2>
+    <p>La fórmula más importante para entender por qué las arteriolas son los verdaderos "grifos" del sistema circulatorio.</p>
+  </div>
+
+  <div class="card">
+    <div class="analogy"><b>Fórmula:</b><br>F = π·ΔP·r⁴ / (8·η·L)<br>F: velocidad del flujo · ΔP: diferencia de presión · r: radio del vaso · L: longitud · η: viscosidad de la sangre</div>
+    <div class="clinical"><b>El punto clave:</b> el flujo es directamente proporcional a la <b>cuarta potencia del radio</b> — pequeños cambios de diámetro generan cambios ENORMES en el flujo.</div>
+
+    <h3>Importancia clínica</h3>
+    <ul>
+      <li>≈2/3 de la resistencia vascular sistémica total está en las <b>arteriolas pequeñas</b> (diámetro 4-25 μm).</li>
+      <li>Sus paredes fuertes permiten cambiar el diámetro hasta <b>4x</b>, aumentando el flujo teóricamente hasta <b>256 veces</b> (4⁴).</li>
+      <li>Esta ley permite que las arteriolas detengan casi por completo el flujo a un tejido, o lo aumenten enormemente.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Efecto de la presión sobre resistencia y flujo</h2>
+    <p>Un aumento de la PA distiende los vasos y reduce la resistencia — por eso el flujo tisular a 100 mmHg suele ser <b>4-6x mayor</b> que a 50 mmHg (no el doble, como sería sin este efecto de distensión).</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>🔓 Inhibición simpática</h4><p style="margin:0; font-size:.86rem;">Dilata mucho los vasos — puede aumentar el flujo 2x o más.</p></div>
+      <div class="mini-card"><h4>🔒 Estímulo simpático fuerte</h4><p style="margin:0; font-size:.86rem;">Puede contraer los vasos hasta reducir el flujo prácticamente a cero.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISCOSIDAD ============ -->
+<section class="section" id="viscosidad">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Hematocrito y viscosidad sanguínea</h2>
+    <p>Un factor que a menudo se subestima, pero que puede duplicar o triplicar la resistencia al flujo.</p>
+  </div>
+
+  <div class="card">
+    <p><b>↑Viscosidad = ↓Flujo</b> (con los demás factores constantes). La sangre es viscosa principalmente por el elevado número de hematíes en fricción constante entre sí y con la pared del vaso.</p>
+    <h3>Hematocrito</h3>
+    <p>Porcentaje de la sangre correspondiente a las células. Ej: hematocrito 40 = 40% células, 60% plasma.</p>
+    <table>
+      <tr><th>Grupo</th><th>Hematocrito normal</th></tr>
+      <tr><td>Varones</td><td>≈42%</td></tr>
+      <tr><td>Mujeres</td><td>≈38%</td></tr>
+    </table>
+    <div class="clinical"><b>Impacto clínico de la viscosidad:</b> con hematocrito normal, la viscosidad sanguínea es ≈3x la del agua (se necesita 3x más presión para el mismo flujo). En <b>policitemia</b> (Hto 60-70), la viscosidad puede llegar a <b>10x</b>.</div>
+    <div class="mnemo"><b>Dato adicional:</b> la viscosidad del plasma (sin células) es solo 1,5x la del agua — el gran salto lo dan los hematíes, no las proteínas plasmáticas.</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Panorámica de la Circulación (Guyton Cap. 14) · Prof. Lisandro</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'panoramica_circulacion_cap14_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['partes','volumenes','leyohm','poiseuille','viscosidad','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+
+/* ============ FLASHCARDS ============ */
+const flashData = [{"tag": "Partes", "front": "¿Cuál es la función principal de las arteriolas?", "back": "Actuar como conductos de control del flujo sanguíneo hacia los capilares, gracias a su fuerte pared muscular capaz de cerrar o dilatar el vaso."}, {"tag": "Partes", "front": "¿Por qué la velocidad del flujo es mucho menor en los capilares que en la aorta?", "back": "Porque la velocidad del flujo es inversamente proporcional al área transversal total — los capilares tienen un área transversal total mucho mayor (≈1/1000 de la velocidad aórtica)."}, {"tag": "Volúmenes", "front": "¿Qué porcentaje del volumen sanguíneo total se encuentra en las venas sistémicas?", "back": "≈64% — el mayor reservorio de sangre del cuerpo."}, {"tag": "Volúmenes", "front": "¿Cuál es la presión funcional media de los capilares sistémicos?", "back": "≈17 mmHg (35 mmHg en el extremo arteriolar, 10 mmHg en el extremo venoso)."}, {"tag": "Volúmenes", "front": "¿Por qué las presiones en la circulación pulmonar son mucho más bajas que en la sistémica?", "back": "Porque en el pulmón solo se necesita exponer la sangre al O2/CO2 en distancias cortas — no se requiere la misma fuerza propulsora."}, {"tag": "Ley de Ohm", "front": "Enuncia la ley de Ohm aplicada a la circulación.", "back": "F = ΔP / R — el flujo es igual a la diferencia de presión dividida por la resistencia vascular."}, {"tag": "Ley de Ohm", "front": "¿Qué determina la velocidad del flujo: la presión absoluta o la diferencia de presión?", "back": "La diferencia de presión (ΔP) entre los 2 extremos del vaso, no la presión absoluta."}, {"tag": "Ley de Ohm", "front": "¿Qué es la conductancia y cómo se relaciona con el diámetro?", "back": "Conductancia = 1/Resistencia. Es proporcional a la cuarta potencia del diámetro del vaso (Conductancia α Diámetro⁴)."}, {"tag": "Poiseuille", "front": "Según la ley de Poiseuille, ¿a qué es directamente proporcional el flujo sanguíneo?", "back": "A la cuarta potencia del radio del vaso (r⁴) — pequeños cambios de diámetro generan cambios enormes en el flujo."}, {"tag": "Poiseuille", "front": "¿Dónde se concentra aproximadamente 2/3 de la resistencia vascular sistémica total?", "back": "En las arteriolas pequeñas (diámetro 4-25 μm)."}, {"tag": "Poiseuille", "front": "Si una arteriola cambia su diámetro 4x, ¿cuánto puede aumentar el flujo teóricamente?", "back": "Hasta 256 veces (4 elevado a la cuarta potencia)."}, {"tag": "Viscosidad", "front": "¿Cuál es el hematocrito normal en varones y mujeres?", "back": "Varones: ≈42%. Mujeres: ≈38%."}, {"tag": "Viscosidad", "front": "¿Cuántas veces más viscosa es la sangre normal comparada con el agua?", "back": "≈3 veces — se necesita 3x más presión para el mismo flujo."}, {"tag": "Viscosidad", "front": "¿Qué le pasa a la viscosidad en la policitemia (Hto 60-70)?", "back": "Puede llegar a ser hasta 10x la del agua."}];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+
+
+/* ============ QUIZ ============ */
+const quizData = [{"q": "¿Cuál es la función principal de los capilares?", "options": ["Transportar sangre a alta presión", "Intercambiar líquidos, nutrientes y electrolitos con el líquido intersticial", "Servir de reservorio principal de sangre", "Generar el impulso cardíaco"], "correct": 1, "exp": "Los capilares, con paredes delgadas y porosas, son el sitio de intercambio entre la sangre y el líquido intersticial."}, {"q": "¿Por qué la velocidad del flujo sanguíneo es mucho menor en los capilares que en la aorta?", "options": ["Porque los capilares tienen mayor presión", "Porque la velocidad es inversamente proporcional al área transversal total, mucho mayor en los capilares", "Porque los capilares están más lejos del corazón", "No hay diferencia real de velocidad"], "correct": 1, "exp": "La velocidad del flujo es inversamente proporcional al área transversal total del segmento vascular; los capilares, en conjunto, tienen un área transversal mucho mayor."}, {"q": "¿Qué porcentaje aproximado del volumen sanguíneo total se encuentra en las venas sistémicas?", "options": ["13%", "30%", "64%", "90%"], "correct": 2, "exp": "Las venas sistémicas contienen ≈64% del volumen sanguíneo total, siendo el principal reservorio de sangre del cuerpo."}, {"q": "La ley de Ohm aplicada a la circulación establece que el flujo (F) es igual a:", "options": ["Presión × Resistencia", "Diferencia de presión / Resistencia", "Resistencia / Diferencia de presión", "Presión × Diámetro"], "correct": 1, "exp": "F = ΔP/R — el flujo es igual a la diferencia de presión entre los extremos del vaso dividida por la resistencia."}, {"q": "Según la ley de Poiseuille, el flujo sanguíneo es directamente proporcional a:", "options": ["El cuadrado del radio del vaso", "La cuarta potencia del radio del vaso", "La longitud del vaso", "La raíz cuadrada de la viscosidad"], "correct": 1, "exp": "La ley de Poiseuille establece que el flujo es proporcional a la cuarta potencia del radio (r⁴), lo que explica el enorme impacto de pequeños cambios de diámetro."}, {"q": "¿Dónde se concentra aproximadamente 2/3 de la resistencia vascular sistémica total?", "options": ["En las grandes arterias", "En las arteriolas pequeñas", "En las venas", "En los capilares"], "correct": 1, "exp": "Las arteriolas pequeñas (4-25 μm de diámetro) concentran ≈2/3 de la resistencia vascular sistémica total."}, {"q": "¿Cuál es el hematocrito normal aproximado en varones?", "options": ["25%", "38%", "42%", "60%"], "correct": 2, "exp": "El hematocrito normal en varones es ≈42% (en mujeres ≈38%)."}, {"q": "¿Cuántas veces más viscosa es la sangre normal (Hto normal) comparada con el agua?", "options": ["1x (igual)", "3x", "10x", "20x"], "correct": 1, "exp": "La sangre completa con hematocrito normal tiene una viscosidad ≈3x mayor que el agua."}, {"q": "En la policitemia (Hto 60-70), la viscosidad sanguínea puede llegar a ser:", "options": ["Igual a la normal", "2x la normal", "Hasta 10x la del agua", "Menor que en condiciones normales"], "correct": 2, "exp": "En la policitemia, con hematocrito elevado (60-70), la viscosidad puede llegar a ser hasta 10x la del agua."}, {"q": "¿Por qué las presiones en la circulación pulmonar son mucho menores que en la sistémica?", "options": ["Porque el corazón derecho es más débil que el izquierdo por defecto", "Porque en el pulmón solo se requiere exponer la sangre a los gases en distancias cortas", "Porque el pulmón no necesita perfusión", "Porque la sangre pulmonar es más viscosa"], "correct": 1, "exp": "Las bajas presiones pulmonares son adecuadas porque el objetivo es solo el intercambio gaseoso en distancias cortas, sin necesidad de la fuerza propulsora sistémica."}];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+
+updateHeader();
+</script>
+</body>
+</html>
