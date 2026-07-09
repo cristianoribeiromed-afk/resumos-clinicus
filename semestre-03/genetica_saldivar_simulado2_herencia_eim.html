@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado — Herencia Monogénica, EIM y Enfermedades Comunes (Dr. Saldivar)</title>
+<style>
+:root{
+  --bg:#0d1117; --bg-alt:#141b26; --card:#182233; --card-hover:#1e2b40; --border:#263348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --helix1:#7c5cff; --helix2:#00d4b5; --amber:#ffb454; --red:#ff6b6b; --green:#4ade80; --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(124,92,255,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(0,212,181,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+header{position:sticky; top:0; z-index:100; background:rgba(13,17,23,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.7rem; color:var(--text-dim);}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--helix2); background:rgba(0,212,181,.1); border:1px solid rgba(0,212,181,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(124,92,255,.15), rgba(0,212,181,.08)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.6rem; margin-bottom:.3em;}
+ul{margin:8px 0 8px 20px; color:#c8d1de;} li{margin-bottom:6px;}
+.btn-primary{background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:12px 26px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(0,212,181,.12); color:var(--helix2); border:1px solid rgba(0,212,181,.3);}
+.tag.type{background:rgba(124,92,255,.12); color:var(--helix1); border:1px solid rgba(124,92,255,.3);}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px; font-family:'Lora',serif;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;} .vf-row .option{flex:1; text-align:center;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-family:'Lora',serif; font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--helix2);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M10 4 C10 12, 30 12, 30 20 C30 28, 10 28, 10 36" stroke="#7c5cff" stroke-width="2.5" fill="none"/><path d="M30 4 C30 12, 10 12, 10 20 C10 28, 30 28, 30 36" stroke="#00d4b5" stroke-width="2.5" fill="none"/></svg>
+      <div class="logo-text">
+        <h1>Simulado — Herencia Monogénica, EIM y Enf. Comunes</h1>
+        <span>Dr. Saldivar · Casos clínicos estilo prueba de Medicina</span>
+      </div>
+    </div>
+    <div class="xp-panel" style="display:flex; align-items:center; gap:14px;">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+</header>
+<main>
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato del simulado</span>
+    <h2>40 preguntas — casos clínicos estilo Medicina</h2>
+    <p>Preguntas de múltiple elección y verdadero/falso, con viñetas clínicas reales — el estilo con el que este profesor evalúa.</p>
+  </div>
+  <div class="card">
+    <h2>Bloques cubiertos</h2>
+    <ul>
+      <li>Tipos de Herencia (autosómica recesiva, ligada al X, mitocondrial)</li>
+      <li>Errores Innatos del Metabolismo (Grupos 1, 2 y 3)</li>
+      <li>Diabetes (Neonatal, MODY, DM1/DM2), Crohn, Coronariopatía</li>
+      <li>Epilepsia, Autismo (TEA), Esquizofrenia, Alzheimer</li>
+      <li>Enfermedad de Huntington, Distrofia Muscular de Duchenne, Hemofilia</li>
+      <li>Herencia Multifactorial — casos clínicos integrados</li>
+    </ul>
+    <button class="btn-primary" onclick="startQuiz()">Comenzar simulado →</button>
+  </div>
+</div>
+<div id="quizScreen" style="display:none;">
+  <div class="card" id="quizCard"><div id="quizArea"></div></div>
+</div>
+</main>
+<footer>Resumos Clinicus · Simulado — Herencia Monogénica, EIM y Enfermedades Comunes (Dr. Saldivar) · 40 preguntas</footer>
+<script>
+const quizData = [{"type": "mcq", "topic": "Herencia Autosómica Recesiva", "q": "Un matrimonio saludable busca asesoramiento genético. Ambos son heterocigotos para una enfermedad autosómica recesiva. ¿Cuál es la probabilidad de que un hijo nazca afectado?", "opts": ["0%", "25%", "50%", "75%"], "correct": 1}, {"type": "mcq", "topic": "Herencia Autosómica Recesiva", "q": "Respecto a la herencia autosómica recesiva, señale la alternativa correcta.", "opts": ["Basta un gen alterado para la manifestación", "Solo los hombres son afectados", "El individuo necesita recibir 2 alelos mutados", "Solo las mujeres transmiten la enfermedad"], "correct": 2}, {"type": "mcq", "topic": "Herencia Mitocondrial", "q": "Una mujer presenta una enfermedad ligada al ADN mitocondrial. ¿Cuál es la probabilidad de transmitirla a sus hijos?", "opts": ["25%", "50%", "Solo a las niñas", "100%"], "correct": 3}, {"type": "mcq", "topic": "Herencia Ligada al X Recesiva", "q": "En la herencia ligada al X recesiva, los hombres suelen ser más afectados porque:", "opts": ["Poseen 2 cromosomas X", "Heredan 2 genes mutados", "Poseen solo 1 cromosoma X", "No poseen cromosomas autosómicos"], "correct": 2}, {"type": "mcq", "topic": "Herencia Ligada al X Dominante", "q": "Una mujer portadora de enfermedad ligada al X dominante queda embarazada. ¿Cuál es la probabilidad de transmitirla a cada hijo/hija?", "opts": ["25%", "50%", "75%", "100%"], "correct": 1}, {"type": "mcq", "topic": "Herencia Ligada al X Dominante Paterna", "q": "En la herencia ligada al X dominante de origen paterna:", "opts": ["Todos los hijos varones serán afectados", "Todas las hijas serán afectadas", "Solo la mitad de las hijas será afectada", "Nadie heredará la enfermedad"], "correct": 1}, {"type": "mcq", "topic": "Erradas Innatos del Metabolismo", "q": "¿Cuál fue la primera enfermedad reconocida como de origen genético?", "opts": ["Fenilcetonuria", "Enfermedad de Pompe", "Alcaptonuria", "Enfermedad de Gaucher"], "correct": 2}, {"type": "mcq", "topic": "Alcaptonuria", "q": "Un paciente de 45 años presenta orina oscurecida y niveles elevados de ácido homogentísico. El diagnóstico más probable es:", "opts": ["Enfermedad de Pompe", "Enfermedad de Wilson", "Alcaptonuria", "Enfermedad de Fabry"], "correct": 2}, {"type": "mcq", "topic": "Errores Innatos del Metabolismo", "q": "Según Garrod, una característica de los errores hereditarios del metabolismo es:", "opts": ["Siempre aparecen entre padres e hijos", "Nunca tienen origen genético", "Derivan de alteraciones enzimáticas", "Son enfermedades infecciosas"], "correct": 2}, {"type": "mcq", "topic": "Fenilcetonuria", "q": "El tratamiento presentado para la Fenilcetonuria consiste en:", "opts": ["Antibioticoterapia", "Dieta rica en proteínas", "Dieta restrictiva en fenilalanina", "Trasplante de médula"], "correct": 2}, {"type": "mcq", "topic": "EIM - Grupo 3", "q": "Un paciente presenta hepatomegalia, cardiomiopatía, hipotonía muscular y déficit de crecimiento. Estas características pertenecen principalmente al grupo:", "opts": ["Trastornos de síntesis/catabolismo de moléculas", "Trastornos del metabolismo intermedio", "Trastornos de producción o utilización de energía", "Enfermedades autoinmunes"], "correct": 2}, {"type": "mcq", "topic": "Errores Innatos del Metabolismo", "q": "Una niña presenta episodios recurrentes de hipoglucemia, hepatomegalia e hipotonía. ¿Qué factor aumenta la sospecha de error hereditario del metabolismo?", "opts": ["Hipertensión arterial", "Consanguinidad entre los padres", "Asma", "Tabaquismo materno"], "correct": 1}, {"type": "mcq", "topic": "EIM - Mecanismo", "q": "Un recién nacido de 7 días presenta dificultad de succión, vómitos persistentes y pérdida de peso. Se identifica deficiencia de una enzima de una vía metabólica, con acumulación del sustrato inicial y disminución de los productos finales. Este mecanismo caracteriza:", "opts": ["Producción excesiva de ATP", "Bloqueo enzimático de una vía metabólica", "Alteración cromosómica estructural", "Deficiencia inmunológica"], "correct": 1}, {"type": "mcq", "topic": "EIM - Vía Alternativa", "q": "Durante una clase práctica, el profesor dibuja el esquema A→X→B→C, explicando que el exceso de A se desvía hacia una vía alternativa formando la sustancia D. ¿Qué característica de D es más probable?", "opts": ["Actúa como cofactor enzimático", "Es siempre benéfica al metabolismo", "Suele ser tóxica para el organismo", "Corrige automáticamente el defecto"], "correct": 2}, {"type": "mcq", "topic": "EIM - Grupo 1", "q": "Una niña presenta aumento progresivo del abdomen desde el primer año de vida, hepatoesplenomegalia importante, retraso del desarrollo neuropsicomotor y deformidades óseas, con síntomas que nunca desaparecieron y empeoran progresivamente. El cuadro es más compatible con:", "opts": ["Grupo 1", "Grupo 2", "Grupo 3", "Enfermedad mitocondrial aislada"], "correct": 0}, {"type": "mcq", "topic": "EIM - Grupo 2", "q": "Una niña permanece asintomática los primeros meses de vida. Tras iniciar alimentación rica en proteínas, presenta vómitos repetidos, somnolencia intensa y convulsiones. Este patrón sugiere:", "opts": ["Grupo 1", "Grupo 2", "Grupo 3", "Enfermedad cromosómica"], "correct": 1}, {"type": "mcq", "topic": "Fenilcetonuria", "q": "Un paciente presenta crisis convulsivas tras ingerir alimentos ricos en proteínas animales. El médico sospecha Fenilcetonuria. ¿Qué sustancia tiende a acumularse?", "opts": ["Glucógeno", "Lactato", "Fenilalanina", "Colesterol"], "correct": 2}, {"type": "mcq", "topic": "EIM - Grupo 3", "q": "Un lactante presenta hipoglucemia recurrente, hipotonía muscular importante, dificultad para ganar peso y cardiomiopatía. El cuadro es más compatible con:", "opts": ["Grupo 1", "Grupo 2", "Grupo 3", "Síndrome cromosómico"], "correct": 2}, {"type": "mcq", "topic": "EIM - Grupo 3", "q": "Una niña presenta hipoglucemia persistente durante el ayuno, hipotonía y acidosis metabólica. El mecanismo fisiopatológico más probable involucra deficiencia de:", "opts": ["Síntesis de ADN", "Glucogenólisis o gluconeogénesis", "Formación de hemoglobina", "Síntesis de colágeno"], "correct": 1}, {"type": "vf", "topic": "EIM - Concepto", "q": "Un error innato del metabolismo siempre provoca deficiencia del producto final y acumulación del sustrato inicial.", "correct": true}, {"type": "mcq", "topic": "EIM - Grupo 1 vs 2", "q": "Un recién nacido presenta hepatomegalia importante, alteraciones faciales progresivas y empeoramiento clínico continuo desde el nacimiento. ¿Qué pregunta ayuda más rápidamente a clasificarlo como Grupo 1?", "opts": ["¿Hubo vacunación reciente?", "¿Existe relación con la alimentación?", "¿Los síntomas son permanentes y progresivos desde el nacimiento?", "¿La niña practica actividad física?"], "correct": 2}, {"type": "mcq", "topic": "EIM - Gatillo", "q": "Un paciente presenta crisis solo tras ayuno prolongado. ¿Qué grupo debe considerarse primero?", "opts": ["Grupo 1", "Grupo 2", "Grupo 3", "Grupo 1 y 3 simultáneamente"], "correct": 2}, {"type": "mcq", "topic": "Diabetes Neonatal", "q": "Una niña presenta diabetes en el primer mes de vida. La investigación genética encuentra mutación en el gen KCNJ11. El diagnóstico más probable es:", "opts": ["DM tipo 2", "Diabetes gestacional", "Diabetes neonatal", "MODY"], "correct": 2}, {"type": "mcq", "topic": "Diabetes MODY", "q": "Un adolescente de 17 años presenta diabetes sin obesidad importante. Su padre, abuelo y bisabuelo también desarrollaron diabetes siendo jóvenes. ¿Cuál diagnóstico es más probable?", "opts": ["DM tipo 1", "DM tipo 2", "MODY", "Diabetes gestacional"], "correct": 2}, {"type": "vf", "topic": "Coronariopatía", "q": "Los genes más estudiados en la coronariopatía están relacionados con el metabolismo lipídico, coagulación, inflamación y función endotelial.", "correct": true}, {"type": "mcq", "topic": "Epilepsia", "q": "Un paciente presenta crisis convulsivas recurrentes. La investigación revela mutación en el gen SCN1A. Este gen está asociado principalmente con:", "opts": ["Enfermedad de Crohn", "Epilepsia", "Hipertensión", "Alzheimer"], "correct": 1}, {"type": "mcq", "topic": "Epilepsia", "q": "¿Qué tipo de epilepsia presenta causa conocida, como tumor cerebral o infección?", "opts": ["Idiopática", "Criptogénica", "Sintomática", "Generalizada"], "correct": 2}, {"type": "mcq", "topic": "Autismo (TEA)", "q": "¿Qué síndrome genético frecuentemente se asocia al Trastorno del Espectro Autista?", "opts": ["Turner", "Down", "X Frágil", "Edwards"], "correct": 2}, {"type": "vf", "topic": "Esquizofrenia", "q": "Los estudios con gemelos idénticos demuestran mayor concordancia para esquizofrenia que en la población general, lo que evidencia un fuerte componente genético.", "correct": true}, {"type": "mcq", "topic": "Alzheimer", "q": "Un hombre de 42 años desarrolló Alzheimer precoz. El test genético reveló mutación en PSEN1. ¿Qué patrón de herencia está más relacionado?", "opts": ["Ligado al X", "Mitocondrial", "Autosómico dominante", "Recesivo"], "correct": 2}, {"type": "mcq", "topic": "Enfermedad de Huntington", "q": "Un hombre de 35 años consulta por movimientos involuntarios progresivos, alteraciones de comportamiento y pérdida de memoria reciente. Su padre presentó síntomas similares a los 45 años y falleció con importante compromiso neurológico. ¿Qué alternativa explica correctamente esta enfermedad?", "opts": ["Enfermedad multifactorial desencadenada solo por el ambiente", "Mutación recesiva ligada al X", "Enfermedad autosómica dominante por expansión de repeticiones CAG en el gen HTT", "Deficiencia de distrofina"], "correct": 2}, {"type": "mcq", "topic": "Enfermedad de Huntington", "q": "Una mujer busca asesoramiento genético porque su esposo tiene Enfermedad de Huntington. Desean saber el riesgo para sus futuros hijos. La orientación correcta es:", "opts": ["Todos los hijos desarrollarán la enfermedad", "Ningún hijo la desarrollará", "Cada hijo tiene aproximadamente 50% de probabilidad de heredar la mutación", "Solo los hijos varones serán afectados"], "correct": 2}, {"type": "mcq", "topic": "Distrofia Muscular de Duchenne", "q": "Un niño de 6 años presenta dificultad para correr, levantarse del suelo y subir escaleras. Al examen físico se observa signo de Gowers positivo, y la CK está extremadamente elevada. El mecanismo fisiopatológico más probable es:", "opts": ["Deficiencia del factor IX", "Ausencia de distrofina, fragilizando la fibra muscular durante la contracción", "Expansión de CAG", "Alteración del gen SRY"], "correct": 1}, {"type": "mcq", "topic": "Distrofia Muscular de Duchenne", "q": "Una madre saludable tiene 2 hijos varones. Uno de ellos presenta Distrofia Muscular de Duchenne. ¿Cuál afirmación es correcta?", "opts": ["La enfermedad es autosómica dominante", "El padre obligatoriamente transmitió el gen", "La madre probablemente es portadora de la mutación ligada al cromosoma X", "La enfermedad afecta igualmente a hombres y mujeres"], "correct": 2}, {"type": "mcq", "topic": "Hemofilia", "q": "Un adolescente presenta episodios repetidos de hemorragias articulares tras traumas menores. Los exámenes muestran deficiencia del factor VIII. El diagnóstico es:", "opts": ["Hemofilia B", "Hemofilia A", "Enfermedad de Huntington", "Enfermedad de Crohn"], "correct": 1}, {"type": "mcq", "topic": "Herencia Multifactorial", "q": "Un paciente pregunta por qué su hermano es obeso y diabético mientras él, con alimentación saludable, nunca desarrolló diabetes, aunque ambos tienen padres diabéticos. Esta situación demuestra que:", "opts": ["La genética determina completamente la aparición de la enfermedad", "La diabetes tipo 2 resulta exclusivamente de la alimentación", "En la herencia multifactorial existe interacción entre predisposición genética y ambiente", "Los hermanos poseen exactamente los mismos genes"], "correct": 2}, {"type": "mcq", "topic": "Diabetes MODY", "q": "Una mujer presenta diabetes a los 19 años, sin obesidad, y varios familiares desarrollaron diabetes antes de los 25 años en generaciones sucesivas. ¿Cuál es el diagnóstico más probable?", "opts": ["DM tipo 2", "DM gestacional", "Diabetes MODY", "Diabetes secundaria"], "correct": 2}, {"type": "mcq", "topic": "Herencia Multifactorial", "q": "Durante una campaña de prevención cardiovascular, un médico explica que 2 individuos tienen predisposición genética similar para hipertensión, pero solo uno desarrolló la enfermedad. ¿Qué factor explica mejor esta diferencia?", "opts": ["La hipertensión depende exclusivamente de los genes", "El ambiente, la dieta, la actividad física y el estrés modifican la expresión génica", "Solo mutaciones nuevas causan hipertensión", "El sexo es el único factor determinante"], "correct": 1}, {"type": "mcq", "topic": "Autismo (TEA)", "q": "Una niña presenta dificultad de interacción social, comportamiento repetitivo y retraso del lenguaje. En la anamnesis se observa edad paterna avanzada y nacimiento prematuro. Según la genética actual, el autismo se explica mejor por:", "opts": ["Una única mutación obligatoria", "Exclusivamente alteraciones cromosómicas", "Interacción entre predisposición genética y factores ambientales", "Exclusivamente infección gestacional"], "correct": 2}, {"type": "mcq", "topic": "Alzheimer", "q": "Un hombre de 72 años desarrolló Alzheimer. Su médico explica que esta forma generalmente tiene influencia genética, pero los hábitos de vida también juegan un papel importante. Esta forma corresponde al:", "opts": ["Alzheimer precoz autosómico dominante", "Alzheimer por expansión de CAG", "Alzheimer tardío multifactorial", "Enfermedad de Huntington"], "correct": 2}];
+let qIndex=0, score=0, answered=false, log=[], topicStats={}, xp=0;
+function addXP(n){ xp+=n; document.getElementById('xpCount').textContent=xp; document.getElementById('levelBadge').textContent='Nivel '+(Math.floor(xp/100)+1); }
+function startQuiz(){ document.getElementById('introScreen').style.display='none'; document.getElementById('quizScreen').style.display='block'; qIndex=0; score=0; log=[]; topicStats={}; renderQuiz(); }
+function typeLabel(t){ return t==='mcq' ? 'Múltiple elección' : 'Verdadero / Falso'; }
+function renderQuiz(){
+  const area=document.getElementById('quizArea');
+  if(qIndex>=quizData.length){ renderResult(); return; }
+  const item=quizData[qIndex]; answered=false;
+  const pct=Math.round((qIndex/quizData.length)*100);
+  let html='<div class="quiz-progress"><span>Pregunta '+(qIndex+1)+' / '+quizData.length+'</span><span>Puntaje: '+score+'</span></div>';
+  html+='<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:'+pct+'%"></div></div>';
+  html+='<div class="tag-row"><span class="tag topic">'+item.topic+'</span><span class="tag type">'+typeLabel(item.type)+'</span></div>';
+  html+='<div class="quiz-q">'+item.q+'</div>';
+  if(item.type==='mcq'){
+    item.opts.forEach((opt,i)=>{ html+='<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">'+opt+'</button>'; });
+  } else {
+    html+='<div class="vf-row"><button class="option" data-val="true" onclick="answerVF(this,true)">Verdadero</button><button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button></div>';
+  }
+  html+='<div id="feedbackArea"></div>';
+  html+='<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Siguiente →</button></div>';
+  area.innerHTML=html;
+}
+function registerTopic(topic,correct){ if(!topicStats[topic]) topicStats[topic]={total:0,correct:0}; topicStats[topic].total++; if(correct) topicStats[topic].correct++; }
+function answerMCQ(btn,idx){
+  if(answered) return; answered=true;
+  const item=quizData[qIndex]; const opts=document.querySelectorAll('.option'); opts.forEach(o=>o.classList.add('disabled'));
+  const correct=idx===item.correct; btn.classList.add(correct?'correct':'incorrect'); opts[item.correct].classList.add('correct');
+  finishAnswer(correct,item.topic,item.q);
+}
+function answerVF(btn,val){
+  if(answered) return; answered=true;
+  const item=quizData[qIndex]; const opts=document.querySelectorAll('.option'); opts.forEach(o=>o.classList.add('disabled'));
+  const correct=val===item.correct; btn.classList.add(correct?'correct':'incorrect');
+  opts.forEach(o=>{ const v=o.dataset.val==='true'; if(v===item.correct) o.classList.add('correct'); });
+  finishAnswer(correct,item.topic,item.q);
+}
+function finishAnswer(correct,topic,q){
+  const fb=document.getElementById('feedbackArea');
+  fb.innerHTML='<div class="feedback '+(correct?'correct':'incorrect')+'">'+(correct?'✓ ¡Correcto!':'✗ Incorrecto')+'</div>';
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic,correct); log.push({q:q,correct:correct});
+  document.getElementById('nextBtn').disabled=false;
+}
+function nextQuestion(){ qIndex++; renderQuiz(); }
+function renderResult(){
+  const area=document.getElementById('quizArea');
+  const pct=Math.round((score/quizData.length)*100);
+  let html='<div class="result-box"><div class="score">'+score+' / '+quizData.length+'</div>';
+  html+='<p style="font-size:1.1rem;">'+pct+'% de aciertos</p>';
+  html+= pct>=80 ? '<p style="color:var(--green);">¡Excelente dominio del razonamiento clínico!</p>' : pct>=50 ? '<p style="color:var(--gold);">Buen resultado — revisa los bloques con más errores abajo.</p>' : '<p style="color:var(--red);">Vale la pena repasar los módulos completos antes de la prueba.</p>';
+  html+='<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{ const s=topicStats[t]; html+='<div class="bd-item"><div class="n">'+s.correct+'/'+s.total+'</div><div class="l">'+t+'</div></div>'; });
+  html+='</div>';
+  html+='<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  log.forEach(l=>{ html+='<tr><td>'+l.q+'</td><td class="'+(l.correct?'ok':'bad')+'">'+(l.correct?'Correcto':'Incorrecto')+'</td></tr>'; });
+  html+='</table>';
+  html+='<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Reintentar simulado</button></div></div>';
+  addXP(100); area.innerHTML=html;
+}
+</script>
+</body>
+</html>
