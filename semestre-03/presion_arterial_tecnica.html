@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presión Arterial: Técnica de Medición · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --art:#ff5c6c; --ven:#4d9fff; --gold:#ffd166; --green:#4ade80; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(255,92,108,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(77,159,255,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--art),var(--ven)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--art),var(--ven)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ven); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(255,92,108,.14), rgba(77,159,255,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--art); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--art);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--ven); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--ven);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.86rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--ven); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--ven); font-size:.95rem; margin-bottom:6px;}
+
+.flow-steps{display:flex; align-items:center; gap:6px; overflow-x:auto; padding:16px 4px; margin:14px 0;}
+.flow-step{flex:1; min-width:130px; text-align:center; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:12px 10px; font-size:.78rem; font-weight:600; color:var(--text);}
+.flow-arrow{color:var(--text-dim); font-size:1.1rem; flex-shrink:0;}
+.flow-step.highlight{border-color:var(--art); background:rgba(255,92,108,.1);}
+.flow-step.highlight2{border-color:var(--ven); background:rgba(77,159,255,.1);}
+
+.korotkoff-phases{display:flex; flex-direction:column; gap:6px; margin:14px 0;}
+.kphase{display:flex; align-items:center; gap:12px; background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 14px;}
+.kphase .num{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; font-weight:800; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.85rem;}
+.kphase p{margin:0; font-size:.85rem;}
+
+.risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+@media(max-width:720px){.risk-grid{grid-template-columns:repeat(2,1fr);}}
+.risk-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; font-size:.8rem;}
+
+.bp-calc{background:var(--bg-alt); border:1px solid var(--border); border-radius:14px; padding:20px; margin:14px 0;}
+.bp-row{display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap;}
+.bp-row label{flex:1; min-width:200px; font-size:.85rem;}
+.bp-row input{width:100px; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:7px 10px; color:var(--text); font-size:.9rem;}
+.bp-result{text-align:center; margin-top:16px; padding:16px; border-radius:12px;}
+.bp-result.normal{background:rgba(74,222,128,.1); border:1px solid var(--green);}
+.bp-result.elevated{background:rgba(255,209,102,.12); border:1px solid var(--gold);}
+.bp-result.high{background:rgba(255,92,108,.1); border:1px solid var(--art);}
+.bp-result.crisis{background:rgba(255,92,108,.22); border:2px solid var(--art);}
+.bp-result .val{font-size:1.4rem; font-weight:800;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.flash-controls{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+.flash-counter{color:var(--text-dim); font-size:.85rem;}
+.flashcard-wrap{perspective:1200px; max-width:560px; margin:0 auto;}
+.flashcard{position:relative; width:100%; min-height:220px; cursor:pointer; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center; justify-content:center; text-align:center; padding:26px; border:1px solid var(--border); box-shadow:var(--shadow);}
+.face-front{background:linear-gradient(135deg,#1c2233,#1b2130); font-size:1.1rem; font-weight:600;}
+.face-back{background:linear-gradient(135deg,rgba(255,92,108,.16),rgba(77,159,255,.14)); transform:rotateY(180deg); font-size:1rem;}
+.flash-tag{position:absolute; top:12px; left:16px; font-size:.68rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+.flash-hint{position:absolute; bottom:10px; right:16px; font-size:.68rem; color:var(--text-dim);}
+.review-btns{display:flex; gap:10px; margin-top:20px; justify-content:center; flex-wrap:wrap;}
+.review-btns button{border:none; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.85rem; color:#0d0f16; transition:.15s;}
+.review-btns button:hover{transform:translateY(-2px);}
+.btn-again{background:var(--art);} .btn-hard{background:var(--gold);} .btn-good{background:var(--ven);} .btn-easy{background:var(--green);}
+.nav-flash{display:flex; justify-content:center; gap:14px; margin-top:16px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer;}
+.nav-flash button:hover{background:var(--card-hover);}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:16px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.option:hover{background:var(--card-hover); border-color:var(--ven);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,92,108,.18); border-color:var(--art);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--art); color:var(--art);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px;}
+.btn-primary{background:linear-gradient(135deg,var(--art),var(--ven)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--art),var(--ven)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--art); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--ven); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Presión Arterial: Técnica de Medición</h1>
+        <span>Fisiología I · Semiología Clínica</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completado</span><span>Conceptos → Condiciones → Palpatorio → Auscultatorio/Korotkoff → Clasificación → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="conceptos">📐 Conceptos Básicos</button>
+    <button class="tab-btn" data-tab="condiciones">✅ Condiciones del Paciente</button>
+    <button class="tab-btn" data-tab="palpatorio">✋ Método Palpatorio</button>
+    <button class="tab-btn" data-tab="auscultatorio">🩺 Auscultatorio / Korotkoff</button>
+    <button class="tab-btn" data-tab="clasificacion">📊 Clasificación de la PA</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ CONCEPTOS ============ -->
+<section class="section active" id="conceptos">
+  <div class="hero">
+    <span class="eyebrow">Semiología Clínica</span>
+    <h2>¿Qué es la presión arterial?</h2>
+    <p>La presión arterial es la <b>fuerza de la sangre contra las paredes de las arterias</b>. Se mide en milímetros de mercurio (mmHg).</p>
+  </div>
+
+  <div class="card">
+    <h2>¿Qué significa "120 mmHg"?</h2>
+    <p>Significa que la fuerza dentro del vaso sanguíneo es suficiente para levantar una columna de mercurio hasta <b>120 mm</b>.</p>
+    <div class="analogy"><b>Analogía de la represa:</b> imagina una represa de agua y compárala con el manguito/brazalete de presión — el manguito "contiene" el flujo arterial igual que una represa contiene el agua, y al liberar presión gradualmente, se detecta el punto exacto donde la sangre vuelve a fluir libremente.</div>
+  </div>
+
+  <div class="card">
+    <h2>Partes del tensiómetro (esfigmomanómetro)</h2>
+    <div class="grid-2">
+      <div class="mini-card"><h4>🩹 Manguito / brazalete</h4><p style="margin:0; font-size:.86rem;">Se coloca alrededor del brazo, comprime la arteria braquial.</p></div>
+      <div class="mini-card"><h4>🎈 Perita (bomba de inflado)</h4><p style="margin:0; font-size:.86rem;">Insufla aire al manguito, controlada con la mano contraria a la palpación.</p></div>
+      <div class="mini-card"><h4>📟 Manómetro</h4><p style="margin:0; font-size:.86rem;">Muestra la presión en mmHg mientras se infla/desinfla el manguito.</p></div>
+      <div class="mini-card"><h4>🩺 Estetoscopio</h4><p style="margin:0; font-size:.86rem;">Usado en el método auscultatorio, colocado sobre la arteria braquial.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONDICIONES ============ -->
+<section class="section" id="condiciones">
+  <div class="hero">
+    <span class="eyebrow">Sección 2</span>
+    <h2>Condiciones para una medición correcta</h2>
+    <p>La técnica es tan importante como el equipo — errores de preparación son la causa más común de mediciones incorrectas.</p>
+  </div>
+
+  <div class="card">
+    <h2>Condiciones del paciente</h2>
+    <div class="risk-grid">
+      <div class="risk-item">Misma hora, ≥2x/día (anotar)</div>
+      <div class="risk-item">Sin ejercicio 30 min antes</div>
+      <div class="risk-item">Descansar 5 min si llegó caminando</div>
+      <div class="risk-item">No comer (1h antes)</div>
+      <div class="risk-item">No fumar (30 min antes)</div>
+      <div class="risk-item">Evitar alcohol/cafeína (30 min antes)</div>
+      <div class="risk-item">No hablar durante la medición</div>
+      <div class="risk-item">Sentado, brazo a nivel del corazón</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Condiciones del equipo y técnica</h2>
+    <ul>
+      <li>Aparato debidamente calibrado</li>
+      <li>Persona con conocimientos suficientes de la técnica</li>
+      <li>Brazo descubierto de ropa</li>
+      <li>Brazal con el borde inferior a 2-3 dedos de la flexura del codo</li>
+      <li>Estetoscopio colocado correctamente a nivel del conducto auditivo</li>
+    </ul>
+    <div class="clinical"><b>Relevancia clínica:</b> no seguir estas condiciones puede generar diagnósticos falsos de hipertensión ("hipertensión de bata blanca") o subestimar valores reales — siempre estandarizar la técnica.</div>
+  </div>
+</section>
+
+<!-- ============ PALPATORIO ============ -->
+<section class="section" id="palpatorio">
+  <div class="hero">
+    <span class="eyebrow">Sección 3</span>
+    <h2>Método palpatorio</h2>
+    <p>Un método rápido, sin estetoscopio, que permite estimar <b>solo la presión sistólica</b> — útil como paso previo al método auscultatorio.</p>
+  </div>
+
+  <div class="card">
+    <h3>Paso a paso</h3>
+    <div class="flow-steps">
+      <div class="flow-step">Colocar manguito 2-3 dedos sobre la flexura del codo</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Palpar arteria radial con mano derecha</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Insuflar con la perita (mano izquierda)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight">Pulso desaparece = anotar valor</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step highlight2">Insuflar 40 mmHg más y soltar lento</div>
+    </div>
+    <div class="analogy"><b>Ejemplo práctico:</b> si al insuflar se deja de sentir el pulso radial en 120 mmHg, se debe insuflar hasta 160 mmHg (120+40) y, al soltar el aire lentamente mientras se observa el manómetro, el pulso debería reaparecer nuevamente cerca de 120 mmHg — confirmando la presión sistólica.</div>
+    <div class="mnemo"><b>Limitación clave:</b> este método NO usa estetoscopio y solo permite medir la <b>presión sistólica</b> — no la diastólica.</div>
+  </div>
+</section>
+
+<!-- ============ AUSCULTATORIO ============ -->
+<section class="section" id="auscultatorio">
+  <div class="hero">
+    <span class="eyebrow">Sección 4</span>
+    <h2>Método auscultatorio y Ruidos de Korotkoff</h2>
+    <p>El método estándar de referencia — permite obtener tanto la presión sistólica como la diastólica.</p>
+  </div>
+
+  <div class="card">
+    <h2>Técnica</h2>
+    <p>Esperar al menos 1 minuto después del método palpatorio, con el manguito aflojado. Colocar la campana del estetoscopio sobre la <b>arteria braquial</b> (borde interno del bíceps), en el espacio entre el manguito y la flexura del codo.</p>
+    <p>Insuflar hasta 40 mmHg por encima del valor sistólico encontrado por palpación, luego soltar el aire suavemente mientras se ausculta.</p>
+    <div class="clinical"><b>Interpretación:</b> el <b>primer</b> ruido audible marca la <b>presión sistólica</b>; el <b>último</b> ruido audible marca la <b>presión diastólica</b>.</div>
+  </div>
+
+  <div class="card">
+    <h2>Ruidos de Korotkoff</h2>
+    <p>Sonidos pulsátiles producidos por el <b>flujo turbulento</b> de sangre al pasar por una arteria parcialmente colapsada por el manguito — descritos por el médico ruso Nikolai Korotkov (1905).</p>
+    <h3>Las 5 fases</h3>
+    <div class="korotkoff-phases">
+      <div class="kphase"><span class="num">1</span><p><b>Fase 1:</b> primer sonido de "latido"/pulso — marca la <b>presión sistólica</b>.</p></div>
+      <div class="kphase"><span class="num">2</span><p><b>Fase 2:</b> el ruido pierde intensidad, se vuelve más amortiguado.</p></div>
+      <div class="kphase"><span class="num">3</span><p><b>Fase 3:</b> aparece un ruido sordo y suave.</p></div>
+      <div class="kphase"><span class="num">4</span><p><b>Fase 4:</b> el ruido comienza a apagarse, volviéndose más débil.</p></div>
+      <div class="kphase"><span class="num">5</span><p><b>Fase 5:</b> el ruido cesa por completo — marca la <b>presión diastólica</b>.</p></div>
+    </div>
+    <div class="mnemo"><b>Regla clínica:</b> la fase 1 determina la presión sistólica; la fase 5 (o la fase 4 si la 5 está ausente) determina la presión diastólica.</div>
+  </div>
+</section>
+
+<!-- ============ CLASIFICACIÓN ============ -->
+<section class="section" id="clasificacion">
+  <div class="hero">
+    <span class="eyebrow">Sección 5</span>
+    <h2>Clasificación de la presión arterial (AHA 2024)</h2>
+    <p>Categorías oficiales de la American Heart Association para clasificar el nivel de presión arterial.</p>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th>Categoría</th><th>Sistólica</th><th></th><th>Diastólica</th></tr>
+      <tr><td>Normal</td><td>&lt;120</td><td>y</td><td>&lt;80</td></tr>
+      <tr><td>Normal elevada</td><td>120-129</td><td>y</td><td>&lt;80</td></tr>
+      <tr><td>Hipertensión nivel 1</td><td>130-139</td><td>o</td><td>80-89</td></tr>
+      <tr><td>Hipertensión nivel 2</td><td>≥140</td><td>o</td><td>≥90</td></tr>
+      <tr><td><b>Crisis hipertensiva</b></td><td>&gt;180</td><td>y/o</td><td>&gt;120</td></tr>
+    </table>
+
+    <h3>🧮 Clasificador rápido de presión arterial</h3>
+    <div class="bp-calc">
+      <div class="bp-row">
+        <label>Presión sistólica (mmHg)</label>
+        <input type="number" id="sys" value="120" oninput="calcBP()">
+      </div>
+      <div class="bp-row">
+        <label>Presión diastólica (mmHg)</label>
+        <input type="number" id="dia" value="80" oninput="calcBP()">
+      </div>
+      <div class="bp-result normal" id="bpResultBox">
+        <div>Clasificación</div>
+        <div class="val" id="bpResult">Normal</div>
+      </div>
+    </div>
+    <p style="font-size:.8rem; color:var(--text-dim);">Herramienta educativa basada en la clasificación AHA 2024 — no sustituye el criterio médico individual.</p>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Repaso activo</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Haz clic en la tarjeta para ver la respuesta, luego califica tu nivel de recuerdo.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span class="flash-counter">Tarjeta <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span class="flash-counter">Dominadas: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Concepto</span><div id="fcFront">Cargando...</div><div class="flash-hint">Toca para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">Otra vez</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bien</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Mezclar</button>
+      <button onclick="nextCard()">Siguiente →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Evaluación final</span>
+    <h2>Quiz estilo INEP / Revalida</h2>
+    <p>10 preguntas de opción múltiple con retroalimentación inmediata.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Resumos Clinicus · Fisiología — Presión Arterial: Técnica de Medición</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'presion_arterial_tecnica_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['conceptos','condiciones','palpatorio','auscultatorio','clasificacion','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nivel ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completado';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Sección explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+    if(tab === 'clasificacion') calcBP();
+    updateHeader();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+function calcBP(){
+  const sys = parseFloat(document.getElementById('sys').value) || 0;
+  const dia = parseFloat(document.getElementById('dia').value) || 0;
+  const box = document.getElementById('bpResultBox');
+  const result = document.getElementById('bpResult');
+  if(sys > 180 || dia > 120){
+    box.className = 'bp-result crisis';
+    result.textContent = 'Crisis Hipertensiva (>180 y/o >120)';
+  } else if(sys >= 140 || dia >= 90){
+    box.className = 'bp-result high';
+    result.textContent = 'Hipertensión Nivel 2 (≥140 o ≥90)';
+  } else if(sys >= 130 || dia >= 80){
+    box.className = 'bp-result high';
+    result.textContent = 'Hipertensión Nivel 1 (130-139 o 80-89)';
+  } else if(sys >= 120){
+    box.className = 'bp-result elevated';
+    result.textContent = 'Normal Elevada (120-129 y <80)';
+  } else {
+    box.className = 'bp-result normal';
+    result.textContent = 'Normal (<120 y <80)';
+  }
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Conceptos', front:'¿Qué es la presión arterial y en qué unidad se mide?', back:'Es la fuerza de la sangre contra las paredes de las arterias. Se mide en milímetros de mercurio (mmHg).'},
+  {tag:'Conceptos', front:'¿Qué significa que la presión arterial sea de 120 mmHg?', back:'Que la fuerza dentro del vaso sanguíneo es suficiente para levantar una columna de mercurio hasta 120 mm.'},
+  {tag:'Condiciones', front:'¿Con cuánta anticipación debe evitarse el ejercicio antes de medir la PA?', back:'Al menos 30 minutos antes de la medición.'},
+  {tag:'Condiciones', front:'¿Dónde debe apoyarse el brazo durante la medición de la PA?', back:'Sobre una superficie plana, si es posible a nivel del corazón, con el paciente sentado y cómodo.'},
+  {tag:'Palpatorio', front:'¿Qué presión se puede medir con el método palpatorio?', back:'Solo la presión sistólica — no se usa estetoscopio.'},
+  {tag:'Palpatorio', front:'Si el pulso radial desaparece a 120 mmHg al insuflar, ¿hasta qué valor se debe insuflar el manguito?', back:'Hasta 160 mmHg (120 + 40 mmHg de margen), antes de soltar el aire lentamente.'},
+  {tag:'Auscultatorio', front:'¿Dónde se coloca la campana del estetoscopio en el método auscultatorio?', back:'Sobre la arteria braquial (borde interno del bíceps), entre el manguito y la flexura del codo.'},
+  {tag:'Auscultatorio', front:'¿Qué marca el primer ruido audible y el último ruido audible en el método auscultatorio?', back:'El primer ruido marca la presión sistólica; el último marca la presión diastólica.'},
+  {tag:'Korotkoff', front:'¿Quién describió los ruidos de Korotkoff y en qué año?', back:'El médico ruso Nikolai Korotkov, en 1905.'},
+  {tag:'Korotkoff', front:'¿Cuántas fases tienen los ruidos de Korotkoff y qué marca la Fase 1?', back:'5 fases. La Fase 1 marca el primer sonido de latido/pulso — la presión sistólica.'},
+  {tag:'Korotkoff', front:'¿Qué marca la Fase 5 de los ruidos de Korotkoff?', back:'El cese completo del ruido — marca la presión diastólica (o la Fase 4 si la 5 está ausente).'},
+  {tag:'Korotkoff', front:'¿Qué produce físicamente los ruidos de Korotkoff?', back:'El flujo turbulento de sangre al pasar por una arteria parcialmente colapsada por el manguito de presión.'},
+  {tag:'Clasificación', front:'Según AHA 2024, ¿cuál es el rango de "Normal elevada"?', back:'120-129 mmHg sistólica y menos de 80 mmHg diastólica.'},
+  {tag:'Clasificación', front:'¿Cuál es el criterio de crisis hipertensiva según AHA 2024?', back:'Presión sistólica >180 mmHg y/o diastólica >120 mmHg.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Tarjetas mezcladas');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['Otra vez','Difícil','Bien','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+  {q:'¿En qué unidad se mide la presión arterial?', options:['mmHg','ml/min','L/día','mEq/L'], correct:0, exp:'La presión arterial se mide en milímetros de mercurio (mmHg).'},
+  {q:'¿Cuánto tiempo antes de medir la PA se debe evitar fumar?', options:['5 minutos','15 minutos','30 minutos','2 horas'], correct:2, exp:'Se recomienda evitar fumar al menos 30 minutos antes de la medición.'},
+  {q:'El método palpatorio permite medir:', options:['Solo la presión diastólica','Solo la presión sistólica','Ambas presiones','Ninguna, solo detecta arritmias'], correct:1, exp:'El método palpatorio, al no usar estetoscopio, solo permite estimar la presión sistólica.'},
+  {q:'En el método auscultatorio, ¿dónde se coloca el estetoscopio?', options:['Sobre la arteria radial','Sobre la arteria braquial','Sobre la arteria femoral','Sobre la arteria carótida'], correct:1, exp:'Se coloca la campana del estetoscopio sobre la arteria braquial, en el borde interno del bíceps.'},
+  {q:'¿Quién describió los ruidos de Korotkoff?', options:['Un médico ruso, en 1905','Un médico alemán, en 1950','Un médico francés, en 1890','Un médico estadounidense, en 1920'], correct:0, exp:'Los ruidos de Korotkoff fueron descritos por el médico ruso Nikolai Korotkov en 1905.'},
+  {q:'¿Qué marca la Fase 1 de los ruidos de Korotkoff?', options:['La presión diastólica','La presión sistólica','El pulso venoso','La frecuencia cardíaca'], correct:1, exp:'La Fase 1, el primer sonido de "latido" audible, marca la presión sistólica.'},
+  {q:'¿Qué marca la desaparición completa del ruido (Fase 5)?', options:['La presión sistólica','El inicio de la medición','La presión diastólica','Un error de técnica'], correct:2, exp:'La Fase 5, cuando el ruido cesa por completo, marca la presión diastólica.'},
+  {q:'¿Cuál es el mecanismo físico que produce los ruidos de Korotkoff?', options:['Vibración de las válvulas cardíacas','Flujo turbulento de sangre en una arteria parcialmente colapsada','Contracción del músculo bicipital','Fricción del manguito con la piel'], correct:1, exp:'Se producen por el flujo turbulento de sangre al pasar por una arteria parcialmente colapsada por el manguito de presión.'},
+  {q:'Según la clasificación AHA 2024, una PA de 132/85 mmHg corresponde a:', options:['Normal','Normal elevada','Hipertensión nivel 1','Hipertensión nivel 2'], correct:2, exp:'132 mmHg (130-139) o 85 mmHg (80-89) corresponde a Hipertensión nivel 1.'},
+  {q:'¿Cuál es el criterio de crisis hipertensiva según AHA 2024?', options:['>140/90 mmHg','>160/100 mmHg','>180 y/o >120 mmHg','>200/130 mmHg'], correct:2, exp:'La crisis hipertensiva se define como presión sistólica >180 mmHg y/o diastólica >120 mmHg — requiere atención médica inmediata.'},
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto! ' : '✗ Incorrecto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Respuesta correcta'); } else { addXP(3, 'Intento registrado'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completado'); }
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Reintentar Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+calcBP();
+</script>
+</body>
+</html>
