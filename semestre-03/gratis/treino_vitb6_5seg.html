@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treino B6 — Identificação em 5 Segundos · Clinicus</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --blue:#4d9fff; --green:#4ade80; --gold:#ffd166; --red:#ff5c6c; --purple:#a78bfa;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(77,159,255,.12), transparent 40%), radial-gradient(circle at 85% 20%, rgba(74,222,128,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3{font-family:'Lora',Georgia,serif; margin:0 0 .3em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:720px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1rem; margin:0; background:linear-gradient(90deg,var(--blue),var(--green)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.7rem; color:var(--text-dim);}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+
+main{max-width:720px; margin:24px auto; padding:0 20px;}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.hero{background:linear-gradient(135deg, rgba(77,159,255,.14), rgba(74,222,128,.10)); border:1px solid var(--border); border-radius:20px; padding:28px; margin-bottom:20px; text-align:center;}
+.hero h2{font-size:1.5rem; margin-bottom:.3em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--blue); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+
+.rule-box{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.rule-box b{color:var(--gold);}
+
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:14px 0;}
+@media(max-width:600px){.grid-3{grid-template-columns:1fr;}}
+.legend-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center;}
+.legend-card .grp{font-size:1.1rem; font-weight:800; margin-bottom:4px;}
+.legend-card.alcohol .grp{color:var(--green);}
+.legend-card.aldehido .grp{color:var(--blue);}
+.legend-card.amina .grp{color:var(--purple);}
+.legend-card .nm{font-size:.82rem; color:var(--text-dim);}
+
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--green)); color:#0d0f16; border:none; padding:14px 30px; border-radius:12px; font-weight:800; cursor:pointer; font-size:1rem; width:100%;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.btn-secondary{background:var(--card); border:1px solid var(--border); color:var(--text); padding:10px 20px; border-radius:10px; cursor:pointer; font-size:.85rem; font-weight:600;}
+
+/* ===== Training screen ===== */
+#trainScreen{display:none;}
+.timer-wrap{text-align:center; margin-bottom:18px;}
+.timer-ring{position:relative; width:100px; height:100px; margin:0 auto;}
+.timer-ring svg{transform:rotate(-90deg);}
+.timer-ring circle{fill:none; stroke-width:8;}
+.timer-bg{stroke:var(--bg-alt);}
+.timer-fg{stroke:var(--green); stroke-linecap:round; transition:stroke-dashoffset .1s linear, stroke .2s;}
+.timer-fg.warn{stroke:var(--gold);}
+.timer-fg.danger{stroke:var(--red);}
+.timer-num{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:800; font-family:'Lora',serif;}
+
+.round-info{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+
+.structure-wrap{background:var(--bg-alt); border:1px solid var(--border); border-radius:16px; padding:20px; margin:16px 0; text-align:center;}
+.structure-wrap svg{max-width:100%; height:auto;}
+
+.answer-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:16px;}
+@media(max-width:600px){.answer-grid{grid-template-columns:1fr;}}
+.answer-btn{background:var(--card); border:2px solid var(--border); color:var(--text); padding:16px 10px; border-radius:12px; font-weight:700; cursor:pointer; font-size:.95rem; transition:.15s;}
+.answer-btn:hover{border-color:var(--blue); background:var(--card-hover);}
+.answer-btn.correct{background:rgba(74,222,128,.2); border-color:var(--green); color:var(--green);}
+.answer-btn.incorrect{background:rgba(255,92,108,.2); border-color:var(--red); color:var(--red);}
+.answer-btn.disabled{pointer-events:none; opacity:.7;}
+
+.feedback-msg{text-align:center; margin-top:14px; font-size:.95rem; font-weight:700; min-height:1.4em;}
+.feedback-msg.ok{color:var(--green);}
+.feedback-msg.bad{color:var(--red);}
+
+/* ===== Result screen ===== */
+#resultScreen{display:none; text-align:center;}
+.big-score{font-size:3.2rem; font-weight:800; background:linear-gradient(90deg,var(--blue),var(--green)); -webkit-background-clip:text; background-clip:text; color:transparent; font-family:'Lora',serif;}
+.stat-row{display:flex; gap:12px; justify-content:center; margin:18px 0; flex-wrap:wrap;}
+.stat-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:14px 20px; min-width:110px;}
+.stat-item .n{font-size:1.4rem; font-weight:800; color:var(--gold);}
+.stat-item .l{font-size:.7rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em;}
+
+.cta-box{background:linear-gradient(135deg, rgba(77,159,255,.18), rgba(74,222,128,.12)); border:1px solid var(--border); border-radius:16px; padding:24px; margin-top:20px; text-align:center;}
+.cta-box h3{margin-bottom:6px;}
+.cta-btn{display:inline-block; margin-top:12px; background:#25D366; color:#0d0f16; font-weight:800; padding:14px 28px; border-radius:12px; text-decoration:none; font-size:.95rem;}
+
+footer{text-align:center; color:var(--text-dim); font-size:.72rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Treino B6 · Método dos 5 Segundos</h1>
+        <span>Clinicus · Bioquímica · Prof. Deborah</span>
+      </div>
+    </div>
+    <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+  </div>
+  <div style="max-width:720px; margin:6px auto 0; text-align:center;">
+    <span id="visitBadge" style="display:inline-block; font-size:.72rem; color:var(--text-dim); background:var(--bg-alt); border:1px solid var(--border); padding:4px 12px; border-radius:999px;">🔥 carregando contador...</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== INTRO ===== -->
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Bizu Clinicus</span>
+    <h2>Vitamina B6: identifique em menos de 5 segundos</h2>
+    <p>Regra de ouro: as 3 formas têm o <b>mesmo anel</b> — a única diferença está no grupo funcional do topo (posição 4). Treine até isso virar automático.</p>
+  </div>
+
+  <div class="card">
+    <h3>Os 3 grupos que você precisa reconhecer</h3>
+    <div class="grid-3">
+      <div class="legend-card alcohol"><div class="grp">–CH₂OH</div><div class="nm">Piridoxina</div></div>
+      <div class="legend-card aldehido"><div class="grp">–CHO</div><div class="nm">Piridoxal</div></div>
+      <div class="legend-card amina"><div class="grp">–CH₂NH₂</div><div class="nm">Piridoxamina</div></div>
+    </div>
+    <div class="rule-box"><b>Macete:</b> PiridoxiNA = Nada diferente (álcool) · PiridoxAL = ALdeído · PiridoxAMINA = tem AMINA.</div>
+    <div class="rule-box"><b>Forma ativa:</b> Piridoxal-5'-fosfato (PLP) — "quem trabalha é o PLP".</div>
+  </div>
+
+  <div class="card">
+    <h3>Como funciona o treino</h3>
+    <p style="margin:0 0 14px;">Vai aparecer uma estrutura. Você tem <b>5 segundos</b> pra clicar no nome correto antes do tempo acabar. São 12 rodadas embaralhadas. No final, você vê sua taxa de acerto e tempo médio de resposta.</p>
+    <button class="btn-primary" onclick="startTraining()">Começar treino →</button>
+  </div>
+</div>
+
+<!-- ===== TRAINING ===== -->
+<div id="trainScreen">
+  <div class="card">
+    <div class="round-info">
+      <span>Rodada <span id="roundNum">1</span> / <span id="roundTotal">12</span></span>
+      <span>Acertos: <span id="scoreNum">0</span></span>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-ring">
+        <svg width="100" height="100">
+          <circle class="timer-bg" cx="50" cy="50" r="42"></circle>
+          <circle class="timer-fg" id="timerCircle" cx="50" cy="50" r="42" stroke-dasharray="264" stroke-dashoffset="0"></circle>
+        </svg>
+        <div class="timer-num" id="timerNum">5.0</div>
+      </div>
+    </div>
+
+    <div class="structure-wrap" id="structureWrap"></div>
+
+    <div class="answer-grid" id="answerGrid">
+      <button class="answer-btn" data-ans="Piridoxina" onclick="answer(this)">Piridoxina</button>
+      <button class="answer-btn" data-ans="Piridoxal" onclick="answer(this)">Piridoxal</button>
+      <button class="answer-btn" data-ans="Piridoxamina" onclick="answer(this)">Piridoxamina</button>
+    </div>
+    <div class="feedback-msg" id="feedbackMsg"></div>
+  </div>
+</div>
+
+<!-- ===== BONUS QUIZ ===== -->
+<div id="bonusScreen" style="display:none;">
+  <div class="card">
+    <span class="eyebrow">Parte 2 · Quiz teórico</span>
+    <h2 style="margin-top:6px;">Mais 6 perguntas sobre a B6</h2>
+    <div class="round-info">
+      <span>Pergunta <span id="bonusNum">1</span> / <span id="bonusTotal">6</span></span>
+      <span>Acertos: <span id="bonusScoreNum">0</span></span>
+    </div>
+    <div id="bonusQArea"></div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="resultScreen" style="display:none;">
+  <div class="card">
+    <span class="eyebrow">Resultado</span>
+    <h2 style="margin-top:6px;">Seu treino</h2>
+    <div class="big-score" id="finalScore">0/12</div>
+    <div class="stat-row">
+      <div class="stat-item"><div class="n" id="statAcc">0%</div><div class="l">Acertos</div></div>
+      <div class="stat-item"><div class="n" id="statTime">0.0s</div><div class="l">Tempo médio</div></div>
+      <div class="stat-item"><div class="n" id="statXP">0</div><div class="l">XP ganho</div></div>
+    </div>
+    <p id="resultMsg" style="font-weight:600;"></p>
+    <button class="btn-secondary" onclick="startTraining()">🔁 Treinar de novo</button>
+  </div>
+
+  <div class="cta-box">
+    <h3>Gostou do método?</h3>
+    <p>Isso foi só um bizu de graça. No Clinicus você tem o módulo completo de Bioquímica da Prof. Deborah — vitaminas, enzimas, aminoácidos — todo treinado assim, com quiz, flashcard e simulado.</p>
+    <a class="cta-btn" href="https://wa.me/5547991572214?text=Oi!%20Treinei%20o%20b%C3%B4nus%20de%20Vitamina%20B6%20e%20quero%20saber%20mais%20sobre%20o%20material%20completo%20de%20Bioqu%C3%ADmica%20da%20Prof.%20Deborah" target="_blank">💬 Quero o material completo</a>
+  </div>
+</div>
+
+</main>
+
+<footer>Resumos Clinicus · Bizu gratuito — Vitamina B6 (Prof. Deborah)</footer>
+
+<script>
+// ===== Contador público de acessos (não bloqueia, só registra) =====
+(function trackVisit(){
+  fetch('https://api.countapi.xyz/hit/clinicusmed/treino-vitb6-5seg')
+    .then(r=>r.json())
+    .then(d=>{
+      const badge = document.getElementById('visitBadge');
+      if(badge && d && d.value){ badge.textContent = '🔥 ' + d.value.toLocaleString('pt-BR') + ' pessoas já treinaram'; }
+    })
+    .catch(()=>{
+      const badge = document.getElementById('visitBadge');
+      if(badge) badge.style.display = 'none';
+    });
+})();
+
+// ===== Compound data =====
+const compounds = [
+  {name:'Piridoxina', formula:'CH₂OH', color:'#4ade80'},
+  {name:'Piridoxal', formula:'CHO', color:'#4d9fff', aldehyde:true},
+  {name:'Piridoxamina', formula:'CH₂NH₂', color:'#a78bfa'},
+];
+
+function ringSVG(compound){
+  const topLabel = compound.formula;
+  const topGroupSVG = compound.aldehyde
+    ? `<line x1="150" y1="55" x2="150" y2="30" stroke="#e6edf3" stroke-width="2"/>
+       <line x1="146" y1="30" x2="146" y2="15" stroke="#e6edf3" stroke-width="2"/>
+       <line x1="154" y1="30" x2="154" y2="15" stroke="#e6edf3" stroke-width="2"/>
+       <text x="150" y="10" text-anchor="middle" fill="${compound.color}" font-size="15" font-weight="800">O</text>
+       <text x="178" y="34" text-anchor="middle" fill="#e6edf3" font-size="14">H</text>
+       <line x1="150" y1="30" x2="170" y2="34" stroke="#e6edf3" stroke-width="2"/>`
+    : `<line x1="150" y1="55" x2="150" y2="28" stroke="#e6edf3" stroke-width="2"/>
+       <text x="150" y="16" text-anchor="middle" fill="${compound.color}" font-size="14" font-weight="800">${topLabel}</text>`;
+
+  return `<svg viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg">
+    <!-- ring -->
+    <polygon points="150,80 205,110 205,170 150,200 95,170 95,110" fill="none" stroke="#8b98ab" stroke-width="2.5"/>
+    <!-- N label bottom -->
+    <text x="150" y="222" text-anchor="middle" fill="#e6edf3" font-size="15" font-weight="700">N</text>
+    <line x1="150" y1="200" x2="150" y2="214" stroke="#8b98ab" stroke-width="2"/>
+    <text x="150" y="240" text-anchor="middle" fill="#8b98ab" font-size="12">H</text>
+    <line x1="150" y1="222" x2="150" y2="232" stroke="#8b98ab" stroke-width="1.5"/>
+    <!-- CH3 lower-left -->
+    <line x1="95" y1="170" x2="60" y2="188" stroke="#8b98ab" stroke-width="2"/>
+    <text x="45" y="192" text-anchor="middle" fill="#e6edf3" font-size="13">H₃C</text>
+    <!-- HO left -->
+    <line x1="95" y1="110" x2="60" y2="92" stroke="#8b98ab" stroke-width="2"/>
+    <text x="42" y="90" text-anchor="middle" fill="#e6edf3" font-size="13">HO</text>
+    <!-- CH2OH right -->
+    <line x1="205" y1="110" x2="240" y2="92" stroke="#8b98ab" stroke-width="2"/>
+    <text x="262" y="90" text-anchor="middle" fill="#e6edf3" font-size="13">CH₂OH</text>
+    <!-- top functional group -->
+    ${topGroupSVG}
+  </svg>`;
+}
+
+// ===== Training logic =====
+let order = [], roundIdx = 0, score = 0, xp = 0, timerInterval = null, timeLeft = 5.0, answered = false, responseTimes = [];
+const TOTAL_ROUNDS = 12;
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+  return arr;
+}
+
+function buildOrder(){
+  let list = [];
+  for(let i=0;i<Math.ceil(TOTAL_ROUNDS/compounds.length);i++) list.push(...compounds);
+  list = shuffle(list).slice(0, TOTAL_ROUNDS);
+  return list;
+}
+
+function startTraining(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('trainScreen').style.display = 'block';
+  order = buildOrder();
+  roundIdx = 0; score = 0; responseTimes = [];
+  document.getElementById('roundTotal').textContent = TOTAL_ROUNDS;
+  nextRound();
+}
+
+function nextRound(){
+  if(roundIdx >= TOTAL_ROUNDS){ startBonus(); return; }
+  answered = false;
+  document.getElementById('roundNum').textContent = roundIdx+1;
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('feedbackMsg').textContent = '';
+  document.getElementById('feedbackMsg').className = 'feedback-msg';
+  document.getElementById('structureWrap').innerHTML = ringSVG(order[roundIdx]);
+  document.querySelectorAll('.answer-btn').forEach(b=>{ b.classList.remove('correct','incorrect','disabled'); });
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft = 5.0;
+  const circle = document.getElementById('timerCircle');
+  const CIRC = 264;
+  updateTimerDisplay(circle, CIRC);
+  const startTs = Date.now();
+  timerInterval = setInterval(()=>{
+    const elapsed = (Date.now()-startTs)/1000;
+    timeLeft = Math.max(0, 5.0 - elapsed);
+    updateTimerDisplay(circle, CIRC);
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      if(!answered) timeoutAnswer();
+    }
+  }, 50);
+}
+
+function updateTimerDisplay(circle, CIRC){
+  const pct = timeLeft/5.0;
+  circle.setAttribute('stroke-dashoffset', CIRC*(1-pct));
+  circle.classList.remove('warn','danger');
+  if(timeLeft <= 1.5) circle.classList.add('danger');
+  else if(timeLeft <= 3) circle.classList.add('warn');
+  document.getElementById('timerNum').textContent = timeLeft.toFixed(1);
+}
+
+function timeoutAnswer(){
+  answered = true;
+  const correct = order[roundIdx].name;
+  document.querySelectorAll('.answer-btn').forEach(b=>{
+    b.classList.add('disabled');
+    if(b.dataset.ans === correct) b.classList.add('correct');
+  });
+  const fb = document.getElementById('feedbackMsg');
+  fb.textContent = '⏱️ Tempo esgotado! Era ' + correct + '.';
+  fb.className = 'feedback-msg bad';
+  responseTimes.push(5.0);
+  addXP(2);
+  setTimeout(()=>{ roundIdx++; nextRound(); }, 1400);
+}
+
+function answer(btn){
+  if(answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+  const elapsed = 5.0 - timeLeft;
+  responseTimes.push(elapsed);
+  const correct = order[roundIdx].name;
+  const chosen = btn.dataset.ans;
+  document.querySelectorAll('.answer-btn').forEach(b=>{ b.classList.add('disabled'); });
+  const fb = document.getElementById('feedbackMsg');
+  if(chosen === correct){
+    btn.classList.add('correct');
+    score++;
+    fb.textContent = '✓ Correto em ' + elapsed.toFixed(1) + 's!';
+    fb.className = 'feedback-msg ok';
+    addXP(elapsed <= 5 ? 15 : 8);
+  } else {
+    btn.classList.add('incorrect');
+    document.querySelectorAll('.answer-btn').forEach(b=>{ if(b.dataset.ans===correct) b.classList.add('correct'); });
+    fb.textContent = '✗ Era ' + correct + '.';
+    fb.className = 'feedback-msg bad';
+    addXP(3);
+  }
+  setTimeout(()=>{ roundIdx++; nextRound(); }, 1200);
+}
+
+// ===== Bonus quiz (6 perguntas teóricas) =====
+const bonusData = [
+  {type:'mcq', q:'Qual é a forma biologicamente ativa da vitamina B6?', opts:['Piridoxina','Piridoxal-5\'-fosfato (PLP)','Piridoxamina','Ácido pantotênico'], correct:1},
+  {type:'mcq', q:'Em qual posição do anel piridínico está o grupo que diferencia os 3 compostos?', opts:['Posição 1 (N)','Posição 2','Posição 3','Posição 4'], correct:3},
+  {type:'vf', q:'A vitamina B6 é uma vitamina hidrossolúvel.', correct:true},
+  {type:'vf', q:'O Piridoxal possui grupo amina (–CH₂NH₂) na posição 4.', correct:false},
+  {type:'mcq', q:'O PLP atua como coenzima principalmente em quais reações?', opts:['Beta-oxidação de ácidos graxos','Transaminação e descarboxilação de aminoácidos','Síntese de colesterol','Ciclo de Krebs'], correct:1},
+  {type:'mcq', q:'Qual grupo funcional identifica a Piridoxamina?', opts:['–CH₂OH','–CHO','–CH₂NH₂','–COOH'], correct:2},
+];
+let bonusIdx = 0, bonusScore = 0, bonusAnswered = false;
+
+function startBonus(){
+  document.getElementById('trainScreen').style.display = 'none';
+  document.getElementById('bonusScreen').style.display = 'block';
+  document.getElementById('bonusTotal').textContent = bonusData.length;
+  bonusIdx = 0; bonusScore = 0;
+  renderBonus();
+}
+
+function renderBonus(){
+  if(bonusIdx >= bonusData.length){ finishTraining(); return; }
+  bonusAnswered = false;
+  document.getElementById('bonusNum').textContent = bonusIdx+1;
+  document.getElementById('bonusScoreNum').textContent = bonusScore;
+  const item = bonusData[bonusIdx];
+  const area = document.getElementById('bonusQArea');
+  let html = '<div class="feedback-msg" style="font-weight:700; color:var(--text); text-align:left; margin-bottom:14px; font-size:1rem;">' + item.q + '</div>';
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="answer-btn" style="display:block; width:100%; text-align:left; margin-bottom:10px;" data-idx="'+i+'" onclick="answerBonusMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else {
+    html += '<div class="answer-grid" style="grid-template-columns:1fr 1fr;">'
+      + '<button class="answer-btn" data-val="true" onclick="answerBonusVF(this,true)">Verdadeiro</button>'
+      + '<button class="answer-btn" data-val="false" onclick="answerBonusVF(this,false)">Falso</button>'
+      + '</div>';
+  }
+  html += '<div class="feedback-msg" id="bonusFeedback"></div>';
+  area.innerHTML = html;
+}
+
+function answerBonusMCQ(btn, idx){
+  if(bonusAnswered) return;
+  bonusAnswered = true;
+  const item = bonusData[bonusIdx];
+  const btns = document.querySelectorAll('#bonusQArea .answer-btn');
+  btns.forEach(b=>b.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct?'correct':'incorrect');
+  btns[item.correct].classList.add('correct');
+  finishBonusAnswer(correct);
+}
+
+function answerBonusVF(btn, val){
+  if(bonusAnswered) return;
+  bonusAnswered = true;
+  const item = bonusData[bonusIdx];
+  const btns = document.querySelectorAll('#bonusQArea .answer-btn');
+  btns.forEach(b=>b.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct?'correct':'incorrect');
+  btns.forEach(b=>{ if((b.dataset.val==='true')===item.correct) b.classList.add('correct'); });
+  finishBonusAnswer(correct);
+}
+
+function finishBonusAnswer(correct){
+  const fb = document.getElementById('bonusFeedback');
+  fb.textContent = correct ? '✓ Correto!' : '✗ Incorreto.';
+  fb.className = 'feedback-msg ' + (correct?'ok':'bad');
+  if(correct){ bonusScore++; addXP(15); } else { addXP(3); }
+  setTimeout(()=>{ bonusIdx++; renderBonus(); }, 1100);
+}
+
+function addXP(n){ xp += n; document.getElementById('xpCount').textContent = xp; }
+
+function finishTraining(){
+  document.getElementById('trainScreen').style.display = 'none';
+  document.getElementById('bonusScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  const pct = Math.round((score/TOTAL_ROUNDS)*100);
+  const avgTime = responseTimes.reduce((a,b)=>a+b,0)/responseTimes.length;
+  const totalQuestions = TOTAL_ROUNDS + bonusData.length;
+  const totalCorrect = score + bonusScore;
+  const resultHtml = `
+    <div class="card">
+      <span class="eyebrow">Resultado</span>
+      <h2 style="margin-top:6px;">Seu treino completo</h2>
+      <div class="big-score">${totalCorrect}/${totalQuestions}</div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="n">${score}/${TOTAL_ROUNDS}</div><div class="l">Estruturas (visual)</div></div>
+        <div class="stat-item"><div class="n">${bonusScore}/${bonusData.length}</div><div class="l">Teoria (quiz)</div></div>
+        <div class="stat-item"><div class="n">${avgTime.toFixed(1)}s</div><div class="l">Tempo médio</div></div>
+        <div class="stat-item"><div class="n">${xp}</div><div class="l">XP ganho</div></div>
+      </div>
+      <p id="resultMsg" style="font-weight:600;"></p>
+      <button class="btn-secondary" onclick="startTraining()">🔁 Treinar de novo</button>
+    </div>
+    <div class="cta-box">
+      <h3>Gostou do método?</h3>
+      <p>Isso foi só um bizu de graça. No Clinicus você tem o módulo completo de Bioquímica da Prof. Deborah — vitaminas, enzimas, aminoácidos — todo treinado assim, com quiz, flashcard e simulado.</p>
+      <a class="cta-btn" href="https://wa.me/5547991572214?text=Oi!%20Treinei%20o%20b%C3%B4nus%20de%20Vitamina%20B6%20e%20quero%20saber%20mais%20sobre%20o%20material%20completo%20de%20Bioqu%C3%ADmica%20da%20Prof.%20Deborah" target="_blank">💬 Quero o material completo</a>
+    </div>`;
+  document.getElementById('resultScreen').innerHTML = resultHtml;
+  const pctTotal = Math.round((totalCorrect/totalQuestions)*100);
+  const msg = document.getElementById('resultMsg');
+  if(pctTotal >= 90 && avgTime <= 3){
+    msg.innerHTML = '🏆 Reconhecimento automático! Você já domina o macete.';
+    msg.style.color = 'var(--green)';
+  } else if(pctTotal >= 70){
+    msg.innerHTML = '💪 Muito bom! Mais algumas rodadas e fica automático.';
+    msg.style.color = 'var(--gold)';
+  } else {
+    msg.innerHTML = '📚 Releia o macete da posição 4 e treine de novo — repetição é o segredo.';
+    msg.style.color = 'var(--text-dim)';
+  }
+}
+</script>
+</body>
+</html>
