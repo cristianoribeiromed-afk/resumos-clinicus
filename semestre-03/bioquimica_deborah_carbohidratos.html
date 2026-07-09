@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carbohidratos | Bioquímica Prof. Deborah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1a14;
+  --bg-panel:#122720;
+  --bg-card:#16302a;
+  --border:#254a3d;
+  --gold:#e0b84b;
+  --gold-soft:#c9a24d;
+  --green:#3fa17e;
+  --green-soft:#57c294;
+  --text:#eef3ef;
+  --text-dim:#a9c2b6;
+  --danger:#e0715a;
+  --info:#5aa9e0;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:radial-gradient(circle at top left,#123024,var(--bg) 60%);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.6;
+  padding-bottom:60px;
+}
+h1,h2,h3,h4{font-family:'Lora',serif;color:var(--gold);margin-top:0;}
+.container{max-width:960px;margin:0 auto;padding:20px;}
+
+.header{
+  text-align:center;
+  padding:28px 20px;
+  background:linear-gradient(135deg,#0f2b21,#1a3d2f);
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:20px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;top:-40%;right:-10%;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(224,184,75,0.15),transparent 70%);
+}
+.header h1{font-size:2rem;margin-bottom:4px;}
+.header p.sub{color:var(--text-dim);font-style:italic;margin:0;}
+.header p.docente{color:var(--green-soft);font-size:0.9rem;margin-top:10px;}
+
+.xp-panel{
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 16px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.xp-badge{
+  font-family:'Lora',serif;font-weight:700;color:#0d1a14;
+  background:linear-gradient(135deg,var(--gold),#f3d78a);
+  border-radius:50%;width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.xp-info{flex:1;min-width:180px;}
+.xp-info .label{font-size:0.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;}
+.xp-bar-track{background:#0a1a14;border-radius:8px;height:10px;overflow:hidden;margin-top:4px;border:1px solid var(--border);}
+.xp-bar-fill{background:linear-gradient(90deg,var(--green),var(--gold));height:100%;width:0%;transition:width .4s ease;}
+.xp-count{font-size:0.8rem;color:var(--gold-soft);white-space:nowrap;}
+
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.tab-btn{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  padding:9px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.85rem;
+  transition:all .2s;
+}
+.tab-btn:hover{color:var(--text);border-color:var(--green-soft);}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--green),#2b6f56);
+  color:#fff;border-color:var(--green-soft);
+  font-weight:700;
+}
+
+.tab-content{display:none;animation:fadeIn .3s ease;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:16px;
+}
+.card h3{font-size:1.15rem;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;}
+.card h4{font-size:1rem;color:var(--green-soft);margin-top:18px;margin-bottom:8px;}
+.card p{color:var(--text);margin:8px 0;}
+.card ul{margin:8px 0;padding-left:20px;}
+.card li{margin-bottom:6px;}
+
+.box{
+  border-radius:10px;
+  padding:14px 16px;
+  margin:14px 0;
+  border-left:4px solid var(--green);
+  background:rgba(63,161,126,0.08);
+}
+.box.criterio{border-left-color:var(--gold);background:rgba(224,184,75,0.08);}
+.box.clinical{border-left-color:var(--danger);background:rgba(224,113,90,0.08);}
+.box.info{border-left-color:var(--info);background:rgba(90,169,224,0.08);}
+.box-title{
+  font-family:'Lora',serif;font-weight:700;font-size:0.85rem;
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.box.criterio .box-title{color:var(--gold);}
+.box.clinical .box-title{color:var(--danger);}
+.box.info .box-title{color:var(--info);}
+.box.green-box .box-title{color:var(--green-soft);}
+
+.diagram{
+  background:#0d211a;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  margin:14px 0;
+}
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;font-family:'DM Sans',sans-serif;}
+.flow-box{
+  background:var(--bg-panel);border:1px solid var(--green-soft);
+  border-radius:10px;padding:10px 16px;font-size:0.9rem;color:var(--text);
+  min-width:90px;
+}
+.flow-arrow{color:var(--gold);font-size:1.3rem;}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem;}
+th,td{border:1px solid var(--border);padding:9px 10px;text-align:left;}
+th{background:var(--bg-panel);color:var(--gold);font-family:'Lora',serif;}
+tr:nth-child(even){background:rgba(255,255,255,0.02);}
+
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+.flashcard{perspective:1000px;height:150px;cursor:pointer;}
+.flashcard-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .5s;transform-style:preserve-3d;
+}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+.flashcard-face{
+  position:absolute;width:100%;height:100%;
+  backface-visibility:hidden;
+  border-radius:12px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:16px;font-size:0.92rem;
+}
+.flashcard-front{background:linear-gradient(135deg,#16302a,#1c3a32);color:var(--gold);font-family:'Lora',serif;font-weight:600;}
+.flashcard-back{background:linear-gradient(135deg,#1c3a32,#255043);color:var(--text);transform:rotateY(180deg);font-size:0.85rem;}
+
+.quiz-progress{color:var(--text-dim);font-size:0.85rem;margin-bottom:10px;}
+.q-block{margin-bottom:22px;}
+.q-text{font-weight:600;margin-bottom:10px;color:var(--text);}
+.opt{
+  display:block;width:100%;text-align:left;
+  background:var(--bg-panel);border:1px solid var(--border);
+  color:var(--text);padding:10px 14px;border-radius:8px;
+  margin-bottom:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.9rem;
+  transition:all .15s;
+}
+.opt:hover{border-color:var(--green-soft);}
+.opt.correct{background:rgba(63,161,126,0.25);border-color:var(--green);}
+.opt.wrong{background:rgba(224,113,90,0.2);border-color:var(--danger);}
+.opt:disabled{cursor:default;}
+.fill-input{
+  background:#0a1a14;border:1px solid var(--border);color:var(--text);
+  padding:8px 10px;border-radius:6px;font-family:'DM Sans',sans-serif;
+  width:220px;max-width:100%;
+}
+.fill-input.correct{border-color:var(--green);}
+.fill-input.wrong{border-color:var(--danger);}
+.check-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  color:#12241d;border:none;padding:8px 16px;border-radius:8px;
+  font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;
+}
+.check-btn:hover{filter:brightness(1.08);}
+.feedback{font-size:0.85rem;margin-top:6px;min-height:18px;}
+.feedback.ok{color:var(--green-soft);}
+.feedback.bad{color:var(--danger);}
+.quiz-result{
+  text-align:center;padding:20px;background:var(--bg-panel);
+  border-radius:12px;border:1px solid var(--gold);margin-top:10px;display:none;
+}
+.quiz-result h3{color:var(--gold);}
+
+.matrix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.82rem;text-align:center;margin:14px 0;}
+.matrix-grid div{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:8px;}
+.matrix-grid .head{background:transparent;border:none;font-family:'Lora',serif;color:var(--gold);font-weight:700;}
+
+.reset-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  padding:6px 12px;border-radius:8px;font-size:0.8rem;cursor:pointer;margin-top:20px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>🍞 CARBOHIDRATOS</h1>
+    <p class="sub">Definición, funciones, clasificación y propiedades</p>
+    <p class="docente">Docente: Qca. Fca. Deborah Michelle Jurowski</p>
+  </div>
+
+  <div class="xp-panel">
+    <div class="xp-badge" id="levelBadge">1</div>
+    <div class="xp-info">
+      <div class="label">Nivel <span id="levelNum">1</span> — Estudiante de Bioquímica</div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+    </div>
+    <div class="xp-count"><span id="xpCount">0</span> / <span id="xpMax">100</span> XP</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="intro">1. Definición</button>
+    <button class="tab-btn" data-tab="funciones">2. Funciones</button>
+    <button class="tab-btn" data-tab="clasificacion">3. Clasificación</button>
+    <button class="tab-btn" data-tab="mono">4. Monosacáridos</button>
+    <button class="tab-btn" data-tab="di-oligo">5. Di- y Oligosacáridos</button>
+    <button class="tab-btn" data-tab="poli">6. Polisacáridos</button>
+    <button class="tab-btn" data-tab="propiedades">7. Propiedades</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz</button>
+  </div>
+
+  <!-- 1. DEFINICION -->
+  <div class="tab-content active" id="intro">
+    <div class="card">
+      <h3>Definición</h3>
+      <p>Los carbohidratos son un <strong>compuesto ternario: C-H-O</strong> (carbono, hidrógeno, oxígeno). Son <strong>biomoléculas</strong> formadas exclusivamente por estos tres elementos.</p>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Sinónimos que ella espera que conozcas</div>
+        <p>Los carbohidratos también pueden llamarse: <strong>glúcidos, glícidos, azúcares, sacáridos, hidratos de carbono</strong> u <strong>osas</strong>. Es común que en la prueba use un sinónimo en vez del nombre "carbohidratos" — si no conoces todos, puedes perder una pregunta entera por no reconocer el término.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. FUNCIONES -->
+  <div class="tab-content" id="funciones">
+    <div class="card">
+      <h3>Funciones de los carbohidratos</h3>
+      <div class="box green-box">
+        <div class="box-title">⚡ Fuente de energía</div>
+        <p>Constituyen la mayor fuente de energía del organismo. Producen <strong>4 kcal/g</strong> (energía por gramo metabolizado).</p>
+      </div>
+      <ul>
+        <li><strong>Biosíntesis</strong> de ácidos grasos y aminoácidos.</li>
+        <li><strong>Constitución de moléculas complejas:</strong> glucolípidos, ácidos nucleicos, glucoesfingolípidos.</li>
+        <li><strong>Aporte de fibra en la dieta:</strong> hay glúcidos que no se pueden digerir (agar, celulosa, lignina) y se usan como fibra para dar volumen a las heces. La falta de fibra en la dieta se relaciona con patologías como diabetes, obesidad, hemorroides, etc.</li>
+        <li><strong>Constitución de los peptidoglicanos:</strong> moléculas que forman parte de la pared bacteriana.</li>
+        <li><strong>Combustible energético para el cuerpo:</strong> la energía de la degradación de carbohidratos potencia la contracción muscular y otras formas de trabajo biológico.</li>
+        <li><strong>Esenciales para el SNC:</strong> el cerebro utiliza la <strong>glucosa sanguínea</strong> como combustible primario.</li>
+      </ul>
+      <div class="box info">
+        <div class="box-title">💪 Rendimiento atlético</div>
+        <p>Los carbohidratos son el combustible primario para la contracción muscular y el nutriente más importante para el rendimiento atlético. La energía de los carbohidratos puede liberarse hasta <strong>tres veces más rápido</strong> que la de las grasas. Como las reservas corporales son limitadas, cuando se agotan el atleta puede experimentar fatiga — por eso se recomienda una dieta rica en carbohidratos para reponer reservas entre sesiones de entrenamiento.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CLASIFICACION -->
+  <div class="tab-content" id="clasificacion">
+    <div class="card">
+      <h3>Clasificación de los carbohidratos</h3>
+      <p>Existen <strong>3 criterios</strong> de clasificación:</p>
+      <table>
+        <tr><th>Criterio</th><th>Categorías</th></tr>
+        <tr><td><strong>1. Número de unidades de azúcares</strong> que componen la molécula</td><td>Monosacáridos, disacáridos, polisacáridos</td></tr>
+        <tr><td><strong>2. Localización del grupo carbonilo</strong></td><td>Aldosa o cetosa</td></tr>
+        <tr><td><strong>3. Número de átomos de carbono</strong></td><td>Triosa, tetrosa, pentosa, hexosa, heptosa</td></tr>
+      </table>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Los 3 criterios se combinan — no son excluyentes</div>
+        <p>Una misma molécula se clasifica simultáneamente por los tres criterios. Por ejemplo, la <strong>glucosa</strong> es: monosacárido (criterio 1) + aldosa (criterio 2) + hexosa (criterio 3) → "aldohexosa". La <strong>fructosa</strong> es: monosacárido + cetosa + hexosa → "cetohexosa". Es exactamente el tipo de pregunta que ella cobra: clasificar una molécula por los tres ejes a la vez.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MONOSACARIDOS -->
+  <div class="tab-content" id="mono">
+    <div class="card">
+      <h3>Monosacáridos</h3>
+      <p>Son las <strong>unidades más sencillas</strong> de los carbohidratos: de <strong>3 a 7 carbonos</strong>, fórmula general C<sub>n</sub>H<sub>2n</sub>O<sub>n</sub>. <strong>No pueden ser hidrolizados</strong> en moléculas más sencillas.</p>
+      <div class="box green-box">
+        <div class="box-title">✅ Características generales</div>
+        <p>Son <strong>solubles</strong> en agua, <strong>no sufren hidrólisis</strong>, y son <strong>dulces</strong>.</p>
+      </div>
+
+      <h4>3.1 — Por número de átomos de carbono</h4>
+      <table>
+        <tr><th>Nombre</th><th>N° de carbonos</th></tr>
+        <tr><td>Triosa</td><td>3 C</td></tr>
+        <tr><td>Tetrosa</td><td>4 C</td></tr>
+        <tr><td>Pentosa</td><td>5 C</td></tr>
+        <tr><td>Hexosa</td><td>6 C</td></tr>
+        <tr><td>Heptosa</td><td>7 C</td></tr>
+      </table>
+
+      <h4>Pentosas de interés biológico</h4>
+      <table>
+        <tr><th>Pentosa</th><th>Fórmula</th><th>Forma parte de</th></tr>
+        <tr><td>Desoxirribosa</td><td>C₅H₁₀O₄</td><td><strong>ADN</strong></td></tr>
+        <tr><td>Ribosa</td><td>C₅H₁₀O₅</td><td><strong>ARN</strong></td></tr>
+      </table>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Detalle que se confunde fácil</div>
+        <p>La desoxirribosa (ADN) tiene <strong>un oxígeno menos</strong> que la ribosa (ARN) — de ahí el prefijo "desoxi". Fórmulas: desoxirribosa C₅H₁₀O₄ vs. ribosa C₅H₁₀O₅.</p>
+      </div>
+
+      <h4>Hexosas de interés biológico (C₆H₁₂O₆)</h4>
+      <table>
+        <tr><th>Hexosa</th><th>Tipo</th><th>Características clave</th></tr>
+        <tr><td><strong>Glucosa</strong></td><td>Aldohexosa</td><td>Monosacárido más abundante; se transporta por el torrente sanguíneo; principal fuente de energía para el metabolismo celular. Muy difundida en vegetales (uvas) y animales; forma parte de muchos di- y polisacáridos.</td></tr>
+        <tr><td><strong>Fructosa</strong></td><td>Cetohexosa</td><td>"Azúcar de fruta"; el más dulce de los carbohidratos; sirve como reserva de energía. Muy difundida en frutas y en la miel. En el hígado se transforma en glucosa.</td></tr>
+        <tr><td><strong>Galactosa</strong></td><td>Aldohexosa</td><td>Forma parte de la lactosa de la leche; esencial para la actividad de las células cerebrales.</td></tr>
+      </table>
+
+      <h4>Aldosa vs. Cetosa (localización del grupo carbonilo)</h4>
+      <p>Todos los monosacáridos contienen un grupo carbonilo <strong>C=O</strong> y varios hidroxilos <strong>OH</strong>.</p>
+      <ul>
+        <li>Si el carbonilo está en el <strong>extremo</strong> de la cadena → grupo <strong>aldehídico</strong> → <strong>aldosa</strong> (ej: glucosa).</li>
+        <li>Si el carbonilo está <strong>entre</strong> átomos de carbono → grupo <strong>cetónico</strong> → <strong>cetosa</strong> (ej: fructosa).</li>
+      </ul>
+
+      <h4>Isomería</h4>
+      <div class="diagram">
+        <div class="flow">
+          <div class="flow-box">Isomería espacial<br><em>(Glucosa vs. Galactosa)</em><br>misma fórmula, distinta posición de OH</div>
+          <div class="flow-box">Isomería de función<br><em>(Glucosa vs. Fructosa)</em><br>misma fórmula, distinto grupo funcional (aldehído vs. cetona)</div>
+        </div>
+      </div>
+      <p>Presentan isomería: sustancias con la misma fórmula molecular pero que difieren en sus propiedades (ej. D-Glucosa vs. L-Glucosa — isómeros espaciales entre sí).</p>
+
+      <div class="box clinical">
+        <div class="box-title">🤔 ¡Toca pensar! (pregunta clásica de la profesora)</div>
+        <p>¿Cuál es la diferencia entre una <strong>triosa</strong> y un <strong>trisacárido</strong>? — Aunque suenan parecido, son conceptos totalmente distintos: la <strong>triosa</strong> se define por su número de átomos de <strong>carbono</strong> (3 C, es un monosacárido), mientras que el <strong>trisacárido</strong> se define por su número de <strong>unidades de monosacáridos</strong> unidas (3 moléculas de azúcar simples enlazadas, es un tipo de oligosacárido). ¡No confundir el criterio de clasificación!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. DI Y OLIGO -->
+  <div class="tab-content" id="di-oligo">
+    <div class="card">
+      <h3>Disacáridos</h3>
+      <p>Son carbohidratos que producen <strong>dos moléculas</strong> del mismo o de diferentes monosacáridos cuando se <strong>hidrolizan</strong>.</p>
+      <div class="box green-box">
+        <div class="box-title">✅ Características generales</div>
+        <p>Son <strong>solubles en agua</strong>, <strong>sufren hidrólisis</strong> y son <strong>dulces</strong>.</p>
+      </div>
+      <table>
+        <tr><th>Disacárido</th><th>Composición</th></tr>
+        <tr><td><strong>Sacarosa</strong> (azúcar de mesa)</td><td>Glucosa + Fructosa</td></tr>
+        <tr><td><strong>Lactosa</strong></td><td>Glucosa + Galactosa</td></tr>
+        <tr><td><strong>Maltosa</strong></td><td>Glucosa + Glucosa</td></tr>
+      </table>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Memoriza exactamente esta combinación</div>
+        <p>Es una de las preguntas más directas de la prueba: qué monosacáridos forman cada disacárido. La <strong>maltosa</strong> es la única formada por <strong>dos moléculas iguales</strong> (Glucosa+Glucosa) — las otras dos combinan monosacáridos diferentes.</p>
+      </div>
+      <div class="box info">
+        <div class="box-title">💡 Hidrólisis</div>
+        <p>Destrucción de una molécula usando agua — es el proceso inverso a la formación del disacárido (que ocurre por deshidratación).</p>
+      </div>
+
+      <h3 style="margin-top:24px;">Oligosacáridos</h3>
+      <p>Son los compuestos que por hidrólisis dan como resultado de <strong>3 a 10 moléculas</strong> de monosacárido.</p>
+    </div>
+  </div>
+
+  <!-- 6. POLISACARIDOS -->
+  <div class="tab-content" id="poli">
+    <div class="card">
+      <h3>Polisacáridos</h3>
+      <p>Carbohidratos que contienen <strong>decenas o centenas</strong> de monosacáridos unidos por <strong>reacciones de deshidratación</strong> (reacción que implica pérdida de agua).</p>
+      <div class="box clinical">
+        <div class="box-title">⚠️ La gran excepción del grupo</div>
+        <p>A diferencia de mono- y disacáridos, los polisacáridos son <strong>insolubles en agua</strong> y <strong>no tienen sabor dulce</strong>. Si la prueba pregunta "¿todos los carbohidratos son dulces y solubles?", la respuesta es <strong>NO</strong> — los polisacáridos son la excepción.</p>
+      </div>
+
+      <h4>Clasificación según función biológica</h4>
+      <table>
+        <tr><th>Tipo</th><th>Ejemplos</th></tr>
+        <tr><td><strong>Polisacáridos de reserva energética</strong></td><td>Almidón, glucógeno</td></tr>
+        <tr><td><strong>Polisacáridos estructurales</strong></td><td>Celulosa, quitina</td></tr>
+      </table>
+
+      <h4>Clasificación según composición</h4>
+      <table>
+        <tr><th>Tipo</th><th>Definición</th></tr>
+        <tr><td><strong>Homopolisacáridos</strong></td><td>Formados por la repetición de <strong>un solo</strong> tipo de monosacárido.</td></tr>
+        <tr><td><strong>Heteropolisacáridos</strong></td><td>Formados por la repetición ordenada de un disacárido compuesto por <strong>dos monosacáridos distintos</strong> (alternancia de dos monosacáridos).</td></tr>
+      </table>
+
+      <h4>Los tres polisacáridos principales</h4>
+      <table>
+        <tr><th>Polisacárido</th><th>Características</th></tr>
+        <tr><td><strong>Glucógeno</strong></td><td>Principal polisacárido en el <strong>cuerpo humano</strong>. Formado en su totalidad por moléculas de glucosa unidas entre sí. Se almacena en el <strong>hígado</strong> y en el <strong>músculo esquelético</strong>.</td></tr>
+        <tr><td><strong>Almidón</strong></td><td>Polisacárido elaborado por los <strong>vegetales</strong> a partir de la glucosa (reserva energética vegetal).</td></tr>
+        <tr><td><strong>Celulosa</strong></td><td>Se encuentra en las plantas. <strong>No puede ser digerida</strong> por los seres humanos — le otorga volumen a las heces, facilitando su eliminación (fibra).</td></tr>
+      </table>
+      <div class="box info">
+        <div class="box-title">💡 Por qué el cuerpo no almacena glucosa libre</div>
+        <p>Los polisacáridos de reserva permiten almacenar azúcares sin crear un problema osmótico. Si la glucosa se almacenara como molécula libre —pequeña y muy soluble— causaría severos problemas osmóticos y de viscosidad, incompatibles con la vida celular. Por eso se guarda "empaquetada" como glucógeno/almidón.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. PROPIEDADES -->
+  <div class="tab-content" id="propiedades">
+    <div class="card">
+      <h3>Propiedades físicas</h3>
+      <ul>
+        <li>Debido a la presencia de muchos grupos hidroxilo (-OH), los carbohidratos forman <strong>puentes de hidrógeno</strong> y por eso son solubles en agua — <strong>a excepción de los polisacáridos</strong>.</li>
+        <li>Son compuestos <strong>cristalinos</strong>.</li>
+        <li>Presentan un <strong>alto punto de fusión</strong>.</li>
+        <li>Los carbohidratos <strong>simples</strong> tienen sabor dulce, mientras que los <strong>complejos no</strong>.</li>
+        <li>Presentan <strong>isomería</strong>: sustancias con la misma forma molecular pero que difieren en sus propiedades.</li>
+      </ul>
+      <div class="box info">
+        <div class="box-title">💡 Definiciones de apoyo</div>
+        <p><strong>Puente de hidrógeno:</strong> fuerza de atracción entre un átomo de hidrógeno y un elemento muy electronegativo (N, O, F).<br><strong>Punto de fusión:</strong> temperatura a la cual la materia pasa de sólido a líquido.</p>
+      </div>
+
+      <h3 style="margin-top:22px;">Propiedades químicas</h3>
+      <p>Las propiedades químicas son aquellas que se observan solo al <strong>cambiar la identidad o estructura química</strong> de la sustancia.</p>
+      <ul>
+        <li>Tienen la capacidad de <strong>producir energía</strong>.</li>
+        <li>Tienen cadenas compuestas de <strong>3 a 6 átomos de carbono</strong>.</li>
+        <li>Pueden formar <strong>polímeros</strong> (macromoléculas formadas por la unión de monómeros).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="tab-content" id="flashcards">
+    <div class="card">
+      <h3>🗂️ Flashcards — clic para girar</h3>
+      <div class="flash-grid" id="flashGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="tab-content" id="quiz">
+    <div class="card">
+      <h3>📝 Quiz final</h3>
+      <p class="quiz-progress" id="quizProgress">0 / 0 respondidas</p>
+      <div id="quizContainer"></div>
+      <div class="quiz-result" id="quizResult">
+        <h3>¡Módulo completado!</h3>
+        <p id="quizScoreText"></p>
+      </div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetProgress()">↺ Reiniciar progreso</button>
+</div>
+
+<script>
+const STORAGE_KEY = 'carbohidratos_xp';
+const XP_PER_LEVEL = 100;
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"xp":0,"answered":{}}');
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function addXP(amount, key){
+  if(key && state.answered[key]) return;
+  if(key) state.answered[key] = true;
+  state.xp += amount;
+  saveState();
+  renderXP();
+}
+
+function renderXP(){
+  const level = Math.floor(state.xp / XP_PER_LEVEL) + 1;
+  const xpInLevel = state.xp % XP_PER_LEVEL;
+  document.getElementById('levelBadge').textContent = level;
+  document.getElementById('levelNum').textContent = level;
+  document.getElementById('xpCount').textContent = xpInLevel;
+  document.getElementById('xpMax').textContent = XP_PER_LEVEL;
+  document.getElementById('xpBarFill').style.width = xpInLevel + '%';
+}
+
+function resetProgress(){
+  if(confirm('¿Reiniciar todo tu progreso y XP de este módulo?')){
+    localStorage.removeItem(STORAGE_KEY);
+    state = {xp:0, answered:{}};
+    renderXP();
+    document.querySelectorAll('.flashcard').forEach(f=>f.classList.remove('flipped'));
+    buildQuiz();
+  }
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    addXP(2, 'tab_'+btn.dataset.tab);
+  });
+});
+
+const flashcards = [
+  {f:"¿Qué elementos químicos forman los carbohidratos?", b:"Carbono (C), Hidrógeno (H) y Oxígeno (O) — compuesto ternario CHO."},
+  {f:"Nombra 4 sinónimos de carbohidrato", b:"Glúcidos, glícidos, azúcares, sacáridos, hidratos de carbono u osas."},
+  {f:"¿Cuánta energía produce 1g de carbohidrato?", b:"4 kcal/g — la mayor fuente de energía del organismo."},
+  {f:"¿Qué pentosa forma parte del ADN? ¿Y del ARN?", b:"ADN: Desoxirribosa (C₅H₁₀O₄). ARN: Ribosa (C₅H₁₀O₅)."},
+  {f:"Diferencia entre aldosa y cetosa", b:"Aldosa: carbonilo en el extremo de la cadena (grupo aldehído). Cetosa: carbonilo entre carbonos (grupo cetona)."},
+  {f:"Composición de la Sacarosa", b:"Glucosa + Fructosa."},
+  {f:"Composición de la Lactosa", b:"Glucosa + Galactosa."},
+  {f:"Composición de la Maltosa", b:"Glucosa + Glucosa (único disacárido de moléculas iguales)."},
+  {f:"¿Cuál es el único carbohidrato insoluble y no dulce?", b:"Los polisacáridos (excepción entre los carbohidratos)."},
+  {f:"¿Dónde se almacena el glucógeno en el cuerpo?", b:"En el hígado y en el músculo esquelético."},
+  {f:"Diferencia entre Homopolisacárido y Heteropolisacárido", b:"Homo: un solo tipo de monosacárido repetido. Hetero: alternancia de dos monosacáridos distintos."},
+  {f:"Diferencia entre triosa y trisacárido", b:"Triosa = monosacárido de 3 carbonos. Trisacárido = oligosacárido de 3 unidades de monosacárido unidas."},
+];
+
+const flashGrid = document.getElementById('flashGrid');
+flashcards.forEach((card, i)=>{
+  const div = document.createElement('div');
+  div.className = 'flashcard';
+  div.innerHTML = `<div class="flashcard-inner">
+      <div class="flashcard-face flashcard-front">${card.f}</div>
+      <div class="flashcard-face flashcard-back">${card.b}</div>
+    </div>`;
+  div.addEventListener('click', ()=>{
+    div.classList.toggle('flipped');
+    if(div.classList.contains('flipped')) addXP(3, 'flash_'+i);
+  });
+  flashGrid.appendChild(div);
+});
+
+const quizData = [
+  {
+    type:'mcq',
+    q:'¿Cuáles son los elementos químicos que forman un carbohidrato?',
+    options:['Carbono, Nitrógeno, Oxígeno','Carbono, Hidrógeno, Oxígeno','Carbono, Hidrógeno, Fósforo','Hidrógeno, Oxígeno, Azufre'],
+    correct:1
+  },
+  {
+    type:'vf',
+    q:'La glucosa es un ejemplo de cetohexosa.',
+    correct:false,
+    explanation:'Falso — la glucosa es una aldohexosa. La fructosa es la cetohexosa.'
+  },
+  {
+    type:'fill',
+    q:'La maltosa está formada por la unión de _______ + _______.',
+    answer:'Glucosa + Glucosa',
+    accept:['glucosa + glucosa','glucosa+glucosa','glucosa y glucosa']
+  },
+  {
+    type:'mcq',
+    q:'¿Cuál de estos polisacáridos NO puede ser digerido por los seres humanos y aporta fibra a la dieta?',
+    options:['Glucógeno','Almidón','Celulosa','Sacarosa'],
+    correct:2
+  },
+  {
+    type:'vf',
+    q:'Todos los carbohidratos son solubles en agua y de sabor dulce, sin excepciones.',
+    correct:false,
+    explanation:'Falso — los polisacáridos son insolubles en agua y no tienen sabor dulce.'
+  },
+  {
+    type:'fill',
+    q:'La pentosa presente en el ADN se llama _______.',
+    answer:'Desoxirribosa',
+    accept:['desoxirribosa']
+  },
+  {
+    type:'mcq',
+    q:'¿Cuál es la diferencia fundamental entre una triosa y un trisacárido?',
+    options:[
+      'No hay diferencia, son sinónimos',
+      'La triosa se clasifica por número de carbonos (3C); el trisacárido por número de unidades de monosacáridos (3)',
+      'La triosa es un polisacárido y el trisacárido un monosacárido',
+      'La triosa siempre es dulce y el trisacárido nunca lo es'
+    ],
+    correct:1
+  },
+  {
+    type:'fill',
+    q:'El principal polisacárido de reserva energética en el cuerpo humano, almacenado en hígado y músculo, se llama _______.',
+    answer:'Glucógeno',
+    accept:['glucogeno','glucógeno']
+  },
+  {
+    type:'vf',
+    q:'El glucógeno está formado exclusivamente por moléculas de glucosa.',
+    correct:true,
+    explanation:'Verdadero — es un homopolisacárido de glucosa.'
+  },
+  {
+    type:'mcq',
+    q:'¿Qué proceso químico une moléculas de monosacáridos para formar un polisacárido?',
+    options:['Hidrólisis','Oxidación','Reacción de deshidratación','Fermentación'],
+    correct:2
+  }
+];
+
+let quizScore = 0;
+let quizAnswered = 0;
+
+function buildQuiz(){
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizScore = 0;
+  quizAnswered = 0;
+  document.getElementById('quizResult').style.display = 'none';
+  updateQuizProgress();
+
+  quizData.forEach((item, idx)=>{
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    let inner = `<div class="q-text">${idx+1}. ${item.q}</div>`;
+
+    if(item.type === 'mcq'){
+      inner += item.options.map((opt,i)=>
+        `<button class="opt" data-idx="${i}">${opt}</button>`).join('');
+    } else if(item.type === 'vf'){
+      inner += `<button class="opt" data-val="true">Verdadero</button>
+                 <button class="opt" data-val="false">Falso</button>`;
+    } else if(item.type === 'fill'){
+      inner += `<input type="text" class="fill-input" placeholder="Escribe tu respuesta...">
+                 <button class="check-btn">Verificar</button>`;
+    }
+    inner += `<div class="feedback" id="fb-${idx}"></div>`;
+    block.innerHTML = inner;
+    container.appendChild(block);
+
+    if(item.type === 'mcq'){
+      block.querySelectorAll('.opt').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(block.dataset.done) return;
+          block.dataset.done = '1';
+          const chosen = parseInt(btn.dataset.idx);
+          const fb = document.getElementById('fb-'+idx);
+          block.querySelectorAll('.opt').forEach((b,i)=>{
+            b.disabled = true;
+            if(i === item.correct) b.classList.add('correct');
+            else if(i === chosen) b.classList.add('wrong');
+          });
+          if(chosen === item.correct){
+            fb.textContent = '¡Correcto!'; fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+          } else {
+            fb.textContent = 'Incorrecto. La respuesta correcta está marcada en verde.'; fb.className='feedback bad';
+          }
+          quizAnswered++; updateQuizProgress();
+        });
+      });
+    } else if(item.type === 'vf'){
+      block.querySelectorAll('.opt').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(block.dataset.done) return;
+          block.dataset.done = '1';
+          const chosen = btn.dataset.val === 'true';
+          const fb = document.getElementById('fb-'+idx);
+          block.querySelectorAll('.opt').forEach(b=>{
+            b.disabled = true;
+            const bVal = b.dataset.val === 'true';
+            if(bVal === item.correct) b.classList.add('correct');
+            else if(b === btn) b.classList.add('wrong');
+          });
+          if(chosen === item.correct){
+            fb.textContent = '¡Correcto! ' + (item.explanation||''); fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+          } else {
+            fb.textContent = 'Incorrecto. ' + (item.explanation||''); fb.className='feedback bad';
+          }
+          quizAnswered++; updateQuizProgress();
+        });
+      });
+    } else if(item.type === 'fill'){
+      const input = block.querySelector('.fill-input');
+      const btn = block.querySelector('.check-btn');
+      btn.addEventListener('click', ()=>{
+        if(block.dataset.done) return;
+        const val = input.value.trim().toLowerCase();
+        const fb = document.getElementById('fb-'+idx);
+        const isCorrect = item.accept.some(a => val === a);
+        block.dataset.done = '1';
+        input.disabled = true; btn.disabled = true;
+        if(isCorrect){
+          input.classList.add('correct');
+          fb.textContent = '¡Correcto!'; fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+        } else {
+          input.classList.add('wrong');
+          fb.textContent = `Incorrecto. Respuesta esperada: "${item.answer}"`; fb.className='feedback bad';
+        }
+        quizAnswered++; updateQuizProgress();
+      });
+    }
+  });
+}
+
+function updateQuizProgress(){
+  document.getElementById('quizProgress').textContent = `${quizAnswered} / ${quizData.length} respondidas`;
+  if(quizAnswered === quizData.length){
+    const result = document.getElementById('quizResult');
+    result.style.display = 'block';
+    document.getElementById('quizScoreText').textContent = `Puntaje: ${quizScore} / ${quizData.length}`;
+    addXP(15, 'quiz_complete');
+  }
+}
+
+renderXP();
+buildQuiz();
+</script>
+</body>
+</html>
