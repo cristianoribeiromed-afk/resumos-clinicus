@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Final — Fisiología (Prof. Lisandro) · Plataforma de Estudio</title>
+<style>
+:root{
+  --bg:#0d1117;
+  --bg-alt:#141b26;
+  --card:#182233;
+  --card-hover:#1e2b40;
+  --border:#263348;
+  --text:#e6edf3;
+  --text-dim:#8b98ab;
+  --helix1:#4d9fff;
+  --helix2:#ff5c6c;
+  --amber:#ffb454;
+  --red:#ff6b6b;
+  --green:#4ade80;
+  --gold:#ffd166;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 15% 0%, rgba(77,159,255,.10), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(255,92,108,.08), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', 'Segoe UI', Arial, sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora', Georgia, serif; margin:0 0 .4em 0;}
+a{color:var(--helix1);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(13,17,23,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.1rem; margin:0; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--amber);}
+.level-badge{background:linear-gradient(135deg,var(--helix1),var(--helix2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1117;}
+
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.eyebrow{
+  display:inline-block; font-family:'DM Sans'; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--helix1); background:rgba(77,159,255,.1); border:1px solid rgba(77,159,255,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#c8d1de;}
+.hero{
+  background:linear-gradient(135deg, rgba(77,159,255,.15), rgba(255,92,108,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;
+}
+.hero h2{font-size:1.7rem; margin-bottom:.3em;}
+ul{margin:8px 0 8px 20px; color:#c8d1de;}
+li{margin-bottom:6px;}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--helix1),var(--helix2)); color:#0d1117; border:none; padding:12px 26px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--helix1),var(--helix2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(77,159,255,.12); color:var(--helix1); border:1px solid rgba(77,159,255,.3);}
+.tag.type{background:rgba(255,92,108,.12); color:var(--helix2); border:1px solid rgba(255,92,108,.3);}
+.quiz-q{font-size:1.08rem; font-weight:700; margin-bottom:16px; font-family:'Lora',serif;}
+
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--helix1);}
+.option.correct{background:rgba(74,222,128,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(255,107,107,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;}
+.vf-row .option{flex:1; text-align:center;}
+
+.match-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin-bottom:10px; flex-wrap:wrap;
+}
+.match-term{font-weight:700; color:var(--helix1); min-width:200px; font-size:.9rem;}
+.match-row select{
+  flex:1; min-width:220px; background:#0d1117; border:1px solid var(--border); color:var(--text);
+  padding:9px 10px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--red);}
+
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(255,107,107,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--helix1),var(--helix2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-family:'Lora',serif; font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--helix1);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#4d9fff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Simulado Final — Fisiología I (Prof. Lisandro)</h1>
+        <span>Cap. 1, 4-12, 14-16, 25-27 + Presión Arterial — temario completo</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nivel 1</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato del simulado</span>
+    <h2>40 preguntas — todo el temario del Prof. Lisandro</h2>
+    <p>25 de múltiple elección, 10 de Verdadero/Falso y 5 de asociar columnas — cubriendo los 17 capítulos completos de la materia.</p>
+  </div>
+  <div class="card">
+    <h2>Capítulos cubiertos</h2>
+    <ul>
+      <li>Cap 1: Organización Funcional del Cuerpo Humano</li>
+      <li>Cap 4: Transporte de Sustancias a través de la Célula</li>
+      <li>Cap 5: Potenciales de Membrana y de Acción</li>
+      <li>Cap 6: Contracción del Músculo Esquelético</li>
+      <li>Cap 7: Transmisión Neuromuscular</li>
+      <li>Cap 8: Contracción del Músculo Liso</li>
+      <li>Cap 9: El Corazón como Bomba</li>
+      <li>Cap 10: Estimulación Rítmica del Corazón</li>
+      <li>Cap 11: Electrocardiograma Normal</li>
+      <li>Cap 12: Eje Eléctrico del Corazón</li>
+      <li>Cap 14: Panorámica de la Circulación</li>
+      <li>Cap 15: Distensibilidad Vascular</li>
+      <li>Cap 16: Microcirculación y Sistema Linfático</li>
+      <li>Cap 25: Compartimientos del Líquido Corporal</li>
+      <li>Cap 26: Sistema Urinario</li>
+      <li>Cap 27: Filtración Glomerular</li>
+      <li>Presión Arterial: Técnica de Medición</li>
+    </ul>
+    <button class="btn-primary" onclick="startQuiz()">Comenzar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>Resumos Clinicus · Simulado Final — Fisiología I (Prof. Lisandro) · 40 preguntas</footer>
+
+<script>
+const quizData = [{"type": "mcq", "topic": "Cap 1 · Organización", "q": "¿Qué fracción del agua corporal total corresponde al líquido intracelular?", "opts": ["1/3", "1/2", "2/3", "3/4"], "correct": 2}, {"type": "mcq", "topic": "Cap 1 · Organización", "q": "La retroalimentación negativa se caracteriza por:", "opts": ["Amplificar continuamente el estímulo inicial", "Devolver un factor alterado a su valor medio normal", "Ocurrir solo en el sistema nervioso", "No tener rol en la homeostasis"], "correct": 1}, {"type": "mcq", "topic": "Cap 4 · Transporte", "q": "¿Cuál es la principal diferencia entre difusión simple y facilitada?", "opts": ["La simple requiere ATP", "La facilitada requiere proteína transportadora y alcanza una Vmax", "No existe diferencia real", "La facilitada nunca satura"], "correct": 1}, {"type": "mcq", "topic": "Cap 4 · Transporte", "q": "El transporte activo primario obtiene su energía directamente de:", "opts": ["Un gradiente de Na⁺ previo", "La ruptura del ATP", "La difusión simple", "La presión osmótica"], "correct": 1}, {"type": "mcq", "topic": "Cap 5 · Potenciales", "q": "¿Cuál es el potencial de membrana en reposo normal de una fibra nerviosa grande?", "opts": ["-40 mV", "-65 mV", "-90 mV", "-120 mV"], "correct": 2}, {"type": "mcq", "topic": "Cap 5 · Potenciales", "q": "¿Cuál es la causa principal de la meseta del potencial de acción cardíaco?", "opts": ["Solo canales rápidos de Na", "Canales lentos de Ca²⁺/Na⁺ y apertura retrasada de canales de K⁺", "Ausencia de canales iónicos", "Aumento súbito de temperatura"], "correct": 1}, {"type": "mcq", "topic": "Cap 6 · Músculo Esquelético", "q": "¿A qué longitud de sarcómero ocurre la fuerza máxima de contracción?", "opts": ["0,5 a 1 μm", "2,0 a 2,2 μm", "4 a 5 μm", "10 μm"], "correct": 1}, {"type": "mcq", "topic": "Cap 6 · Músculo Esquelético", "q": "¿Qué subunidad de la troponina tiene gran afinidad por el Ca²⁺?", "opts": ["Troponina I", "Troponina T", "Troponina C", "Troponina A"], "correct": 2}, {"type": "mcq", "topic": "Cap 7 · Transmisión Neuromuscular", "q": "¿Cuántas moléculas de acetilcolina deben unirse al receptor para abrir su canal?", "opts": ["1", "2", "4", "10"], "correct": 1}, {"type": "mcq", "topic": "Cap 7 · Transmisión Neuromuscular", "q": "¿Por qué son necesarios los túbulos T en la fibra muscular esquelética?", "opts": ["Para almacenar glucógeno", "Porque la fibra es muy grande para que el potencial de superficie active su interior", "Para producir acetilcolina", "Para eliminar CO2"], "correct": 1}, {"type": "mcq", "topic": "Cap 8 · Músculo Liso", "q": "¿Qué proteína reemplaza a la troponina en la regulación del músculo liso?", "opts": ["Actina G", "Calmodulina", "Tropomiosina", "Miosina fosfatasa"], "correct": 1}, {"type": "mcq", "topic": "Cap 8 · Músculo Liso", "q": "¿Cuál es el principal ion responsable del potencial de acción del músculo liso?", "opts": ["Sodio", "Cloruro", "Calcio", "Bicarbonato"], "correct": 2}, {"type": "mcq", "topic": "Cap 9 · Corazón Bomba", "q": "El mecanismo de Frank-Starling establece que:", "opts": ["El corazón bombea siempre el mismo volumen", "Cuanto más se distiende el corazón al llenarse, mayor la fuerza de contracción", "La frecuencia no afecta el volumen bombeado", "Solo el SNA regula el bombeo"], "correct": 1}, {"type": "mcq", "topic": "Cap 9 · Corazón Bomba", "q": "¿Cuál es la fracción de eyección normal del ventrículo?", "opts": ["20%", "40%", "60%", "90%"], "correct": 2}, {"type": "mcq", "topic": "Cap 10 · Estimulación Rítmica", "q": "¿Por qué el nódulo sinusal es el marcapasos normal del corazón?", "opts": ["Es el único con capacidad de autoexcitación", "Su tasa de descarga rítmica es mayor que la de cualquier otra estructura", "Está conectado al SNC directamente", "No tiene periodo refractario"], "correct": 1}, {"type": "mcq", "topic": "Cap 11 · ECG Normal", "q": "¿Qué representa la onda T del electrocardiograma?", "opts": ["Despolarización auricular", "Despolarización ventricular", "Repolarización ventricular", "Repolarización auricular"], "correct": 2}, {"type": "mcq", "topic": "Cap 12 · Eje Eléctrico", "q": "Si DI y aVF son ambos positivos, el eje eléctrico está:", "opts": ["Entre 0° y +90° (normal)", "Entre ±180° y +90° (derecha)", "Entre 0° y -90° (izquierda)", "En el eje derecho extremo"], "correct": 0}, {"type": "mcq", "topic": "Cap 14 · Panorámica Circulación", "q": "Según la ley de Poiseuille, el flujo sanguíneo es directamente proporcional a:", "opts": ["El cuadrado del radio", "La cuarta potencia del radio", "La longitud del vaso", "La raíz cuadrada de la viscosidad"], "correct": 1}, {"type": "mcq", "topic": "Cap 15 · Distensibilidad Vascular", "q": "¿Cuántas veces mayor es la compliancia de una vena sistémica comparada con su arteria correspondiente?", "opts": ["2 veces", "8 veces", "24 veces", "100 veces"], "correct": 2}, {"type": "mcq", "topic": "Cap 16 · Microcirculación", "q": "En el extremo arterial del capilar, la fuerza neta favorece:", "opts": ["La reabsorción", "La filtración", "La vasomotilidad exclusivamente", "Solo la formación de linfa"], "correct": 1}, {"type": "mcq", "topic": "Cap 25 · Líquidos Corporales", "q": "¿Cuál es la causa más frecuente de edema extracelular?", "opts": ["Fallo linfático", "Salida anormal de líquido del plasma al intersticio vía capilares", "Exceso de proteínas plasmáticas", "Aumento de la presión oncótica intersticial"], "correct": 1}, {"type": "mcq", "topic": "Cap 26 · Sistema Urinario", "q": "¿Cuál es la fórmula correcta de la excreción urinaria?", "opts": ["Excreción = Filtración + Reabsorción", "Excreción = Filtración − Reabsorción + Secreción", "Excreción = Reabsorción − Secreción", "Excreción = Filtración × Secreción"], "correct": 1}, {"type": "mcq", "topic": "Cap 27 · Filtración Glomerular", "q": "¿Cuál es la TFG normal aproximada en un adulto?", "opts": ["50 ml/min", "125 ml/min", "300 ml/min", "500 ml/min"], "correct": 1}, {"type": "mcq", "topic": "Presión Arterial", "q": "¿Qué marca la Fase 1 de los ruidos de Korotkoff?", "opts": ["La presión diastólica", "La presión sistólica", "El pulso venoso", "La frecuencia cardíaca"], "correct": 1}, {"type": "mcq", "topic": "Presión Arterial", "q": "Según la clasificación AHA 2024, una PA de 132/85 mmHg corresponde a:", "opts": ["Normal", "Normal elevada", "Hipertensión nivel 1", "Hipertensión nivel 2"], "correct": 2}, {"type": "vf", "topic": "Cap 1 · Organización", "q": "La retroalimentación positiva siempre es perjudicial para el organismo, sin excepciones.", "correct": false}, {"type": "vf", "topic": "Cap 5 · Potenciales", "q": "El principio del todo o nada establece que, una vez alcanzado el umbral, el potencial de acción se propaga completamente por la fibra.", "correct": true}, {"type": "vf", "topic": "Cap 6 · Músculo Esquelético", "q": "El músculo esquelético puede sostener una contracción máxima usando solo fosfocreatina por 5 a 8 segundos.", "correct": true}, {"type": "vf", "topic": "Cap 8 · Músculo Liso", "q": "El músculo liso puede acortarse hasta un 80% de su longitud, más que el músculo esquelético (≈30%).", "correct": true}, {"type": "vf", "topic": "Cap 9 · Corazón Bomba", "q": "Los músculos papilares son los responsables directos de cerrar las válvulas A-V del corazón.", "correct": false}, {"type": "vf", "topic": "Cap 10 · Estimulación Rítmica", "q": "El Haz A-V es capaz de conducir impulsos de forma retrógrada (ventrículo a aurícula) en condiciones normales.", "correct": false}, {"type": "vf", "topic": "Cap 12 · Eje Eléctrico", "q": "Un eje eléctrico en la región extrema derecha está fuertemente asociado a arritmias.", "correct": true}, {"type": "vf", "topic": "Cap 15 · Distensibilidad Vascular", "q": "Sin las válvulas venosas, la presión hidrostática en los pies de un adulto de pie sería de aproximadamente +90 mmHg.", "correct": true}, {"type": "vf", "topic": "Cap 26 · Sistema Urinario", "q": "Las nefronas se regeneran continuamente durante toda la vida adulta.", "correct": false}, {"type": "vf", "topic": "Presión Arterial", "q": "El método palpatorio permite medir tanto la presión sistólica como la diastólica.", "correct": false}, {"type": "match", "topic": "Cap 10 · Marcapasos", "prompt": "Una cada estructura con su frecuencia intrínseca de descarga.", "pairs": [{"term": "Nódulo sinusal", "def": "60 a 100 latidos/min"}, {"term": "Nódulo A-V", "def": "40 a 60 latidos/min"}, {"term": "Fibras de Purkinje", "def": "15 a 45 latidos/min"}, {"term": "Marcapasos ectópico", "def": "Estructura distinta del nódulo sinusal que descarga más rápido que él"}]}, {"type": "match", "topic": "Presión Arterial · Korotkoff", "prompt": "Una cada fase de los ruidos de Korotkoff con lo que representa.", "pairs": [{"term": "Fase 1", "def": "Primer sonido de latido — marca la presión sistólica"}, {"term": "Fase 3", "def": "Aparece un ruido sordo y suave"}, {"term": "Fase 5", "def": "Cese completo del ruido — marca la presión diastólica"}, {"term": "Mecanismo físico", "def": "Flujo turbulento en una arteria parcialmente colapsada por el manguito"}]}, {"type": "match", "topic": "Cap 27 · Membrana Glomerular", "prompt": "Una cada capa de la membrana capilar glomerular con su característica.", "pairs": [{"term": "Endotelio capilar", "def": "Fenestrado, con carga negativa"}, {"term": "Membrana basal", "def": "Red de colágeno y proteoglucanos"}, {"term": "Epitelio (podocitos)", "def": "Posee los Poros de Rendija"}, {"term": "Albúmina", "def": "No se filtra por su carga negativa, a pesar de su tamaño"}]}, {"type": "match", "topic": "Cap 25 · Compartimientos Líquidos", "prompt": "Una cada compartimiento corporal con su volumen aproximado (adulto de 70 kg).", "pairs": [{"term": "Líquido intracelular", "def": "28 litros"}, {"term": "Líquido intersticial", "def": "11 litros"}, {"term": "Plasma", "def": "3 litros"}, {"term": "Líquido transcelular", "def": "1 a 2 litros"}]}, {"type": "match", "topic": "Tipos de Músculo", "prompt": "Una cada tipo de músculo con su característica reguladora principal.", "pairs": [{"term": "Músculo esquelético", "def": "Regulado por troponina, activado por Ca²⁺ desde el retículo sarcoplásmico"}, {"term": "Músculo cardíaco", "def": "Posee meseta en el potencial de acción, sincitio funcional"}, {"term": "Músculo liso unitario", "def": "Fibras conectadas por uniones en hendidura, se contraen como una sola unidad"}, {"term": "Músculo liso multiunitario", "def": "Fibras separadas, cada una con inervación independiente"}]}];
+
+let qIndex = 0, score = 0, answered = false, log = [];
+let topicStats = {};
+let xp = 0;
+
+function addXP(n){ xp += n; document.getElementById('xpCount').textContent = xp; document.getElementById('levelBadge').textContent = 'Nivel ' + (Math.floor(xp/100)+1); }
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = []; topicStats = {};
+  renderQuiz();
+}
+
+function typeLabel(t){ return t==='mcq' ? 'Múltiple elección' : t==='vf' ? 'Verdadero / Falso' : 'Asociar columnas'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIndex >= quizData.length){ renderResult(); return; }
+  const item = quizData[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/quizData.length)*100);
+  let html = '<div class="quiz-progress"><span>Pregunta ' + (qIndex+1) + ' / ' + quizData.length + '</span><span>Puntaje: ' + score + '</span></div>';
+  html += '<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="tag-row"><span class="tag topic">' + item.topic + '</span><span class="tag type">' + typeLabel(item.type) + '</span></div>';
+  html += '<div class="quiz-q">' + (item.q || item.prompt) + '</div>';
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else if(item.type === 'vf'){
+    html += '<div class="vf-row">'
+      + '<button class="option" data-val="true" onclick="answerVF(this,true)">Verdadero</button>'
+      + '<button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button>'
+      + '</div>';
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += '<div id="matchBlock">';
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += '<div class="match-row" data-idx="'+i+'">'
+        + '<span class="match-term">' + p.term + '</span>'
+        + '<select onchange="matchSelected()"><option value="">— Seleccione —</option>'
+        + shuffled.map(d=>'<option value="'+escapeHtml(d)+'">'+d+'</option>').join('')
+        + '</select></div>';
+    });
+    html += '</div>';
+    html += '<button class="btn-primary" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>';
+  }
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Siguiente →</button></div>';
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function registerTopic(topic, correct){
+  if(!topicStats[topic]) topicStats[topic] = {total:0, correct:0};
+  topicStats[topic].total++;
+  if(correct) topicStats[topic].correct++;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct, item.topic, item.q);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct, item.topic, item.q);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  document.getElementById('checkMatchBtn').disabled = ![...selects].every(s=>s.value !== '');
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (allCorrect?'correct':'incorrect') + '">' + correctCount + ' / ' + item.pairs.length + ' pares correctos.</div>';
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  registerTopic(item.topic, allCorrect);
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct, topic, q){
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ ¡Correcto!' : '✗ Incorrecto') + '</div>';
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic, correct);
+  log.push({q: q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((score/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + score + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de aciertos</p>';
+  html += pct >= 80 ? '<p style="color:var(--green);">¡Excelente dominio de toda la materia del Prof. Lisandro!</p>'
+    : pct >= 50 ? '<p style="color:var(--gold);">Buen resultado — revisa los capítulos con más errores abajo.</p>'
+    : '<p style="color:var(--red);">Vale la pena repasar los módulos completos antes de la prueba.</p>';
+
+  html += '<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{
+    const s = topicStats[t];
+    html += '<div class="bd-item"><div class="n">' + s.correct + '/' + s.total + '</div><div class="l">' + t + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<table class="summary-table"><tr><th>Pregunta</th><th>Resultado</th></tr>';
+  log.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correcto':'Incorrecto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Reintentar simulado</button></div></div>';
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
