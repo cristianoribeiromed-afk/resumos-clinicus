@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas de ECG — Fisiología Cardiovascular</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1712; --bg-panel:#152119; --bg-card:#1a2a20;
+  --gold:#d4af37; --gold-soft:#e8cf7a; --green:#4caf6e; --green-soft:#7fd39c;
+  --text:#eef3ee; --text-dim:#a9bdae; --border:#2a3d30;
+  --danger:#e0705a; --info:#5aa9e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(circle at top left,#16241a,#0e1712 60%);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.55;padding:20px;min-height:100vh;}
+.wrap{max-width:1050px;margin:0 auto;}
+h1,h2,h3{font-family:'Lora',serif;}
+header{background:linear-gradient(135deg,#1c2e21,#14201a);border:1px solid var(--gold);border-radius:16px;padding:20px 24px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+header h1{font-size:1.35rem;color:var(--gold-soft);}
+header p{color:var(--text-dim);font-size:.85rem;margin-top:4px;}
+.xp-badge{background:var(--bg-card);border:1px solid var(--gold);border-radius:12px;padding:8px 16px;text-align:center;min-width:120px;}
+.xp-badge .lvl{font-family:'Lora',serif;font-weight:700;color:var(--gold-soft);font-size:1rem;}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+nav button{background:var(--bg-card);border:1px solid var(--border);color:var(--text-dim);padding:9px 14px;border-radius:9px;font-size:.83rem;cursor:pointer;transition:.2s;}
+nav button:hover{border-color:var(--green-soft);color:var(--text);}
+nav button.active{background:linear-gradient(135deg,#294a34,#1e3527);border-color:var(--gold);color:var(--gold-soft);font-weight:700;}
+section.tab{display:none;background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:22px 24px;animation:fadein .3s ease;}
+section.tab.active{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+h2.tab-title{color:var(--gold-soft);font-size:1.25rem;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;}
+p{margin-bottom:8px;color:var(--text);font-size:.9rem;}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+.card h3{color:var(--green-soft);font-size:1rem;margin-bottom:8px;}
+.box{border-radius:10px;padding:11px 14px;margin:10px 0;border-left:4px solid;font-size:.87rem;}
+.box.info{background:rgba(90,169,224,.1);border-color:var(--info);}
+.box.info .lbl{color:var(--info);font-weight:700;}
+.box.danger{background:rgba(224,112,90,.1);border-color:var(--danger);}
+.box.danger .lbl{color:var(--danger);font-weight:700;}
+.box.gold{background:rgba(212,175,55,.1);border-color:var(--gold);}
+.box.gold .lbl{color:var(--gold-soft);font-weight:700;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.85rem;}
+th,td{border:1px solid var(--border);padding:7px 9px;text-align:left;}
+th{background:#1e3327;color:var(--gold-soft);}
+td{color:var(--text-dim);}
+.action-btn{background:linear-gradient(135deg,#2c4c37,#1f3628);border:1px solid var(--gold);color:var(--gold-soft);padding:9px 18px;border-radius:9px;cursor:pointer;font-weight:700;font-size:.85rem;}
+.action-btn:disabled{opacity:.4;cursor:not-allowed;}
+.credit{font-size:.68rem;color:var(--text-dim);text-align:center;margin-top:6px;}
+
+/* ATLAS GRID */
+.atlas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.atlas-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:.2s;}
+.atlas-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.atlas-card img{width:100%;height:110px;object-fit:cover;background:#fff;display:block;}
+.atlas-card .name{padding:9px 12px;font-size:.82rem;font-weight:700;color:var(--gold-soft);}
+.atlas-card .badge{display:inline-block;font-size:.62rem;padding:2px 8px;border-radius:20px;margin:0 12px 8px;}
+.badge.normal{background:rgba(76,175,110,.2);color:var(--green-soft);}
+.badge.emergencia{background:rgba(224,112,90,.2);color:var(--danger);}
+.badge.atencion{background:rgba(212,175,55,.2);color:var(--gold-soft);}
+
+/* DETAIL MODAL */
+.detail-view{display:none;}
+.detail-view.active{display:block;}
+.detail-img-wrap{background:#fff;border-radius:10px;padding:8px;margin-bottom:14px;}
+.detail-img-wrap img{width:100%;display:block;border-radius:4px;}
+
+/* QUIZ */
+.quiz-progress{display:flex;justify-content:space-between;color:var(--text-dim);font-size:.85rem;margin-bottom:10px;}
+.option{display:block;width:100%;text-align:left;background:var(--bg-card);border:1px solid var(--border);color:var(--text);padding:11px 14px;border-radius:9px;margin-bottom:8px;cursor:pointer;font-size:.88rem;}
+.option:hover{border-color:var(--green-soft);}
+.option.correct{background:rgba(76,175,110,.22);border-color:var(--green);}
+.option.wrong{background:rgba(224,112,90,.22);border-color:var(--danger);}
+.feedback{margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.85rem;}
+.feedback.correct{background:rgba(76,175,110,.12);color:var(--green-soft);}
+.feedback.wrong{background:rgba(224,112,90,.12);color:var(--danger);}
+
+/* AXIS TRAINER */
+.axis-case{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;}
+.axis-leads{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+.axis-lead{text-align:center;}
+.axis-lead .lbl{font-size:.8rem;color:var(--gold-soft);font-weight:700;margin-bottom:4px;}
+.quad-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:420px;margin:14px auto;}
+.quad-btns button{background:var(--bg-card);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:9px;cursor:pointer;font-size:.85rem;}
+.quad-btns button:hover{border-color:var(--green-soft);}
+.quad-btns button.correct{background:rgba(76,175,110,.25);border-color:var(--green);}
+.quad-btns button.wrong{background:rgba(224,112,90,.25);border-color:var(--danger);}
+.hexaxial{background:#fff;border-radius:10px;padding:14px;margin:14px 0;text-align:center;}
+
+/* FLASHCARDS */
+.flashcard-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.flashcard{width:100%;max-width:520px;height:230px;perspective:1200px;cursor:pointer;}
+.flashcard-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+.face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;border:1px solid var(--gold);font-size:.85rem;overflow:hidden;}
+.face.front{background:#fff;}
+.face.front img{width:100%;border-radius:6px;}
+.face.back{background:linear-gradient(135deg,#213a29,#1a2a20);color:var(--text);transform:rotateY(180deg);}
+.flash-nav{display:flex;gap:10px;align-items:center;}
+.flash-counter{color:var(--text-dim);font-size:.8rem;}
+footer{text-align:center;color:var(--text-dim);font-size:.78rem;margin-top:20px;padding:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>🫀 Atlas de ECG</h1>
+    <p>Fisiología Cardiovascular · Ritmos Reales, Eje Eléctrico y Cuadro Hexaxial</p>
+  </div>
+  <div class="xp-badge">
+    <div class="lvl" id="lvlLabel">Nivel 1</div>
+    <div style="font-size:.7rem;color:var(--text-dim);margin-top:3px;" id="xpLabel">0 XP</div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-tab="t1">🖼️ Atlas de Ritmos</button>
+  <button class="tab-btn" data-tab="t2">📐 Eje Eléctrico</button>
+  <button class="tab-btn" data-tab="t3">📝 Quiz de Identificación</button>
+  <button class="tab-btn" data-tab="t4">🗂️ Flashcards</button>
+</nav>
+
+<!-- ===== T1 - ATLAS ===== -->
+<section class="tab active" id="t1">
+  <h2 class="tab-title">Atlas de Ritmos Cardíacos</h2>
+  <p>Toca cualquier tira de ECG real para ver la ficha completa con sus características.</p>
+  <div class="atlas-grid" id="atlasGrid"></div>
+
+  <div class="detail-view" id="detailView">
+    <button class="action-btn" onclick="closeDetail()" style="margin-bottom:14px;">← Volver al atlas</button>
+    <div class="detail-img-wrap"><img id="detailImg" src=""></div>
+    <h2 id="detailName" style="color:var(--gold-soft);margin-bottom:10px;"></h2>
+    <table id="detailTable"></table>
+    <div class="box info" id="detailInfoBox"></div>
+  </div>
+  <p class="credit">Tiras de ECG: © Deanna Hoyord, <i>Nursing Advanced Skills</i> (WisTech Open) — licencia CC BY 4.0</p>
+</section>
+
+<!-- ===== T2 - EJE ELÉCTRICO ===== -->
+<section class="tab" id="t2">
+  <h2 class="tab-title">Eje Eléctrico — Sistema Hexaxial</h2>
+  <div class="hexaxial">
+    <svg viewBox="0 0 300 300" width="260" height="260" style="margin:0 auto;display:block;">
+      <circle cx="150" cy="150" r="120" fill="none" stroke="#ddd" stroke-width="1"/>
+      <line x1="30" y1="150" x2="270" y2="150" stroke="#999" stroke-width="1.2"/>
+      <line x1="150" y1="30" x2="150" y2="270" stroke="#999" stroke-width="1.2"/>
+      <!-- DI 0° -->
+      <line x1="30" y1="150" x2="270" y2="150" stroke="#c0392b" stroke-width="1.6"/>
+      <text x="272" y="154" font-size="11" fill="#c0392b">DI 0°</text>
+      <!-- DII 60 -->
+      <line x1="45" y1="45" x2="255" y2="255" stroke="#2980b9" stroke-width="1.6" transform="rotate(60 150 150)"/>
+      <text x="255" y="235" font-size="11" fill="#2980b9" transform="rotate(60 150 150)">DII 60°</text>
+      <!-- DIII 120 -->
+      <line x1="30" y1="150" x2="270" y2="150" stroke="#27ae60" stroke-width="1.6" transform="rotate(120 150 150)"/>
+      <text x="255" y="145" font-size="11" fill="#27ae60" transform="rotate(120 150 150)">DIII 120°</text>
+      <!-- aVR -210/-150 -->
+      <line x1="30" y1="150" x2="270" y2="150" stroke="#8e44ad" stroke-width="1.6" transform="rotate(-150 150 150)"/>
+      <text x="30" y="145" font-size="11" fill="#8e44ad" transform="rotate(-150 150 150)">aVR −150°</text>
+      <!-- aVL -30 -->
+      <line x1="30" y1="150" x2="270" y2="150" stroke="#d35400" stroke-width="1.6" transform="rotate(-30 150 150)"/>
+      <text x="255" y="145" font-size="11" fill="#d35400" transform="rotate(-30 150 150)">aVL −30°</text>
+      <!-- aVF 90 -->
+      <line x1="150" y1="30" x2="150" y2="270" stroke="#16a085" stroke-width="1.6"/>
+      <text x="155" y="272" font-size="11" fill="#16a085">aVF 90°</text>
+      <circle cx="150" cy="150" r="3" fill="#333"/>
+    </svg>
+    <p style="color:#555;font-size:.8rem;margin-top:6px;">Sistema hexaxial de Bailey — las 6 derivaciones del plano frontal, con sus ángulos correspondientes.</p>
+  </div>
+
+  <p>Método rápido: mira la polaridad de DI y aVF, y determina el cuadrante. Se generan casos aleatorios — practica cuantas veces quieras.</p>
+  <div class="axis-case" id="axisCase"></div>
+  <button class="action-btn" onclick="newAxisCase()">🔀 Nuevo caso</button>
+
+  <div class="card" style="margin-top:16px;">
+    <h3>Recordatorio del método</h3>
+    <table>
+      <tr><th>DI</th><th>aVF</th><th>Interpretación</th><th>Rango aproximado</th></tr>
+      <tr><td>Positivo</td><td>Positivo</td><td>Eje normal</td><td>-30° a +90°</td></tr>
+      <tr><td>Positivo</td><td>Negativo</td><td>Desvío a la izquierda</td><td>-30° a -90°</td></tr>
+      <tr><td>Negativo</td><td>Positivo</td><td>Desvío a la derecha</td><td>+90° a +180°</td></tr>
+      <tr><td>Negativo</td><td>Negativo</td><td>Extremo / Indeterminado</td><td>-90° a -180°</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== T3 - QUIZ ===== -->
+<section class="tab" id="t3">
+  <h2 class="tab-title">Quiz de Identificación</h2>
+  <div id="quizArea"></div>
+</section>
+
+<!-- ===== T4 - FLASHCARDS ===== -->
+<section class="tab" id="t4">
+  <h2 class="tab-title">Flashcards</h2>
+  <div class="flashcard-wrap">
+    <div class="flashcard" id="flashcard" onclick="flipCard()">
+      <div class="flashcard-inner">
+        <div class="face front"><img id="fcImg" src=""></div>
+        <div class="face back"><span id="fcBack"></span></div>
+      </div>
+    </div>
+    <div class="flash-nav">
+      <button class="action-btn" onclick="prevCard()">◀ Anterior</button>
+      <span class="flash-counter" id="flashCounter"></span>
+      <button class="action-btn" onclick="nextCard()">Siguiente ▶</button>
+    </div>
+    <p style="font-size:.78rem;color:var(--text-dim);">Frente: la tira de ECG. Toca para ver el nombre y las características.</p>
+  </div>
+</section>
+
+</div>
+<footer>ClinicusMed · Fisiología Cardiovascular · Atlas de ECG</footer>
+
+<script>
+/* ============ DATA ============ */
+const IMG = 'ecg_atlas_img/';
+const rhythms = [
+  { key:'nsr', file:'Normal-Sinus-Rhythm-1024x276.jpg', name:'Ritmo Sinusal Normal', badge:'normal',
+    fc:'60-100 lpm', reg:'Regular', pWave:'Presente, positiva, precede a cada QRS', pr:'0,12-0,20s', qrs:'Estrecho (<0,12s)',
+    info:'Ritmo originado en el nodo sinusal, patrón de referencia normal. Cada QRS es precedido por una onda P con morfología constante.' },
+  { key:'stachy', file:'Sinus-Tachycardia-1-1024x281.jpg', name:'Taquicardia Sinusal', badge:'atencion',
+    fc:'>100 lpm', reg:'Regular', pWave:'Presente, normal', pr:'Normal', qrs:'Estrecho',
+    info:'Misma morfología que el ritmo sinusal, con frecuencia >100 lpm. Causas: fiebre, ansiedad, hipovolemia, hipertiroidismo, dolor, ejercicio.' },
+  { key:'sbrady', file:'Sinus-Bradycardia-1-1024x285.jpg', name:'Bradicardia Sinusal', badge:'atencion',
+    fc:'<60 lpm', reg:'Regular', pWave:'Presente, normal', pr:'Normal', qrs:'Estrecho',
+    info:'Frecuencia sinusal <60 lpm con morfología normal. Frecuente en atletas entrenados; también puede indicar disfunción del nodo sinusal o efecto de fármacos (betabloqueantes).' },
+  { key:'afib', file:'Atrial-Fibrillation-1024x282.jpg', name:'Fibrilación Atrial', badge:'atencion',
+    fc:'Variable (respuesta ventricular)', reg:'Irregularmente irregular', pWave:'Ausente (línea fibrilatoria "f")', pr:'No medible', qrs:'Estrecho',
+    info:'Ausencia de ondas P organizadas, reemplazadas por una línea de base ondulante. Los intervalos R-R son irregularmente irregulares. Riesgo de trombos auriculares y ACV.' },
+  { key:'aflutter', file:'Atrial-Flutter-1024x282.jpg', name:'Flutter Atrial', badge:'atencion',
+    fc:'Auricular ~250-350, ventricular variable', reg:'Regular (con conducción fija)', pWave:'Ondas "F" en diente de sierra', pr:'No aplica', qrs:'Estrecho',
+    info:'Ondas de flutter en patrón de "diente de sierra", muy características en derivaciones inferiores (DII, DIII, aVF). Conducción AV frecuentemente fija (2:1, 3:1, 4:1).' },
+  { key:'svt', file:'Supraventricular-Tachycardia-SVT-1024x284.jpg', name:'Taquicardia Supraventricular (SVT)', badge:'atencion',
+    fc:'150-250 lpm', reg:'Regular', pWave:'Ausente o escondida en el QRS/T', pr:'No medible', qrs:'Estrecho',
+    info:'Frecuencia muy rápida y regular, de origen por encima de los ventrículos. Incluye taquicardia sinusal, fibrilación y flutter atrial dentro del término "supraventricular".' },
+  { key:'vtach', file:'Ventricular-Tachycardia-1024x287.jpg', name:'Taquicardia Ventricular', badge:'emergencia',
+    fc:'150-200 lpm', reg:'Regular', pWave:'Ausente / disociada', pr:'No aplica', qrs:'Ancho (>0,12s), bizarro',
+    info:'Ritmo de origen ventricular, QRS ancho y de morfología bizarra, frecuencia rápida y regular. Es una emergencia médica — puede degenerar en fibrilación ventricular.' },
+  { key:'vfib', file:'Ventricular-Fibrillation-1024x284.jpg', name:'Fibrilación Ventricular', badge:'emergencia',
+    fc:'Caótica, no medible', reg:'Totalmente irregular', pWave:'Ausente', pr:'No aplica', qrs:'No identificable',
+    info:'Actividad eléctrica caótica y desorganizada, sin complejos QRS identificables. Ausencia de gasto cardíaco efectivo — requiere desfibrilación inmediata.' },
+  { key:'torsades', file:'Torsades-Des-Pointes-1024x282.jpg', name:'Torsades de Pointes', badge:'emergencia',
+    fc:'150-250 lpm', reg:'Irregular', pWave:'Ausente', pr:'No aplica', qrs:'Ancho, amplitud oscilante ("girando sobre un eje")',
+    info:'Variante de taquicardia ventricular polimórfica, asociada a QT prolongado. La amplitud de los QRS "gira" alrededor de la línea isoeléctrica. Puede degenerar en fibrilación ventricular.' },
+  { key:'bav1', file:'1st-Degree-Heart-Block-1024x285.jpg', name:'BAV 1er Grado', badge:'atencion',
+    fc:'60-100 lpm', reg:'Regular', pWave:'Presente, normal', pr:'Prolongado (>0,20s), constante', qrs:'Estrecho',
+    info:'Todas las ondas P conducen, pero con un intervalo PR constantemente prolongado. Generalmente benigno, por retraso de conducción en el nodo AV.' },
+  { key:'bav2', file:'2nd-Degree-Type-II-AV-Block-1024x287.jpg', name:'BAV 2º Grado (Mobitz II)', badge:'emergencia',
+    fc:'Variable, frecuentemente lenta', reg:'Puede ser irregular', pWave:'Presente; algunas NO conducen (QRS ausente)', pr:'Constante en los latidos conducidos', qrs:'Puede ser ancho',
+    info:'Bloqueo súbito e intermitente de la conducción AV, sin el alargamiento progresivo típico del Mobitz I. Mayor riesgo de progresión a BAV completo — requiere atención inmediata.' },
+  { key:'bav3', file:'3rd-Degree-Heart-Block-1024x287.jpg', name:'BAV 3er Grado (Completo)', badge:'emergencia',
+    fc:'Auricular normal / ventricular lento (escape)', reg:'P y QRS regulares, pero independientes', pWave:'Presente, disociada del QRS', pr:'Variable (sin relación)', qrs:'Puede ser ancho (ritmo de escape)',
+    info:'Disociación auriculoventricular completa: las ondas P laten a su propio ritmo, y los QRS laten a su propio ritmo de escape, sin relación entre ellos. Frecuentemente requiere marcapasos.' },
+  { key:'asystole', file:'Asystole-1024x288.jpg', name:'Asistolia', badge:'emergencia',
+    fc:'0', reg:'—', pWave:'Ausente', pr:'No aplica', qrs:'Ausente',
+    info:'Ausencia total de actividad eléctrica cardíaca organizada — línea isoeléctrica. Paro cardíaco; requiere reanimación cardiopulmonar inmediata.' },
+  { key:'stemi', file:'Sinus-Inferior-AMI-with-ST-Elevation-1024x296.jpg', name:'IAM Inferior con Supra de ST', badge:'emergencia',
+    fc:'Variable', reg:'Regular (base sinusal)', pWave:'Presente', pr:'Normal', qrs:'Estrecho, con elevación del segmento ST',
+    info:'Elevación del segmento ST en derivaciones inferiores (DII, DIII, aVF), indicando infarto agudo de miocardio de pared inferior — territorio de la arteria coronaria derecha.' },
+];
+
+/* ============ XP ============ */
+let xp = parseInt(localStorage.getItem('ecg_atlas_xp') || '0');
+function updateXP(){
+  document.getElementById('xpLabel').textContent = xp + ' XP';
+  document.getElementById('lvlLabel').textContent = 'Nivel ' + (Math.floor(xp/100)+1);
+  localStorage.setItem('ecg_atlas_xp', xp);
+}
+function addXP(n){ xp+=n; updateXP(); }
+updateXP();
+
+/* ============ TABS ============ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    addXP(3);
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+/* ============ ATLAS ============ */
+const atlasGrid = document.getElementById('atlasGrid');
+rhythms.forEach(r=>{
+  const card = document.createElement('div');
+  card.className = 'atlas-card';
+  card.innerHTML = `<img src="${IMG}${r.file}" alt="${r.name}"><div class="name">${r.name}</div><span class="badge ${r.badge}">${r.badge==='emergencia'?'Emergencia':r.badge==='atencion'?'Atención':'Normal'}</span>`;
+  card.onclick = ()=>openDetail(r);
+  atlasGrid.appendChild(card);
+});
+function openDetail(r){
+  document.getElementById('atlasGrid').style.display='none';
+  document.getElementById('detailView').classList.add('active');
+  document.getElementById('detailImg').src = IMG+r.file;
+  document.getElementById('detailName').textContent = r.name;
+  document.getElementById('detailTable').innerHTML = `
+    <tr><th>FC</th><td>${r.fc}</td></tr>
+    <tr><th>Regularidad</th><td>${r.reg}</td></tr>
+    <tr><th>Onda P</th><td>${r.pWave}</td></tr>
+    <tr><th>Intervalo PR</th><td>${r.pr}</td></tr>
+    <tr><th>QRS</th><td>${r.qrs}</td></tr>`;
+  document.getElementById('detailInfoBox').innerHTML = `<div class="lbl">🩺 Características</div><p style="margin-top:4px;">${r.info}</p>`;
+  addXP(6);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeDetail(){
+  document.getElementById('atlasGrid').style.display='grid';
+  document.getElementById('detailView').classList.remove('active');
+}
+
+/* ============ AXIS TRAINER ============ */
+const axisCases = [
+  {di:1, avf:1, answer:'Normal', explain:'DI positivo y aVF positivo → eje eléctrico normal (entre -30° y +90°).'},
+  {di:1, avf:-1, answer:'Desvío a la izquierda', explain:'DI positivo y aVF negativo → desvío del eje a la izquierda (HBAE, HVI, entre otras causas).'},
+  {di:-1, avf:1, answer:'Desvío a la derecha', explain:'DI negativo y aVF positivo → desvío del eje a la derecha (HVD, TEP, EPOC, entre otras causas).'},
+  {di:-1, avf:-1, answer:'Extremo / Indeterminado', explain:'DI negativo y aVF negativo → eje extremo o indeterminado.'},
+];
+let currentAxisCase = null;
+function miniLead(polarity){
+  const y1 = polarity>0 ? 38 : 12;
+  return `<svg width="90" height="50" viewBox="0 0 90 50">
+    <line x1="0" y1="25" x2="90" y2="25" stroke="#ccc" stroke-width="1"/>
+    <path d="M0 25 L30 25 L38 ${polarity>0?38:12} L48 ${polarity>0?8:42} L58 25 L90 25" fill="none" stroke="#1a7a3c" stroke-width="2.5"/>
+  </svg>`;
+}
+function newAxisCase(){
+  currentAxisCase = axisCases[Math.floor(Math.random()*axisCases.length)];
+  const c = currentAxisCase;
+  document.getElementById('axisCase').innerHTML = `
+    <div class="axis-leads">
+      <div class="axis-lead"><div class="lbl">DI</div><div style="background:#fff;border-radius:8px;">${miniLead(c.di)}</div></div>
+      <div class="axis-lead"><div class="lbl">aVF</div><div style="background:#fff;border-radius:8px;">${miniLead(c.avf)}</div></div>
+    </div>
+    <div class="quad-btns" id="quadBtns">
+      <button onclick="answerAxis(this,'Normal')">Eje normal</button>
+      <button onclick="answerAxis(this,'Desvío a la izquierda')">Desvío a la izquierda</button>
+      <button onclick="answerAxis(this,'Desvío a la derecha')">Desvío a la derecha</button>
+      <button onclick="answerAxis(this,'Extremo / Indeterminado')">Extremo / Indeterminado</button>
+    </div>
+    <div id="axisFeedback"></div>
+  `;
+}
+function answerAxis(btn, chosen){
+  const c = currentAxisCase;
+  const correct = chosen === c.answer;
+  document.querySelectorAll('#quadBtns button').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct){
+    document.querySelectorAll('#quadBtns button').forEach(b=>{ if(b.textContent===c.answer) b.classList.add('correct'); });
+  }
+  document.getElementById('axisFeedback').innerHTML = `<div class="box ${correct?'gold':'danger'}" style="margin-top:10px;"><div class="lbl">${correct?'✔ Correcto':'✘ Incorrecto'}</div><p style="margin-top:4px;">${c.explain}</p></div>`;
+  addXP(correct?15:4);
+}
+newAxisCase();
+
+/* ============ QUIZ ============ */
+let quizPool = [];
+function buildQuiz(){
+  quizPool = [...rhythms].sort(()=>Math.random()-0.5).slice(0,10);
+}
+let qIdx=0, qScore=0, qAnswered=false;
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIdx>=quizPool.length){
+    area.innerHTML = `<div class="card" style="text-align:center;"><h3 style="font-size:1.5rem;color:var(--gold-soft);">${qScore} / ${quizPool.length}</h3><p>${Math.round(qScore/quizPool.length*100)}% de aciertos</p><button class="action-btn" onclick="buildQuiz();qIdx=0;qScore=0;renderQuiz();">Reintentar con otras tiras</button></div>`;
+    addXP(50);
+    return;
+  }
+  const item = quizPool[qIdx];
+  qAnswered=false;
+  const wrongOpts = rhythms.filter(r=>r.key!==item.key).sort(()=>Math.random()-0.5).slice(0,3);
+  const opts = [...wrongOpts, item].sort(()=>Math.random()-0.5);
+  let html = `<div class="quiz-progress"><span>Pregunta ${qIdx+1} / ${quizPool.length}</span><span>Puntaje: ${qScore}</span></div>`;
+  html += `<div class="card"><div class="detail-img-wrap"><img src="${IMG}${item.file}" style="width:100%;"></div>`;
+  html += `<p style="font-weight:700;margin-bottom:10px;">¿Cuál es este ritmo?</p>`;
+  opts.forEach(o=>{ html += `<button class="option" onclick="answerQuiz(this,'${o.key}')">${o.name}</button>`; });
+  html += `<div id="qFeedback"></div></div>`;
+  html += `<button class="action-btn" id="qNextBtn" disabled onclick="qIdx++;renderQuiz();">Siguiente →</button>`;
+  area.innerHTML = html;
+}
+function answerQuiz(btn, key){
+  if(qAnswered) return; qAnswered=true;
+  const item = quizPool[qIdx];
+  const opts = document.querySelectorAll('.option');
+  const correct = key===item.key;
+  btn.classList.add(correct?'correct':'wrong');
+  opts.forEach(o=>{ if(o.textContent===item.name) o.classList.add('correct'); });
+  if(correct) qScore++;
+  document.getElementById('qFeedback').innerHTML = `<div class="feedback ${correct?'correct':'wrong'}">${correct?'✔ Correcto':'✘ Incorrecto — era '+item.name}</div>`;
+  document.getElementById('qNextBtn').disabled=false;
+  addXP(correct?15:3);
+}
+buildQuiz();
+renderQuiz();
+
+/* ============ FLASHCARDS ============ */
+let fcIdx=0;
+function renderFC(){
+  const r = rhythms[fcIdx];
+  document.getElementById('fcImg').src = IMG+r.file;
+  document.getElementById('fcBack').innerHTML = `<b style="color:var(--gold-soft);font-family:'Lora',serif;">${r.name}</b><br><br>FC: ${r.fc}<br>Regularidad: ${r.reg}<br>Onda P: ${r.pWave}<br>QRS: ${r.qrs}`;
+  document.getElementById('flashCounter').textContent = (fcIdx+1)+' / '+rhythms.length;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); addXP(2); }
+function nextCard(){ fcIdx=(fcIdx+1)%rhythms.length; renderFC(); }
+function prevCard(){ fcIdx=(fcIdx-1+rhythms.length)%rhythms.length; renderFC(); }
+renderFC();
+</script>
+</body>
+</html>
