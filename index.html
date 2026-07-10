@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClinicusMed — Resumos e Simulados por Semestre</title>
+<title>ClinicusMed — Guias de Estudo e Simulados por Semestre</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -317,8 +317,26 @@ footer{
   padding:30px 24px 50px;
   color:var(--muted);
   font-size:12.5px;
+  position:relative;
+  z-index:1;
 }
 footer b{color:var(--green-light);}
+
+.watermark-c{
+  font-family:'Lora',serif;
+  font-weight:700;
+  font-size:min(40vw, 380px);
+  line-height:1;
+  text-align:center;
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  opacity:.05;
+  margin-top:-40px;
+  user-select:none;
+  pointer-events:none;
+}
 
 /* ===== FAQ ===== */
 .faq-section{margin:36px 0 10px;}
@@ -455,8 +473,8 @@ footer b{color:var(--green-light);}
 <div class="hero" style="margin-top:40px">
   <img src="assets/logo-hero.png" alt="ClinicusMed" style="width:92px;height:92px;border-radius:50%;margin-bottom:18px;">
   <div class="eyebrow">Universidad Interamericana · Carrera de Medicina</div>
-  <h1>Resumos objetivos. <em>Simulados que cobram de verdade.</em></h1>
-  <p class="lead">Material organizado por semestre, direto da sua malla curricular. O resumo te dá a base — o simulado é onde você descobre se realmente sabe, antes da prova te perguntar.</p>
+  <h1>Guias de estudo objetivos. <em>Simulados que cobram de verdade.</em></h1>
+  <p class="lead">O guia te dá o caminho — o simulado prova que você chegou lá. Material organizado por semestre, direto da sua malla curricular, feito por quem está na mesma corrida que você.</p>
   <div class="social-proof-badge">🔥 +100 alunos já estudando com a plataforma</div>
   <div class="hero-badges">
     <span class="hero-badge">10 semestres mapeados</span>
@@ -479,8 +497,8 @@ footer b{color:var(--green-light);}
       <p>Use o botão <b>"Já comprei — ver meu acesso"</b> no topo da página, digite o email que você usou no pagamento, e os links dos seus materiais aparecem na hora.</p>
     </details>
     <details class="faq-item">
-      <summary>Posso comprar só o Resumo ou só o Simulado?</summary>
-      <p>Sim! Resumo e Simulado são vendidos separados. Se quiser os dois com desconto, escolha a opção "Combo" dentro da matéria.</p>
+      <summary>Posso comprar só o Guia de Estudo ou só o Simulado?</summary>
+      <p>Sim! Guia de Estudo e Simulado são vendidos separados. Se quiser os dois com desconto, escolha a opção "Combo" dentro da matéria.</p>
     </details>
     <details class="faq-item">
       <summary>Quanto tempo demora a liberação do acesso?</summary>
@@ -497,6 +515,7 @@ footer b{color:var(--green-light);}
   </div>
 </div>
 
+<div class="watermark-c" aria-hidden="true">C</div>
 <footer>Conteúdo produzido por <b>Dr. Cristiano Ribeiro da Silva</b> · Já pagou? Use o botão "Já comprei" no topo da página.</footer>
 
 <div class="modal-bg" id="pixModalBg">
@@ -600,7 +619,7 @@ function buildAccessIndex(data){
       label = parts[0].trim();
       url = parts.slice(1).join('::').trim();
     } else {
-      const prefixo = tipo === 'resumo' ? 'Resumo' : 'Simulado';
+      const prefixo = tipo === 'resumo' ? 'Guia de Estudo' : 'Simulado';
       label = prefixo+' - '+materiaNome+(i>0?' (parte '+(i+1)+')':'');
       url = arq;
     }
@@ -744,9 +763,9 @@ function renderProdutoRows(m){
   const ambosDisponiveis = m.resumo.disponivel && m.simulado.disponivel;
   return `
     <div class="produto-row">
-      <span class="produto-label"><span class="tagdot"></span>Resumo</span>
+      <span class="produto-label"><span class="tagdot"></span>Guia de Estudo</span>
       ${m.resumo.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Resumo - ${m.nome.replace(/'/g,"\\'")}', ${m.resumo.preco})">Comprar</button></span>`
+        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Guia de Estudo - ${m.nome.replace(/'/g,"\\'")}', ${m.resumo.preco})">Comprar</button></span>`
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     <div class="produto-row">
@@ -756,7 +775,7 @@ function renderProdutoRows(m){
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     ${ambosDisponiveis ? `<div class="produto-row combo-row">
-      <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (resumo + simulado)</span>
+      <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (guia + simulado)</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)})">Comprar combo</button></span>
     </div>` : ``}`;
 }
@@ -779,7 +798,7 @@ function renderCatalogo(data){
 
     if(sem.combo.disponivel){
       html += `<div class="combo-banner">
-        <div class="ctext"><b>Combo completo · ${sem.semestre}º Semestre</b><span>Todas as matérias do semestre (resumos + simulados)</span></div>
+        <div class="ctext"><b>Combo completo · ${sem.semestre}º Semestre</b><span>Todas as matérias do semestre (guias + simulados)</span></div>
         <button class="btn-comprar" onclick="abrirPagamentoPix('Combo ${sem.semestre}º Semestre', ${sem.combo.preco})">Comprar combo${sem.combo.preco? ' — R$ '+sem.combo.preco:''}</button>
       </div>`;
     }
@@ -806,7 +825,7 @@ function renderCatalogo(data){
             <div class="subject-icon">${meta.icon}</div>
             <div class="subject-info">
               <p class="subject-title">${m.nome} ${isBestseller(m.nome) ? bestsellerBadge() : ''}</p>
-              <p class="subject-sub">${m.resumo.disponivel && m.simulado.disponivel ? 'Resumo e simulado disponíveis' : m.resumo.disponivel ? 'Resumo disponível' : m.simulado.disponivel ? 'Simulado disponível' : 'Em breve'}</p>
+              <p class="subject-sub">${m.resumo.disponivel && m.simulado.disponivel ? 'Guia de Estudo e simulado disponíveis' : m.resumo.disponivel ? 'Guia de Estudo disponível' : m.simulado.disponivel ? 'Simulado disponível' : 'Em breve'}</p>
             </div>
           </div>
           <div class="subject-body"><div class="subject-body-inner">${renderProdutoRows(m)}</div></div>
@@ -904,7 +923,7 @@ document.getElementById('modalCheck').onclick = async ()=>{
         grupos.forEach((g, materia)=>{
           const nArq = g.resumo.length + g.simulado.length;
           let body = '';
-          if(g.resumo.length) body += `<div class="access-sub"><div class="access-sub-label">📖 Resumo</div><div class="access-chips">${renderChips(g.resumo,'resumo')}</div></div>`;
+          if(g.resumo.length) body += `<div class="access-sub"><div class="access-sub-label">📖 Guia de Estudo</div><div class="access-chips">${renderChips(g.resumo,'resumo')}</div></div>`;
           if(g.simulado.length) body += `<div class="access-sub"><div class="access-sub-label">📝 Simulado</div><div class="access-chips">${renderChips(g.simulado,'simulado')}</div></div>`;
           gruposHtml += `<details class="access-group">
             <summary><span>${materia}</span><span class="count">${nArq} arquivo${nArq>1?'s':''} <span class="chev">▶</span></span></summary>
