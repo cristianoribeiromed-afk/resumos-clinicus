@@ -74,6 +74,16 @@ a{color:inherit;}
 }
 .hero-badge b{color:var(--gold);}
 
+.social-proof-badge{
+  display:inline-block;
+  background:rgba(31,184,106,.14);
+  border:1px solid var(--green);
+  color:var(--green-light);
+  font-size:13px;font-weight:700;
+  padding:8px 18px;border-radius:30px;
+  margin-bottom:18px;
+}
+
 /* PULSE DIVIDER */
 .pulse-divider{width:100%;max-width:1000px;margin:36px auto;padding:0 24px;}
 .pulse-divider svg{width:100%;height:36px;display:block;}
@@ -254,6 +264,13 @@ a{color:inherit;}
 .prof-item:last-child{margin-bottom:0;}
 .prof-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .prof-item-nome{font-size:13.5px;font-weight:600;color:#fff;}
+.popular-badge{
+  background:rgba(232,179,74,.18);color:var(--gold);
+  border:1px solid var(--gold-dark);
+  font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;
+  margin-left:6px;text-transform:uppercase;letter-spacing:.02em;
+  display:inline-block;vertical-align:middle;
+}
 .prof-item .produto-row{padding:5px 0;}
 
 .btn-outline{
@@ -424,7 +441,7 @@ footer b{color:var(--green-light);}
 }
 #accessBar button{background:none;border:none;color:var(--green-light);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;}
 .brand-mark{display:flex;align-items:center;gap:8px;}
-.brand-mark img{width:26px;height:26px;border-radius:50%;display:block;}
+.brand-mark img{width:36px;height:36px;border-radius:50%;display:block;}
 .brand-mark span{color:var(--muted);font-weight:600;letter-spacing:.02em;}
 </style>
 </head>
@@ -436,10 +453,11 @@ footer b{color:var(--green-light);}
 </div>
 
 <div class="hero" style="margin-top:40px">
-  <img src="assets/logo-hero.png" alt="ClinicusMed" style="width:64px;height:64px;border-radius:50%;margin-bottom:18px;">
+  <img src="assets/logo-hero.png" alt="ClinicusMed" style="width:92px;height:92px;border-radius:50%;margin-bottom:18px;">
   <div class="eyebrow">Universidad Interamericana · Carrera de Medicina</div>
   <h1>Resumos objetivos. <em>Simulados que cobram de verdade.</em></h1>
   <p class="lead">Material organizado por semestre, direto da sua malla curricular. O resumo te dá a base — o simulado é onde você descobre se realmente sabe, antes da prova te perguntar.</p>
+  <div class="social-proof-badge">🔥 +100 alunos já estudando com a plataforma</div>
   <div class="hero-badges">
     <span class="hero-badge">10 semestres mapeados</span>
     <span class="hero-badge"><b>Simulados</b> com correção imediata</span>
@@ -710,6 +728,17 @@ function subjectGroupKey(nome){
   return nome.trim().split(' ')[0].toLowerCase();
 }
 
+const BESTSELLER_MATERIAS = [
+  'Bioquímica — Prof. Deborah',
+  'Fisiología — Prof. Lisandro',
+  'Genética — Dr. Saldivar',
+  'Genética — Prof. Geovani',
+  'Microbiología I',
+  'Inmunología',
+];
+function isBestseller(nome){ return BESTSELLER_MATERIAS.includes(nome); }
+function bestsellerBadge(){ return `<span class="popular-badge">🔥 Popular</span>`; }
+
 function renderProdutoRows(m){
   const ambosDisponiveis = m.resumo.disponivel && m.simulado.disponivel;
   return `
@@ -775,7 +804,7 @@ function renderCatalogo(data){
           <div class="subject-head no-toggle">
             <div class="subject-icon">${meta.icon}</div>
             <div class="subject-info">
-              <p class="subject-title">${m.nome}</p>
+              <p class="subject-title">${m.nome} ${isBestseller(m.nome) ? bestsellerBadge() : ''}</p>
               <p class="subject-sub">${m.resumo.disponivel && m.simulado.disponivel ? 'Resumo e simulado disponíveis' : m.resumo.disponivel ? 'Resumo disponível' : m.simulado.disponivel ? 'Simulado disponível' : 'Em breve'}</p>
             </div>
           </div>
@@ -795,7 +824,7 @@ function renderCatalogo(data){
           <div class="subject-body"><div class="subject-body-inner">`;
         membros.forEach(m=>{
           html += `<div class="prof-item">
-            <div class="prof-item-head"><span class="prof-item-nome">${m.nome}</span></div>
+            <div class="prof-item-head"><span class="prof-item-nome">${m.nome}</span>${isBestseller(m.nome) ? bestsellerBadge() : ''}</div>
             ${renderProdutoRows(m)}
           </div>`;
         });
