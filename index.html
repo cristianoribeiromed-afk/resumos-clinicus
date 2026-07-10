@@ -267,6 +267,32 @@ a{color:inherit;}
 }
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
 
+.combo-row{
+  background:var(--accent-bg);
+  border:1.5px solid var(--accent);
+  border-radius:10px;
+  margin-top:8px;
+  padding:10px 12px !important;
+}
+.combo-row .produto-label{color:var(--text);font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.combo-badge{
+  background:var(--accent);color:var(--panel);
+  font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.03em;
+}
+.btn-combo{
+  background:var(--accent);
+  color:var(--panel);
+  border:none;
+  font-size:13px;
+  font-weight:800;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-combo:hover{opacity:.88;}
+
 footer{
   text-align:center;
   padding:30px 24px 50px;
@@ -308,7 +334,17 @@ footer b{color:var(--green-light);}
   background:var(--panel);border:1px solid var(--border);border-radius:14px;
   padding:24px;max-width:380px;width:100%;
   max-height:85vh;overflow-y:auto;
+  position:relative;
 }
+.modal-x{
+  position:absolute;top:14px;right:14px;
+  background:var(--panel2);border:1px solid var(--border);
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:16px;cursor:pointer;
+  line-height:1;
+}
+.modal-x:hover{color:#fff;border-color:var(--muted);}
 .modal h3{margin:0 0 8px;font-size:17px;color:#fff;}
 .modal p{color:var(--muted);font-size:13px;margin:0 0 14px;}
 .modal input{
@@ -441,6 +477,7 @@ footer b{color:var(--green-light);}
 
 <div class="modal-bg" id="pixModalBg">
   <div class="modal" style="max-width:420px;">
+    <span class="modal-x" id="pixModalX">✕</span>
     <h3 id="pixItemNome">Pagamento via PIX</h3>
     <p id="pixValor" style="color:var(--green-light);font-size:20px;font-weight:700;font-family:'DM Mono',monospace;"></p>
     <div style="text-align:center;margin-bottom:14px;">
@@ -460,6 +497,7 @@ footer b{color:var(--green-light);}
 
 <div class="modal-bg" id="modalBg">
   <div class="modal">
+    <span class="modal-x" id="modalX">✕</span>
     <h3>Ver meu acesso</h3>
     <p>Digite o email que você usou para fazer o pagamento.</p>
     <input type="email" id="emailInput" placeholder="seuemail@exemplo.com">
@@ -514,6 +552,7 @@ function abrirPagamentoPix(itemNome, preco){
   document.getElementById('pixModalBg').classList.add('show');
 }
 document.getElementById('pixCloseBtn').onclick = ()=>document.getElementById('pixModalBg').classList.remove('show');
+document.getElementById('pixModalX').onclick = ()=>document.getElementById('pixModalBg').classList.remove('show');
 document.getElementById('pixCopyBtn').onclick = ()=>{
   const ta = document.getElementById('pixPayload');
   ta.select(); document.execCommand('copy');
@@ -613,6 +652,49 @@ const SUBJECT_META = {
   'inmunologia':   {icon:'🛡️', accent:'inmunologia'},
   'biofísica':     {icon:'⚡', accent:'biofisica'},
   'biofisica':     {icon:'⚡', accent:'biofisica'},
+  'histología':    {icon:'🔬', accent:'microbiologia'},
+  'histologia':    {icon:'🔬', accent:'microbiologia'},
+  'historia':      {icon:'📜', accent:'default'},
+  'biología':      {icon:'🧫', accent:'bioquimica'},
+  'biologia':      {icon:'🧫', accent:'bioquimica'},
+  'lengua':        {icon:'📝', accent:'default'},
+  'embriología':   {icon:'🐣', accent:'fisiologia'},
+  'embriologia':   {icon:'🐣', accent:'fisiologia'},
+  'anatomía':      {icon:'🦴', accent:'fisiologia'},
+  'anatomia':      {icon:'🦴', accent:'fisiologia'},
+  'metodología':   {icon:'📐', accent:'default'},
+  'metodologia':   {icon:'📐', accent:'default'},
+  'bioestadística':{icon:'📊', accent:'default'},
+  'bioestadistica':{icon:'📊', accent:'default'},
+  'medicina':      {icon:'🩺', accent:'default'},
+  'psicología':    {icon:'🧠', accent:'genetica'},
+  'psicologia':    {icon:'🧠', accent:'genetica'},
+  'guaraní':       {icon:'🗣️', accent:'default'},
+  'guarani':       {icon:'🗣️', accent:'default'},
+  'inglés':        {icon:'🗣️', accent:'default'},
+  'ingles':        {icon:'🗣️', accent:'default'},
+  'bioética':      {icon:'⚖️', accent:'default'},
+  'bioetica':      {icon:'⚖️', accent:'default'},
+  'nutrición':     {icon:'🥗', accent:'bioquimica'},
+  'nutricion':     {icon:'🥗', accent:'bioquimica'},
+  'epidemiología': {icon:'📈', accent:'microbiologia'},
+  'epidemiologia': {icon:'📈', accent:'microbiologia'},
+  'farmacología':  {icon:'💊', accent:'bioquimica'},
+  'farmacologia':  {icon:'💊', accent:'bioquimica'},
+  'semiología':    {icon:'🩻', accent:'fisiologia'},
+  'semiologia':    {icon:'🩻', accent:'fisiologia'},
+  'fisiopatología':{icon:'🫁', accent:'fisiologia'},
+  'fisiopatologia':{icon:'🫁', accent:'fisiologia'},
+  'neurología':    {icon:'🧠', accent:'genetica'},
+  'neurologia':    {icon:'🧠', accent:'genetica'},
+  'cirugía':       {icon:'🔪', accent:'default'},
+  'cirugia':       {icon:'🔪', accent:'default'},
+  'pediatría':     {icon:'🧸', accent:'fisiologia'},
+  'pediatria':     {icon:'🧸', accent:'fisiologia'},
+  'ginecología':   {icon:'🤰', accent:'default'},
+  'ginecologia':   {icon:'🤰', accent:'default'},
+  'oncología':     {icon:'🎗️', accent:'genetica'},
+  'oncologia':     {icon:'🎗️', accent:'genetica'},
 };
 function subjectMeta(nome){
   const first = nome.trim().split(' ')[0].toLowerCase();
@@ -637,9 +719,9 @@ function renderProdutoRows(m){
         ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirPagamentoPix('Simulado - ${m.nome.replace(/'/g,"\\'")}', ${m.simulado.preco})">Comprar</button></span>`
         : `<span class="embreve-tag">em breve</span>`}
     </div>
-    ${ambosDisponiveis ? `<div class="produto-row" style="border-top:1px dashed var(--border);">
-      <span class="produto-label" style="color:var(--green-light)">⭐ Combo (resumo + simulado)</span>
-      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)}</span><button class="btn-outline" onclick="abrirPagamentoPix('Combo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)})">Ver combo</button></span>
+    ${ambosDisponiveis ? `<div class="produto-row combo-row">
+      <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (resumo + simulado)</span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)})">Comprar combo</button></span>
     </div>` : ``}`;
 }
 
@@ -734,6 +816,7 @@ const ACESSOS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFHzFc
 
 document.getElementById('acessoBtn').onclick = ()=>document.getElementById('modalBg').classList.add('show');
 document.getElementById('modalClose').onclick = ()=>document.getElementById('modalBg').classList.remove('show');
+document.getElementById('modalX').onclick = ()=>document.getElementById('modalBg').classList.remove('show');
 document.getElementById('modalCheck').onclick = async ()=>{
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   const msg = document.getElementById('modalMsg');
