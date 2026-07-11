@@ -738,7 +738,7 @@ function buildAccessIndex(data){
         const etapa = m.etapas[etapaNome];
         if(!etapa) return;
         const itens = [];
-        const labelMateria = etapaNome === 'Finais' ? m.nome : m.nome+' - '+etapaNome;
+        const labelMateria = etapaNome === 'Final' ? m.nome : m.nome+' - '+etapaNome;
         if(etapa.resumo.disponivel && etapa.resumo.arquivo){
           etapa.resumo.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
             itens.push(parseEntry(arq, i, 'resumo', labelMateria));
@@ -750,9 +750,9 @@ function buildAccessIndex(data){
           });
         }
         if(itens.length){
-          /* Finais mantém o código antigo (sem sufixo) para nao quebrar acesso ja liberado.
+          /* Final mantém o código antigo (sem sufixo) para nao quebrar acesso ja liberado.
              P1/P2 usam sufixo proprio, ja que sao produtos novos. */
-          const keyBase = etapaNome === 'Finais' ? base : base+'-'+slugify(etapaNome);
+          const keyBase = etapaNome === 'Final' ? base : base+'-'+slugify(etapaNome);
           idx[keyBase+'-resumo'] = itens.filter(it=>it.tipo==='resumo');
           idx[keyBase+'-simulado'] = itens.filter(it=>it.tipo==='simulado');
           idx[keyBase+'-combo'] = itens;
@@ -877,8 +877,8 @@ const BESTSELLER_MATERIAS = [
 function isBestseller(nome){ return BESTSELLER_MATERIAS.includes(nome); }
 function bestsellerBadge(){ return `<span class="popular-badge">🔥 Popular</span>`; }
 
-const ETAPA_ORDEM = ['P1', 'P2', 'Finais'];
-const ETAPA_ICON = {'P1':'📁', 'P2':'📁', 'Finais':'📁'};
+const ETAPA_ORDEM = ['P1', 'P2', 'Final'];
+const ETAPA_ICON = {'P1':'📁', 'P2':'📁', 'Final':'📁'};
 
 function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome){
   const ambosDisponiveis = etapa.resumo.disponivel && etapa.simulado.disponivel;
@@ -932,7 +932,7 @@ function renderEtapaFolder(etapaNome, etapa, materiaNome){
 function renderMateriaCard(m, meta){
   const algumDisponivel = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].disponivel);
   const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
-      <span class="produto-label">⭐ Combo completo (P1 + P2 + Finais)</span>
+      <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco})">Comprar</button></span>
     </div>` : '';
   return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open">
