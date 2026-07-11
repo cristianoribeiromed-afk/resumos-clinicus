@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Grátis — Biologia Celular · ClinicusMed</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --purple:#8b6fd8; --accent2:#4fc3d9; --gold:#ffd166; --green:#4ade80; --red:#ff5c6c;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(139,111,216,.14), transparent 40%), radial-gradient(circle at 85% 20%, rgba(74,222,128,.10), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3{font-family:'Lora',Georgia,serif; margin:0 0 .3em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:720px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo-text h1{font-size:1rem; margin:0; background:linear-gradient(90deg,var(--purple),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.7rem; color:var(--text-dim);}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+
+main{max-width:720px; margin:24px auto; padding:0 20px;}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.hero{background:linear-gradient(135deg, rgba(139,111,216,.16), rgba(74,222,128,.10)); border:1px solid var(--border); border-radius:20px; padding:28px; margin-bottom:20px; text-align:center;}
+.hero h2{font-size:1.5rem; margin-bottom:.3em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); background:rgba(139,111,216,.12); border:1px solid rgba(139,111,216,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--accent2)); color:#0d0f16; border:none; padding:14px 30px; border-radius:12px; font-weight:800; cursor:pointer; font-size:1rem; width:100%;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.btn-secondary{background:var(--card-hover); border:1px solid var(--border); color:var(--text); padding:10px 20px; border-radius:10px; cursor:pointer; font-size:.85rem; font-weight:600; width:100%;}
+
+#quizScreen{display:none;}
+.progresslabel{font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.qtxt{font-weight:700; margin-bottom:14px; font-size:1.05rem;}
+.qz-btn{background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:14px; border-radius:10px; width:100%; text-align:left; margin-bottom:8px; cursor:pointer; font-size:.92rem; transition:.15s;}
+.qz-btn:hover{border-color:var(--accent2); background:var(--card-hover);}
+.xpouter{flex:1; background:#0b1120; border-radius:8px; height:12px; overflow:hidden; border:1px solid var(--border); margin:10px 0;}
+.xpinner{height:100%; width:0%; background:linear-gradient(90deg,var(--purple),var(--green)); transition:width .4s;}
+
+#resultScreen{display:none; text-align:center;}
+.result-score{font-size:2.4rem; font-weight:800; background:linear-gradient(90deg,var(--purple),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; margin:10px 0;}
+.result-msg{font-size:1rem; color:var(--text-dim); margin-bottom:20px;}
+.cta-box{background:linear-gradient(135deg, rgba(139,111,216,.18), rgba(255,209,102,.10)); border:1px solid var(--border); border-radius:16px; padding:22px; margin-top:14px; text-align:center;}
+.cta-box h3{color:var(--gold); font-size:1.1rem;}
+.wa-btn{display:inline-block; background:linear-gradient(135deg,#25D366,#1ebe5a); color:#06210f; font-weight:800; padding:13px 26px; border-radius:12px; text-decoration:none; margin-top:12px; font-size:.95rem;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; margin-top:30px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo-text">
+      <h1>ClinicusMed</h1>
+      <span>Quiz gratuito de treino</span>
+    </div>
+    <div class="xp-badge"><span class="flame">🔥</span><span id="scoreLive">0 acertos</span></div>
+  </div>
+</header>
+
+<main>
+  <div id="startScreen">
+    <div class="hero">
+      <span class="eyebrow">Amostra grátis</span>
+      <h2>🧬 Quiz de Biologia Celular</h2>
+      <p>20 perguntas rápidas para você testar seu nível antes da Final de Biología I. Sem cadastro, sem pegadinha — é só clicar e responder.</p>
+    </div>
+    <div class="card">
+      <p style="margin-top:0;">Este quiz cobre os temas mais cobrados da prova: células procariontes/eucariontes, ácidos nucleicos, membrana plasmática, organelas, núcleo e ciclo celular.</p>
+      <p>No final você vê sua pontuação e, se quiser aprofundar, te mostramos o Guia de Estudo e o Simulado completo (com banco de mais de 100 questões e justificativa em cada uma).</p>
+      <button class="btn-primary" onclick="startQuiz()">Começar quiz (20 perguntas)</button>
+    </div>
+  </div>
+
+  <div id="quizScreen">
+    <div class="card">
+      <p class="progresslabel" id="progLabel">Pergunta 1/20</p>
+      <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+      <p class="qtxt" id="qtxt"></p>
+      <div id="optsArea"></div>
+    </div>
+  </div>
+
+  <div id="resultScreen">
+    <div class="card">
+      <span class="eyebrow">Resultado</span>
+      <div class="result-score" id="scoreText">0/20</div>
+      <p class="result-msg" id="resultMsg"></p>
+      <button class="btn-secondary" onclick="startQuiz()">Refazer quiz</button>
+      <div class="cta-box">
+        <h3>Quer o Guia de Estudo completo + Simulado com 100+ questões?</h3>
+        <p style="margin-bottom:0;">A gente organiza toda a matéria de Biología I (P1, P2 e Final) pronta pra revisar, com flashcards, quiz e justificativa em cada questão.</p>
+        <a class="wa-btn" href="https://wa.me/?text=Ol%C3%A1!%20Fiz%20o%20quiz%20gr%C3%A1tis%20de%20Biologia%20e%20quero%20saber%20mais%20sobre%20o%20Guia%20de%20Estudo%20completo%20do%20ClinicusMed." target="_blank" rel="noopener">Quero conhecer no WhatsApp →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>ClinicusMed — Guias de Estudo e Simulados para medicina. Este quiz é uma amostra gratuita.</footer>
+</main>
+
+<script>
+const bank = [{"q": "Quantas membranas possuem os lisossomos e os peroxissomos?", "opts": ["Duas membranas, como a mitocôndria", "Uma única membrana", "Nenhuma membrana", "Três membranas concêntricas"], "correct": 1, "just": "Lisossomos e peroxissomos possuem uma única membrana — a dupla membrana é exclusiva de mitocôndrias e núcleo.", "n": 1}, {"q": "Qual é a função do RNAt (RNA transportador) na síntese proteica?", "opts": ["Catalisar a replicação do DNA", "Formar a estrutura do ribossomo", "Trazer o aminoácido correspondente ao códon do RNAm", "Armazenar a informação genética permanentemente"], "correct": 2, "just": "O RNAt reconhece o códon do RNAm através do anticódon e traz o aminoácido correspondente para ser incorporado à cadeia polipeptídica.", "n": 2}, {"q": "Qual organela está presente em eucariontes mas ausente em procariontes?", "opts": ["Ribossomos", "Membrana plasmática", "Mitocôndrias", "Parede celular"], "correct": 2, "just": "Procariontes não possuem organelas membranosas (mitocôndrias, RE, Golgi) — todo o metabolismo ocorre no citoplasma ou na membrana plasmática.", "n": 3}, {"q": "Em quais tecidos os desmossomos são particularmente abundantes, dada sua função de resistência mecânica?", "opts": ["Tecido nervoso exclusivamente", "Pele, coração e bexiga — tecidos sujeitos a tensão mecânica", "Tecido adiposo", "Nenhum tecido específico"], "correct": 1, "just": "Desmossomos são especialmente numerosos em tecidos sujeitos a estresse mecânico e tensão, como pele, miocárdio e bexiga.", "n": 4}, {"q": "A endocitose em que a célula engloba partículas sólidas grandes é chamada de:", "opts": ["Pinocitose", "Fagocitose", "Exocitose", "Osmose"], "correct": 1, "just": "Fagocitose é a endocitose de partículas sólidas grandes (ex: macrófagos englobando bactérias); pinocitose é para líquidos/pequenas moléculas.", "n": 5}, {"q": "O que caracteriza o transporte passivo através da membrana plasmática?", "opts": ["Necessita de ATP", "Ocorre a favor do gradiente de concentração, sem gasto de energia", "Só ocorre em direção contrária ao gradiente", "É exclusivo de íons"], "correct": 1, "just": "No transporte passivo (difusão simples, facilitada, osmose), as substâncias se movem a favor do gradiente de concentração sem consumo de ATP.", "n": 6}, {"q": "A membrana plasmática é composta principalmente por:", "opts": ["Celulose e amido", "Bicamada de fosfolipídios com proteínas associadas", "Apenas proteínas estruturais", "Colágeno e elastina"], "correct": 1, "just": "O modelo do mosaico fluido descreve a membrana como uma bicamada de fosfolipídios com proteínas periféricas e integrais distribuídas de forma dinâmica.", "n": 7}, {"q": "Onde ocorre a transcrição em uma célula eucarionte?", "opts": ["No citoplasma", "No núcleo", "Na mitocôndria exclusivamente", "No ribossomo"], "correct": 1, "just": "A transcrição (síntese de RNA a partir do DNA) ocorre no núcleo das células eucariontes; a tradução ocorre no citoplasma (ribossomos).", "n": 8}, {"q": "A citocinese é o processo de:", "opts": ["Divisão do material genético", "Divisão do citoplasma, formando duas células-filhas", "Condensação dos cromossomos", "Formação do fuso mitótico"], "correct": 1, "just": "A citocinese é a divisão física do citoplasma, ocorrendo geralmente ao final da telófase, resultando em duas células-filhas independentes.", "n": 9}, {"q": "Qual tipo de RNA carrega a informação genética do núcleo até os ribossomos para a síntese proteica?", "opts": ["RNAt (transportador)", "RNAr (ribossômico)", "RNAm (mensageiro)", "RNA polimerase"], "correct": 2, "just": "O RNA mensageiro (RNAm) é a cópia transcrita do DNA que leva a informação até o ribossomo, onde será traduzida em proteína.", "n": 10}, {"q": "Os desmossomos conectam células vizinhas através de qual proteína, ancorada a qual filamento do citoesqueleto?", "opts": ["Integrinas ancoradas à actina", "Caderinas ancoradas a filamentos intermediários de queratina", "Conexinas ancoradas a microtúbulos", "Claudinas sem ancoragem citoplasmática"], "correct": 1, "just": "Os desmossomos usam caderinas transmembrana que se ancoram, no interior da célula, a filamentos intermediários de queratina.", "n": 11}, {"q": "Quais são as fases principais do ciclo celular, em ordem?", "opts": ["S → G1 → G2 → M", "G1 → S → G2 → M", "M → G1 → G2 → S", "G2 → G1 → S → M"], "correct": 1, "just": "O ciclo celular segue a ordem G1 (crescimento) → S (síntese/replicação do DNA) → G2 (preparação para a mitose) → M (mitose e citocinese).", "n": 12}, {"q": "Os três tipos de secreção realizados pelo complexo de Golgi são:", "opts": ["Ativa, passiva e facilitada", "Constitutiva, regulada e lisossomal", "Endocítica, exocítica e fagocítica", "Simples, facilitada e osmótica"], "correct": 1, "just": "O Golgi realiza secreção constitutiva (contínua), regulada (mediante estímulo, ex: insulina) e lisossomal (enzimas hidrolíticas para os lisossomos).", "n": 13}, {"q": "Qual das seguintes é uma diferença estrutural entre DNA e RNA?", "opts": ["DNA é de fita simples; RNA é de fita dupla", "DNA tem desoxirribose e timina; RNA tem ribose e uracila", "Apenas o RNA contém fósforo", "DNA não tem bases nitrogenadas"], "correct": 1, "just": "O DNA usa desoxirribose (açúcar) e timina como base pirimídica; o RNA usa ribose e uracila no lugar da timina.", "n": 14}, {"q": "A cadeia transportadora de elétrons e a ATP sintase estão localizadas na:", "opts": ["Matriz mitocondrial", "Membrana externa", "Membrana interna (cristas mitocondriais)", "Citosol"], "correct": 2, "just": "A membrana interna, dobrada em cristas para aumentar a superfície, contém os complexos da cadeia respiratória e a ATP sintase.", "n": 15}, {"q": "Qual é a principal diferença funcional entre o retículo endoplasmático rugoso (RER) e o liso (REL)?", "opts": ["RER sintetiza lipídios; REL sintetiza proteínas", "RER tem ribossomos aderidos e sintetiza proteínas; REL não tem ribossomos e sintetiza lipídios/detoxifica", "Não há diferença funcional", "REL só existe em células vegetais"], "correct": 1, "just": "O RER, com ribossomos aderidos, sintetiza proteínas de exportação e de membrana; o REL, sem ribossomos, sintetiza lipídios, detoxifica substâncias e armazena cálcio.", "n": 16}, {"q": "O DNA de uma célula procarionte típica é:", "opts": ["Linear, associado a histonas", "Circular, geralmente único e sem histonas", "Fragmentado em múltiplos cromossomos lineares", "Ausente — usam apenas RNA"], "correct": 1, "just": "O DNA procarionte é tipicamente circular, único (cromossomo bacteriano) e não associado a histonas, diferente do DNA eucarionte linear e histonado.", "n": 17}, {"q": "Os pontos de checagem (checkpoints) do ciclo celular servem para:", "opts": ["Acelerar sempre a divisão celular", "Verificar se as condições estão adequadas antes de a célula avançar para a próxima fase", "Impedir permanentemente a divisão celular", "Substituir a necessidade de replicação do DNA"], "correct": 1, "just": "Os checkpoints (em G1, G2 e na metáfase/M) monitoram integridade do DNA, tamanho celular e correta fixação dos cromossomos ao fuso, garantindo a fidelidade da divisão.", "n": 18}, {"q": "O nucléolo é responsável por:", "opts": ["Replicar o DNA", "Sintetizar RNA ribossômico e montar as subunidades dos ribossomos", "Formar a lâmina nuclear", "Realizar a fosforilação oxidativa"], "correct": 1, "just": "O nucléolo é a região nuclear onde ocorre a transcrição do RNAr e a montagem inicial das subunidades ribossômicas.", "n": 19}, {"q": "Além do RNAm e do RNAt, qual outro tipo de RNA participa diretamente da síntese proteica formando a estrutura do ribossomo?", "opts": ["RNA de interferência (siRNA)", "RNAr (ribossômico)", "RNA polimerase", "microRNA"], "correct": 1, "just": "O RNAr (ribossômico) é o componente estrutural e catalítico dos ribossomos, associando-se a proteínas para formar as subunidades ribossômicas.", "n": 20}];
+let idx = 0, score = 0;
+
+function startQuiz(){
+  idx = 0; score = 0;
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('resultScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  document.getElementById('scoreLive').textContent = '0 acertos';
+  renderQ();
+}
+
+function renderQ(){
+  if(idx >= bank.length){ finish(); return; }
+  const item = bank[idx];
+  document.getElementById('progLabel').textContent = `Pergunta ${idx+1}/${bank.length}`;
+  document.getElementById('xpFill').style.width = ((idx)/bank.length*100)+'%';
+  document.getElementById('qtxt').textContent = `${idx+1}. ${item.q}`;
+  const area = document.getElementById('optsArea');
+  area.innerHTML = item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${String.fromCharCode(97+i)}) ${o}</button>`).join('');
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--green)'; btn.style.color='var(--green)'; score++; document.getElementById('scoreLive').textContent = score+' acertos'; }
+      else {
+        btn.style.borderColor='var(--red)'; btn.style.color='var(--red)';
+        area.children[item.correct].style.borderColor='var(--green)';
+        area.children[item.correct].style.color='var(--green)';
+      }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{ idx++; renderQ(); }, 800);
+    };
+  });
+}
+
+function finish(){
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('resultScreen').style.display='block';
+  document.getElementById('scoreText').textContent = `${score}/${bank.length}`;
+  let msg;
+  if(score >= 17) msg = "Excelente! Você já domina o conteúdo — bora manter esse ritmo até a prova. 🏆";
+  else if(score >= 12) msg = "Bom resultado! Alguns pontos ainda merecem revisão antes da Final. 💪";
+  else msg = "Esse é só o começo — com um bom guia de estudo você vira esse jogo rapidinho. 📚";
+  document.getElementById('resultMsg').textContent = msg;
+}
+</script>
+</body>
+</html>
