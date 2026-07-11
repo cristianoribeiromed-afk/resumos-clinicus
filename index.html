@@ -524,6 +524,14 @@ footer p:last-child{margin-bottom:0;}
   font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;
   color:var(--muted);margin-bottom:6px;
 }
+.access-etapa{
+  border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;margin-bottom:8px;background:var(--panel2);
+}
+.access-etapa:last-child{margin-bottom:0;}
+.access-etapa-label{
+  font-size:12px;font-weight:700;color:var(--green-light);margin-bottom:8px;
+}
 .access-chips{display:flex;flex-wrap:wrap;gap:6px;}
 .access-chip{
   display:inline-flex;align-items:center;justify-content:center;
@@ -715,7 +723,7 @@ function slugify(str){
 function buildAccessIndex(data){
   const idx = {};
   const todosArquivos = [];
-  function parseEntry(arq, i, tipo, materiaNome){
+  function parseEntry(arq, i, tipo, materiaNome, etapaNome){
     let label, url;
     if(arq.includes('::')){
       const parts = arq.split('::');
@@ -726,7 +734,7 @@ function buildAccessIndex(data){
       label = prefixo+' - '+materiaNome+(i>0?' (parte '+(i+1)+')':'');
       url = arq;
     }
-    return { nome: label, url: url, tipo: tipo, materia: materiaNome };
+    return { nome: label, url: url, tipo: tipo, materia: materiaNome, etapa: etapaNome };
   }
   data.semestres.forEach(sem=>{
     sem.materias.forEach(m=>{
@@ -738,15 +746,14 @@ function buildAccessIndex(data){
         const etapa = m.etapas[etapaNome];
         if(!etapa) return;
         const itens = [];
-        const labelMateria = etapaNome === 'Final' ? m.nome : m.nome+' - '+etapaNome;
         if(etapa.resumo.disponivel && etapa.resumo.arquivo){
           etapa.resumo.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
-            itens.push(parseEntry(arq, i, 'resumo', labelMateria));
+            itens.push(parseEntry(arq, i, 'resumo', m.nome, etapaNome));
           });
         }
         if(etapa.simulado.disponivel && etapa.simulado.arquivo){
           etapa.simulado.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
-            itens.push(parseEntry(arq, i, 'simulado', labelMateria));
+            itens.push(parseEntry(arq, i, 'simulado', m.nome, etapaNome));
           });
         }
         if(itens.length){
@@ -1040,13 +1047,16 @@ document.getElementById('modalCheck').onclick = async ()=>{
       });
       const itens = Array.from(itensMap.values());
       if(itens.length){
-        // Agrupa por matéria usando os campos explícitos (tipo/materia) de cada item
-        const grupos = new Map(); // materia -> { resumo:[{n,url,label}], simulado:[{n,url,label}] }
+        // Agrupa por matéria, depois por etapa (P1/P2/Final), depois por tipo (resumo/simulado)
+        const grupos = new Map(); // materia -> Map(etapa -> {resumo:[], simulado:[]})
         itens.forEach(it=>{
           const tipo = it.tipo || 'resumo';
           const materia = it.materia || it.nome;
-          if(!grupos.has(materia)) grupos.set(materia, {resumo:[], simulado:[]});
-          const lista = grupos.get(materia)[tipo];
+          const etapa = it.etapa || 'Final';
+          if(!grupos.has(materia)) grupos.set(materia, new Map());
+          const etapasMap = grupos.get(materia);
+          if(!etapasMap.has(etapa)) etapasMap.set(etapa, {resumo:[], simulado:[]});
+          const lista = etapasMap.get(etapa)[tipo];
           lista.push({n:lista.length+1, url:it.url, label:it.nome});
         });
         const totalArquivos = itens.length;
@@ -1059,14 +1069,29 @@ document.getElementById('modalCheck').onclick = async ()=>{
           return lista.map(it=>`<a href="${it.url}" target="_blank" class="access-chip ${tipoClasse}" title="${it.label}">${it.n}</a>`).join('');
         }
 
+        const ETAPA_ORDEM_ACESSO = ['P1','P2','Final'];
         let gruposHtml = '';
-        grupos.forEach((g, materia)=>{
-          const nArq = g.resumo.length + g.simulado.length;
+        grupos.forEach((etapasMap, materia)=>{
+          let nArqMateria = 0;
+          etapasMap.forEach(g=>{ nArqMateria += g.resumo.length + g.simulado.length; });
+
+          const multiEtapa = etapasMap.size > 1;
           let body = '';
-          if(g.resumo.length) body += `<div class="access-sub"><div class="access-sub-label">📖 Guia de Estudo</div><div class="access-chips">${renderChips(g.resumo,'resumo')}</div></div>`;
-          if(g.simulado.length) body += `<div class="access-sub"><div class="access-sub-label">📝 Simulado</div><div class="access-chips">${renderChips(g.simulado,'simulado')}</div></div>`;
+          ETAPA_ORDEM_ACESSO.forEach(etapaNome=>{
+            const g = etapasMap.get(etapaNome);
+            if(!g) return;
+            let etapaBody = '';
+            if(g.resumo.length) etapaBody += `<div class="access-sub"><div class="access-sub-label">📖 Guia de Estudo</div><div class="access-chips">${renderChips(g.resumo,'resumo')}</div></div>`;
+            if(g.simulado.length) etapaBody += `<div class="access-sub"><div class="access-sub-label">📝 Simulado</div><div class="access-chips">${renderChips(g.simulado,'simulado')}</div></div>`;
+            if(multiEtapa){
+              body += `<div class="access-etapa"><div class="access-etapa-label">📁 ${etapaNome}</div>${etapaBody}</div>`;
+            } else {
+              body += etapaBody;
+            }
+          });
+
           gruposHtml += `<details class="access-group">
-            <summary><span>${materia}</span><span class="count">${nArq} arquivo${nArq>1?'s':''} <span class="chev">▶</span></span></summary>
+            <summary><span>${materia}</span><span class="count">${nArqMateria} arquivo${nArqMateria>1?'s':''} <span class="chev">▶</span></span></summary>
             <div class="access-group-body">${body}</div>
           </details>`;
         });
