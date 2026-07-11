@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado — Bioquímica I: Aminoácidos, Proteínas e Enzimas | ClinicusMed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul-escuro:#12283f;
+    --azul-med:#1e4166;
+    --azul-claro:#e7edf4;
+    --dourado:#c98f1f;
+    --dourado-claro:#f7ecd4;
+    --creme:#f7f4ef;
+    --texto:#20242b;
+    --texto-suave:#4d5766;
+    --verde:#1f7a4d;
+    --verde-claro:#e3f3ea;
+    --vermelho:#a63328;
+    --vermelho-claro:#f8e6e3;
+    --branco:#ffffff;
+    --sombra:0 4px 18px rgba(18,40,63,0.12);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'DM Sans',sans-serif;background:var(--creme);color:var(--texto);line-height:1.6;}
+  h1,h2,h3{font-family:'Lora',serif;color:var(--azul-escuro);}
+  header{
+    background:linear-gradient(135deg,var(--azul-escuro),var(--azul-med));
+    color:var(--branco);padding:30px 20px 24px;text-align:center;
+  }
+  header .marca{font-size:12.5px;letter-spacing:3px;text-transform:uppercase;color:var(--dourado);font-weight:700;margin-bottom:6px;}
+  header h1{color:var(--branco);font-size:clamp(20px,4vw,29px);margin:4px 0;}
+  header p{color:#cfdcea;max-width:680px;margin:10px auto 0;font-size:14.5px;}
+  .info-bar{
+    max-width:900px;margin:18px auto 0;background:var(--branco);border-radius:10px;
+    box-shadow:var(--sombra);padding:14px 20px;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;
+    font-size:13.5px;color:var(--texto-suave);
+  }
+  main{max-width:900px;margin:0 auto;padding:20px 18px 60px;}
+  .secao-titulo{
+    background:var(--azul-escuro);color:var(--branco);padding:10px 18px;border-radius:8px;
+    font-family:'Lora',serif;font-size:17px;font-weight:600;margin:32px 0 16px;
+  }
+  .secao-titulo span{color:var(--dourado);}
+  .questao{
+    background:var(--branco);border-radius:10px;box-shadow:var(--sombra);
+    padding:16px 18px;margin-bottom:14px;
+  }
+  .questao .num{font-family:'Lora',serif;font-weight:700;color:var(--azul-med);margin-right:4px;}
+  .enunciado{font-size:14.5px;margin-bottom:10px;color:var(--texto);}
+  .opcoes label{
+    display:block;background:var(--creme);border:1.5px solid #e0d9c4;border-radius:7px;
+    padding:8px 12px;margin-bottom:7px;font-size:13.8px;cursor:pointer;transition:.15s;
+  }
+  .opcoes label:hover{border-color:var(--azul-med);}
+  .opcoes input{margin-right:8px;}
+  .vf-btns{display:flex;gap:10px;}
+  .vf-btns button{
+    flex:1;padding:9px;border-radius:7px;border:1.5px solid var(--azul-med);
+    background:var(--branco);color:var(--azul-med);font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13.5px;
+  }
+  .vf-btns button.selecionado{background:var(--azul-med);color:var(--branco);}
+  .relacionar-item{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;
+    margin-bottom:8px;font-size:13.8px;
+  }
+  .relacionar-item .termo{font-weight:600;color:var(--azul-escuro);}
+  .relacionar-item select{
+    padding:7px 8px;border-radius:6px;border:1.5px solid #cfc7ab;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;
+    background:var(--creme);
+  }
+  .questao.correta{border:2px solid var(--verde);}
+  .questao.errada{border:2px solid var(--vermelho);}
+  .feedback{
+    margin-top:9px;padding:8px 12px;border-radius:7px;font-size:13px;display:none;
+  }
+  .feedback.mostrar{display:block;}
+  .feedback.ok{background:var(--verde-claro);color:var(--verde);}
+  .feedback.no{background:var(--vermelho-claro);color:var(--vermelho);}
+  .opcoes label.marcar-correta{background:var(--verde-claro);border-color:var(--verde);font-weight:700;}
+  .opcoes label.marcar-errada{background:var(--vermelho-claro);border-color:var(--vermelho);}
+  select.marcar-correta{border-color:var(--verde);background:var(--verde-claro);}
+  select.marcar-errada{border-color:var(--vermelho);background:var(--vermelho-claro);}
+  .vf-btns button.marcar-correta{background:var(--verde);border-color:var(--verde);color:var(--branco);}
+  .vf-btns button.marcar-errada{background:var(--vermelho);border-color:var(--vermelho);color:var(--branco);}
+  .barra-fixa{
+    position:sticky;bottom:0;background:var(--branco);border-top:2px solid var(--dourado);
+    padding:14px 18px;text-align:center;box-shadow:0 -4px 14px rgba(0,0,0,0.08);
+  }
+  .btn-corrigir{
+    background:var(--dourado);color:var(--azul-escuro);border:none;padding:13px 34px;
+    border-radius:24px;font-weight:700;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  }
+  .btn-corrigir:hover{background:#b7810f;}
+  .resultado-box{
+    max-width:900px;margin:0 auto 20px;background:var(--azul-escuro);color:var(--branco);
+    border-radius:12px;padding:22px;text-align:center;display:none;
+  }
+  .resultado-box.mostrar{display:block;}
+  .resultado-box .nota{font-family:'Lora',serif;font-size:40px;color:var(--dourado);font-weight:700;}
+  .resultado-box .detalhe{font-size:14px;color:#cfdcea;margin-top:6px;}
+  footer{text-align:center;padding:20px 10px;color:var(--texto-suave);font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">CLINICUS · RESUMOS · SIMULADOS</div>
+  <h1>Simulado — Bioquímica I</h1>
+  <p>Aminoácidos · Proteínas · Enzimas — baseado nos exercícios do Prof. Dr. Robert Vargas Bernal</p>
+</header>
+
+<div class="info-bar">
+  <span>📝 40 questões</span>
+  <span>25 múltipla escolha</span>
+  <span>5 de relacionar</span>
+  <span>10 verdadeiro ou falso</span>
+</div>
+
+<div class="resultado-box" id="resultadoBox">
+  <div class="nota" id="notaFinal">0 / 40</div>
+  <div class="detalhe" id="detalheFinal"></div>
+</div>
+
+<main id="main"></main>
+
+<div class="barra-fixa">
+  <button class="btn-corrigir" onclick="corrigirTudo()">Corrigir Simulado</button>
+</div>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+
+<script>
+const main = document.getElementById("main");
+
+/* ================= MÚLTIPLA ESCOLHA (25) ================= */
+const mc = [
+ {p:"O que são aminoácidos?", op:["Unidades estruturais (monômeros) que formam as proteínas","Lipídios de reserva energética","Polímeros de glicose","Ácidos graxos essenciais"], correta:0},
+ {p:"O que é um carbono assimétrico (quiral)?", op:["Um carbono ligado a quatro grupos diferentes entre si","Um carbono com apenas duas ligações","Um carbono presente somente em lipídios","Um carbono que forma ligações duplas exclusivamente"], correta:0},
+ {p:"A atividade óptica dos aminoácidos se deve à presença de:", op:["Grupo fosfato","Carbono assimétrico (quiral)","Ligação peptídica","Grupo prostético"], correta:1},
+ {p:"Quanto à presença ou não nas proteínas, os aminoácidos se classificam em:", op:["Ácidos e básicos","Proteicos e não-proteicos","Essenciais e semiessenciais","Polares e apolares apenas"], correta:1},
+ {p:"Segundo a natureza do grupo R, os aminoácidos podem ser classificados em (entre outros):", op:["Apolares (hidrofóbicos) e polares (hidrofílicos)","Somente ácidos","Somente aromáticos","Somente essenciais"], correta:0},
+ {p:"Aminoácidos essenciais são aqueles que:", op:["São produzidos em excesso pelo fígado","Não podem ser sintetizados pelo organismo e devem ser obtidos pela dieta","Só existem em proteínas vegetais","Não participam da síntese proteica"], correta:1},
+ {p:"Qual aminoácido NÃO possui carbono quiral e, portanto, não apresenta atividade óptica?", op:["Alanina","Valina","Glicina","Leucina"], correta:2},
+ {p:"Assinale a alternativa que contém apenas aminoácidos essenciais:", op:["Valina, Leucina, Isoleucina, Triptofano","Glicina, Alanina, Serina, Prolina","Ácido Aspártico, Ácido Glutâmico, Asparagina","Cisteína, Tirosina, Glutamina"], correta:0},
+ {p:"As proteínas simples (holoproteínas) são aquelas que, por hidrólise, produzem:", op:["Apenas aminoácidos","Aminoácidos e carboidratos obrigatoriamente","Apenas lipídios","Ácidos nucleicos exclusivamente"], correta:0},
+ {p:"As proteínas conjugadas (heteroproteínas) são aquelas que, por hidrólise, produzem:", op:["Somente aminoácidos","Aminoácidos e também outros componentes orgânicos/inorgânicos","Somente vitaminas","Somente sais minerais"], correta:1},
+ {p:"Denomina-se grupo prostético:", op:["A sequência de aminoácidos de uma proteína","A porção não-aminoacídica de uma proteína conjugada","O local onde a proteína é sintetizada","A carga elétrica total da proteína"], correta:1},
+ {p:"A estrutura secundária de uma proteína se refere ao:", op:["Enovelamento tridimensional final da proteína","Plegamento da cadeia por pontes de hidrogênio entre os átomos do esqueleto peptídico","Conjunto de várias cadeias polipeptídicas associadas","Grupo prostético ligado à proteína"], correta:1},
+ {p:"A estrutura primária de uma proteína corresponde a:", op:["A sequência linear de aminoácidos unidos por ligações peptídicas","O enovelamento em hélice alfa","A associação de múltiplas subunidades","A ligação com o grupo prostético"], correta:0},
+ {p:"A estrutura terciária de uma proteína se refere a:", op:["Apenas a sequência de aminoácidos","O dobramento tridimensional completo da cadeia polipeptídica","A união entre duas proteínas diferentes","O tipo de grupo prostético presente"], correta:1},
+ {p:"Marasmo é definido como:", op:["Excesso de proteínas na dieta","Desnutrição calórico-proteica severa e global","Deficiência isolada de vitamina C","Intoxicação por proteínas animais"], correta:1},
+ {p:"O Síndrome de Ehlers-Danlos está relacionado a um defeito estrutural do(a):", op:["Colágeno","Hemoglobina","Insulina","Queratina"], correta:0},
+ {p:"O sufixo '-ase', usado na nomenclatura das enzimas, é adicionado:", op:["Ao nome do substrato sobre o qual a enzima atua","Ao nome do produto final da reação","Ao nome do cofator envolvido","Ao nome do organismo que produz a enzima"], correta:0},
+ {p:"Ao aumentar a concentração de substrato, a velocidade da reação aumenta porque:", op:["Mais moléculas de substrato colidem com as moléculas de enzima","O pH da solução aumenta automaticamente","A temperatura diminui","Isso nunca influencia a velocidade"], correta:0},
+ {p:"Com o aumento da concentração de enzima (substrato em excesso), a velocidade da reação:", op:["Diminui","Aumenta de forma proporcional","Não sofre nenhuma modificação","Se torna negativa"], correta:1},
+ {p:"Em relação ao pH ótimo das enzimas, é correto afirmar que:", op:["Deve ser sempre ácido","Deve ser sempre básico/alcalino","Depende de onde a enzima atua normalmente no organismo","É sempre neutro, sem exceções"], correta:2},
+ {p:"Sobre o efeito da temperatura na atividade enzimática, é correto afirmar que:", op:["O aumento de temperatura sempre aumenta a atividade, sem limites","Temperaturas muito altas desnaturam as enzimas, reduzindo sua atividade","A temperatura nunca influencia a velocidade da reação enzimática","Somente o pH influencia a atividade enzimática, nunca a temperatura"], correta:1},
+ {p:"Substâncias que algumas enzimas necessitam para funcionar melhor são chamadas de:", op:["Produtos","Substratos","Ativadores","Zimogênios"], correta:2},
+ {p:"Substâncias que afetam negativamente a função das enzimas, diminuindo ou interrompendo a catálise, são chamadas de:", op:["Ativadores","Inibidores enzimáticos","Coenzimas","Isoenzimas"], correta:1},
+ {p:"Um composto que se liga a um sítio diferente do sítio ativo (sítio alostérico), alterando a forma da enzima e impedindo sua ligação ao substrato, é chamado de:", op:["Inibidor competitivo","Inibidor não-competitivo (alostérico)","Coenzima","Substrato análogo"], correta:1},
+ {p:"Um precursor enzimático inativo, que precisa de uma modificação bioquímica para formar seu centro ativo, é chamado de:", op:["Zimogênio ou pró-enzima","Holoenzima","Isoenzima","Coenzima"], correta:0},
+];
+
+let secaoMC = `<div class="secao-titulo">Seção A <span>· Múltipla Escolha (25 questões)</span></div>`;
+mc.forEach((q,i)=>{
+  secaoMC += `<div class="questao" id="mc-${i}" data-tipo="mc" data-correta="${q.correta}">
+    <div class="enunciado"><span class="num">${i+1}.</span>${q.p}</div>
+    <div class="opcoes">`;
+  q.op.forEach((op,j)=>{
+    secaoMC += `<label><input type="radio" name="mc-${i}" value="${j}">${String.fromCharCode(65+j)}) ${op}</label>`;
+  });
+  secaoMC += `</div><div class="feedback" id="fb-mc-${i}"></div></div>`;
+});
+main.insertAdjacentHTML("beforeend", secaoMC);
+
+/* ================= RELACIONAR (5) ================= */
+const relacionar = [
+ {titulo:"Relacione o símbolo de três letras ao respectivo aminoácido:",
+  pares:[["VAL","Valina"],["LEU","Leucina"],["ILE","Isoleucina"],["PHE","Fenilalanina"],["TRP","Triptofano"],["THR","Treonina"]]},
+ {titulo:"Relacione a proteína ao seu local de ocorrência predominante:",
+  pares:[["Albuminas","Sangue (plasma) e clara de ovo"],["Globulinas","Sangue (plasma) — anticorpos"],["Colágeno","Tecido conjuntivo, pele, ossos e tendões"],["Elastina","Artérias, pulmões e ligamentos"],["Queratina","Pele, unhas e cabelo"]]},
+ {titulo:"Relacione a classificação do aminoácido (segundo o grupo R) à sua característica:",
+  pares:[["Apolar (hidrofóbico)","Evita contato com a água"],["Polar sem carga (hidrofílico)","Forma pontes de hidrogênio com a água"],["Ácido","Grupo carboxila desprotonado, carga negativa"],["Básico","Grupo amino protonado, carga positiva"]]},
+ {titulo:"Relacione a classe de enzima ao tipo de catálise que realiza:",
+  pares:[["Transferases","Transferem grupos funcionais (ex: transaminases, quinases)"],["Liases","Adicionam ou removem um grupo sem hidrólise (ex: descarboxilases)"],["Ligases","Unem duas moléculas com gasto de energia do ATP"],["Hidrolases","Catalisam reações de hidrólise (quebra com água)"]]},
+ {titulo:"Relacione o termo enzimático à sua definição:",
+  pares:[["Apoenzima","Porção proteica sem o cofator — cataliticamente inativa"],["Holoenzima","Complexo enzima + cofator, cataliticamente ativo"],["Cofator","Componente não-proteico necessário para a atividade enzimática"],["Zimogênio","Precursor enzimático inativo"]]},
+];
+
+function embaralharArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+let secaoRel = `<div class="secao-titulo">Seção B <span>· Relacionar (5 questões)</span></div>`;
+relacionar.forEach((r,i)=>{
+  const respostasEmbaralhadas = embaralharArray(r.pares.map(p=>p[1]));
+  secaoRel += `<div class="questao" id="rel-${i}" data-tipo="rel">
+    <div class="enunciado"><span class="num">${26+i}.</span>${r.titulo}</div>`;
+  r.pares.forEach((par,j)=>{
+    secaoRel += `<div class="relacionar-item">
+      <div class="termo">${par[0]}</div>
+      <select id="rel-${i}-${j}" data-correta="${par[1].replace(/"/g,'&quot;')}">
+        <option value="">Selecione...</option>
+        ${respostasEmbaralhadas.map(op=>`<option value="${op.replace(/"/g,'&quot;')}">${op}</option>`).join("")}
+      </select>
+    </div>`;
+  });
+  secaoRel += `<div class="feedback" id="fb-rel-${i}"></div></div>`;
+});
+main.insertAdjacentHTML("beforeend", secaoRel);
+
+/* ================= VERDADEIRO OU FALSO (10) ================= */
+const vf = [
+ {p:"Os aminoácidos essenciais podem ser sintetizados pelo próprio organismo humano.", correta:false},
+ {p:"A glicina não possui carbono quiral, por isso não apresenta atividade óptica.", correta:true},
+ {p:"As proteínas simples (holoproteínas) produzem, por hidrólise, apenas aminoácidos.", correta:true},
+ {p:"As proteínas conjugadas (heteroproteínas) não possuem grupo prostético.", correta:false},
+ {p:"A estrutura secundária de uma proteína é estabilizada principalmente por pontes de hidrogênio do esqueleto peptídico.", correta:true},
+ {p:"As proteínas fibrosas costumam ser solúveis em água e cumprem função metabólica dinâmica.", correta:false},
+ {p:"O escorbuto se deve à deficiência de vitamina C e compromete a síntese de colágeno.", correta:true},
+ {p:"As enzimas atuam diminuindo a energia de ativação necessária para uma reação química.", correta:true},
+ {p:"O sufixo '-ase' é adicionado ao nome do substrato para nomear a enzima correspondente.", correta:true},
+ {p:"A apoenzima é o complexo cataliticamente ativo formado pela enzima mais o cofator.", correta:false},
+];
+
+let secaoVF = `<div class="secao-titulo">Seção C <span>· Verdadeiro ou Falso (10 questões)</span></div>`;
+vf.forEach((q,i)=>{
+  secaoVF += `<div class="questao" id="vf-${i}" data-tipo="vf" data-correta="${q.correta}">
+    <div class="enunciado"><span class="num">${31+i}.</span>${q.p}</div>
+    <div class="vf-btns">
+      <button type="button" onclick="marcarVF(${i}, true, this)" id="vf-${i}-true">VERDADEIRO</button>
+      <button type="button" onclick="marcarVF(${i}, false, this)" id="vf-${i}-false">FALSO</button>
+    </div>
+    <div class="feedback" id="fb-vf-${i}"></div>
+  </div>`;
+});
+main.insertAdjacentHTML("beforeend", secaoVF);
+
+const respostasVF = {};
+function marcarVF(i, valor, btn){
+  respostasVF[i] = valor;
+  document.getElementById(`vf-${i}-true`).classList.remove("selecionado");
+  document.getElementById(`vf-${i}-false`).classList.remove("selecionado");
+  btn.classList.add("selecionado");
+}
+
+/* ================= CORREÇÃO ================= */
+function corrigirTudo(){
+  let acertos = 0, totalMC=0, acertosMC=0, totalRel=0, acertosRel=0, totalVF=0, acertosVF=0;
+
+  // Múltipla escolha
+  mc.forEach((q,i)=>{
+    totalMC++;
+    const selecionado = document.querySelector(`input[name="mc-${i}"]:checked`);
+    const questaoDiv = document.getElementById(`mc-${i}`);
+    const labels = questaoDiv.querySelectorAll(".opcoes label");
+    labels.forEach(l=>l.classList.remove("marcar-correta","marcar-errada"));
+    const fb = document.getElementById(`fb-mc-${i}`);
+    if(selecionado){
+      const val = parseInt(selecionado.value);
+      if(val === q.correta){
+        acertos++; acertosMC++;
+        labels[val].classList.add("marcar-correta");
+        questaoDiv.classList.add("correta"); questaoDiv.classList.remove("errada");
+        fb.textContent = "✓ Correto!"; fb.className="feedback mostrar ok";
+      } else {
+        labels[val].classList.add("marcar-errada");
+        labels[q.correta].classList.add("marcar-correta");
+        questaoDiv.classList.add("errada"); questaoDiv.classList.remove("correta");
+        fb.textContent = "✗ Incorreto. Resposta correta: " + String.fromCharCode(65+q.correta) + ") " + q.op[q.correta];
+        fb.className="feedback mostrar no";
+      }
+    } else {
+      labels[q.correta].classList.add("marcar-correta");
+      questaoDiv.classList.add("errada");
+      fb.textContent = "Não respondida. Resposta correta: " + String.fromCharCode(65+q.correta) + ") " + q.op[q.correta];
+      fb.className="feedback mostrar no";
+    }
+  });
+
+  // Relacionar
+  relacionar.forEach((r,i)=>{
+    totalRel++;
+    let acertouTudo = true;
+    r.pares.forEach((par,j)=>{
+      const sel = document.getElementById(`rel-${i}-${j}`);
+      sel.classList.remove("marcar-correta","marcar-errada");
+      if(sel.value === par[1]){
+        sel.classList.add("marcar-correta");
+      } else {
+        sel.classList.add("marcar-errada");
+        acertouTudo = false;
+      }
+    });
+    const questaoDiv = document.getElementById(`rel-${i}`);
+    const fb = document.getElementById(`fb-rel-${i}`);
+    if(acertouTudo){
+      acertos++; acertosRel++;
+      questaoDiv.classList.add("correta"); questaoDiv.classList.remove("errada");
+      fb.textContent = "✓ Todas as relações corretas!"; fb.className="feedback mostrar ok";
+    } else {
+      questaoDiv.classList.add("errada"); questaoDiv.classList.remove("correta");
+      fb.textContent = "✗ Uma ou mais relações estão incorretas (veja os campos em vermelho).";
+      fb.className="feedback mostrar no";
+    }
+  });
+
+  // V ou F
+  vf.forEach((q,i)=>{
+    totalVF++;
+    const questaoDiv = document.getElementById(`vf-${i}`);
+    const btnT = document.getElementById(`vf-${i}-true`);
+    const btnF = document.getElementById(`vf-${i}-false`);
+    btnT.classList.remove("marcar-correta","marcar-errada");
+    btnF.classList.remove("marcar-correta","marcar-errada");
+    const resposta = respostasVF[i];
+    const fb = document.getElementById(`fb-vf-${i}`);
+    const btnCorreto = q.correta ? btnT : btnF;
+    if(resposta === q.correta){
+      acertos++; acertosVF++;
+      btnCorreto.classList.add("marcar-correta");
+      questaoDiv.classList.add("correta"); questaoDiv.classList.remove("errada");
+      fb.textContent = "✓ Correto!"; fb.className="feedback mostrar ok";
+    } else {
+      btnCorreto.classList.add("marcar-correta");
+      if(resposta !== undefined){
+        (resposta ? btnT : btnF).classList.add("marcar-errada");
+      }
+      questaoDiv.classList.add("errada"); questaoDiv.classList.remove("correta");
+      fb.textContent = "✗ Incorreto. Resposta correta: " + (q.correta ? "VERDADEIRO" : "FALSO");
+      fb.className="feedback mostrar no";
+    }
+  });
+
+  const total = totalMC + totalRel + totalVF;
+  document.getElementById("notaFinal").textContent = `${acertos} / ${total}`;
+  document.getElementById("detalheFinal").textContent =
+    `Múltipla Escolha: ${acertosMC}/${totalMC} · Relacionar: ${acertosRel}/${totalRel} · V ou F: ${acertosVF}/${totalVF} — ${Math.round(acertos/total*100)}% de aproveitamento`;
+  document.getElementById("resultadoBox").classList.add("mostrar");
+  document.getElementById("resultadoBox").scrollIntoView({behavior:"smooth"});
+}
+</script>
+</body>
+</html>
