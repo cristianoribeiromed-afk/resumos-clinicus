@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Aminoácidos</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green2); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.prof-tag{display:inline-flex; align-items:center; gap:8px; background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.35); color:var(--gold); border-radius:999px; padding:5px 14px; font-size:.78rem; font-weight:700; margin-bottom:14px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.aa-badge{display:inline-flex; flex-direction:column; align-items:center; justify-content:center; width:70px; height:70px; border-radius:10px; font-weight:800; margin:4px; background:var(--bg-alt); border:1px solid var(--border); color:var(--text);}
+.aa-badge span{font-size:.6rem; font-weight:400; color:var(--text-dim);}
+.aa-badge.nonpolar{border-color:#6bbf59; color:#a3d84a;}
+.aa-badge.polar{border-color:#4d9fff; color:#7ab8ff;}
+.aa-badge.positive{border-color:#ffd166; color:#ffd166;}
+.aa-badge.negative{border-color:#ff5c6c; color:#ff8a94;}
+
+.exercise-box{background:var(--bg-alt); border:2px dashed var(--border); border-radius:12px; padding:18px; margin:14px 0;}
+.exercise-box h4{color:var(--gold); margin-bottom:10px;}
+.fill-input{background:var(--card); border:1px solid var(--border); border-radius:6px; color:var(--text); padding:6px 10px; font-size:.85rem; width:100%; margin-top:4px;}
+.check-btn{background:var(--green2); color:#0d0f16; border:none; padding:8px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:.85rem; margin-top:10px;}
+.check-btn:hover{background:var(--green1);}
+.exercise-result{margin-top:10px; padding:10px 14px; border-radius:8px; font-size:.85rem; display:none; background:rgba(163,216,74,.08); border:1px solid var(--green2);}
+.exercise-result.show{display:block;}
+
+.flash-controls{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.flashcard-wrap{perspective:1000px; margin:10px 0;}
+.flashcard{position:relative; min-height:180px; cursor:pointer;}
+.face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt);}
+.face-back{display:none; background:rgba(163,216,74,.08); border-color:var(--green2);}
+.flashcard.flipped .face-front{display:none;}
+.flashcard.flipped .face-back{display:flex;}
+.flash-tag{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--green2); margin-bottom:8px;}
+.flash-hint{font-size:.72rem; color:var(--text-dim); margin-top:10px;}
+.review-btns{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+.review-btns button{flex:1; min-width:70px; padding:9px 6px; border-radius:8px; border:none; font-weight:700; font-size:.78rem; cursor:pointer; color:#0d0f16;}
+.btn-again{background:var(--red);} .btn-hard{background:#ffa552;} .btn-good{background:var(--green2);} .btn-easy{background:var(--blue);}
+.nav-flash{display:flex; justify-content:space-between; margin-top:12px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.82rem;}
+
+.quiz-progress{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:14px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:14px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:.9rem;}
+.option:hover:not(.disabled){border-color:var(--green2);}
+.option.correct{background:rgba(74,222,128,.15); border-color:#4ade80;}
+.option.incorrect{background:rgba(255,92,108,.15); border-color:var(--red);}
+.option.disabled{cursor:default;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid #4ade80; color:#4ade80;}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:14px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:#4ade80; font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--green2); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><circle cx="14" cy="14" r="6" fill="none" stroke="#6bbf59" stroke-width="2"/><circle cx="28" cy="14" r="4" fill="none" stroke="#a3d84a" stroke-width="2"/><circle cx="20" cy="28" r="5" fill="none" stroke="#ffd166" stroke-width="2"/><line x1="14" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/><line x1="28" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Bioquímica — Aminoácidos</h1>
+        <span>Prof. Dr. Robert Vargas Bernal</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nível 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completo</span><span>Estrutura → Classificação → Nomenclatura → Propriedades → Funções → Flashcards → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧬 Estrutura</button>
+    <button class="tab-btn" data-tab="classificacao">⚛️ Classificação (Grupo R)</button>
+    <button class="tab-btn" data-tab="nomenclatura">🔤 Nomenclatura</button>
+    <button class="tab-btn" data-tab="propriedades">⚖️ Propriedades</button>
+    <button class="tab-btn" data-tab="funcoes">🎯 Funções e Não-Proteicos</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO / ESTRUTURA ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="prof-tag">🧪 Bioquímica — Prof. Dr. Robert Vargas Bernal</span>
+    <h2>Aminoácidos: o alfabeto das proteínas</h2>
+    <p>Antes de entender proteínas, é preciso entender aminoácidos — os "sillares" (tijolos) que as constroem. Suas propriedades físicas e químicas determinam boa parte das propriedades das proteínas que eles formam.</p>
+  </div>
+
+  <div class="card">
+    <h2>O que são aminoácidos?</h2>
+    <p>Aminoácidos são <b>compostos orgânicos que se combinam para formar proteínas</b>. Junto com as proteínas, são os pilares fundamentais da vida.</p>
+    <p>Quando as proteínas são digeridas, elas se decompõem e liberam aminoácidos. O corpo humano precisa de muitos aminoácidos para:</p>
+    <div class="grid-4">
+      <div class="mini-card"><h4>A) Digestão</h4><p style="margin:0;font-size:.85rem;">Decompor os alimentos</p></div>
+      <div class="mini-card"><h4>B) Crescimento</h4><p style="margin:0;font-size:.85rem;">Crescer</p></div>
+      <div class="mini-card"><h4>C) Reparo</h4><p style="margin:0;font-size:.85rem;">Reparar tecidos corporais</p></div>
+      <div class="mini-card"><h4>D) Funções</h4><p style="margin:0;font-size:.85rem;">Realizar outras funções corporais</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Características estruturais</h2>
+    <p>A fórmula estrutural geral dos α-aminoácidos (os encontrados nas proteínas) tem, como denominador comum — <b>exceto a prolina</b> — um grupo carboxilo livre e um grupo amino livre, ligados ao carbono α:</p>
+    <div class="mnemo" style="text-align:center; font-family:monospace; font-size:1.1rem;">
+      H<br>
+      R — C — COOH<br>
+      NH₂
+    </div>
+    <p>Os aminoácidos diferem entre si pela estrutura de suas cadeias laterais distintivas — os chamados <b>grupos R</b>.</p>
+    <div class="analogy"><b>Contexto histórico:</b> o primeiro aminoácido isolado de um hidrolisado de proteína foi a glicocola (glicina), obtida em 1820 a partir da gelatina, por Braconot.</div>
+  </div>
+
+  <div class="card">
+    <h2>Carbono assimétrico (quiral) e isomeria óptica</h2>
+    <p>O carbono assimétrico ou quiral está ligado a <b>quatro substituintes diferentes</b>. Pode estar presente em compostos orgânicos dos seres vivos, como aminoácidos e glicídios.</p>
+    <p>A existência de um carbono assimétrico é responsável pela <b>isomeria óptica</b>: duas estruturas diferentes com os mesmos átomos e ligações, mas que não podem se sobrepor uma à outra — como as mãos de uma pessoa. São chamadas <b>enantiômeros</b>, e se diferenciam pela direção em que desviam a luz polarizada (por isso são chamadas formas opticamente ativas).</p>
+    <div class="criterio"><b>Importância clínica:</b> a quiralidade é essencial pois todas as moléculas do nosso corpo são quirais — por isso são possíveis as interações específicas entre enzimas e substratos. É também a base para o desenvolvimento de fármacos.</div>
+  </div>
+</section>
+
+<!-- ============ CLASSIFICAÇÃO ============ -->
+<section class="section" id="classificacao">
+  <div class="hero">
+    <span class="eyebrow">Classificação dos aminoácidos</span>
+    <h2>Dois grandes grupos, e 4 classes de grupo R</h2>
+    <p>Embora a maioria dos AA presentes na natureza façam parte de proteínas, alguns desempenham outras funções.</p>
+  </div>
+
+  <div class="card">
+    <h3>Por função biológica</h3>
+    <div class="grid-2">
+      <div class="mini-card"><h4>a) Aminoácidos proteicos</h4><p style="margin:0;font-size:.86rem;">Os 20 que compõem as proteínas.</p></div>
+      <div class="mini-card"><h4>b) Aminoácidos não proteicos</h4><p style="margin:0;font-size:.86rem;">Desempenham outras funções metabólicas (~150 conhecidos).</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Pela polaridade do grupo R (4 classes principais)</h3>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">1. Grupos R não polares / hidrófobos <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Têm um grupo "R" hidrofóbico e evitam contato com água e outros líquidos. Ex: Alanina, Valina, Leucina, Isoleucina, Prolina, Fenilalanina, Triptofano, Metionina.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">2. Grupos R polares sem carga <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Contêm grupos funcionais que formam pontes de hidrogênio com a água, tornando-os mais solúveis (hidrofílicos). Ex: Glicocola, Serina, Treonina, Cisteína, Tirosina, Asparagina, Glutamina.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">3. Grupos R com carga positiva (básicos) <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Costumam ter carga positiva no grupo amino, a pH 6,0-7,0 (zona de pH intracelular). Ex: Lisina (Lys), Arginina (Arg), Histidina (His) — os aminoácidos dibásicos.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">4. Grupos R com carga negativa (ácidos) <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>A pH 6,0-7,0, sua cadeia lateral contém um grupo carboxilo (COOH) que se desprotona e adquire carga negativa. Ex: Ácido aspártico (Asp/D) e Ácido glutâmico (Glu/E) — os aminoácidos dicarboxílicos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOMENCLATURA ============ -->
+<section class="section" id="nomenclatura">
+  <div class="hero">
+    <span class="eyebrow">Símbolos</span>
+    <h2>Nomenclatura: símbolos de 3 e de 1 letra</h2>
+    <p>Os aminoácidos costumam ser designados por símbolos de três letras, ou por um conjunto de símbolos de uma letra, adotado para facilitar a comparação de sequências de proteínas homólogas.</p>
+  </div>
+
+  <div class="card">
+    <h3>Tabela completa dos 20 aminoácidos proteicos</h3>
+    <table>
+      <tr><th>Aminoácido</th><th>3 letras</th><th>1 letra</th><th>Pm</th></tr>
+      <tr><td>Alanina</td><td>Ala</td><td>A</td><td>89</td></tr>
+      <tr><td>Arginina</td><td>Arg</td><td>R</td><td>174</td></tr>
+      <tr><td>Asparagina</td><td>Asn</td><td>N</td><td>132</td></tr>
+      <tr><td>Ácido Aspártico</td><td>Asp</td><td>D</td><td>133</td></tr>
+      <tr><td>Cisteína</td><td>Cys</td><td>C</td><td>121</td></tr>
+      <tr><td>Glutamina</td><td>Gln</td><td>Q</td><td>146</td></tr>
+      <tr><td>Ácido Glutâmico</td><td>Glu</td><td>E</td><td>147</td></tr>
+      <tr><td>Glicocola (Glicina)</td><td>Gly</td><td>G</td><td>75</td></tr>
+      <tr><td>Histidina</td><td>His</td><td>H</td><td>155</td></tr>
+      <tr><td>Isoleucina</td><td>Ile</td><td>I</td><td>131</td></tr>
+      <tr><td>Leucina</td><td>Leu</td><td>L</td><td>131</td></tr>
+      <tr><td>Lisina</td><td>Lys</td><td>K</td><td>146</td></tr>
+      <tr><td>Metionina</td><td>Met</td><td>M</td><td>149</td></tr>
+      <tr><td>Fenilalanina</td><td>Phe</td><td>F</td><td>165</td></tr>
+      <tr><td>Prolina</td><td>Pro</td><td>P</td><td>115</td></tr>
+      <tr><td>Serina</td><td>Ser</td><td>S</td><td>105</td></tr>
+      <tr><td>Treonina</td><td>Thr</td><td>T</td><td>119</td></tr>
+      <tr><td>Triptofano</td><td>Trp</td><td>W</td><td>204</td></tr>
+      <tr><td>Tirosina</td><td>Tyr</td><td>Y</td><td>181</td></tr>
+      <tr><td>Valina</td><td>Val</td><td>V</td><td>117</td></tr>
+    </table>
+    <div class="mnemo"><b>Casos especiais:</b> Asx (B) = Asn ou Asp (não diferenciados); Glx (Z) = Gln ou Glu (não diferenciados).</div>
+  </div>
+
+  <div class="card">
+    <h3>Aminoácidos essenciais</h3>
+    <p>Dos 20 aminoácidos, <b>metade pode ser sintetizada pelo próprio organismo</b>, mas o resto não — por isso devem ser fornecidos pela dieta. São os <b>aminoácidos essenciais</b>:</p>
+    <div class="clinical"><b>Val · Leu · Ile · Phe · Trp · Tyr · Thr · Cys · Met · Lys</b></div>
+    <p style="margin-top:10px;">Em recém-nascidos, a <b>Histidina (His)</b> também é essencial, pois o organismo ainda não amadureceu o suficiente para sintetizá-la.</p>
+  </div>
+</section>
+
+<!-- ============ PROPRIEDADES ============ -->
+<section class="section" id="propriedades">
+  <div class="hero">
+    <span class="eyebrow">Propriedades físico-químicas</span>
+    <h2>Propriedades físicas, ópticas e ácido-base</h2>
+  </div>
+
+  <div class="card">
+    <h3>Propriedades físicas</h3>
+    <p>São substâncias cristalinas, geralmente solúveis em água ou soluções ácidas/básicas diluídas, pouco solúveis em álcool e insolúveis em éter. Possuem ponto de fusão elevado, geralmente acima de 200-300°C — acima dessas temperaturas, os aminoácidos se decompõem.</p>
+  </div>
+
+  <div class="card">
+    <h3>Propriedades ópticas</h3>
+    <p>Exceto a <b>glicina</b>, todos os aminoácidos apresentam atividade óptica — capazes de desviar o plano de vibração da luz polarizada. Isso ocorre porque o carbono alfa (exceto na glicina) está substituído de forma assimétrica com quatro grupos químicos diferentes.</p>
+  </div>
+
+  <div class="card">
+    <h3>Propriedades ácido-base: os aminoácidos como íons dipolares (zwitterions)</h3>
+    <p>Os aminoácidos cristalizados se encontram e cristalizam a partir de soluções aquosas neutras na forma de <b>íons dipolares</b> (também chamados íons híbridos ou <b>zwitterions</b>), e não como moléculas dissociadas.</p>
+    <p>Substâncias com essa propriedade dupla são chamadas <b>anfóteras</b> (do grego <i>amphi</i>: ambos) — e recebem o nome de <b>anfólitos</b> ("eletrólitos anfóteros").</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Como ácido (doador de prótons)</h4><p style="margin:0;font-size:.85rem; font-family:monospace;">H₃N⁺-CH(CH₃)-COO⁻ → H⁺ + H₂N-CH(CH₃)-COO⁻</p></div>
+      <div class="mini-card"><h4>Como base (aceptor de prótons)</h4><p style="margin:0;font-size:.85rem; font-family:monospace;">H⁺ + H₃N⁺-CH(CH₃)-COO⁻ → H₃N⁺-CH(CH₃)-COOH</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="exercise-box">
+      <h4>Exercício — complete</h4>
+      <p style="font-size:.9rem;">O carbono assimétrico está ligado a <input class="fill-input" id="ex1a" placeholder="quantos substituintes diferentes?"></p>
+      <p style="font-size:.9rem;">Exceto a glicina/prolina, todos os aminoácidos comuns têm um grupo carboxilo e um grupo <input class="fill-input" id="ex1b" placeholder="qual outro grupo?"> livres.</p>
+      <p style="font-size:.9rem;">Substâncias que atuam como ácido ou base são chamadas <input class="fill-input" id="ex1c" placeholder="termo técnico"></p>
+      <button class="check-btn" onclick="showAnswers1()">Ver respostas</button>
+      <div class="exercise-result" id="ex1result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FUNÇÕES E NÃO-PROTEICOS ============ -->
+<section class="section" id="funcoes">
+  <div class="hero">
+    <span class="eyebrow">Além das proteínas</span>
+    <h2>Funções dos aminoácidos e aminoácidos não proteicos</h2>
+  </div>
+
+  <div class="card">
+    <h3>Funções dos aminoácidos</h3>
+    <ul style="color:#c8d1de;">
+      <li>São precursores de peptídeos e proteínas</li>
+      <li>Fazem parte das proteínas</li>
+      <li>São precursores na síntese de algumas hormônios</li>
+      <li>Alguns antibióticos são aminoácidos, como o cloranfenicol</li>
+      <li>Alguns são metabólitos intermediários de vias metabólicas importantes</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Aminoácidos não proteicos</h3>
+    <p>Além dos 20 aminoácidos comuns, existem cerca de <b>150 aminoácidos adicionais</b> encontrados em células e tecidos, de forma livre ou combinada, mas <b>nunca fazendo parte de proteínas</b>. A maioria deriva dos alfa-aminoácidos, mas também existem beta, gama e outros.</p>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">Exemplos importantes de não proteicos <span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <ul style="color:#c8d1de; margin:0;">
+          <li><b>β-alanina</b> — precursora da vitamina ácido pantotênico</li>
+          <li><b>Homocisteína e homoserina</b> — intermediários no metabolismo de aminoácidos</li>
+          <li><b>Citrulina e ornitina</b> — intermediários na síntese da arginina</li>
+          <li><b>Ácido gama-aminobutírico (GABA)</b> — atua na transmissão de impulsos nervosos</li>
+          <li><b>Ácido D-glutâmico</b> — encontrado nas paredes celulares de muitas bactérias</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Revisão ativa</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Clique no cartão para ver a resposta, depois avalie seu nível de lembrança.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span>Cartão <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span>Dominados: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Conceito</span><div id="fcFront">Carregando...</div><div class="flash-hint">Toque para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">De novo</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bem</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Misturar</button>
+      <button onclick="nextCard()">Próximo →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Avaliação final</span>
+    <h2>Quiz — Aminoácidos</h2>
+    <p>12 questões de múltipla escolha.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Clinicus · Bioquímica — Aminoácidos · Prof. Dr. Robert Vargas Bernal</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'bioquimica_aminoacidos_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','classificacao','nomenclatura','propriedades','funcoes','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nível ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completo';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Seção explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+  });
+});
+function toggleAcc(head){
+  head.parentElement.classList.toggle('open');
+}
+function showAnswers1(){
+  const r = document.getElementById('ex1result');
+  r.className = 'exercise-result show';
+  r.innerHTML = `<b>Respostas:</b><br>
+  Quatro substituintes diferentes.<br>
+  Grupo amino.<br>
+  Anfóteras (ou anfólitos).`;
+  addXP(15, 'Exercício revisado');
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Estrutura', front:'Qual a fórmula estrutural geral dos α-aminoácidos?', back:'R–CH(NH₂)–COOH — um grupo carboxilo e um grupo amino ligados ao carbono alfa (exceto na prolina).'},
+  {tag:'Estrutura', front:'Qual foi o primeiro aminoácido isolado, e quando?', back:'A glicocola (glicina), isolada em 1820 a partir da gelatina, por Braconot.'},
+  {tag:'Isomeria', front:'O que é um carbono assimétrico (quiral)?', back:'Um carbono ligado a 4 substituintes diferentes — responsável pela isomeria óptica.'},
+  {tag:'Isomeria', front:'Como se chamam as duas formas que diferem na direção em que desviam a luz polarizada?', back:'Enantiômeros — formas opticamente ativas.'},
+  {tag:'Classificação', front:'Quais são as 4 classes de aminoácidos pela polaridade do grupo R?', back:'1) Não polares/hidrófobos; 2) Polares sem carga; 3) Carga positiva (básicos); 4) Carga negativa (ácidos).'},
+  {tag:'Classificação', front:'Quais são os 3 aminoácidos básicos (carga positiva)?', back:'Lisina (Lys/K), Arginina (Arg/R) e Histidina (His/H).'},
+  {tag:'Classificação', front:'Quais são os 2 aminoácidos ácidos (carga negativa)?', back:'Ácido Aspártico (Asp/D) e Ácido Glutâmico (Glu/E).'},
+  {tag:'Essenciais', front:'Quais são os 10 aminoácidos essenciais?', back:'Val, Leu, Ile, Phe, Trp, Tyr, Thr, Cys, Met, Lys.'},
+  {tag:'Essenciais', front:'Qual aminoácido é essencial apenas em recém-nascidos, e por quê?', back:'A Histidina (His) — porque o organismo do recém-nascido ainda não amadureceu o suficiente para sintetizá-la.'},
+  {tag:'Propriedades', front:'Qual é o único aminoácido comum sem atividade óptica, e por quê?', back:'A glicina — porque seu carbono alfa não está ligado a 4 grupos diferentes (tem 2 hidrogênios).'},
+  {tag:'Propriedades', front:'Em que forma os aminoácidos cristalizam a partir de soluções aquosas neutras?', back:'Como íons dipolares (zwitterions/íons híbridos), não como moléculas dissociadas.'},
+  {tag:'Propriedades', front:'O que são substâncias "anfóteras"?', back:'Substâncias que podem atuar tanto como ácido (doador de prótons) quanto como base (aceptor de prótons) — também chamadas anfólitos.'},
+  {tag:'Não proteicos', front:'Quantos aminoácidos não proteicos são conhecidos aproximadamente?', back:'Cerca de 150, encontrados livres ou combinados em células e tecidos, mas nunca em proteínas.'},
+  {tag:'Não proteicos', front:'Qual aminoácido não proteico atua na transmissão de impulsos nervosos?', back:'O ácido gama-aminobutírico (GABA).'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Cartões misturados');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['De novo','Difícil','Bem','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+{"q":"Qual é o denominador comum estrutural dos α-aminoácidos, exceto a prolina?","options":["Dois grupos amino","Um grupo carboxilo e um grupo amino livres no carbono alfa","Apenas um grupo hidroxila","Um anel aromático"],"correct":1,"exp":"Todos os α-aminoácidos comuns (exceto a prolina) têm um grupo carboxilo livre e um grupo amino livre ligados ao carbono alfa."},
+{"q":"Quem isolou o primeiro aminoácido (glicocola) e em que ano?","options":["Pasteur, em 1860","Fisher, em 1900","Braconot, em 1820","Linus Pauling, em 1950"],"correct":2,"exp":"Braconot isolou a glicocola (glicina) a partir da gelatina, em 1820."},
+{"q":"O que caracteriza um carbono assimétrico (quiral)?","options":["Estar ligado a 4 substituintes diferentes","Ter carga elétrica neutra","Formar sempre ligações duplas","Estar presente apenas na glicina"],"correct":0,"exp":"O carbono quiral está ligado a 4 substituintes diferentes, sendo responsável pela isomeria óptica."},
+{"q":"Como se chamam as duas estruturas que possuem os mesmos átomos e ligações, mas não se sobrepõem (como as mãos)?","options":["Isótopos","Isômeros geométricos","Enantiômeros","Polímeros"],"correct":2,"exp":"São chamados enantiômeros — diferem na direção em que desviam a luz polarizada."},
+{"q":"Quais aminoácidos possuem grupo R com carga positiva a pH 6,0-7,0?","options":["Ácido Aspártico e Ácido Glutâmico","Alanina e Valina","Lisina, Arginina e Histidina","Serina e Treonina"],"correct":2,"exp":"Lisina (Lys), Arginina (Arg) e Histidina (His) são os aminoácidos básicos, com carga positiva nesse pH."},
+{"q":"Quais aminoácidos possuem grupo R com carga negativa (dicarboxílicos)?","options":["Ácido Aspártico e Ácido Glutâmico","Lisina e Arginina","Glicina e Alanina","Cisteína e Metionina"],"correct":0,"exp":" Ácido Aspártico (Asp/D) e Ácido Glutâmico (Glu/E) desprotonam seu grupo carboxilo lateral, adquirindo carga negativa nesse pH."},
+{"q":"Quantos dos 20 aminoácidos são considerados essenciais (não sintetizados pelo organismo)?","options":["5","10","15","20"],"correct":1,"exp":"10 aminoácidos são essenciais: Val, Leu, Ile, Phe, Trp, Tyr, Thr, Cys, Met, Lys."},
+{"q":"Por que a Histidina é considerada essencial em recém-nascidos, mas não em adultos?","options":["Porque muda de estrutura com a idade","Porque o organismo do recém-nascido ainda não amadureceu para sintetizá-la","Porque é tóxica para adultos","Porque não existe em adultos"],"correct":1,"exp":"O organismo do recém-nascido ainda não está maduro o suficiente para sintetizar Histidina, tornando-a essencial nessa fase."},
+{"q":"Qual é o único aminoácido comum que NÃO apresenta atividade óptica?","options":["Alanina","Glicina","Lisina","Prolina"],"correct":1,"exp":"A glicina é o único sem atividade óptica, pois seu carbono alfa não está ligado a 4 grupos diferentes."},
+{"q":"Em soluções aquosas neutras, como os aminoácidos cristalizados se encontram predominantemente?","options":["Como moléculas totalmente dissociadas","Como íons dipolares (zwitterions)","Como sais insolúveis","Como gases dissolvidos"],"correct":1,"exp":"Os aminoácidos se encontram como íons dipolares/híbridos (zwitterions), não como moléculas dissociadas."},
+{"q":"Uma substância capaz de atuar tanto como ácido quanto como base é chamada de:","options":["Eletrólito forte","Anfótera (anfólito)","Isômero","Cofator"],"correct":1,"exp":"Substâncias anfóteras (anfólitos) podem doar prótons (agir como ácido) ou aceitar prótons (agir como base)."},
+{"q":"Qual aminoácido não proteico atua como agente químico na transmissão de impulsos nervosos?","options":["Homocisteína","Citrulina","Ácido gama-aminobutírico (GABA)","Ornitina"],"correct":2,"exp":"O ácido gama-aminobutírico (GABA) atua como neurotransmissor na transmissão de impulsos nervosos."}
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Questão ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Pontos: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ Correto! ' : '✗ Incorreto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Resposta correta'); } else { addXP(3, 'Tentativa registrada'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de acertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completo'); }
+  html += '<table class="summary-table"><tr><th>Questão</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correto':'Incorreto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Refazer Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>

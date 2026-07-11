@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioquímica — Enzimas</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.tab-btn .done-check{color:var(--green2); font-size:.75rem;}
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.prof-tag{display:inline-flex; align-items:center; gap:8px; background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.35); color:var(--gold); border-radius:999px; padding:5px 14px; font-size:.78rem; font-weight:700; margin-bottom:14px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+@media(max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:600px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+.aa-badge{display:inline-flex; flex-direction:column; align-items:center; justify-content:center; width:70px; height:70px; border-radius:10px; font-weight:800; margin:4px; background:var(--bg-alt); border:1px solid var(--border); color:var(--text);}
+.aa-badge span{font-size:.6rem; font-weight:400; color:var(--text-dim);}
+.aa-badge.nonpolar{border-color:#6bbf59; color:#a3d84a;}
+.aa-badge.polar{border-color:#4d9fff; color:#7ab8ff;}
+.aa-badge.positive{border-color:#ffd166; color:#ffd166;}
+.aa-badge.negative{border-color:#ff5c6c; color:#ff8a94;}
+
+.exercise-box{background:var(--bg-alt); border:2px dashed var(--border); border-radius:12px; padding:18px; margin:14px 0;}
+.exercise-box h4{color:var(--gold); margin-bottom:10px;}
+.fill-input{background:var(--card); border:1px solid var(--border); border-radius:6px; color:var(--text); padding:6px 10px; font-size:.85rem; width:100%; margin-top:4px;}
+.check-btn{background:var(--green2); color:#0d0f16; border:none; padding:8px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:.85rem; margin-top:10px;}
+.check-btn:hover{background:var(--green1);}
+.exercise-result{margin-top:10px; padding:10px 14px; border-radius:8px; font-size:.85rem; display:none; background:rgba(163,216,74,.08); border:1px solid var(--green2);}
+.exercise-result.show{display:block;}
+
+.flash-controls{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.flashcard-wrap{perspective:1000px; margin:10px 0;}
+.flashcard{position:relative; min-height:180px; cursor:pointer;}
+.face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt);}
+.face-back{display:none; background:rgba(163,216,74,.08); border-color:var(--green2);}
+.flashcard.flipped .face-front{display:none;}
+.flashcard.flipped .face-back{display:flex;}
+.flash-tag{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--green2); margin-bottom:8px;}
+.flash-hint{font-size:.72rem; color:var(--text-dim); margin-top:10px;}
+.review-btns{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+.review-btns button{flex:1; min-width:70px; padding:9px 6px; border-radius:8px; border:none; font-weight:700; font-size:.78rem; cursor:pointer; color:#0d0f16;}
+.btn-again{background:var(--red);} .btn-hard{background:#ffa552;} .btn-good{background:var(--green2);} .btn-easy{background:var(--blue);}
+.nav-flash{display:flex; justify-content:space-between; margin-top:12px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.82rem;}
+
+.quiz-progress{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:14px;}
+.quiz-q{font-size:1.05rem; font-weight:700; margin-bottom:14px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:.9rem;}
+.option:hover:not(.disabled){border-color:var(--green2);}
+.option.correct{background:rgba(74,222,128,.15); border-color:#4ade80;}
+.option.incorrect{background:rgba(255,92,108,.15); border-color:var(--red);}
+.option.disabled{cursor:default;}
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(74,222,128,.12); border:1px solid #4ade80; color:#4ade80;}
+.feedback.incorrect{background:rgba(255,92,108,.12); border:1px solid var(--red); color:var(--red);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:14px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 22px; border-radius:10px; font-weight:800; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.result-box{text-align:center; padding:30px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.summary-table td.ok{color:#4ade80; font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(40px); opacity:0; background:var(--card); border:1px solid var(--green2); color:var(--text); padding:12px 22px; border-radius:12px; font-weight:700; font-size:.85rem; box-shadow:var(--shadow); transition:.35s; z-index:999;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+<style>
+.enz-class{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:8px;}
+.enz-class b{color:var(--green2);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40"><circle cx="14" cy="14" r="6" fill="none" stroke="#6bbf59" stroke-width="2"/><circle cx="28" cy="14" r="4" fill="none" stroke="#a3d84a" stroke-width="2"/><circle cx="20" cy="28" r="5" fill="none" stroke="#ffd166" stroke-width="2"/><line x1="14" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/><line x1="28" y1="14" x2="20" y2="28" stroke="#8b98ab" stroke-width="1.5"/></svg>
+      <div class="logo-text">
+        <h1>Bioquímica — Enzimas</h1>
+        <span>Prof. Dr. Robert Vargas Bernal · Partes I e II</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nível 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0% completo</span><span>Nomenclatura → Cofatores → Interação E-S → Fatores → Inibidores → Cinética/Diagnóstico → Flashcards → Quiz</span></div>
+  </div>
+  <nav>
+    <button class="tab-btn active" data-tab="intro">🧪 Nomenclatura e Classificação</button>
+    <button class="tab-btn" data-tab="cofatores">🔗 Cofatores e Coenzimas</button>
+    <button class="tab-btn" data-tab="interacao">🔑 Interação Enzima-Substrato</button>
+    <button class="tab-btn" data-tab="fatores">🌡️ Fatores que Afetam a Atividade</button>
+    <button class="tab-btn" data-tab="inibidores">🚫 Inibidores Enzimáticos</button>
+    <button class="tab-btn" data-tab="clinica">🩺 Cinética e Diagnóstico Clínico</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz Final</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INTRO / NOMENCLATURA ============ -->
+<section class="section active" id="intro">
+  <div class="hero">
+    <span class="prof-tag">🧪 Bioquímica — Prof. Dr. Robert Vargas Bernal</span>
+    <h2>Enzimas: os catalisadores biológicos</h2>
+    <p>As enzimas são proteínas especializadas na catálise de reações biológicas — estão entre as mais notáveis biomoléculas conhecidas, por sua extraordinária especificidade e poder catalítico, muito maior que o de catalisadores feitos pelo homem.</p>
+  </div>
+
+  <div class="card">
+    <h2>O que são enzimas?</h2>
+    <p>As enzimas são <b>catalisadores biológicos</b> que aceleram as reações bioquímicas nas quais participam — sem serem consumidas no processo.</p>
+  </div>
+
+  <div class="card">
+    <h3>Nomenclatura clássica</h3>
+    <p>Muitas enzimas foram nomeadas adicionando o sufixo <b>"-ase"</b> ao nome do substrato — a molécula sobre a qual a enzima exerce sua ação catalítica.</p>
+    <div class="grid-3">
+      <div class="mini-card"><h4>Ureasa</h4><p style="margin:0;font-size:.85rem;">Catalisa a hidrólise da ureia, produzindo amônia e CO₂</p></div>
+      <div class="mini-card"><h4>Arginasa</h4><p style="margin:0;font-size:.85rem;">Catalisa a hidrólise da arginina em ornitina e ureia</p></div>
+      <div class="mini-card"><h4>Fosfatase</h4><p style="margin:0;font-size:.85rem;">Catalisa a hidrólise de ésteres fosfóricos</p></div>
+    </div>
+    <p style="margin-top:12px;">Também podem ser nomeadas pelo <b>tipo de reação</b> que catalisam (Desidrogenases transferem H; Descarboxilases transferem grupos -COOH), ou por <b>nome comum</b> histórico (Pepsina, Tripsina, Quimotripsina — todas enzimas digestivas).</p>
+    <div class="clinical"><b>Limitação:</b> essa nomenclatura nem sempre foi prática — muitas enzimas (como pepsina, tripsina, catalase) receberam nomes quimicamente pouco informativos.</div>
+  </div>
+
+  <div class="card">
+    <h3>Classificação Internacional (6 classes)</h3>
+    <p>Por essa razão — e pelo crescente número de enzimas descobertas — foi adotada uma classificação sistemática, segundo recomendação de uma comissão internacional. O sistema divide as enzimas em <b>6 classes principais</b>, cada uma subdividida de acordo com o tipo de reação catalisada:</p>
+    <div class="enz-class"><b>1. Oxidorredutases</b> — catalisam reações de oxidação-redução (transferência de elétrons/hidrogênio). Ex: desidrogenases, oxidases.</div>
+    <div class="enz-class"><b>2. Transferases</b> — transferem um grupo funcional (não H) de uma molécula para outra. Ex: aminotransferases (transaminases).</div>
+    <div class="enz-class"><b>3. Hidrolases</b> — catalisam a hidrólise (quebra por adição de água) de ligações. Ex: proteases, lipases, amilases, fosfatases.</div>
+    <div class="enz-class"><b>4. Liases</b> — removem grupos sem hidrólise, formando ligações duplas (ou o inverso).</div>
+    <div class="enz-class"><b>5. Isomerases</b> — catalisam rearranjos dentro de uma mesma molécula (isomerização).</div>
+    <div class="enz-class"><b>6. Ligases (sintetases)</b> — unem duas moléculas, com gasto de energia (ATP).</div>
+  </div>
+</section>
+
+<!-- ============ COFATORES ============ -->
+<section class="section" id="cofatores">
+  <div class="hero">
+    <span class="eyebrow">Componentes não proteicos</span>
+    <h2>Cofatores enzimáticos: holoenzima e apoenzima</h2>
+  </div>
+  <div class="card">
+    <p>A atividade de algumas enzimas depende apenas de sua estrutura proteica — outras precisam, além disso, de um ou mais componentes não proteicos, chamados <b>cofatores</b>.</p>
+    <div class="grid-2">
+      <div class="mini-card"><h4>Cofator inorgânico</h4><p style="margin:0;font-size:.85rem;">Pode ser um íon metálico (Mg²⁺, Zn²⁺, Fe²⁺, etc.)</p></div>
+      <div class="mini-card"><h4>Coenzima (orgânico)</h4><p style="margin:0;font-size:.85rem;">Molécula orgânica que facilita a ação enzimática — pode se ligar temporária ou permanentemente à enzima</p></div>
+    </div>
+    <p style="margin-top:12px;">As coenzimas podem catalisar reações, mas não com a mesma eficácia que quando ligadas a uma enzima. Os cofatores geralmente são estáveis ao calor, enquanto muitas proteínas enzimáticas perdem atividade por aquecimento.</p>
+    <div class="mnemo"><b>Termos-chave:</b> o complexo enzima-cofator cataliticamente ativo é chamado <b>holoenzima</b>. Quando o cofator é removido, a proteína restante — inativa por si só — é chamada <b>apoenzima</b>.</div>
+    <div class="criterio"><b>Origem das coenzimas:</b> muitas coenzimas se formam no organismo a partir de <b>vitaminas</b> ingeridas na dieta. Ex: a vitamina B12 é precursora da coenzima da metionina sintetase.</div>
+  </div>
+</section>
+
+<!-- ============ INTERAÇÃO ENZIMA-SUBSTRATO ============ -->
+<section class="section" id="interacao">
+  <div class="hero">
+    <span class="eyebrow">2 modelos históricos</span>
+    <h2>Como a enzima reconhece seu substrato?</h2>
+  </div>
+  <div class="card">
+    <h3>Modelo Chave-Fechadura (Emil Fischer)</h3>
+    <p>O primeiro modelo proposto para explicar a interação enzima-substrato, pelo químico <b>Emil Fischer</b>. Supõe que a estrutura do substrato e a do sítio ativo são <b>exatamente complementares</b> — da mesma forma que uma chave encaixa numa fechadura.</p>
+  </div>
+  <div class="card">
+    <h3>Modelo de Encaixe Induzido</h3>
+    <p>Estudos posteriores sugeriram que o sítio ativo é muito mais flexível que uma fechadura rígida. A interação física entre enzima e substrato produz uma <b>mudança na geometria do centro ativo</b>, por distorção das superfícies moleculares.</p>
+    <p>Esse modelo impõe certa tensão às moléculas reagentes, <b>facilitando ainda mais a reação</b>.</p>
+    <div class="analogy"><b>Diferença-chave para a prova:</b> o modelo chave-fechadura é rígido/estático; o encaixe induzido é dinâmico — o sítio ativo se ajusta ao se aproximar do substrato.</div>
+  </div>
+</section>
+
+<!-- ============ FATORES ============ -->
+<section class="section" id="fatores">
+  <div class="hero">
+    <span class="eyebrow">8 fatores</span>
+    <h2>O que afeta a atividade enzimática</h2>
+    <p>Agentes ou condições que podem modificar o funcionamento das enzimas.</p>
+  </div>
+
+  <div class="card">
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">1. Concentração de substrato <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Ao aumentar a concentração de substrato, a velocidade da reação aumenta — mais colisões enzima-substrato. Acima de certa concentração, porém, a enzima satura e a velocidade se torna constante (velocidade máxima).</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">2. Concentração de enzima <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>A velocidade aumenta proporcionalmente à concentração de enzima, até certo ponto, quando se torna constante. Essa propriedade é usada para determinar atividades de enzimas séricas no diagnóstico de doenças.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">3. pH <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Mudanças na concentração de H⁺ geram forças de atração/repulsão nos enlaces de hidrogênio e iônicos das enzimas, mudando sua forma. Cada enzima tem um <b>pH ótimo</b>. Ex: enzimas intestinais ≈7,5 (levemente básico); enzimas estomacais ≈2 (muito ácido).</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">4. Temperatura <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>O aumento de temperatura aumenta a atividade enzimática — até certo ponto. Temperaturas muito altas desnaturam a enzima. A maioria das enzimas do corpo humano tem temperatura ótima ≈37°C. O gráfico velocidade × temperatura tem formato de sino.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">5. Salinidade <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>A concentração de sais afeta o potencial iônico, podendo interferir em ligações do sítio ativo, afetando a atividade enzimática — de forma semelhante ao pH.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">6. Concentração do produto <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>A acumulação de produtos geralmente reduz a velocidade da enzima — em alguns casos, o produto se liga ao sítio ativo, inibindo a enzima. Em sistemas vivos, isso é normalmente evitado por remoção rápida dos produtos.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">7. Ativadores enzimáticos <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Cátions metálicos inorgânicos (Mg²⁺, Mn²⁺, Zn²⁺, Ca²⁺, Co²⁺, Cu²⁺, Na⁺, K⁺) são cofatores comuns. Raramente, ânions também são necessários — ex: cloreto (Cl⁻) para a amilase. Coenzimas (moléculas orgânicas de carbono, como vitaminas) também favorecem a atividade — ex: vitamina B12 é coenzima da metionina sintetase.</p></div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)">8. Inibidores enzimáticos <span class="arrow">▾</span></div>
+      <div class="accordion-body"><p>Substâncias que afetam negativamente a função enzimática, reduzindo ou parando a catálise. Detalhados na próxima aba.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INIBIDORES ============ -->
+<section class="section" id="inibidores">
+  <div class="hero">
+    <span class="eyebrow">4 tipos</span>
+    <h2>Inibidores enzimáticos</h2>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr><th>Tipo</th><th>Mecanismo</th></tr>
+      <tr><td><b>Competitivo</b></td><td>Composto quimicamente similar ao substrato, que reage com o sítio ativo. Enquanto ligado, o substrato não consegue se ligar — desloca o substrato, impedindo metabolização.</td></tr>
+      <tr><td><b>Não competitivo</b></td><td>Liga-se a outro local da enzima, chamado <b>sítio alostérico</b>. A enzima muda de forma e não consegue mais se ligar facilmente ao substrato.</td></tr>
+      <tr><td><b>Incompetitivo (anticompetitivo)</b></td><td>Liga-se ao centro ativo <b>somente depois</b> que o substrato já se ligou (complexo ES) — não competem entre si. Forma um complexo inativo ESI. Diminui o Km (aumenta afinidade aparente), mas o complexo ESI não gera produto — Vmáx diminui.</td></tr>
+      <tr><td><b>Irreversível</b></td><td>Produz mudanças permanentes na enzima, deteriorando sua capacidade catalítica.</td></tr>
+    </table>
+    <div class="clinical"><b>Exemplos de inibição irreversível:</b> venenos organofosforados (inseticidas) inibem irreversivelmente a acetilcolinesterase (sistema nervoso). O alopurinol inibe a xantina oxidase (enzima do catabolismo das purinas) — usado como fármaco antigotoso no tratamento da artrite gotosa ("gota").</div>
+  </div>
+
+  <div class="card">
+    <h3>Zimógenos (proenzimas)</h3>
+    <p>Um zimógeno é um <b>precursor enzimático inativo</b> — não cataliza nenhuma reação. Para se ativar, precisa de uma mudança bioquímica em sua estrutura que forme um centro ativo capaz de realizar a catálise. Nesse momento, o zimógeno passa a ser uma enzima ativa.</p>
+    <p>A mudança costuma ocorrer num lisossomo, onde uma parte específica da enzima precursora se cliva do resto para ativá-la. A cadeia de aminoácidos liberada é chamada <b>peptídeo de ativação</b>.</p>
+    <div class="mnemo"><b>Onde os zimógenos atuam:</b> em muitas reações biológicas, como a digestão (ex: pepsinogênio → pepsina) e a coagulação sanguínea (ex: protrombina → trombina).</div>
+  </div>
+</section>
+
+<!-- ============ CINÉTICA E DIAGNÓSTICO ============ -->
+<section class="section" id="clinica">
+  <div class="hero">
+    <span class="eyebrow">Aplicação clínica</span>
+    <h2>Cinética enzimática e enzimas no diagnóstico</h2>
+  </div>
+
+  <div class="card">
+    <h3>Cinética enzimática (Michaelis-Menten)</h3>
+    <p>O processo enzimático segue etapas: primeiro, o substrato (S) e a enzima (E) se unem, formando um complexo enzima-substrato (ES). O complexo ES ou se dissocia de volta em E + S, ou se transforma, gerando o complexo enzima-produto (EP), que se dissocia em E + Produto (P).</p>
+    <p>Esse processo foi modelado por <b>Michaelis e Menten</b>, que obtiveram uma equação (equação de Michaelis-Menten) em que a velocidade da ação enzimática é função da quantidade de substrato, da quantidade de enzima, e das características da enzima (afinidade pelo substrato e poder catalítico).</p>
+    <div class="mnemo"><b>Km (constante de Michaelis):</b> é a concentração de substrato com a qual se alcança a metade da velocidade máxima (Vmáx/2).</div>
+  </div>
+
+  <div class="card">
+    <h3>Enzimas séricas usadas no diagnóstico clínico</h3>
+    <table>
+      <tr><th>Enzima sérica</th><th>Principal uso diagnóstico</th></tr>
+      <tr><td><b>AST/GOT</b> (Aspartato aminotransferase)</td><td>Infarto do miocárdio, dano hepático</td></tr>
+      <tr><td><b>ALT/GPT</b> (Alanina aminotransferase)</td><td>Hepatite viral, mais específica para fígado que AST</td></tr>
+      <tr><td><b>Amilase</b></td><td>Pancreatite aguda, câncer de pâncreas/ovário/pulmão</td></tr>
+      <tr><td><b>Creatina cinase (CK)</b></td><td>Transtornos musculares e infarto do miocárdio</td></tr>
+      <tr><td><b>Gama-glutamiltransferase</b></td><td>Diversas doenças hepáticas</td></tr>
+      <tr><td><b>Lipase</b></td><td>Pancreatite aguda</td></tr>
+      <tr><td><b>Fosfatase ácida</b></td><td>Carcinoma metastático de próstata</td></tr>
+      <tr><td><b>Fosfatase alcalina</b></td><td>Transtornos ósseos, doenças hepáticas obstrutivas</td></tr>
+    </table>
+    <div class="clinical"><b>AST vs. ALT na prática:</b> valor normal de ambas é geralmente &lt;40 UI/L. Infarto do miocárdio eleva mais a AST/GOT; hepatite viral e cirrose elevam mais a ALT/GPT (mais específica para dano hepático).</div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="section" id="flashcards">
+  <div class="hero">
+    <span class="eyebrow">Revisão ativa</span>
+    <h2>Flashcards estilo Anki</h2>
+    <p>Clique no cartão para ver a resposta, depois avalie seu nível de lembrança.</p>
+  </div>
+  <div class="card">
+    <div class="flash-controls">
+      <span>Cartão <span id="fcIndex">1</span> / <span id="fcTotal">0</span></span>
+      <span>Dominados: <span id="fcMastered">0</span></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">Conceito</span><div id="fcFront">Carregando...</div><div class="flash-hint">Toque para revelar</div></div>
+        </div>
+        <div class="face face-back"><div id="fcBack"></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCard(0)">De novo</button>
+      <button class="btn-hard" onclick="reviewCard(1)">Difícil</button>
+      <button class="btn-good" onclick="reviewCard(2)">Bem</button>
+      <button class="btn-easy" onclick="reviewCard(3)">Fácil</button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="shuffleCards()">🔀 Misturar</button>
+      <button onclick="nextCard()">Próximo →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="hero">
+    <span class="eyebrow">Avaliação final</span>
+    <h2>Quiz — Enzimas</h2>
+    <p>15 questões de múltipla escolha.</p>
+  </div>
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>Clinicus · Bioquímica — Enzimas (Partes I e II) · Prof. Dr. Robert Vargas Bernal</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'bioquimica_enzimas_progress';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+state.xp = state.xp || 0;
+state.visited = state.visited || {};
+state.quizDone = state.quizDone || false;
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function addXP(amount, reason){
+  state.xp += amount; saveState(); updateHeader(); showToast('+' + amount + ' XP · ' + reason);
+}
+const tabIds = ['intro','cofatores','interacao','fatores','inibidores','clinica','flashcards','quiz'];
+function updateHeader(){
+  document.getElementById('xpCount').textContent = state.xp;
+  const level = Math.floor(state.xp / 100) + 1;
+  document.getElementById('levelBadge').textContent = 'Nível ' + level;
+  const pct = Math.round((Object.keys(state.visited).length/tabIds.length)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '% completo';
+  tabIds.forEach(id=>{
+    const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(state.visited[id] && btn && !btn.querySelector('.done-check')){
+      btn.innerHTML += ' <span class="done-check">✓</span>';
+    }
+  });
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    if(!state.visited[tab]){ state.visited[tab] = true; saveState(); addXP(10, 'Seção explorada'); }
+    if(tab === 'flashcards') initFlashcards();
+    if(tab === 'quiz') initQuiz();
+  });
+});
+function toggleAcc(head){
+  head.parentElement.classList.toggle('open');
+}
+
+/* ============ FLASHCARDS ============ */
+const flashData = [
+  {tag:'Nomenclatura', front:'Qual sufixo é comumente adicionado ao nome do substrato para nomear uma enzima?', back:'"-ase" (ex: ureasa atua sobre a ureia, arginasa sobre a arginina).'},
+  {tag:'Nomenclatura', front:'Quais são as 6 classes principais da Classificação Internacional de Enzimas?', back:'1) Oxidorredutases, 2) Transferases, 3) Hidrolases, 4) Liases, 5) Isomerases, 6) Ligases (sintetases).'},
+  {tag:'Nomenclatura', front:'Qual classe de enzima catalisa reações de hidrólise?', back:'As Hidrolases — ex: proteases, lipases, amilases, fosfatases.'},
+  {tag:'Cofatores', front:'O que é uma holoenzima?', back:'O complexo enzima + cofator cataliticamente ativo.'},
+  {tag:'Cofatores', front:'O que é uma apoenzima?', back:'A proteína enzimática sem seu cofator — inativa por si só.'},
+  {tag:'Cofatores', front:'De onde geralmente se formam as coenzimas no organismo?', back:'A partir de vitaminas ingeridas na dieta (ex: vitamina B12 → coenzima da metionina sintetase).'},
+  {tag:'Interação E-S', front:'Quem propôs o modelo chave-fechadura, e qual sua premissa?', back:'Emil Fischer — supõe que o sítio ativo e o substrato são exatamente complementares, como uma chave numa fechadura.'},
+  {tag:'Interação E-S', front:'O que propõe o modelo de encaixe induzido?', back:'Que o sítio ativo é flexível — a interação com o substrato muda a geometria do centro ativo, facilitando a reação.'},
+  {tag:'Fatores', front:'Qual é a temperatura ótima da maioria das enzimas do corpo humano?', back:'Aproximadamente 37°C.'},
+  {tag:'Fatores', front:'Por que o pH ótimo varia entre enzimas de diferentes órgãos?', back:'Porque depende de onde a enzima funciona normalmente — ex: pH ótimo intestinal ≈7,5, pH ótimo estomacal ≈2.'},
+  {tag:'Inibidores', front:'Como age um inibidor competitivo?', back:'É similar ao substrato e compete pelo sítio ativo, deslocando o substrato.'},
+  {tag:'Inibidores', front:'Como age um inibidor não competitivo?', back:'Liga-se a um sítio alostérico (diferente do ativo), mudando a forma da enzima, que não consegue mais se ligar bem ao substrato.'},
+  {tag:'Inibidores', front:'Como age um inibidor incompetitivo (anticompetitivo)?', back:'Liga-se apenas ao complexo ES já formado, criando um complexo ESI inativo — não compete com o substrato pelo sítio.'},
+  {tag:'Zimógenos', front:'O que é um zimógeno?', back:'Um precursor enzimático inativo, que precisa de uma mudança bioquímica (clivagem) para se tornar uma enzima ativa.'},
+  {tag:'Diagnóstico', front:'Qual enzima sérica é mais específica para dano hepático: AST ou ALT?', back:'ALT (GPT) é mais específica para lesão hepática que AST (GOT).'},
+  {tag:'Diagnóstico', front:'Qual enzima é o principal marcador de pancreatite aguda, junto à lipase?', back:'A amilase.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  renderCard();
+}
+function renderCard(){
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Cartões misturados');
+}
+function reviewCard(level){
+  const xpMap = [1,2,4,6]; const labels = ['De novo','Difícil','Bem','Fácil'];
+  addXP(xpMap[level], 'Flashcard: ' + labels[level]);
+  if(level >= 2) fcMastered++;
+  nextCard();
+}
+
+/* ============ QUIZ ============ */
+const quizData = [
+{"q":"Qual sufixo é classicamente adicionado ao nome do substrato para nomear uma enzima?","options":["-ina","-ase","-osa","-ol"],"correct":1,"exp":"O sufixo \"-ase\" é adicionado ao nome do substrato — ex: ureasa, arginasa, fosfatase."},
+{"q":"Quantas classes principais tem a Classificação Internacional de Enzimas?","options":["3","4","6","10"],"correct":2,"exp":"São 6 classes principais: Oxidorredutases, Transferases, Hidrolases, Liases, Isomerases e Ligases."},
+{"q":"Enzimas que catalisam reações de hidrólise pertencem a qual classe?","options":["Oxidorredutases","Hidrolases","Isomerases","Ligases"],"correct":1,"exp":"As Hidrolases catalisam a quebra de ligações por adição de água — incluem proteases, lipases e amilases."},
+{"q":"O complexo enzima-cofator cataliticamente ativo é chamado:","options":["Apoenzima","Zimógeno","Holoenzima","Substrato"],"correct":2,"exp":"Holoenzima é o nome do complexo enzima+cofator ativo."},
+{"q":"Quando o cofator é removido de uma enzima, a proteína restante (inativa) é chamada:","options":["Apoenzima","Coenzima","Holoenzima","Proenzima"],"correct":0,"exp":"A proteína sem seu cofator, inativa por si só, é chamada apoenzima."},
+{"q":"Qual modelo de interação enzima-substrato foi proposto por Emil Fischer?","options":["Encaixe induzido","Chave-fechadura","Alostérico","Michaelis-Menten"],"correct":1,"exp":"Emil Fischer propôs o modelo chave-fechadura, com complementaridade exata entre sítio ativo e substrato."},
+{"q":"O modelo de encaixe induzido propõe que:","options":["O sítio ativo é rígido e imutável","O sítio ativo muda de geometria ao interagir com o substrato","A enzima nunca se liga ao substrato","O substrato é sempre maior que a enzima"],"correct":1,"exp":"O encaixe induzido propõe que a interação com o substrato distorce/ajusta a geometria do sítio ativo, facilitando a reação."},
+{"q":"Qual é a temperatura ótima aproximada da maioria das enzimas do corpo humano?","options":["0°C","20°C","37°C","70°C"],"correct":2,"exp":"A maioria das enzimas humanas tem temperatura ótima próxima a 37°C, a temperatura corporal normal."},
+{"q":"Um inibidor que compete diretamente com o substrato pelo sítio ativo é chamado:","options":["Não competitivo","Competitivo","Incompetitivo","Irreversível apenas"],"correct":1,"exp":"O inibidor competitivo é estruturalmente similar ao substrato e compete pelo mesmo sítio ativo."},
+{"q":"Um inibidor que se liga a um sítio alostérico, diferente do sítio ativo, é chamado:","options":["Competitivo","Não competitivo","Substrato análogo","Coenzima"],"correct":1,"exp":"O inibidor não competitivo se liga a um sítio alostérico, mudando a forma da enzima e prejudicando sua ligação ao substrato."},
+{"q":"O inibidor incompetitivo (anticompetitivo) se liga:","options":["Antes do substrato, no sítio ativo livre","Somente ao complexo ES já formado","Nunca à enzima","Apenas a enzimas desnaturadas"],"correct":1,"exp":"O inibidor incompetitivo só se liga após o substrato já estar ligado (complexo ES), formando um complexo ESI inativo."},
+{"q":"O que é um zimógeno?","options":["Uma enzima já totalmente ativa","Um precursor enzimático inativo","Um tipo de coenzima","Um produto final de reação"],"correct":1,"exp":"Um zimógeno (proenzima) é um precursor inativo que precisa de ativação bioquímica para se tornar enzima funcional."},
+{"q":"Qual enzima sérica é mais específica para lesão hepática: AST (GOT) ou ALT (GPT)?","options":["AST (GOT)","ALT (GPT)","Ambas são igualmente específicas","Nenhuma das duas é usada para fígado"],"correct":1,"exp":"A ALT (GPT) é considerada mais específica para lesão hepática que a AST (GOT), que também se eleva em lesão muscular/cardíaca."},
+{"q":"Qual enzima sérica, junto à lipase, é o principal marcador de pancreatite aguda?","options":["Amilase","Creatina cinase","Fosfatase ácida","Gama-glutamiltransferase"],"correct":0,"exp":"A amilase (junto à lipase) é classicamente elevada na pancreatite aguda."},
+{"q":"Km, na equação de Michaelis-Menten, representa:","options":["A velocidade máxima absoluta da enzima","A concentração de substrato na qual se atinge metade da velocidade máxima","O número total de enzimas na célula","A temperatura ótima da reação"],"correct":1,"exp":"Km é a concentração de substrato necessária para alcançar a metade da velocidade máxima (Vmáx/2) — reflete a afinidade da enzima pelo substrato."}
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Questão ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Pontos: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ Correto! ' : '✗ Incorreto. ') + item.exp + '</div>';
+  if(correct){ quizScore++; addXP(15, 'Resposta correta'); } else { addXP(3, 'Tentativa registrada'); }
+  quizLog.push({q:item.q, correct:correct});
+  document.getElementById('quizNextBtn').disabled = false;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((quizScore/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + quizScore + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de acertos</p>';
+  if(!state.quizDone){ state.quizDone = true; saveState(); addXP(50, 'Quiz completo'); }
+  html += '<table class="summary-table"><tr><th>Questão</th><th>Resultado</th></tr>';
+  quizLog.forEach(l=>{ html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correto':'Incorreto') + '</td></tr>'; });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="initQuiz()">Refazer Quiz</button></div></div>';
+  area.innerHTML = html;
+}
+
+updateHeader();
+</script>
+</body>
+</html>
