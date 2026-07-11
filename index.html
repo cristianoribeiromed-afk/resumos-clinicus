@@ -300,16 +300,43 @@ a{color:inherit;}
 }
 .subject-body-inner{padding:12px 18px 16px;max-width:460px;}
 
-.prof-item{
+.subject-group-label{
+  display:flex; align-items:center; gap:8px;
+  font-size:13px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.04em;
+  margin:14px 2px 2px;
+}
+.subject-group-label:first-child{margin-top:0;}
+
+.etapa-folder{
   background:var(--panel2);
   border:1px solid var(--border);
   border-radius:10px;
-  padding:12px 14px;
   margin-bottom:8px;
+  overflow:hidden;
 }
-.prof-item:last-child{margin-bottom:0;}
-.prof-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.prof-item-nome{font-size:13.5px;font-weight:600;color:#fff;}
+.etapa-folder:last-of-type{margin-bottom:0;}
+.etapa-folder-head{
+  display:flex; align-items:center; gap:10px;
+  padding:11px 14px;
+  cursor:pointer;
+}
+.etapa-icon{font-size:15px;}
+.etapa-name{font-size:13.5px; font-weight:700; color:#fff; flex:0 0 auto;}
+.etapa-status{font-size:11.5px; margin-left:auto; padding:2px 10px; border-radius:20px;}
+.etapa-status-ok{background:rgba(31,184,106,.15); color:var(--green-light);}
+.etapa-status-embreve{background:var(--panel); color:var(--muted);}
+.etapa-chevron{font-size:12px; color:var(--muted); transition:transform .2s;}
+.etapa-folder.open .etapa-chevron{transform:rotate(180deg);}
+.etapa-folder-body{max-height:0; overflow:hidden; transition:max-height .2s ease;}
+.etapa-folder.open .etapa-folder-body{max-height:600px; border-top:1px solid var(--border);}
+.etapa-folder-body-inner{padding:10px 14px 12px;}
+.etapa-vazia-msg{font-size:12.5px; color:var(--muted); margin:0; font-style:italic;}
+.combo-geral-row{
+  display:flex; justify-content:space-between; align-items:center;
+  background:rgba(232,179,74,.08); border:1.5px dashed var(--gold);
+  border-radius:10px; padding:10px 14px; margin-top:4px;
+}
 .popular-badge{
   background:rgba(232,179,74,.18);color:var(--gold);
   border:1px solid var(--gold-dark);
@@ -705,22 +732,37 @@ function buildAccessIndex(data){
     sem.materias.forEach(m=>{
       const slugM = slugify(m.nome);
       const base = sem.slug+'-'+slugM;
-      const itens = [];
-      if(m.resumo.disponivel && m.resumo.arquivo){
-        m.resumo.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
-          itens.push(parseEntry(arq, i, 'resumo', m.nome));
-        });
-      }
-      if(m.simulado.disponivel && m.simulado.arquivo){
-        m.simulado.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
-          itens.push(parseEntry(arq, i, 'simulado', m.nome));
-        });
-      }
-      if(itens.length){
-        idx[base+'-resumo'] = itens.filter(it=>it.tipo==='resumo');
-        idx[base+'-simulado'] = itens.filter(it=>it.tipo==='simulado');
-        idx[base+'-combo'] = itens;
-        todosArquivos.push(...itens);
+      const itensMateriaCompleta = [];
+
+      ETAPA_ORDEM.forEach(etapaNome=>{
+        const etapa = m.etapas[etapaNome];
+        if(!etapa) return;
+        const itens = [];
+        const labelMateria = etapaNome === 'Finais' ? m.nome : m.nome+' - '+etapaNome;
+        if(etapa.resumo.disponivel && etapa.resumo.arquivo){
+          etapa.resumo.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
+            itens.push(parseEntry(arq, i, 'resumo', labelMateria));
+          });
+        }
+        if(etapa.simulado.disponivel && etapa.simulado.arquivo){
+          etapa.simulado.arquivo.split('|').map(s=>s.trim()).forEach((arq,i)=>{
+            itens.push(parseEntry(arq, i, 'simulado', labelMateria));
+          });
+        }
+        if(itens.length){
+          /* Finais mantém o código antigo (sem sufixo) para nao quebrar acesso ja liberado.
+             P1/P2 usam sufixo proprio, ja que sao produtos novos. */
+          const keyBase = etapaNome === 'Finais' ? base : base+'-'+slugify(etapaNome);
+          idx[keyBase+'-resumo'] = itens.filter(it=>it.tipo==='resumo');
+          idx[keyBase+'-simulado'] = itens.filter(it=>it.tipo==='simulado');
+          idx[keyBase+'-combo'] = itens;
+          todosArquivos.push(...itens);
+          itensMateriaCompleta.push(...itens);
+        }
+      });
+
+      if(m.comboGeralDisponivel && itensMateriaCompleta.length){
+        idx[base+'-completo'] = itensMateriaCompleta;
       }
     });
   });
@@ -746,7 +788,7 @@ function pulseSVG(){
 
 function statusSemestre(sem){
   const todas = sem.materias.length;
-  const prontas = sem.materias.filter(m=>m.resumo.disponivel || m.simulado.disponivel).length;
+  const prontas = sem.materias.filter(m=>ETAPA_ORDEM.some(k=>m.etapas[k] && m.etapas[k].disponivel)).length;
   if(prontas===0) return {label:"Em breve", cls:"status-embreve"};
   if(prontas===todas) return {label:"Disponível completo", cls:"status-disponivel"};
   return {label:prontas+" de "+todas+" matérias prontas", cls:"status-parcial"};
@@ -835,29 +877,77 @@ const BESTSELLER_MATERIAS = [
 function isBestseller(nome){ return BESTSELLER_MATERIAS.includes(nome); }
 function bestsellerBadge(){ return `<span class="popular-badge">🔥 Popular</span>`; }
 
-function renderProdutoRows(m){
-  const ambosDisponiveis = m.resumo.disponivel && m.simulado.disponivel;
+const ETAPA_ORDEM = ['P1', 'P2', 'Finais'];
+const ETAPA_ICON = {'P1':'📁', 'P2':'📁', 'Finais':'📁'};
+
+function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome){
+  const ambosDisponiveis = etapa.resumo.disponivel && etapa.simulado.disponivel;
+  const itemPrefix = `${etapaNome} - ${materiaNome}`.replace(/'/g,"\\'");
   return `
     <div class="produto-row">
       <span class="produto-label"><span class="tagdot"></span>Guia de Estudo</span>
-      ${m.resumo.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Guia de Estudo - ${m.nome.replace(/'/g,"\\'")}', ${m.resumo.preco})">Comprar</button></span>`
+      ${etapa.resumo.disponivel
+        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Guia de Estudo - ${itemPrefix}', ${etapa.resumo.preco})">Comprar</button></span>`
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     <div class="produto-row">
       <span class="produto-label simulado"><span class="tagdot simulado"></span>Simulado</span>
-      ${m.simulado.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirPagamentoPix('Simulado - ${m.nome.replace(/'/g,"\\'")}', ${m.simulado.preco})">Comprar</button></span>`
+      ${etapa.simulado.disponivel
+        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirPagamentoPix('Simulado - ${itemPrefix}', ${etapa.simulado.preco})">Comprar</button></span>`
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     ${ambosDisponiveis ? `<div class="produto-row combo-row">
       <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (guia + simulado)</span>
-      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboPreco ?? (m.resumo.preco + m.simulado.preco - 5)})">Comprar combo</button></span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo - ${itemPrefix}', ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)})">Comprar combo</button></span>
     </div>` : ``}`;
 }
 
-function toggleSubjectCard(el){
+function toggleEtapaFolder(el){
   el.classList.toggle('open');
+}
+
+function statusEtapasTexto(m){
+  const disponiveis = ETAPA_ORDEM.filter(k => m.etapas[k] && m.etapas[k].disponivel);
+  if(disponiveis.length === 0) return 'Em breve';
+  return disponiveis.join(', ') + ' disponível' + (disponiveis.length>1 ? 'is' : '');
+}
+
+function renderEtapaFolder(etapaNome, etapa, materiaNome){
+  if(!etapa) return '';
+  const statusTxt = etapa.disponivel ? 'disponível' : 'em breve';
+  const statusCls = etapa.disponivel ? 'etapa-status-ok' : 'etapa-status-embreve';
+  return `<div class="etapa-folder ${etapa.disponivel ? '' : 'etapa-vazia'}">
+    <div class="etapa-folder-head" onclick="toggleEtapaFolder(this.closest('.etapa-folder'))">
+      <span class="etapa-icon">📁</span>
+      <span class="etapa-name">${etapaNome}</span>
+      <span class="etapa-status ${statusCls}">${statusTxt}</span>
+      <span class="etapa-chevron">▾</span>
+    </div>
+    <div class="etapa-folder-body"><div class="etapa-folder-body-inner">
+      ${etapa.disponivel ? renderProdutoRowsEtapa(etapa, materiaNome, etapaNome) : `<p class="etapa-vazia-msg">Conteúdo desta etapa ainda não foi liberado. Fique de olho — avisamos no grupo assim que sair!</p>`}
+    </div></div>
+  </div>`;
+}
+
+function renderMateriaCard(m, meta){
+  const algumDisponivel = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].disponivel);
+  const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
+      <span class="produto-label">⭐ Combo completo (P1 + P2 + Finais)</span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco})">Comprar</button></span>
+    </div>` : '';
+  return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open">
+    <div class="subject-head no-toggle">
+      <div class="subject-icon">${meta.icon}</div>
+      <div class="subject-info">
+        <p class="subject-title">${m.nome} ${isBestseller(m.nome) ? bestsellerBadge() : ''}</p>
+        <p class="subject-sub">${statusEtapasTexto(m)}</p>
+      </div>
+    </div>
+    <div class="subject-body"><div class="subject-body-inner">
+      ${ETAPA_ORDEM.map(k => renderEtapaFolder(k, m.etapas[k], m.nome)).join('')}
+      ${comboGeral}
+    </div></div>
+  </div>`;
 }
 
 function renderCatalogo(data){
@@ -879,7 +969,7 @@ function renderCatalogo(data){
       </div>`;
     }
 
-    /* Agrupa matérias pela primeira palavra do nome (ex: "Genética") */
+    /* Agrupa matérias pela primeira palavra do nome (ex: "Genética") só pra rotular visualmente — nada fica escondido */
     const grupos = {};
     const ordem = [];
     sem.materias.forEach(m=>{
@@ -892,40 +982,14 @@ function renderCatalogo(data){
     ordem.forEach(key=>{
       const membros = grupos[key];
       const meta = subjectMeta(membros[0].nome);
-      const algumDisponivelGrupo = membros.some(m=>m.resumo.disponivel || m.simulado.disponivel);
 
-      if(membros.length === 1){
-        const m = membros[0];
-        html += `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivelGrupo?'':'embreve'} open">
-          <div class="subject-head no-toggle">
-            <div class="subject-icon">${meta.icon}</div>
-            <div class="subject-info">
-              <p class="subject-title">${m.nome} ${isBestseller(m.nome) ? bestsellerBadge() : ''}</p>
-              <p class="subject-sub">${m.resumo.disponivel && m.simulado.disponivel ? 'Guia de Estudo e simulado disponíveis' : m.resumo.disponivel ? 'Guia de Estudo disponível' : m.simulado.disponivel ? 'Simulado disponível' : 'Em breve'}</p>
-            </div>
-          </div>
-          <div class="subject-body"><div class="subject-body-inner">${renderProdutoRows(m)}</div></div>
-        </div>`;
-      } else {
+      if(membros.length > 1){
         const subjectLabel = membros[0].nome.trim().split(' ')[0];
-        html += `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivelGrupo?'':'embreve'}">
-          <div class="subject-head" onclick="toggleSubjectCard(this.closest('.subject-card'))">
-            <div class="subject-icon">${meta.icon}</div>
-            <div class="subject-info">
-              <p class="subject-title">${subjectLabel} <span class="subject-count">${membros.length} opções</span></p>
-              <p class="subject-sub">👆 Clique aqui e escolha seu professor</p>
-            </div>
-            <span class="subject-chevron">▾</span>
-          </div>
-          <div class="subject-body"><div class="subject-body-inner">`;
-        membros.forEach(m=>{
-          html += `<div class="prof-item">
-            <div class="prof-item-head"><span class="prof-item-nome">${m.nome}</span>${isBestseller(m.nome) ? bestsellerBadge() : ''}</div>
-            ${renderProdutoRows(m)}
-          </div>`;
-        });
-        html += `</div></div></div>`;
+        html += `<div class="subject-group-label">${meta.icon} ${subjectLabel} <span class="subject-count">${membros.length} professores</span></div>`;
       }
+      membros.forEach(m=>{
+        html += renderMateriaCard(m, meta);
+      });
     });
     html += `</div></div>`;
 
