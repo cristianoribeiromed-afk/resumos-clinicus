@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiología — Prof. Marcos Rigonato · 26 Bactérias da Final</title>
+<style>
+:root{
+  --bg:#0b0f0e; --panel:#121917; --panel2:#161f1c; --border:#22302a;
+  --green:#1fb86a; --green-dark:#0e6e3f; --green-light:#7fe6b0;
+  --gold:#e8b34a; --gold-dark:#a87a23; --text:#e8efec; --muted:#8fa39a;
+  --purple:#a78bfa; --blue:#4fc3d9; --red:#e0505f;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;}
+.wrap{max-width:980px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:22px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:16px;}
+header h1{margin:0 0 6px;font-size:1.5em;background:linear-gradient(90deg,var(--green-light),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--muted);margin:0;font-size:.92em;}
+.intro-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:18px;font-size:.9em;color:var(--muted);}
+.intro-box b{color:var(--gold);}
+.searchbar{margin-bottom:16px;}
+.searchbar input{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-size:.95em;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:10;}
+nav.tabs button{background:var(--panel);color:var(--muted);border:1px solid var(--border);padding:9px 14px;border-radius:20px;cursor:pointer;font-size:.82em;font-weight:700;transition:.2s;}
+nav.tabs button:hover{border-color:var(--green);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--green-dark),var(--green));color:#fff;border-color:transparent;}
+.cat-panel{display:none;}
+.cat-panel.active{display:block;}
+.bact-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;}
+.bact-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
+.bact-head:hover{background:var(--panel2);}
+.bact-gram{font-size:.7em;font-weight:800;padding:3px 9px;border-radius:8px;flex-shrink:0;}
+.gram-p{background:rgba(31,184,106,.18);color:var(--green-light);border:1px solid var(--green);}
+.gram-n{background:rgba(167,139,250,.18);color:var(--purple);border:1px solid var(--purple);}
+.gram-BAAR{background:rgba(232,179,74,.18);color:var(--gold);border:1px solid var(--gold);}
+.bact-nome{flex:1;font-size:1.02em;font-weight:600;}
+.bact-chevron{color:var(--muted);transition:transform .2s;}
+.bact-card.open .bact-chevron{transform:rotate(180deg);}
+.bact-body{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.bact-card.open .bact-body{max-height:4000px;border-top:1px solid var(--border);}
+.bact-body-inner{padding:6px 18px 18px;}
+.bact-body-inner h4{color:var(--blue);font-size:.92em;margin:14px 0 6px;}
+.bact-body-inner ul{margin:0;padding-left:20px;font-size:.88em;}
+.bact-body-inner li{margin-bottom:4px;}
+.mnemo-box{background:var(--panel2);border-left:4px solid var(--gold);border-radius:8px;padding:10px 14px;margin:14px 0;font-size:.87em;}
+.caso-box{background:rgba(167,139,250,.08);border:1px solid var(--purple);border-radius:10px;padding:14px 16px;margin-top:14px;}
+.caso-title{font-weight:800;color:var(--purple);font-size:.88em;margin-bottom:8px;}
+.caso-vinheta{font-size:.88em;font-style:italic;color:var(--text);margin:0 0 8px;}
+.caso-pergunta{font-size:.88em;margin:0 0 10px;}
+.reveal-btn{background:var(--purple);color:#1a1030;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:700;}
+.caso-resposta{display:none;margin-top:10px;padding:10px 12px;background:#0f1726;border-radius:8px;font-size:.87em;color:var(--green-light);border-left:3px solid var(--green);}
+.caso-resposta.show{display:block;}
+footer{text-align:center;color:var(--muted);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+.badge-fonte{font-size:.62em;padding:1px 8px;border-radius:10px;margin-left:8px;font-weight:700;}
+.no-results{text-align:center;color:var(--muted);padding:30px;display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🦠 Microbiología — Prof. Marcos Rigonato</h1>
+  <p>Final Teórica e Prática · 26 Bactérias completas · Cocos G+/G-, Bacilos G+/G-, Micobactérias</p>
+</header>
+
+<div class="intro-box">
+  Material baseado nas anotações do <b>Dr. Marcos Rigonato</b>, revisado e complementado pela equipe ClinicusMed com
+  <b>exemplos, casos clínicos e mnemônicos</b> em todos os 26 organismos cobrados na Final teórica e prática —
+  incluindo os que não estavam no material original (S. saprophyticus, S. epidermidis, N. gonorrhoeae, N. meningitidis,
+  P. aeruginosa, Listeria, os 4 Clostridium e os 2 Bacillus).
+</div>
+
+<div class="searchbar">
+  <input type="text" id="searchInput" placeholder="🔎 Buscar por nome da bactéria (ex: Klebsiella, tétano, gonorreia)...">
+</div>
+
+<nav class="tabs" id="tabs"><button data-cat="Cocos Gram-positivos" class="active">🔵 Cocos G+ (6)</button><button data-cat="Cocos Gram-negativos" class="">🟣 Cocos G- (2)</button><button data-cat="Bacilos Gram-negativos" class="">🟢 Bacilos G- (10)</button><button data-cat="Micobactérias" class="">🟠 Micobactérias (1)</button><button data-cat="Bacilos Gram-positivos" class="">🔴 Bacilos G+ (7)</button></nav>
+
+<section class="cat-panel active" data-cat="Cocos Gram-positivos">
+<div class="bact-card" id="b0" data-nome="staphylococcus aureus" data-cat="Cocos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b0')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Staphylococcus aureus</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocos em cachos ("cacho de uvas"), imóveis, 0,5–1 µm</li><li>Anaeróbio facultativo; tolera até 25% de NaCl (ótimo 7–10%)</li><li>Catalase positiva (diferencia de Streptococcus/Enterococcus)</li><li>Coagulase positiva — ÚNICA espécie humana comum com essa característica</li><li>DNase positiva; colônias douradas (pigmento carotenoide)</li><li>Coloniza narinas anteriores (principal reservatório)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Cápsula: inibe fagocitose</li><li>Proteína A: liga Fc de anticorpos, bloqueia opsonização</li><li>Coagulase: converte fibrinogênio em fibrina (forma "parede" protetora)</li><li>Toxinas exfoliativas (ETA/ETB): síndrome da pele escaldada (SSSS)</li><li>TSST-1: superantígeno — síndrome do choque tóxico</li><li>Enterotoxinas termoestáveis: intoxicação alimentar (início rápido, 1-6h, vômito predominante)</li><li>Leucocidina de Panton-Valentine: necrose tecidual, cepas CA-MRSA</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Infecções de pele: furúnculo, carbúnculo, impetigo bolhoso</li><li>SSSS: descolamento epidérmico em recém-nascidos/crianças pequenas (sinal de Nikolsky +)</li><li>Intoxicação alimentar: laticínios/maionese mal conservados, autolimitada</li><li>Endocardite aguda (válvula tricúspide em usuários de drogas IV), osteomielite, artrite séptica</li><li>Pneumonia pós-influenza, choque tóxico (tampões, feridas cirúrgicas)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: Gram + cultura em ágar-sal-manitol (fermenta manitol); coagulase e DNase confirmatórias</li><li>Tratamento: oxacilina/cefalosporinas se sensível; MRSA → vancomicina, linezolida ou clindamicina</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Coagula, tem catalase e adora manitol" — S. aureus é o único estafilococo coagulase-positivo e fermenta manitol no ágar salgado (colônias amarelas).</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Recém-nascido de 5 dias apresenta eritema difuso e bolhas flácidas que se rompem facilmente ao toque (sinal de Nikolsky positivo), poupando mucosas.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e o mecanismo?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Síndrome da Pele Escaldada Estafilocócica (SSSS), causada pela disseminação hematogênica de toxinas exfoliativas (ETA/ETB) a partir de um foco à distância (ex: conjuntivite, onfalite) — a bactéria não precisa estar na pele lesada.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b1" data-nome="staphylococcus saprophyticus" data-cat="Cocos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b1')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Staphylococcus saprophyticus</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocos em cachos, coagulase-negativo</li><li>Catalase positiva</li><li>Característica-chave: RESISTENTE à novobiocina (diferencia de S. epidermidis, que é sensível)</li><li>Segunda causa mais comum de ITU não complicada em mulheres jovens sexualmente ativas (depois de E. coli)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Adesinas que facilitam a fixação ao uroepitélio</li><li>Produção de urease (menor que Proteus, mas contribui)</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Cistite e uretrite em mulheres jovens sexualmente ativas ("síndrome da lua de mel")</li><li>Raramente causa infecções fora do trato urinário</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: urocultura + teste de sensibilidade à novobiocina (RESISTENTE = saprophyticus)</li><li>Tratamento: nitrofurantoína ou sulfametoxazol-trimetoprima (mesmo esquema de ITU não complicada)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "SAPRO-fitico é NOVO-biotico resistente" — S. SAPROphyticus é resistente à NOVObiocina; já o epidermidis é sensível. Lembre: 'Sapro Se Salva' (resiste) da novobiocina.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Mulher de 22 anos, sexualmente ativa, procura o pronto-socorro com disúria, urgência miccional e dor suprapúbica há 2 dias, sem febre.</p>
+        <p class="caso-pergunta"><b>Qual o principal agente etiológico a suspeitar além de E. coli, e como confirmá-lo?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Staphylococcus saprophyticus — confirmado pela resistência à novobiocina no antibiograma, típico de mulheres jovens sexualmente ativas.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b2" data-nome="staphylococcus epidermidis" data-cat="Cocos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b2')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Staphylococcus epidermidis</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocos em cachos, coagulase-negativo, catalase positiva</li><li>SENSÍVEL à novobiocina (ao contrário do S. saprophyticus)</li><li>Componente normal da microbiota da pele — principal contaminante de hemoculturas</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Produção de biofilme (slime) — principal fator de virulência, adere a superfícies plásticas/metálicas</li><li>Baixa virulência intrínseca — patógeno oportunista típico de dispositivos médicos</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Infecções associadas a próteses articulares e valvares (endocardite de válvula PROTÉTICA)</li><li>Infecções de cateteres venosos centrais, shunts de derivação ventricular</li><li>Bacteriemia em neonatos prematuros com cateter</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: cuidado com contaminação de hemocultura — repetir cultura para confirmar significância clínica</li><li>Tratamento: remoção do dispositivo/prótese + vancomicina (alta taxa de resistência à oxacilina)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Epidermidis gruda no plástico" — pense em biofilme sempre que houver cateter, prótese ou shunt envolvido.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente com válvula cardíaca protética há 3 meses desenvolve febre baixa persistente. Hemoculturas seriadas isolam cocos Gram-positivos coagulase-negativos.</p>
+        <p class="caso-pergunta"><b>Contaminação ou infecção real? Qual o próximo passo?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Em endocardite de prótese valvar, S. epidermidis é causa real (não contaminante) — confirmar com múltiplas hemoculturas positivas e ecocardiograma; tratar com vancomicina + rifampicina + gentamicina.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b3" data-nome="streptococcus pyogenes (grupo a)" data-cat="Cocos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b3')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Streptococcus pyogenes (Grupo A)</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocos em cadeias, catalase NEGATIVA (diferencia de Staphylococcus)</li><li>Beta-hemolítico (hemólise total, halo claro)</li><li>Grupo A de Lancefield (polissacarídeo C da parede)</li><li>Sensível à bacitracina (diferencia de outros beta-hemolíticos)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Proteína M: principal fator de virulência — antifagocitária, muitos sorotipos (mimetismo molecular → febre reumática)</li><li>Estreptolisina O (ASO): hemolisina, imunogênica — base do teste ASLO</li><li>Exotoxina pirogênica (superantígeno): escarlatina e choque tóxico estreptocócico</li><li>Estreptoquinase: lisa coágulos de fibrina, facilita disseminação</li><li>DNase B, hialuronidase: degradam tecido conectivo</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Faringite ("garganta em morango", exsudato), impetigo, erisipela, celulite</li><li>Fascite necrosante ("bactéria comedora de carne")</li><li>Escarlatina: exantema em lixa + língua em framboesa</li><li>Sequelas não supurativas: febre reumática (após faringite) e glomerulonefrite pós-estreptocócica (após pele ou garganta)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: teste rápido de antígeno / cultura de swab de garganta; sorologia ASLO para sequelas</li><li>Tratamento: penicilina (ainda 100% sensível — sem resistência descrita)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Reumática lambe as articulações e MORDE o coração" — febre reumática causa artrite migratória (lambe) mas a lesão permanente é cardíaca (morde), por mimetismo molecular da proteína M.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Criança de 7 anos com faringite há 10 dias evolui com poliartrite migratória, cardite e nódulos subcutâneos.</p>
+        <p class="caso-pergunta"><b>Qual a complicação e o mecanismo fisiopatológico?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Febre reumática — reação autoimune por mimetismo molecular entre a proteína M do S. pyogenes e proteínas do tecido cardíaco/articular; NÃO é infecção direta do coração.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b4" data-nome="streptococcus agalactiae (grupo b)" data-cat="Cocos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b4')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Streptococcus agalactiae (Grupo B)</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocos em cadeias, beta-hemolítico</li><li>Grupo B de Lancefield</li><li>Teste de CAMP positivo (aumenta zona de hemólise da toxina beta de S. aureus)</li><li>Coloniza trato vaginal/retal em 10-30% das gestantes</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Cápsula polissacarídica: principal fator de virulência, antifagocitária</li><li>Beta-hemolisina/citolisina: dano tecidual</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Principal causa de sepse e meningite NEONATAL (transmissão vertical no parto)</li><li>Sepse precoce (< 7 dias): pneumonia, sepse fulminante</li><li>Sepse tardia (7 dias–3 meses): meningite predominante</li><li>Em adultos: ITU, infecções de pele em diabéticos/idosos</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: rastreio universal por swab vaginal/retal em 35-37 semanas de gestação</li><li>Profilaxia Antibiótica Intraparto (PAI): penicilina IV durante o trabalho de parto em gestantes colonizadas</li><li>Tratamento neonatal: penicilina ± gentamicina</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "CAMP me dá positivo, Grupo B, neonato em risco" — CAMP test positivo + Grupo B de Lancefield = pensar sempre em rastreio pré-natal e profilaxia intraparto.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Recém-nascido de 3 dias, filho de mãe sem pré-natal adequado, desenvolve letargia, recusa alimentar e febre. Líquor com pleocitose neutrofílica.</p>
+        <p class="caso-pergunta"><b>Qual o agente mais provável e como poderia ter sido prevenido?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Streptococcus agalactiae (Grupo B) — prevenção com rastreio da mãe entre 35-37 semanas e profilaxia antibiótica intraparto (penicilina) se colonizada.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b5" data-nome="streptococcus pneumoniae" data-cat="Cocos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b5')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Streptococcus pneumoniae</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Diplococos Gram-positivos lanceolados ("chama de vela")</li><li>Alfa-hemolítico (halo esverdeado)</li><li>Sensível à OPTOQUINA (diferencia de outros alfa-hemolíticos, ex: viridans)</li><li>Solúvel em bile (lise pela bile de sais biliares)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Cápsula polissacarídica: principal fator de virulência — base das vacinas (conjugada/polissacarídica)</li><li>Pneumolisina: forma poros, lisa células ciliadas e fagócitos</li><li>IgA protease: degrada IgA secretora, facilita colonização de mucosas</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Principal causa de pneumonia bacteriana adquirida na comunidade (padrão lobar)</li><li>Principal causa de meningite bacteriana em adultos</li><li>Otite média aguda e sinusite em crianças</li><li>Grupos de risco: esplenectomizados (risco de sepse fulminante), idosos, imunossuprimidos</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: Gram de escarro/LCR (diplococos lanceolados), teste de optoquina, antígeno urinário</li><li>Tratamento: penicilina G se sensível; vancomicina + ceftriaxona empírico se resistência suspeita</li><li>Prevenção: vacinas conjugadas (PCV) e polissacarídica (PPSV23)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "OPTOquina mata o PNEUMOcoco" — sensibilidade à optoquina é o teste clássico que diferencia S. pneumoniae dos estreptococos viridans (ambos alfa-hemolíticos).</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente esplenectomizado há 2 anos por trauma desenvolve febre alta, calafrios e choque em poucas horas, sem foco aparente.</p>
+        <p class="caso-pergunta"><b>Qual o risco específico desse paciente e o agente mais temido?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Sepse fulminante pós-esplenectomia (OPSI) por bactérias encapsuladas — S. pneumoniae é a mais comum, seguida de H. influenzae e N. meningitidis. Por isso pacientes esplenectomizados devem ser vacinados.</div>
+      </div>
+    </div>
+  </div>
+</div></section><section class="cat-panel " data-cat="Cocos Gram-negativos">
+<div class="bact-card" id="b6" data-nome="neisseria gonorrhoeae" data-cat="Cocos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b6')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Neisseria gonorrhoeae</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Diplococos Gram-negativos em "grão de café", intracelulares (dentro de neutrófilos)</li><li>Oxidase positiva</li><li>Fermenta apenas glicose (diferencia de N. meningitidis, que fermenta glicose E maltose)</li><li>Exigente nutricionalmente — cultivo em ágar chocolate (Thayer-Martin)</li><li>Sem cápsula polissacarídica (diferente da meningitidis)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Pili (fímbrias): adesão ao epitélio + variação antigênica (evita imunidade)</li><li>Proteína Por (porina): sobrevivência intracelular</li><li>Proteína Opa: adesão íntima às células</li><li>IgA protease: degrada IgA de mucosas</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Uretrite/cervicite purulenta (principal DST bacteriana)</li><li>Pode ser assintomática em mulheres → risco de doença inflamatória pélvica (DIP) e infertilidade</li><li>Oftalmia neonatal (conjuntivite purulenta no recém-nascido por passagem no canal de parto)</li><li>Infecção gonocócica disseminada: artrite séptica + pústulas cutâneas (poliartralgia migratória + tenossinovite)</li><li>Faringite e proctite (contato oral/anal)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: Gram de secreção uretral (diplococos intracelulares), cultura em Thayer-Martin, NAAT/PCR</li><li>Tratamento: ceftriaxona IM dose única (resistência crescente a quinolonas e penicilina) — sempre tratar clamídia concomitante (coinfecção comum)</li><li>Prevenção neonatal: profilaxia ocular com eritromicina ao nascer</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "GONO só gosta de GLICOSE" — N. gonorrhoeae fermenta só glicose; N. meningitidis fermenta glicose E maltose ("MENINGO é mais faminta").</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Homem de 24 anos com corrimento uretral purulento e disúria há 3 dias, relata parceira nova sem uso de preservativo.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico mais provável e a conduta terapêutica correta?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Uretrite gonocócica — tratar com ceftriaxona IM dose única, e SEMPRE cobrir Chlamydia trachomatis concomitante (coinfecção frequente), mesmo sem confirmação laboratorial imediata.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b7" data-nome="neisseria meningitidis" data-cat="Cocos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b7')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Neisseria meningitidis</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Diplococos Gram-negativos em "grão de café"</li><li>Oxidase positiva</li><li>Fermenta GLICOSE e MALTOSE (diferencia de N. gonorrhoeae)</li><li>POSSUI cápsula polissacarídica — base da classificação em sorogrupos (A, B, C, W, Y principais)</li><li>Coloniza nasofaringe (portador assintomático em até 10% da população)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Cápsula: principal fator de virulência, antifagocitária — alvo das vacinas</li><li>Endotoxina (LOS - lipooligossacarídeo): responsável pelo choque séptico e CIVD na meningococcemia</li><li>Pili e proteínas de membrana externa: adesão à nasofaringe</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Meningite bacteriana epidêmica — principal causa em crianças/adultos jovens, surtos em dormitórios/quartéis</li><li>Meningococcemia: petéquias e púrpura que NÃO desaparecem à digitopressão, evolução rápida para choque</li><li>Síndrome de Waterhouse-Friderichsen: hemorragia adrenal bilateral + CIVD + choque — forma fulminante</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: LCR turvo com diplococos G- intracelulares, cultura, PCR; considerar isolamento respiratório</li><li>Tratamento: penicilina G ou ceftriaxona — emergência médica, iniciar empiricamente sem esperar confirmação</li><li>Profilaxia de contactantes próximos: rifampicina, ciprofloxacino ou ceftriaxona</li><li>Prevenção: vacinas conjugadas (sorogrupos A, C, W, Y e B)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Petéquia que NÃO desaparece = meningococo até prova em contrário" — vitropressão negativa (não some) é sinal de alarme máximo em pronto-socorro.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Adolescente de 16 anos, previamente hígido, em dormitório universitário, desenvolve febre alta, cefaleia intensa, rigidez de nuca e petéquias em membros inferiores que não desaparecem à digitopressão, evoluindo para hipotensão em 6 horas.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e a conduta imediata?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Meningococcemia com meningite — emergência médica: iniciar ceftriaxona IMEDIATAMENTE (não aguardar confirmação laboratorial), isolamento respiratório e profilaxia dos contactantes próximos.</div>
+      </div>
+    </div>
+  </div>
+</div></section><section class="cat-panel " data-cat="Bacilos Gram-negativos">
+<div class="bact-card" id="b8" data-nome="escherichia coli" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b8')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Escherichia coli</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo, membro da família Enterobacteriaceae</li><li>Fermentador de lactose (colônias rosas em ágar MacConkey)</li><li>Anaeróbio facultativo, oxidase negativa</li><li>Componente mais comum da microbiota normal do cólon</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Fímbrias P: adesão ao uroepitélio (ITU)</li><li>Antígeno capsular K1: meningite neonatal</li><li>Toxina Shiga (Stx1/Stx2) nas cepas STEC/EHEC: dano endotelial, síndrome hemolítico-urêmica (SHU)</li><li>Toxinas LT/ST nas cepas ETEC: diarreia do viajante</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>5 cepas diarrogênicas: EPEC (diarreia aquosa em lactentes), ETEC (diarreia do viajante), STEC/EHEC (colite hemorrágica + SHU), EIEC (disenteria, similar a Shigella), EAEC (diarreia persistente >14 dias)</li><li>90% das ITUs não complicadas em mulheres jovens</li><li>Meningite neonatal (cepas K1) — transmissão vertical</li><li>Sepse de origem urinária/abdominal (causa mais comum de sepse Gram-negativa)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: urocultura, coprocultura em MacConkey, PCR para genes de virulência (stx, eae)</li><li>⚠️ Antibiótico é CONTRAINDICADO em STEC/EHEC suspeita — estresse bacteriano ativa profagos e AUMENTA liberação de toxina Shiga, elevando risco de SHU</li><li>Tratamento ITU: nitrofurantoína/SMX-TMP; sepse: ceftriaxona ou carbapenêmico conforme gravidade</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "STEC não se toca com antibiótico" — na suspeita de E. coli produtora de toxina Shiga, tratamento é APENAS suporte/hidratação; antibiótico piora o quadro.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Criança de 4 anos com diarreia sanguinolenta após consumir hambúrguer malpassado evolui, 5 dias depois, com palidez, oligúria e plaquetopenia.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e por que NÃO se deve prescrever antibiótico?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Síndrome Hemolítico-Urêmica (SHU) por E. coli STEC/EHEC — antibióticos aumentam a lise bacteriana e a liberação de toxina Shiga, piorando o dano endotelial e o risco de SHU.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b9" data-nome="salmonella spp." data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b9')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Salmonella spp.</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo, família Enterobacteriaceae</li><li>NÃO fermenta lactose (colônias incolores em MacConkey)</li><li>Móvel (flagelos peritríquios)</li><li>Produz H2S (colônias com centro negro em ágar SS/Hektoen)</li><li>Reservatório animal (aves, répteis, ovos, laticínios) — zoonose</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Ilhas de patogenicidade (SPI-1/SPI-2): invasão do epitélio intestinal e sobrevivência intracelular em macrófagos</li><li>Antígeno Vi (S. Typhi): protege contra fagocitose, associado à forma tifoide</li><li>Endotoxina (LPS): resposta inflamatória sistêmica</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Gastroenterite não tifoide (mais comum): diarreia, febre, cólica 6-48h após ingestão de ovos/aves contaminados — geralmente autolimitada</li><li>Febre tifoide (S. Typhi/Paratyphi): febre em platô, dissociação pulso-temperatura, roséolas, hepatoesplenomegalia, risco de perfuração intestinal (placas de Peyer) na 3ª semana</li><li>Estado de portador crônico: colonização da vesícula biliar (associado a colelitíase)</li><li>Bacteriemia com risco de osteomielite em pacientes com anemia falciforme</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: coprocultura (gastroenterite) ou hemocultura (febre tifoide, mais sensível nas primeiras 2 semanas)</li><li>Tratamento: gastroenterite não tifoide geralmente NÃO precisa de antibiótico (risco de prolongar estado de portador); febre tifoide → ceftriaxona ou ciprofloxacino</li><li>Prevenção: vacina para febre tifoide em viajantes para área endêmica</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "SALMONELLA na anemia falciforme = pensar OSSO" — Salmonella é a causa clássica de osteomielite em pacientes com doença falciforme (asplenia funcional).</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Viajante retorna do sul da Ásia com febre há 10 dias em platô, bradicardia relativa, dor abdominal, roséolas no tronco e hepatoesplenomegalia.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e o exame mais sensível nessa fase?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Febre tifoide (Salmonella Typhi) — hemocultura é o exame mais sensível na primeira/segunda semana de doença (coprocultura positiva mais tardiamente).</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b10" data-nome="shigella spp." data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b10')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Shigella spp.</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo, família Enterobacteriaceae</li><li>IMÓVEL (diferença chave de Salmonella)</li><li>Não fermenta lactose</li><li>Reservatório EXCLUSIVAMENTE humano (não é zoonose)</li><li>4 espécies: S. dysenteriae (grupo A, mais virulenta), S. flexneri (B), S. boydii (C), S. sonnei (D, mais comum em países desenvolvidos)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Invasão de enterócitos e disseminação célula-a-célula (usa actina do hospedeiro, similar a Listeria)</li><li>Toxina Shiga (S. dysenteriae tipo 1): mesma toxina de STEC — pode causar SHU</li><li>Baixíssima dose infectante (10-100 bactérias) — alta transmissibilidade pessoa-a-pessoa</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Disenteria bacilar: diarreia com muco e sangue, febre, cólica intensa, tenesmo</li><li>Convulsões febris em crianças (mais comum que em outras causas de diarreia)</li><li>Complicação: síndrome hemolítico-urêmica (S. dysenteriae tipo 1) e artrite reativa (síndrome de Reiter)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: coprocultura em meio seletivo (MacConkey/SS), leucócitos fecais positivos</li><li>Tratamento: azitromicina ou ciprofloxacino em casos moderados/graves (reduz duração e transmissão, diferente de Salmonella)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "SHIGella fica QUIETA (imóvel) mas é a mais CONTAGIOSA" — baixa dose infectante + reservatório humano exclusivo = surtos em creches e centros de refugiados.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Surto de diarreia com sangue e muco em uma creche, com múltiplas crianças afetadas rapidamente em poucos dias.</p>
+        <p class="caso-pergunta"><b>Qual o agente mais provável dado o padrão de disseminação rápida?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Shigella spp. — sua dose infectante extremamente baixa (10-100 organismos) e reservatório exclusivamente humano explicam surtos explosivos em ambientes fechados como creches.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b11" data-nome="haemophilus influenzae" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b11')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Haemophilus influenzae</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocobacilo Gram-negativo pleomórfico</li><li>Exigente: requer fatores X (hemina) e V (NAD) — cresce em ágar chocolate</li><li>Cepas encapsuladas (sorotipos a-f, sendo 'b'/Hib a mais virulenta) e não-tipáveis (NTHi, sem cápsula)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Cápsula de fosfato de poliribitol (PRP) — Hib: antifagocitária, principal alvo vacinal</li><li>IgA protease: facilita colonização de mucosas respiratórias</li><li>NTHi (sem cápsula): menor virulência, mas causa infecções localizadas por adesão direta</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Hib: meningite em crianças 5 meses-10 anos (incidência drasticamente reduzida pós-vacina), epiglotite aguda ("cereja", risco de obstrução de via aérea, emergência)</li><li>NTHi: otite média, sinusite, bronquite exacerbada em DPOC (50-80% de portação assintomática)</li><li>Pneumonia em idosos e imunossuprimidos</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: cultura em ágar chocolate com fatores X e V, teste de satelitismo com S. aureus</li><li>Tratamento: ceftriaxona (meningite/epiglotite); amoxicilina-clavulanato para infecções não invasivas</li><li>Prevenção: vacina conjugada Hib (calendário infantil)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Hib precisa de X e V para viver" — Haemophilus ("ama sangue" em grego) precisa dos fatores X (hemina) e V (NAD) do sangue para crescer — daí o nome e a exigência de ágar chocolate (hemácias lisadas).</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Criança de 3 anos, não vacinada, apresenta início súbito de febre alta, sialorreia, posição em tripé e estridor inspiratório.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e a conduta imediata?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Epiglotite aguda por Haemophilus influenzae tipo b — EMERGÊNCIA: evitar examinar a orofaringe (risco de laringoespasmo), garantir via aérea em ambiente controlado (centro cirúrgico/UTI) antes de qualquer manipulação.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b12" data-nome="haemophilus ducreyi" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b12')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Haemophilus ducreyi</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Cocobacilo Gram-negativo, exigente, dispõe-se em cadeias ("trilho de trem")</li><li>Não faz parte da microbiota normal — transmissão exclusivamente sexual</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Adesinas e toxina citoletal distensiva: causam ulceração tecidual dolorosa</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Cancro mole (cancroide): DST que causa úlcera genital DOLOROSA, de bordas irregulares e base friável, com sangramento fácil</li><li>Linfadenopatia inguinal dolorosa e supurativa (bubão) — pode fistulizar</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: clínico + cultura em meio especial (difícil, baixa sensibilidade); excluir sífilis e herpes (diagnóstico diferencial de úlcera genital)</li><li>Tratamento: azitromicina dose única ou ceftriaxona IM</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Cancro MOLE dói, cancro DURO (sífilis) não dói" — a dor é o principal diferencial clínico entre cancroide (H. ducreyi) e cancro duro da sífilis primária.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Homem relata úlcera genital dolorosa, de bordas irregulares, com secreção purulenta, associada a linfonodo inguinal aumentado e doloroso.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico diferencial mais importante e como distingui-lo clinicamente?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Cancroide (H. ducreyi) x cancro duro da sífilis (Treponema pallidum) — cancroide é DOLOROSO e de bordas irregulares; sífilis primária é INDOLOR, de bordas endurecidas e regulares.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b13" data-nome="helicobacter pylori" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b13')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Helicobacter pylori</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo espiralado (helicoidal), microaerófilo</li><li>Múltiplos flagelos polares — alta motilidade no muco gástrico</li><li>Coloniza o antro gástrico, sob a camada de muco</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Urease: hidrolisa ureia em amônia, neutralizando o ácido gástrico ao redor da bactéria (sobrevivência no estômago)</li><li>Citotoxina VacA e proteína CagA: dano ao epitélio gástrico, associadas a maior risco oncogênico</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Gastrite crônica ativa (principal causa)</li><li>Úlcera péptica (duodenal > gástrica)</li><li>Fator de risco para adenocarcinoma gástrico e linfoma MALT gástrico (a erradicação pode reverter o linfoma MALT inicial)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: teste respiratório da ureia (não invasivo), antígeno fecal, biópsia com teste da urease rápido, sorologia (não distingue infecção ativa de passada)</li><li>Tratamento: terapia tripla/quádrupla — inibidor de bomba de prótons + 2 antibióticos (claritromicina + amoxicilina, ou esquema com bismuto se resistência)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "UREASE derrete o ácido" — o teste respiratório da ureia funciona porque H. pylori quebra a ureia marcada em CO2 (detectado no ar exalado) + amônia.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente com dor epigástrica recorrente, teste respiratório da ureia positivo, biópsia confirma linfoma MALT gástrico em estágio inicial.</p>
+        <p class="caso-pergunta"><b>Qual a conduta terapêutica inicial?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Erradicação do H. pylori (terapia tripla/quádrupla) — linfomas MALT gástricos em estágio inicial frequentemente regridem completamente após a erradicação bacteriana, sem necessidade de quimioterapia.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b14" data-nome="campylobacter jejuni" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b14')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Campylobacter jejuni</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo curvo, em forma de "asa de gaivota", microaerófilo</li><li>Móvel (flagelo polar único ou bipolar)</li><li>Cresce melhor a 42°C (temperatura corporal de aves)</li><li>Principal causa bacteriana de gastroenterite no mundo (fonte: aves malcozidas, leite não pasteurizado)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Invasão da mucosa do íleo/cólon</li><li>Produção de toxina similar à Shiga em algumas cepas</li><li>Mimetismo molecular: lipooligossacarídeo semelhante a gangliosídeos de nervos periféricos</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Gastroenterite inflamatória: diarreia (às vezes sanguinolenta), febre, dor abdominal tipo cólica intensa (pode mimetizar apendicite)</li><li>Síndrome de Guillain-Barré: complicação pós-infecciosa mais associada a QUALQUER agente infeccioso — por mimetismo molecular</li><li>Artrite reativa pós-infecciosa</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: coprocultura em meio seletivo, incubação microaerófila a 42°C</li><li>Tratamento: geralmente autolimitado (suporte); azitromicina em casos graves/imunossuprimidos</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Comeu frango, ficou fraco depois" — Campylobacter jejuni é a principal causa infecciosa antecedente da Síndrome de Guillain-Barré.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente com quadro de diarreia há 2 semanas, hoje evolui com fraqueza ascendente simétrica em membros inferiores e arreflexia.</p>
+        <p class="caso-pergunta"><b>Qual o agente antecedente mais provável e o mecanismo da complicação neurológica?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Campylobacter jejuni causando Síndrome de Guillain-Barré por mimetismo molecular — os lipooligossacarídeos da bactéria se assemelham a gangliosídeos dos nervos periféricos, gerando resposta autoimune cruzada.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b15" data-nome="klebsiella pneumoniae" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b15')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Klebsiella pneumoniae</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo, família Enterobacteriaceae</li><li>Grande cápsula polissacarídica — colônias extremamente mucoides</li><li>Fermentador de lactose, IMÓVEL (diferença de E. coli e Proteus, que são móveis)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Cápsula espessa: principal fator de virulência, altamente antifagocitária</li><li>Clones de alto risco (ST16-BLEE, ST258-KPC): multirresistência severa, disseminação hospitalar</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Pneumonia lobar grave, clássica em alcoólatras/diabéticos — escarro "gelatinoso" (corrente/pegajoso, cor de tijolo)</li><li>ITU complicada, abscesso hepático piogênico (associado a cepas hipervirulentas)</li><li>Subespécies: K. ozaenae (rinite atrófica fétida), K. rhinoscleromatis (rinoescleroma, células de Mikulicz)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: cultura, colônias mucoides em MacConkey (fermenta lactose)</li><li>Tratamento: depende do perfil de resistência — cepas KPC+ exigem ceftazidima-avibactam ou meropenem + colistina</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Klebsiella é GELATINOSA e não anda" — escarro em geleia de framboesa/tijolo + imóvel (ao contrário de E. coli e Proteus) são as duas pistas mais cobradas.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Homem de 55 anos, etilista crônico, apresenta febre alta, tosse produtiva com escarro espesso e sanguinolento, consolidação no lobo superior direito na radiografia.</p>
+        <p class="caso-pergunta"><b>Qual o agente mais provável e a característica clássica do escarro?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Klebsiella pneumoniae — escarro descrito classicamente como "geleia de groselha/framboesa" (corrente, sanguinolento), típico em alcoólatras e diabéticos.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b16" data-nome="klebsiella granulomatis" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b16')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Klebsiella granulomatis</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo intracelular, relacionado taxonomicamente à Klebsiella</li><li>De difícil cultivo em meios convencionais — diagnóstico principalmente por visualização direta</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Sobrevive e se multiplica dentro de monócitos/macrófagos do tecido — visualizados como "corpúsculos de Donovan"</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Granuloma inguinal (Donovanose): DST rara, causa úlceras genitais crônicas, indolores, progressivas, de bordas elevadas e sangramento fácil ao toque ("carnosas")</li><li>Sem linfadenopatia verdadeira (pode haver pseudobubão por edema subcutâneo)</li><li>Endêmica em regiões tropicais (Índia, África, Caribe, norte da Austrália, alguns focos no Brasil/Norte-Nordeste)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: esfregaço tecidual (biópsia por raspado) corado (Giemsa/Wright) mostrando corpúsculos de Donovan dentro de macrófagos</li><li>Tratamento: azitromicina por tempo prolongado (mínimo 3 semanas ou até cicatrização completa)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "DONOVAN mora dentro do macrófago" — corpúsculos de Donovan = bactérias visíveis dentro dos macrófagos no esfregaço, achado patognomônico da donovanose.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente de região endêmica apresenta úlcera genital crônica, indolor, de crescimento lento, com tecido de granulação exuberante e sangramento fácil, sem linfadenopatia dolorosa verdadeira.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e o achado laboratorial confirmatório?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Granuloma inguinal (Donovanose) por Klebsiella granulomatis — confirmado pela visualização de corpúsculos de Donovan (bactérias intracitoplasmáticas em macrófagos) no esfregaço corado.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b17" data-nome="pseudomonas aeruginosa" data-cat="Bacilos Gram-negativos">
+  <div class="bact-head" onclick="toggleCard('b17')">
+    <span class="bact-gram gram-Gn">G-</span>
+    <span class="bact-nome"><i>Pseudomonas aeruginosa</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-negativo, não fermentador, aeróbio estrito, oxidase POSITIVA</li><li>Móvel (flagelo polar único)</li><li>Produz pigmentos: piocianina (azul-esverdeado) e pioverdina (fluorescente)</li><li>Odor característico de "uva"/doce</li><li>Patógeno oportunista clássico de ambiente hospitalar e úmido</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Exotoxina A: inibe síntese proteica (mesmo mecanismo da toxina diftérica — inativa fator de elongação EF-2)</li><li>Formação de biofilme: chave na colonização crônica de vias aéreas de pacientes com fibrose cística</li><li>Multirresistência intrínseca: bombas de efluxo, baixa permeabilidade de membrana externa</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Infecções em pacientes com fibrose cística (colonização pulmonar crônica, principal causa de morbimortalidade)</li><li>Otite externa maligna (necrosante) em diabéticos e imunossuprimidos — pode invadir base do crânio</li><li>Ectima gangrenoso: lesão necrótica de pele em pacientes neutropênicos/sépticos — sinal de bacteriemia grave</li><li>Queimaduras infectadas, ITU associada a cateter, pneumonia associada à ventilação mecânica</li><li>Foliculite associada a banheiras de hidromassagem/piscinas mal cloradas ("hot tub folliculitis")</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: cultura com colônias de odor de uva e pigmento verde-azulado, oxidase positiva</li><li>Tratamento: sempre exige cobertura anti-pseudomonas específica — piperacilina-tazobactam, cefepima, meropenem, ciprofloxacino ou aminoglicosídeo (frequentemente terapia combinada pela alta resistência)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Pseudomonas é AZUL, cheira a UVA e ama gente MOLHADA" — pigmento azul-esverdeado + odor de uva + ambientes úmidos (banheiras, ventiladores, queimaduras) são as pistas mais clássicas de prova.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente diabético de 68 anos com otalgia intensa e otorreia refratária a tratamento tópico, exame mostra tecido de granulação no canal auditivo, evoluindo com paralisia facial.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e o agente etiológico mais provável?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Otite externa maligna (necrosante) por Pseudomonas aeruginosa — pode se estender para a base do crânio e causar paralisia de nervos cranianos; requer antibioticoterapia anti-pseudomonas prolongada e, às vezes, debridamento cirúrgico.</div>
+      </div>
+    </div>
+  </div>
+</div></section><section class="cat-panel " data-cat="Micobactérias">
+<div class="bact-card" id="b18" data-nome="mycobacterium tuberculosis" data-cat="Micobactérias">
+  <div class="bact-head" onclick="toggleCard('b18')">
+    <span class="bact-gram gram-BAAR">BAAR</span>
+    <span class="bact-nome"><i>Mycobacterium tuberculosis</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Álcool-Ácido Resistente (BAAR) — parede rica em ácidos micólicos, não cora bem pelo Gram</li><li>Aeróbio estrito, crescimento MUITO lento (tempo de duplicação ~18h; cultura demora semanas)</li><li>Bacilo fino e reto (0,4 x 3 µm)</li><li>Parede: peptidoglicano + arabinogalactano + ácidos micólicos + lipoarabinomanano (LAM)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Fator corda: associado a virulência e formação de granulomas</li><li>Sobrevivência intracelular dentro de macrófagos (impede fusão fagolisossomal)</li><li>Resposta do hospedeiro (granuloma caseoso) é o que causa o dano tecidual — imunopatologia, não toxina bacteriana direta</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Primoinfecção: lesão exsudativa pulmonar + linfonodo regional = Complexo de Ghon (geralmente assintomático/autolimitado, calcifica)</li><li>Tuberculose secundária (reativação): ocorre no ÁPICE pulmonar (maior pO2), tosse crônica, hemoptise, febre vespertina, sudorese noturna, perda ponderal</li><li>Formas extrapulmonares: meningite tuberculosa, tuberculose óssea (mal de Pott — coluna vertebral), miliar (disseminação hematogênica)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: baciloscopia (Ziehl-Neelsen) do escarro, cultura em meio de Löwenstein-Jensen (lenta), PCR (teste rápido molecular), PPD/IGRA para infecção latente</li><li>Tratamento: esquema RIPE (Rifampicina + Isoniazida + Pirazinamida + Etambutol) por 6 meses — fase intensiva de 2 meses + manutenção de 4 meses</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "RIPE amadurece em 6 meses" — Rifampicina, Isoniazida, Pirazinamida, Etambutol = esquema padrão de 6 meses para TB sensível.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente HIV positivo com tosse há 3 semanas, febre vespertina, sudorese noturna e perda de peso, radiografia com cavitação em ápice pulmonar direito.</p>
+        <p class="caso-pergunta"><b>Por que a reativação ocorre preferencialmente no ápice pulmonar?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">O ápice pulmonar tem maior tensão de oxigênio (pO2) e menor fluxo linfático, condições favoráveis para o M. tuberculosis (aeróbio estrito) se multiplicar durante a reativação (tuberculose secundária/pós-primária).</div>
+      </div>
+    </div>
+  </div>
+</div></section><section class="cat-panel " data-cat="Bacilos Gram-positivos">
+<div class="bact-card" id="b19" data-nome="listeria monocytogenes" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b19')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Listeria monocytogenes</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo pequeno, catalase positiva, móvel EM TEMPERATURA AMBIENTE (20-25°C) mas imóvel a 37°C</li><li>Cresce em temperaturas de refrigeração (4°C) — cresce em geladeira, ao contrário da maioria das bactérias</li><li>Beta-hemolítico, encontrado em laticínios não pasteurizados, embutidos frios (frios de padaria/deli)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Listeriolisina O: rompe o fagossomo, permite escape para o citoplasma</li><li>Motilidade intracelular por polimerização de actina do hospedeiro ("cauda de cometa"), espalha-se célula-a-célula sem sair para o espaço extracelular — evade anticorpos</li><li>Atravessa 3 barreiras: intestinal, placentária e hematoencefálica</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Gestantes: infecção geralmente leve/subclínica na mãe, mas pode causar aborto, natimorto ou sepse neonatal grave (granulomatose infantosséptica)</li><li>Neonatos: sepse de início precoce ou meningite tardia</li><li>Idosos e imunossuprimidos: meningite/meningoencefalite — importante causa de meningite em > 50 anos e imunocomprometidos</li><li>Imunocompetentes: gastroenterite febril autolimitada após ingestão de alimento contaminado</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: hemocultura, cultura de LCR (pode ser confundida com difteroide contaminante — atenção!)</li><li>Tratamento: AMPICILINA é o tratamento de escolha — atenção: cefalosporinas NÃO cobrem Listeria (resistência intrínseca), importante na escolha empírica de meningite em idosos</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Listeria mora na geladeira e a cefalosporina não pega" — gestantes/idosos devem evitar queijos não pasteurizados e frios de deli; e lembre: meningite em > 50 anos = SEMPRE incluir ampicilina no esquema empírico.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Gestante de 28 semanas apresenta febre e mialgia leve após consumir queijo artesanal não pasteurizado; uma semana depois, evolui com trabalho de parto prematuro e o recém-nascido nasce com sepse grave.</p>
+        <p class="caso-pergunta"><b>Qual o agente e por que a escolha do antibiótico empírico para meningite neonatal deve incluir ampicilina?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Listeria monocytogenes — atravessa a barreira placentária. Cefalosporinas (usadas empiricamente em meningite) NÃO cobrem Listeria, por isso ampicilina deve ser sempre associada no esquema empírico neonatal e em pacientes > 50 anos.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b20" data-nome="clostridium tetani" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b20')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Clostridium tetani</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo, anaeróbio ESTRITO, formador de esporos</li><li>Esporo terminal característico — formato de "baqueta de tambor" ou "raquete de tênis"</li><li>Esporos ubíquos no solo, fezes de animais — entram por feridas contaminadas (pregos enferrujados, terra)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Tetanospasmina (neurotoxina): migra retrogradamente pelos axônios motores até a medula espinhal/tronco encefálico</li><li>Bloqueia a liberação de neurotransmissores INIBITÓRIOS (GABA e glicina) das interneuronas de Renshaw</li><li>Resultado: contração muscular SUSTENTADA e generalizada (perda da inibição, não estímulo excitatório direto)</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Trismo ("lockjaw") — primeiro sinal clássico, dificuldade de abrir a boca</li><li>Riso sardônico (contração dos músculos faciais)</li><li>Opistótono: hiperextensão da coluna em arco por espasmo da musculatura paravertebral</li><li>Espasmos generalizados dolorosos desencadeados por estímulos mínimos (luz, som, toque)</li><li>Disfunção autonômica: labilidade de pressão arterial, arritmias (em casos graves)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: CLÍNICO — cultura raramente positiva/necessária</li><li>Tratamento: imunoglobulina antitetânica (neutraliza toxina livre) + metronidazol + debridamento da ferida + suporte em UTI (sedação, relaxantes musculares, ventilação se necessário)</li><li>Prevenção: vacinação (dT/dTpa) — reforço a cada 10 anos, ou antes se ferida suja</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "TÉTANO tira o FREIO" — a toxina tetânica bloqueia neurônios INIBITÓRIOS, então o músculo fica sem "freio" e contrai sem parar (diferente do botulismo, que causa PARALISIA flácida por bloquear a liberação excitatória).</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente com ferida perfurante no pé por prego enferrujado há 8 dias, sem vacinação em dia, apresenta dificuldade progressiva para abrir a boca e espasmos musculares dolorosos ao menor estímulo sonoro.</p>
+        <p class="caso-pergunta"><b>Qual o mecanismo fisiopatológico da rigidez muscular?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">A tetanospasmina bloqueia a liberação de GABA e glicina pelas interneuronas inibitórias de Renshaw na medula espinhal, removendo a inibição sobre os motoneurônios — resultando em contração muscular sustentada e generalizada.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b21" data-nome="clostridium botulinum" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b21')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Clostridium botulinum</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo, anaeróbio estrito, formador de esporos</li><li>Esporos resistentes ao calor, sobrevivem em conservas caseiras mal processadas (enlatados, mel)</li><li>A toxina em si é termolábil (destruída por fervura, ao contrário do esporo)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Toxina botulínica (a mais potente toxina biológica conhecida): bloqueia a liberação de ACETILCOLINA na fenda sináptica neuromuscular (impede exocitose de vesículas via clivagem de proteínas SNARE)</li><li>Resultado: paralisia flácida DESCENDENTE (ao contrário da rigidez do tétano)</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Botulismo alimentar: ingestão de toxina pré-formada em conservas caseiras — diplopia, disartria, disfagia, PARALISIA FLÁCIDA descendente simétrica, pupilas fixas/dilatadas, SEM febre e SEM alteração de consciência</li><li>Botulismo do lactente: ingestão de ESPOROS (não toxina pré-formada) — associado ao MEL, causa constipação seguida de hipotonia ("floppy baby") e choro fraco</li><li>Botulismo de ferida: em usuários de drogas injetáveis (heroína contaminada)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: clínico + detecção da toxina no soro/alimento/fezes (bioensaio em camundongo ou métodos moleculares)</li><li>Tratamento: antitoxina botulínica equina + suporte ventilatório (pode ser necessário por semanas) — NÃO usar antibiótico no botulismo do lactente (lise bacteriana libera mais toxina)</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "BOTOX paralisa, TÉTANO enrijece" — botulismo = paralisia FLÁCIDA descendente (bloqueia liberação de acetilcolina); tétano = rigidez/espasmo (bloqueia neurônios inibitórios). Mel + bebê < 1 ano = nunca dar.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Lactente de 4 meses, alimentado recentemente com mel caseiro, desenvolve constipação, sucção fraca, choro débil e hipotonia generalizada ("boneco de pano"), sem febre.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e por que o mel é contraindicado antes de 1 ano de idade?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Botulismo do lactente — o mel pode conter esporos de C. botulinum que germinam no intestino imaturo do bebê (com microbiota ainda não estabelecida) e produzem toxina in situ; por isso mel é contraindicado para menores de 1 ano.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b22" data-nome="clostridium difficile" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b22')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Clostridium difficile</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo, anaeróbio estrito, formador de esporos resistentes (sobrevivem a álcool gel — requer lavagem com água e sabão)</li><li>Faz parte da microbiota intestinal normal em pequena proporção — patogênico quando há disbiose</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Toxina A (enterotoxina): dano à mucosa intestinal, atrai neutrófilos</li><li>Toxina B (citotoxina): mais potente, despolimeriza actina do citoesqueleto celular</li><li>Fator de risco NÚMERO 1: uso recente de antibióticos de amplo espectro (clindamicina, fluoroquinolonas, cefalosporinas) que destroem a microbiota protetora</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Colite associada a antibióticos / colite pseudomembranosa: diarreia aquosa profusa, cólica abdominal, febre, após uso de antibiótico (dias a semanas depois)</li><li>Formação de pseudomembranas visíveis à colonoscopia (placas amarelo-esverdeadas)</li><li>Casos graves: megacólon tóxico, perfuração intestinal</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: detecção de toxinas A/B nas fezes (ELISA) ou PCR para gene da toxina; NÃO usar cultura isolada (baixa especificidade, pode detectar cepas não toxigênicas)</li><li>Tratamento: SUSPENDER o antibiótico causador; vancomicina ORAL ou fidaxomicina (não IV — precisa agir localmente no cólon); metronidazol reservado para casos leves quando outras opções indisponíveis</li><li>Recorrência: transplante de microbiota fecal em casos refratários/recorrentes</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Álcool gel NÃO mata o C. diff" — os esporos são resistentes ao álcool; a higiene correta na prevenção de surtos hospitalares é lavagem das mãos com ÁGUA E SABÃO.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente hospitalizado, em uso de clindamicina há 6 dias por infecção dentária, desenvolve diarreia aquosa profusa com 8 evacuações/dia, febre e dor abdominal difusa.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico mais provável e a primeira conduta terapêutica?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Colite por Clostridium difficile — primeira conduta: suspender o antibiótico causador (clindamicina) e iniciar vancomicina ORAL (não parenteral, pois precisa agir localmente no lúmen intestinal).</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b23" data-nome="clostridium perfringens" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b23')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Clostridium perfringens</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo grande ("em caixote"), anaeróbio, formador de esporos, imóvel</li><li>Beta-hemólise em dupla zona característica em ágar-sangue</li><li>Crescimento extremamente rápido — tempo de geração de ~8-10 minutos em condições ideais</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Toxina alfa (lecitinase/fosfolipase C): degrada membranas celulares, causa hemólise maciça e necrose tecidual — principal responsável pela mionecrose</li><li>Produção maciça de GÁS no tecido (fermentação de carboidratos musculares) — crepitação característica</li><li>Enterotoxina (cepas tipo A): termolábil, liberada durante esporulação no intestino</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Gangrena gasosa (mionecrose clostridial): após trauma/cirurgia contaminada — dor intensa e súbita, edema, crepitação à palpação (gás nos tecidos), toxemia sistêmica rapidamente progressiva, alta mortalidade sem debridamento urgente</li><li>Intoxicação alimentar: carnes mal reaquecidas/mantidas aquecidas por tempo prolongado (buffets) — diarreia aquosa e cólica 8-16h após ingestão, SEM febre significativa, autolimitada (12-24h)</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: clínico (crepitação, dor desproporcional) + imagem (gás nos tecidos moles) + Gram do exsudato (bacilos G+ grandes, poucos leucócitos — a toxina destrói os neutrófilos)</li><li>Tratamento da gangrena gasosa: DEBRIDAMENTO CIRÚRGICO URGENTE (é a medida mais importante) + penicilina G + clindamicina (inibe síntese de toxina) + oxigenoterapia hiperbárica coadjuvante</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Gás no tecido + dor que não bate com o exame = gangrena gasosa" — dor desproporcional ao achado inicial é sinal de alarme; debridamento cirúrgico é mais importante que o antibiótico isolado.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente politraumatizado, ferimento profundo contaminado com terra há 24h, evolui com dor intensa desproporcional ao exame local, edema tenso, crepitação à palpação e secreção com odor fétido.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e a conduta mais urgente?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Gangrena gasosa (mionecrose por Clostridium perfringens) — a conduta mais urgente é o DEBRIDAMENTO CIRÚRGICO extenso do tecido necrótico, associado a antibioticoterapia (penicilina + clindamicina); atraso no debridamento é a principal causa de óbito.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b24" data-nome="bacillus cereus" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b24')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Bacillus cereus</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo grande, aeróbio facultativo, formador de esporos, MÓVEL</li><li>Esporos resistentes ao calor — sobrevivem ao reaquecimento de alimentos (típico: arroz frito reaquecido)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Toxina emética (termoestável, resiste a reaquecimento): pré-formada no alimento, similar mecanismo às enterotoxinas de S. aureus</li><li>Toxina diarreica (termolábil, produzida in vivo no intestino): mecanismo similar à toxina de ETEC/cólera</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Síndrome EMÉTICA ("síndrome do arroz frito"): início RÁPIDO (1-6h), náusea e vômito predominantes, associada a arroz reaquecido de forma inadequada</li><li>Síndrome DIARREICA: início mais tardio (8-16h), diarreia aquosa e cólica, associada a carnes/vegetais/molhos</li><li>Ambas autolimitadas (12-24h); quadro ocular grave (endoftalmite) em ferimentos penetrantes por corpo estranho contaminado com terra</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: geralmente clínico + epidemiológico (alimento suspeito, tempo de início); cultura do alimento se necessário</li><li>Tratamento: suporte/hidratação — autolimitado, antibiótico raramente indicado</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Arroz de ontem esquentado de novo = B. cereus" — a síndrome emética clássica de prova é sempre ligada a arroz frito/reaquecido deixado em temperatura ambiente antes de esquentar.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Paciente relata vômitos intensos 2 horas após consumir arroz frito de restaurante chinês que havia sido preparado no dia anterior e reaquecido.</p>
+        <p class="caso-pergunta"><b>Qual o agente e o mecanismo da toxina responsável pelo início tão rápido dos sintomas?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Bacillus cereus, síndrome emética — a toxina emética é PRÉ-FORMADA no alimento e termoestável (sobrevive ao reaquecimento), por isso os sintomas aparecem rapidamente (1-6h), sem necessidade de replicação bacteriana no intestino.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bact-card" id="b25" data-nome="bacillus anthracis" data-cat="Bacilos Gram-positivos">
+  <div class="bact-head" onclick="toggleCard('b25')">
+    <span class="bact-gram gram-Gp">G+</span>
+    <span class="bact-nome"><i>Bacillus anthracis</i></span>
+    <span class="bact-chevron">▾</span>
+  </div>
+  <div class="bact-body">
+    <div class="bact-body-inner">
+      <h4>🔬 Características</h4>
+      <ul><li>Bacilo Gram-positivo grande, em cadeias longas ("vagão de trem"), IMÓVEL (diferença chave de B. cereus, que é móvel)</li><li>Formador de esporos extremamente resistentes — sobrevivem décadas no solo (potencial arma biológica)</li><li>Possui cápsula de ácido poli-D-glutâmico (incomum — a maioria das cápsulas bacterianas é polissacarídica)</li></ul>
+      <h4>⚔️ Fatores de Virulência</h4>
+      <ul><li>Toxina tripartite: antígeno protetor (PA, forma o poro de entrada) + fator letal (FL, protease que cliva MAPKKs, causa morte celular) + fator edema (FE, adenilato ciclase, aumenta AMPc, causa edema maciço)</li><li>Cápsula de poli-D-glutamato: antifagocitária</li></ul>
+      <h4>🩺 Clínica</h4>
+      <ul><li>Antraz cutâneo (mais comum, 95% dos casos): pápula pruriginosa evolui para vesícula e depois para ÚLCERA COM ESCARA NEGRA INDOLOR, edema perilesional importante (contato com animais/couro contaminado)</li><li>Antraz por inalação ("doença dos trabalhadores de lã"): mediastinite hemorrágica, alargamento do mediastino na radiografia, alta letalidade — associado a bioterrorismo</li><li>Antraz gastrointestinal: raro, após ingestão de carne contaminada malcozida, alta mortalidade</li></ul>
+      <h4>🧪 Diagnóstico e Tratamento</h4>
+      <ul><li>Diagnóstico: Gram do exsudato/tecido (bacilos grandes em cadeia), cultura, PCR; radiografia de tórax (alargamento de mediastino) na forma inalatória</li><li>Tratamento: ciprofloxacino ou doxiciclina (esquemas combinados em casos sistêmicos/inalatórios) + antitoxina em casos graves</li><li>Contexto ocupacional: trabalhadores com couro, lã, ossos de animais ("doença dos cardadores de lã")</li></ul>
+      <div class="mnemo-box">💡 <b>Mnemônico / Dica de prova:</b> "Escara NEGRA e INDOLOR + contato com couro/lã = antraz cutâneo" — a ausência de dor na lesão cutânea (apesar do aspecto necrótico impressionante) é o detalhe clássico de prova.</div>
+      <div class="caso-box">
+        <div class="caso-title">🏥 Caso Clínico</div>
+        <p class="caso-vinheta">Trabalhador de curtume desenvolve lesão de pele que evoluiu de pápula para vesícula e depois para uma úlcera necrótica com escara enegrecida, com importante edema ao redor, mas SEM dor na lesão.</p>
+        <p class="caso-pergunta"><b>Qual o diagnóstico e a característica mais marcante da lesão?</b></p>
+        <button class="reveal-btn" onclick="toggleResposta(this)">Ver resposta</button>
+        <div class="caso-resposta">Antraz cutâneo (Bacillus anthracis) — a característica mais marcante é a escara negra ("carbúnculo") indolor, apesar da aparência necrótica exuberante; contexto ocupacional com couro/lã/animais reforça o diagnóstico.</div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<p class="no-results" id="noResults">Nenhuma bactéria encontrada com esse termo.</p>
+
+<footer>Material elaborado para Dr. Cristiano Ribeiro da Silva — Microbiología (semestre 3) · ClinicusMed.<br>Fonte: anotações do Prof. Marcos Rigonato + complementos de conteúdo ClinicusMed. Uso exclusivamente acadêmico.</footer>
+</div>
+
+<script>
+function toggleCard(id){
+  document.getElementById(id).classList.toggle('open');
+}
+function toggleResposta(btn){
+  btn.nextElementSibling.classList.toggle('show');
+}
+document.getElementById('tabs').addEventListener('click', (e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.querySelector(`.cat-panel[data-cat="${e.target.dataset.cat}"]`).classList.add('active');
+    document.getElementById('searchInput').value='';
+    filterCards('');
+  }
+});
+
+function filterCards(term){
+  term = term.toLowerCase().trim();
+  const cards = document.querySelectorAll('.bact-card');
+  let anyVisible = false;
+  const searching = term.length > 0;
+  document.querySelectorAll('.cat-panel').forEach(p => p.style.display = searching ? 'block' : '');
+  if(!searching){
+    document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('nav.tabs button.active') && document.querySelector(`.cat-panel[data-cat="${document.querySelector('nav.tabs button.active').dataset.cat}"]`).classList.add('active');
+  }
+  cards.forEach(c => {
+    const match = !searching || c.dataset.nome.includes(term);
+    c.style.display = match ? '' : 'none';
+    if(match && searching) anyVisible = true;
+  });
+  document.getElementById('noResults').style.display = (searching && !anyVisible) ? 'block' : 'none';
+}
+document.getElementById('searchInput').addEventListener('input', (e)=> filterCards(e.target.value));
+</script>
+</body>
+</html>
