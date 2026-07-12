@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Top — Embriologia | ClinicusMed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#d88a3f; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#3a2410 0%,var(--bg) 55%);color:var(--text);line-height:1.55;padding-bottom:40px;}
+h1,h2,h3{font-family:'Lora',serif;}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px;}
+header{text-align:center;padding:24px 10px 18px;border-bottom:2px solid var(--border);margin-bottom:18px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.6em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.92em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:16px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;font-size:.85em;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.78em;color:var(--text-dim);white-space:nowrap;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.type-tag{display:inline-block;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:999px;margin-bottom:12px;}
+.type-tag.mc{background:rgba(216,138,63,.18);color:var(--accent);}
+.type-tag.vf{background:rgba(79,195,217,.18);color:var(--accent2);}
+.type-tag.assoc{background:rgba(232,184,75,.18);color:var(--gold);}
+.topic-tag{font-size:.72rem;color:var(--text-dim);margin-left:8px;}
+
+.qtxt{font-weight:700;font-size:1.08rem;margin-bottom:16px;}
+
+.qz-btn{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px 16px;border-radius:10px;margin-bottom:9px;cursor:pointer;font-size:.94rem;font-family:inherit;transition:.15s;}
+.qz-btn:hover:not(:disabled){border-color:var(--accent2);background:#243654;}
+.qz-btn:disabled{cursor:default;}
+.qz-btn b{margin-right:8px;color:var(--accent2);}
+
+.vf-row{display:flex;gap:12px;margin-bottom:10px;}
+.vf-btn{flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:16px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:700;font-family:inherit;transition:.15s;}
+.vf-btn:hover:not(:disabled){border-color:var(--accent2);}
+.vf-btn:disabled{cursor:default;}
+
+.assoc-item{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.assoc-term{flex:0 0 40%;font-weight:700;font-size:.9rem;color:var(--gold);}
+.assoc-select{flex:1;background:#0b1120;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:.85rem;}
+.assoc-select.correct{border-color:var(--ok);}
+.assoc-select.wrong{border-color:var(--bad);}
+.assoc-check{background:linear-gradient(90deg,var(--accent),var(--gold));color:#1a1000;border:none;padding:12px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.92rem;width:100%;margin-top:6px;}
+.assoc-check:disabled{opacity:.5;cursor:default;}
+
+.feedback{margin-top:14px;padding:14px 16px;border-radius:10px;font-size:.88rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:rgba(79,209,161,.12);border:1px solid var(--ok);color:#c9f5e2;}
+.feedback.bad{background:rgba(224,80,95,.12);border:1px solid var(--bad);color:#f7cfd3;}
+.feedback b{display:block;margin-bottom:4px;font-size:.95rem;}
+.next-btn{display:block;width:100%;background:linear-gradient(90deg,var(--accent2),var(--ok));color:#04241c;border:none;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.92rem;margin-top:12px;}
+
+#resultScreen{display:none;text-align:center;}
+.result-score{font-size:2.8rem;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;margin:14px 0 6px;}
+.result-msg{font-size:1rem;color:var(--text-dim);margin-bottom:22px;}
+.review-item{text-align:left;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;font-size:.85rem;}
+.review-item .rq{font-weight:700;margin-bottom:4px;}
+.review-item.ok{border-left:4px solid var(--ok);}
+.review-item.bad{border-left:4px solid var(--bad);}
+.review-item .rjust{color:var(--text-dim);margin-top:6px;font-size:.85rem;}
+.btn-secondary{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:12px 22px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:700;font-family:inherit;margin-top:16px;}
+
+.cta-box{background:linear-gradient(135deg, rgba(216,138,63,.16), rgba(232,184,75,.10));border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:20px;text-align:center;}
+.cta-box h3{color:var(--gold);font-size:1.1rem;margin-bottom:8px;}
+.cta-box p{color:var(--text-dim);font-size:.88rem;margin-bottom:14px;}
+.wa-btn{display:inline-block;background:linear-gradient(135deg,#25D366,#1ebe5a);color:#06210f;font-weight:800;padding:13px 26px;border-radius:12px;text-decoration:none;font-size:.95rem;}
+
+#startScreen .hero{background:linear-gradient(135deg, rgba(216,138,63,.16), rgba(79,195,217,.10));border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:18px;text-align:center;}
+#startScreen .hero h2{font-size:1.4rem;margin-bottom:8px;}
+#startScreen ul{margin:14px 0;padding-left:0;list-style:none;font-size:.9rem;color:var(--text-dim);}
+#startScreen ul li{padding:6px 0;border-bottom:1px solid var(--border);}
+#startScreen ul li b{color:var(--text);}
+.start-btn{display:block;width:100%;background:linear-gradient(90deg,var(--accent),var(--gold));color:#1a1000;border:none;padding:16px;border-radius:12px;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;margin-top:10px;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="eyebrow">Simulado Final · Embriologia</span>
+  <h1>🧬 Simulado Top — Embriologia</h1>
+  <p>40 questões · 26 múltipla escolha + 7 V/F + 7 associação · com gabarito comentado</p>
+</header>
+
+<div id="startScreen">
+  <div class="hero">
+    <h2>Pronto pra testar tudo?</h2>
+    <p style="color:var(--text-dim);font-size:.9rem;">Cobre gametogênese, ciclo ovariano, fecundação, 1ª a 8ª semana e malformações congênitas/teratógenos.</p>
+  </div>
+  <div class="card">
+    <ul>
+      <li>📝 <b>26 questões</b> de múltipla escolha (4 alternativas)</li>
+      <li>✅ <b>7 questões</b> de Verdadeiro ou Falso</li>
+      <li>🔗 <b>7 questões</b> de associação de colunas</li>
+      <li>💬 Justificativa completa em cada resposta</li>
+      <li>📊 Revisão final com todas as questões erradas</li>
+    </ul>
+    <button class="start-btn" onclick="startQuiz()">Começar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="xpbar">
+    <span class="lvl" id="progLabel">1/40</span>
+    <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+    <span class="xptext" id="scoreLive">0 acertos</span>
+  </div>
+  <div class="card" id="qCard"></div>
+</div>
+
+<div id="resultScreen">
+  <div class="card">
+    <span class="eyebrow" style="display:inline-block;margin-bottom:8px;">Resultado</span>
+    <div class="result-score" id="scoreText">0/40</div>
+    <p class="result-msg" id="resultMsg"></p>
+  </div>
+  <div id="reviewArea"></div>
+  <div class="cta-box">
+    <h3>Quer o Guia de Estudo completo de Embriologia?</h3>
+    <p>Flashcards, resumos por tema e mais simulados prontos pra revisar tudo antes da prova.</p>
+    <a class="wa-btn" href="https://wa.me/5547991572214?text=Ol%C3%A1!%20Fiz%20o%20Simulado%20Top%20de%20Embriologia%20e%20quero%20saber%20mais%20sobre%20o%20Guia%20de%20Estudo%20completo%20do%20ClinicusMed." target="_blank" rel="noopener">Quero conhecer no WhatsApp →</a>
+  </div>
+  <button class="btn-secondary" onclick="location.reload()">Refazer simulado</button>
+</div>
+
+<footer>ClinicusMed — Guias de Estudo e Simulados para medicina.</footer>
+</div>
+
+<script>
+const DATA = {"mc": [{"n": 1, "type": "mc", "topic": "Gametogênese", "q": "A espermatogênese ocorre em qual estrutura testicular?", "opts": ["Epidídimo", "Túbulos seminíferos", "Rede testicular", "Ducto deferente"], "correct": 1, "just": "A espermatogênese ocorre nos túbulos seminíferos; a maturação final (aquisição de mobilidade) acontece no epidídimo."}, {"n": 2, "type": "mc", "topic": "Gametogênese", "q": "Quantos dias, aproximadamente, dura o processo completo de espermatogênese até a espermiogênese?", "opts": ["28 dias", "64-74 dias", "9 meses", "7 dias"], "correct": 1, "just": "A espermatogênese completa dura em torno de 64 a 74 dias, incluindo a fase proliferativa, meiótica e a espermiogênese."}, {"n": 3, "type": "mc", "topic": "Gametogênese", "q": "A espermiogênese é o processo em que:", "opts": ["Ocorre a primeira divisão meiótica", "As células de Sertoli se multiplicam", "A espermátide se diferencia em espermatozoide maduro", "O espermatogônio se torna espermatócito"], "correct": 2, "just": "Na espermiogênese, a espermátide sofre transformações morfológicas (formação do acrossomo, condensação nuclear, desenvolvimento do flagelo, eliminação de citoplasma) até se tornar espermatozoide maduro."}, {"n": 4, "type": "mc", "topic": "Gametogênese", "q": "O ovócito secundário fica parado em qual fase da meiose até a fecundação?", "opts": ["Metáfase II", "Prófase I", "Telófase II", "Anáfase I"], "correct": 0, "just": "Após completar a meiose I na ovulação, o ovócito secundário entra em meiose II e para em metáfase II, só concluindo se houver fecundação."}, {"n": 5, "type": "mc", "topic": "Gametogênese", "q": "Ao nascer, quantos ovócitos primários uma menina possui aproximadamente?", "opts": ["40.000", "500", "7.000.000", "600.000 a 800.000"], "correct": 3, "just": "Ao nascer há entre 600.000 e 800.000 ovócitos primários; na puberdade restam cerca de 40.000, e apenas ~500 chegarão a ser ovulados ao longo da vida reprodutiva."}, {"n": 6, "type": "mc", "topic": "Ciclo Ovariano", "q": "O pico de LH, que desencadeia a ovulação, ocorre tipicamente em qual dia do ciclo ovariano de 28 dias?", "opts": ["Dia 14", "Dia 1", "Dia 21", "Dia 28"], "correct": 0, "just": "Na fase folicular, o pico de estrogênio gera retrocontrole positivo sobre a LH, cujo pico (por volta do dia 14) desencadeia a ovulação."}, {"n": 7, "type": "mc", "topic": "Ciclo Ovariano", "q": "A hormona hCG (gonadotrofina coriônica humana), detectada nos testes de gravidez, tem qual função inicial?", "opts": ["Iniciar o parto", "Estimular a ovulação", "Impedir a degeneração do corpo lúteo, mantendo a produção de progesterona", "Estimular a espermatogênese"], "correct": 2, "just": "A hCG, secretada pelo sinciciotrofoblasto, resgata o corpo lúteo da degeneração, mantendo a secreção de progesterona até a placenta assumir essa função (~4º mês)."}, {"n": 8, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "A fecundação ocorre tipicamente em qual porção da tuba uterina?", "opts": ["Infundíbulo", "Porção intramural", "Istmo", "Ampola"], "correct": 3, "just": "A fecundação ocorre na ampola da tuba uterina, sua porção mais larga, geralmente dentro de 24h após a ovulação."}, {"n": 9, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "Coloque em ordem as fases da fecundação: penetração da corona radiada, penetração da zona pelúcida, fusão de membranas, fusão dos núcleos. Qual é a etapa que garante que apenas um espermatozoide fecunde o óvulo?", "opts": ["Segmentação", "Reação de zona (bloqueio da polispermia após fusão de membranas)", "Reação acrossômica", "Capacitação"], "correct": 1, "just": "Após a fusão de membranas, ocorre a reação de zona, que torna a zona pelúcida impermeável a outros espermatozoides, prevenindo a polispermia."}, {"n": 10, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "A segmentação (clivagem) do zigoto produz células progressivamente menores chamadas:", "opts": ["Trofoblastos", "Blastocistos", "Blastômeros", "Ovogônias"], "correct": 2, "just": "A segmentação é uma série de mitoses do zigoto que geram blastômeros cada vez menores, sem aumento do volume total do embrião."}, {"n": 11, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "A implantação do blastocisto no endométrio ocorre aproximadamente quantos dias após a fecundação?", "opts": ["14 dias", "6 dias", "1 dia", "21 dias"], "correct": 1, "just": "A implantação começa por volta do 6º dia após a fecundação, quando o blastocisto adere ao endométrio, geralmente na parede anterior ou posterior do corpo uterino."}, {"n": 12, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "O sinciciotrofoblasto é responsável por qual função crítica na implantação?", "opts": ["Originar o âmnio", "Formar o saco vitelino", "Produzir líquido amniótico", "Invadir e destruir o endométrio materno, promovendo a implantação"], "correct": 3, "just": "O sinciciotrofoblasto secreta enzimas proteolíticas que destroem o tecido endometrial, permitindo que o blastocisto se implante na parede uterina."}, {"n": 13, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "No 8º dia, o embrioblasto se diferencia em disco bilaminar, formado por duas camadas. Quais são elas?", "opts": ["Ectoderma e mesoderma", "Âmnio e córion", "Citotrofoblasto e sinciciotrofoblasto", "Epiblasto e hipoblasto"], "correct": 3, "just": "O disco germinativo bilaminar é formado pelo epiblasto (camada colunar alta, adjacente à cavidade amniótica) e o hipoblasto (camada cúbica, voltada para a cavidade blastocística)."}, {"n": 14, "type": "mc", "topic": "Fecundação / 1ª-2ª Semana", "q": "O período lacunar, que se inicia por volta do 9º dia, se caracteriza por:", "opts": ["Formação de vacúolos (lacunas) no sinciciotrofoblasto, que se enchem de sangue materno", "Formação da linha primitiva", "Formação dos somitos", "Fechamento do tubo neural"], "correct": 0, "just": "No período lacunar, vacúolos aparecem no sinciciotrofoblasto e se fusionam, formando lacunas que se enchem de sangue materno oriundo dos capilares endometriais rompidos — início da circulação uteroplacentária."}, {"n": 15, "type": "mc", "topic": "Gastrulação / Neurulação", "q": "A gastrulação, processo que forma o disco trilaminar, se inicia aproximadamente em qual dia?", "opts": ["15-16 dias", "6 dias", "21 dias", "28 dias"], "correct": 0, "just": "A gastrulação inicia entre os dias 15-16, marcada pelo surgimento da linha primitiva sobre o epiblasto."}, {"n": 16, "type": "mc", "topic": "Gastrulação / Neurulação", "q": "A estrutura cuja aparição indica o início da gastrulação é:", "opts": ["A notocorda", "O saco vitelino secundário", "A linha primitiva", "O tubo neural"], "correct": 2, "just": "O aparecimento da linha primitiva no epiblasto é o marco que indica o início da gastrulação e do processo de formação das três camadas germinativas."}, {"n": 17, "type": "mc", "topic": "Gastrulação / Neurulação", "q": "A notocorda se forma a partir de células que migram do:", "opts": ["Trofoblasto", "Nódulo primitivo (nódulo de Hensen)", "Alantoide", "Hipoblasto"], "correct": 1, "just": "Células pró-notocordais migram cranialmente a partir do nódulo primitivo, intercalando-se no hipoblasto para formar a placa notocordal e, posteriormente, a notocorda definitiva."}, {"n": 18, "type": "mc", "topic": "Gastrulação / Neurulação", "q": "A neurulação se inicia ao final da 3ª semana e se caracteriza pela formação de qual estrutura?", "opts": ["O saco vitelino", "O disco trilaminar", "As vilosidades terciárias", "A placa neural, a partir do ectoderma induzido pela notocorda"], "correct": 3, "just": "Induzido pela notocorda e placa precordal, o ectoderma se espessa formando a placa neural, dando início à neurulação, que originará o tubo neural."}, {"n": 19, "type": "mc", "topic": "Gastrulação / Neurulação", "q": "Os neuróporos anterior e posterior se fecham, respectivamente, em torno de quais dias de gestação?", "opts": ["10 e 12 dias", "40 e 45 dias", "14 e 21 dias", "25 e 28 dias"], "correct": 3, "just": "O neuróporo anterior fecha por volta do dia 25, e o posterior por volta do dia 28 — marcos importantes, já que sua falha de fechamento causa defeitos do tubo neural."}, {"n": 20, "type": "mc", "topic": "Gastrulação / Neurulação", "q": "As placodas óticas e as placodas do cristalino se formam a partir de:", "opts": ["Migração de células da crista neural", "Espessamentos ectodérmicos bilaterais na região cefálica", "Invaginação do endoderma", "Diferenciação do mesoderma paraxial"], "correct": 1, "just": "Quando o tubo neural já está fechado, surgem na região cefálica dois espessamentos ectodérmicos: as placodas óticas (originam estruturas da audição/equilíbrio) e as placodas do cristalino (originam o cristalino do olho)."}, {"n": 21, "type": "mc", "topic": "4ª a 8ª Semana", "q": "O mesoderma paraxial se organiza em segmentos chamados:", "opts": ["Somatopleura", "Vilosidades", "Somitos", "Esplancnopleura"], "correct": 2, "just": "O mesoderma paraxial se segmenta em pares de somitos ao longo do eixo crânio-caudal do embrião, que originarão a musculatura axial, vértebras e derme dorsal."}, {"n": 22, "type": "mc", "topic": "4ª a 8ª Semana", "q": "As primeiras células sanguíneas e vasos sanguíneos do embrião derivam de estruturas chamadas:", "opts": ["Placa precordal", "Ilhotas sanguíneas (hemangioblastos) no mesoderma do saco vitelino", "Somitos cervicais", "Crista neural craniana"], "correct": 1, "just": "No início da 3ª semana, células do mesoderma visceral do saco vitelino se diferenciam em hemangioblastos, formando as ilhotas sanguíneas — origem das primeiras células sanguíneas e vasos primitivos."}, {"n": 23, "type": "mc", "topic": "4ª a 8ª Semana", "q": "Os arcos faríngeos (branquiais), estruturas típicas da 4ª semana, contribuem principalmente para a formação de:", "opts": ["Estruturas da face, pescoço e cabeça (ossos, músculos, nervos cranianos)", "Placenta e cordão umbilical", "Rins e gônadas", "Membros superiores e inferiores"], "correct": 0, "just": "Os arcos faríngeos (1º ao 4º, sendo o 5º e 6º rudimentares) formam estruturas da face e pescoço, cada um associado a um nervo craniano, artéria e musculatura específicos."}, {"n": 24, "type": "mc", "topic": "Malformações / Teratógenos", "q": "Segundo a classificação etiológica das anomalias congênitas, qual porcentagem aproximada é atribuída à interação entre fatores ambientais e suscetibilidade genética?", "opts": ["55%", "90%", "30%", "15%"], "correct": 0, "just": "Cerca de 55% das anomalias resultam da interação entre fatores ambientais e a suscetibilidade genética do indivíduo — a maior categoria, e a de origem menos compreendida."}, {"n": 25, "type": "mc", "topic": "Malformações / Teratógenos", "q": "A disrupção se diferencia da malformação porque:", "opts": ["É causada por uma interrupção extrínseca em uma estrutura que se formava normalmente (ex: bridas amnióticas)", "Nunca causa aborto espontâneo", "Ocorre apenas em cromossomos sexuais", "Sempre tem causa genética"], "correct": 0, "just": "Diferente da malformação (defeito intrínseco do desenvolvimento), a disrupção decorre de um processo destrutivo extrínseco sobre uma estrutura previamente normal — o exemplo clássico é a síndrome de bridas amnióticas."}, {"n": 26, "type": "mc", "topic": "Malformações / Teratógenos", "q": "A Síndrome de Turner, única monossomia compatível com a vida, é caracterizada por qual cariótipo?", "opts": ["47, XX+13", "47, XXY", "45, X (ausência de um cromossomo sexual)", "47, XX+21"], "correct": 2, "just": "A Síndrome de Turner (45,X) é a única monossomia viável; cerca de 50% dos fetos afetados são abortados espontaneamente."}], "vf": [{"n": 1, "type": "vf", "topic": "Fecundação / 1ª-2ª Semana", "q": "A implantação do blastocisto ocorre normalmente na porção anterior ou posterior do corpo uterino, nos óstios das glândulas uterinas.", "answer": true, "just": "Verdadeiro. A implantação, que se inicia por volta do 6º dia, ocorre tipicamente na parede anterior ou posterior do corpo uterino, nos óstios das glândulas uterinas."}, {"n": 2, "type": "vf", "topic": "Gametogênese", "q": "O ovócito secundário completa a Meiose II espontaneamente, independentemente de haver fecundação.", "answer": false, "just": "Falso. O ovócito secundário para em metáfase II e só completa a Meiose II se houver fecundação; caso contrário, é eliminado na menstruação ainda em metáfase II."}, {"n": 3, "type": "vf", "topic": "Gastrulação / Neurulação", "q": "A notocorda, formada a partir de células do nódulo primitivo, tem como função induzir o ectoderma a formar a placa neural.", "answer": true, "just": "Verdadeiro. A notocorda funciona como eixo axial e induz o ectoderma sobrejacente a se diferenciar em placa neural, dando início à neurulação."}, {"n": 4, "type": "vf", "topic": "Gastrulação / Neurulação", "q": "O neuroporo posterior se fecha antes do neuroporo anterior durante a neurulação.", "answer": false, "just": "Falso. O neuroporo anterior fecha primeiro, por volta do dia 25; o neuroporo posterior fecha depois, por volta do dia 28."}, {"n": 5, "type": "vf", "topic": "Malformações / Teratógenos", "q": "A talidomida é um exemplo clássico de teratógeno farmacológico associado a defeitos de redução dos membros (meromelia/amelia).", "answer": true, "just": "Verdadeiro. A talidomida, usada como antiemético/sedativo, ficou historicamente associada a meromelia e amelia, sendo retirada do mercado por seus efeitos teratogênicos."}, {"n": 6, "type": "vf", "topic": "4ª a 8ª Semana", "q": "O mesoderma intermédio é responsável pela formação da musculatura axial e das vértebras.", "answer": false, "just": "Falso. Isso é função do mesoderma paraxial (organizado em somitos). O mesoderma intermédio origina o sistema urogenital (rins, gônadas, ductos genitais)."}, {"n": 7, "type": "vf", "topic": "Malformações / Teratógenos", "q": "A deficiência de ácido fólico durante o período periconcepcional está associada a maior risco de defeitos do tubo neural.", "answer": true, "just": "Verdadeiro. A suplementação de ácido fólico periconcepcional reduz em até 70% o risco de defeitos do tubo neural (DTN)."}], "assoc": [{"n": 1, "type": "assoc", "topic": "Gametogênese", "title": "Associe cada célula/estrutura da gametogênese à sua característica:", "terms": ["Espermatogônio tipo A", "Espermatogônio tipo B", "Célula de Sertoli", "Célula de Leydig", "Ovócito primário"], "defs": ["Parado em prófase I (diplóteno) desde o nascimento até a puberdade", "Produz testosterona sob estímulo do LH", "Entra em meiose; origina os espermatócitos primários", "Sustentação e nutrição das células germinativas em desenvolvimento", "Mantém divisões mitóticas; função proliferativa"], "correct": [4, 2, 3, 1, 0]}, {"n": 2, "type": "assoc", "topic": "Ciclo Ovariano", "title": "Associe cada estrutura do ciclo ovariano à sua função/característica:", "terms": ["Corpo lúteo", "Corpo albicans", "hCG", "Folículo de Graaf", "Pico de LH"], "defs": ["Secreta progesterona após a ovulação", "Cicatriz fibrosa formada pela degeneração do corpo lúteo", "Resgata o corpo lúteo da degeneração no início da gravidez", "Folículo ovariano maduro, pronto para ovular", "Desencadeia a ovulação, por volta do dia 14"], "correct": [0, 1, 2, 3, 4]}, {"n": 3, "type": "assoc", "topic": "Fecundação / 1ª-2ª Semana", "title": "Associe cada fase da fecundação à sua descrição:", "terms": ["Capacitação", "Reação acrossômica", "Fusão de membranas", "Reação de zona", "Fusão dos núcleos"], "defs": ["Bloqueia a entrada de outros espermatozoides (impede polispermia)", "Membrana do espermatozoide se funde à do ovócito", "Libera enzimas que digerem a zona pelúcida", "Restaura o número diploide de cromossomos", "Ocorre no trato genital feminino, dura cerca de 7 horas"], "correct": [4, 2, 1, 0, 3]}, {"n": 4, "type": "assoc", "topic": "Fecundação / 1ª-2ª Semana", "title": "Associe cada estrutura da 1ª e 2ª semana à sua origem/definição:", "terms": ["Embrioblasto", "Trofoblasto", "Citotrofoblasto", "Sinciciotrofoblasto", "Período lacunar"], "defs": ["Camada externa multinucleada; invade e destrói o endométrio", "Massa celular externa do blastocisto; origina placenta e membranas", "Camada interna do trofoblasto, mitoticamente ativa", "Vacúolos no sinciciotrofoblasto se enchem de sangue materno", "Massa celular interna do blastocisto; origina o embrião"], "correct": [4, 1, 2, 0, 3]}, {"n": 5, "type": "assoc", "topic": "Gastrulação / Neurulação", "title": "Associe cada estrutura da gastrulação/neurulação à sua função:", "terms": ["Linha primitiva", "Nódulo primitivo", "Notocorda", "Placa neural", "Crista neural"], "defs": ["Marca o início da gastrulação sobre o epiblasto", "Eixo axial; induz a formação da placa neural", "Origem das células pró-notocordais", "Espessamento do ectoderma que originará o tubo neural", "Origina gânglios espinais, medula suprarrenal e melanócitos, entre outros"], "correct": [0, 2, 1, 3, 4]}, {"n": 6, "type": "assoc", "topic": "4ª a 8ª Semana", "title": "Associe cada segmento do mesoderma ao que ele origina:", "terms": ["Mesoderma paraxial", "Mesoderma intermédio", "Mesoderma parietal (somático)", "Mesoderma visceral (esplâncnico)", "Hemangioblastos"], "defs": ["Associado ao endoderma; parede dos órgãos", "Primeiras células sanguíneas e vasos, no saco vitelino", "Sistema urogenital — rins, gônadas, ductos genitais", "Somitos — musculatura axial, vértebras, derme dorsal", "Associado ao ectoderma; parede do corpo"], "correct": [3, 2, 4, 0, 1]}, {"n": 7, "type": "assoc", "topic": "Malformações / Teratógenos", "title": "Associe cada tipo de anomalia congênita à sua definição:", "terms": ["Malformação", "Disrupção", "Deformação", "Agenesia", "Aplasia"], "defs": ["Forma/posição anômala causada por força mecânica", "Ausência de um órgão por falta do primórdio", "Falta de desenvolvimento, mas com esboço orgânico presente", "Defeito morfológico intrínseco durante a organogênese", "Defeito por interrupção extrínseca de estrutura já formada"], "correct": [3, 4, 0, 1, 2]}]}
+;
+
+// Monta a sequência: 26 MC + 7 VF + 7 Assoc = 40 questões, cada uma com "kind" e "ref"
+let sequence = [];
+DATA.mc.forEach(q => sequence.push(q));
+DATA.vf.forEach(q => sequence.push(q));
+DATA.assoc.forEach(q => sequence.push(q));
+
+let idx = 0, score = 0, maxScore = 0, wrongReview = [];
+
+function startQuiz(){
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  idx = 0; score = 0; wrongReview = [];
+  renderQ();
+}
+
+function updateBar(){
+  document.getElementById('progLabel').textContent = `${idx+1}/40`;
+  document.getElementById('xpFill').style.width = (idx/40*100)+'%';
+  document.getElementById('scoreLive').textContent = score+' acertos';
+}
+
+function renderQ(){
+  if(idx >= sequence.length){ finish(); return; }
+  updateBar();
+  const item = sequence[idx];
+  const card = document.getElementById('qCard');
+
+  if(item.type === 'mc'){
+    card.innerHTML = `
+      <span class="type-tag mc">Múltipla escolha</span><span class="topic-tag">${item.topic}</span>
+      <div class="qtxt">${item.n}. ${item.q}</div>
+      <div id="optsArea"></div>
+      <div class="feedback" id="fb"></div>
+    `;
+    const area = document.getElementById('optsArea');
+    item.opts.forEach((o,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'qz-btn';
+      btn.innerHTML = `<b>${String.fromCharCode(97+i)})</b> ${o}`;
+      btn.onclick = ()=> answerMC(i, item);
+      area.appendChild(btn);
+    });
+  } else if(item.type === 'vf'){
+    card.innerHTML = `
+      <span class="type-tag vf">Verdadeiro ou Falso</span><span class="topic-tag">${item.topic}</span>
+      <div class="qtxt">${item.n + 26}. ${item.q}</div>
+      <div class="vf-row" id="vfRow">
+        <button class="vf-btn" id="vfTrue">✅ Verdadeiro</button>
+        <button class="vf-btn" id="vfFalse">❌ Falso</button>
+      </div>
+      <div class="feedback" id="fb"></div>
+    `;
+    document.getElementById('vfTrue').onclick = ()=> answerVF(true, item);
+    document.getElementById('vfFalse').onclick = ()=> answerVF(false, item);
+  } else if(item.type === 'assoc'){
+    let rows = '';
+    item.terms.forEach((t,i)=>{
+      rows += `<div class="assoc-item"><div class="assoc-term">${t}</div>
+        <select class="assoc-select" id="asel${i}">
+          <option value="">Selecione...</option>
+          ${item.defs.map((d,j)=>`<option value="${j}">${String.fromCharCode(97+j)}) ${d}</option>`).join('')}
+        </select></div>`;
+    });
+    card.innerHTML = `
+      <span class="type-tag assoc">Associar colunas</span><span class="topic-tag">${item.topic}</span>
+      <div class="qtxt">${item.n + 33}. ${item.title}</div>
+      ${rows}
+      <button class="assoc-check" id="assocCheckBtn">Conferir associação</button>
+      <div class="feedback" id="fb"></div>
+    `;
+    document.getElementById('assocCheckBtn').onclick = ()=> answerAssoc(item);
+  }
+}
+
+function nextBtn(){
+  const fb = document.getElementById('fb');
+  const btn = document.createElement('button');
+  btn.className = 'next-btn';
+  btn.textContent = (idx+1 >= sequence.length) ? 'Ver resultado final →' : 'Próxima questão →';
+  btn.onclick = ()=>{ idx++; renderQ(); };
+  fb.appendChild(btn);
+}
+
+function answerMC(i, item){
+  const area = document.getElementById('optsArea');
+  const btns = area.querySelectorAll('.qz-btn');
+  btns.forEach(b=>b.disabled = true);
+  const correct = i === item.correct;
+  btns[item.correct].style.borderColor = 'var(--ok)';
+  btns[item.correct].style.color = 'var(--ok)';
+  if(!correct){
+    btns[i].style.borderColor = 'var(--bad)';
+    btns[i].style.color = 'var(--bad)';
+  } else { score++; maxScore++; }
+  if(!correct){
+    wrongReview.push({q: item.q, just: item.just, correctText: `Resposta correta: ${String.fromCharCode(97+item.correct)}) ${item.opts[item.correct]}`});
+  }
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (correct?'ok':'bad');
+  fb.innerHTML = `<b>${correct?'✅ Correto!':'❌ Não foi dessa vez'}</b>${item.just}`;
+  document.getElementById('scoreLive').textContent = score+' acertos';
+  nextBtn();
+}
+
+function answerVF(choice, item){
+  document.getElementById('vfTrue').disabled = true;
+  document.getElementById('vfFalse').disabled = true;
+  const correct = choice === item.answer;
+  const correctBtn = document.getElementById(item.answer ? 'vfTrue' : 'vfFalse');
+  correctBtn.style.borderColor = 'var(--ok)'; correctBtn.style.color='var(--ok)';
+  if(!correct){
+    const wrongBtn = document.getElementById(choice ? 'vfTrue' : 'vfFalse');
+    wrongBtn.style.borderColor = 'var(--bad)'; wrongBtn.style.color='var(--bad)';
+  } else { score++; }
+  if(!correct){
+    wrongReview.push({q: item.q, just: item.just, correctText: `Resposta correta: ${item.answer ? 'Verdadeiro' : 'Falso'}`});
+  }
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (correct?'ok':'bad');
+  fb.innerHTML = `<b>${correct?'✅ Correto!':'❌ Não foi dessa vez'}</b>${item.just}`;
+  document.getElementById('scoreLive').textContent = score+' acertos';
+  nextBtn();
+}
+
+function answerAssoc(item){
+  let allCorrect = true;
+  let acertos = 0;
+  item.terms.forEach((t,i)=>{
+    const sel = document.getElementById('asel'+i);
+    const chosen = parseInt(sel.value);
+    const isCorrect = chosen === item.correct[i];
+    if(isCorrect){ sel.classList.add('correct'); acertos++; }
+    else { sel.classList.add('wrong'); allCorrect = false; }
+    sel.disabled = true;
+  });
+  document.getElementById('assocCheckBtn').disabled = true;
+  if(allCorrect){ score++; }
+  else {
+    let corrList = item.terms.map((t,i)=> `${t} → ${item.defs[item.correct[i]]}`).join('; ');
+    wrongReview.push({q: item.title, just: `Gabarito: ${corrList}`, correctText: `Você acertou ${acertos}/${item.terms.length} pares.`});
+  }
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (allCorrect?'ok':'bad');
+  fb.innerHTML = allCorrect
+    ? `<b>✅ Todos os pares corretos!</b>Mandou bem nessa associação.`
+    : `<b>⚠️ ${acertos}/${item.terms.length} pares corretos</b>Confira em vermelho os que erraste — a associação certa está marcada em verde.`;
+  document.getElementById('scoreLive').textContent = score+' acertos';
+  nextBtn();
+}
+
+function finish(){
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  document.getElementById('scoreText').textContent = `${score}/40`;
+  let msg;
+  if(score >= 35) msg = 'Excelente! Domínio sólido de Embriologia. 🏆';
+  else if(score >= 27) msg = 'Bom resultado — revise os pontos que errou antes da prova. 💪';
+  else if(score >= 18) msg = 'Dá pra melhorar — volta no guia de estudo nos temas que mais errou. 📚';
+  else msg = 'Esse é o momento de revisar com calma — é pra isso que serve o simulado. 📖';
+  document.getElementById('resultMsg').textContent = msg;
+
+  if(wrongReview.length){
+    let html = '<h3 style="margin-bottom:12px;color:var(--gold);font-size:1.05rem;">📋 Revisão das questões erradas</h3>';
+    wrongReview.forEach(r=>{
+      html += `<div class="review-item bad"><div class="rq">${r.q}</div><div class="rjust">${r.correctText}<br>${r.just}</div></div>`;
+    });
+    document.getElementById('reviewArea').innerHTML = html;
+  } else {
+    document.getElementById('reviewArea').innerHTML = '<div class="review-item ok"><div class="rq">🎉 Gabarito 100% — nenhuma questão errada!</div></div>';
+  }
+}
+</script>
+</body>
+</html>
