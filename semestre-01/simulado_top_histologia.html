@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Top — Histologia Geral | ClinicusMed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#d88a3f; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#3a2410 0%,var(--bg) 55%);color:var(--text);line-height:1.55;padding-bottom:40px;}
+h1,h2,h3{font-family:'Lora',serif;}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px;}
+header{text-align:center;padding:24px 10px 18px;border-bottom:2px solid var(--border);margin-bottom:18px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.6em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.92em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:16px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;font-size:.85em;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.78em;color:var(--text-dim);white-space:nowrap;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.type-tag{display:inline-block;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:999px;margin-bottom:12px;}
+.type-tag.mc{background:rgba(216,138,63,.18);color:var(--accent);}
+.type-tag.vf{background:rgba(79,195,217,.18);color:var(--accent2);}
+.type-tag.assoc{background:rgba(232,184,75,.18);color:var(--gold);}
+.topic-tag{font-size:.72rem;color:var(--text-dim);margin-left:8px;}
+
+.qtxt{font-weight:700;font-size:1.08rem;margin-bottom:16px;}
+
+.qz-btn{display:block;width:100%;text-align:left;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px 16px;border-radius:10px;margin-bottom:9px;cursor:pointer;font-size:.94rem;font-family:inherit;transition:.15s;}
+.qz-btn:hover:not(:disabled){border-color:var(--accent2);background:#243654;}
+.qz-btn:disabled{cursor:default;}
+.qz-btn b{margin-right:8px;color:var(--accent2);}
+
+.vf-row{display:flex;gap:12px;margin-bottom:10px;}
+.vf-btn{flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:16px;border-radius:10px;cursor:pointer;font-size:1rem;font-weight:700;font-family:inherit;transition:.15s;}
+.vf-btn:hover:not(:disabled){border-color:var(--accent2);}
+.vf-btn:disabled{cursor:default;}
+
+.assoc-item{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.assoc-term{flex:0 0 40%;font-weight:700;font-size:.9rem;color:var(--gold);}
+.assoc-select{flex:1;background:#0b1120;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:.85rem;}
+.assoc-select.correct{border-color:var(--ok);}
+.assoc-select.wrong{border-color:var(--bad);}
+.assoc-check{background:linear-gradient(90deg,var(--accent),var(--gold));color:#1a1000;border:none;padding:12px 20px;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.92rem;width:100%;margin-top:6px;}
+.assoc-check:disabled{opacity:.5;cursor:default;}
+
+.feedback{margin-top:14px;padding:14px 16px;border-radius:10px;font-size:.88rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:rgba(79,209,161,.12);border:1px solid var(--ok);color:#c9f5e2;}
+.feedback.bad{background:rgba(224,80,95,.12);border:1px solid var(--bad);color:#f7cfd3;}
+.feedback b{display:block;margin-bottom:4px;font-size:.95rem;}
+.next-btn{display:block;width:100%;background:linear-gradient(90deg,var(--accent2),var(--ok));color:#04241c;border:none;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;font-size:.92rem;margin-top:12px;}
+
+#resultScreen{display:none;text-align:center;}
+.result-score{font-size:2.8rem;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;margin:14px 0 6px;}
+.result-msg{font-size:1rem;color:var(--text-dim);margin-bottom:22px;}
+.review-item{text-align:left;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;font-size:.85rem;}
+.review-item .rq{font-weight:700;margin-bottom:4px;}
+.review-item.ok{border-left:4px solid var(--ok);}
+.review-item.bad{border-left:4px solid var(--bad);}
+.review-item .rjust{color:var(--text-dim);margin-top:6px;font-size:.85rem;}
+.btn-secondary{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:12px 22px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:700;font-family:inherit;margin-top:16px;}
+
+.cta-box{background:linear-gradient(135deg, rgba(216,138,63,.16), rgba(232,184,75,.10));border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:20px;text-align:center;}
+.cta-box h3{color:var(--gold);font-size:1.1rem;margin-bottom:8px;}
+.cta-box p{color:var(--text-dim);font-size:.88rem;margin-bottom:14px;}
+.wa-btn{display:inline-block;background:linear-gradient(135deg,#25D366,#1ebe5a);color:#06210f;font-weight:800;padding:13px 26px;border-radius:12px;text-decoration:none;font-size:.95rem;}
+
+#startScreen .hero{background:linear-gradient(135deg, rgba(216,138,63,.16), rgba(79,195,217,.10));border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:18px;text-align:center;}
+#startScreen .hero h2{font-size:1.4rem;margin-bottom:8px;}
+#startScreen ul{margin:14px 0;padding-left:0;list-style:none;font-size:.9rem;color:var(--text-dim);}
+#startScreen ul li{padding:6px 0;border-bottom:1px solid var(--border);}
+#startScreen ul li b{color:var(--text);}
+.start-btn{display:block;width:100%;background:linear-gradient(90deg,var(--accent),var(--gold));color:#1a1000;border:none;padding:16px;border-radius:12px;font-weight:800;cursor:pointer;font-family:inherit;font-size:1rem;margin-top:10px;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="eyebrow">Simulado Final · Histologia Geral</span>
+  <h1>🔬 Simulado Top — Histologia</h1>
+  <p>30 questões · 20 múltipla escolha + 5 V/F + 5 associação · com gabarito comentado</p>
+</header>
+
+<div id="startScreen">
+  <div class="hero">
+    <h2>Pronto pra testar tudo?</h2>
+    <p style="color:var(--text-dim);font-size:.9rem;">Cobre técnica histológica, tecido epitelial, conjuntivo, adiposo, cartilagem, osso, muscular, nervoso e sangue.</p>
+  </div>
+  <div class="card">
+    <ul>
+      <li>📝 <b>20 questões</b> de múltipla escolha (4 alternativas)</li>
+      <li>✅ <b>5 questões</b> de Verdadeiro ou Falso</li>
+      <li>🔗 <b>5 questões</b> de associação de colunas</li>
+      <li>💬 Justificativa completa em cada resposta</li>
+      <li>📊 Revisão final com todas as questões erradas</li>
+    </ul>
+    <button class="start-btn" onclick="startQuiz()">Começar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="xpbar">
+    <span class="lvl" id="progLabel">1/30</span>
+    <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+    <span class="xptext" id="scoreLive">0 acertos</span>
+  </div>
+  <div class="card" id="qCard"></div>
+</div>
+
+<div id="resultScreen">
+  <div class="card">
+    <span class="eyebrow" style="display:inline-block;margin-bottom:8px;">Resultado</span>
+    <div class="result-score" id="scoreText">0/30</div>
+    <p class="result-msg" id="resultMsg"></p>
+  </div>
+  <div id="reviewArea"></div>
+  <div class="cta-box">
+    <h3>Quer o Guia de Estudo completo de Histologia (P1 + P2)?</h3>
+    <p>Flashcards, resumos por tema e mais simulados prontos pra revisar tudo antes da prova.</p>
+    <a class="wa-btn" href="https://wa.me/5547991572214?text=Ol%C3%A1!%20Fiz%20o%20Simulado%20Top%20de%20Histologia%20e%20quero%20saber%20mais%20sobre%20o%20Guia%20de%20Estudo%20completo%20do%20ClinicusMed." target="_blank" rel="noopener">Quero conhecer no WhatsApp →</a>
+  </div>
+  <button class="btn-secondary" onclick="location.reload()">Refazer simulado</button>
+</div>
+
+<footer>ClinicusMed — Guias de Estudo e Simulados para medicina.</footer>
+</div>
+
+<script>
+const DATA = {"mc": [{"n": 1, "type": "mc", "topic": "Técnica histológica", "q": "A coloração de rotina em histologia, que usa hematoxilina (basófila) e eosina (acidófila), é conhecida pela sigla:", "opts": ["Tricrômico de Masson", "PAS (Ácido periódico de Schiff)", "Giemsa", "H&E (Hematoxilina-Eosina)"], "correct": 3, "just": "H&E é a coloração padrão de rotina: a hematoxilina cora estruturas basófilas (núcleo) de roxo-azulado, e a eosina cora estruturas acidófilas (citoplasma, colágeno) de rosa."}, {"n": 2, "type": "mc", "topic": "Técnica histológica", "q": "O corante utilizado para evidenciar carboidratos (glicogênio, mucinas) em cortes histológicos é:", "opts": ["Hematoxilina", "PAS (Ácido periódico de Schiff)", "Eosina", "Sudan III"], "correct": 1, "just": "O PAS reage com carboidratos (glicogênio, glicoproteínas, mucinas neutras), corando-os em magenta — muito usado para membranas basais e glândulas mucosas."}, {"n": 3, "type": "mc", "topic": "Tecido epitelial", "q": "Um epitélio com múltiplas camadas celulares, todas apoiadas na membrana basal mas nem todas alcançando a superfície livre, é classificado como:", "opts": ["De transição", "Estratificado", "Pseudoestratificado", "Simples"], "correct": 2, "just": "No pseudoestratificado, todas as células tocam a membrana basal, mas nem todas alcançam a superfície — dando a falsa impressão de múltiplas camadas (ex: epitélio respiratório)."}, {"n": 4, "type": "mc", "topic": "Tecido epitelial", "q": "As microvilosidades intestinais têm como principal função:", "opts": ["Aumentar a superfície de absorção", "Mover partículas na superfície do epitélio", "Secretar muco", "Ancorar a célula à membrana basal"], "correct": 0, "just": "As microvilosidades são projeções citoplasmáticas com núcleo de actina que aumentam drasticamente a área de superfície absortiva, típicas do epitélio intestinal (borda em escova)."}, {"n": 5, "type": "mc", "topic": "Tecido epitelial glandular", "q": "Glândulas exócrinas em que a célula inteira se rompe para liberar seu produto de secreção são classificadas, quanto ao mecanismo, como:", "opts": ["Apócrinas", "Holócrinas", "Endócrinas", "Merócrinas"], "correct": 1, "just": "Na secreção holócrina (ex: glândula sebácea), a célula acumula o produto e se rompe totalmente, sendo eliminada junto com a secreção."}, {"n": 6, "type": "mc", "topic": "Tecido conjuntivo", "q": "O tecido conjuntivo embrionário rico em ácido hialurônico, típico do cordão umbilical, é chamado de:", "opts": ["Mesênquima", "Tecido mucoso (geleia de Wharton)", "Tecido conjuntivo denso", "Tecido reticular"], "correct": 1, "just": "O tecido mucoso, ou geleia de Wharton, é rico em ácido hialurônico e encontrado especificamente no cordão umbilical — diferente do mesênquima, presente de forma mais ampla no embrião."}, {"n": 7, "type": "mc", "topic": "Tecido conjuntivo", "q": "A célula do tecido conjuntivo responsável pela síntese ativa de colágeno e demais componentes da matriz extracelular é o(a):", "opts": ["Fibrócito", "Mastócito", "Macrófago", "Fibroblasto"], "correct": 3, "just": "O fibroblasto é a forma jovem e metabolicamente ativa (RER abundante), responsável pela síntese de colágeno, elastina e substância fundamental. O fibrócito é sua forma madura e quiescente."}, {"n": 8, "type": "mc", "topic": "Tecido conjuntivo", "q": "A célula do tecido conjuntivo que libera histamina e heparina, participando de reações alérgicas, é o(a):", "opts": ["Plasmócito", "Adipócito", "Mastócito", "Fibroblasto"], "correct": 2, "just": "Os mastócitos armazenam grânulos de histamina e heparina, sendo centrais em reações de hipersensibilidade imediata (alérgicas) e na inflamação."}, {"n": 9, "type": "mc", "topic": "Tecido adiposo", "q": "A principal diferença entre o tecido adiposo unilocular (branco) e o multilocular (pardo) é:", "opts": ["Não há diferença estrutural entre eles", "O pardo não tem função metabólica", "O branco tem uma única gotícula lipídica e poucas mitocôndrias; o pardo tem múltiplas gotículas e muitas mitocôndrias", "O branco é exclusivo de recém-nascidos"], "correct": 2, "just": "O adipócito unilocular armazena uma única e grande gotícula de gordura (reserva energética); o multilocular tem várias gotículas menores e abundantes mitocôndrias, responsáveis pela termogênese."}, {"n": 10, "type": "mc", "topic": "Cartilagem", "q": "A cartilagem que contém colágeno tipo II e reveste as superfícies articulares é a cartilagem:", "opts": ["Hialina", "Reticular (não existe essa categoria)", "Fibrocartilagem", "Elástica"], "correct": 0, "just": "A cartilagem hialina, rica em colágeno tipo II, é a mais comum, revestindo superfícies articulares e compondo traqueia, brônquios e o esqueleto fetal inicial."}, {"n": 11, "type": "mc", "topic": "Cartilagem", "q": "O pericôndrio é essencial para a cartilagem porque:", "opts": ["Substitui o osso durante a ossificação endocondral", "Nutre o tecido avascular por difusão e contém células progenitoras de condrócitos", "É exclusivo da fibrocartilagem", "Produz diretamente a matriz óssea"], "correct": 1, "just": "Como a cartilagem não tem vasos sanguíneos próprios, o pericôndrio (vascularizado) garante sua nutrição por difusão, além de conter células capazes de originar novos condroblastos."}, {"n": 12, "type": "mc", "topic": "Cartilagem", "q": "A fibrocartilagem, encontrada em discos intervertebrais e meniscos, se destaca por:", "opts": ["Ser a cartilagem mais elástica do corpo", "Estar presente apenas no pavilhão auricular", "Não possuir pericôndrio e ter colágeno tipo I abundante", "Ser avascular e sem colágeno"], "correct": 2, "just": "A fibrocartilagem não possui pericôndrio definido e é rica em colágeno tipo I (diferente da hialina, rica em tipo II), o que lhe confere maior resistência à tração."}, {"n": 13, "type": "mc", "topic": "Tecido ósseo", "q": "Os osteoclastos, células responsáveis pela reabsorção óssea, se originam de qual linhagem?", "opts": ["Adipócitos", "Linhagem hematopoiética (fusão de monócitos)", "Condrócitos diferenciados", "Linhagem mesenquimal, como os osteoblastos"], "correct": 1, "just": "Diferente da maioria das células ósseas (de origem mesenquimal), os osteoclastos derivam da fusão de monócitos da linhagem hematopoiética, formando células multinucleadas especializadas em reabsorção."}, {"n": 14, "type": "mc", "topic": "Tecido ósseo", "q": "A ossificação em que o osso se forma diretamente a partir de tecido mesenquimal, sem molde cartilaginoso prévio, é chamada de:", "opts": ["Apositiva", "Endocondral", "Intersticial", "Intramembranosa"], "correct": 3, "just": "Na ossificação intramembranosa, células mesenquimais se diferenciam diretamente em osteoblastos, formando osso sem passar por um molde de cartilagem — típico dos ossos chatos do crânio."}, {"n": 15, "type": "mc", "topic": "Tecido ósseo", "q": "A unidade estrutural básica do osso compacto, formada por lamelas concêntricas ao redor de um canal central vascular, é o(a):", "opts": ["Canalículo", "Trabécula", "Ósteon (sistema de Havers)", "Periósteo"], "correct": 2, "just": "O ósteon é a unidade estrutural do osso compacto: lamelas ósseas concêntricas organizadas ao redor do canal de Havers, que contém vasos sanguíneos e nervos."}, {"n": 16, "type": "mc", "topic": "Tecido muscular", "q": "Os três tipos de tecido muscular são:", "opts": ["Estriado esquelético, estriado cardíaco e liso", "Estriado, elástico e reticular", "Voluntário, involuntário e misto", "Esquelético, tendíneo e liso"], "correct": 0, "just": "Os três tipos clássicos são: músculo estriado esquelético (voluntário), estriado cardíaco (involuntário, com discos intercalares) e liso (involuntário, sem estriações visíveis)."}, {"n": 17, "type": "mc", "topic": "Tecido muscular", "q": "A camada de tecido conjuntivo que envolve cada fibra muscular esquelética individualmente é o:", "opts": ["Perimísio", "Epimísio", "Sarcolema", "Endomísio"], "correct": 3, "just": "O endomísio envolve cada fibra muscular individualmente; o perimísio agrupa fascículos de fibras; o epimísio envolve o músculo inteiro. O sarcolema é a membrana plasmática da própria fibra."}, {"n": 18, "type": "mc", "topic": "Tecido muscular", "q": "Os discos intercalares, estrutura exclusiva do músculo cardíaco, contêm junções que garantem:", "opts": ["Adesão mecânica e acoplamento elétrico entre cardiomiócitos", "Armazenamento de cálcio exclusivamente", "Produção de hormônios cardíacos", "Formação de novas fibras musculares"], "correct": 0, "just": "Os discos intercalares contêm desmossomos e fascias aderentes (adesão mecânica) e junções comunicantes/gap junctions (acoplamento elétrico), permitindo que o coração se contraia de forma sincronizada."}, {"n": 19, "type": "mc", "topic": "Tecido nervoso", "q": "As células responsáveis pela mielinização de axônios no sistema nervoso central são os(as):", "opts": ["Oligodendrócitos", "Astrócitos", "Células de Schwann", "Micróglia"], "correct": 0, "just": "No SNC, os oligodendrócitos mielinizam múltiplos axônios simultaneamente. No SNP, essa função é exercida pelas células de Schwann, que mielinizam apenas um axônio por vez."}, {"n": 20, "type": "mc", "topic": "Tecido sanguíneo", "q": "A célula do sangue com núcleo multilobulado e grânulos neutros, sendo a mais numerosa na defesa inata contra bactérias, é o:", "opts": ["Basófilo", "Linfócito", "Eosinófilo", "Neutrófilo"], "correct": 3, "just": "O neutrófilo apresenta núcleo multilobulado (2-5 lóbulos) e grânulos específicos neutros, sendo a célula de defesa mais abundante no sangue e a primeira linha contra infecções bacterianas."}], "vf": [{"n": 1, "type": "vf", "topic": "Tecido epitelial", "q": "O epitélio de transição (urotélio), encontrado na bexiga, é capaz de mudar de forma conforme o grau de distensão do órgão.", "answer": true, "just": "Verdadeiro. O epitélio de transição tem células que se achatam quando o órgão está distendido (bexiga cheia) e ficam cuboides/piriformes quando relaxado — adaptação exclusiva das vias urinárias."}, {"n": 2, "type": "vf", "topic": "Cartilagem", "q": "Os condrócitos, assim como os osteócitos, recebem nutrientes diretamente de vasos sanguíneos presentes dentro da própria matriz cartilaginosa.", "answer": false, "just": "Falso. A cartilagem é avascular — os condrócitos recebem nutrientes por difusão a partir dos vasos do pericôndrio, e não de vasos internos à matriz (diferente do osso, que é vascularizado)."}, {"n": 3, "type": "vf", "topic": "Tecido muscular", "q": "O músculo liso possui estriações transversais visíveis à microscopia óptica, semelhantes às do músculo esquelético.", "answer": false, "just": "Falso. O músculo liso não apresenta estriações visíveis, pois seus filamentos de actina e miosina não estão organizados em sarcômeros regulares como no músculo estriado."}, {"n": 4, "type": "vf", "topic": "Tecido conjuntivo", "q": "Os plasmócitos são células diferenciadas a partir de linfócitos B e têm como função principal a produção de anticorpos.", "answer": true, "just": "Verdadeiro. Os plasmócitos derivam da diferenciação terminal dos linfócitos B ativados e são especializados na síntese e secreção de imunoglobulinas (anticorpos)."}, {"n": 5, "type": "vf", "topic": "Tecido sanguíneo", "q": "A medula óssea vermelha, sítio da hematopoiese em adultos, está localizada preferencialmente em ossos longos como o fêmur e a tíbia ao longo de toda a vida adulta.", "answer": false, "just": "Falso. Em adultos, a hematopoiese ativa concentra-se principalmente em ossos chatos (esterno, vértebras, crista ilíaca) — nos ossos longos, a medula vermelha é progressivamente substituída por medula amarela (gordura) a partir da infância/adolescência."}], "assoc": [{"n": 1, "type": "assoc", "topic": "Tecido sanguíneo", "title": "Associe cada célula do sangue à sua principal característica/função:", "terms": ["Neutrófilo", "Eosinófilo", "Basófilo", "Linfócito", "Monócito"], "defs": ["Grânulos acidófilos; atua contra parasitas e em alergias", "Maior leucócito circulante; origina macrófagos nos tecidos", "Núcleo grande e arredondado; imunidade específica (celular/humoral)", "Núcleo multilobulado; primeira linha de defesa contra bactérias", "Grânulos com histamina e heparina; menos numeroso no sangue"], "correct": [3, 0, 4, 2, 1]}, {"n": 2, "type": "assoc", "topic": "Cartilagem", "title": "Associe cada tipo de cartilagem à sua principal localização/característica:", "terms": ["Cartilagem hialina", "Cartilagem elástica", "Fibrocartilagem", "Pericôndrio", "Condrócito"], "defs": ["Superfícies articulares, traqueia e brônquios; colágeno tipo II", "Célula madura alojada em lacunas dentro da matriz cartilaginosa", "Pavilhão auricular e epiglote; rica em fibras elásticas", "Discos intervertebrais e meniscos; sem pericôndrio definido", "Camada externa vascularizada que nutre a cartilagem por difusão"], "correct": [0, 2, 3, 4, 1]}, {"n": 3, "type": "assoc", "topic": "Tecido ósseo", "title": "Associe cada célula óssea à sua função:", "terms": ["Osteoblasto", "Osteócito", "Osteoclasto", "Célula osteoprogenitora", "Osteoide"], "defs": ["Célula-tronco do periósteo/endósteo que origina osteoblastos", "Sintetiza a matriz óssea orgânica (osteoide)", "Matriz óssea orgânica ainda não mineralizada", "Reabsorve a matriz óssea; origem hematopoiética", "Célula óssea madura, alojada em lacunas, mantém a matriz"], "correct": [1, 4, 3, 0, 2]}, {"n": 4, "type": "assoc", "topic": "Tecido epitelial glandular", "title": "Associe cada tipo de epitélio glandular exócrino ao seu mecanismo de secreção:", "terms": ["Merócrina", "Apócrina", "Holócrina", "Glândula unicelular", "Glândula composta"], "defs": ["Perde parte do citoplasma apical junto com a secreção (ex: glândula mamária)", "Exemplo clássico é a célula caliciforme, secretora de muco", "Possui ducto excretor ramificado antes da porção secretora", "Secreção por exocitose, sem perda de citoplasma (ex: glândula salivar)", "A célula inteira se rompe e é eliminada com a secreção (ex: glândula sebácea)"], "correct": [3, 0, 4, 1, 2]}, {"n": 5, "type": "assoc", "topic": "Tecido muscular", "title": "Associe cada estrutura do tecido muscular esquelético à sua definição:", "terms": ["Sarcômero", "Endomísio", "Perimísio", "Epimísio", "Tríade"], "defs": ["Tecido conjuntivo que agrupa fascículos de fibras musculares", "Tecido conjuntivo que envolve o músculo inteiro", "Unidade contrátil entre duas linhas Z consecutivas", "Tecido conjuntivo que envolve cada fibra muscular individual", "Conjunto de um túbulo T e duas cisternas do retículo sarcoplasmático"], "correct": [2, 3, 0, 1, 4]}]}
+;
+
+// Monta a sequência: 20 MC + 5 VF + 5 Assoc = 30 questões, cada uma com "kind" e "ref"
+let sequence = [];
+DATA.mc.forEach(q => sequence.push(q));
+DATA.vf.forEach(q => sequence.push(q));
+DATA.assoc.forEach(q => sequence.push(q));
+
+let idx = 0, score = 0, maxScore = 0, wrongReview = [];
+
+function startQuiz(){
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  idx = 0; score = 0; wrongReview = [];
+  renderQ();
+}
+
+function updateBar(){
+  document.getElementById('progLabel').textContent = `${idx+1}/30`;
+  document.getElementById('xpFill').style.width = (idx/30*100)+'%';
+  document.getElementById('scoreLive').textContent = score+' acertos';
+}
+
+function renderQ(){
+  if(idx >= sequence.length){ finish(); return; }
+  updateBar();
+  const item = sequence[idx];
+  const card = document.getElementById('qCard');
+
+  if(item.type === 'mc'){
+    card.innerHTML = `
+      <span class="type-tag mc">Múltipla escolha</span><span class="topic-tag">${item.topic}</span>
+      <div class="qtxt">${item.n}. ${item.q}</div>
+      <div id="optsArea"></div>
+      <div class="feedback" id="fb"></div>
+    `;
+    const area = document.getElementById('optsArea');
+    item.opts.forEach((o,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'qz-btn';
+      btn.innerHTML = `<b>${String.fromCharCode(97+i)})</b> ${o}`;
+      btn.onclick = ()=> answerMC(i, item);
+      area.appendChild(btn);
+    });
+  } else if(item.type === 'vf'){
+    card.innerHTML = `
+      <span class="type-tag vf">Verdadeiro ou Falso</span><span class="topic-tag">${item.topic}</span>
+      <div class="qtxt">${item.n + 20}. ${item.q}</div>
+      <div class="vf-row" id="vfRow">
+        <button class="vf-btn" id="vfTrue">✅ Verdadeiro</button>
+        <button class="vf-btn" id="vfFalse">❌ Falso</button>
+      </div>
+      <div class="feedback" id="fb"></div>
+    `;
+    document.getElementById('vfTrue').onclick = ()=> answerVF(true, item);
+    document.getElementById('vfFalse').onclick = ()=> answerVF(false, item);
+  } else if(item.type === 'assoc'){
+    let rows = '';
+    item.terms.forEach((t,i)=>{
+      rows += `<div class="assoc-item"><div class="assoc-term">${t}</div>
+        <select class="assoc-select" id="asel${i}">
+          <option value="">Selecione...</option>
+          ${item.defs.map((d,j)=>`<option value="${j}">${String.fromCharCode(97+j)}) ${d}</option>`).join('')}
+        </select></div>`;
+    });
+    card.innerHTML = `
+      <span class="type-tag assoc">Associar colunas</span><span class="topic-tag">${item.topic}</span>
+      <div class="qtxt">${item.n + 25}. ${item.title}</div>
+      ${rows}
+      <button class="assoc-check" id="assocCheckBtn">Conferir associação</button>
+      <div class="feedback" id="fb"></div>
+    `;
+    document.getElementById('assocCheckBtn').onclick = ()=> answerAssoc(item);
+  }
+}
+
+function nextBtn(){
+  const fb = document.getElementById('fb');
+  const btn = document.createElement('button');
+  btn.className = 'next-btn';
+  btn.textContent = (idx+1 >= sequence.length) ? 'Ver resultado final →' : 'Próxima questão →';
+  btn.onclick = ()=>{ idx++; renderQ(); };
+  fb.appendChild(btn);
+}
+
+function answerMC(i, item){
+  const area = document.getElementById('optsArea');
+  const btns = area.querySelectorAll('.qz-btn');
+  btns.forEach(b=>b.disabled = true);
+  const correct = i === item.correct;
+  btns[item.correct].style.borderColor = 'var(--ok)';
+  btns[item.correct].style.color = 'var(--ok)';
+  if(!correct){
+    btns[i].style.borderColor = 'var(--bad)';
+    btns[i].style.color = 'var(--bad)';
+  } else { score++; maxScore++; }
+  if(!correct){
+    wrongReview.push({q: item.q, just: item.just, correctText: `Resposta correta: ${String.fromCharCode(97+item.correct)}) ${item.opts[item.correct]}`});
+  }
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (correct?'ok':'bad');
+  fb.innerHTML = `<b>${correct?'✅ Correto!':'❌ Não foi dessa vez'}</b>${item.just}`;
+  document.getElementById('scoreLive').textContent = score+' acertos';
+  nextBtn();
+}
+
+function answerVF(choice, item){
+  document.getElementById('vfTrue').disabled = true;
+  document.getElementById('vfFalse').disabled = true;
+  const correct = choice === item.answer;
+  const correctBtn = document.getElementById(item.answer ? 'vfTrue' : 'vfFalse');
+  correctBtn.style.borderColor = 'var(--ok)'; correctBtn.style.color='var(--ok)';
+  if(!correct){
+    const wrongBtn = document.getElementById(choice ? 'vfTrue' : 'vfFalse');
+    wrongBtn.style.borderColor = 'var(--bad)'; wrongBtn.style.color='var(--bad)';
+  } else { score++; }
+  if(!correct){
+    wrongReview.push({q: item.q, just: item.just, correctText: `Resposta correta: ${item.answer ? 'Verdadeiro' : 'Falso'}`});
+  }
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (correct?'ok':'bad');
+  fb.innerHTML = `<b>${correct?'✅ Correto!':'❌ Não foi dessa vez'}</b>${item.just}`;
+  document.getElementById('scoreLive').textContent = score+' acertos';
+  nextBtn();
+}
+
+function answerAssoc(item){
+  let allCorrect = true;
+  let acertos = 0;
+  item.terms.forEach((t,i)=>{
+    const sel = document.getElementById('asel'+i);
+    const chosen = parseInt(sel.value);
+    const isCorrect = chosen === item.correct[i];
+    if(isCorrect){ sel.classList.add('correct'); acertos++; }
+    else { sel.classList.add('wrong'); allCorrect = false; }
+    sel.disabled = true;
+  });
+  document.getElementById('assocCheckBtn').disabled = true;
+  if(allCorrect){ score++; }
+  else {
+    let corrList = item.terms.map((t,i)=> `${t} → ${item.defs[item.correct[i]]}`).join('; ');
+    wrongReview.push({q: item.title, just: `Gabarito: ${corrList}`, correctText: `Você acertou ${acertos}/${item.terms.length} pares.`});
+  }
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (allCorrect?'ok':'bad');
+  fb.innerHTML = allCorrect
+    ? `<b>✅ Todos os pares corretos!</b>Mandou bem nessa associação.`
+    : `<b>⚠️ ${acertos}/${item.terms.length} pares corretos</b>Confira em vermelho os que erraste — a associação certa está marcada em verde.`;
+  document.getElementById('scoreLive').textContent = score+' acertos';
+  nextBtn();
+}
+
+function finish(){
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'block';
+  document.getElementById('scoreText').textContent = `${score}/30`;
+  let msg;
+  if(score >= 26) msg = 'Excelente! Domínio sólido de Histologia Geral. 🏆';
+  else if(score >= 20) msg = 'Bom resultado — revise os pontos que errou antes da prova. 💪';
+  else if(score >= 14) msg = 'Dá pra melhorar — volta no guia de estudo nos temas que mais errou. 📚';
+  else msg = 'Esse é o momento de revisar com calma — é pra isso que serve o simulado. 📖';
+  document.getElementById('resultMsg').textContent = msg;
+
+  if(wrongReview.length){
+    let html = '<h3 style="margin-bottom:12px;color:var(--gold);font-size:1.05rem;">📋 Revisão das questões erradas</h3>';
+    wrongReview.forEach(r=>{
+      html += `<div class="review-item bad"><div class="rq">${r.q}</div><div class="rjust">${r.correctText}<br>${r.just}</div></div>`;
+    });
+    document.getElementById('reviewArea').innerHTML = html;
+  } else {
+    document.getElementById('reviewArea').innerHTML = '<div class="review-item ok"><div class="rq">🎉 Gabarito 100% — nenhuma questão errada!</div></div>';
+  }
+}
+</script>
+</body>
+</html>
