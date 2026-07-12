@@ -1,6 +1,6 @@
 // CONFIGURAÇÕES EDITÁVEIS — mude aqui sem tocar no resto do site
 const CONFIG = {
-  whatsappNumero: "5547991572214", // DDI 55 (Brasil) + DDD 47 + número. Troque aqui se mudar.
+  whatsappNumero: "5567992443248", // DDI 55 (Brasil) + DDD 47 + número. Troque aqui se mudar.
   nomeMarca: "ClinicusMed",
   pixChave: "cristianoribeiromed@gmail.com", // chave PIX (email)
   pixNome: "Cristiano Ribeiro da Silva",       // precisa bater com o nome no banco
