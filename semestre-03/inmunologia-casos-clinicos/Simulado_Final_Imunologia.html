@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Final — Imunologia | ClinicusMed</title>
+<style>
+  :root{
+    --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+    --accent:#c23b6b; --accent2:#4fc3d9; --gold:#e8b84b;
+    --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#3a1428 0%,var(--bg) 55%);color:var(--text);line-height:1.55;}
+  .wrap{max-width:900px;margin:0 auto;padding:18px 14px 90px;}
+  header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+  header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  header p{color:var(--text-dim);margin:0;font-size:.9em;}
+  .info-bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0;font-size:.82em;color:var(--text-dim);}
+  .info-bar span{background:var(--card);border:1px solid var(--border);padding:5px 12px;border-radius:16px;}
+  .secao-titulo{background:linear-gradient(90deg,var(--accent),#8a2450);color:#fff;padding:10px 16px;border-radius:10px;font-size:1.05em;font-weight:700;margin:28px 0 14px;}
+  .secao-titulo span{display:block;font-size:.72em;font-weight:400;opacity:.9;margin-top:2px;}
+  .questao{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px;}
+  .questao .num{color:var(--gold);font-weight:700;margin-right:4px;}
+  .enunciado{font-size:.92em;margin-bottom:10px;}
+  .opcoes label{display:block;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:7px;font-size:.86em;cursor:pointer;transition:.15s;}
+  .opcoes label:hover{border-color:var(--accent2);}
+  .opcoes input{margin-right:8px;}
+  .relacionar-item{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin-bottom:8px;font-size:.85em;}
+  .relacionar-item .termo{font-weight:700;color:var(--gold);}
+  .relacionar-item select{padding:7px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:.82em;width:100%;}
+  .vf-btns{display:flex;gap:8px;}
+  .vf-btns button{flex:1;padding:9px;border-radius:8px;border:1.5px solid var(--accent2);background:transparent;color:var(--accent2);font-weight:700;cursor:pointer;font-size:.82em;}
+  .vf-btns button.selecionado{background:var(--accent2);color:#0e1420;}
+  .questao.correta{border-color:var(--ok);}
+  .questao.errada{border-color:var(--bad);}
+  .feedback{margin-top:9px;padding:8px 12px;border-radius:8px;font-size:.82em;display:none;}
+  .feedback.mostrar{display:block;}
+  .feedback.ok{background:rgba(79,209,161,.15);color:var(--ok);}
+  .feedback.no{background:rgba(224,80,95,.15);color:var(--bad);}
+  .opcoes label.marcar-correta{background:rgba(79,209,161,.18);border-color:var(--ok);font-weight:700;}
+  .opcoes label.marcar-errada{background:rgba(224,80,95,.18);border-color:var(--bad);}
+  select.marcar-correta{border-color:var(--ok);background:rgba(79,209,161,.15);}
+  select.marcar-errada{border-color:var(--bad);background:rgba(224,80,95,.15);}
+  .vf-btns button.marcar-correta{background:var(--ok);border-color:var(--ok);color:#06140d;}
+  .vf-btns button.marcar-errada{background:var(--bad);border-color:var(--bad);color:#fff;}
+  .barra-fixa{position:sticky;bottom:0;background:var(--bg);border-top:2px solid var(--gold);padding:14px;text-align:center;}
+  .btn-corrigir{background:var(--gold);color:#2b1c00;border:none;padding:13px 34px;border-radius:24px;font-weight:800;font-size:15px;cursor:pointer;}
+  .btn-corrigir:hover{filter:brightness(1.08);}
+  .resultado-box{max-width:900px;margin:0 auto 20px;background:var(--card);border:1px solid var(--gold);border-radius:14px;padding:22px;text-align:center;display:none;}
+  .resultado-box.mostrar{display:block;}
+  .resultado-box .nota{font-size:40px;color:var(--gold);font-weight:800;}
+  .resultado-box .detalhe{font-size:.85em;color:var(--text-dim);margin-top:6px;}
+  footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🛡️ Simulado Final — Imunologia</h1>
+  <p>Inato/Adaptativo · Ativa/Passiva · Diferenciação do LT · Tecidos de Defesa · Privilégio Imunitário · Hipersensibilidades · Imunodeficiências</p>
+</header>
+
+<div class="info-bar">
+  <span>📝 40 questões</span>
+  <span>25 múltipla escolha</span>
+  <span>5 de relacionar</span>
+  <span>10 verdadeiro ou falso</span>
+</div>
+
+<div class="resultado-box" id="resultadoBox">
+  <div class="nota" id="notaFinal">0 / 40</div>
+  <div class="detalhe" id="detalheFinal"></div>
+</div>
+
+<main id="main"></main>
+</div>
+
+<div class="barra-fixa"><button class="btn-corrigir" onclick="corrigirTudo()">Corrigir Simulado</button></div>
+
+<script>
+const main = document.getElementById("main");
+
+/* ================= MÚLTIPLA ESCOLHA (25) ================= */
+const mc = [
+ {p:"Qual a principal estratégia de defesa da imunidade inata?", op:["A inflamação","A produção de anticorpos específicos","A memória imunológica","A seleção clonal"], correta:0},
+ {p:"O que são DAMPs?", op:["Anticorpos específicos contra patógenos","Padrões moleculares associados a dano, liberados por células lesadas do próprio hospedeiro","Receptores de linfócitos B","Proteínas do sistema complemento"], correta:1},
+ {p:"Segundo o quadro comparativo inato x adaptativo, a resposta adaptativa se caracteriza por:", op:["Ser imediata e não requerer exposição prévia","Não mudar com exposições repetidas","Se desenvolver em vários dias e requerer exposição prévia","Reconhecer um número limitado de estruturas moleculares"], correta:2},
+ {p:"Na imunidade ativa, quem produz os anticorpos?", op:["Outro indivíduo, transferidos por soro","A mãe, transferidos via placenta","Um laboratório, por síntese química","O próprio organismo"], correta:3},
+ {p:"Anticorpos transferidos da mãe para o feto via placenta são um exemplo de:", op:["Imunidade passiva natural","Imunidade ativa natural","Imunidade ativa artificial","Imunidade passiva artificial"], correta:0},
+ {p:"A vacinação é classificada como:", op:["Imunidade passiva artificial","Imunidade ativa artificial","Imunidade passiva natural","Imunidade ativa natural"], correta:1},
+ {p:"Qual é a molécula-chave secretada pelo TH1?", op:["IL-17","IL-4","IFN-γ","FoxP3"], correta:2},
+ {p:"Quais citocinas caracterizam o TH2?", op:["IL-17, IL-22","IFN-γ apenas","FoxP3","IL-4, IL-5, IL-13"], correta:3},
+ {p:"Qual é o marcador-chave que define o linfócito Treg?", op:["FoxP3","CD8","IgE","IFN-γ"], correta:0},
+ {p:"Como os linfócitos T CD8+ eliminam suas células-alvo?", op:["Produção de anticorpos específicos","Liberação de perforinas e granzimas (lise celular)","Fagocitose direta","Liberação de histamina"], correta:1},
+ {p:"A tolerância central dos linfócitos T ocorre principalmente:", op:["Nos linfonodos, mediada por Treg","Na medula óssea, mediada por edição do receptor","No timo, mediada pela proteína AIRE","No baço, mediada por anergia"], correta:2},
+ {p:"Quais são os órgãos linfoides primários?", op:["Baço e linfonodos","Pele e mucosa intestinal","MALT e baço","Timo e medula óssea"], correta:3},
+ {p:"Qual anticorpo predomina na mucosa intestinal?", op:["IgA","IgE","IgM","IgG"], correta:0},
+ {p:"Qual célula intestinal é responsável por liberar defensinas?", op:["Células caliciformes","Células de Paneth","Células dendríticas","Células M"], correta:1},
+ {p:"A barreira hemato-ocular se protege principalmente por meio de:", op:["TGF-beta e testosterona","Micróglia e poda sináptica","Córnea avascular e secreção de PD-L1","Alta concentração de IgA"], correta:2},
+ {p:"Qual molécula protege o feto de ataque imune materno na barreira hematoplacentária?", op:["FoxP3","AIRE","IL-10","PD-L1"], correta:3},
+ {p:"Qual mediador domina a fase imediata (minutos) da hipersensibilidade tipo I?", op:["Histamina pré-formada","Linfócitos T citotóxicos","Imunocomplexos","Macrófagos"], correta:0},
+ {p:"A hipersensibilidade tipo IV se caracteriza por:", op:["Ser mediada por IgE e mastócitos","Ser 100% celular, sem anticorpos, com resposta em 48-72 horas","Envolver imunocomplexos circulantes","Ter início em minutos"], correta:1},
+ {p:"O mecanismo por trás da febre reumática pós-infecção estreptocócica é:", op:["Deficiência de complemento","Hipersensibilidade tipo I","Mimetismo molecular (hipersensibilidade tipo II)","Reservatório viral latente"], correta:2},
+ {p:"A principal diferença entre hipersensibilidade tipo II e tipo III está em:", op:["Apenas a tipo III envolve anticorpos","Não há diferença relevante","Apenas a tipo II causa dano tecidual","Tipo II: antígeno fixo, dano localizado. Tipo III: antígeno solúvel, imunocomplexos circulantes, dano disperso"], correta:3},
+ {p:"Na Agamaglobulinemia de Bruton, o gene mutado é:", op:["BTK","FOXP3","NADPH oxidase","AIRE"], correta:0},
+ {p:"A Síndrome de DiGeorge é causada por:", op:["Deficiência seletiva de IgA","Deleção do cromossomo 22q11.2","Mutação no gene BTK","Defeito na NADPH oxidase"], correta:1},
+ {p:"A deficiência das proteínas terminais do complemento (C5-C9) predispõe especificamente a infecções recorrentes por:", op:["Staphylococcus aureus","Pneumocystis jirovecii","Neisseria","Mycobacterium tuberculosis"], correta:2},
+ {p:"Na Doença Granulomatosa Crônica (CGD), o defeito está na enzima:", op:["Transcriptase reversa","BTK","Adenosina desaminase","NADPH oxidase"], correta:3},
+ {p:"O VIH ataca principalmente qual célula do sistema imunológico?", op:["Linfócito T CD4+","Linfócito T CD8+","Linfócito B","Célula NK"], correta:0},
+];
+
+let secaoMC = `<div class="secao-titulo">Seção A <span>Múltipla Escolha — 25 questões</span></div>`;
+mc.forEach((q,i)=>{
+  secaoMC += `<div class="questao" id="mc-${i}" data-tipo="mc" data-correta="${q.correta}">
+    <div class="enunciado"><span class="num">${i+1}.</span>${q.p}</div>
+    <div class="opcoes">`;
+  q.op.forEach((op,j)=>{
+    secaoMC += `<label><input type="radio" name="mc-${i}" value="${j}">${String.fromCharCode(65+j)}) ${op}</label>`;
+  });
+  secaoMC += `</div><div class="feedback" id="fb-mc-${i}"></div></div>`;
+});
+main.insertAdjacentHTML("beforeend", secaoMC);
+
+/* ================= RELACIONAR (5) ================= */
+const relacionar = [
+ {titulo:"Relacione o tipo de hipersensibilidade ao seu mecanismo/exemplo:",
+  pares:[["Tipo I","IgE/mastócitos — asma, anafilaxia"],["Tipo II","IgG/IgM contra antígeno fixo — miastenia gravis"],["Tipo III","Imunocomplexos circulantes — vasculite por dengue"],["Tipo IV","Linfócitos T, sem anticorpos — dermatite de contato"]]},
+ {titulo:"Relacione o órgão linfoide à sua classificação e função:",
+  pares:[["Timo","Primário — maturação dos linfócitos T"],["Medula óssea","Primário — origem das células sanguíneas e maturação dos linfócitos B"],["Baço","Secundário — filtra o sangue"],["Linfonodos","Secundário — filtram a linfa"]]},
+ {titulo:"Relacione o subtipo de linfócito T auxiliar à sua citocina/alvo principal:",
+  pares:[["TH1","IFN-γ — micro-organismos intracelulares"],["TH2","IL-4, IL-5, IL-13 — parasitas e helmintos"],["TH17","IL-17, IL-22 — fungos e extracelulares"],["Treg","FoxP3 — regulação e tolerância"]]},
+ {titulo:"Relacione a imunodeficiência primária ao seu defeito genético:",
+  pares:[["Agamaglobulinemia de Bruton","Mutação no gene BTK"],["Síndrome de DiGeorge","Deleção do cromossomo 22q11.2"],["Doença Granulomatosa Crônica","Defeito na enzima NADPH oxidase"],["SCID","Ausência funcional de linfócitos T (e frequentemente também B)"]]},
+ {titulo:"Relacione a barreira de privilégio imunitário ao seu mecanismo de proteção:",
+  pares:[["Hemato-ocular","Córnea avascular, secreção de PD-L1"],["Hematoencefálica","Micróglia — sem privilégio estrito"],["Hematotesticular","TGF-beta e testosterona"],["Hematoplacentária","Alta concentração de PD-L1"]]},
+];
+
+function embaralharArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+let secaoRel = `<div class="secao-titulo">Seção B <span>Relacionar — 5 questões</span></div>`;
+relacionar.forEach((r,i)=>{
+  const respostasEmbaralhadas = embaralharArray(r.pares.map(p=>p[1]));
+  secaoRel += `<div class="questao" id="rel-${i}" data-tipo="rel">
+    <div class="enunciado"><span class="num">${26+i}.</span>${r.titulo}</div>`;
+  r.pares.forEach((par,j)=>{
+    secaoRel += `<div class="relacionar-item">
+      <div class="termo">${par[0]}</div>
+      <select id="rel-${i}-${j}" data-correta="${par[1].replace(/"/g,'&quot;')}">
+        <option value="">Selecione...</option>
+        ${respostasEmbaralhadas.map(op=>`<option value="${op.replace(/"/g,'&quot;')}">${op}</option>`).join("")}
+      </select>
+    </div>`;
+  });
+  secaoRel += `<div class="feedback" id="fb-rel-${i}"></div></div>`;
+});
+main.insertAdjacentHTML("beforeend", secaoRel);
+
+/* ================= VERDADEIRO OU FALSO (10) ================= */
+const vf = [
+ {p:"A imunidade inata apresenta memória imunológica, tornando-se mais eficiente a cada nova exposição ao mesmo patógeno.", correta:false},
+ {p:"A imunidade passiva não gera memória imunológica, sendo, portanto, temporária.", correta:true},
+ {p:"O linfócito Tfh, sob influência do TH2, estimula a produção de IgE pelos linfócitos B.", correta:true},
+ {p:"Os linfócitos T CD8+ eliminam células-alvo principalmente por meio da produção de anticorpos específicos.", correta:false},
+ {p:"Cerca de 65% dos linfócitos do organismo estão concentrados no baço e nos linfonodos.", correta:true},
+ {p:"Na pele, a inflamação deve ser evitada ao máximo, assim como ocorre no intestino.", correta:false},
+ {p:"A barreira hematoencefálica possui privilégio imunitário absoluto, sendo totalmente impermeável a células de defesa.", correta:false},
+ {p:"A hipersensibilidade tipo I tem como mediador principal a IgE ligada a mastócitos.", correta:true},
+ {p:"A deficiência seletiva de IgA é considerada a imunodeficiência primária mais comum.", correta:true},
+ {p:"O VIH utiliza a enzima transcriptase reversa, que possui alta capacidade de correção de erros, o que reduz sua taxa de mutação.", correta:false},
+];
+
+let secaoVF = `<div class="secao-titulo">Seção C <span>Verdadeiro ou Falso — 10 questões</span></div>`;
+vf.forEach((q,i)=>{
+  secaoVF += `<div class="questao" id="vf-${i}" data-tipo="vf" data-correta="${q.correta}">
+    <div class="enunciado"><span class="num">${31+i}.</span>${q.p}</div>
+    <div class="vf-btns">
+      <button type="button" onclick="marcarVF(${i}, true, this)" id="vf-${i}-true">VERDADEIRO</button>
+      <button type="button" onclick="marcarVF(${i}, false, this)" id="vf-${i}-false">FALSO</button>
+    </div>
+    <div class="feedback" id="fb-vf-${i}"></div>
+  </div>`;
+});
+main.insertAdjacentHTML("beforeend", secaoVF);
+
+const respostasVF = {};
+function marcarVF(i, valor, btn){
+  respostasVF[i] = valor;
+  document.getElementById(`vf-${i}-true`).classList.remove("selecionado");
+  document.getElementById(`vf-${i}-false`).classList.remove("selecionado");
+  btn.classList.add("selecionado");
+}
+
+/* ================= CORREÇÃO ================= */
+function corrigirTudo(){
+  let acertos = 0, totalMC=0, acertosMC=0, totalRel=0, acertosRel=0, totalVF=0, acertosVF=0;
+
+  mc.forEach((q,i)=>{
+    totalMC++;
+    const selecionado = document.querySelector(`input[name="mc-${i}"]:checked`);
+    const questaoDiv = document.getElementById(`mc-${i}`);
+    const labels = questaoDiv.querySelectorAll(".opcoes label");
+    labels.forEach(l=>l.classList.remove("marcar-correta","marcar-errada"));
+    const fb = document.getElementById(`fb-mc-${i}`);
+    if(selecionado){
+      const val = parseInt(selecionado.value);
+      if(val === q.correta){
+        acertos++; acertosMC++;
+        labels[val].classList.add("marcar-correta");
+        questaoDiv.classList.add("correta"); questaoDiv.classList.remove("errada");
+        fb.textContent = "✓ Correto!"; fb.className="feedback mostrar ok";
+      } else {
+        labels[val].classList.add("marcar-errada");
+        labels[q.correta].classList.add("marcar-correta");
+        questaoDiv.classList.add("errada"); questaoDiv.classList.remove("correta");
+        fb.textContent = "✗ Incorreto. Resposta correta: " + String.fromCharCode(65+q.correta) + ") " + q.op[q.correta];
+        fb.className="feedback mostrar no";
+      }
+    } else {
+      labels[q.correta].classList.add("marcar-correta");
+      questaoDiv.classList.add("errada");
+      fb.textContent = "Não respondida. Resposta correta: " + String.fromCharCode(65+q.correta) + ") " + q.op[q.correta];
+      fb.className="feedback mostrar no";
+    }
+  });
+
+  relacionar.forEach((r,i)=>{
+    totalRel++;
+    let acertouTudo = true;
+    r.pares.forEach((par,j)=>{
+      const sel = document.getElementById(`rel-${i}-${j}`);
+      sel.classList.remove("marcar-correta","marcar-errada");
+      if(sel.value === par[1]){
+        sel.classList.add("marcar-correta");
+      } else {
+        sel.classList.add("marcar-errada");
+        acertouTudo = false;
+      }
+    });
+    const questaoDiv = document.getElementById(`rel-${i}`);
+    const fb = document.getElementById(`fb-rel-${i}`);
+    if(acertouTudo){
+      acertos++; acertosRel++;
+      questaoDiv.classList.add("correta"); questaoDiv.classList.remove("errada");
+      fb.textContent = "✓ Todas as relações corretas!"; fb.className="feedback mostrar ok";
+    } else {
+      questaoDiv.classList.add("errada"); questaoDiv.classList.remove("correta");
+      fb.textContent = "✗ Uma ou mais relações estão incorretas (veja os campos em vermelho).";
+      fb.className="feedback mostrar no";
+    }
+  });
+
+  vf.forEach((q,i)=>{
+    totalVF++;
+    const questaoDiv = document.getElementById(`vf-${i}`);
+    const btnT = document.getElementById(`vf-${i}-true`);
+    const btnF = document.getElementById(`vf-${i}-false`);
+    btnT.classList.remove("marcar-correta","marcar-errada");
+    btnF.classList.remove("marcar-correta","marcar-errada");
+    const resposta = respostasVF[i];
+    const fb = document.getElementById(`fb-vf-${i}`);
+    const btnCorreto = q.correta ? btnT : btnF;
+    if(resposta === q.correta){
+      acertos++; acertosVF++;
+      btnCorreto.classList.add("marcar-correta");
+      questaoDiv.classList.add("correta"); questaoDiv.classList.remove("errada");
+      fb.textContent = "✓ Correto!"; fb.className="feedback mostrar ok";
+    } else {
+      btnCorreto.classList.add("marcar-correta");
+      if(resposta !== undefined){
+        (resposta ? btnT : btnF).classList.add("marcar-errada");
+      }
+      questaoDiv.classList.add("errada"); questaoDiv.classList.remove("correta");
+      fb.textContent = "✗ Incorreto. Resposta correta: " + (q.correta ? "VERDADEIRO" : "FALSO");
+      fb.className="feedback mostrar no";
+    }
+  });
+
+  const total = totalMC + totalRel + totalVF;
+  document.getElementById("notaFinal").textContent = `${acertos} / ${total}`;
+  document.getElementById("detalheFinal").textContent =
+    `Múltipla Escolha: ${acertosMC}/${totalMC} · Relacionar: ${acertosRel}/${totalRel} · V ou F: ${acertosVF}/${totalVF} — ${Math.round(acertos/total*100)}% de aproveitamento`;
+  document.getElementById("resultadoBox").classList.add("mostrar");
+  document.getElementById("resultadoBox").scrollIntoView({behavior:"smooth"});
+}
+</script>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</body>
+</html>
