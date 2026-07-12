@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embriologia — Guia Final | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#6a4fd8; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#241a3a 0%,var(--bg) 55%);color:var(--text);line-height:1.55;}
+.wrap{max-width:1020px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:7px 10px;border-radius:20px;cursor:pointer;font-size:.72em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#3a2a80);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;color:var(--text);}
+.hot{background:rgba(106,79,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.85em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--gold);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+.badge{display:inline-block;background:var(--gold);color:#111;font-size:.68em;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:6px;}
+.badge.new{background:var(--accent2);color:#0e1420;}
+ul{margin:6px 0;padding-left:20px;}
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.qitem .qtxt{font-weight:600;margin-bottom:8px;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:4px 8px;border-radius:6px;margin-bottom:3px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#2a3850;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.just{display:none;margin-top:8px;padding:8px 10px;background:#0f1726;border-radius:8px;font-size:.83em;color:var(--text-dim);border-left:3px solid var(--accent2);}
+.just.show{display:block;}
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#3a2a80,#241a3a);color:#e6ddff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.timeline{display:flex;flex-direction:column;gap:0;margin:10px 0;}
+.tl-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.tl-row .tl-day{flex:0 0 110px;font-weight:800;color:var(--gold);font-size:.85em;}
+.tl-row .tl-evt{flex:1;font-size:.87em;color:var(--text);}
+.notice{background:rgba(232,184,75,.1);border:1px solid var(--gold);border-radius:10px;padding:10px 14px;font-size:.85em;margin:10px 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🧬 Embriologia — Guia Final</h1>
+  <p>Gametogênese · Ciclo Ovariano · Fecundação · 1ª a 8ª Semana · Malformações Congênitas · Teratógenos</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 / 0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">1️⃣ Gametogênese</button>
+  <button data-p="p1">2️⃣ Ciclo Ovariano</button>
+  <button data-p="p2">3️⃣ Fecundação/1ª Sem.</button>
+  <button data-p="p3">4️⃣ 2ª e 3ª Semana</button>
+  <button data-p="p4">5️⃣ 4ª a 8ª Semana</button>
+  <button data-p="p5">6️⃣ Malformações</button>
+  <button data-p="p6">🗓️ Linha do Tempo</button>
+  <button data-p="p7">🃏 Flashcards</button>
+  <button data-p="p8">✅ Banco de Questões</button>
+  <button data-p="p9">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ TAB 1 — GAMETOGÊNESE ============ -->
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🧬 Gametogênese — visão geral</h2>
+    <p>Processo biológico de formação dos gametas (espermatozoides e óvulos) que ocorre nas gônadas (testículos/ovários). As células germinativas surgem na 2ª semana de gestação a partir do disco bilaminar, migram para o saco vitelino (3ª semana) e depois para a cavidade abdominal, iniciando a formação das gônadas na 5ª semana.</p>
+    <div class="mnemo">💡 A fecundação (união dos gametas) forma o zigoto, marco que inicia o desenvolvimento embrionário.</div>
+  </div>
+
+  <div class="card">
+    <h2>♂️ Espermatogênese</h2>
+    <table>
+      <tr><th>Item</th><th>Detalhe</th></tr>
+      <tr><td>Local</td><td>Túbulos seminíferos dos testículos</td></tr>
+      <tr><td>Duração</td><td>Aproximadamente 64-74 dias</td></tr>
+      <tr><td>Célula de soporte</td><td>Células de Sertoli (nutrição e sustentação)</td></tr>
+    </table>
+    <h3>Etapas</h3>
+    <ul>
+      <li><b>1. Fase proliferativa (mitose):</b> espermatogônias (2n) → espermatócitos primários (2n)</li>
+      <li><b>2. Fase meiótica:</b> Meiose I → espermatócitos secundários (n). Meiose II → espermátides (n)</li>
+      <li><b>3. Espermiogênese:</b> espermátide se diferencia em espermatozoide — formação do acrossomo, condensação nuclear, desenvolvimento do flagelo, eliminação do citoplasma</li>
+      <li><b>4. Maturação final:</b> no epidídimo — aquisição de mobilidade e capacidade de fecundação</li>
+    </ul>
+    <div class="hot"><b>Espermatogônios tipo A x tipo B:</b> Tipo A mantém divisões mitóticas (função proliferativa); Tipo B entra em meiose, dando origem aos espermatócitos.</div>
+  </div>
+
+  <div class="card">
+    <h2>♀️ Ovogênese</h2>
+    <table>
+      <tr><th>Item</th><th>Detalhe</th></tr>
+      <tr><td>Local</td><td>Ovários</td></tr>
+      <tr><td>Início</td><td>Vida fetal</td></tr>
+      <tr><td>Finalização</td><td>Somente se ocorrer fecundação</td></tr>
+    </table>
+    <h3>Etapas</h3>
+    <ul>
+      <li><b>1. Proliferação (mitose, vida fetal):</b> células germinativas primordiais → ovogônias (2n)</li>
+      <li><b>2. Crescimento:</b> algumas ovogônias → ovócitos primários (2n), envolvidos por células foliculares (folículos primordiais). Entram em Meiose I e param em <b>prófase I (diplóteno)</b> até a puberdade</li>
+      <li><b>3. Fase meiótica:</b> a cada ciclo, um ovócito retoma a Meiose I → ovócito secundário (n) + 1º corpo polar. Entra em Meiose II e para em <b>metáfase II</b> até a fecundação</li>
+      <li><b>4. Se houver fecundação:</b> completa Meiose II → óvulo maduro (n) + 2º corpo polar. Sem fecundação, o ovócito secundário é eliminado na menstruação</li>
+    </ul>
+    <table>
+      <tr><th>Momento</th><th>Nº de ovócitos primários</th></tr>
+      <tr><td>Ao nascer</td><td>600.000 – 800.000</td></tr>
+      <tr><td>5º mês fetal (ovogônios, pico antes da apoptose)</td><td>≈ 7.000.000</td></tr>
+      <tr><td>Puberdade</td><td>≈ 40.000</td></tr>
+      <tr><td>Efetivamente ovulados na vida reprodutiva</td><td>≈ 500</td></tr>
+    </table>
+    <div class="hot"><b>OMI (inibidor da maturação do ovócito):</b> secretado pelas células foliculares, retarda a progressão da meiose II até o pico de LH.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Regulação hormonal (Hipotálamo-Hipófise-Gônadas)</h2>
+    <table>
+      <tr><th>Hormônio</th><th>Origem</th><th>Ação</th></tr>
+      <tr><td>GnRH</td><td>Hipotálamo</td><td>Estimula a hipófise anterior a secretar FSH e LH</td></tr>
+      <tr><td>FSH</td><td>Hipófise anterior</td><td>♂ Estimula células de Sertoli · ♀ Estimula crescimento folicular</td></tr>
+      <tr><td>LH</td><td>Hipófise anterior</td><td>♂ Estimula células de Leydig (produção de testosterona) · ♀ Induz ovulação e formação do corpo lúteo</td></tr>
+    </table>
+    <div class="example"><b>Retrocontrole:</b> o estrogênio, em níveis baixos/moderados, inibe a FSH (retrocontrole negativo); em pico no final da fase folicular, estimula a LH (retrocontrole positivo), desencadeando a ovulação.</div>
+  </div>
+</section>
+
+<!-- ============ TAB 2 — CICLO OVARIANO ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🥚 Ciclo Ovariano (~28 dias)</h2>
+    <h3>Fase Folicular (Dias 1-14)</h3>
+    <ul>
+      <li>FSH estimula o crescimento de múltiplos folículos</li>
+      <li>O folículo dominante produz estrogênio, que inibe o FSH (retrocontrole negativo)</li>
+      <li>Ao final da fase, o pico de estrogênio gera retrocontrole <b>positivo</b> sobre a LH</li>
+    </ul>
+    <h3>Ovulação (Dia 14)</h3>
+    <ul>
+      <li>O pico de LH provoca a ruptura folicular</li>
+      <li>O ovócito secundário é liberado, capturado pelas fímbrias da tuba uterina</li>
+    </ul>
+    <h3>Fase Lútea (Dias 15-28)</h3>
+    <ul>
+      <li>As células da granulosa e teca remanescentes formam o <b>corpo lúteo</b>, que secreta progesterona (e estrogênio)</li>
+      <li>Sem fecundação: o corpo lúteo regride, formando o <b>corpo albicans</b>, e ocorre a menstruação</li>
+      <li>Com fecundação: a hCG do sinciciotrofoblasto resgata o corpo lúteo (agora chamado corpo lúteo gravídico), mantendo a progesterona até a placenta assumir a produção hormonal (~4º mês)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🌸 Folículo ovariano — evolução</h2>
+    <table>
+      <tr><th>Estágio</th><th>Característica</th></tr>
+      <tr><td>Folículo primordial</td><td>Ovócito primário envolto por uma camada de células foliculares achatadas</td></tr>
+      <tr><td>Folículo primário</td><td>Células foliculares se tornam cúbicas; surge a zona pelúcida</td></tr>
+      <tr><td>Folículo antral</td><td>Acúmulo de líquido forma o antro; teca se diferencia em teca interna (secretora) e teca externa (fibrosa)</td></tr>
+      <tr><td>Folículo maduro (de Graaf)</td><td>Diâmetro máximo ≈ 25mm; meiose I se completa próximo à ovulação</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🌡️ Fases do endométrio (ciclo uterino)</h2>
+    <table>
+      <tr><th>Fase</th><th>Dias</th><th>Característica</th></tr>
+      <tr><td>Menstrual</td><td>1-5</td><td>Descamação da camada funcional do endométrio</td></tr>
+      <tr><td>Proliferativa (folicular)</td><td>6-14</td><td>Regeneração do endométrio sob influência do estrogênio</td></tr>
+      <tr><td>Secretora (lútea)</td><td>15-28</td><td>Espessamento e vascularização sob influência da progesterona, preparando para a implantação</td></tr>
+    </table>
+    <div class="mnemo">💡 A fase secretora do endométrio é sincronizada com a fase lútea do ovário — ambas dependem da progesterona do corpo lúteo.</div>
+  </div>
+
+  <div class="card">
+    <h2>🔬 Fecundação — visão geral</h2>
+    <p>Ocorre pela união dos gametas masc. e fem. na <b>ampola da tuba uterina</b>, facilitada pelo movimento flagelar e pela contração muscular uterina.</p>
+    <div class="diagram">
+      <h3>As 4 fases da fecundação</h3>
+    </div>
+    <table>
+      <tr><th>Fase</th><th>Descrição</th></tr>
+      <tr><td>1. Penetração da corona radiada</td><td>Facilitada pela capacitação (~7h no trato genital feminino)</td></tr>
+      <tr><td>2. Penetração da zona pelúcida</td><td>Reação acrossômica libera enzimas (acrosina, tripsina) que digerem a zona pelúcida</td></tr>
+      <tr><td>3. Fusão das membranas</td><td>Membrana do espermatozoide se funde à do ovócito</td></tr>
+      <tr><td>4. Fusão dos núcleos</td><td>Restaura o número diploide (46 cromossomos); determina o sexo genético</td></tr>
+    </table>
+    <div class="hot"><b>Reação de zona:</b> após a fusão de membranas, a zona pelúcida se torna impermeável a outros espermatozoides — bloqueio da polispermia.</div>
+  </div>
+</section>
+
+<!-- ============ TAB 3 — FECUNDAÇÃO / 1ª SEMANA ============ -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🌀 Segmentação (Clivagem)</h2>
+    <p>Série de divisões mitóticas do zigoto (12-24h após a fecundação), gerando células progressivamente menores chamadas <b>blastômeros</b>, sem aumento do volume total.</p>
+    <table>
+      <tr><th>Estágio</th><th>Momento</th></tr>
+      <tr><td>Zigoto (unicelular)</td><td>Dia 0</td></tr>
+      <tr><td>2 células</td><td>~30h</td></tr>
+      <tr><td>Mórula (16 células, estágio avançado)</td><td>Dia 3-4</td></tr>
+      <tr><td>Blastocisto</td><td>Dia 4-5</td></tr>
+    </table>
+    <div class="hot"><b>Mórula:</b> massa celular interna (embrioblasto → embrião) + massa celular externa (trofoblasto → placenta/membranas).</div>
+  </div>
+
+  <div class="card">
+    <h2>🫧 Blastocisto e Implantação</h2>
+    <p>Quando a mórula chega ao útero, líquido entra pela zona pelúcida e se acumula, formando a <b>cavidade do blastocisto</b>. A massa celular interna passa a se chamar <b>embrioblasto</b>, e a externa, <b>trofoblasto</b>. A zona pelúcida desaparece para permitir a implantação.</p>
+    <ul>
+      <li>A implantação ocorre ~6 dias após a fecundação, com o blastocisto</li>
+      <li>Local: parede anterior ou posterior do corpo uterino, nos óstios das glândulas uterinas</li>
+    </ul>
+    <div class="example"><b>Diferenciação do trofoblasto (dia 6):</b> Citotrofoblasto (camada interna, células mononucleadas, mitoticamente ativas) e Sinciciotrofoblasto (camada externa multinucleada, invade o endométrio destruindo-o — permite a implantação mútua). O início da implantação marca o fim da 1ª semana de gestação.</div>
+  </div>
+
+  <div class="card">
+    <h2>📅 2ª Semana — Disco Bilaminar</h2>
+    <table>
+      <tr><th>Dia</th><th>Evento</th></tr>
+      <tr><td>Dia 8</td><td>Trofoblasto se diferencia em 2 camadas (cito/sincício). Embrioblasto se diferencia em disco bilaminar: <b>epiblasto</b> (colunar alto) e <b>hipoblasto</b> (cúbico)</td></tr>
+      <tr><td>Dia 9</td><td>Surgem vacúolos no sinciciotrofoblasto (período lacunar). Forma-se a cavidade amniótica (delimitada pelos amnioblastos) e o saco vitelino primitivo</td></tr>
+      <tr><td>Dia 11-12</td><td>Blastocisto totalmente incluído no endométrio. Lacunas se interconectam com sangue materno — rede lacunar</td></tr>
+      <tr><td>Dia 13</td><td>Vilosidades coriônicas primárias (cito + sinciciotrofoblasto). Surge o mesoderma extraembrionário e o pedículo de fixação (futuro cordão umbilical)</td></tr>
+    </table>
+    <div class="mnemo">💡 Vilosidades primárias (só trofoblasto) → secundárias (invadidas por mesoderma extraembrionário) → terciárias (mesoderma vascularizado).</div>
+  </div>
+</section>
+
+<!-- ============ TAB 4 — 2ª e 3ª SEMANA (GASTRULAÇÃO/NEURULAÇÃO) ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🌊 Gastrulação (3ª Semana)</h2>
+    <p>Processo de formação do disco trilaminar (3 camadas germinativas), iniciado com a formação da <b>linha primitiva</b> sobre o epiblasto, por volta dos dias 15-16.</p>
+    <ul>
+      <li>O <b>nódulo primitivo</b> (nódulo de Hensen) fica na porção cefálica da linha, rodeando a fosseta primitiva</li>
+      <li>Células migram através da linha primitiva: as primeiras deslocam o hipoblasto e formam o <b>endoderma</b>; as seguintes formam o <b>mesoderma intraembrionário</b>; o epiblasto remanescente forma o <b>ectoderma</b></li>
+    </ul>
+    <div class="hot"><b>Regra prática:</b> todas as camadas germinativas se formam a partir do epiblasto — o hipoblasto é apenas "empurrado" e substituído.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧵 Notocorda</h2>
+    <p>Formada por células pró-notocordais que migram do <b>nódulo primitivo</b> em direção à placa precordal, se intercalam no hipoblasto e, depois, se separam do endoderma.</p>
+    <table>
+      <tr><th>Função</th><th>Descrição</th></tr>
+      <tr><td>Eixo axial</td><td>Guia estrutural do embrião</td></tr>
+      <tr><td>Indução</td><td>Induz o ectoderma sobrejacente a formar a placa neural</td></tr>
+      <tr><td>Origem óssea</td><td>Contribui para o núcleo pulposo dos discos intervertebrais no adulto</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🎈 Alantoide e Membrana cloacal</h2>
+    <ul>
+      <li><b>Alantoide:</b> divertículo do saco vitelino, se estende ao pedículo de fixação; forma parte do cordão umbilical</li>
+      <li><b>Membrana cloacal:</b> formada na porção caudal do embrião, análoga à membrana bucofaríngea (porção cranial)</li>
+      <li>Ambas aparecem por volta do dia 16 de gestação</li>
+    </ul>
+    <h3>🍇 Vilosidades coriônicas</h3>
+    <p>As vilosidades primárias são invadidas por vasos capilares do mesoderma (vilosidades <b>terciárias</b> ou definitivas), permitindo a troca adequada nutriente-materno-fetal, comunicando-se com o sistema cardiovascular embrionário até o 21º dia.</p>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Neurulação</h2>
+    <p>Processo embriológico dos vertebrados caracterizado pela formação do <b>tubo neural</b>, iniciando ao final da 3ª semana graças aos fatores indutores da notocorda e placa precordal.</p>
+    <ul>
+      <li>O ectoderma forma a <b>placa neural</b>; as células da placa formam o <b>neuroectoderma</b></li>
+      <li>O fechamento se inicia a nível <b>cervical</b> e avança em sentido crânio-caudal</li>
+      <li><b>Neuroporo anterior:</b> fecha em torno do dia 25 (com ~18-20 somitos)</li>
+      <li><b>Neuroporo posterior:</b> fecha em torno do dia 28 (com ~25 somitos)</li>
+    </ul>
+    <div class="hot"><b>Ao final da neurulação</b>, o SNC é formado por um tubo fechado, estreito caudalmente e dilatado na porção cefálica em vesículas cerebrais.</div>
+  </div>
+
+  <div class="card">
+    <h2>✨ Crista Neural</h2>
+    <p>Estrutura biológica discreta, composta por poucas células, que existe transitoriamente nas etapas iniciais do desenvolvimento — mas é responsável por algumas das estruturas mais relevantes do organismo.</p>
+    <h3>Derivados da crista neural</h3>
+    <ul>
+      <li>Tecido conectivo e ossos da face e do crânio</li>
+      <li>Células C da glândula tireoide</li>
+      <li>Tabique tronco-conal do coração</li>
+      <li>Odontoblastos e derme da face/pescoço</li>
+      <li>Gânglios espinais, cadeia simpática, gânglios pré-aórticos, gânglios parassimpáticos do trato GI</li>
+      <li>Medula suprarrenal</li>
+      <li>Células de Schwann, células gliais, piamáter e aracnoide</li>
+      <li>Melanócitos</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>👁️ Placodas óticas e do cristalino</h2>
+    <p>Quando o tubo neural já está fechado, surgem na região cefálica dois espessamentos ectodérmicos bilaterais: as <b>placodas óticas</b> (invaginam e formam as vesículas óticas — audição e equilíbrio) e as <b>placodas do cristalino</b> (invaginam e, na 5ª semana, formam o cristalino do olho).</p>
+  </div>
+</section>
+
+<!-- ============ TAB 5 — 4ª A 8ª SEMANA (ORGANOGÊNESE) ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>🏗️ Período Embrionário (3ª-8ª semana) — Organogênese</h2>
+    <p>Durante essa etapa, os principais sistemas orgânicos se estabelecem. Ao final do 2º mês, já existem formas reconhecíveis dos principais caracteres externos do corpo.</p>
+  </div>
+
+  <div class="card">
+    <h2>🧱 Derivados do Mesoderma</h2>
+    <table>
+      <tr><th>Segmento</th><th>Derivados</th></tr>
+      <tr><td><b>Mesoderma paraxial</b></td><td>Se organiza em <b>somitos</b> — origina musculatura axial, vértebras e derme dorsal</td></tr>
+      <tr><td><b>Mesoderma intermédio</b></td><td>Sistema urogenital: néfrotomos (cranial) e cordão nefrogênico (caudal) → rins, gônadas, ductos genitais</td></tr>
+      <tr><td><b>Lâmina lateral do mesoderma</b></td><td>Se divide em mesoderma parietal (somático) + mesoderma visceral (esplâncnico), delimitando o <b>celoma intraembrionário</b></td></tr>
+    </table>
+    <div class="example"><b>Somitos por região:</b> 4 occipitais, 8 cervicais, 12 torácicos, 5 lombares, 5 sacros, 8-10 coccígeos.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩸 Sangue e Vasos Sanguíneos</h2>
+    <p>Ao início da 3ª semana, células do mesoderma visceral do saco vitelino se diferenciam em <b>hemangioblastos</b>, formando as ilhotas sanguíneas — origem das primeiras células sanguíneas e vasos primitivos que colonizam o fígado (principal órgão hematopoiético fetal).</p>
+  </div>
+
+  <div class="card">
+    <h2>🧩 Derivados do Ectoderma e Endoderma</h2>
+    <table>
+      <tr><th>Camada</th><th>Derivados</th></tr>
+      <tr><td>Ectoderma</td><td>Sistema nervoso central e periférico; epitélio sensorial do ouvido, nariz e olho; epiderme (pelos, unhas); glândulas subcutâneas, mamárias e hipófise; esmalte dentário</td></tr>
+      <tr><td>Endoderma</td><td>Trato gastrointestinal; comunicação inicialmente ampla entre intestino médio e saco vitelino, através do ducto onfalomesentérico (vitelino)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🫁 Arcos Faríngeos e formação da face</h2>
+    <p>Estruturas típicas da 4ª semana, formadas pelos arcos faríngeos (1º ao 4º arco, sendo o 5º e 6º rudimentares), cada um associado a um nervo craniano, artéria e musculatura específicos, originando estruturas da face, pescoço e cabeça.</p>
+    <table>
+      <tr><th>Semana</th><th>Marco do desenvolvimento externo</th></tr>
+      <tr><td>4ª semana</td><td>1º e 2º arcos faríngeos visíveis; placodas óticas e do cristalino</td></tr>
+      <tr><td>5ª semana</td><td>Aparecem os esboços das extremidades superiores e inferiores, em forma de remo; surcos interdigitais</td></tr>
+      <tr><td>8ª semana</td><td>Caracteres externos principais já reconhecíveis; comprimento V-N (vértice-nádega); fim do período embrionário</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ TAB 6 — MALFORMAÇÕES E TERATÓGENOS ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>⚠️ Malformações Congênitas — Definição</h2>
+    <p>Defeito congênito, malformação congênita e anomalia congênita são sinônimos que designam problemas estruturais, comportamentais, funcionais e metabólicos presentes no momento do nascimento.</p>
+    <table>
+      <tr><th>Categoria etiológica</th><th>% aproximada</th></tr>
+      <tr><td>Fatores ambientais</td><td>15%</td></tr>
+      <tr><td>Fatores genéticos</td><td>30%</td></tr>
+      <tr><td>Interação ambiente + suscetibilidade genética</td><td>55% (maioria; origem pouco compreendida)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔤 Tipos de anomalias (patogenia)</h2>
+    <table>
+      <tr><th>Tipo</th><th>Definição</th><th>Exemplo</th></tr>
+      <tr><td><b>Malformação</b></td><td>Defeito morfológico intrínseco, durante a formação de uma estrutura (ex: organogênese, 3ª-8ª semana)</td><td>Otocefalia (alteração do 1º arco branquial, semana 4)</td></tr>
+      <tr><td><b>Disrupção</b></td><td>Defeito morfológico por interrupção extrínseca de estrutura já formada</td><td>Síndrome de bridas amnióticas</td></tr>
+      <tr><td><b>Deformação</b></td><td>Forma/posição anômala por força mecânica</td><td>Oligoidrâmnio → pé torto (pé zambo)</td></tr>
+      <tr><td><b>Displasia</b></td><td>Organização celular anormal em um tecido</td><td>Displasia óssea</td></tr>
+      <tr><td><b>Agenesia</b></td><td>Ausência de um órgão por falta do primórdio</td><td>Agenesia do corpo caloso</td></tr>
+      <tr><td><b>Aplasia</b></td><td>Falta de desenvolvimento, mas com esboço orgânico presente</td><td>Aplasia pulmonar</td></tr>
+      <tr><td><b>Atrofia</b></td><td>Diminuição de volume/tamanho já formado</td><td>—</td></tr>
+      <tr><td><b>Ectopia</b></td><td>Estrutura fora de seu local habitual</td><td>Ectopia renal</td></tr>
+      <tr><td><b>Atresia/Estenose</b></td><td>Ausência de orifício / estreitamento de conduto</td><td>Atresia de esôfago, ânus; estenose pilórica</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🧬 Alterações cromossômicas</h2>
+    <table>
+      <tr><th>Categoria</th><th>Detalhe</th></tr>
+      <tr><td>Euploidias</td><td>Um ou mais jogos completos de cromossomos (triploide 3n=69, tetraploide 4n=92)</td></tr>
+      <tr><td>Aneuploidias</td><td>Número de cromossomos não corresponde a múltiplo exato do haploide (monossomias, trissomias, etc.)</td></tr>
+    </table>
+    <div class="hot"><b>Síndrome de Turner (45,X):</b> única monossomia compatível com a vida; ~50% dos fetos afetados são abortados espontaneamente.</div>
+    <div class="hot"><b>Trissomia 13 (Síndrome de Patau):</b> cariótipo 47,XX+13 ou 47,XY+13; deficiência mental, malformações graves do SNC, microftalmia, fenda labial/palatina.</div>
+  </div>
+
+  <div class="card">
+    <h2>☠️ Teratógenos — o que são?</h2>
+    <p>Teratógeno é tudo aquilo capaz de alterar o desenvolvimento embrionário normal, causando, na maioria dos casos, malformações congênitas.</p>
+    <table>
+      <tr><th>Categoria</th><th>Agente</th><th>Efeitos principais</th></tr>
+      <tr><td rowspan="2">Físicos</td><td>Radiação ionizante</td><td>Microcefalia, retraso psicomotor</td></tr>
+      <tr><td>Raios X</td><td>Aborto, microcefalia, hidrocefalia, defeitos oculares</td></tr>
+      <tr><td rowspan="4">Químicos/Drogas</td><td>Álcool etílico</td><td>Síndrome alcoólica fetal: dismorfia facial, fenda palatina, cardiopatia congênita</td></tr>
+      <tr><td>Nicotina</td><td>Abortos, parto prematuro, baixo peso, morte súbita do RN</td></tr>
+      <tr><td>Cocaína</td><td>Alterações estruturais do SNC, deterioro neurológico, parto prematuro</td></tr>
+      <tr><td>Talidomida</td><td>Meromelia/amelia (ausência total ou parcial dos membros)</td></tr>
+      <tr><td rowspan="2">Farmacológicos</td><td>Anticonvulsivantes</td><td>Defeitos do fechamento do tubo neural, microcefalia, cardiopatias</td></tr>
+      <tr><td>Antibióticos (tetraciclina)</td><td>Pigmentação dos dentes; estreptomicina causa surdez</td></tr>
+      <tr><td rowspan="3">Infecciosos</td><td>Toxoplasma gondii</td><td>Pior no início da gestação; dano ocular, hepatoesplenomegalia, retraso mental</td></tr>
+      <tr><td>Treponema pallidum (sífilis)</td><td>Sífilis congênita; hidropisia, hidrocefalia, erupções cutâneas</td></tr>
+      <tr><td>HIV</td><td>Não aumenta malformações, mas sim prematuridade e hipotrofia fetal</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>💊 Doença materna e nutrição</h2>
+    <table>
+      <tr><th>Condição</th><th>Efeito</th></tr>
+      <tr><td>Diabetes mellitus pregestacional</td><td>Risco de anomalias congênitas 3-4x maior (SNC, cardiovasculares, musculoesqueléticas)</td></tr>
+      <tr><td>Fenilcetonúria materna (PKU)</td><td>Deficiência intelectual, microcefalia, defeitos cardíacos no filho, se não controlada</td></tr>
+      <tr><td>Deficiência de ácido fólico</td><td>Aumenta o risco de defeitos do tubo neural (DTN)</td></tr>
+    </table>
+    <div class="notice">📌 <b>Ponto de prova:</b> a suplementação de ácido fólico periconcepcional (2 meses antes até 2 meses após a concepção) reduz em até <b>70%</b> o risco de DTN.</div>
+  </div>
+</section>
+
+<!-- ============ TAB 7 — LINHA DO TEMPO ============ -->
+<section class="panel" id="p6">
+  <div class="card">
+    <h2>🗓️ Cronologia do Desenvolvimento Embrionário</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Eventos-chave em ordem cronológica — ótimo para fixação e revisão rápida antes da prova.</p>
+    <div class="timeline" id="timelineArea"></div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p7">
+  <div class="card">
+    <h2>🃏 Flashcards — toque para virar</h2>
+    <div class="fc-wrap">
+      <div class="fc-counter" id="fcCounter">1 / 30</div>
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p8">
+  <div class="card">
+    <h2>✅ Banco de Questões (com justificativa)</h2>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p9">
+  <div class="card">
+    <h2>🎮 Quiz Rápido (15 perguntas aleatórias)</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "q": "A espermatogênese ocorre em qual estrutura testicular?", "opts": ["Túbulos seminíferos", "Ducto deferente", "Epidídimo", "Rede testicular"], "correct": 0, "just": "A espermatogênese ocorre nos túbulos seminíferos; a maturação final (aquisição de mobilidade) acontece no epidídimo."}, {"n": 2, "q": "Quantos dias, aproximadamente, dura o processo completo de espermatogênese até a espermiogênese?", "opts": ["28 dias", "7 dias", "9 meses", "64-74 dias"], "correct": 3, "just": "A espermatogênese completa dura em torno de 64 a 74 dias, incluindo a fase proliferativa, meiótica e a espermiogênese."}, {"n": 3, "q": "Os espermatogônios do Tipo B são responsáveis por:", "opts": ["Produzir testosterona", "Manter divisões mitóticas proliferativas", "Entrar em meiose e originar os espermatócitos", "Formar as células de Sertoli"], "correct": 2, "just": "O espermatogônio tipo A tem função proliferativa (mitose); o tipo B entra em meiose, originando os espermatócitos primários."}, {"n": 4, "q": "A espermiogênese é o processo em que:", "opts": ["Ocorre a primeira divisão meiótica", "O espermatogônio se torna espermatócito", "As células de Sertoli se multiplicam", "A espermátide se diferencia em espermatozoide maduro"], "correct": 3, "just": "Na espermiogênese, a espermátide sofre transformações morfológicas (formação do acrossomo, condensação nuclear, desenvolvimento do flagelo, eliminação de citoplasma) até se tornar espermatozoide maduro."}, {"n": 5, "q": "Aproximadamente quantos ovogônios existem por volta do 5º mês de vida fetal, antes do início da apoptose?", "opts": ["Cerca de 400", "Cerca de 600", "Cerca de 7.000.000", "Cerca de 40.000"], "correct": 2, "just": "No 5º mês de vida fetal, a mitose acelerada gera cerca de 7 milhões de ovogônios, que em seguida começam a entrar em apoptose maciça."}, {"n": 6, "q": "O ovócito primário permanece parado em qual fase da meiose, do nascimento até a puberdade?", "opts": ["Prófase I (diplóteno)", "Metáfase II", "Prófase II", "Telófase I"], "correct": 0, "just": "Ao nascer, o ovócito primário inicia a prófase I e para no estágio de diplóteno, retomando a meiose apenas na puberdade."}, {"n": 7, "q": "O ovócito secundário fica parado em qual fase da meiose até a fecundação?", "opts": ["Prófase I", "Anáfase I", "Telófase II", "Metáfase II"], "correct": 3, "just": "Após completar a meiose I na ovulação, o ovócito secundário entra em meiose II e para em metáfase II, só concluindo se houver fecundação."}, {"n": 8, "q": "Qual hormônio hipofisário atua sobre as células de Sertoli, estimulando a espermatogênese?", "opts": ["FSH", "LH", "Estrogênio", "Progesterona"], "correct": 0, "just": "O FSH estimula as células de Sertoli (suporte e nutrição dos gametas em formação); o LH atua nas células de Leydig, estimulando a produção de testosterona."}, {"n": 9, "q": "Ao nascer, quantos ovócitos primários uma menina possui aproximadamente?", "opts": ["600.000 a 800.000", "40.000", "500", "7.000.000"], "correct": 0, "just": "Ao nascer há entre 600.000 e 800.000 ovócitos primários; na puberdade restam cerca de 40.000, e apenas ~500 chegarão a ser ovulados ao longo da vida reprodutiva."}, {"n": 10, "q": "O pico de LH, que desencadeia a ovulação, ocorre tipicamente em qual dia do ciclo ovariano de 28 dias?", "opts": ["Dia 21", "Dia 14", "Dia 1", "Dia 28"], "correct": 1, "just": "Na fase folicular, o pico de estrogênio gera retrocontrole positivo sobre a LH, cujo pico (por volta do dia 14) desencadeia a ovulação."}, {"n": 11, "q": "Após a ovulação, a estrutura que se forma no ovário e secreta progesterona é o:", "opts": ["Folículo primordial", "Corpo albicans", "Corpo lúteo", "Folículo de Graaf"], "correct": 2, "just": "Após a ovulação, as células da granulosa e da teca do folículo remanescente se transformam no corpo lúteo, que secreta progesterona para sustentar a fase secretora do endométrio."}, {"n": 12, "q": "Caso não haja fecundação, o corpo lúteo regride e se transforma em:", "opts": ["Corpo lúteo gravídico", "Folículo primordial", "Corpo albicans", "Cumulus oophorus"], "correct": 2, "just": "Sem fecundação, o corpo lúteo (amarelo) regride por falta de HCG, tornando-se corpo albicans (branco), uma cicatriz fibrosa."}, {"n": 13, "q": "A hormona hCG (gonadotrofina coriônica humana), detectada nos testes de gravidez, tem qual função inicial?", "opts": ["Estimular a ovulação", "Estimular a espermatogênese", "Impedir a degeneração do corpo lúteo, mantendo a produção de progesterona", "Iniciar o parto"], "correct": 2, "just": "A hCG, secretada pelo sinciciotrofoblasto, resgata o corpo lúteo da degeneração, mantendo a secreção de progesterona até a placenta assumir essa função (~4º mês)."}, {"n": 14, "q": "A fecundação ocorre tipicamente em qual porção da tuba uterina?", "opts": ["Ampola", "Porção intramural", "Istmo", "Infundíbulo"], "correct": 0, "just": "A fecundação ocorre na ampola da tuba uterina, sua porção mais larga, geralmente dentro de 24h após a ovulação."}, {"n": 15, "q": "Coloque em ordem as fases da fecundação: penetração da corona radiada, penetração da zona pelúcida, fusão de membranas, fusão dos núcleos. Qual é a etapa que garante que apenas um espermatozoide fecunde o óvulo?", "opts": ["Reação de zona (bloqueio da polispermia após fusão de membranas)", "Segmentação", "Capacitação", "Reação acrossômica"], "correct": 0, "just": "Após a fusão de membranas, ocorre a reação de zona, que torna a zona pelúcida impermeável a outros espermatozoides, prevenindo a polispermia."}, {"n": 16, "q": "A capacitação do espermatozoide, necessária para a fecundação, ocorre em qual local e demora aproximadamente quanto tempo?", "opts": ["Na ampola tubária, 1 minuto", "No testículo, 64 dias", "No trato genital feminino, cerca de 7 horas", "No epidídimo, 24h"], "correct": 2, "just": "A capacitação ocorre no trato genital feminino e dura cerca de 7 horas, removendo glicoproteínas e proteínas plasmáticas que recobrem o acrossomo."}, {"n": 17, "q": "A segmentação (clivagem) do zigoto produz células progressivamente menores chamadas:", "opts": ["Ovogônias", "Trofoblastos", "Blastocistos", "Blastômeros"], "correct": 3, "just": "A segmentação é uma série de mitoses do zigoto que geram blastômeros cada vez menores, sem aumento do volume total do embrião."}, {"n": 18, "q": "A mórula, formada por volta do 3º-4º dia após a fecundação, é composta por quantas células em estágio avançado?", "opts": ["16 células", "4 células", "2 células", "64 células"], "correct": 0, "just": "A mórula atinge cerca de 16 células no estágio avançado (4º dia), organizando-se em massa celular interna (embrioblasto) e massa celular externa (trofoblasto)."}, {"n": 19, "q": "No blastocisto, a estrutura que dará origem ao embrião propriamente dito é:", "opts": ["O citotrofoblasto", "A massa celular interna (embrioblasto)", "O trofoblasto", "O sinciciotrofoblasto"], "correct": 1, "just": "A massa celular interna (embrioblasto) origina o embrião; a massa celular externa (trofoblasto) origina a placenta e as membranas fetais."}, {"n": 20, "q": "A implantação do blastocisto no endométrio ocorre aproximadamente quantos dias após a fecundação?", "opts": ["1 dia", "14 dias", "21 dias", "6 dias"], "correct": 3, "just": "A implantação começa por volta do 6º dia após a fecundação, quando o blastocisto adere ao endométrio, geralmente na parede anterior ou posterior do corpo uterino."}, {"n": 21, "q": "O trofoblasto se diferencia, por volta do 6º dia, em duas camadas celulares. Quais são elas?", "opts": ["Epiblasto e hipoblasto", "Âmnio e saco vitelino", "Ectoderma e endoderma", "Citotrofoblasto e sinciciotrofoblasto"], "correct": 3, "just": "O trofoblasto se subdivide no citotrofoblasto (camada interna, células mononucleadas com figuras mitóticas) e no sinciciotrofoblasto (camada externa multinucleada, responsável por invadir o endométrio)."}, {"n": 22, "q": "O sinciciotrofoblasto é responsável por qual função crítica na implantação?", "opts": ["Formar o saco vitelino", "Originar o âmnio", "Invadir e destruir o endométrio materno, promovendo a implantação", "Produzir líquido amniótico"], "correct": 2, "just": "O sinciciotrofoblasto secreta enzimas proteolíticas que destroem o tecido endometrial, permitindo que o blastocisto se implante na parede uterina."}, {"n": 23, "q": "No 8º dia, o embrioblasto se diferencia em disco bilaminar, formado por duas camadas. Quais são elas?", "opts": ["Ectoderma e mesoderma", "Epiblasto e hipoblasto", "Citotrofoblasto e sinciciotrofoblasto", "Âmnio e córion"], "correct": 1, "just": "O disco germinativo bilaminar é formado pelo epiblasto (camada colunar alta, adjacente à cavidade amniótica) e o hipoblasto (camada cúbica, voltada para a cavidade blastocística)."}, {"n": 24, "q": "A cavidade que se forma dentro do epiblasto, delimitada pelos amnioblastos, é chamada de:", "opts": ["Cavidade coriônica", "Cavidade exocelômica", "Cavidade do blastocisto", "Cavidade amniótica"], "correct": 3, "just": "A cavidade amniótica se forma no interior do epiblasto, revestida pelos amnioblastos, e conterá o líquido amniótico que envolve o embrião."}, {"n": 25, "q": "O período lacunar, que se inicia por volta do 9º dia, se caracteriza por:", "opts": ["Formação da linha primitiva", "Formação dos somitos", "Fechamento do tubo neural", "Formação de vacúolos (lacunas) no sinciciotrofoblasto, que se enchem de sangue materno"], "correct": 3, "just": "No período lacunar, vacúolos aparecem no sinciciotrofoblasto e se fusionam, formando lacunas que se enchem de sangue materno oriundo dos capilares endometriais rompidos — início da circulação uteroplacentária."}, {"n": 26, "q": "As vilosidades coriônicas primárias, que surgem na 2ª semana, evoluem para vilosidades secundárias quando são invadidas por:", "opts": ["Células do hipoblasto", "Vasos sanguíneos maternos", "Mesoderma extraembrionário", "Líquido amniótico"], "correct": 2, "just": "As vilosidades primárias (só citotrofoblasto + sinciciotrofoblasto) tornam-se secundárias ao serem invadidas pelo mesoderma extraembrionário; as terciárias surgem quando esse mesoderma é vascularizado."}, {"n": 27, "q": "A gastrulação, processo que forma o disco trilaminar, se inicia aproximadamente em qual dia?", "opts": ["28 dias", "15-16 dias", "21 dias", "6 dias"], "correct": 1, "just": "A gastrulação inicia entre os dias 15-16, marcada pelo surgimento da linha primitiva sobre o epiblasto."}, {"n": 28, "q": "A estrutura cuja aparição indica o início da gastrulação é:", "opts": ["A notocorda", "A linha primitiva", "O tubo neural", "O saco vitelino secundário"], "correct": 1, "just": "O aparecimento da linha primitiva no epiblasto é o marco que indica o início da gastrulação e do processo de formação das três camadas germinativas."}, {"n": 29, "q": "Durante a gastrulação, as células migram através da linha primitiva e formam, na ordem correta, as três camadas germinativas. Qual é a ordem de formação?", "opts": ["Endoderma, depois mesoderma, por último o epiblasto se torna ectoderma", "Ectoderma, mesoderma, endoderma", "Endoderma, ectoderma, mesoderma", "Mesoderma, ectoderma, endoderma"], "correct": 0, "just": "As células que migram primeiro pela linha primitiva deslocam o hipoblasto e formam o endoderma; as seguintes formam o mesoderma intraembrionário; o epiblasto remanescente forma o ectoderma."}, {"n": 30, "q": "A notocorda se forma a partir de células que migram do:", "opts": ["Hipoblasto", "Nódulo primitivo (nódulo de Hensen)", "Trofoblasto", "Alantoide"], "correct": 1, "just": "Células pró-notocordais migram cranialmente a partir do nódulo primitivo, intercalando-se no hipoblasto para formar a placa notocordal e, posteriormente, a notocorda definitiva."}, {"n": 31, "q": "A função principal da notocorda no desenvolvimento embrionário é:", "opts": ["Servir de eixo/guia axial e induzir a formação do tubo neural", "Formar os somitos diretamente", "Originar as células sanguíneas", "Formar a placenta"], "correct": 0, "just": "A notocorda funciona como eixo esquelético primitivo e induz o ectoderma sobrejacente a se diferenciar em placa neural, iniciando a neurulação."}, {"n": 32, "q": "O alantoide, divertículo que se forma a partir do saco vitelino, está relacionado a qual estrutura definitiva?", "opts": ["Os somitos", "O tubo neural", "As vilosidades coriônicas", "Parte do cordão umbilical e da bexiga (úraco)"], "correct": 3, "just": "O alantoide se estende para o pedículo de fixação, contribuindo para a formação do cordão umbilical; seu resquício no adulto é o ligamento umbilical mediano (úraco)."}, {"n": 33, "q": "A neurulação se inicia ao final da 3ª semana e se caracteriza pela formação de qual estrutura?", "opts": ["A placa neural, a partir do ectoderma induzido pela notocorda", "O saco vitelino", "O disco trilaminar", "As vilosidades terciárias"], "correct": 0, "just": "Induzido pela notocorda e placa precordal, o ectoderma se espessa formando a placa neural, dando início à neurulação, que originará o tubo neural."}, {"n": 34, "q": "O fechamento do tubo neural se inicia em qual região e progride em qual direção?", "opts": ["Inicia na região cefálica e para ali mesmo", "Inicia na região caudal e progride cranialmente", "Inicia a nível cervical e progride em sentido crânio-caudal", "Ocorre simultaneamente em todo o tubo"], "correct": 2, "just": "O fechamento do tubo neural começa na região cervical e avança bidirecionalmente (crânio e caudalmente), fechando os neuróporos anterior e posterior em momentos distintos."}, {"n": 35, "q": "Os neuróporos anterior e posterior se fecham, respectivamente, em torno de quais dias de gestação?", "opts": ["10 e 12 dias", "40 e 45 dias", "14 e 21 dias", "25 e 28 dias"], "correct": 3, "just": "O neuróporo anterior fecha por volta do dia 25, e o posterior por volta do dia 28 — marcos importantes, já que sua falha de fechamento causa defeitos do tubo neural."}, {"n": 36, "q": "A crista neural, estrutura transitória que se destaca lateralmente ao tubo neural, origina qual grupo de estruturas?", "opts": ["Exclusivamente o epitélio sensorial do olho", "Gânglios espinais, cadeia simpática, medula suprarrenal, células de Schwann e melanócitos, entre outros", "Somente o músculo cardíaco", "Apenas os neurônios motores da medula"], "correct": 1, "just": "A crista neural é extremamente pluripotente, originando os gânglios sensitivos e autônomos, medula suprarrenal, células de Schwann, células gliais, melanócitos e diversos tecidos craniofaciais."}, {"n": 37, "q": "As vesículas encefálicas primárias, formadas a partir do tubo neural fechado, são:", "opts": ["Telencéfalo, diencéfalo e mesencéfalo", "Apenas o telencéfalo", "Prosencéfalo, mesencéfalo e rombencéfalo", "Metencéfalo, mielencéfalo e diencéfalo"], "correct": 2, "just": "As três vesículas encefálicas primárias são o prosencéfalo (anterior), o mesencéfalo (médio) e o rombencéfalo (posterior), que posteriormente se subdividem em cinco vesículas secundárias."}, {"n": 38, "q": "As placodas óticas e as placodas do cristalino se formam a partir de:", "opts": ["Diferenciação do mesoderma paraxial", "Espessamentos ectodérmicos bilaterais na região cefálica", "Migração de células da crista neural", "Invaginação do endoderma"], "correct": 1, "just": "Quando o tubo neural já está fechado, surgem na região cefálica dois espessamentos ectodérmicos: as placodas óticas (originam estruturas da audição/equilíbrio) e as placodas do cristalino (originam o cristalino do olho)."}, {"n": 39, "q": "O mesoderma paraxial se organiza em segmentos chamados:", "opts": ["Somitos", "Vilosidades", "Esplancnopleura", "Somatopleura"], "correct": 0, "just": "O mesoderma paraxial se segmenta em pares de somitos ao longo do eixo crânio-caudal do embrião, que originarão a musculatura axial, vértebras e derme dorsal."}, {"n": 40, "q": "O mesoderma intermédio, que conecta o mesoderma paraxial ao mesoderma lateral, dá origem principalmente a:", "opts": ["Somitos", "Sistema urinário e gônadas", "Sistema nervoso", "Coração"], "correct": 1, "just": "O mesoderma intermédio origina o sistema urogenital: néfrotomos (porção cranial) e cordão nefrogênico (porção caudal), formando rins, gônadas e ductos genitais."}, {"n": 41, "q": "A lâmina lateral do mesoderma se divide em duas camadas, que delimitam o celoma intraembrionário. Quais são elas?", "opts": ["Notocorda e placa precordal", "Mesoderma somático (parietal) e mesoderma esplâncnico (visceral)", "Mesoderma paraxial e intermédio", "Ectoderma e endoderma"], "correct": 1, "just": "A lâmina lateral se separa em mesoderma parietal (somático), associado ao ectoderma, e mesoderma visceral (esplâncnico), associado ao endoderma, delimitando entre si o celoma intraembrionário."}, {"n": 42, "q": "As primeiras células sanguíneas e vasos sanguíneos do embrião derivam de estruturas chamadas:", "opts": ["Somitos cervicais", "Crista neural craniana", "Placa precordal", "Ilhotas sanguíneas (hemangioblastos) no mesoderma do saco vitelino"], "correct": 3, "just": "No início da 3ª semana, células do mesoderma visceral do saco vitelino se diferenciam em hemangioblastos, formando as ilhotas sanguíneas — origem das primeiras células sanguíneas e vasos primitivos."}, {"n": 43, "q": "Os arcos faríngeos (branquiais), estruturas típicas da 4ª semana, contribuem principalmente para a formação de:", "opts": ["Membros superiores e inferiores", "Rins e gônadas", "Estruturas da face, pescoço e cabeça (ossos, músculos, nervos cranianos)", "Placenta e cordão umbilical"], "correct": 2, "just": "Os arcos faríngeos (1º ao 4º, sendo o 5º e 6º rudimentares) formam estruturas da face e pescoço, cada um associado a um nervo craniano, artéria e musculatura específicos."}, {"n": 44, "q": "Ao final da 8ª semana, marco que encerra o período embrionário, o desenvolvimento se caracteriza por:", "opts": ["Formação da linha primitiva", "Formação do zigoto", "Sistemas orgânicos principais já estabelecidos e caracteres externos reconhecíveis", "Início da gametogênese"], "correct": 2, "just": "Ao final da 8ª semana (período embrionário/organogênese), os principais sistemas orgânicos já estão formados, e o embrião passa a ser chamado feto, com caracteres externos reconhecíveis."}, {"n": 45, "q": "Segundo a classificação etiológica das anomalias congênitas, qual porcentagem aproximada é atribuída à interação entre fatores ambientais e suscetibilidade genética?", "opts": ["55%", "30%", "90%", "15%"], "correct": 0, "just": "Cerca de 55% das anomalias resultam da interação entre fatores ambientais e a suscetibilidade genética do indivíduo — a maior categoria, e a de origem menos compreendida."}, {"n": 46, "q": "Uma malformação, por definição, é:", "opts": ["Uma interrupção de um órgão já formado normalmente", "Uma organização celular anormal em um tecido", "Uma alteração de forma causada por força mecânica externa", "Um defeito morfológico resultante de um desenvolvimento intrinsecamente anormal, geralmente na organogênese (3ª-8ª semana)"], "correct": 3, "just": "Malformação é um defeito morfológico primário, resultante de um processo de desenvolvimento intrinsecamente anormal, tipicamente ocorrendo durante a organogênese (3ª a 8ª semana)."}, {"n": 47, "q": "A disrupção se diferencia da malformação porque:", "opts": ["Ocorre apenas em cromossomos sexuais", "É causada por uma interrupção extrínseca em uma estrutura que se formava normalmente (ex: bridas amnióticas)", "Nunca causa aborto espontâneo", "Sempre tem causa genética"], "correct": 1, "just": "Diferente da malformação (defeito intrínseco do desenvolvimento), a disrupção decorre de um processo destrutivo extrínseco sobre uma estrutura previamente normal — o exemplo clássico é a síndrome de bridas amnióticas."}, {"n": 48, "q": "A talidomida, retirada do mercado por seus efeitos teratogênicos, é classicamente associada a qual malformação?", "opts": ["Fenda palatina isolada", "Meromelia/amelia (redução ou ausência de membros)", "Surdez congênita", "Pigmentação dentária"], "correct": 1, "just": "A talidomida (usada como antiemético/sedativo) ficou historicamente associada a meromelia e amelia — redução parcial ou ausência total dos membros — sendo um marco na história da teratologia."}, {"n": 49, "q": "O consumo de ácido fólico no período periconcepcional reduz em até 70% o risco de qual grupo de malformações?", "opts": ["Malformações renais", "Defeitos do tubo neural (DTN)", "Trissomias cromossômicas", "Cardiopatias congênitas isoladas"], "correct": 1, "just": "A suplementação de ácido fólico, iniciada idealmente dois meses antes da concepção, reduz significativamente (até 70%) o risco de defeitos do tubo neural, além de reduzir fissuras labiopalatinas e defeitos cardíacos."}, {"n": 50, "q": "A Síndrome de Turner, única monossomia compatível com a vida, é caracterizada por qual cariótipo?", "opts": ["45, X (ausência de um cromossomo sexual)", "47, XX+21", "47, XXY", "47, XX+13"], "correct": 0, "just": "A Síndrome de Turner (45,X) é a única monossomia viável; cerca de 50% dos fetos afetados são abortados espontaneamente."}];
+const flashcards = [{"f": "Onde ocorre a espermatogênese e quanto tempo dura?", "b": "Nos túbulos seminíferos dos testículos; dura cerca de 64-74 dias até a espermiogênese."}, {"f": "Quais são os 2 tipos de espermatogônios e suas funções?", "b": "Tipo A: função proliferativa (mitose). Tipo B: entra em meiose e origina os espermatócitos."}, {"f": "Em que fase da meiose o ovócito primário fica parado até a puberdade?", "b": "Prófase I, no estágio de diplóteno."}, {"f": "Em que fase da meiose o ovócito secundário fica parado até a fecundação?", "b": "Metáfase II."}, {"f": "Quantos ovócitos primários existem ao nascer? E na puberdade?", "b": "600.000-800.000 ao nascer; cerca de 40.000 na puberdade (só ~500 serão ovulados)."}, {"f": "Qual hormônio estimula as células de Sertoli? E as de Leydig?", "b": "FSH estimula Sertoli (suporte/nutrição); LH estimula Leydig (produção de testosterona)."}, {"f": "O que acontece no pico de LH do ciclo ovariano?", "b": "Desencadeia a ovulação, por volta do dia 14 do ciclo de 28 dias."}, {"f": "O que é o corpo albicans?", "b": "A cicatriz fibrosa que resulta da degeneração do corpo lúteo, quando não há fecundação."}, {"f": "Qual a função da hCG no início da gravidez?", "b": "Resgata o corpo lúteo da degeneração, mantendo a produção de progesterona até a placenta assumir essa função."}, {"f": "Onde ocorre a fecundação?", "b": "Na ampola da tuba uterina."}, {"f": "Quais são as 4 etapas da fecundação?", "b": "Penetração da corona radiada → penetração da zona pelúcida → fusão das membranas → fusão dos núcleos."}, {"f": "O que é a reação de zona?", "b": "Modificação da zona pelúcida após a fusão de membranas, que impede a entrada de outros espermatozoides (bloqueio da polispermia)."}, {"f": "O que são blastômeros?", "b": "As células, progressivamente menores, geradas pelas divisões mitóticas (segmentação) do zigoto."}, {"f": "Como se organiza a mórula?", "b": "Massa celular interna (embrioblasto, forma o embrião) e massa celular externa (trofoblasto, forma placenta/membranas)."}, {"f": "Quando ocorre a implantação?", "b": "Por volta do 6º dia após a fecundação, quando o blastocisto adere ao endométrio."}, {"f": "Em quais 2 camadas o trofoblasto se diferencia no 6º dia?", "b": "Citotrofoblasto (interna, mitoticamente ativa) e sinciciotrofoblasto (externa, multinucleada, invade o endométrio)."}, {"f": "Do que é composto o disco germinativo bilaminar?", "b": "Epiblasto (colunar alto) e hipoblasto (cúbico), formados no 8º dia."}, {"f": "O que caracteriza o período lacunar (dia 9)?", "b": "Vacúolos no sinciciotrofoblasto se fusionam formando lacunas que se enchem de sangue materno."}, {"f": "Qual estrutura indica o início da gastrulação?", "b": "O surgimento da linha primitiva sobre o epiblasto (dias 15-16)."}, {"f": "Quais as 3 camadas germinativas formadas na gastrulação?", "b": "Ectoderma, mesoderma e endoderma — a partir da migração celular pela linha primitiva."}, {"f": "A partir de onde se forma a notocorda?", "b": "De células pró-notocordais que migram do nódulo primitivo (nódulo de Hensen)."}, {"f": "Qual a função da notocorda?", "b": "Servir de eixo axial e induzir o ectoderma sobrejacente a formar a placa neural (neurulação)."}, {"f": "Como progride o fechamento do tubo neural?", "b": "Inicia na região cervical e progride em direção crânio-caudal, com os neuróporos anterior (dia 25) e posterior (dia 28) fechando por último."}, {"f": "O que origina a crista neural?", "b": "Gânglios espinais, cadeia simpática, medula suprarrenal, células de Schwann, células gliais, melanócitos, entre outras estruturas."}, {"f": "Quais são as 3 vesículas encefálicas primárias?", "b": "Prosencéfalo, mesencéfalo e rombencéfalo."}, {"f": "O que origina as placodas óticas e do cristalino?", "b": "Espessamentos ectodérmicos bilaterais na região cefálica, após o fechamento do tubo neural."}, {"f": "Em que os somitos (mesoderma paraxial) se diferenciam?", "b": "Musculatura axial, vértebras e derme dorsal."}, {"f": "O que origina o mesoderma intermédio?", "b": "O sistema urogenital: rins, gônadas e ductos genitais."}, {"f": "Quais as 2 camadas da lâmina lateral do mesoderma?", "b": "Mesoderma parietal/somático (com o ectoderma) e mesoderma visceral/esplâncnico (com o endoderma), delimitando o celoma intraembrionário."}, {"f": "O que são hemangioblastos e onde surgem?", "b": "Células do mesoderma do saco vitelino que originam as primeiras células sanguíneas e vasos — as ilhotas sanguíneas."}, {"f": "Diferença entre malformação e disrupção?", "b": "Malformação: defeito intrínseco do desenvolvimento (ex: organogênese). Disrupção: processo destrutivo extrínseco sobre estrutura já formada (ex: bridas amnióticas)."}, {"f": "Qual malformação clássica está associada à talidomida?", "b": "Meromelia/amelia — redução parcial ou ausência total dos membros."}, {"f": "Qual o efeito do ácido fólico periconcepcional?", "b": "Reduz em até 70% o risco de defeitos do tubo neural."}, {"f": "Qual o cariótipo da Síndrome de Turner?", "b": "45, X — única monossomia compatível com a vida."}];
+
+const timelineData = [
+  ["Dia 0", "Fecundação do ovócito."],
+  ["Dia 1-3", "Segmentação e formação de blastômeras (12-24h)."],
+  ["Dia 4", "Formação da mórula (16 células)."],
+  ["Dia 5", "Formação do blastocisto."],
+  ["Dia 6-7", "Início da implantação. Aparece o sinciciotrofoblasto."],
+  ["Dia 8", "Disco bilaminar: epiblasto e hipoblasto."],
+  ["Dia 9", "Período lacunar. Cavidade amniótica e saco vitelino primitivo."],
+  ["Dia 11-12", "Finaliza a implantação. Início das lacunas trofoblásticas."],
+  ["Dia 13", "Mesoderma extraembrionário e saco vitelino secundário. Vilosidades primárias."],
+  ["Dia 15-16", "Início da gastrulação. Formação da linha primitiva e as 3 camadas germinativas."],
+  ["Dia 17", "Formação da notocorda a partir do epiblasto."],
+  ["Dia 18-19", "Início da neurulação. Formação da placa neural."],
+  ["Dia 20", "Aparecem pregas neurais e esboços do sulco neural."],
+  ["Dia 21-22", "Início do batimento cardíaco."],
+  ["Dia 25", "Fechamento do neuroporo anterior."],
+  ["Dia 27-28", "Fechamento do neuroporo posterior."],
+  ["4ª semana", "Arcos faríngeos visíveis. Otocefalia (se houver alteração do 1º arco)."],
+  ["5ª semana", "Esboços dos membros superiores/inferiores. Placodas óticas/cristalino já invaginadas."],
+  ["Fim da 8ª semana", "Fim do período embrionário. Sistemas orgânicos principais estabelecidos."],
+];
+
+const timelineEl = document.getElementById('timelineArea');
+timelineData.forEach(([day, evt])=>{
+  const row = document.createElement('div');
+  row.className = 'tl-row';
+  row.innerHTML = `<div class="tl-day">${day}</div><div class="tl-evt">${evt}</div>`;
+  timelineEl.appendChild(row);
+});
+
+const list = document.getElementById('gabaritoList');
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `<div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${String.fromCharCode(97+i)}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver justificativa</button>
+    <div class="just" id="just-${idx}">${item.just}</div>`;
+  list.appendChild(div);
+});
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('just-'+qi).classList.toggle('show');
+  }
+});
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+let fcIdx = 0;
+const fcCard = document.getElementById('fcCard');
+function renderFc(){
+  fcCard.classList.remove('flipped');
+  document.getElementById('fcFront').textContent = flashcards[fcIdx].f;
+  document.getElementById('fcBack').textContent = flashcards[fcIdx].b;
+  document.getElementById('fcCounter').textContent = (fcIdx+1)+' / '+flashcards.length;
+}
+fcCard.addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcFlip').addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcNext').addEventListener('click', ()=>{ fcIdx=(fcIdx+1)%flashcards.length; renderFc(); addXP(1); });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIdx=(fcIdx-1+flashcards.length)%flashcards.length; renderFc(); });
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]).slice(0,15);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length}</p>
+    <p class="qtxt">${item.n}. ${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${String.fromCharCode(97+i)}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+</script>
+</body>
+</html>
