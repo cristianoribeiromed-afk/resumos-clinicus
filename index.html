@@ -1372,6 +1372,17 @@ document.getElementById('modalCheck').onclick = async ()=>{
   if(!email){ msg.textContent="Digite um email."; msg.style.color="var(--gold)"; return; }
   if(!ACESSOS_CSV_URL){ msg.textContent="Verificação ainda não configurada. Fale com o suporte no WhatsApp."; msg.style.color="var(--muted)"; return; }
   msg.textContent="Verificando..."; msg.style.color="var(--muted)"; msg.innerHTML="Verificando...";
+  // Garante que o catálogo já carregou antes de montar o índice de acesso (evita falso "arquivo não encontrado")
+  if(!CATALOGO_DATA){
+    try{
+      const rCat = await fetch('./catalogo.json?v=' + Date.now());
+      CATALOGO_DATA = await rCat.json();
+    }catch(e){
+      msg.textContent = "Não foi possível carregar o catálogo agora. Tente novamente em instantes.";
+      msg.style.color="var(--gold)";
+      return;
+    }
+  }
   try{
     const res = await fetch(ACESSOS_CSV_URL);
     const csv = await res.text();
@@ -1388,9 +1399,19 @@ document.getElementById('modalCheck').onclick = async ()=>{
       const itensMap = new Map(); // dedupe por url, caso dois planos compartilhem material
       encontradas.forEach(l=>{
         const planoRaw = (l[iPlano]||"").trim();
-        const planoKey = planoRaw.toLowerCase();
+        let planoKey = planoRaw.toLowerCase();
         planosNomes.push(planoRaw);
-        (idx[planoKey] || []).forEach(it=>{ if(itensMap.has(it.url)) itensMap.delete(it.url); itensMap.set(it.url, it); });
+        // Alias PT/ES: algumas matérias têm nome em espanhol no catálogo (ex: "Inmunología")
+        // mas os planos na planilha usam a grafia em português (ex: "imunologia"). Se não achar
+        // a chave direta, tenta a variante alternativa antes de desistir.
+        let found = idx[planoKey];
+        if(!found){
+          const alt = planoKey.includes('imunologia') ? planoKey.replace('imunologia','inmunologia')
+                    : planoKey.includes('inmunologia') ? planoKey.replace('inmunologia','imunologia')
+                    : null;
+          if(alt && idx[alt]) found = idx[alt];
+        }
+        (found || []).forEach(it=>{ if(itensMap.has(it.url)) itensMap.delete(it.url); itensMap.set(it.url, it); });
       });
       const itens = Array.from(itensMap.values());
       if(itens.length){
