@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabela de Excelência — Histologia Geral | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0e1420; --card:#1a2436; --card2:#20304a;
+  --accent:#d88a3f; --accent2:#4fc3d9; --gold:#e8b84b;
+  --text:#eef2f7; --text-dim:#a3b1c6; --ok:#4fd1a1; --bad:#e0505f; --border:#2a3850;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#3a2410 0%,var(--bg) 55%);color:var(--text);line-height:1.55;}
+.wrap{max-width:1020px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:8px 12px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#a8622a);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;color:var(--text);}
+.hot{background:rgba(216,138,63,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:7px 9px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul{margin:6px 0;padding-left:20px;}
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.qitem .qtxt{font-weight:600;margin-bottom:8px;}
+.qitem .topic-tag{display:inline-block;font-size:.68em;color:var(--accent2);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:4px 8px;border-radius:6px;margin-bottom:3px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#2a3850;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.just{display:none;margin-top:8px;padding:8px 10px;background:#0f1726;border-radius:8px;font-size:.83em;color:var(--text-dim);border-left:3px solid var(--accent2);}
+.just.show{display:block;}
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#6b3d10,#3a2410);color:#ffe4c4;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>📋 Tabela de Excelência — Histologia Geral</h1>
+  <p>Tipos de Tecidos · Conjuntivo · Cartilagem · Adiposo · Nervoso · Epitelial · Sanguíneo · Muscular · Ósseo</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 / 0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Tabela de Excelência</button>
+  <button data-p="p1">🃏 Flashcards</button>
+  <button data-p="p2">✅ Banco de Questões</button>
+  <button data-p="p3">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ TABELA DE EXCELÊNCIA ============ -->
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🧬 Quadro-Resumo Geral — Os 4 Tecidos Básicos</h2>
+    <table>
+      <tr><th>Tecido</th><th>Histogênese</th><th>Celularidade</th><th>MEC</th><th>Tipos</th></tr>
+      <tr><td><b>Epitelial</b></td><td>Endoderma, ectoderma</td><td>Células epiteliais justapostas</td><td>Escassa</td><td>1. Revestimento · 2. Glandular</td></tr>
+      <tr><td><b>Conjuntivo</b></td><td>Mesoderma (e ectoderma)</td><td>Células e fibras</td><td>Abundante</td><td>1. Embrionário · 2. Propriamente dito (PPD) · 3. Especializados</td></tr>
+      <tr><td><b>Muscular</b></td><td>Mesoderma</td><td>Miócitos</td><td>Escassa</td><td>1. Estriado · 2. Liso</td></tr>
+      <tr><td><b>Nervoso</b></td><td>Ectoderma</td><td>Neurônios e células gliais</td><td>Substância intersticial (neurópilo)</td><td>1. SNC · 2. SNP</td></tr>
+    </table>
+    <div class="mnemo">💡 Regra de ouro: Epitelial e Muscular têm MEC escassa; Conjuntivo tem MEC abundante — essa é a diferença mais cobrada em prova.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧵 Tecido Conjuntivo Laxo x Denso</h2>
+    <table>
+      <tr><th>Característica</th><th>Conjuntivo Laxo</th><th>Conjuntivo Denso</th></tr>
+      <tr><td>MEC</td><td>Abundante, gelatinosa</td><td>Fibras abundantes, menos substância amorfa</td></tr>
+      <tr><td>Fibras</td><td>Colágenas, elásticas e reticulares</td><td>Predomínio de fibras colágenas grossas</td></tr>
+      <tr><td>Células</td><td>Muitas células</td><td>Menos células</td></tr>
+      <tr><td>Função</td><td>Sustentação, nutrição de epitélios</td><td>Resistência mecânica, tração</td></tr>
+      <tr><td>Exemplo</td><td>Derme papilar, mucosa digestiva</td><td>Tendões, ligamentos, derme reticular</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Células do Tecido Conjuntivo — Fixas x Migrantes</h2>
+    <table>
+      <tr><th>Categoria</th><th>Célula</th><th>Função</th></tr>
+      <tr><td rowspan="4"><b>Fixas</b> (residentes)</td><td>Fibroblasto</td><td>Produz fibras e MEC</td></tr>
+      <tr><td>Adipócito</td><td>Armazena gordura</td></tr>
+      <tr><td>Macrófago fixo</td><td>Defesa e fagocitose</td></tr>
+      <tr><td>Mastócito</td><td>Libera histamina (inflamação/alergia)</td></tr>
+      <tr><td rowspan="4"><b>Migrantes</b> (origem sanguínea)</td><td>Linfócitos</td><td>Imunidade específica</td></tr>
+      <tr><td>Neutrófilos</td><td>Fagocitose de bactérias</td></tr>
+      <tr><td>Eosinófilos</td><td>Defesa contra parasitas</td></tr>
+      <tr><td>Monócitos</td><td>Tornam-se macrófagos nos tecidos</td></tr>
+    </table>
+    <div class="hot"><b>Chegam em processos inflamatórios ou imunes</b> — essa é a marca registrada das células migrantes.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧱 Cartilagem — Tipos e Células</h2>
+    <table>
+      <tr><th>Tipo</th><th>Característica</th><th>Localização</th></tr>
+      <tr><td>Hialina</td><td>Mais comum, matriz homogênea</td><td>Traqueia, nariz, articulações</td></tr>
+      <tr><td>Elástica</td><td>Fibras elásticas, flexível</td><td>Pavilhão auricular, epiglote</td></tr>
+      <tr><td>Fibrosa</td><td>Resistente, colágeno tipo I</td><td>Discos intervertebrais</td></tr>
+    </table>
+    <table>
+      <tr><th>Célula</th><th>Descrição</th></tr>
+      <tr><td>Condroblasto</td><td>Célula jovem, forma a matriz</td></tr>
+      <tr><td>Condrócito</td><td>Célula madura, em lacunas, mantém a matriz</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🧈 Tecido Adiposo</h2>
+    <table>
+      <tr><th>Tipo de célula</th><th>Característica</th></tr>
+      <tr><td>Adipócito unilocular (branco)</td><td>Uma única grande gotícula lipídica — reserva energética</td></tr>
+      <tr><td>Adipócito multilocular (marrom/pardo)</td><td>Várias gotículas pequenas — termogênese</td></tr>
+    </table>
+    <h3>Funções</h3>
+    <ul>
+      <li>Reserva energética</li>
+      <li>Isolante térmico</li>
+      <li>Proteção mecânica</li>
+      <li>Regulação hormonal (leptina)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🏗️ Conceitos Básicos — Tecido x Órgão</h2>
+    <table>
+      <tr><th>Termo</th><th>Definição</th></tr>
+      <tr><td>Tecido</td><td>Conjunto de células especializadas com função comum</td></tr>
+      <tr><td>Órgão</td><td>Conjunto de vários tecidos que cumprem uma função específica</td></tr>
+    </table>
+    <div class="mnemo">💡 Todo órgão tem tecido epitelial, conjuntivo e nervoso — e, muitas vezes, também tecido muscular.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Tecido Nervoso</h2>
+    <table>
+      <tr><th>Célula</th><th>Função</th></tr>
+      <tr><td>Neurônio</td><td>Transmissão de impulsos elétricos</td></tr>
+      <tr><td>Células gliais</td><td>Sustentação, nutrição e proteção (astrócitos, oligodendrócitos, micróglia, células de Schwann)</td></tr>
+    </table>
+    <table>
+      <tr><th>Parte do neurônio</th><th>Função</th></tr>
+      <tr><td>Soma (corpo celular)</td><td>Núcleo e organelas</td></tr>
+      <tr><td>Dendritos</td><td>Recebem sinais</td></tr>
+      <tr><td>Axônio</td><td>Conduz o impulso</td></tr>
+    </table>
+    <div class="hot"><b>Nervo periférico:</b> feixe de axônios envolto por tecido conjuntivo em 3 camadas — endoneuro (cada axônio), perineuro (fascículos) e epineuro (nervo inteiro). O tecido nervoso depende do conjuntivo para nutrição, sustentação e reparação.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧱 Tecido Epitelial</h2>
+    <table>
+      <tr><th>Aspecto</th><th>Característica</th></tr>
+      <tr><td>Localização</td><td>Revestimento de superfícies internas e externas</td></tr>
+      <tr><td>Vascularização</td><td>Avascular</td></tr>
+      <tr><td>Suporte</td><td>Descansa sobre a membrana basal</td></tr>
+      <tr><td>Regeneração</td><td>Alta capacidade regenerativa</td></tr>
+    </table>
+    <table>
+      <tr><th>Classificação</th><th>Categorias</th></tr>
+      <tr><td>Nº de camadas</td><td>Simples ou estratificado</td></tr>
+      <tr><td>Forma da célula</td><td>Plano, cúbico ou cilíndrico</td></tr>
+      <tr><td>Especializações</td><td>Microvilosidades, cílios</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>👶 Tecido Embrionário e Mesenquimatoso</h2>
+    <p>O <b>mesênquima</b> é o tecido conjuntivo embrionário indiferenciado, formado por células estreladas em matriz gelatinosa — dá origem a todos os tecidos conjuntivos do adulto.</p>
+  </div>
+
+  <div class="card">
+    <h2>🩸 Tecido Sanguíneo</h2>
+    <table>
+      <tr><th>Célula</th><th>Categoria</th><th>Função</th></tr>
+      <tr><td>Eritrócito</td><td>—</td><td>Transporte de O₂ (via hemoglobina)</td></tr>
+      <tr><td>Neutrófilo</td><td>Granulado</td><td>Fagocitose — bactérias</td></tr>
+      <tr><td>Eosinófilo</td><td>Granulado</td><td>Defesa contra parasitas</td></tr>
+      <tr><td>Basófilo</td><td>Granulado</td><td>Libera histamina — alergia</td></tr>
+      <tr><td>Linfócito</td><td>Agranulado</td><td>Imunidade específica</td></tr>
+      <tr><td>Monócito</td><td>Agranulado</td><td>Vira macrófago nos tecidos</td></tr>
+    </table>
+    <p><b>Plasma:</b> parte líquida do sangue, com proteínas, hormônios, nutrientes e resíduos.</p>
+  </div>
+
+  <div class="card">
+    <h2>🧩 Tecido Epitelioide</h2>
+    <p>Semelhante ao epitelial, mas <b>não forma lâmina contínua</b> — células agrupadas, típicas de granulomas na resposta imune.</p>
+  </div>
+
+  <div class="card">
+    <h2>💪 Tecido Muscular</h2>
+    <table>
+      <tr><th>Tipo</th><th>Característica</th></tr>
+      <tr><td>Estriado esquelético</td><td>Fibras longas, multinucleadas, contração voluntária</td></tr>
+      <tr><td>Estriado cardíaco</td><td>Ramificadas, discos intercalares, contração involuntária</td></tr>
+      <tr><td>Liso</td><td>Fusiforme, sem estriações, contração involuntária</td></tr>
+    </table>
+    <div class="mnemo">💡 A contração acontece pelo deslizamento dos filamentos de actina e miosina.</div>
+  </div>
+
+  <div class="card">
+    <h2>🦴 Tecido Cartilaginoso e Ósseo</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Descrição</th></tr>
+      <tr><td>Pericôndrio</td><td>Tecido conjuntivo denso que envolve a cartilagem (exceto a articular); contém condroblastos e vasos</td></tr>
+      <tr><td>Periósteo</td><td>Camada externa fibrosa do osso; responsável pelo crescimento e reparação</td></tr>
+    </table>
+    <table>
+      <tr><th>Tipo de osso</th><th>Estrutura</th></tr>
+      <tr><td>Compacto</td><td>Osteonas, denso, resistente</td></tr>
+      <tr><td>Esponjoso</td><td>Trabéculas, medula óssea nos espaços</td></tr>
+    </table>
+    <table>
+      <tr><th>Célula óssea</th><th>Função</th></tr>
+      <tr><td>Osteoblasto</td><td>Forma osso novo</td></tr>
+      <tr><td>Osteócito</td><td>Mantém o tecido ósseo</td></tr>
+      <tr><td>Osteoclasto</td><td>Reabsorve osso (multinucleado)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🃏 Flashcards — toque para virar</h2>
+    <div class="fc-wrap">
+      <div class="fc-counter" id="fcCounter">1 / 25</div>
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>✅ Banco de Questões (com justificativa)</h2>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🎮 Quiz Rápido (15 perguntas aleatórias)</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "topic": "Tipos de Tecidos", "q": "O tecido epitelial tem origem embriológica em quais folhetos?", "opts": ["Ectoderma e mesoderma", "Apenas endoderma", "Apenas mesoderma", "Endoderma e ectoderma"], "correct": 3, "just": "O tecido epitelial deriva do endoderma e do ectoderma embrionários — diferente do conjuntivo, que deriva principalmente do mesoderma (e também ectoderma, em algumas regiões)."}, {"n": 2, "topic": "Tipos de Tecidos", "q": "Qual característica de matriz extracelular (MEC) é comum ao tecido epitelial e ao tecido muscular?", "opts": ["Apenas o epitelial tem MEC", "Escassa MEC em ambos", "Apenas o muscular tem MEC", "MEC abundante em ambos"], "correct": 1, "just": "Tanto o tecido epitelial quanto o muscular têm MEC escassa — diferente do tecido conjuntivo, que se caracteriza justamente pela MEC abundante."}, {"n": 3, "topic": "Tipos de Tecidos", "q": "O tecido nervoso tem sua matriz extracelular constituída principalmente por:", "opts": ["Matriz óssea mineralizada", "Substância intersticial (neuroglia/neurópilo)", "Líquido sinovial", "Fibras colágenas densas"], "correct": 1, "just": "No tecido nervoso, o espaço entre neurônios e células gliais é preenchido pelo neurópilo (substância intersticial), e não por uma MEC clássica como no conjuntivo."}, {"n": 4, "topic": "Tecido Conectivo Laxo x Denso", "q": "O tecido conjuntivo denso, comparado ao laxo, se caracteriza por:", "opts": ["Predomínio de fibras colágenas grossas, com menos células", "Função exclusivamente nutritiva", "Ausência total de fibras colágenas", "MEC mais gelatinosa e abundante em células"], "correct": 0, "just": "O conjuntivo denso tem fibras colágenas grossas predominantes e menos células, conferindo resistência mecânica — típico de tendões e ligamentos. O laxo tem MEC gelatinosa abundante e mais células, com função de sustentação e nutrição de epitélios."}, {"n": 5, "topic": "Tecido Conectivo Laxo x Denso", "q": "Qual estrutura é um exemplo clássico de tecido conjuntivo denso?", "opts": ["Mucosa digestiva", "Derme papilar", "Tecido adiposo", "Tendões e ligamentos"], "correct": 3, "just": "Tendões e ligamentos são compostos por tecido conjuntivo denso, rico em fibras colágenas grossas organizadas para resistir à tração."}, {"n": 6, "topic": "Células do Tecido Conjuntivo", "q": "Entre as células fixas (residentes) do tecido conjuntivo, qual é responsável pela produção de fibras e MEC?", "opts": ["Linfócito", "Fibroblasto", "Monócito", "Neutrófilo"], "correct": 1, "just": "O fibroblasto é a célula fixa/residente responsável pela síntese de fibras (colágeno, elastina) e da substância fundamental da matriz extracelular."}, {"n": 7, "topic": "Células do Tecido Conjuntivo", "q": "Qual célula fixa do tecido conjuntivo libera histamina, participando de processos inflamatórios?", "opts": ["Adipócito", "Mastócito", "Macrófago fixo", "Fibroblasto"], "correct": 1, "just": "O mastócito armazena grânulos de histamina, sendo central nos processos inflamatórios e reações alérgicas."}, {"n": 8, "topic": "Células do Tecido Conjuntivo", "q": "As células migrantes do tecido conjuntivo (linfócitos, neutrófilos, eosinófilos, monócitos) têm em comum:", "opts": ["Serem exclusivas do tecido ósseo", "Serem sempre residentes fixas do tecido", "Produzirem colágeno diretamente", "Origem sanguínea, chegando em processos inflamatórios/imunes"], "correct": 3, "just": "Diferente das células fixas (fibroblastos, adipócitos, macrófagos fixos, mastócitos), as células migrantes têm origem sanguínea e chegam ao tecido conjuntivo durante processos inflamatórios ou imunológicos."}, {"n": 9, "topic": "Cartilagem", "q": "Qual tipo de cartilagem é o mais comum, com matriz homogênea, encontrado na traqueia, nariz e articulações?", "opts": ["Reticular (não existe essa categoria)", "Hialina", "Elástica", "Fibrosa"], "correct": 1, "just": "A cartilagem hialina é a mais comum e tem matriz homogênea, presente na traqueia, nariz e superfícies articulares."}, {"n": 10, "topic": "Cartilagem", "q": "A cartilagem elástica, rica em fibras elásticas e mais flexível, é encontrada tipicamente em:", "opts": ["Superfícies articulares", "Discos intervertebrais", "Traqueia e brônquios", "Pavilhão auricular e epiglote"], "correct": 3, "just": "A cartilagem elástica, flexível graças às fibras elásticas em sua matriz, forma o pavilhão auricular (orelha) e a epiglote."}, {"n": 11, "topic": "Cartilagem", "q": "A diferença entre condroblasto e condrócito é:", "opts": ["Condrócito forma matriz nova; condroblasto a mantém", "Condroblasto é exclusivo do osso", "Condroblasto é a célula jovem que forma matriz; condrócito é a célula madura alojada em lacunas", "São a mesma célula em fases idênticas"], "correct": 2, "just": "O condroblasto é a célula jovem, ativa na síntese de matriz cartilaginosa; o condrócito é a forma madura, que ocupa lacunas e mantém a matriz já formada."}, {"n": 12, "topic": "Tecido Adiposo", "q": "Os adipócitos uniloculares (brancos) se diferenciam dos multiloculares (marrons/pardos) por:", "opts": ["Terem uma única grande gotícula lipídica, ao invés de múltiplas gotículas pequenas", "Não terem função de reserva energética", "Não produzirem hormônios", "Serem exclusivos de recém-nascidos"], "correct": 0, "just": "O adipócito unilocular (branco) armazena gordura numa única e grande gotícula; o multilocular (pardo) tem múltiplas gotículas menores, associado à termogênese."}, {"n": 13, "topic": "Tecido Adiposo", "q": "Qual hormônio é produzido pelo tecido adiposo, relacionado à regulação do apetite?", "opts": ["Testosterona", "Leptina", "Insulina", "Cortisol"], "correct": 1, "just": "O tecido adiposo tem função endócrina, produzindo leptina, hormônio envolvido na regulação do apetite e do balanço energético."}, {"n": 14, "topic": "Conceitos Básicos", "q": "A definição correta de 'órgão', em histologia, é:", "opts": ["Sinônimo de tecido", "Estrutura formada por um único tipo de célula", "Conjunto de vários tecidos que cumprem uma função específica", "Conjunto de células idênticas sem função definida"], "correct": 2, "just": "Um órgão é formado pela combinação de diferentes tecidos (epitelial, conjuntivo, nervoso e, muitas vezes, muscular) trabalhando de forma integrada para uma função específica."}, {"n": 15, "topic": "Conceitos Básicos", "q": "Quais tecidos básicos estão presentes, em maior ou menor grau, em praticamente todos os órgãos?", "opts": ["Apenas conjuntivo e adiposo", "Epitelial, conjuntivo, nervoso e, às vezes, muscular", "Apenas epitelial e ósseo", "Apenas muscular e nervoso"], "correct": 1, "just": "Todos os órgãos contêm tecido epitelial, conjuntivo e nervoso, e frequentemente também tecido muscular, em proporções variáveis conforme a função do órgão."}, {"n": 16, "topic": "Tecido Nervoso", "q": "Qual componente da neurônio é responsável por CONDUZIR o impulso nervoso para fora da célula?", "opts": ["Dendrito", "Célula glial", "Axônio", "Soma (corpo celular)"], "correct": 2, "just": "O axônio conduz o impulso nervoso para longe do corpo celular, em direção a outras células; os dendritos, ao contrário, recebem sinais."}, {"n": 17, "topic": "Tecido Nervoso", "q": "No nervo periférico, a camada de tecido conjuntivo que envolve cada axônio individualmente é o:", "opts": ["Neurópilo", "Perineuro", "Epineuro", "Endoneuro"], "correct": 3, "just": "O endoneuro envolve cada axônio individualmente; o perineuro agrupa fascículos de axônios; o epineuro envolve o nervo inteiro."}, {"n": 18, "topic": "Tecido Nervoso", "q": "As células gliais, diferente dos neurônios, têm como função principal:", "opts": ["Conduzir o impulso nervoso mais rápido que os neurônios", "Contrair e gerar movimento", "Produzir hemácias", "Sustentação, nutrição e proteção — não conduzem impulso nervoso como os neurônios"], "correct": 3, "just": "As células gliais (astrócitos, oligodendrócitos, micróglia, células de Schwann) dão suporte estrutural, nutrição e proteção aos neurônios, sem conduzir impulsos elétricos como estes."}, {"n": 19, "topic": "Tecido Epitelial", "q": "Uma característica fundamental do tecido epitelial é ser:", "opts": ["Avascular, apoiado sobre uma membrana basal", "Desprovido de qualquer capacidade regenerativa", "Ricamente vascularizado", "Sempre formado por uma única célula"], "correct": 0, "just": "O tecido epitelial é avascular (não tem vasos sanguíneos próprios, sendo nutrido por difusão a partir do conjuntivo subjacente), apoia-se sobre a membrana basal e tem alta capacidade de regeneração."}, {"n": 20, "topic": "Tecido Epitelial", "q": "Na classificação morfológica do epitélio, os termos 'simples' e 'estratificado' se referem a:", "opts": ["Forma da célula (achatada, cúbica, cilíndrica)", "Origem embriológica", "Número de camadas celulares", "Presença ou ausência de cílios"], "correct": 2, "just": "'Simples' (uma camada) e 'estratificado' (múltiplas camadas) classificam o epitélio quanto ao número de camadas; já 'plano', 'cúbico' e 'cilíndrico' classificam quanto à forma da célula."}, {"n": 21, "topic": "Embrionário", "q": "O tecido mesenquimatoso, tecido conjuntivo embrionário indiferenciado, se caracteriza por:", "opts": ["Ser um tecido já totalmente diferenciado", "Ser exclusivo do adulto", "Ter apenas fibras colágenas densas", "Células estreladas em matriz gelatinosa, origina todos os tecidos conjuntivos"], "correct": 3, "just": "O mesênquima é formado por células estreladas indiferenciadas numa matriz gelatinosa, sendo a origem embrionária de todos os tipos de tecido conjuntivo do adulto."}, {"n": 22, "topic": "Tecido Sanguíneo", "q": "Qual leucócito granulado é responsável principalmente pela defesa contra bactérias, via fagocitose?", "opts": ["Neutrófilo", "Eosinófilo", "Basófilo", "Linfócito"], "correct": 0, "just": "O neutrófilo é o leucócito mais numeroso, com função primária de fagocitose contra bactérias — primeira linha de defesa na inflamação aguda."}, {"n": 23, "topic": "Tecido Sanguíneo", "q": "Qual célula sanguínea se transforma em macrófago ao migrar para os tecidos?", "opts": ["Eritrócito", "Basófilo", "Monócito", "Neutrófilo"], "correct": 2, "just": "O monócito, um leucócito agranulado circulante, se diferencia em macrófago ao migrar do sangue para os tecidos."}, {"n": 24, "topic": "Tecido Sanguíneo", "q": "O eosinófilo tem papel de defesa principalmente contra:", "opts": ["Parasitas", "Bactérias", "Fungos exclusivamente", "Vírus intracelulares"], "correct": 0, "just": "O eosinófilo tem grânulos especializados na defesa contra parasitas (helmintos), além de participar de reações alérgicas."}, {"n": 25, "topic": "Tecido Epitelioide", "q": "O que diferencia o tecido epitelioide do tecido epitelial verdadeiro?", "opts": ["O epitelioide não forma uma lâmina contínua, com células agrupadas (ex: granulomas)", "O epitelioide é sempre vascularizado", "Não existe diferença entre eles", "O epitelioide é exclusivo do sistema nervoso"], "correct": 0, "just": "O tecido epitelioide é formado por células agrupadas de aspecto similar ao epitelial, mas sem formar uma lâmina contínua — típico de granulomas na resposta imune."}, {"n": 26, "topic": "Tecido Muscular", "q": "A fibra muscular estriada esquelética se caracteriza por ser:", "opts": ["Longa, multinucleada, de contração voluntária", "Ramificada, com discos intercalares", "Mononucleada e ramificada", "Fusiforme, sem estriações, involuntária"], "correct": 0, "just": "A fibra do músculo estriado esquelético é longa, multinucleada e sob controle voluntário — diferente da cardíaca (ramificada, discos intercalares, involuntária) e da lisa (fusiforme, sem estriações, involuntária)."}, {"n": 27, "topic": "Tecido Muscular", "q": "A contração muscular ocorre por deslizamento de quais filamentos?", "opts": ["Tubulina e miosina", "Actina e miosina", "Queratina e actina", "Colágeno e elastina"], "correct": 1, "just": "A contração muscular se dá pelo deslizamento dos filamentos finos de actina sobre os filamentos grossos de miosina, encurtando o sarcômero."}, {"n": 28, "topic": "Tecido Ósseo", "q": "O periósteo, camada externa fibrosa que reveste o osso, é responsável por:", "opts": ["Armazenar apenas gordura", "Produção de células sanguíneas", "Crescimento e reparação óssea", "Formar a cartilagem articular"], "correct": 2, "just": "O periósteo, rico em células osteoprogenitoras e vasos, é responsável pelo crescimento em espessura e pela reparação do osso."}, {"n": 29, "topic": "Tecido Ósseo", "q": "Qual célula óssea é responsável pela reabsorção do tecido ósseo, sendo multinucleada?", "opts": ["Osteoblasto", "Condroblasto", "Osteoclasto", "Osteócito"], "correct": 2, "just": "O osteoclasto, célula multinucleada de origem hematopoiética, é responsável pela reabsorção da matriz óssea — ação oposta à do osteoblasto, que forma osso novo."}, {"n": 30, "topic": "Tecido Ósseo", "q": "A diferença estrutural entre osso compacto e osso esponjoso está em:", "opts": ["Compacto tem osteonas densas; esponjoso forma trabéculas com espaços de medula óssea", "O esponjoso não tem células ósseas", "O compacto não tem vascularização", "Apenas na localização, sem diferença estrutural real"], "correct": 0, "just": "O osso compacto é organizado em osteonas densas e resistentes; o esponjoso forma uma rede de trabéculas com espaços preenchidos por medula óssea."}];
+const flashcards = [{"f": "Quais camadas embrionárias originam o tecido epitelial?", "b": "Endoderma e ectoderma."}, {"f": "Quais camadas embrionárias originam o tecido conjuntivo?", "b": "Principalmente mesoderma (e ectoderma em algumas regiões)."}, {"f": "Qual tecido tem MEC abundante como característica marcante?", "b": "Tecido conjuntivo."}, {"f": "Diferença principal entre conjuntivo laxo e denso?", "b": "Laxo: MEC gelatinosa abundante, muitas células, sustentação/nutrição. Denso: fibras colágenas grossas predominantes, menos células, resistência mecânica."}, {"f": "Quais são as 4 células fixas clássicas do tecido conjuntivo?", "b": "Fibroblasto, adipócito, macrófago fixo e mastócito."}, {"f": "Quais células migrantes chegam ao conjuntivo em processos inflamatórios?", "b": "Linfócitos, neutrófilos, eosinófilos e monócitos — todos de origem sanguínea."}, {"f": "Quais são os 3 tipos de cartilagem e onde se encontram?", "b": "Hialina (traqueia, articulações), Elástica (orelha, epiglote), Fibrosa (discos intervertebrais)."}, {"f": "Diferença entre condroblasto e condrócito?", "b": "Condroblasto: célula jovem, forma matriz. Condrócito: célula madura, mantém a matriz, alojada em lacunas."}, {"f": "Diferença entre adipócito unilocular e multilocular?", "b": "Unilocular (branco): 1 gotícula grande, reserva energética. Multilocular (pardo): várias gotículas pequenas, termogênese."}, {"f": "Qual hormônio o tecido adiposo produz?", "b": "Leptina (regulação do apetite)."}, {"f": "Defina 'órgão' em histologia.", "b": "Conjunto de vários tecidos (epitelial, conjuntivo, nervoso e às vezes muscular) que cumprem uma função específica."}, {"f": "Quais são as 3 partes básicas de um neurônio?", "b": "Soma (corpo celular), dendritos (recebem sinais) e axônio (conduz o impulso)."}, {"f": "Quais são as 3 camadas de tecido conjuntivo do nervo periférico?", "b": "Endoneuro (cada axônio), perineuro (fascículos), epineuro (nervo inteiro)."}, {"f": "Função das células gliais?", "b": "Sustentação, nutrição e proteção dos neurônios — não conduzem impulso nervoso."}, {"f": "Duas características fundamentais do tecido epitelial?", "b": "Avascular e apoiado sobre membrana basal."}, {"f": "Como se classifica o epitélio quanto ao número de camadas? E quanto à forma?", "b": "Número de camadas: simples ou estratificado. Forma: plano, cúbico ou cilíndrico."}, {"f": "O que é o tecido mesenquimatoso?", "b": "Tecido conjuntivo embrionário indiferenciado, com células estreladas em matriz gelatinosa — origina todos os tecidos conjuntivos do adulto."}, {"f": "Quais são os 3 leucócitos granulados e sua função principal?", "b": "Neutrófilo (bactérias), Eosinófilo (parasitas), Basófilo (libera histamina, alergia)."}, {"f": "Quais são os 2 leucócitos agranulados?", "b": "Linfócitos (imunidade específica) e Monócitos (viram macrófagos nos tecidos)."}, {"f": "O que caracteriza o tecido epitelioide?", "b": "Células agrupadas semelhantes ao epitélio, mas sem formar lâmina contínua — típico de granulomas."}, {"f": "Quais são os 3 tipos de tecido muscular?", "b": "Estriado esquelético (voluntário), Estriado cardíaco (involuntário, discos intercalares) e Liso (involuntário, sem estriações)."}, {"f": "Quais filamentos deslizam na contração muscular?", "b": "Actina (filamento fino) e miosina (filamento grosso)."}, {"f": "Função do periósteo?", "b": "Crescimento em espessura e reparação do osso."}, {"f": "Quais são as 3 células ósseas e suas funções?", "b": "Osteoblasto (forma osso novo), Osteócito (mantém o tecido), Osteoclasto (reabsorve osso, multinucleado)."}, {"f": "Diferença entre osso compacto e esponjoso?", "b": "Compacto: osteonas densas e resistentes. Esponjoso: trabéculas com espaços de medula óssea."}];
+
+const list = document.getElementById('gabaritoList');
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `<div class="topic-tag">${item.topic}</div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${String.fromCharCode(97+i)}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver justificativa</button>
+    <div class="just" id="just-${idx}">${item.just}</div>`;
+  list.appendChild(div);
+});
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('just-'+qi).classList.toggle('show');
+  }
+});
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+let fcIdx = 0;
+const fcCard = document.getElementById('fcCard');
+function renderFc(){
+  fcCard.classList.remove('flipped');
+  document.getElementById('fcFront').textContent = flashcards[fcIdx].f;
+  document.getElementById('fcBack').textContent = flashcards[fcIdx].b;
+  document.getElementById('fcCounter').textContent = (fcIdx+1)+' / '+flashcards.length;
+}
+fcCard.addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcFlip').addEventListener('click', ()=> fcCard.classList.toggle('flipped'));
+document.getElementById('fcNext').addEventListener('click', ()=>{ fcIdx=(fcIdx+1)%flashcards.length; renderFc(); addXP(1); });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIdx=(fcIdx-1+flashcards.length)%flashcards.length; renderFc(); });
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]).slice(0,15);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length}</p>
+    <p class="qtxt">${item.n}. ${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${String.fromCharCode(97+i)}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+</script>
+</body>
+</html>
