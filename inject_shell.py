@@ -143,6 +143,18 @@ MOBILE_TOGGLE_SCRIPT = '''<script>
 })();
 </script>'''
 
+def fix_body_flex_grid_conflict(html):
+    """Se o arquivo define body{display:flex/grid} pro layout proprio dele,
+    retargeta pra .cmed-nav-main - senao o body flex/grid do arquivo
+    'puxa' nosso cabecalho/breadcrumb/sidebar pro lugar errado tambem."""
+    m = re.search(r'\bbody\s*\{[^}]*display\s*:\s*(flex|grid)[^}]*\}', html)
+    if not m:
+        return html
+    regra_original = m.group(0)
+    regra_nova = re.sub(r'^body\s*\{', '.cmed-nav-main{', regra_original)
+    return html.replace(regra_original, regra_nova, 1)
+
+
 def inject_file(item, seq, idx, dry_run=False):
     full_path = os.path.join(REPO, item['path'])
     if not os.path.exists(full_path):
@@ -155,6 +167,9 @@ def inject_file(item, seq, idx, dry_run=False):
     if 'cmed-nav-header' in html:
         print(f"  ⏭️  ja tem o shell injetado, pulando: {item['path']}")
         return False
+
+    # corrige conflito de layout ANTES de injetar (ver funcao acima)
+    html = fix_body_flex_grid_conflict(html)
 
     # 1. injeta o <link> do CSS no <head>
     if '</head>' not in html:
