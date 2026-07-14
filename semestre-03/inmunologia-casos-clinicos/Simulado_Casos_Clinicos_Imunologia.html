@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado — Inmunología | Casos Clínicos Integrados (40 preguntas)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#181210;
+  --bg-alt:#1f1713;
+  --surface:#261c17;
+  --surface-2:#2e221b;
+  --line:#3c2e25;
+  --text:#f3e9dd;
+  --text-dim:#c7b6a6;
+  --text-faint:#8f7c6c;
+  --amber:#e2924a;
+  --amber-deep:#c96f2e;
+  --teal:#5fb3a3;
+  --teal-deep:#3f8a7c;
+  --good:#7ec98a;
+  --good-bg:#233021;
+  --bad:#e2695f;
+  --bad-bg:#331f1c;
+  --gold:#e8c27a;
+  --radius:14px;
+  --serif: 'Lora', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, sans-serif;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(226,146,74,0.08), transparent 55%),
+    radial-gradient(ellipse at 90% 20%, rgba(95,179,163,0.06), transparent 50%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.55;
+  min-height:100vh;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 80px;}
+
+/* HEADER */
+header.top{
+  position:sticky; top:0; z-index:50;
+  background:rgba(24,18,16,0.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:14px 20px;
+}
+.top-inner{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;flex:1 1 auto;min-width:180px;}
+.brand-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--amber),var(--teal));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.brand-text h1{font-family:var(--serif);font-size:16px;margin:0;font-weight:700;letter-spacing:.2px;}
+.brand-text span{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.6px;}
+.stats{display:flex;align-items:center;gap:14px;}
+.stat-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surface);border:1px solid var(--line);
+  padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;
+  white-space:nowrap;
+}
+.stat-pill.xp{color:var(--gold);}
+.stat-pill.streak{color:var(--amber);}
+.xp-track{width:110px;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;display:none;}
+@media(min-width:560px){.xp-track{display:block;}}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--amber-deep),var(--gold));width:0%;transition:width .5s ease;}
+
+/* NAV TABS */
+nav.tabs{
+  display:flex;gap:6px;margin:22px 0 4px;overflow-x:auto;padding-bottom:2px;
+  scrollbar-width:none;
+}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{
+  font-family:var(--sans);font-weight:600;font-size:13.5px;
+  background:transparent;border:1px solid var(--line);color:var(--text-dim);
+  padding:9px 16px;border-radius:999px;cursor:pointer;white-space:nowrap;
+  transition:all .18s ease;flex-shrink:0;
+}
+.tab-btn:hover{border-color:var(--amber);color:var(--text);}
+.tab-btn.active{background:var(--amber);border-color:var(--amber);color:#1d140c;}
+.tab-btn .count{opacity:.7;font-weight:500;margin-left:4px;}
+
+/* HERO */
+.hero{padding:34px 0 8px;}
+.hero .eyebrow{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal);font-weight:700;}
+.hero h2{font-family:var(--serif);font-size:clamp(24px,4vw,32px);margin:8px 0 10px;line-height:1.2;}
+.hero p{color:var(--text-dim);font-size:14.5px;max-width:640px;}
+.hero-topics{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.chip{
+  font-size:12px;background:var(--surface);border:1px solid var(--line);
+  padding:5px 11px;border-radius:8px;color:var(--text-dim);
+}
+
+/* SECTIONS */
+section.panel{display:none;padding-top:18px;}
+section.panel.active{display:block;animation:fadeIn .35s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.part-intro{color:var(--text-dim);font-size:14px;margin-bottom:18px;border-left:3px solid var(--teal);padding-left:12px;}
+
+/* QUESTION CARD */
+.qcard{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:16px;
+}
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.qnum{
+  font-family:var(--serif);font-weight:700;color:var(--amber);font-size:15px;
+  background:rgba(226,146,74,0.12);width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.qtag{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;padding:3px 8px;border-radius:6px;}
+.qtag.facil{background:rgba(126,201,138,0.15);color:var(--good);}
+.qtag.inter{background:rgba(232,194,122,0.15);color:var(--gold);}
+.qtag.dificil{background:rgba(226,105,95,0.15);color:var(--bad);}
+.qstem{font-size:15px;color:var(--text);flex-basis:100%;line-height:1.5;}
+
+.alts{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+.alt-btn{
+  text-align:left;font-family:var(--sans);font-size:14px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+  padding:11px 14px;border-radius:10px;cursor:pointer;transition:all .15s ease;
+  display:flex;gap:10px;
+}
+.alt-btn:hover:not(:disabled){border-color:var(--amber);background:rgba(226,146,74,0.08);}
+.alt-btn .letter{font-weight:700;color:var(--teal);flex-shrink:0;}
+.alt-btn:disabled{cursor:default;}
+.alt-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.alt-btn.correct .letter{color:var(--good);}
+.alt-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.alt-btn.incorrect .letter{color:var(--bad);}
+.alt-btn.dim{opacity:.45;}
+
+.feedback{
+  margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13.5px;
+  display:none;line-height:1.5;
+}
+.feedback.show{display:block;animation:fadeIn .3s ease;}
+.feedback.ok{background:var(--good-bg);color:var(--good);border:1px solid rgba(126,201,138,0.3);}
+.feedback.no{background:var(--bad-bg);color:#f0b3ac;border:1px solid rgba(226,105,95,0.3);}
+.feedback b{color:inherit;}
+
+/* V/F BLOCK */
+.vf-theme{font-family:var(--serif);font-weight:700;font-size:15.5px;color:var(--gold);margin-bottom:4px;}
+.vf-sub{font-size:12.5px;color:var(--text-faint);margin-bottom:14px;}
+.vf-item{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--line);
+}
+.vf-item:first-of-type{border-top:none;}
+.vf-roman{font-weight:700;color:var(--teal);width:22px;flex-shrink:0;font-family:var(--serif);}
+.vf-text{flex:1;font-size:14px;}
+.vf-buttons{display:flex;gap:6px;flex-shrink:0;}
+.vf-btn{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface-2);color:var(--text-dim);font-weight:700;cursor:pointer;font-family:var(--sans);
+  transition:all .15s ease;
+}
+.vf-btn:hover:not(:disabled){border-color:var(--amber);}
+.vf-btn:disabled{cursor:default;}
+.vf-btn.correct{background:var(--good-bg);border-color:var(--good);color:var(--good);}
+.vf-btn.incorrect{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+.vf-comment{
+  margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text-dim);display:none;
+}
+.vf-comment.show{display:block;}
+
+/* ASSOCIATION */
+.assoc-title{font-family:var(--serif);font-weight:700;font-size:15.5px;color:var(--gold);margin-bottom:14px;}
+.assoc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+@media(max-width:600px){.assoc-grid{grid-template-columns:1fr;}}
+.assoc-col h4{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--text-faint);margin:0 0 10px;}
+.assoc-row{
+  display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13.5px;
+}
+.assoc-row:first-of-type{border-top:none;}
+.assoc-row select{
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+  font-family:var(--sans);font-size:13.5px;font-weight:600;border-radius:8px;padding:6px 8px;
+  width:64px;flex-shrink:0;cursor:pointer;
+}
+.assoc-row select.correct{border-color:var(--good);color:var(--good);}
+.assoc-row select.incorrect{border-color:var(--bad);color:var(--bad);}
+.assoc-b-item{font-size:13px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.assoc-b-item:first-of-type{border-top:none;}
+.btn{
+  font-family:var(--sans);font-weight:700;font-size:13.5px;
+  background:var(--amber);color:#1d140c;border:none;padding:10px 20px;border-radius:10px;
+  cursor:pointer;transition:all .15s ease;
+}
+.btn:hover{background:var(--gold);}
+.btn:disabled{opacity:.4;cursor:default;}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text);}
+.btn.ghost:hover{border-color:var(--teal);color:var(--teal);}
+
+/* RESULTS */
+.result-hero{
+  text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:34px 20px;margin-bottom:24px;
+}
+.result-hero .big-score{font-family:var(--serif);font-size:52px;font-weight:700;color:var(--amber);}
+.result-hero .big-score span{font-size:22px;color:var(--text-faint);}
+.result-hero .msg{color:var(--text-dim);font-size:14px;margin-top:8px;}
+.progress-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px;}
+.pb-card{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;}
+.pb-card .n{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--teal);}
+.pb-card .l{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+.comment-block{margin-top:26px;}
+.comment-block h3{font-family:var(--serif);font-size:17px;color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:14px;}
+.comment-item{font-size:13.5px;color:var(--text-dim);padding:9px 0;border-top:1px solid var(--line);}
+.comment-item:first-of-type{border-top:none;}
+.comment-item b{color:var(--text);}
+
+footer.note{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--text-faint);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="brand-icon">🧬</div>
+      <div class="brand-text">
+        <h1>Simulado · Inmunología</h1>
+        <span>Th1·Th2·Th17·Tfh·Treg — Hipersensibilidades — Antitumoral</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-pill streak">🔥 <span id="streakCount">0</span></div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+      <div class="stat-pill xp">⭐ <span id="xpCount">0</span> XP</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Dr. Cristiano · Preparación Revalida</div>
+    <h2>Simulado — Casos Clínicos Integrados de Inmunología</h2>
+    <p>40 preguntas (25 múltiple escolha, 10 V/F, 5 asociaciones) integrando complemento, inmunoglobulinas, MHC, subtipos TH, mecanismos efectores, inmunidad frente a bacterias/hongos/virus, las 4 hipersensibilidades, trasplantes e inmunología antitumoral — con énfasis en casos clínicos, al estilo del Prof. Geovani Meireles. Responde, recibe feedback inmediato y acumula XP.</p>
+    <div class="hero-topics">
+      <span class="chip">Complemento &amp; Anticuerpos</span>
+      <span class="chip">Bacterias / Hongos / Virus</span>
+      <span class="chip">Hipersensibilidad I–IV</span>
+      <span class="chip">Trasplantes</span>
+      <span class="chip">Inmunología Antitumoral</span>
+      <span class="chip">Inmunodeficiencias</span>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="p1">Parte 1 · Múltipla Escolha <span class="count">25</span></button>
+    <button class="tab-btn" data-tab="p2">Parte 2 · Verdadero/Falso <span class="count">10</span></button>
+    <button class="tab-btn" data-tab="p3">Parte 3 · Asociación <span class="count">5</span></button>
+    <button class="tab-btn" data-tab="res">Resultados &amp; Comentarios</button>
+  </nav>
+
+  <!-- PARTE 1 -->
+  <section class="panel active" id="p1">
+    <p class="part-intro">25 preguntas con 5 alternativas cada una, con énfasis en casos clínicos. Haz clic en tu respuesta para ver el feedback inmediato.</p>
+    <div id="mcqContainer"></div>
+  </section>
+
+  <!-- PARTE 2 -->
+  <section class="panel" id="p2">
+    <p class="part-intro">2 bloques con 5 afirmaciones cada uno. Marca cada afirmación como Verdadera (V) o Falsa (F).</p>
+    <div id="vfContainer"></div>
+  </section>
+
+  <!-- PARTE 3 -->
+  <section class="panel" id="p3">
+    <p class="part-intro">Asocia cada elemento de la Columna A con la opción correcta de la Columna B usando los menús desplegables, luego pulsa "Verificar".</p>
+    <div id="assocContainer"></div>
+  </section>
+
+  <!-- RESULTADOS -->
+  <section class="panel" id="res">
+    <div class="result-hero">
+      <div class="big-score"><span id="resScore">0</span><span>/<span id="resTotal">25</span> preguntas · <span id="resPct">0%</span></span></div>
+      <div class="msg" id="resMsg">Responde las preguntas de las tres partes para ver tu desempeño aquí.</div>
+      <div class="progress-breakdown">
+        <div class="pb-card"><div class="n" id="resP1">0/25</div><div class="l">Múltipla Escolha</div></div>
+        <div class="pb-card"><div class="n" id="resP2">0/10</div><div class="l">Verdadero/Falso</div></div>
+        <div class="pb-card"><div class="n" id="resP3">0/25</div><div class="l">Asociación</div></div>
+      </div>
+    </div>
+
+    <div class="comment-block">
+      <h3>Comentarios — Parte 1 (Múltipla Escolha)</h3>
+      <div id="mcqComments"></div>
+    </div>
+    <div class="comment-block">
+      <h3>Comentarios — Parte 2 (Verdadero/Falso)</h3>
+      <div id="vfComments"></div>
+    </div>
+    <div class="comment-block">
+      <h3>Comentarios — Parte 3 (Asociación)</h3>
+      <div id="assocComments"></div>
+    </div>
+  </section>
+
+  <footer class="note">Material de estudio personal — basado exclusivamente en el resumen de la clase grabada del profesor. No sustituye la revisión de la bibliografía oficial.</footer>
+</div>
+
+<script>
+// ---------------- DATA ----------------
+const mcqData = [{"tag": "Fácil", "stem": "Un adulto sano produce entre 2 y 3 gramos de anticuerpos por día. ¿Cuál es la clase de inmunoglobulina producida en mayor cantidad, principalmente en las mucosas?", "alts": ["IgG", "IgA", "IgM", "IgE", "IgD"], "correct": 1, "comment": "IgA es la inmunoglobulina más producida diariamente, sobre todo en mucosas (respiratoria, digestiva). Trampa clásica: confundir con IgG, que es la más abundante EN SANGRE, no la más producida en total."}, {"tag": "Fácil", "stem": "¿Cuál proteína del complemento inicia específicamente la vía clásica, al unirse a anticuerpos ya fijados sobre el antígeno?", "alts": ["C3", "C5b-C9", "C1q", "MBL", "Factor B"], "correct": 2, "comment": "C1q reconoce el Fc de IgG/IgM unidas al microbio e inicia la vía clásica. C3 se asocia a la vía alternativa (hidrólisis espontánea); MBL a la vía de las lectinas."}, {"tag": "Fácil", "stem": "¿Cuál molécula de adhesión es responsable de la adhesión TEMPRANA del leucocito al endotelio activado, durante los primeros minutos de la inflamación?", "alts": ["P-selectina", "L-selectina", "Integrinas", "ICAM-1", "VCAM-1"], "correct": 0, "comment": "La P-selectina, preformada en gránulos de Weibel-Palade del endotelio y en plaquetas, se expone en minutos tras la activación — es la primera en actuar. Las integrinas median la adhesión firme, un paso posterior."}, {"tag": "Fácil", "stem": "¿Cuál es la ruta de presentación de antígeno típica del MHC de Clase I?", "alts": ["Fagosoma → lisosoma → superficie", "Endosoma → lisosoma → superficie", "Golgi → vesícula secretora → membrana", "Proteasoma → TAP → retículo endoplásmico", "Núcleo → citoplasma → exocitosis"], "correct": 3, "comment": "El MHC I presenta antígenos ENDÓGENOS (citosólicos): el proteasoma degrada la proteína, el transportador TAP la lleva al retículo endoplásmico donde se acopla al MHC I. La ruta endosoma-lisosoma es del MHC II."}, {"tag": "Fácil", "stem": "Un paciente sin bazo (esplenectomizado) tiene mayor riesgo de infecciones graves por bacterias encapsuladas (neumococo, Haemophilus, meningococo). ¿Qué función esplénica explica principalmente este riesgo?", "alts": ["El bazo es el único sitio de maduración de linfocitos T", "El bazo produce el complemento C3", "El bazo produce la mayoría de los anticuerpos IgA del organismo", "El bazo es responsable de la tolerancia central", "El bazo es el principal sitio de respuesta a antígenos que llegan por la sangre"], "correct": 4, "comment": "El bazo filtra la sangre y es el principal órgano de respuesta a antígenos sanguíneos (incluidas bacterias encapsuladas). Sin bazo, la opsonización y el clearance de estos patógenos quedan comprometidos."}, {"tag": "Intermediária", "stem": "Un lactante de 2 meses presenta neumonía por Pneumocystis jirovecii, candidiasis oral extensa y diarrea crónica. Los estudios muestran ausencia casi total de linfocitos T y B. ¿Cuál es la hipótesis diagnóstica más probable?", "alts": ["Deficiencia selectiva de IgA", "Enfermedad granulomatosa crónica", "Deficiencia de complemento C3", "Síndrome de DiGeorge aislado", "Inmunodeficiencia combinada grave (SCID)"], "correct": 4, "comment": "La combinación de infecciones oportunistas graves (Pneumocystis, Candida) con ausencia de LT y LB en un lactante es el cuadro clásico de SCID — falla en ambos brazos, celular y humoral, de la inmunidad adaptativa."}, {"tag": "Intermediária", "stem": "Un paciente politraumatizado desarrolla, 48 horas después, fiebre, hipotensión y coagulación intravascular diseminada, sin foco infeccioso claro inicialmente. Se aísla posteriormente una bacteria Gram negativa en hemocultivo. ¿Cuál es el mecanismo fisiopatológico central del choque séptico en este caso?", "alts": ["Un superantígeno activa el 20% de los linfocitos T de forma inespecífica", "El LPS (endotoxina) activa masivamente TLR4, desencadenando una tormenta de citocinas", "Depósito de inmunocomplejos circulantes en múltiples órganos", "Reacción de hipersensibilidad tipo I mediada por IgE", "Rechazo hiperagudo mediado por anticuerpos preformados"], "correct": 1, "comment": "El LPS de la pared de bacterias Gram negativas activa TLR4 masivamente, generando una tormenta de citocinas (TNF, IL-1, IL-6) responsable del choque séptico y la CID. El mecanismo de superantígenos es similar en efecto, pero es típico de Staphylococcus/Streptococcus (Gram positivas), no del LPS."}, {"tag": "Intermediária", "stem": "Un paciente con VIH y CD4+ de 80 células/mm³ desarrolla lesiones cavitarias pulmonares con granulomas mal formados, y el cultivo confirma Mycobacterium tuberculosis. ¿Por qué la inmunosupresión por VIH agrava particularmente las infecciones por M. tuberculosis?", "alts": ["El VIH destruye directamente al bacilo, liberando toxinas", "El VIH inhibe exclusivamente la producción de IgG anti-tuberculosis", "M. tuberculosis solo infecta linfocitos T CD4+ directamente", "La caída de LT CD4+ compromete la activación Th1 de macrófagos vía IFN-γ, necesaria para contener al bacilo intracelular", "La ausencia de LT CD8+ impide la fagocitosis del bacilo"], "correct": 3, "comment": "M. tuberculosis es un patógeno intracelular que sobrevive dentro de macrófagos bloqueando la fusión fagosoma-lisosoma. Su control depende de Th1 activando macrófagos vía IFN-γ — exactamente el eje que el VIH destruye al depletar LT CD4+. Los anticuerpos son poco eficaces contra patógenos intracelulares."}, {"tag": "Intermediária", "stem": "Un paciente neutropénico (post-quimioterapia) desarrolla una lesión pulmonar con invasión vascular, y la biopsia muestra hifas septadas. ¿Cuál es el diagnóstico más probable y qué línea de defensa innata está comprometida?", "alts": ["Aspergilosis; falla de neutrófilos y macrófagos, primera línea contra hongos", "Histoplasmosis; falla de la respuesta granulomatosa Th1", "Candidiasis mucocutánea; falla de Th17", "Criptococosis; falla de anticuerpos opsonizantes", "Paracoccidioidomicosis; falla de barrera epitelial"], "correct": 0, "comment": "Aspergillus es el ejemplo clásico de infección oportunista fulminante en neutropenia, porque los neutrófilos y macrófagos son la primera línea de defensa contra hongos — sin ellos, el hongo invade vasos libremente. Histoplasma/Paracoccidioides son endémicos, típicos de inmunocompetentes."}, {"tag": "Intermediária", "stem": "Un receptor de trasplante renal presenta, a los 10 días del procedimiento, fiebre, dolor en el injerto y elevación de creatinina. La biopsia muestra infiltrado de linfocitos T. ¿Qué tipo de rechazo es este y cuál es su mecanismo principal?", "alts": ["Rechazo hiperagudo, mediado por anticuerpos preformados contra el donante", "Rechazo crónico, mediado por fibrosis progresiva", "Rechazo agudo, mediado principalmente por linfocitos T del receptor contra el MHC del injerto", "Enfermedad de injerto contra huésped, mediada por linfocitos T del donante", "Rechazo hiperagudo, mediado por linfocitos T citotóxicos"], "correct": 2, "comment": "El rechazo AGUDO ocurre en días a pocos meses, con infiltrado linfocitario T contra el MHC del donante — el mecanismo predominantemente celular. El hiperagudo es mediado por anticuerpos PREFORMADOS y ocurre en minutos a horas, no en días."}, {"tag": "Intermediária", "stem": "Un paciente oncológico en uso de un inhibidor de checkpoint inmunológico desarrolla colitis autoinmune grave semanas después de iniciar el tratamiento. ¿Cuál es la explicación fisiopatológica más adecuada?", "alts": ["El fármaco induce directamente mutaciones en el epitelio intestinal", "El fármaco actúa como superantígeno bacteriano", "El fármaco estimula directamente a los linfocitos Treg intestinales", "La colitis se debe a un choque anafiláctico por el fármaco", "Al bloquear los frenos inmunológicos (PD-1/PD-L1 o CTLA-4), el sistema inmune reactivado puede atacar tejidos propios, no solo el tumor"], "correct": 4, "comment": "Los inhibidores de checkpoint (anti-PD-1, anti-PD-L1, anti-CTLA-4) retiran los frenos que limitan la respuesta inmune contra el tumor — el mismo mecanismo puede desinhibir el ataque contra tejidos sanos, causando eventos adversos autoinmunes (colitis, hipofisitis, etc.), un efecto colateral bien documentado de esta clase de fármacos."}, {"tag": "Intermediária", "stem": "Un niño con antecedente de faringitis estreptocócica no tratada desarrolla, 3 semanas después, poliartritis migratoria, carditis y nódulos subcutáneos. ¿Cuál es el tipo de hipersensibilidad y el mecanismo involucrado?", "alts": ["Tipo I, mediada por IgE contra el estreptococo", "Tipo III, por depósito de inmunocomplejos circulantes en las articulaciones", "Tipo IV, mediada exclusivamente por linfocitos T CD8+", "Tipo II, por mimetismo molecular entre la proteína M estreptocócica y proteínas cardíacas/articulares propias", "Rechazo hiperagudo cruzado con el tejido cardíaco"], "correct": 3, "comment": "La fiebre reumática es el ejemplo clásico de hipersensibilidad tipo II por mimetismo molecular: anticuerpos contra la proteína M del estreptococo reaccionan de forma cruzada con proteínas propias (miosina cardíaca, tejido articular), causando daño mediado por anticuerpos."}, {"tag": "Intermediária", "stem": "Un trabajador desarrolla dermatitis pruriginosa en las manos, con eritema y vesículas, 48 horas después de manipular un nuevo tipo de guante de látex (sin reacción inmediata al contacto). ¿Qué tipo de hipersensibilidad explica mejor este cuadro?", "alts": ["Tipo I — mediada por IgE, reacción inmediata", "Tipo IV — mediada por linfocitos T (Th1, Th17, TCD8+), de inicio tardío (24-72h)", "Tipo III — por inmunocomplejos circulantes", "Tipo II — citotóxica, mediada por IgG", "Choque anafilactoide, sin sensibilización previa"], "correct": 1, "comment": "El retraso de 48 horas sin reacción inmediata, junto con el patrón vesicular localizado, es característico de la hipersensibilidad tipo IV (dermatitis de contacto), mediada por linfocitos T — sin participación de anticuerpos, a diferencia de los tipos I, II y III."}, {"tag": "Difícil", "stem": "En un experimento, se compara el crecimiento de un mismo tipo de tumor trasplantado en dos grupos de ratones: uno inmunocompetente y otro con inmunodeficiencia (sin linfocitos T ni B funcionales). El tumor crece más agresivamente y con mayor capacidad de evadir el sistema inmune en el grupo inmunodeficiente. ¿Qué concepto ilustra mejor este experimento?", "alts": ["Los tumores en ratones inmunodeficientes siempre son benignos", "Los linfocitos T y B no participan en la inmunidad antitumoral", "La vigilancia inmunológica ejerce presión selectiva que, paradójicamente, entrena a los tumores inmunocompetentes a evadir mejor al sistema inmune", "La ausencia de linfocitos T impide completamente el crecimiento tumoral", "El tumor en el ratón inmunodeficiente es rechazado más rápidamente"], "correct": 2, "comment": "Este es el concepto de \"inmunoedición\": la presión selectiva del sistema inmune intacto no solo elimina células tumorales, sino que selecciona clones capaces de evadir la vigilancia — por eso los tumores que crecen en un huésped inmunocompetente suelen ser más \"educados\" para evadir, mientras que los de un huésped inmunodeficiente permanecen más vulnerables al no haber enfrentado esa presión."}, {"tag": "Difícil", "stem": "Un paciente con deficiencia congénita de C3 presenta infecciones recurrentes tanto por bacterias piógenas como fallas de opsonización, y además muestra susceptibilidad aumentada a enfermedades por inmunocomplejos. ¿Por qué la deficiencia de C3 específicamente genera este doble problema?", "alts": ["C3 es el punto de convergencia de las tres vías del complemento (clásica, alternativa y de las lectinas), por lo que su ausencia compromete opsonización (C3b), lisis (vía MAC) y solubilización de inmunocomplejos", "C3 es exclusivo de la vía clásica, y su falta solo afecta anticuerpos IgG", "C3 solo actúa como anafilotoxina, sin relación con opsonización", "La deficiencia de C3 aumenta la producción de anticuerpos, causando inmunocomplejos", "C3 es producido exclusivamente por los linfocitos B, y su falta afecta solo la inmunidad humoral"], "correct": 0, "comment": "C3 es el nodo central donde convergen las 3 vías del complemento. Su deficiencia compromete simultáneamente la opsonización (C3b), la formación del MAC (C5b-C9, que depende de la cascada iniciada por C3) y la solubilización/aclaramiento de inmunocomplejos — de ahí el doble fenotipo clínico (infecciones + enfermedad por inmunocomplejos)."}, {"tag": "Difícil", "stem": "Con relación a la diferencia entre rechazo hiperagudo y rechazo agudo humoral en trasplantes, marque la alternativa correcta:", "alts": ["Ambos son mediados por linfocitos T y ocurren en el mismo intervalo de tiempo", "El rechazo hiperagudo ocurre solo en trasplantes singénicos", "El hiperagudo es mediado por anticuerpos preformados contra antígenos del donante (ej. sistema ABO), actuando en minutos a horas; el agudo humoral involucra anticuerpos generados DESPUÉS del trasplante, actuando en días a semanas", "El rechazo agudo humoral nunca involucra al sistema del complemento", "El rechazo hiperagudo puede revertirse fácilmente con inmunosupresores"], "correct": 2, "comment": "La distinción clave es el ORIGEN y TIEMPO de los anticuerpos: en el hiperagudo, ya existen anticuerpos preformados (por ejemplo, incompatibilidad ABO) que actúan casi inmediatamente; en el agudo humoral, el receptor GENERA nuevos anticuerpos contra el injerto tras el trasplante, un proceso que toma días a semanas."}, {"tag": "Difícil", "stem": "Sobre la interacción entre los subtipos de linfocitos T CD4+ en la respuesta contra hongos, marque la alternativa correcta:", "alts": ["Th17 combate hongos intracelulares mediante IFN-γ, mientras Th1 combate hongos extracelulares mediante IL-17", "Th1 combate hongos extracelulares (como Candida superficial) mediante IL-17, reclutando neutrófilos", "Treg es el principal subtipo responsable de eliminar infecciones fúngicas activas", "Solo los anticuerpos son eficaces contra infecciones fúngicas, sin participación de linfocitos T", "Th17 combate hongos extracelulares (como Candida superficial) mediante IL-17, reclutando neutrófilos; Th1 combate hongos intracelulares (como Histoplasma) activando macrófagos vía IFN-γ"], "correct": 4, "comment": "Th17 actúa contra hongos extracelulares (ej. Candida superficial) reclutando neutrófilos vía IL-17; Th1 actúa contra hongos con comportamiento intracelular (ej. Histoplasma) activando macrófagos vía IFN-γ — el mismo patrón dual visto en la inmunidad antibacteriana."}, {"tag": "Difícil", "stem": "Un lactante con infecciones bacterianas piógenas recurrentes (abscesos, neumonías) presenta niveles normales de inmunoglobulinas y complemento, pero los neutrófilos aislados no logran generar especies reactivas de oxígeno en el test de nitroazul de tetrazolio. ¿Cuál es el diagnóstico más probable y qué mecanismo de defensa está comprometido?", "alts": ["Deficiencia de C3; falla en la opsonización", "Enfermedad granulomatosa crónica; falla en la lisis intracelular oxidativa de los fagocitos, pese a fagocitosis normal", "SCID; falla combinada de linfocitos T y B", "Deficiencia selectiva de IgA; falla en la inmunidad de mucosas", "Síndrome de DiGeorge; falla en la maduración tímica de LT"], "correct": 1, "comment": "La enfermedad granulomatosa crónica se caracteriza por fagocitosis NORMAL pero falla en la explosión respiratoria (NADPH oxidasa) necesaria para destruir al microbio ya fagocitado — el neutrófilo \"come\" pero no \"digiere\". El test de NBT anormal con Ig y complemento normales es el patrón clásico."}, {"tag": "Difícil", "stem": "Sobre la presentación cruzada (\"cross-presentation\") realizada por células dendríticas, marque la alternativa correcta:", "alts": ["Permite que un antígeno EXÓGENO (fagocitado) sea presentado en MHC de Clase I, activando LT CD8+ contra patógenos extracelulares que nunca infectaron directamente a la célula dendrítica", "Es exclusiva de todos los tipos de APC, incluidos macrófagos y linfocitos B", "Ocurre quando un antígeno ENDÓGENO es presentado en MHC de Clase II", "Es el mecanismo por el cual el MHC de Clase I presenta antígenos solo a LT CD4+", "Solo ocurre en el timo, durante la selección negativa"], "correct": 0, "comment": "La presentación cruzada es una excepción a la regla general (MHC I = endógeno / MHC II = exógeno): permite que la célula dendrítica presente antígenos exógenos capturados en MHC I, activando LT CD8+ contra patógenos que no infectaron directamente a la célula presentadora — crucial para activar CTL contra virus que no infectan APCs directamente."}, {"tag": "Intermediária", "stem": "Un paciente pica de abeja y, en pocos minutos, desarrolla broncoespasmo, urticaria generalizada e hipotensión. ¿Cuál es la conducta terapéutica de primera línea, y qué célula/mediador es central en este cuadro?", "alts": ["Corticoides orales; mediado por linfocitos T CD8+", "Antihistamínicos exclusivamente; mediado por IgG", "Inmunoglobulina endovenosa; mediado por complemento", "Adrenalina (epinefrina); mediado por IgE unida a mastocitos y basófilos", "Ciclosporina; mediado por Th17"], "correct": 3, "comment": "Cuadro típico de anafilaxia (hipersensibilidad tipo I): IgE sensibiliza mastocitos/basófilos, y una nueva exposición al alérgeno desencadena degranulación masiva. La adrenalina es SIEMPRE la primera línea, antes que antihistamínicos o corticoides, que son adyuvantes."}, {"tag": "Intermediária", "stem": "Un paciente con artritis persistente en múltiples articulaciones, semanas después de una infección por Chikungunya ya resuelta (sin viremia detectable), es evaluado. ¿Cuál mecanismo de hipersensibilidad explica mejor este cuadro?", "alts": ["Tipo I, por IgE contra el virus", "Tipo IV, mediada por linfocitos T CD8+ directamente contra el virus persistente", "Rechazo hiperagudo cruzado con tejido articular", "Tipo III, por depósito de inmunocomplejos circulantes (antígeno viral + anticuerpo) en la sinovia articular", "Tipo II, por anticuerpos fijos contra el cartílago"], "correct": 3, "comment": "Artritis en múltiples articulaciones tras infección viral resuelta es el patrón clásico de hipersensibilidad tipo III: el antígeno viral remanente forma inmunocomplejos circulantes con los anticuerpos generados, que se depositan en tejidos como la sinovia, causando inflamación local."}, {"tag": "Intermediária", "stem": "¿Cuál es la principal diferencia funcional entre la vía clásica y la vía alternativa del sistema del complemento?", "alts": ["La vía clásica es activada por anticuerpos (IgG/IgM) unidos al antígeno; la vía alternativa es activada directamente por la superficie del patógeno, sin necesidad de anticuerpos", "La vía clásica no depende de anticuerpos, mientras la alternativa sí", "Ambas requieren anticuerpos IgE para activarse", "La vía alternativa solo actúa sobre virus, nunca sobre bacterias", "La vía clásica es evolutivamente más antigua que la alternativa"], "correct": 0, "comment": "La vía clásica conecta la inmunidad ADAPTATIVA al complemento (requiere anticuerpos ya formados); la vía alternativa es puramente INNATA, activada por hidrólisis espontánea de C3 sobre superficies microbianas, sin necesidad de anticuerpo — y es, de hecho, evolutivamente MÁS ANTIGUA que la clásica, pese a haber sido descubierta después."}, {"tag": "Fácil", "stem": "¿Cuál es la principal función de la citocina IL-6 en la respuesta inflamatoria innata?", "alts": ["Activa exclusivamente a los linfocitos T citotóxicos", "Estimula la síntesis de proteínas de fase aguda en el hígado y la producción de neutrófilos", "Es la única citocina responsable de la fiebre", "Inhibe directamente la fagocitosis", "Bloquea la diferenciación de linfocitos Th17"], "correct": 1, "comment": "IL-6 estimula al hígado a producir proteínas de fase aguda (como PCR) y estimula la producción de neutrófilos en la médula ósea — además de inducir diferenciación hacia Th17. No es la única citocina relacionada con fiebre (IL-1 y TNF también lo son)."}, {"tag": "Difícil", "stem": "Un paciente con lupus eritematoso sistémico presenta glomerulonefritis, con biopsia renal mostrando depósitos granulares de inmunoglobulinas y complemento en la membrana basal glomerular. ¿Cuál es el mecanismo fisiopatológico central de este daño renal?", "alts": ["Hipersensibilidad tipo I mediada por IgE en el glomérulo", "Rechazo hiperagudo del propio tejido renal", "Depósito de inmunocomplejos circulantes (hipersensibilidad tipo III), con activación local del complemento y reclutamiento de neutrófilos vía C3a/C5a", "Ausencia total de linfocitos T reguladores en el riñón", "Hipersensibilidad tipo IV mediada exclusivamente por macrófagos"], "correct": 2, "comment": "La glomerulonefritis lúpica es el ejemplo clásico de daño renal por hipersensibilidad tipo III: inmunocomplejos circulantes (anti-ADN, entre otros) se depositan en la membrana basal glomerular, activan el complemento localmente (generando C3a/C5a, anafilotoxinas quimiotácticas) y reclutan neutrófilos que causan el daño tisular."}, {"tag": "Intermediária", "stem": "Un paciente con infección aguda por influenza presenta fiebre y malestar antes de que los anticuerpos específicos sean detectables. ¿Cuál es el principal mecanismo de defensa innata que actúa en esta fase temprana, antes de la respuesta adaptativa?", "alts": ["Anticuerpos IgM de baja afinidad", "Eosinófilos y mastocitos, como en la respuesta antiparasitaria", "Complemento por vía clásica exclusivamente", "Linfocitos T CD8+ de memoria de una infección previa por otro virus", "Interferones tipo I, que inducen un estado antiviral en las células vecinas, y células NK que eliminan células ya infectadas"], "correct": 4, "comment": "En la fase temprana de una infección viral, antes de que la respuesta adaptativa se desarrolle (días), los interferones tipo I (producidos por células infectadas y células dendríticas) inducen resistencia antiviral en células vecinas, y las NK eliminan células infectadas identificando la pérdida de MHC I — la primera línea de defensa específicamente antiviral."}];
+
+const vfData = [
+  { theme:"Complemento y opsonización",
+    statements:[
+    "El Complejo de Ataque a la Membrana (MAC), formado por C5b-C9, es especialmente eficaz contra bacterias Gram positivas debido a su pared celular delgada.",
+    "C3b depositado sobre la superficie de un patógeno facilita la fagocitosis al ser reconocido por receptores CR1 de los fagocitos.",
+    "C3a y C5a son anafilotoxinas que actúan como quimioatrayentes de neutrófilos y macrófagos hacia el foco de infección.",
+    "Neisseria gonorrhoeae y Haemophilus influenzae pueden evadir el complemento incorporando ácidos siálicos del propio anfitrión en su superficie.",
+    "El meningococo y E. coli K1 evaden el complemento robando ácidos siálicos exclusivamente del anfitrión, sin poder sintetizarlos por sí mismos."
+  ], answers:["F", "V", "V", "V", "F"],
+    comment:"Ítem I es falso: el MAC es eficaz sobre todo contra bacterias Gram NEGATIVAS — las Gram positivas tienen pared celular GRUESA que impide su acción. Ítem V es falso: el meningococo y E. coli K1 son capaces de SINTETIZAR sus propios ácidos siálicos, a diferencia de N. gonorrhoeae y H. influenzae, que deben incorporarlos del anfitrión." },
+  { theme:"Hipersensibilidades y mecanismos de daño",
+    statements:[
+    "La hipersensibilidad tipo IV es la única de las cuatro que no involucra anticuerpos, siendo mediada exclusivamente por linfocitos T.",
+    "En la hipersensibilidad tipo II, el antígeno está fijo en la superficie celular o en la matriz extracelular, generando un daño localizado.",
+    "La fiebre reumática es un ejemplo clásico de hipersensibilidad tipo III, por depósito de inmunocomplejos circulantes en el tejido cardíaco.",
+    "El choque anafiláctico se trata en primera línea con adrenalina, mientras que los antihistamínicos y corticoides cumplen un rol adyuvante.",
+    "La dermatitis de contacto por níquel se manifiesta típicamente en minutos tras el contacto con el metal, sin período de latencia."
+  ], answers:["V", "V", "F", "V", "F"],
+    comment:"Ítem III es falso: la fiebre reumática es el ejemplo clásico de hipersensibilidad TIPO II (mimetismo molecular entre la proteína M estreptocócica y proteínas cardíacas), no tipo III. Ítem V es falso: la dermatitis de contacto (tipo IV) tiene inicio TARDÍO (24-72h), no inmediato — es justamente lo que la distingue del tipo I." },
+];
+
+const assocData = [
+  { title:"1. Citocinas y su función/origen principal",
+    colA:["TNF", "IL-1", "IL-6", "IFN-γ", "IL-17"],
+    colB:["Estimula síntesis de proteínas de fase aguda en el hígado", "Recluta neutrófilos, producida por Th17", "Activa caspasas, desencadenando apoptosis; producida por macrófagos y células dendríticas", "Potente mediador inflamatorio relacionado con los inflamasomas y la fiebre", "Activa macrófagos para eliminar patógenos intracelulares, producida por Th1 y NK"],
+    answers:["C", "D", "A", "E", "B"],
+    comment:"La trampa más común es confundir el rol de IL-1 (inflamasomas/fiebre) con el de IL-6 (fase aguda hepática) — ambas son proinflamatorias, pero con blancos moleculares distintos." },
+  { title:"2. Vías del complemento y su activador específico",
+    colA:["Vía clásica", "Vía alternativa", "Vía de las lectinas", "C3b", "C3a y C5a"],
+    colB:["Anafilotoxinas quimiotácticas que atraen neutrófilos y macrófagos", "Activada por C1q, que reconoce anticuerpos (IgG/IgM) unidos al antígeno", "Activada directamente por la superficie microbiana, mediante hidrólisis espontánea de C3", "Activada por MBL, que reconoce manosa en la superficie microbiana", "Se deposita sobre el patógeno y es reconocido por receptores CR1, facilitando la fagocitosis"],
+    answers:["B", "C", "D", "E", "A"],
+    comment:"El error típico es olvidar que la vía alternativa NO requiere anticuerpo (es puramente innata) y creer que es más reciente evolutivamente que la clásica — en realidad es al revés." },
+  { title:"3. Mecanismo efector del anticuerpo y su blanco principal",
+    colA:["Neutralización", "Opsonización", "ADCC", "Eliminación de helmintos", "Activación del complemento"],
+    colB:["IgG marca al patógeno para que fagocitos con receptores Fc lo reconozcan y fagociten", "Las células NK reconocen el Fc del anticuerpo vía FcγRIII (CD16) y matan por degranulación", "IgE se une a mastocitos y eosinófilos, que degranulan sobre el parásito grande", "IgG e IgM activan la cascada del complemento sobre bacterias Gram negativas y hongos", "El anticuerpo bloquea físicamente la unión del microbio o toxina a su receptor celular"],
+    answers:["E", "A", "B", "C", "D"],
+    comment:"La confusión más frecuente es entre opsonización (facilita que EL FAGOCITO coma) y ADCC (la célula NK mata directamente sin fagocitar) — ambos usan IgG, pero con células efectoras y mecanismos de destrucción distintos." },
+  { title:"4. Patógeno y el eje de inmunidad predominante contra él",
+    colA:["Bacterias extracelulares", "Bacterias intracelulares (M. tuberculosis)", "Hongos extracelulares (Candida superficial)", "Hongos intracelulares (Histoplasma)", "Virus (fase intracelular)"],
+    colB:["Linfocitos T CD8+ (CTL), eliminando la célula infectada", "Th1, activando macrófagos vía IFN-γ para matar al hongo intracelularmente", "Humoral: IgG, IgM e IgA neutralizando toxinas y opsonizando", "Th17, reclutando neutrófilos vía IL-17", "Th1 activando macrófagos vía IFN-γ, con formación de granuloma"],
+    answers:["C", "E", "D", "B", "A"],
+    comment:"El patrón se repite: Th1 combate lo intracelular (bacterias Y hongos), Th17 combate lo extracelular fúngico — confundir estos dos ejes entre bacterias y hongos es el error más común de la unidad." },
+  { title:"5. Tipo de rechazo de trasplante y su característica temporal/mecanismo",
+    colA:["Rechazo hiperagudo", "Rechazo agudo celular", "Rechazo agudo humoral", "Rechazo crónico", "Enfermedad de injerto contra huésped (GVHD)"],
+    colB:["Ocurre en días a semanas, mediado por anticuerpos GENERADOS después del trasplante", "Ocurre en minutos a horas, mediado por anticuerpos PREFORMADOS contra el donante (ej. incompatibilidad ABO)", "Fibrosis progresiva del injerto, desarrollándose a lo largo de meses a años", "Mediado por linfocitos T del DONANTE atacando los tejidos del receptor (típico de trasplante de médula ósea)", "Ocurre en días a semanas, mediado por linfocitos T del receptor contra el MHC del injerto"],
+    answers:["B", "E", "A", "C", "D"],
+    comment:"La clave para diferenciar hiperagudo de agudo humoral es el ORIGEN del anticuerpo: preformado (antes del trasplante) vs. generado después — el tiempo de aparición sigue esa misma lógica." },
+];
+
+// ---------------- STATE ----------------
+let xp = 0, streak = 0, maxStreak = 0;
+let scoreP1 = 0, scoreP2 = 0, scoreP3 = 0;
+const TOTAL_P2 = vfData.reduce((sum,v)=>sum+v.statements.length,0);
+const TOTAL_P3 = assocData.length * 5;
+
+function addXP(amount, correct){
+  xp += amount;
+  if(correct){ streak++; if(streak>maxStreak) maxStreak = streak; }
+  else { streak = 0; }
+  document.getElementById('xpCount').textContent = xp;
+  document.getElementById('streakCount').textContent = streak;
+  const pct = Math.min(100, (xp % 200)/2);
+  document.getElementById('xpFill').style.width = pct + '%';
+  updateResults();
+}
+
+function updateResults(){
+  document.getElementById('resP1').textContent = scoreP1 + '/' + mcqData.length;
+  document.getElementById('resP2').textContent = scoreP2 + '/' + TOTAL_P2;
+  document.getElementById('resP3').textContent = scoreP3 + '/' + TOTAL_P3;
+  const totalQ = mcqData.length + TOTAL_P2 + TOTAL_P3;
+  const totalCorrect = scoreP1 + scoreP2 + scoreP3;
+  const pct = Math.round((totalCorrect/totalQ)*100);
+  document.getElementById('resScore').textContent = totalCorrect;
+  document.getElementById('resPct').textContent = pct + '%';
+  document.getElementById('resTotal').textContent = totalQ;
+  let msg = "Sigue respondiendo para ver tu desempeño completo.";
+  if(totalCorrect > 0){
+    if(pct >= 85) msg = "Excelente dominio del tema — nivel de aprobación en Revalida.";
+    else if(pct >= 65) msg = "Buen desempeño, pero revisa los comentarios de las preguntas falladas.";
+    else msg = "Vale la pena repasar el material antes de repetir el simulado.";
+  }
+  document.getElementById('resMsg').textContent = msg;
+}
+
+// ---------------- RENDER MCQ ----------------
+const letters = ['A','B','C','D','E'];
+const mcqContainer = document.getElementById('mcqContainer');
+mcqData.forEach((q, qi) => {
+  const card = document.createElement('div');
+  card.className = 'qcard';
+  const tagClass = q.tag === 'Fácil' ? 'facil' : (q.tag === 'Intermediária' ? 'inter' : 'dificil');
+  card.innerHTML = `
+    <div class="qhead">
+      <div class="qnum">${qi+1}</div>
+      <span class="qtag ${tagClass}">${q.tag}</span>
+      <div class="qstem">${q.stem}</div>
+    </div>
+    <div class="alts"></div>
+    <div class="feedback"></div>
+  `;
+  const altsDiv = card.querySelector('.alts');
+  const feedback = card.querySelector('.feedback');
+  q.alts.forEach((alt, ai) => {
+    const btn = document.createElement('button');
+    btn.className = 'alt-btn';
+    btn.innerHTML = `<span class="letter">${letters[ai]})</span><span>${alt}</span>`;
+    btn.onclick = () => {
+      const allBtns = altsDiv.querySelectorAll('.alt-btn');
+      allBtns.forEach(b => b.disabled = true);
+      const isCorrect = ai === q.correct;
+      if(isCorrect){
+        btn.classList.add('correct');
+        addXP(10, true);
+      } else {
+        btn.classList.add('incorrect');
+        allBtns[q.correct].classList.add('correct');
+        addXP(0, false);
+      }
+      allBtns.forEach((b,i) => { if(i!==ai && i!==q.correct) b.classList.add('dim'); });
+      feedback.className = 'feedback show ' + (isCorrect ? 'ok' : 'no');
+      feedback.innerHTML = (isCorrect ? '✅ <b>¡Correcto!</b> ' : '❌ <b>Incorrecto.</b> ') + q.comment;
+      if(isCorrect) scoreP1++;
+      updateResults();
+    };
+    altsDiv.appendChild(btn);
+  });
+  mcqContainer.appendChild(card);
+});
+
+// ---------------- RENDER V/F ----------------
+const romans = ['I','II','III','IV','V'];
+const vfContainer = document.getElementById('vfContainer');
+vfData.forEach((q, qi) => {
+  const card = document.createElement('div');
+  card.className = 'qcard';
+  card.innerHTML = `
+    <div class="vf-theme">Questão ${qi+1} — ${q.theme}</div>
+    <div class="vf-sub">Marca cada afirmación como Verdadera (V) o Falsa (F)</div>
+    <div class="vf-list"></div>
+    <div class="vf-comment"></div>
+  `;
+  const list = card.querySelector('.vf-list');
+  const comment = card.querySelector('.vf-comment');
+  let answeredCount = 0;
+  q.statements.forEach((s, si) => {
+    const row = document.createElement('div');
+    row.className = 'vf-item';
+    row.innerHTML = `
+      <div class="vf-roman">${romans[si]}</div>
+      <div class="vf-text">${s}</div>
+      <div class="vf-buttons">
+        <button class="vf-btn" data-v="V">V</button>
+        <button class="vf-btn" data-v="F">F</button>
+      </div>
+    `;
+    const btns = row.querySelectorAll('.vf-btn');
+    btns.forEach(btn => {
+      btn.onclick = () => {
+        btns.forEach(b => b.disabled = true);
+        const correct = q.answers[si];
+        const picked = btn.getAttribute('data-v');
+        const correctBtn = [...btns].find(b => b.getAttribute('data-v') === correct);
+        if(picked === correct){
+          btn.classList.add('correct');
+          addXP(5, true);
+          scoreP2++;
+        } else {
+          btn.classList.add('incorrect');
+          correctBtn.classList.add('correct');
+          addXP(0, false);
+        }
+        answeredCount++;
+        if(answeredCount === q.statements.length){
+          comment.className = 'vf-comment show';
+          comment.innerHTML = '💡 ' + q.comment;
+        }
+        updateResults();
+      };
+    });
+    list.appendChild(row);
+  });
+  vfContainer.appendChild(card);
+});
+
+// ---------------- RENDER ASSOCIATION ----------------
+const assocContainer = document.getElementById('assocContainer');
+assocData.forEach((q, qi) => {
+  const card = document.createElement('div');
+  card.className = 'qcard';
+  const shuffledB = q.colB.map((text,i) => ({text, letter: letters[i]}));
+  card.innerHTML = `
+    <div class="assoc-title">${q.title}</div>
+    <div class="assoc-grid">
+      <div class="assoc-col">
+        <h4>Columna A</h4>
+        <div class="colA-list"></div>
+      </div>
+      <div class="assoc-col">
+        <h4>Columna B</h4>
+        <div class="colB-list"></div>
+      </div>
+    </div>
+    <button class="btn verify-btn">Verificar</button>
+    <div class="feedback"></div>
+  `;
+  const colAList = card.querySelector('.colA-list');
+  const colBList = card.querySelector('.colB-list');
+  const feedback = card.querySelector('.feedback');
+
+  q.colA.forEach((item, ai) => {
+    const row = document.createElement('div');
+    row.className = 'assoc-row';
+    let options = '<option value="">—</option>';
+    letters.slice(0, q.colA.length).forEach(l => { options += `<option value="${l}">${l}</option>`; });
+    row.innerHTML = `<select data-idx="${ai}">${options}</select><span>${item}</span>`;
+    colAList.appendChild(row);
+  });
+  q.colB.forEach((text, bi) => {
+    const item = document.createElement('div');
+    item.className = 'assoc-b-item';
+    item.textContent = `(${letters[bi]}) ${text}`;
+    colBList.appendChild(item);
+  });
+
+  const verifyBtn = card.querySelector('.verify-btn');
+  verifyBtn.onclick = () => {
+    const selects = colAList.querySelectorAll('select');
+    let correctCount = 0;
+    let allAnswered = true;
+    selects.forEach((sel, i) => {
+      if(!sel.value){ allAnswered = false; return; }
+    });
+    if(!allAnswered){
+      feedback.className = 'feedback show no';
+      feedback.innerHTML = '⚠️ Completa todas las asociaciones antes de verificar.';
+      return;
+    }
+    selects.forEach((sel, i) => {
+      sel.disabled = true;
+      if(sel.value === q.answers[i]){
+        sel.classList.add('correct');
+        correctCount++;
+      } else {
+        sel.classList.add('incorrect');
+      }
+    });
+    scoreP3 += correctCount;
+    for(let k=0;k<correctCount;k++) addXP(5, true);
+    for(let k=0;k<(q.colA.length-correctCount);k++) addXP(0, false);
+    verifyBtn.disabled = true;
+    feedback.className = 'feedback show ' + (correctCount === q.colA.length ? 'ok' : 'no');
+    feedback.innerHTML = `${correctCount === q.colA.length ? '✅' : '📊'} <b>${correctCount}/${q.colA.length} correctas.</b> ${q.comment}`;
+    updateResults();
+  };
+
+  assocContainer.appendChild(card);
+});
+
+// ---------------- RENDER COMMENTS TAB ----------------
+const mcqComments = document.getElementById('mcqComments');
+mcqData.forEach((q,i) => {
+  const div = document.createElement('div');
+  div.className = 'comment-item';
+  div.innerHTML = `<b>${i+1}.</b> ${q.comment}`;
+  mcqComments.appendChild(div);
+});
+const vfComments = document.getElementById('vfComments');
+vfData.forEach((q,i) => {
+  const div = document.createElement('div');
+  div.className = 'comment-item';
+  div.innerHTML = `<b>Questão ${i+1}:</b> ${q.comment}`;
+  vfComments.appendChild(div);
+});
+const assocComments = document.getElementById('assocComments');
+assocData.forEach((q,i) => {
+  const div = document.createElement('div');
+  div.className = 'comment-item';
+  div.innerHTML = `<b>Questão ${i+1}:</b> ${q.comment}`;
+  assocComments.appendChild(div);
+});
+
+// ---------------- TABS ----------------
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
+});
+</script>
+</body>
+</html>
