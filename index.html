@@ -1597,12 +1597,75 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 });
 
+// Retorno do Mercado Pago após o pagamento (?pagamento=sucesso|falha|pendente).
+// A "saudação automática" do WhatsApp Business (gratuita, configurada no app)
+// responde sozinha assim que o aluno manda essa primeira mensagem — sem
+// precisar de nenhuma API paga.
+document.addEventListener('DOMContentLoaded', function(){
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('pagamento');
+  if(!status || typeof CONFIG === 'undefined') return;
+
+  const modal = document.getElementById('pagamentoStatusModalBg');
+  const icon = document.getElementById('pagamentoStatusIcon');
+  const titulo = document.getElementById('pagamentoStatusTitulo');
+  const texto = document.getElementById('pagamentoStatusTexto');
+  const waLink = document.getElementById('pagamentoStatusWaBtn');
+
+  const config = {
+    sucesso: {
+      icon: '✅',
+      titulo: 'Pagamento confirmado!',
+      texto: 'Seu material vai ser liberado em alguns minutos. Você também recebe um e-mail de confirmação — depois é só usar "Já comprei — ver meu acesso" com o mesmo e-mail da compra.',
+      waMsg: 'Olá! Acabei de finalizar minha compra no ' + CONFIG.nomeMarca + ' 😊',
+    },
+    falha: {
+      icon: '⚠️',
+      titulo: 'Pagamento não concluído',
+      texto: 'Parece que o pagamento não foi finalizado. Se quiser, tenta de novo, ou chama no WhatsApp que a gente ajuda.',
+      waMsg: 'Olá! Tive um problema tentando pagar no ' + CONFIG.nomeMarca + '.',
+    },
+    pendente: {
+      icon: '⏳',
+      titulo: 'Pagamento em análise',
+      texto: 'Seu pagamento está sendo processado (comum em PIX/boleto). Assim que for aprovado, o acesso libera automaticamente.',
+      waMsg: 'Olá! Meu pagamento no ' + CONFIG.nomeMarca + ' ficou como pendente.',
+    },
+  };
+  const c = config[status];
+  if(!c || !modal) return;
+
+  icon.textContent = c.icon;
+  titulo.textContent = c.titulo;
+  texto.textContent = c.texto;
+  waLink.href = "https://wa.me/" + CONFIG.whatsappNumero + "?text=" + encodeURIComponent(c.waMsg);
+  modal.classList.add('show');
+
+  document.getElementById('pagamentoStatusCloseBtn').onclick = ()=>modal.classList.remove('show');
+
+  // Limpa o parâmetro da URL pra não reabrir o modal se o aluno atualizar a página
+  const cleanUrl = window.location.pathname + window.location.hash;
+  window.history.replaceState({}, document.title, cleanUrl);
+});
+
 // Ano do rodapé sempre atualizado
 (function(){
   const el = document.getElementById('footerYear');
   if(el) el.textContent = new Date().getFullYear();
 })();
 </script>
+<div class="modal-bg" id="pagamentoStatusModalBg">
+  <div class="modal" style="max-width:380px;text-align:center;">
+    <div id="pagamentoStatusIcon" style="font-size:40px;margin-bottom:8px;"></div>
+    <h3 id="pagamentoStatusTitulo"></h3>
+    <p id="pagamentoStatusTexto" style="font-size:13.5px;margin:10px 0 18px;"></p>
+    <a id="pagamentoStatusWaBtn" class="btn-comprar" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;">Falar no WhatsApp</a>
+    <div style="margin-top:12px;">
+      <button class="btn-sec" id="pagamentoStatusCloseBtn" style="background:none;border:none;color:var(--muted);">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <a href="#" id="waFloatBtn" class="wa-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.696 4.61 1.897 6.484L4 29l7.72-1.867A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm0 21.818a9.77 9.77 0 0 1-4.982-1.363l-.357-.213-4.583 1.108 1.127-4.47-.233-.366A9.78 9.78 0 0 1 5.818 15c0-5.614 4.568-10.182 10.183-10.182 5.613 0 10.181 4.568 10.181 10.182 0 5.615-4.568 10.182-10.181 10.182zm5.593-7.632c-.306-.153-1.81-.893-2.09-.995-.28-.102-.484-.153-.688.153-.204.306-.79.995-.968 1.199-.178.204-.357.23-.663.077-.306-.153-1.293-.477-2.463-1.52-.91-.812-1.525-1.815-1.703-2.121-.178-.306-.019-.472.134-.624.138-.137.306-.357.459-.535.153-.178.204-.306.306-.51.102-.204.051-.383-.026-.536-.077-.153-.688-1.658-.943-2.271-.248-.596-.5-.515-.688-.524-.178-.008-.382-.01-.586-.01a1.126 1.126 0 0 0-.816.383c-.28.306-1.07 1.046-1.07 2.55 0 1.505 1.095 2.96 1.248 3.164.153.204 2.155 3.29 5.223 4.615.73.315 1.298.503 1.742.644.732.233 1.398.2 1.925.121.587-.088 1.81-.74 2.065-1.454.255-.714.255-1.326.178-1.454-.076-.128-.28-.204-.586-.357z"/></svg>
 </a>
