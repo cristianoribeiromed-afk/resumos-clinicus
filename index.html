@@ -321,6 +321,40 @@ a{color:inherit;}
 .combo-banner .ctext b{color:var(--green-light);}
 .combo-banner .ctext span{display:block;color:var(--muted);font-size:13px;margin-top:2px;}
 
+.pacotes-semestre{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.pacote-card{
+  position:relative;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 16px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  text-align:center;
+}
+.pacote-card b{font-size:15px;color:var(--text);}
+.pacote-card .pacote-desc{color:var(--muted);font-size:12.5px;line-height:1.4;min-height:36px;}
+.pacote-card .pacote-preco{font-size:22px;font-weight:800;color:var(--green-light);font-family:'DM Mono',monospace;margin:6px 0;}
+.pacote-card .btn-comprar{width:100%;}
+.pacote-destaque{
+  border:2px solid var(--gold);
+  background:linear-gradient(135deg, rgba(232,179,74,.10), rgba(31,184,106,.06));
+  transform:scale(1.03);
+}
+.pacote-destaque .combo-badge{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+}
+
 .materias-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
@@ -1132,8 +1166,8 @@ function planoKeyEtapa(semSlug, materiaNome, etapaNome, tipo){
 function planoKeyMateriaCompleta(semSlug, materiaNome){
   return semSlug + '-' + slugify(materiaNome) + '-completo';
 }
-function planoKeySemestre(semSlug){
-  return semSlug + '-combo';
+function planoKeyPacote(semSlug, tipo){
+  return semSlug + '-pacote-' + tipo; // tipo: 'p1' | 'p1p2' | 'premium'
 }
 
 let CATALOGO_DATA = null;
@@ -1195,15 +1229,22 @@ function buildAccessIndex(data){
       }
     });
   });
-  // combo por semestre = soma de tudo disponivel daquele semestre
+  // pacotes por semestre: P1 (so etapa P1), P1+P2 (etapas P1+P2), Premium (tudo: P1+P2+Final)
   data.semestres.forEach(sem=>{
-    let itens = [];
+    let itensP1 = [], itensP1P2 = [], itensPremium = [];
     sem.materias.forEach(m=>{
       const slugM = slugify(m.nome);
-      const base = sem.slug+'-'+slugM+'-combo';
-      if(idx[base]) itens.push(...idx[base]);
+      const baseM = sem.slug+'-'+slugM;
+      const p1 = idx[baseM+'-p1-combo'] || [];
+      const p2 = idx[baseM+'-p2-combo'] || [];
+      const final = idx[baseM+'-combo'] || []; // Final nao tem sufixo (codigo legado)
+      itensP1.push(...p1);
+      itensP1P2.push(...p1, ...p2);
+      itensPremium.push(...p1, ...p2, ...final);
     });
-    if(itens.length) idx[sem.slug+'-combo'] = itens;
+    if(itensP1.length) idx[sem.slug+'-pacote-p1'] = itensP1;
+    if(itensP1P2.length) idx[sem.slug+'-pacote-p1p2'] = itensP1P2;
+    if(itensPremium.length) idx[sem.slug+'-pacote-premium'] = itensPremium;
   });
   idx['pacote'] = todosArquivos;
   return idx;
@@ -1409,11 +1450,21 @@ function renderCatalogo(data){
           <span class="semestre-status ${st.cls}">${st.label}</span>
         </div>`;
 
-    if(sem.combo.disponivel){
-      panelsHtml += `<div class="combo-banner">
-        <div class="ctext"><b>Combo completo · ${sem.semestre}º Semestre</b><span>Todas as matérias do semestre (guias + simulados)</span></div>
-        <button class="btn-comprar" onclick="abrirCheckout('Combo ${sem.semestre}º Semestre', ${sem.combo.preco}, '${planoKeySemestre(sem.slug)}')">Comprar combo${sem.combo.preco? ' — R$ '+sem.combo.preco:''}</button>
-      </div>`;
+    const pacotesAtivos = ['p1','p1p2','premium'].filter(k => sem.pacotes && sem.pacotes[k] && sem.pacotes[k].disponivel);
+    if(pacotesAtivos.length){
+      panelsHtml += `<div class="pacotes-semestre">`;
+      pacotesAtivos.forEach(k=>{
+        const p = sem.pacotes[k];
+        const planoKey = planoKeyPacote(sem.slug, k);
+        panelsHtml += `<div class="pacote-card ${p.maisVendido ? 'pacote-destaque' : ''}">
+          ${p.maisVendido ? `<span class="combo-badge">🔥 Mais vendido</span>` : ''}
+          <b>${p.label}</b>
+          <span class="pacote-desc">${p.descricao}</span>
+          <span class="preco pacote-preco">R$ ${p.preco}</span>
+          <button class="btn-comprar" onclick="abrirCheckout('${p.label} — ${sem.semestre}º Semestre', ${p.preco}, '${planoKey}')">Comprar</button>
+        </div>`;
+      });
+      panelsHtml += `</div>`;
     }
 
     const grupos = {};
