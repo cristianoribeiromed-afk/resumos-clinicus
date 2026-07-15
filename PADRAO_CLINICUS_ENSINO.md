@@ -66,6 +66,25 @@ Essa orientação vale a partir de agora pra todo conteúdo novo — inclusive o
 - **Fonte pequena demais** — corrigido pra 18px de base no Cap. 47. Isso NÃO é algo que o material do Vargas também faz (ele usa tamanho padrão ~16px) — é uma correção pontual baseada no seu incômodo direto, não uma cópia de outro material.
 - **Mapas Mentais não funcionam** — nem o formato ASCII (usado em várias disciplinas, incluindo Cap. 46) nem a tentativa em SVG (Cap. 47) agradaram. Ver seção 4.
 
+## 2.1 Primeiro feedback real de aluna — Cap. 46 (15/07/2026)
+
+🟢 **Comprovado por aluna** — a primeira validação real de estudante que esse capítulo recebe (corrige a nota da v1/v2 que dizia que nenhum aluno tinha acesso ainda). Mensagem literal: *"eu prefiro esse primeiro, acho que visualmente tem mais pontos de atenção, que pode ajudar a fixar melhor"* — comparando a versão **original** do Cap. 46 (pré-redesign, layout vermelho) com a versão **atual** (layout azul, em produção).
+
+**Auditoria objetiva que confirma o feedback** (contagem de caixas de destaque):
+
+| Tipo de caixa | Cap.46 original | Cap.46 atual (produção) | Cap.47 | Cap.48 |
+|---|---|---|---|---|
+| 📌 `.prova` (cobrança de prova) | 4 | 0 | 0 | 0 |
+| ⚠️ `.hot` (alerta/confusão comum) | 3 | 5 | 4 | 1 |
+| 💡 `.example` | 2 | 0 | 0 | 0 |
+| 🎵 `.mnemo` | 3 | 2 | 2 | 1 |
+| 🧠 `.al-box` (autoexplicação) | 0 | 0 | 12 | 8 |
+| `.analogy`/`.clinical`/`.criterio` (sistema Vargas 🟢) | 0 | 0 | 0 | 0 |
+
+**Conclusão:** o redesign pro layout azul perdeu os tipos `.prova` e `.example`, que não foram recriados em nenhum capítulo posterior. Nenhum capítulo de Fisiologia II usa o sistema de cores validado do Vargas (seção 1.1), apesar de estar documentado como padrão.
+
+**Decisão (15/07/2026):** reintroduzir `.prova` e `.example` como caixas padrão em todo conteúdo de Fisiologia II (novo e existente), mantendo `.hot` e `.mnemo`, e adicionar o sistema Vargas (`.analogy`/`.clinical`/`.criterio`) que estava documentado mas nunca aplicado aqui. O layout visual azul do Cap. 46 atual permanece — a mudança é de densidade/tipos de caixa de destaque, não de identidade visual.
+
 ---
 
 ## 3. Estrutura de abas (padrão em uso, sem reclamação registrada)
@@ -105,4 +124,6 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 14/07/2026 | Sugestão: SM-2 real + rótulos/UX do Anki | 🟡 sugestão minha |
 | 14/07/2026 | Flashcard SM-2+Anki aprovado após protótipo testado | ✅ aprovado pelo Dr. Cristiano |
 | 14/07/2026 | Tom de escrita: meio-termo (base Vargas + você nos momentos de virada) | ✅ decisão conjunta |
+| 15/07/2026 | Primeiro feedback real de aluna sobre Cap.46 — prefere versão original por ter mais "pontos de atenção" | 🟢 aluna |
+| 15/07/2026 | Reintroduzir `.prova` e `.example`, adicionar sistema Vargas ao Cap.46/47/48 | ✅ decisão conjunta |
 
