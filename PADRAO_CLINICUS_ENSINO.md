@@ -137,6 +137,8 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 15/07/2026 | Primeiro feedback real de aluno no Cap. 46: prefere versão original por ter mais caixas de destaque (`.prova`/`.example`) | 🟢 aluna, mensagem direta |
 | 15/07/2026 | Reintrodução de `.prova` e `.example` como padrão em Fisiologia II | ✅ decisão do Dr. Cristiano |
 | 15/07/2026 | Sem simulado por capítulo em Fisiologia II — simulado único e integrado, construído só após P1 completo | ✅ decisão do Dr. Cristiano |
+| 15/07/2026 | Materia renomeada para "Fisiología II — Prof. Gabriel Coronil" (coexistência futura com versão do Prof. Lisandro) | ✅ decisão do Dr. Cristiano |
+| 15/07/2026 | **P2 de Fisiología II completa: 11 capítulos** (Cap. 46-49, 55, 63-66 do Guyton) — bloco sensorial/reflexos + bloco gastrointestinal inteiros publicados e sincronizados | 🏁 marco concluído |
 | 15/07/2026 | Primeiro feedback real de aluna sobre Cap.46 — prefere versão original por ter mais "pontos de atenção" | 🟢 aluna |
 | 15/07/2026 | Reintroduzir `.prova` e `.example`, adicionar sistema Vargas ao Cap.46/47/48 | ✅ decisão conjunta |
 
