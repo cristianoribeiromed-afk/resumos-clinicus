@@ -1,76 +1,86 @@
 # Padrão Clinicus de Ensino
 
-**Versão 1** — criado em 14/07/2026, a partir do que já tem prova real de funcionar (elogios de alunos + validação do Dr. Cristiano), não de suposição.
+**Versão 2** — corrigida em 14/07/2026. A v1 continha um erro: atribuía validação de alunos ao Capítulo 46 de Fisiologia II, mas **nenhum aluno teve acesso a esse material ainda**. Essa versão separa claramente 3 tipos de fonte, pra nunca mais confundir:
 
-Este documento é a referência fixa pra todo conteúdo novo da plataforma. Qualquer mudança de formato precisa passar pelo processo descrito no final antes de ir pra um arquivo publicado.
+- 🟢 **Comprovado por alunos** — elogio real, de gente que usou
+- 🔵 **Feedback direto do Dr. Cristiano** — validado por ele, mas não testado com aluno
+- 🟡 **Recomendação minha (orientador pedagógico)** — síntese, ainda não validada por ninguém — tratar como sugestão, não regra
 
 ---
 
-## 1. Estrutura de abas (obrigatória)
+## 1. A referência real: Bioquímica — Prof. Robert Vargas Bernal
 
-| Aba | Conteúdo | Status |
+🟢 Esse é o material com elogio confirmado de alunos, especificamente por: **cores, organização, e o modelo de flashcard estilo Anki**. Arquivos: `bioquimica_vargas_*.html`.
+
+### 1.1 Sistema de cores (multi-semântico, não um grid fixo)
+
+Não é uma caixinha de 4 cores agrupada — são **4 tipos de caixa usados individualmente, onde fizer sentido no texto**, cada uma com um propósito claro:
+
+| Classe CSS | Cor | Uso |
 |---|---|---|
-| 📋 Guia de Estudo | Conteúdo teórico, tom conversacional | ✅ Padrão |
-| 🩺 Casos Clínicos | Caso progressivo (2-3 fases reveladas aos poucos) | ✅ Padrão |
-| 🃏 Flashcards | Motor SM-2 (revisão espaçada, localStorage) | ✅ Padrão |
-| ✅ Banco de Questões | MCQ comentadas, gabarito balanceado | ✅ Padrão |
-| 🎮 Quiz Rápido | Versão curta pra revisão relâmpago | ✅ Padrão |
-| 🗺️ Mapas Mentais | — | ❌ **Removida do padrão** (ver seção 5) |
+| `.analogy` | dourado | Analogia do dia a dia pra explicar o conceito |
+| `.clinical` | vermelho | Correlação clínica |
+| `.mnemo` | azul | Mnemônico / truque de memorização |
+| `.criterio` | verde | Critério técnico exato / exceção que cai em prova |
+
+Paleta base: `--green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff` sobre fundo escuro `#0d0f16`. Tipografia: **Lora** (serifada) pros títulos, **DM Sans** pro corpo do texto — essa combinação séria+legível parece parte do que funciona.
+
+### 1.2 Organização — trilha de progresso visível
+
+Uma barra pequena, dentro da área de abas, mostra a sequência inteira do capítulo com setas: `Estrutura → Classificação → Nomenclatura → Propriedades → Funções → Flashcards → Quiz`. Isso dá ao aluno noção de "onde estou, o que falta" sem precisar abrir a sidebar. **Vale adotar em todo conteúdo novo.**
+
+### 1.3 Flashcards estilo Anki
+
+🟢 Comprovado: botões com os rótulos genuínos do Anki (**De novo / Difícil / Bem / Fácil**), contador "Cartão X/Y", contador de "Dominados", e botão de **misturar (🔀)**.
+
+⚠️ Detalhe técnico importante: essa versão **não tem repetição espaçada de verdade** — não salva intervalo nem data de próxima revisão, só soma XP e conta "dominados" na sessão. Quem tem o algoritmo real (SM-2 com localStorage, intervalos calculados) é o material de Fisiologia II — só que com rótulos genéricos ("Não lembrei / Com esforço / Fácil"), não os do Anki.
+
+🟡 **Minha recomendação:** juntar os dois — manter o algoritmo real de repetição espaçada (SM-2, o que já existe em Fisiologia) mas trocar os rótulos dos botões pros 4 termos genuínos do Anki (De novo/Difícil/Bem/Fácil) e adicionar o botão de misturar + contador de dominados. Isso não foi testado ainda — é uma hipótese minha de que reúne o que funciona de cada um.
 
 ---
 
-## 2. Tom de escrita
+## 2. Feedback direto do Dr. Cristiano (não testado com aluno ainda)
 
-Baseado no que rendeu elogio real no Capítulo 47:
+🔵 Sobre o material de Fisiologia II (Cap. 46/47), especificamente:
 
-- **Segunda pessoa, sempre** ("você", nunca "o aluno deve...")
-- Analogias do cotidiano antes da definição técnica
-- Frases curtas. Parágrafo longo é sinal de que precisa quebrar em tópicos
-- Pergunta retórica pra abrir seção é bem-vinda ("Por que você para de sentir a roupa no corpo?")
-- Gíria/expressão brasileira coloquial é permitida com moderação ("bate o cotovelo naquele osso da risada")
+- **Fonte pequena demais** — corrigido pra 18px de base no Cap. 47. Isso NÃO é algo que o material do Vargas também faz (ele usa tamanho padrão ~16px) — é uma correção pontual baseada no seu incômodo direto, não uma cópia de outro material.
+- **Mapas Mentais não funcionam** — nem o formato ASCII (usado em várias disciplinas, incluindo Cap. 46) nem a tentativa em SVG (Cap. 47) agradaram. Ver seção 4.
 
-## 3. Sistema visual
+---
 
-- **Fonte base: 18px** (não 16px — telas menores cansam a vista, confirmado por feedback direto)
-- Tema escuro, paleta por disciplina (cada matéria pode ter sua cor de destaque, mas segue a mesma estrutura)
-- **Caixinha de 4 cores (al-grid)** — usar em pontos de alta densidade de informação:
-  - ✅ verde — O que você deve lembrar
-  - ⚠️ coral — Erro comum
-  - ⚡ azul — Questão rápida (com resposta escondida em toggle)
-  - 🧠 roxo — Autoexplicação
-  - Meta: pelo menos 1 a cada 2-3 seções principais do Guia de Estudo
-- **Shell de navegação** (cabeçalho fixo + sidebar da disciplina + breadcrumb + progresso + anterior/próximo) — implementado em toda a plataforma, manter em todo conteúdo novo via `inject_shell.py`
+## 3. Estrutura de abas (padrão em uso, sem reclamação registrada)
 
-## 4. Flashcards — meta de completude
+| Aba | Conteúdo |
+|---|---|
+| Guia de Estudo | Conteúdo teórico |
+| Casos Clínicos | Caso progressivo (quando aplicável) |
+| Flashcards | Ver seção 1.3 |
+| Banco de Questões / Quiz | MCQ comentadas, gabarito sempre balanceado (regra permanente, não muda) |
 
-- **Mínimo de 30 cards por capítulo** (referência: Cap. 46 tem 34, foi elogiado; Cap. 47 tinha só 20, foi criticado como "incompleto")
-- Motor SM-2 com 3 botões de review (Não lembrei / Com esforço / Fácil) — não mexer nesse mecanismo, já está validado
-- Cobrir: definições-chave, números/valores que caem em prova, armadilhas conceituais, e pelo menos 1 card por caso clínico
+## 4. Mapas Mentais — status: EM ABERTO
 
-## 5. Mapas Mentais — status: EM ABERTO, não obrigatório
+Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigatória em conteúdo novo até termos uma versão validada.
 
-Duas tentativas até agora, nenhuma aprovada:
-1. **Formato ASCII/fluxograma de texto** (Cap. 46 e outros) — reclamação original: "não é mapa mental de verdade"
-2. **Formato SVG radial** (tentativa nesta sessão, Cap. 47) — não agradou visualmente
+## 5. Processo pra testar formato novo
 
-**Decisão:** não incluir "Mapas Mentais" como aba obrigatória em conteúdo novo até termos um formato validado. Se o tema pedir uma representação visual, usar diagrama de fluxo simples dentro do Guia de Estudo mesmo (não como aba separada), ou pular essa parte.
+**Nunca redesenhar um elemento visual direto num arquivo já publicado.**
 
-## 6. Processo pra testar formato novo (regra nova, por causa do que aconteceu)
-
-**Nunca mais redesenhar um elemento visual direto num arquivo já publicado sem aprovação prévia.** A partir de agora:
-
-1. Construir 1 protótipo isolado (não no arquivo de produção)
-2. Mostrar pro Dr. Cristiano com um resumo claro do que mudou e por quê
+1. Construir 1 protótipo isolado
+2. Mostrar pro Dr. Cristiano com o que mudou e por quê — e deixar claro se é 🟢 comprovado, 🔵 feedback seu, ou 🟡 sugestão minha
 3. Só aplicar em conteúdo publicado depois do "sim"
-4. Se aprovado, documentar aqui como novo padrão
+4. Documentar aqui como novo padrão, com a fonte certa (não inventar validação que não existe)
 
 ---
 
 ## Histórico de decisões
 
-| Data | O que mudou | Motivo |
+| Data | O que mudou | Fonte |
 |---|---|---|
-| 14/07/2026 | Fonte base 16px → 18px | Feedback direto: letra pequena |
-| 14/07/2026 | Adicionado al-grid (4 cores) no padrão | Elogiado no material da Profa. Deborah |
-| 14/07/2026 | Mapas Mentais removidos da lista obrigatória | Duas tentativas reprovadas (ASCII e SVG) |
-| 14/07/2026 | Meta de 30+ flashcards por capítulo | Cap. 47 com 20 foi sentido como incompleto |
+| 14/07/2026 | v1 criada, com erro (atribuiu elogio ao Cap. 46 sem alunos terem acesso) | — |
+| 14/07/2026 | v2: corrigida a fonte real do elogio pra Bioquímica do Prof. Vargas | 🟢 Dr. Cristiano confirmou |
+| 14/07/2026 | Fonte base 18px no Cap. 47 | 🔵 feedback direto |
+| 14/07/2026 | Mapas Mentais fora da lista obrigatória | 🔵 duas tentativas reprovadas |
+| 14/07/2026 | Sistema de cores multi-semântico (não grid fixo) documentado | 🟢 Bioquímica Vargas |
+| 14/07/2026 | Trilha de progresso nas abas documentada como boa prática | 🟢 Bioquímica Vargas |
+| 14/07/2026 | Sugestão: SM-2 real + rótulos/UX do Anki | 🟡 não testado ainda |
+
