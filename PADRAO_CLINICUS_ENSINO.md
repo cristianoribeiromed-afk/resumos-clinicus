@@ -35,7 +35,27 @@ Uma barra pequena, dentro da área de abas, mostra a sequência inteira do capí
 
 ⚠️ Detalhe técnico importante: essa versão **não tem repetição espaçada de verdade** — não salva intervalo nem data de próxima revisão, só soma XP e conta "dominados" na sessão. Quem tem o algoritmo real (SM-2 com localStorage, intervalos calculados) é o material de Fisiologia II — só que com rótulos genéricos ("Não lembrei / Com esforço / Fácil"), não os do Anki.
 
-🟡 **Minha recomendação:** juntar os dois — manter o algoritmo real de repetição espaçada (SM-2, o que já existe em Fisiologia) mas trocar os rótulos dos botões pros 4 termos genuínos do Anki (De novo/Difícil/Bem/Fácil) e adicionar o botão de misturar + contador de dominados. Isso não foi testado ainda — é uma hipótese minha de que reúne o que funciona de cada um.
+🟡 **Minha recomendação:** juntar os dois — manter o algoritmo real de repetição espaçada (SM-2, o que já existe em Fisiologia) mas trocar os rótulos dos botões pros 4 termos genuínos do Anki (De novo/Difícil/Bem/Fácil) e adicionar o botão de misturar + contador de dominados.
+
+✅ **APROVADO em 14/07/2026** — protótipo testado (com prévia de "daqui a quantos dias volta" em cada botão) e validado pelo Dr. Cristiano. Passa a ser o padrão pra flashcards em conteúdo novo e na próxima atualização dos capítulos existentes.
+
+---
+
+## 1.4 Tom de escrita — o meio-termo (definido em 14/07/2026)
+
+Comparação direta feita entre os dois estilos:
+
+- **Vargas (🟢 comprovado):** terceira pessoa, registro professor-sério, preciso, com analogia pontual. Ex: *"Aminoácidos são compostos orgânicos que se combinam para formar proteínas... os 'sillares' (tijolos) que as constroem."*
+- **Fisiologia Cap. 47 (🔵 só feedback do Dr. Cristiano, não testado):** segunda pessoa o tempo todo, bem coloquial. Ex: *"você bate o cotovelo naquele 'osso da risada'..."*
+
+**Decisão:** usar o registro do Vargas como base (é o que tem prova), com pitada de didática:
+
+- **Base:** direto, preciso, terceira pessoa na maior parte do texto
+- **Segunda pessoa ("você"):** só nos momentos de virada — quando o capítulo revela algo contraintuitivo ou é o ponto mais importante da seção. Não o texto inteiro.
+- **Pergunta retórica:** ok pra abrir uma seção difícil, com moderação — não em toda seção
+- **Evitar:** gírias muito regionais/informais (tipo "osso da risada"). Prefere clareza a graça.
+
+Essa orientação vale a partir de agora pra todo conteúdo novo — inclusive o próximo capítulo que o Dr. Cristiano for mandar.
 
 ---
 
@@ -82,5 +102,7 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 14/07/2026 | Mapas Mentais fora da lista obrigatória | 🔵 duas tentativas reprovadas |
 | 14/07/2026 | Sistema de cores multi-semântico (não grid fixo) documentado | 🟢 Bioquímica Vargas |
 | 14/07/2026 | Trilha de progresso nas abas documentada como boa prática | 🟢 Bioquímica Vargas |
-| 14/07/2026 | Sugestão: SM-2 real + rótulos/UX do Anki | 🟡 não testado ainda |
+| 14/07/2026 | Sugestão: SM-2 real + rótulos/UX do Anki | 🟡 sugestão minha |
+| 14/07/2026 | Flashcard SM-2+Anki aprovado após protótipo testado | ✅ aprovado pelo Dr. Cristiano |
+| 14/07/2026 | Tom de escrita: meio-termo (base Vargas + você nos momentos de virada) | ✅ decisão conjunta |
 
