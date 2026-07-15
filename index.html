@@ -958,6 +958,23 @@ footer p:last-child{margin-bottom:0;}
   <p class="footer-credit">Conteúdo produzido por <b>Cristiano Ribeiro da Silva</b></p>
 </footer>
 
+<div class="modal-bg" id="checkoutModalBg">
+  <div class="modal" style="max-width:420px;">
+    <span class="modal-x" id="checkoutModalX">✕</span>
+    <h3 id="checkoutItemNome">Finalizar compra</h3>
+    <p id="checkoutValor" style="color:var(--green-light);font-size:20px;font-weight:700;font-family:'DM Mono',monospace;"></p>
+    <p style="font-size:12.5px;margin-bottom:10px;">Digite seus dados pra gerar o link de pagamento seguro (PIX ou cartão):</p>
+    <input type="text" id="checkoutNomeInput" placeholder="Seu nome completo" style="margin-bottom:8px;">
+    <input type="email" id="checkoutEmailInput" placeholder="seuemail@exemplo.com" style="margin-bottom:8px;">
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Use o mesmo email que você vai usar depois pra verificar seu acesso na plataforma.</p>
+    <div id="checkoutMsg" style="font-size:13px;margin-bottom:8px;"></div>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn-sec" id="checkoutCloseBtn">Cancelar</button>
+      <button class="btn-comprar" id="checkoutGoBtn">Ir para pagamento</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="pixModalBg">
   <div class="modal" style="max-width:420px;">
     <span class="modal-x" id="pixModalX">✕</span>
@@ -1042,6 +1059,82 @@ document.getElementById('pixCopyBtn').onclick = ()=>{
   const btn = document.getElementById('pixCopyBtn');
   const old = btn.textContent; btn.textContent="Copiado!"; setTimeout(()=>btn.textContent=old,1500);
 };
+
+/* ---------- CHECKOUT VIA MERCADO PAGO (fluxo novo, automatizado) ---------- */
+let CHECKOUT_ATUAL = null; // { itemNome, preco, planoKey }
+
+function abrirCheckout(itemNome, preco, planoKey){
+  CHECKOUT_ATUAL = { itemNome, preco, planoKey };
+  document.getElementById('checkoutItemNome').textContent = itemNome;
+  document.getElementById('checkoutValor').textContent = preco ? "R$ "+Number(preco).toFixed(2).replace('.',',') : "Valor a combinar";
+  document.getElementById('checkoutMsg').textContent = '';
+  document.getElementById('checkoutNomeInput').value = '';
+  document.getElementById('checkoutEmailInput').value = '';
+  document.getElementById('checkoutGoBtn').disabled = false;
+  document.getElementById('checkoutGoBtn').textContent = 'Ir para pagamento';
+  document.getElementById('checkoutModalBg').classList.add('show');
+}
+
+async function confirmarCheckout(){
+  const nome = document.getElementById('checkoutNomeInput').value.trim();
+  const email = document.getElementById('checkoutEmailInput').value.trim();
+  const msgEl = document.getElementById('checkoutMsg');
+  const btn = document.getElementById('checkoutGoBtn');
+
+  if(!nome){ msgEl.style.color='var(--coral,#e06060)'; msgEl.textContent='Digite seu nome.'; return; }
+  if(!email || !email.includes('@')){ msgEl.style.color='var(--coral,#e06060)'; msgEl.textContent='Digite um email válido.'; return; }
+  if(!CHECKOUT_ATUAL || !CHECKOUT_ATUAL.planoKey){ msgEl.style.color='var(--coral,#e06060)'; msgEl.textContent='Erro interno: produto não identificado. Recarregue a página.'; return; }
+
+  msgEl.style.color='var(--muted)';
+  msgEl.textContent='Gerando seu link de pagamento...';
+  btn.disabled = true;
+  btn.textContent = 'Aguarde...';
+
+  try {
+    const resp = await fetch(CONFIG.clinicusApiUrl + '/api/checkout/clinicusmed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        nome: nome,
+        plano: CHECKOUT_ATUAL.planoKey,
+        itemNome: CHECKOUT_ATUAL.itemNome,
+        preco: CHECKOUT_ATUAL.preco,
+      }),
+    });
+    const data = await resp.json();
+    if(resp.ok && data.success && data.checkoutUrl){
+      window.location.href = data.checkoutUrl;
+      return;
+    }
+    throw new Error(data.message || 'Erro ao gerar checkout.');
+  } catch(e){
+    console.error('Falha no checkout automatico:', e);
+    msgEl.style.color='var(--coral,#e06060)';
+    msgEl.innerHTML = 'Não foi possível iniciar o pagamento automático agora. <a href="'+gerarLinkWhatsapp(CHECKOUT_ATUAL.itemNome, CHECKOUT_ATUAL.preco)+'" target="_blank" style="color:var(--accent2);">Chama no WhatsApp</a> que resolvemos na mão.';
+    btn.disabled = false;
+    btn.textContent = 'Tentar novamente';
+  }
+}
+
+document.getElementById('checkoutGoBtn').onclick = confirmarCheckout;
+document.getElementById('checkoutCloseBtn').onclick = ()=>document.getElementById('checkoutModalBg').classList.remove('show');
+document.getElementById('checkoutModalX').onclick = ()=>document.getElementById('checkoutModalBg').classList.remove('show');
+
+// Constrói a mesma chave de plano usada em buildAccessIndex(), pra que o
+// checkout automatizado grave o acesso exatamente no identificador que o
+// "Já comprei — ver meu acesso" já sabe procurar.
+function planoKeyEtapa(semSlug, materiaNome, etapaNome, tipo){
+  const base = semSlug + '-' + slugify(materiaNome);
+  const keyBase = etapaNome === 'Final' ? base : base + '-' + slugify(etapaNome);
+  return keyBase + '-' + tipo; // tipo: 'resumo' | 'simulado' | 'combo'
+}
+function planoKeyMateriaCompleta(semSlug, materiaNome){
+  return semSlug + '-' + slugify(materiaNome) + '-completo';
+}
+function planoKeySemestre(semSlug){
+  return semSlug + '-combo';
+}
 
 let CATALOGO_DATA = null;
 function slugify(str){
@@ -1216,25 +1309,28 @@ function bestsellerBadge(){ return `<span class="popular-badge">🔥 Popular</sp
 const ETAPA_ORDEM = ['P1', 'P2', 'Final'];
 const ETAPA_ICON = {'P1':'📁', 'P2':'📁', 'Final':'📁'};
 
-function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome){
+function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome, semSlug){
   const ambosDisponiveis = etapa.resumo.disponivel && etapa.simulado.disponivel;
   const itemPrefix = `${etapaNome} - ${materiaNome}`.replace(/'/g,"\\'");
+  const planoResumo = planoKeyEtapa(semSlug, materiaNome, etapaNome, 'resumo');
+  const planoSimulado = planoKeyEtapa(semSlug, materiaNome, etapaNome, 'simulado');
+  const planoCombo = planoKeyEtapa(semSlug, materiaNome, etapaNome, 'combo');
   return `
     <div class="produto-row">
       <span class="produto-label"><span class="tagdot"></span>Guia de Estudo</span>
       ${etapa.resumo.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirPagamentoPix('Guia de Estudo - ${itemPrefix}', ${etapa.resumo.preco})">Comprar</button></span>`
+        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirCheckout('Guia de Estudo - ${itemPrefix}', ${etapa.resumo.preco}, '${planoResumo}')">Comprar</button></span>`
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     <div class="produto-row">
       <span class="produto-label simulado"><span class="tagdot simulado"></span>Simulado</span>
       ${etapa.simulado.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirPagamentoPix('Simulado - ${itemPrefix}', ${etapa.simulado.preco})">Comprar</button></span>`
+        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirCheckout('Simulado - ${itemPrefix}', ${etapa.simulado.preco}, '${planoSimulado}')">Comprar</button></span>`
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     ${ambosDisponiveis ? `<div class="produto-row combo-row">
       <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (guia + simulado)</span>
-      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo - ${itemPrefix}', ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)})">Comprar combo</button></span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirCheckout('Combo - ${itemPrefix}', ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}, '${planoCombo}')">Comprar combo</button></span>
     </div>` : ``}`;
 }
 
@@ -1248,7 +1344,7 @@ function statusEtapasTexto(m){
   return disponiveis.join(', ') + ' disponível' + (disponiveis.length>1 ? 'is' : '');
 }
 
-function renderEtapaFolder(etapaNome, etapa, materiaNome){
+function renderEtapaFolder(etapaNome, etapa, materiaNome, semSlug){
   if(!etapa) return '';
   const statusTxt = etapa.disponivel ? 'disponível' : 'em breve';
   const statusCls = etapa.disponivel ? 'etapa-status-ok' : 'etapa-status-embreve';
@@ -1260,16 +1356,17 @@ function renderEtapaFolder(etapaNome, etapa, materiaNome){
       <span class="etapa-chevron">▾</span>
     </div>
     <div class="etapa-folder-body"><div class="etapa-folder-body-inner">
-      ${etapa.disponivel ? renderProdutoRowsEtapa(etapa, materiaNome, etapaNome) : `<p class="etapa-vazia-msg">Conteúdo desta etapa ainda não foi liberado. Fique de olho — avisamos no grupo assim que sair!</p>`}
+      ${etapa.disponivel ? renderProdutoRowsEtapa(etapa, materiaNome, etapaNome, semSlug) : `<p class="etapa-vazia-msg">Conteúdo desta etapa ainda não foi liberado. Fique de olho — avisamos no grupo assim que sair!</p>`}
     </div></div>
   </div>`;
 }
 
-function renderMateriaCard(m, meta){
+function renderMateriaCard(m, meta, semSlug){
   const algumDisponivel = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].disponivel);
+  const planoCompleto = planoKeyMateriaCompleta(semSlug, m.nome);
   const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
       <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)</span>
-      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirPagamentoPix('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco})">Comprar</button></span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
     </div>` : '';
   return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open">
     <div class="subject-head no-toggle">
@@ -1281,7 +1378,7 @@ function renderMateriaCard(m, meta){
       </div>
     </div>
     <div class="subject-body"><div class="subject-body-inner">
-      ${ETAPA_ORDEM.map(k => renderEtapaFolder(k, m.etapas[k], m.nome)).join('')}
+      ${ETAPA_ORDEM.map(k => renderEtapaFolder(k, m.etapas[k], m.nome, semSlug)).join('')}
       ${comboGeral}
     </div></div>
   </div>`;
@@ -1315,7 +1412,7 @@ function renderCatalogo(data){
     if(sem.combo.disponivel){
       panelsHtml += `<div class="combo-banner">
         <div class="ctext"><b>Combo completo · ${sem.semestre}º Semestre</b><span>Todas as matérias do semestre (guias + simulados)</span></div>
-        <button class="btn-comprar" onclick="abrirPagamentoPix('Combo ${sem.semestre}º Semestre', ${sem.combo.preco})">Comprar combo${sem.combo.preco? ' — R$ '+sem.combo.preco:''}</button>
+        <button class="btn-comprar" onclick="abrirCheckout('Combo ${sem.semestre}º Semestre', ${sem.combo.preco}, '${planoKeySemestre(sem.slug)}')">Comprar combo${sem.combo.preco? ' — R$ '+sem.combo.preco:''}</button>
       </div>`;
     }
 
@@ -1336,7 +1433,7 @@ function renderCatalogo(data){
         panelsHtml += `<div class="subject-group-label">${meta.icon} ${subjectLabel} <span class="subject-count">${membros.length} professores</span></div>`;
       }
       membros.forEach(m=>{
-        panelsHtml += renderMateriaCard(m, meta);
+        panelsHtml += renderMateriaCard(m, meta, sem.slug);
       });
     });
     panelsHtml += `</div></div></div>`;
