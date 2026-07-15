@@ -66,23 +66,6 @@ Essa orientação vale a partir de agora pra todo conteúdo novo — inclusive o
 - **Fonte pequena demais** — corrigido pra 18px de base no Cap. 47. Isso NÃO é algo que o material do Vargas também faz (ele usa tamanho padrão ~16px) — é uma correção pontual baseada no seu incômodo direto, não uma cópia de outro material.
 - **Mapas Mentais não funcionam** — nem o formato ASCII (usado em várias disciplinas, incluindo Cap. 46) nem a tentativa em SVG (Cap. 47) agradaram. Ver seção 4.
 
-## 2.1 Primeiro feedback real de aluno — Cap. 46 (15/07/2026)
-
-🟢 **Comprovado por aluna** (mensagem direta, 15/07/2026): ela prefere a **versão original** do Cap. 46 (antes da migração pro layout azul atual), especificamente porque *"visualmente tem mais pontos de atenção, que pode ajudar a fixar melhor"*.
-
-Auditoria objetiva que confirma o motivo:
-
-| Tipo de caixa | Cap.46 original | Cap.46 atual (azul) | Cap.47 | Cap.48 |
-|---|---|---|---|---|
-| 📌 `.prova` (cobrança de prova) | 4 | 0 | 0 | 0 |
-| 💡 `.example` | 2 | 0 | 0 | 0 |
-| ⚠️ `.hot` | 3 | 5 | 4 | 1 |
-| 🎵 `.mnemo` | 3 | 2 | 2 | 1 |
-
-A migração pro layout azul **perdeu** os tipos `.prova` e `.example` — presentes no original, ausentes em todos os capítulos atuais (46/47/48). Nenhum capítulo de Fisiologia II usa o sistema de cores validado do Vargas (`.analogy`/`.clinical`/`.criterio`) tampouco.
-
-**Decisão:** reintroduzir `.prova` (cobrança de prova) e `.example` como caixas padrão em todo conteúdo de Fisiologia II, mantendo o layout visual azul atual (aprovado à parte) e o tom de escrita meio-termo (seção 1.4). Isso não substitui o sistema Vargas — ambos podem coexistir, cada um com seu propósito.
-
 ## 2.1 Primeiro feedback real de aluna — Cap. 46 (15/07/2026)
 
 🟢 **Comprovado por aluna** — a primeira validação real de estudante que esse capítulo recebe (corrige a nota da v1/v2 que dizia que nenhum aluno tinha acesso ainda). Mensagem literal: *"eu prefiro esse primeiro, acho que visualmente tem mais pontos de atenção, que pode ajudar a fixar melhor"* — comparando a versão **original** do Cap. 46 (pré-redesign, layout vermelho) com a versão **atual** (layout azul, em produção).
@@ -101,6 +84,16 @@ A migração pro layout azul **perdeu** os tipos `.prova` e `.example` — prese
 **Conclusão:** o redesign pro layout azul perdeu os tipos `.prova` e `.example`, que não foram recriados em nenhum capítulo posterior. Nenhum capítulo de Fisiologia II usa o sistema de cores validado do Vargas (seção 1.1), apesar de estar documentado como padrão.
 
 **Decisão (15/07/2026):** reintroduzir `.prova` e `.example` como caixas padrão em todo conteúdo de Fisiologia II (novo e existente), mantendo `.hot` e `.mnemo`, e adicionar o sistema Vargas (`.analogy`/`.clinical`/`.criterio`) que estava documentado mas nunca aplicado aqui. O layout visual azul do Cap. 46 atual permanece — a mudança é de densidade/tipos de caixa de destaque, não de identidade visual.
+
+**Status de aplicação real (15/07/2026):** Cap. 46 e Cap. 4 (48 parte 2) já têm `.prova`/`.example`/sistema Vargas. Cap. 47 e Cap. 48 (parte 1) ainda **não** têm — pendente.
+
+## 2.2 Estratégia de simulados — sem simulado por capítulo (15/07/2026)
+
+✅ **Decisão do Dr. Cristiano:** Fisiologia II **não terá simulado em cada capítulo individual**. Os capítulos ficam só com Banco de Questões (comentado) + Quiz Rápido, como já é o padrão. O **simulado será único e integrado**, cobrindo o conteúdo completo de P1, construído **só depois que todos os capítulos de P1 estiverem prontos** — não capítulo a capítulo.
+
+Motivo: preservar a possibilidade de vender o simulado como produto separado do guia de estudo (mesmo modelo de monetização já usado em Bioquímica e Biologia I — capítulo/resumo é um produto, simulado é outro).
+
+
 
 ---
 
@@ -143,6 +136,7 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 14/07/2026 | Tom de escrita: meio-termo (base Vargas + você nos momentos de virada) | ✅ decisão conjunta |
 | 15/07/2026 | Primeiro feedback real de aluno no Cap. 46: prefere versão original por ter mais caixas de destaque (`.prova`/`.example`) | 🟢 aluna, mensagem direta |
 | 15/07/2026 | Reintrodução de `.prova` e `.example` como padrão em Fisiologia II | ✅ decisão do Dr. Cristiano |
+| 15/07/2026 | Sem simulado por capítulo em Fisiologia II — simulado único e integrado, construído só após P1 completo | ✅ decisão do Dr. Cristiano |
 | 15/07/2026 | Primeiro feedback real de aluna sobre Cap.46 — prefere versão original por ter mais "pontos de atenção" | 🟢 aluna |
 | 15/07/2026 | Reintroduzir `.prova` e `.example`, adicionar sistema Vargas ao Cap.46/47/48 | ✅ decisão conjunta |
 
