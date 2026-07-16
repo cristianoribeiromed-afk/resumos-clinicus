@@ -1515,11 +1515,16 @@ fetch('./catalogo.json?v=' + Date.now())
 
 const ACESSOS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQFHzFcaGYagwUJcvdY5QXGlmI8ktTxVPiWx_p2akJmgXv73xclYSCrl1OvfXqZg_KSghztcPJrEPzv/pub?output=csv";
 
-document.getElementById('acessoBtn').onclick = ()=>document.getElementById('modalBg').classList.add('show');
+document.getElementById('acessoBtn').onclick = ()=>{
+  document.getElementById('modalBg').classList.add('show');
+  tentarAutoVerificar();
+};
 document.getElementById('modalClose').onclick = ()=>document.getElementById('modalBg').classList.remove('show');
 document.getElementById('modalX').onclick = ()=>document.getElementById('modalBg').classList.remove('show');
-document.getElementById('modalCheck').onclick = async ()=>{
-  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+
+const EMAIL_LEMBRADO_KEY = 'clinicus_email_verificado';
+
+async function checarAcesso(email){
   const msg = document.getElementById('modalMsg');
   if(!email){ msg.textContent="Digite um email."; msg.style.color="var(--gold)"; return; }
   if(!ACESSOS_CSV_URL){ msg.textContent="Verificação ainda não configurada. Fale com o suporte no WhatsApp."; msg.style.color="var(--muted)"; return; }
@@ -1546,6 +1551,9 @@ document.getElementById('modalCheck').onclick = async ()=>{
     // Um email pode ter VÁRIAS linhas ativas (um combo/plano por linha) — junta todas.
     const encontradas = linhas.slice(1).filter(l=> (l[iEmail]||"").trim().toLowerCase()===email && (l[iAtivo]||"").trim().toUpperCase()==="TRUE");
     if(encontradas.length){
+      // Verificação deu certo — lembra esse email no navegador, pra não pedir de novo
+      // toda vez que o aluno voltar pro catálogo (ex: clicando em "Voltar" dentro de um capítulo).
+      try{ localStorage.setItem(EMAIL_LEMBRADO_KEY, email); }catch(e){}
       const idx = CATALOGO_DATA ? buildAccessIndex(CATALOGO_DATA) : {};
       const planosNomes = [];
       const itensMap = new Map(); // dedupe por url, caso dois planos compartilhem material
@@ -1611,7 +1619,13 @@ document.getElementById('modalCheck').onclick = async ()=>{
           </details>`;
         });
 
-        msg.innerHTML = `<div class="access-summary">✅ Acesso liberado: <b>${planosNomes.join(', ')}</b><br>${totalMaterias} matéria${totalMaterias>1?'s':''} · ${totalArquivos} arquivo${totalArquivos>1?'s':''}</div>${gruposHtml}`;
+        msg.innerHTML = `<div class="access-summary">✅ Acesso liberado: <b>${planosNomes.join(', ')}</b><br>${totalMaterias} matéria${totalMaterias>1?'s':''} · ${totalArquivos} arquivo${totalArquivos>1?'s':''}</div>${gruposHtml}<button class="btn-sec" id="trocarEmailBtn" style="margin-top:12px;width:100%;">Verificar outro email</button>`;
+        const trocarBtn = document.getElementById('trocarEmailBtn');
+        if(trocarBtn) trocarBtn.onclick = ()=>{
+          try{ localStorage.removeItem(EMAIL_LEMBRADO_KEY); }catch(e){}
+          document.getElementById('emailInput').value = '';
+          msg.innerHTML = '';
+        };
       } else {
         msg.innerHTML = `<span style="color:var(--gold)">Acesso confirmado (plano(s): ${planosNomes.join(', ')}), mas não encontramos os arquivos vinculados. Fale com o suporte no WhatsApp.</span>`;
       }
@@ -1623,7 +1637,35 @@ document.getElementById('modalCheck').onclick = async ()=>{
     msg.textContent = "Erro ao verificar. Tente de novo em alguns instantes.";
     msg.style.color="var(--gold)";
   }
+}
+
+// Se o aluno já verificou o email antes (guardado no navegador), reconfirma sozinho
+// ao abrir o modal de novo — evita pedir o email de novo toda vez que ele voltar
+// pro catálogo (ex: clicando em "Voltar" dentro de um capítulo já liberado).
+function tentarAutoVerificar(){
+  let emailLembrado = null;
+  try{ emailLembrado = localStorage.getItem(EMAIL_LEMBRADO_KEY); }catch(e){}
+  if(emailLembrado){
+    document.getElementById('emailInput').value = emailLembrado;
+    checarAcesso(emailLembrado);
+  }
+}
+
+document.getElementById('modalCheck').onclick = ()=>{
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  checarAcesso(email);
 };
+
+// Ao carregar a página (ex: clicou em "Voltar" dentro de um capítulo), se já tiver
+// um email lembrado, abre o painel de acesso automaticamente com os materiais.
+document.addEventListener('DOMContentLoaded', function(){
+  let emailLembrado = null;
+  try{ emailLembrado = localStorage.getItem(EMAIL_LEMBRADO_KEY); }catch(e){}
+  if(emailLembrado && window.location.hash === '#catalogo'){
+    document.getElementById('modalBg').classList.add('show');
+    tentarAutoVerificar();
+  }
+});
 
 // Botão do Hero e do Menu — "Falar com um Mentor" (mensagem de acolhimento, não de venda)
 (function(){
