@@ -141,7 +141,37 @@ MOBILE_TOGGLE_SCRIPT = '''<script>
     localStorage.setItem(key, '1');
   }catch(e){}
 })();
+</script>
+<script>
+(function(){
+  var KEY = 'cmed_reading_mode';
+  var SEEN_KEY = 'cmed_reading_mode_seen_intro';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  try{
+    var stored = localStorage.getItem(KEY);
+    var seenIntro = localStorage.getItem(SEEN_KEY);
+    if(stored === '1'){
+      html.classList.add('cmed-reading-mode');
+    } else if(stored === null && seenIntro === '1'){
+      // aluno ja navegou antes mas nunca mexeu no toggle -> assume preferencia por modo leitura
+      html.classList.add('cmed-reading-mode');
+    }
+    if(!seenIntro){ localStorage.setItem(SEEN_KEY, '1'); }
+  }catch(e){}
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      try{ localStorage.setItem(KEY, html.classList.contains('cmed-reading-mode') ? '1' : '0'); }catch(e){}
+    };
+  }
+})();
 </script>'''
+
+READING_MODE_BTN = '''<button class="cmed-reading-btn" id="cmedReadingBtn">
+  <span class="cmed-reading-label-enter">⛶ Modo Leitura</span>
+  <span class="cmed-reading-label-exit">✕ Sair do Modo Leitura</span>
+</button>'''
 
 def fix_body_flex_grid_conflict(html):
     """Se o arquivo define body{display:flex/grid} pro layout proprio dele,
@@ -189,7 +219,8 @@ def inject_file(item, seq, idx, dry_run=False):
     next_item = seq[idx + 1] if idx < len(seq) - 1 else None
     prevnext_html = build_prevnext(prev_item, next_item)
 
-    top_block = f'''{header_html}
+    top_block = f'''{READING_MODE_BTN}
+{header_html}
 {breadcrumb_html}
 {progress_html}
 <div class="cmed-nav-layout">

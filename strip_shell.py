@@ -12,16 +12,17 @@ def strip_shell(path):
     # remove o link do CSS
     html = html.replace('<link rel="stylesheet" href="/assets/shell-nav.css">\n', '', 1)
 
-    # remove o bloco do topo: de <header class="cmed-nav-header"> ate <div class="cmed-nav-main">
+    # remove o bloco do topo: botao de modo leitura (se existir, arquivos antigos nao tem) + header ate cmed-nav-main
     html = re.sub(
-        r'<header class="cmed-nav-header">.*?<div class="cmed-nav-main">\n',
+        r'(?:<button class="cmed-reading-btn".*?</button>\n)?<header class="cmed-nav-header">.*?<div class="cmed-nav-main">\n',
         '',
         html, count=1, flags=re.DOTALL
     )
 
-    # remove o bloco do rodape: do fechamento do cmed-nav-main ate o fim do script de toggle mobile
+    # remove o bloco do rodape: do fechamento do cmed-nav-main ate o fim do(s) script(s)
+    # (arquivos antigos tem so 1 script de toggle mobile; novos tem 2: toggle mobile + modo leitura)
     html = re.sub(
-        r'\n  </div>\n</div>\n<nav class="cmed-nav-prevnext">.*?</script>\n',
+        r'\n  </div>\n</div>\n<nav class="cmed-nav-prevnext">.*?</script>(?:\s*<script>.*?</script>)?\n',
         '\n',
         html, count=1, flags=re.DOTALL
     )

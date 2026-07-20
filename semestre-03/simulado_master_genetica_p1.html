@@ -207,6 +207,10 @@
 <link rel="stylesheet" href="/assets/shell-nav.css">
 </head>
 <body>
+<button class="cmed-reading-btn" id="cmedReadingBtn">
+  <span class="cmed-reading-label-enter">⛶ Modo Leitura</span>
+  <span class="cmed-reading-label-exit">✕ Sair do Modo Leitura</span>
+</button>
 <header class="cmed-nav-header">
   <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
   <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
@@ -241,6 +245,7 @@
     </div>
   </aside>
   <div class="cmed-nav-main">
+
 
 
 <!-- WELCOME SCREEN -->
@@ -793,6 +798,7 @@ function resetSimulado() {
 }
 </script>
 
+
   </div>
 </div>
 <nav class="cmed-nav-prevnext">
@@ -815,6 +821,31 @@ function resetSimulado() {
     var key = 'cmed_visto_' + location.pathname;
     localStorage.setItem(key, '1');
   }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var KEY = 'cmed_reading_mode';
+  var SEEN_KEY = 'cmed_reading_mode_seen_intro';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  try{
+    var stored = localStorage.getItem(KEY);
+    var seenIntro = localStorage.getItem(SEEN_KEY);
+    if(stored === '1'){
+      html.classList.add('cmed-reading-mode');
+    } else if(stored === null && seenIntro === '1'){
+      // aluno ja navegou antes mas nunca mexeu no toggle -> assume preferencia por modo leitura
+      html.classList.add('cmed-reading-mode');
+    }
+    if(!seenIntro){ localStorage.setItem(SEEN_KEY, '1'); }
+  }catch(e){}
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      try{ localStorage.setItem(KEY, html.classList.contains('cmed-reading-mode') ? '1' : '0'); }catch(e){}
+    };
+  }
 })();
 </script>
 </body>
