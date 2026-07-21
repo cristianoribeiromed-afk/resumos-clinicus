@@ -12,9 +12,9 @@ def strip_shell(path):
     # remove o link do CSS
     html = html.replace('<link rel="stylesheet" href="/assets/shell-nav.css">\n', '', 1)
 
-    # remove o bloco do topo: botao de modo leitura (se existir, arquivos antigos nao tem) + header ate cmed-nav-main
+    # remove o bloco do topo: novo toolbar (modo leitura+temas+progresso) OU botao antigo (se existir) + header ate cmed-nav-main
     html = re.sub(
-        r'(?:<button class="cmed-reading-btn".*?</button>\n)?<header class="cmed-nav-header">.*?<div class="cmed-nav-main">\n',
+        r'(?:<div class="cmed-reading-toolbar">.*?</div>\n<button class="cmed-reading-top".*?</button>\n<div class="cmed-reading-progress".*?></div>\n)?(?:<button class="cmed-reading-btn".*?</button>\n)?<header class="cmed-nav-header">.*?<div class="cmed-nav-main">\n',
         '',
         html, count=1, flags=re.DOTALL
     )

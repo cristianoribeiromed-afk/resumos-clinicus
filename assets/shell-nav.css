@@ -170,24 +170,134 @@ html body{
   transition: width .4s ease;
 }
 
-/* ---------- MODO LEITURA ---------- */
-.cmed-reading-btn{
+/* ---------- MODO LEITURA (Modo Foco) ---------- */
+
+/* Botão de alternância + selo de tempo de leitura, agrupados numa barrinha fixa */
+.cmed-reading-toolbar{
   position: fixed; top: 14px; right: 14px; z-index: 999;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+}
+.cmed-reading-btn{
   background: #1a2129; color: #f3e9dd; border: 1px solid rgba(255,255,255,0.14);
   border-radius: 999px; padding: 9px 15px; font-size: 12.5px; font-weight: 700;
-  font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  font-family: inherit;
   cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.35);
   display: flex; align-items: center; gap: 6px;
+  transition: background .3s ease, border-color .3s ease, transform .2s ease;
 }
-.cmed-reading-btn:hover{ border-color: #e8c27a; background: rgba(232,194,122,0.08); }
+.cmed-reading-btn:hover{ border-color: #e8c27a; background: rgba(232,194,122,0.14); }
+.cmed-reading-btn:active{ transform: scale(.96); }
+html.cmed-reading-mode .cmed-reading-btn .cmed-reading-label-enter{ display: none; }
+html:not(.cmed-reading-mode) .cmed-reading-btn .cmed-reading-label-exit{ display: none; }
+
+/* Selo de tempo de leitura + seletor de tema — só aparecem dentro do modo leitura */
+.cmed-reading-extras{
+  display: none;
+  align-items: center; gap: 8px;
+}
+html.cmed-reading-mode .cmed-reading-extras{ display: flex; }
+.cmed-reading-time{
+  background: #1a2129; color: #cbd5df; border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px; padding: 8px 13px; font-size: 11.5px; font-weight: 600;
+  white-space: nowrap;
+}
+.cmed-reading-themes{
+  display: flex; gap: 3px; background: #1a2129; border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px; padding: 4px;
+}
+.cmed-reading-theme-btn{
+  border: none; background: transparent; cursor: pointer; font-size: 15px;
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  opacity: .55; transition: opacity .2s ease, background .2s ease;
+}
+.cmed-reading-theme-btn:hover{ opacity: .85; }
+.cmed-reading-theme-btn.is-active{ opacity: 1; background: rgba(255,255,255,0.14); }
+
+/* Barra de progresso de leitura, fixa no topo */
+.cmed-reading-progress{
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%; z-index: 1001;
+  background: linear-gradient(90deg,#c96f2e,#e8c27a);
+  transition: width .12s linear;
+  display: none;
+}
+html.cmed-reading-mode .cmed-reading-progress{ display: block; }
+
+/* Botão flutuante "voltar ao topo" */
+.cmed-reading-top{
+  position: fixed; right: 20px; bottom: 20px; z-index: 998;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: #1a2129; color: #f3e9dd; border: 1px solid rgba(255,255,255,0.14);
+  cursor: pointer; font-size: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  opacity: 0; pointer-events: none; transform: translateY(8px);
+  transition: opacity .3s ease, transform .3s ease;
+  display: none; align-items: center; justify-content: center;
+}
+html.cmed-reading-mode .cmed-reading-top{ display: flex; }
+html.cmed-reading-mode .cmed-reading-top.is-visible{ opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+/* Oculta navegação/UI que não é conteúdo de estudo */
 html.cmed-reading-mode .cmed-nav-header,
 html.cmed-reading-mode .cmed-nav-breadcrumb,
 html.cmed-reading-mode .cmed-nav-progress-wrap,
-html.cmed-reading-mode .cmed-nav-sidebar{
+html.cmed-reading-mode .cmed-nav-sidebar,
+html.cmed-reading-mode .cmed-nav-prevnext,
+html.cmed-reading-mode footer{
   display: none !important;
 }
-html.cmed-reading-mode .cmed-reading-btn .cmed-reading-label-enter{ display: none; }
-html:not(.cmed-reading-mode) .cmed-reading-btn .cmed-reading-label-exit{ display: none; }
-@media (max-width: 640px){
-  .cmed-reading-btn{ padding: 7px 12px; font-size: 11.5px; top: 10px; right: 10px; }
+
+/* Área de leitura: largura confortável, centralizada, com transição suave */
+html.cmed-reading-mode .wrap{
+  max-width: 880px !important;
+  margin: 0 auto !important;
+  transition: max-width .3s ease;
 }
+
+/* Tipografia mais confortável dentro do conteúdo de estudo */
+html.cmed-reading-mode .card p,
+html.cmed-reading-mode .card li,
+html.cmed-reading-mode .card td,
+html.cmed-reading-mode .card th{
+  font-size: 19px !important;
+  line-height: 1.8 !important;
+}
+html.cmed-reading-mode .card{
+  padding: 26px 28px !important;
+  margin-bottom: 22px !important;
+  transition: background .3s ease, color .3s ease, border-color .3s ease;
+}
+html.cmed-reading-mode .card p{ margin-bottom: 1em !important; }
+html.cmed-reading-mode body{ transition: background .3s ease, color .3s ease; }
+
+/* ---- Temas do Modo Leitura ---- */
+html.cmed-reading-mode[data-reading-theme="claro"]{
+  --bg:#ffffff !important; --card:#ffffff !important; --card2:#f5f5f5 !important;
+  --text:#1c1c1c !important; --text-dim:#5a5a5a !important; --border:#e2e2e2 !important;
+}
+html.cmed-reading-mode[data-reading-theme="claro"] body{ background:#ffffff !important; }
+html.cmed-reading-mode[data-reading-theme="claro"] .card{ background:#ffffff !important; border-color:#e2e2e2 !important; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+
+html.cmed-reading-mode[data-reading-theme="escuro"]{
+  --bg:#101418 !important; --card:#161b20 !important; --card2:#1c2229 !important;
+  --text:#e9edf1 !important; --text-dim:#9aa5af !important; --border:#2a3138 !important;
+}
+html.cmed-reading-mode[data-reading-theme="escuro"] body{ background:#101418 !important; }
+html.cmed-reading-mode[data-reading-theme="escuro"] .card{ background:#161b20 !important; border-color:#2a3138 !important; }
+
+html.cmed-reading-mode[data-reading-theme="papel"]{
+  --bg:#f4ecd8 !important; --card:#f8f1e1 !important; --card2:#f0e6cd !important;
+  --text:#3a3226 !important; --text-dim:#6b5f4d !important; --border:#e0d3b0 !important;
+}
+html.cmed-reading-mode[data-reading-theme="papel"] body{ background:#f4ecd8 !important; }
+html.cmed-reading-mode[data-reading-theme="papel"] .card{ background:#f8f1e1 !important; border-color:#e0d3b0 !important; }
+
+@media (max-width: 640px){
+  .cmed-reading-btn{ padding: 7px 12px; font-size: 11.5px; }
+  .cmed-reading-toolbar{ top: 10px; right: 10px; flex-wrap: wrap; justify-content: flex-end; max-width: calc(100vw - 20px); }
+  .cmed-reading-time{ display: none; } /* no celular, prioriza espaço — some o selo de tempo */
+  html.cmed-reading-mode .wrap{ max-width: 100% !important; padding-left: 14px; padding-right: 14px; }
+  html.cmed-reading-mode .card{ padding: 18px 16px !important; }
+  html.cmed-reading-mode .card p, html.cmed-reading-mode .card li{ font-size: 17px !important; }
+  .cmed-reading-top{ right: 14px; bottom: 14px; width: 38px; height: 38px; }
+}
+

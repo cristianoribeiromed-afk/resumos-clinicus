@@ -93,10 +93,22 @@
 <link rel="stylesheet" href="/assets/shell-nav.css">
 </head>
 <body>
-<button class="cmed-reading-btn" id="cmedReadingBtn">
-  <span class="cmed-reading-label-enter">⛶ Modo Leitura</span>
-  <span class="cmed-reading-label-exit">✕ Sair do Modo Leitura</span>
-</button>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
 <header class="cmed-nav-header">
   <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
   <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
@@ -138,6 +150,7 @@
     </div>
   </aside>
   <div class="cmed-nav-main">
+
 
 
 
@@ -343,6 +356,7 @@ function restart(){
 </script>
 
 
+
   </div>
 </div>
 <nav class="cmed-nav-prevnext">
@@ -369,26 +383,72 @@ function restart(){
 </script>
 <script>
 (function(){
-  var KEY = 'cmed_reading_mode';
-  var SEEN_KEY = 'cmed_reading_mode_seen_intro';
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
   var html = document.documentElement;
   var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
   try{
-    var stored = localStorage.getItem(KEY);
-    var seenIntro = localStorage.getItem(SEEN_KEY);
-    if(stored === '1'){
-      html.classList.add('cmed-reading-mode');
-    } else if(stored === null && seenIntro === '1'){
-      // aluno ja navegou antes mas nunca mexeu no toggle -> assume preferencia por modo leitura
-      html.classList.add('cmed-reading-mode');
-    }
-    if(!seenIntro){ localStorage.setItem(SEEN_KEY, '1'); }
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
   }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
   if(btn){
     btn.onclick = function(){
       html.classList.toggle('cmed-reading-mode');
-      try{ localStorage.setItem(KEY, html.classList.contains('cmed-reading-mode') ? '1' : '0'); }catch(e){}
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
     };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
   }
 })();
 </script>
