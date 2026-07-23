@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiología II Prática — Casos Clínicos de Parasitología (Parte 2)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a23;
+  --red: #f85149;
+  --red-dim: #4a1a1a;
+  --yellow: #d29922;
+  --yellow-dim: #3d2c00;
+  --blue: #58a6ff;
+  --blue-dim: #0d2144;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+.header-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--purple);
+  background: rgba(188,140,255,.1);
+  border: 1px solid var(--purple);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header-sub { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-left: auto; }
+
+.progress-bar { height: 3px; background: var(--border); width: 100%; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width .4s ease; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill {
+  font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  cursor: pointer; transition: all .2s;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.caso-header {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0;
+  padding: 20px 24px; border-bottom: none;
+}
+.bacteria-tag {
+  font-family: var(--mono); font-size: 11px; color: var(--red); letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header {
+  display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+  background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s;
+}
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num {
+  font-family: var(--mono); font-size: 12px; color: var(--blue); background: var(--blue-dim);
+  border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px;
+}
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+.diffdx-box { background: var(--surface); border: 1px solid var(--yellow-dim); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; }
+.diffdx-box h4 { font-family: var(--mono); font-size: 12px; color: var(--yellow); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.diffdx-box ul { margin-left: 18px; font-size: 13.5px; line-height: 1.7; }
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/index.html#catalogo">Início</a><span class="sep">›</span>
+  <a href="/index.html#catalogo">Microbiología II — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Microbiología II — Prática</span><span>7 de 10</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:70%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Microbiología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte1.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 1)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte2.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 2)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte3.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 3)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_micologia_parte1.html"><span class="ico">📋</span><span>Casos Clínicos — Micología (Parte 1)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_micologia_parte2.html"><span class="ico">📋</span><span>Casos Clínicos — Micología (Parte 2)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte1.html"><span class="ico">📋</span><span>Casos Clínicos — Parasitología (Parte 1)</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte2.html"><span class="ico">📋</span><span>Casos Clínicos — Parasitología (Parte 2)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte3.html"><span class="ico">📋</span><span>Casos Clínicos — Parasitología (Parte 3)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte4.html"><span class="ico">📋</span><span>Casos Clínicos — Parasitología (Parte 4)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte5.html"><span class="ico">📋</span><span>Casos Clínicos — Parasitología (Parte 5)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="header">
+  <span class="header-badge">PRÁTICA MICRO II</span>
+  <h1>Casos Clínicos de Parasitología (Parte 2)</h1>
+  <span class="header-sub">Semana 11 · 2 casos</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:50%"></div></div>
+
+<div class="container">
+  <div class="nav-pills" id="navPills">
+    <div class="pill active" onclick="irCaso(0)">Leishmaniose Cutânea</div>
+    <div class="pill" onclick="irCaso(1)">Leishmaniose Mucocutânea</div>
+  </div>
+  <!-- CASO 1: Leishmaniose Cutânea -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Protozoário Flagelado · Leishmania spp.</div>
+      <div class="caso-title">Leishmaniose Tegumentar Cutânea</div>
+      <div class="caso-meta">Paciente: Ana Paula S.M., feminino, 40 anos · Altamira, Pará (Interior) · Nível: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">História da doença atual</div>
+      <div class="caso-text">
+        Surgimento de uma pequena <strong>pápula avermelhada na perna direita há ~3 meses</strong>, que evoluiu pra nódulo e depois <strong>ulcerou. A lesão é INDOLOR, com bordas elevadas e fundo granuloso</strong>, sem cicatrização apesar de cuidados locais. Nega febre ou dor sistêmica.
+      </div>
+
+      <div class="section-label">Antecedentes relevantes</div>
+      <div class="caso-text">
+        Vive em <strong>zona rural próxima à selva, com alta incidência de mosquitos</strong> (flebotomíneos). Retornou há 4 meses de comunidade ribeirinha no interior do Pará.
+      </div>
+
+      <div class="section-label">Exame físico — achados-chave</div>
+      <div class="caso-text">
+        <strong>Perna direita, terço médio: lesão ulcerada de ~3x4cm, bordas elevadas, eritematosas e infiltradas, fundo granuloso, limpo, sem secreção purulenta. SEM linfadenopatia regional.</strong>
+      </div>
+
+      <div class="section-label">Dados laboratoriais</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Eosinófilos</div><div class="dado-valor">2%</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor normal">5 mg/L</div></div>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Perguntas do caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">Qual a suspeita diagnóstica, e quais características da lesão a sustentam?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A suspeita é <strong>Leishmaniose Tegumentar Cutânea</strong>, causada por espécies de <strong>Leishmania</strong>, transmitida pela picada do mosquito-palha (flebotomíneo). As características clássicas da lesão são: úlcera <strong>INDOLOR</strong>, de bordas elevadas e bem definidas, fundo granuloso ("em moldura de quadro"), evolução lenta a partir de pápula/nódulo, e ausência de resposta a cuidados locais convencionais — um padrão de úlcera crônica muito característico dessa etiologia.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">Quais os fatores de risco/exposição relevantes nessa paciente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Residência em <strong>zona rural próxima à mata/selva, com alta incidência de mosquitos</strong> (flebotomíneos do gênero Lutzomyia, vetores da Leishmania) — o ambiente silvestre/peridomiciliar é o cenário epidemiológico clássico de transmissão, já que os flebotomíneos se reproduzem em áreas com matéria orgânica em decomposição típicas de ambientes florestais.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Quais os sinais e sintomas típicos da leishmaniose cutânea?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Lesão que evolui de <strong>pápula → nódulo → úlcera</strong>, tipicamente em área exposta (face, membros), <strong>INDOLOR</strong>, com bordas elevadas e infiltradas, fundo granuloso, geralmente ÚNICA (embora possa haver lesões múltiplas), evolução crônica (semanas a meses), sem sinais sistêmicos (febre) na forma puramente cutânea localizada.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">Quais as opções de tratamento?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O tratamento de primeira linha é com <strong>antimoniais pentavalentes</strong> (antimoniato de meglumina), por via sistêmica. Alternativas incluem <strong>anfotericina B</strong> (especialmente em casos refratários ou contraindicação aos antimoniais) e, em alguns contextos/lesões pequenas, tratamentos locais (crioterapia, termoterapia) podem ser considerados.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">Quais as complicações possíveis se não tratada adequadamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A complicação mais temida é a <strong>progressão pra forma Mucocutânea (mucosa)</strong> — dependendo da espécie de Leishmania envolvida (particularmente L. braziliensis, comum na região amazônica), o parasita pode disseminar por via hematogênica/linfática pra mucosas (nasal, oral, faríngea) meses a anos depois da lesão cutânea inicial, causando destruição tecidual progressiva e desfigurante — exatamente o quadro visto no próximo caso desse mesmo módulo. Outras complicações incluem infecção bacteriana secundária da úlcera e cicatrizes desfigurantes permanentes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2: Leishmaniose Mucocutânea -->
+  <div class="caso" id="caso-1">
+    <div class="caso-header">
+      <div class="bacteria-tag">Protozoário Flagelado · Leishmania (braziliensis)</div>
+      <div class="caso-title">Leishmaniose Mucocutânea (Espúndia)</div>
+      <div class="caso-meta">Paciente: masculino · Região Serra Pelada, Pará (Interior) · Nível: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Motivo de consulta</div>
+      <div class="caso-text">Obstrução nasal progressiva, sangramentos nasais e dor facial há 8 meses.</div>
+
+      <div class="section-label">História da doença atual</div>
+      <div class="caso-text">
+        Há ~8 meses, <strong>obstrução nasal progressiva</strong> (inicialmente unilateral, depois bilateral), com <strong>epistaxes frequentes, dor facial e secreção nasal purulenta.</strong> Também rouquidão e dificuldade pra engolir sólidos. Nega febre.
+      </div>
+
+      <div class="section-label">Antecedentes relevantes</div>
+      <div class="caso-text">
+        Viveu em <strong>acampamentos de mineração na selva</strong> (garimpo), condições sanitárias precárias, alta exposição a mosquitos. Retornou há 1 ano de temporada de mineração em Serra Pelada. Tabagista (20 anos/maço), etilista social.
+      </div>
+
+      <div class="section-label">Exame físico — achados-chave</div>
+      <div class="caso-text">
+        Edema e eritema na região nasal. <strong>Rinoscopia anterior: lesões ulceradas e infiltradas na mucosa nasal, com destruição do septo nasal e palato mole.</strong> SEM lesões cutâneas em outras partes do corpo.
+      </div>
+
+      <div class="section-label">Dados laboratoriais</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">15 mg/L</div></div>
+        <div class="dado"><div class="dado-label">Rx seios paranasais</div><div class="dado-valor anormal">Velamento seios maxilares/etmoidais + destruição óssea do septo nasal</div></div>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Perguntas do caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">Qual o diagnóstico desse paciente, e como ele se relaciona com o caso anterior de leishmaniose cutânea?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O diagnóstico é <strong>Leishmaniose Mucocutânea (Espúndia)</strong>, tipicamente causada por <strong>Leishmania braziliensis</strong>. Essa forma representa a <strong>disseminação secundária</strong> (por via hematogênica/linfática) de uma infecção cutânea primária por Leishmania — que pode ter passado despercebida ou já ter cicatrizado meses a anos antes — pra mucosas das vias aéreas superiores, causando destruição tecidual progressiva característica (destruição do septo nasal e palato, como observado nesse paciente).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">Quais os fatores de risco relevantes nesse paciente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Vida em <strong>acampamentos de garimpo na selva</strong>, com alta exposição a flebotomíneos e condições sanitárias precárias — cenário epidemiológico de altíssimo risco pra leishmaniose na Amazônia. O tabagismo pode ser um fator agravante adicional pra saúde de mucosas respiratórias, embora não seja causal da leishmaniose em si.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Quais os sinais e sintomas típicos da forma mucocutânea?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Obstrução nasal progressiva (geralmente iniciando unilateral), epistaxes recorrentes, dor facial, rouquidão (se laringe envolvida), disfagia (se orofaringe/palato envolvidos), e — achado mais grave e característico — <strong>destruição progressiva de estruturas cartilaginosas e ósseas</strong> (septo nasal, palato), podendo levar a deformidade facial significativa ("nariz de tapir", nome popular dado à deformidade nasal resultante).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">Qual o tratamento indicado, e por que a forma mucocutânea geralmente exige abordagem mais agressiva que a cutânea simples?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O tratamento também é com <strong>antimoniais pentavalentes ou anfotericina B</strong>, mas a forma mucocutânea geralmente requer <strong>doses maiores, tratamento mais prolongado</strong>, e tem <strong>taxa de resposta terapêutica pior</strong> que a forma cutânea simples — refletindo a natureza mais agressiva e destrutiva dessa apresentação, além do risco de sequelas anatômicas permanentes mesmo com tratamento bem-sucedido (a destruição tecidual já ocorrida não é revertida pelo tratamento antiparasitário, apenas interrompida).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">Quais as complicações possíveis se não tratada adequadamente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Sem tratamento, há <strong>progressão da destruição tecidual</strong> — comprometimento adicional de estruturas nasais/orofaríngeas/laríngeas, podendo levar a <strong>perfuração completa do septo nasal, colapso da pirâmide nasal (deformidade permanente), obstrução de vias aéreas (risco de comprometimento respiratório grave)</strong>, disfagia progressiva com comprometimento nutricional, e <strong>infecção bacteriana secundária</strong> das lesões ulceradas expostas — um curso potencialmente fatal se não tratado.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 2</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)">Próximo →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 2;
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+function toggleGabarito(header) { header.parentElement.classList.toggle('open'); }
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte1.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Casos Clínicos — Parasitología (Parte 1)</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-04/microbiologia2-pratica/casos_parasitologia_parte3.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Casos Clínicos — Parasitología (Parte 3)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body>
+</html>
