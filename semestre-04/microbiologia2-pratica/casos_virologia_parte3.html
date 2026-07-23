@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiología II Prática — Casos Clínicos de Virología (Parte 3)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a23;
+  --red: #f85149;
+  --red-dim: #4a1a1a;
+  --yellow: #d29922;
+  --yellow-dim: #3d2c00;
+  --blue: #58a6ff;
+  --blue-dim: #0d2144;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+.header-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--purple);
+  background: rgba(188,140,255,.1);
+  border: 1px solid var(--purple);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header-sub { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-left: auto; }
+
+.progress-bar { height: 3px; background: var(--border); width: 100%; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width .4s ease; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill {
+  font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  cursor: pointer; transition: all .2s;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.caso-header {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0;
+  padding: 20px 24px; border-bottom: none;
+}
+.bacteria-tag {
+  font-family: var(--mono); font-size: 11px; color: var(--red); letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header {
+  display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+  background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s;
+}
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num {
+  font-family: var(--mono); font-size: 12px; color: var(--blue); background: var(--blue-dim);
+  border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px;
+}
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+.diffdx-box { background: var(--surface); border: 1px solid var(--yellow-dim); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; }
+.diffdx-box h4 { font-family: var(--mono); font-size: 12px; color: var(--yellow); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.diffdx-box ul { margin-left: 18px; font-size: 13.5px; line-height: 1.7; }
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/index.html#catalogo">Início</a><span class="sep">›</span>
+  <a href="/index.html#catalogo">Microbiología II — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Microbiología II — Prática</span><span>3 de 3</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Microbiología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte1.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 1)</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte2.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 2)</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte3.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 3)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="header">
+  <span class="header-badge">PRÁTICA MICRO II</span>
+  <h1>Casos Clínicos de Virología (Parte 3)</h1>
+  <span class="header-sub">Semana 06 · 1 caso</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:100%"></div></div>
+
+<div class="container">
+  <div class="nav-pills" id="navPills">
+    <div class="pill active" onclick="irCaso(0)">SARS-CoV-2</div>
+  </div>
+  <!-- CASO 1: SARS-CoV-2 -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Vírus RNA · Família Coronaviridae</div>
+      <div class="caso-title">Pneumonia Viral Grave por SARS-CoV-2 com Insuficiência Respiratória Hipoxêmica</div>
+      <div class="caso-meta">Paciente: M.R.G., masculino, 68 anos, DM2 + HAS · Emergência · Nível: ★★★★☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Motivo de consulta</div>
+      <div class="caso-text">
+        "Estou com febre alta, tosse seca e dificuldade pra respirar há 4 dias" — refere o paciente.
+      </div>
+
+      <div class="section-label">História da doença atual</div>
+      <div class="caso-text">
+        Quadro de início insidioso há 6 dias, com <strong>mal-estar geral, cefaleia frontal e mialgias generalizadas</strong>. No 3º dia, apresentou febre de 38.5°C (inicialmente intermitente, progredindo pra contínua, picos de até 39.8°C). Há 4 dias, iniciou <strong>tosse seca persistente, não produtiva</strong>, associada a dor torácica tipo pontada que piora com inspiração profunda. Há 2 dias, <strong>dispneia progressiva</strong> — inicialmente aos médios esforços, agora presente em repouso, piorando em decúbito. Automedicou-se com paracetamol, com melhora parcial e temporária apenas da febre.
+      </div>
+
+      <div class="section-label">Antecedentes relevantes</div>
+      <div class="caso-text">
+        <strong>DM2</strong> há 12 anos (metformina, HbA1c 7.2%), <strong>HAS</strong> há 15 anos (enalapril + anlodipino), dislipidemia (atorvastatina). Ex-tabagista (30 maços/ano, parou há 5 anos). Vacinação antigripal há 14 meses; <strong>nega vacinação antipneumocócica</strong>.
+      </div>
+
+      <div class="section-label">Exame físico — achados-chave</div>
+      <div class="caso-text">
+        <strong>PA 145/88, FC 98bpm, FR 28rpm, Temperatura 38.9°C, SatO2 89% em ar ambiente</strong> — hipoxemia significativa. Diaforético, polipneico, posição semi-sentada preferida, tiragem intercostal leve, uso de musculatura acessória. <strong>Percussão: macicez em bases pulmonares bilaterais. Ausculta: murmúrio vesicular diminuído em bases bilaterais, crepitações finas bibasais, roncos esparsos, sem sibilos.</strong> Cardiovascular sem sopros. Restante do exame sem alterações significativas.
+      </div>
+
+      <div class="section-label">Dados laboratoriais</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Leucócitos</div><div class="dado-valor anormal">4.200/µL (baixo)</div></div>
+        <div class="dado"><div class="dado-label">Linfócitos</div><div class="dado-valor anormal">15% / 630µL (linfopenia)</div></div>
+        <div class="dado"><div class="dado-label">VSG</div><div class="dado-valor anormal">45 mm/h (elevada)</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">128 mg/L (muito elevada)</div></div>
+        <div class="dado"><div class="dado-label">Ferritina</div><div class="dado-valor anormal">680 ng/mL (elevada)</div></div>
+        <div class="dado"><div class="dado-label">IL-6</div><div class="dado-valor anormal">85 pg/mL (muito elevada)</div></div>
+        <div class="dado"><div class="dado-label">LDH</div><div class="dado-valor anormal">520 U/L (elevada)</div></div>
+        <div class="dado"><div class="dado-label">Dímero D</div><div class="dado-valor anormal">1.240 ng/mL (elevado)</div></div>
+        <div class="dado"><div class="dado-label">PaO2 (gasometria)</div><div class="dado-valor anormal">58 mmHg (hipoxemia)</div></div>
+        <div class="dado"><div class="dado-label">Relação PaO2/FiO2</div><div class="dado-valor anormal">276 (VR &gt;300)</div></div>
+        <div class="dado"><div class="dado-label">Painel viral respiratório padrão</div><div class="dado-valor normal">Negativo (Influenza A/B, VSR, Adenovírus, Parainfluenza, Metapneumovírus, Rinovírus)</div></div>
+        <div class="dado"><div class="dado-label">RT-PCR RNA viral</div><div class="dado-valor anormal">POSITIVO (Ct 22 — alta carga viral)</div></div>
+        <div class="dado"><div class="dado-label">IgM anti-proteína N e S</div><div class="dado-valor anormal">Ambos POSITIVOS</div></div>
+        <div class="dado"><div class="dado-label">Rx tórax</div><div class="dado-valor anormal">Infiltrados alveolares bilaterais periféricos, lobos inferiores</div></div>
+      </div>
+
+      <div class="diffdx-box">
+        <h4>⚠ Diagnósticos diferenciais considerados</h4>
+        <ul>
+          <li><strong>Pneumonia bacteriana típica</strong> (S. pneumoniae, H. influenzae) — hemoculturas negativas em 48h</li>
+          <li><strong>Pneumonia atípica</strong> (Mycoplasma, Chlamydophila)</li>
+          <li><strong>Influenza grave</strong> — descartada pelo painel viral negativo</li>
+          <li><strong>Outras viroses respiratórias</strong> (VSR, Adenovírus) — descartadas pelo painel</li>
+          <li><strong>Pneumonia por Pneumocystis jirovecii</strong> — considerar em imunocomprometidos</li>
+          <li><strong>Tuberculose pulmonar</strong></li>
+          <li><strong>Embolia pulmonar</strong> — considerada pela dispneia aguda + D-dímero elevado</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Perguntas do caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">Qual o diagnóstico mais provável, e qual exame confirma diretamente a etiologia viral nesse caso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O diagnóstico é <strong>Pneumonia Viral Grave por SARS-CoV-2 (COVID-19)</strong> com insuficiência respiratória hipoxêmica. A confirmação vem da <strong>RT-PCR positiva pra RNA viral</strong> (Ct 22, indicando alta carga viral) e da <strong>sorologia positiva pra IgM anti-proteína N e anti-proteína Spike (S)</strong> — proteínas estruturais características do SARS-CoV-2, indicando infecção aguda.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">O SARS-CoV-2 é DNA ou RNA? A qual família pertence, e qual estrutura de superfície dá nome à família?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O SARS-CoV-2 é um vírus de <strong>RNA de fita simples positiva, envelopado</strong>, da família <strong>Coronaviridae</strong>. Seu nome vem das projeções em forma de espículas (proteína Spike/S) na superfície do envelope, que à microscopia eletrônica lembram uma coroa ("corona") ao redor do vírion — essa mesma proteína S é o que o vírus usa pra se ligar ao receptor ACE2 nas células humanas, sendo também o principal alvo das vacinas e da resposta imune humoral.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Por que o painel viral respiratório PADRÃO (influenza, VSR, adenovírus etc.) veio negativo, mesmo o paciente tendo uma infecção viral respiratória confirmada?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O painel viral respiratório "padrão" testado nesse caso NÃO incluiu especificamente o SARS-CoV-2 entre os alvos pesquisados (testou apenas os vírus respiratórios sazonais clássicos: influenza, VSR, adenovírus, parainfluenza, metapneumovírus, rinovírus). O SARS-CoV-2 precisa de um teste ESPECÍFICO (RT-PCR direcionado, como o realizado separadamente e que veio positivo) — um raciocínio importante: um painel "negativo" só exclui os patógenos efetivamente testados, nunca "descarta infecção viral" de forma genérica.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">Interprete os achados de linfopenia (630/µL) e leucopenia (4.200/µL) nesse paciente — o que eles sugerem sobre a gravidade do quadro?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A <strong>linfopenia</strong> é um achado laboratorial CLÁSSICO e bem documentado do COVID-19, particularmente associado a casos mais GRAVES — reflete tanto o efeito direto do vírus sobre linfócitos (que podem expressar o receptor ACE2) quanto a redistribuição/sequestro de linfócitos nos pulmões afetados durante a resposta inflamatória. A combinação de linfopenia com os marcadores inflamatórios muito elevados (PCR, ferritina, IL-6) sinaliza um quadro de <strong>tempestade de citocinas / resposta inflamatória sistêmica exacerbada</strong>, associada a pior prognóstico.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">Por que a ferritina, IL-6 e o Dímero D estão sendo monitorados nesse paciente? O que cada um indica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto"><strong>Ferritina e IL-6 elevadas</strong> são marcadores da síndrome de <strong>tempestade de citocinas</strong> característica dos casos graves de COVID-19 — refletem hiperativação da resposta imune inata/inflamatória, associada a maior risco de deterioração clínica e necessidade de suporte ventilatório avançado. O <strong>Dímero D elevado</strong> reflete o <strong>estado de hipercoagulabilidade</strong> bem descrito no COVID-19 (o vírus promove disfunção endotelial e ativação da cascata de coagulação), sinalizando risco aumentado de eventos tromboembólicos (TVP, embolia pulmonar), justificando inclusive sua consideração como diagnóstico diferencial nesse caso.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">Por que esse paciente (68 anos, diabético, hipertenso, ex-tabagista) tem maior risco de evolução grave por COVID-19?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A <strong>idade avançada</strong> é o fator de risco isolado mais importante pra gravidade do COVID-19 (relacionado à imunossenescência — resposta imune menos eficiente e mais desregulada). O <strong>Diabetes Mellitus</strong> favorece pior controle glicêmico durante infecções agudas (hiperglicemia de estresse, como visto na glicemia de 156 desse paciente) e está associado a disfunção imune e maior risco inflamatório/trombótico. A <strong>HAS</strong> e o histórico de tabagismo também são fatores de risco reconhecidos, possivelmente relacionados a disfunção endotelial prévia e reserva pulmonar/cardiovascular reduzida — tornando esse paciente um perfil de alto risco pra complicações graves, justificando o nível de vigilância intensiva desse caso.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">O que significa a relação PaO2/FiO2 de 276 encontrada na gasometria, e qual sua importância clínica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A relação PaO2/FiO2 (índice de Kirby) avalia a gravidade da <strong>hipoxemia/lesão pulmonar</strong> — valores abaixo de 300 já indicam algum grau de comprometimento da troca gasosa, e esse paciente está em <strong>276</strong>, compatível com <strong>SDRA (Síndrome do Desconforto Respiratório Agudo) leve a moderada</strong>, segundo os critérios de Berlim (SDRA leve: 200-300; moderada: 100-200; grave: &lt;100). Esse índice orienta diretamente decisões de manejo — indicando necessidade de suporte de oxigênio mais agressivo e monitoramento rigoroso pra possível progressão pra formas mais graves, exigindo ventilação mecânica.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">Quais as principais formas de contágio do SARS-CoV-2?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A transmissão ocorre principalmente por <strong>gotículas respiratórias</strong> (ao tossir, espirrar, falar), <strong>contato próximo</strong> com pessoas infectadas, e <strong>fômites</strong> (superfícies contaminadas, embora com papel secundário comparado à transmissão respiratória direta). Em ambientes fechados, mal ventilados, também é reconhecida transmissão por aerossóis de partículas menores que podem permanecer suspensas no ar por mais tempo.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">Qual o padrão radiológico esperado no Rx de tórax da pneumonia por SARS-CoV-2, e como isso se compara ao padrão de uma pneumonia bacteriana típica?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O padrão típico da pneumonia por SARS-CoV-2 é de <strong>infiltrados/opacidades bilaterais, de predomínio periférico e em bases pulmonares</strong> — como observado nesse paciente — sugerindo um padrão intersticial/"vidro fosco" mais difuso, característico de pneumonias virais atípicas. Isso contrasta com a pneumonia bacteriana típica, que classicamente apresenta <strong>consolidação lobar UNILATERAL bem localizada</strong> (broncopneumonia focal), refletindo um processo infeccioso mais concentrado numa área específica, diferente do padrão bilateral e difuso mais característico das pneumonias virais graves como essa.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">Considerando a gravidade desse quadro (SatO2 89%, PaO2/FiO2 276, marcadores inflamatórios muito elevados), quais complicações esse paciente está em risco de desenvolver?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Esse paciente está em risco de: <strong>progressão pra SDRA grave</strong> (podendo exigir intubação e ventilação mecânica), <strong>eventos tromboembólicos</strong> (TVP/embolia pulmonar, dado o estado de hipercoagulabilidade já sinalizado pelo D-dímero elevado), <strong>descompensação do diabetes</strong> (hiperglicemia de estresse já presente, risco de cetoacidose), <strong>lesão renal aguda</strong> (creatinina já discretamente elevada, 1.3), <strong>coinfecção bacteriana secundária</strong> (pneumonia bacteriana sobreposta), e, em casos mais graves, <strong>síndrome de disfunção de múltiplos órgãos</strong> e óbito — justificando o nível de vigilância intensiva e a consideração de internação em unidade de terapia intensiva pra esse paciente de alto risco.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 1</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)" disabled>Próximo →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 1;
+
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  const pills = document.querySelectorAll('.pill');
+  pills[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+
+function toggleGabarito(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte2.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Casos Clínicos — Virología (Parte 2)</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body>
+</html>
