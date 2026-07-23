@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiología II Prática — Casos Clínicos de Virología (Parte 2)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a23;
+  --red: #f85149;
+  --red-dim: #4a1a1a;
+  --yellow: #d29922;
+  --yellow-dim: #3d2c00;
+  --blue: #58a6ff;
+  --blue-dim: #0d2144;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+.header-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--purple);
+  background: rgba(188,140,255,.1);
+  border: 1px solid var(--purple);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header-sub { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-left: auto; }
+
+.progress-bar { height: 3px; background: var(--border); width: 100%; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width .4s ease; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill {
+  font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  cursor: pointer; transition: all .2s;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.caso-header {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0;
+  padding: 20px 24px; border-bottom: none;
+}
+.bacteria-tag {
+  font-family: var(--mono); font-size: 11px; color: var(--red); letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header {
+  display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+  background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s;
+}
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num {
+  font-family: var(--mono); font-size: 12px; color: var(--blue); background: var(--blue-dim);
+  border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px;
+}
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+.diffdx-box { background: var(--surface); border: 1px solid var(--yellow-dim); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; }
+.diffdx-box h4 { font-family: var(--mono); font-size: 12px; color: var(--yellow); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.diffdx-box ul { margin-left: 18px; font-size: 13.5px; line-height: 1.7; }
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/index.html#catalogo">Início</a><span class="sep">›</span>
+  <a href="/index.html#catalogo">Microbiología II — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Microbiología II — Prática</span><span>2 de 2</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Microbiología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte1.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 1)</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte2.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 2)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="header">
+  <span class="header-badge">PRÁTICA MICRO II</span>
+  <h1>Casos Clínicos de Virología (Parte 2)</h1>
+  <span class="header-sub">Semanas 03-04 · 2 casos</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:50%"></div></div>
+
+<div class="container">
+  <div class="nav-pills" id="navPills">
+    <div class="pill active" onclick="irCaso(0)">Epstein-Barr</div>
+    <div class="pill" onclick="irCaso(1)">Hepatite A</div>
+  </div>
+  <!-- CASO 1: Epstein-Barr -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Vírus DNA · Família Herpesviridae (HHV-4)</div>
+      <div class="caso-title">Mononucleose Infecciosa Aguda por Vírus Epstein-Barr</div>
+      <div class="caso-meta">Paciente: H.K., masculino, 19 anos · Ambulatório universitário · Nível: ★★★☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Motivo de consulta</div>
+      <div class="caso-text">
+        "Estou com muita febre há vários dias, dor de garganta intensa e me sinto muito cansado" — refere o paciente.
+      </div>
+
+      <div class="section-label">História da doença atual</div>
+      <div class="caso-text">
+        Quadro iniciado há 7 dias, de forma gradual, com <strong>mal-estar geral, astenia e adinamia progressivas</strong>. Há 5 dias, iniciou <strong>febre de até 39.5°C</strong> (predomínio vespertino), associada a <strong>odinofagia intensa</strong> (dificulta deglutir sólidos e líquidos) e sensação de "corpo estranho" na garganta. Notou <strong>linfonodos cervicais inflamados e dolorosos</strong>. Refere também cefaleia frontal moderada e mialgias generalizadas. Nega tosse, rinorreia, dispneia, dor abdominal, diarreia ou exantema.
+        <br><br>
+        <strong>Exposição relevante:</strong> beijou várias pessoas numa festa de Ano Novo há ~4 semanas. Um colega de apartamento teve sintomas similares (febre + dor de garganta) há algumas semanas.
+      </div>
+
+      <div class="section-label">Exame físico — achados-chave</div>
+      <div class="caso-text">
+        Temperatura 38.9°C, FC 98 bpm, PA 110/70 mmHg. Paciente com aspecto febril, decaído, consciente e orientado. <strong>Faringe eritematosa e hiperêmica, com amígdalas hipertróficas e exsudato branco-acinzentado de aspecto pseudomembranoso.</strong> <strong>Adenopatias cervicais anteriores E posteriores bilaterais</strong>, múltiplas (1-3cm), móveis, dolorosas, de consistência elástica. Abdome: <strong>esplenomegalia palpável (baço 2cm abaixo do rebordo costal esquerdo)</strong>, indolor, consistência amolecida. Fígado não palpável.
+      </div>
+
+      <div class="section-label">Dados laboratoriais</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Leucócitos</div><div class="dado-valor anormal">15.000/µL (leucocitose)</div></div>
+        <div class="dado"><div class="dado-label">Linfócitos</div><div class="dado-valor anormal">65% (linfocitose)</div></div>
+        <div class="dado"><div class="dado-label">Linfócitos atípicos</div><div class="dado-valor anormal">15% (VR &lt;10%)</div></div>
+        <div class="dado"><div class="dado-label">Bilirrubina total</div><div class="dado-valor anormal">1.5 mg/dL (elevada)</div></div>
+        <div class="dado"><div class="dado-label">ALT/AST</div><div class="dado-valor anormal">80 / 75 U/L (elevadas)</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">10 mg/L (leve elevação)</div></div>
+        <div class="dado"><div class="dado-label">Ecografia abdominal</div><div class="dado-valor anormal">Baço aumentado (15cm eixo longitudinal)</div></div>
+      </div>
+
+      <div class="diffdx-box">
+        <h4>⚠ Diagnósticos diferenciais considerados</h4>
+        <ul>
+          <li><strong>Faringoamigdalite estreptocócica</strong> — menos provável (esplenomegalia + linfocitose atípica; cultura seria negativa)</li>
+          <li><strong>Citomegalovírus (CMV)</strong> — síndrome semelhante; sorologia específica confirmaria</li>
+          <li><strong>Infecção aguda por HIV</strong> — síndrome retroviral agudo pode simular; sorologia HIV pode ainda ser negativa nessa fase (considerar RNA viral)</li>
+          <li><strong>Toxoplasmose</strong> — pode causar linfadenopatia + sintomas sistêmicos</li>
+          <li><strong>Linfoma</strong> — apresentação aguda + resolução espontânea favorecem mononucleose</li>
+          <li><strong>Hepatite viral aguda</strong> — transaminases elevadas podem sugerir, mas quadro predominante é de mononucleose</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Perguntas do caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">Qual a tríade clássica da Mononucleose Infecciosa, e como ela se manifesta nesse paciente?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A tríade clássica é: <strong>febre + faringite + linfadenopatia</strong>. Nesse paciente: febre de até 39.5°C, faringite exsudativa com aspecto pseudomembranoso, e adenopatias cervicais anteriores E posteriores bilaterais — a presença de linfadenopatia POSTERIOR (além da anterior) é um achado que ajuda a diferenciar mononucleose de faringite estreptocócica simples.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">O EBV é DNA ou RNA? A qual família viral pertence?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O Epstein-Barr Vírus (EBV, também chamado HHV-4) é um vírus de <strong>DNA de fita dupla, envelopado</strong>, pertencente à família <strong>Herpesviridae</strong> (subfamília Gammaherpesvirinae). Como todo herpesvírus, tem capacidade de estabelecer <strong>latência</strong> — nesse caso, principalmente em linfócitos B.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Qual a principal via de transmissão do EBV, e por que a doença é popularmente chamada de "doença do beijo"?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A principal via é a <strong>saliva</strong>, através de contato oral direto — daí o apelido popular "doença do beijo". É mais transmitida entre adolescentes e adultos jovens (contexto social de maior contato íntimo, como o relatado pelo paciente na festa de Ano Novo). Não é classicamente uma IST, mas está associada a contato íntimo. Na infância, a transmissão costuma ser intrafamiliar e frequentemente assintomática.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">O que são "linfócitos atípicos", e por que esse achado é tão característico da mononucleose?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Linfócitos atípicos são <strong>linfócitos T CD8+ reativos</strong> (não são as células infectadas em si, que são os linfócitos B) — ativados em resposta à infecção pelo EBV nos linfócitos B, apresentando morfologia alterada (maiores, citoplasma mais basofílico) à microscopia. Sua presença acima de 10% no diferencial é um achado clássico e bastante sugestivo de mononucleose infecciosa, embora também possa ocorrer em outras infecções virais (CMV, toxoplasmose, HIV agudo).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">Esse paciente tem esplenomegalia significativa. Qual a complicação mais temida associada a esse achado, e que orientação prática deve ser dada?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A complicação mais temida é a <strong>ruptura esplênica</strong> — manifesta-se com dor abdominal súbita e síncope/hipotensão, sendo uma emergência cirúrgica. Por isso, é fundamental orientar o paciente a <strong>evitar esportes de contato e atividades físicas vigorosas por pelo menos 3-4 semanas</strong> (até resolução da esplenomegalia), já que o baço aumentado fica mais vulnerável a trauma mesmo com impacto leve.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">Se esse paciente tivesse recebido amoxicilina empiricamente (supondo faringite bacteriana) antes do diagnóstico correto, o que provavelmente teria acontecido?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Há uma associação clássica e bem documentada entre <strong>administração de amoxicilina (ou ampicilina) em pacientes com mononucleose por EBV e o desenvolvimento de um exantema cutâneo generalizado</strong> — não é uma alergia verdadeira à penicilina, mas sim uma reação imunomediada específica dessa combinação. Esse é um motivo prático importante para suspeitar de mononucleose antes de prescrever amoxicilina empírica em quadros de faringite com linfadenopatia atípica.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">Como as transaminases elevadas (ALT 80, AST 75) e a bilirrubina discretamente elevada (1.5) se encaixam no quadro de mononucleose?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Essas alterações refletem uma <strong>hepatite reativa/leve associada ao EBV</strong> — um achado comum (não uma complicação grave na maioria dos casos), causado pela resposta imune sistêmica à infecção, incluindo infiltração hepática por linfócitos reativos. Geralmente se resolve espontaneamente com a resolução da infecção primária, sem necessidade de tratamento específico direcionado ao fígado.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">Qual o tratamento indicado para esse paciente? Existe antiviral específico de uso rotineiro?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O tratamento é <strong>de suporte</strong> — repouso, hidratação adequada, analgésicos/antitérmicos (evitando amoxicilina/ampicilina pelo risco de exantema, e cautela com AAS em jovens pelo risco teórico de Síndrome de Reye associada a infecções virais). NÃO há antiviral específico de uso rotineiro pra mononucleose por EBV em pacientes imunocompetentes — aciclovir tem atividade limitada in vivo contra EBV e não é indicado rotineiramente.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">Após a infecção primária resolvida, o EBV é eliminado do organismo? Explique o conceito envolvido.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Não — como todo herpesvírus, o EBV estabelece <strong>latência viral permanente</strong>, principalmente em linfócitos B de memória. O vírus permanece no organismo por toda a vida, podendo reativar-se de forma assintomática (excreção intermitente pela saliva, importante fonte de transmissão contínua) ou, em contextos de imunossupressão significativa, causar doenças associadas à reativação (incluindo certas neoplasias linfoproliferativas).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">Cite outras 2 complicações possíveis da mononucleose infecciosa, além da ruptura esplênica e do exantema por amoxicilina.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">1. <strong>Hepatite por EBV</strong> (já discutida — geralmente leve/autolimitada, mas ocasionalmente mais significativa). 2. <strong>Obstrução de vias aéreas superiores</strong> por hipertrofia amigdaliana/faríngea maciça (pode exigir corticoide em casos graves). Outras complicações menos comuns incluem anemia hemolítica autoimune, trombocitopenia, síndrome de Guillain-Barré, e (em contextos de imunodeficiência) doenças linfoproliferativas associadas ao EBV.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASO 2: Hepatite A -->
+  <div class="caso" id="caso-1">
+    <div class="caso-header">
+      <div class="bacteria-tag">Vírus RNA · Família Picornaviridae</div>
+      <div class="caso-title">Hepatite A Aguda</div>
+      <div class="caso-meta">Paciente: J.P., masculino, 12 anos · Ambulatório pediátrico · Nível: ★★☆☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Motivo de consulta</div>
+      <div class="caso-text">
+        Trazido pelos pais devido a quadro de mal-estar geral.
+      </div>
+
+      <div class="section-label">História da doença atual</div>
+      <div class="caso-text">
+        Os pais relatam que o filho está mais abatido que o habitual, com pouco apetite. Há cerca de <strong>3 semanas, a família viajou pra uma zona rural</strong>, onde consumiram alimentos preparados em barracas de rua e <strong>água de poço</strong>. Não referem contato com pessoas doentes. Há 2 dias, notaram que a <strong>urina do filho ficou escura ("cor de Coca-Cola")</strong> e as fezes ficaram <strong>pálidas ("cor de massa de vidraceiro")</strong>. Hoje pela manhã, observaram <strong>coloração amarelada na pele e nas escleras</strong>. Refere dor leve no quadrante superior direito do abdome.
+        <br><br>
+        <strong>Antecedente importante:</strong> esquema vacinal completo pra idade, INCLUINDO vacina contra Hepatite A.
+      </div>
+
+      <div class="section-label">Exame físico — achados-chave</div>
+      <div class="caso-text">
+        Temperatura 37.2°C (afebril). Estado geral regular, abatido, mas consciente e orientado. <strong>Icterícia generalizada em pele e escleras.</strong> Abdome: doloroso à palpação em hipocôndrio direito, com <strong>hepatomegalia leve</strong> (2cm abaixo do rebordo costal direito), consistência amolecida, borda regular. Baço não palpável. Restante do exame sem alterações significativas.
+      </div>
+
+      <div class="section-label">Dados laboratoriais</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Bilirrubina total</div><div class="dado-valor anormal">8.5 mg/dL (elevada)</div></div>
+        <div class="dado"><div class="dado-label">Bilirrubina direta</div><div class="dado-valor anormal">6.8 mg/dL (elevada)</div></div>
+        <div class="dado"><div class="dado-label">AST (TGO)</div><div class="dado-valor anormal">1.200 U/L (muito elevada)</div></div>
+        <div class="dado"><div class="dado-label">ALT (TGP)</div><div class="dado-valor anormal">1.500 U/L (muito elevada)</div></div>
+        <div class="dado"><div class="dado-label">Albumina/TP/INR</div><div class="dado-valor normal">Dentro dos limites normais</div></div>
+        <div class="dado"><div class="dado-label">Anti-HAV IgM</div><div class="dado-valor anormal">Positivo</div></div>
+        <div class="dado"><div class="dado-label">Anti-HAV IgG</div><div class="dado-valor normal">Negativo</div></div>
+      </div>
+
+      <div class="diffdx-box">
+        <h4>⚠ Diagnósticos diferenciais considerados</h4>
+        <ul>
+          <li><strong>Hepatite B (HBV)</strong> — investigar HBsAg, anti-HBc IgM</li>
+          <li><strong>Hepatite C (HCV)</strong> — investigar anti-HCV, RNA-HCV</li>
+          <li><strong>Hepatite E (HEV)</strong> — também fecal-oral, grave em gestantes, zoonose (suíno)</li>
+          <li><strong>EBV (Mononucleose)</strong> — faringite, adenopatias, esplenomegalia, linfócitos atípicos</li>
+          <li><strong>CMV</strong> — febre prolongada, mais grave em imunodeprimidos</li>
+          <li><strong>Leptospirose</strong> — febre, mialgias, icterícia, insuficiência renal, exposição a água contaminada</li>
+          <li><strong>Dengue/Zika/Chikungunya</strong> — considerar conforme contexto epidemiológico</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Perguntas do caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">Qual o diagnóstico mais provável, e qual exame confirma diretamente a infecção AGUDA (e não uma exposição/imunidade prévia)?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O diagnóstico é <strong>Hepatite A Aguda</strong>. A confirmação de infecção AGUDA (recente) vem do <strong>Anti-HAV IgM positivo</strong> — os anticorpos IgM aparecem precocemente e indicam infecção ativa/recente. O Anti-HAV IgG NEGATIVO reforça que essa é uma primoinfecção (o IgG apareceria mais tardiamente e persistiria indicando imunidade, seja por infecção prévia ou vacinação).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">O vírus da Hepatite A é DNA ou RNA? A qual família pertence?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O HAV é um vírus de <strong>RNA de fita simples positiva</strong>, não envelopado, pertencente à família <strong>Picornaviridae</strong> (gênero Hepatovirus). Sua natureza não envelopada o torna resistente no ambiente, favorecendo a transmissão fecal-oral através de água e alimentos contaminados.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Qual a via de transmissão do HAV, e como a história de viagem (água de poço, comida de rua) se relaciona com isso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A via de transmissão é <strong>fecal-oral</strong> — água ou alimentos contaminados com fezes de pessoas infectadas são a fonte clássica. A exposição relatada (água de poço não tratada + comida de barracas de rua em zona rural, sem controle sanitário garantido) é exatamente o cenário epidemiológico clássico de exposição ao HAV, coerente com o período de incubação de ~2-6 semanas até o início dos sintomas.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">Esse paciente já tinha recebido a vacina contra Hepatite A. Como explicar que ele mesmo assim desenvolveu a doença?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Existem algumas explicações possíveis: <strong>falha vacinal</strong> (nenhuma vacina tem 100% de eficácia, embora a vacina de HAV tenha eficácia muito alta, >95% após esquema completo), <strong>esquema incompleto ou intervalo inadequado entre doses</strong> (não detalhado no caso, mas relevante investigar), ou <strong>exposição a uma carga viral muito alta</strong> que superou a proteção imunológica conferida pela vacina. De qualquer forma, é importante notar que o Anti-HAV IgG NEGATIVO sugere que a resposta vacinal pode não ter sido adequadamente estabelecida ou mantida nesse paciente — um ponto que mereceria investigação adicional (histórico vacinal detalhado, sorologia pré-exposição se disponível).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">Explique a fisiopatologia por trás da urina escura e das fezes pálidas descritas pelos pais.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A <strong>urina escura ("cor de Coca-Cola")</strong> ocorre porque a bilirrubina DIRETA (conjugada), elevada no sangue devido à disfunção hepatocelular, é hidrossolúvel e filtrada pelos rins, sendo excretada na urina (colúria). As <strong>fezes pálidas ("cor de massa de vidraceiro")</strong> ocorrem porque a bilirrubina não está sendo adequadamente excretada pela via biliar normal pro intestino (onde seria convertida em estercobilina, pigmento que dá a cor marrom normal às fezes) — refletindo o comprometimento do fluxo biliar durante a hepatite aguda.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">As transaminases estão extremamente elevadas (AST 1200, ALT 1500). O que esses valores indicam, e por que a albumina/TP/INR normais são um dado tranquilizador?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Transaminases tão elevadas indicam <strong>lesão hepatocelular aguda significativa</strong> (necrose/inflamação de hepatócitos liberando essas enzimas na circulação) — típico da fase aguda da hepatite viral. Já a <strong>albumina, TP e INR normais</strong> são tranquilizadores porque refletem que a <strong>função de SÍNTESE hepática está preservada</strong> — ou seja, apesar da lesão celular importante (refletida pelas transaminases), o fígado ainda consegue produzir proteínas e fatores de coagulação adequadamente, sem sinais de insuficiência hepática grave/fulminante nesse momento.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">Qual o tratamento indicado pra Hepatite A? Existe antiviral específico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O tratamento é <strong>de suporte</strong> — repouso, hidratação adequada, dieta conforme tolerância (evitando álcool e medicamentos hepatotóxicos, incluindo evitar paracetamol em doses altas), e monitoramento clínico/laboratorial da função hepática. NÃO existe antiviral específico pra Hepatite A — é uma doença AUTOLIMITADA na grande maioria dos casos em crianças e adultos jovens, com resolução completa em semanas.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">Qual a complicação mais grave (embora rara) da Hepatite A, e quais sinais clínicos/laboratoriais alertariam pra essa evolução?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A complicação mais grave é a <strong>Hepatite Fulminante</strong> — caracterizada por encefalopatia hepática, elevação do INR (coagulopatia), e hipoglicemia, refletindo falência da função de síntese hepática. É RARA, mas potencialmente fatal, exigindo avaliação urgente pra possível transplante hepático. Os sinais de alerta incluem: alteração do nível de consciência, sangramentos, piora progressiva do INR/TP (diferente do caso atual, onde estão normais), e hipoglicemia — nenhum desses sinais está presente nesse paciente, o que é tranquilizador.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">Que medidas de prevenção de contágio devem ser orientadas à família, considerando que há uma irmã menor em casa?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto"><strong>Higiene rigorosa das mãos</strong> (especialmente após uso do banheiro e antes de preparar/consumir alimentos), <strong>evitar preparo de alimentos pelo paciente</strong> enquanto contagiante (o período de maior excreção viral fecal é nas 2 semanas ANTES do início da icterícia, mas ainda pode haver excreção residual), e <strong>considerar vacinação/imunoglobulina pra contatos domiciliares não imunes</strong> (como a irmã de 8 anos, se ainda não vacinada) — a profilaxia pós-exposição com vacina ou imunoglobulina é eficaz se administrada dentro de 2 semanas do contato.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">Compare brevemente a Hepatite A com a Hepatite E quanto à via de transmissão e um aspecto clínico importante que as diferencia.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Ambas compartilham a <strong>via de transmissão fecal-oral</strong> e apresentação clínica similar (hepatite aguda autolimitada na maioria dos casos). A diferença clínica importante é que a <strong>Hepatite E é particularmente GRAVE em gestantes</strong> (risco aumentado de hepatite fulminante e mortalidade materna, especialmente no 3º trimestre) — diferente da Hepatite A, que raramente é grave nessa população. Além disso, a Hepatite E tem uma associação importante com <strong>zoonose</strong> (reservatório suíno em alguns genótipos), enquanto a Hepatite A é predominantemente de transmissão interpessoal/água-alimentos contaminados por fezes humanas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 2</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)">Próximo →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 2;
+
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  const pills = document.querySelectorAll('.pill');
+  pills[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+
+function toggleGabarito(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte1.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Casos Clínicos — Virología (Parte 1)</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body>
+</html>
