@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiología II Prática — Casos Clínicos de Virología</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --green: #3fb950;
+  --green-dim: #1a4a23;
+  --red: #f85149;
+  --red-dim: #4a1a1a;
+  --yellow: #d29922;
+  --yellow-dim: #3d2c00;
+  --blue: #58a6ff;
+  --blue-dim: #0d2144;
+  --purple: #bc8cff;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+.header-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--purple);
+  background: rgba(188,140,255,.1);
+  border: 1px solid var(--purple);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header-sub { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-left: auto; }
+
+.progress-bar { height: 3px; background: var(--border); width: 100%; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); transition: width .4s ease; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.nav-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+.pill {
+  font-family: var(--mono); font-size: 12px; padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  cursor: pointer; transition: all .2s;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+.pill.done { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+
+.caso { display: none; animation: fadeIn .3s ease; }
+.caso.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.caso-header {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px 12px 0 0;
+  padding: 20px 24px; border-bottom: none;
+}
+.bacteria-tag {
+  font-family: var(--mono); font-size: 11px; color: var(--red); letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.caso-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.caso-meta { font-size: 13px; color: var(--muted); font-family: var(--mono); }
+
+.caso-body { background: var(--surface2); border: 1px solid var(--border); border-top: none; padding: 24px; }
+.section-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--yellow); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.caso-text { font-size: 14.5px; line-height: 1.75; color: var(--text); margin-bottom: 24px; }
+.caso-text strong { color: var(--yellow); }
+
+.dados-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.dado { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.dado-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 2px; }
+.dado-valor { font-size: 14px; font-weight: 600; color: var(--text); }
+.dado-valor.anormal { color: var(--red); }
+.dado-valor.normal { color: var(--green); }
+
+.perguntas-section { background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 12px 12px; border-top: none; padding: 24px; }
+.pergunta-item { margin-bottom: 20px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pergunta-header {
+  display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+  background: var(--surface2); cursor: pointer; user-select: none; transition: background .2s;
+}
+.pergunta-header:hover { background: var(--bg); }
+.pergunta-num {
+  font-family: var(--mono); font-size: 12px; color: var(--blue); background: var(--blue-dim);
+  border-radius: 4px; padding: 2px 7px; flex-shrink: 0; margin-top: 2px;
+}
+.pergunta-texto { font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+.pergunta-toggle { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+.pergunta-item.open .pergunta-toggle { transform: rotate(180deg); }
+
+.gabarito { display: none; padding: 14px 16px; border-top: 1px solid var(--green-dim); background: rgba(63,185,80,.05); }
+.pergunta-item.open .gabarito { display: block; }
+.gabarito-label { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+.gabarito-texto { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+.gabarito-texto strong { color: var(--green); }
+
+.nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 12px; }
+.btn { font-family: var(--mono); font-size: 13px; padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all .2s; font-weight: 600; }
+.btn-prev { background: var(--surface); color: var(--muted); }
+.btn-prev:hover { color: var(--text); border-color: var(--text); }
+.btn-next { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-next:hover { opacity: .85; }
+.btn:disabled { opacity: .3; cursor: not-allowed; }
+.caso-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+.diffdx-box { background: var(--surface); border: 1px solid var(--yellow-dim); border-left: 3px solid var(--yellow); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; }
+.diffdx-box h4 { font-family: var(--mono); font-size: 12px; color: var(--yellow); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.diffdx-box ul { margin-left: 18px; font-size: 13.5px; line-height: 1.7; }
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/index.html#catalogo">Início</a><span class="sep">›</span>
+  <a href="/index.html#catalogo">Microbiología II — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Microbiología II — Prática</span><span>1 de 1</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Microbiología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-04/microbiologia2-pratica/casos_virologia_parte1.html"><span class="ico">📋</span><span>Casos Clínicos — Virología (Parte 1)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="header">
+  <span class="header-badge">PRÁTICA MICRO II</span>
+  <h1>Casos Clínicos de Virología</h1>
+  <span class="header-sub">Semana 02 · 1 caso</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:100%"></div></div>
+
+<div class="container">
+  <div class="nav-pills" id="navPills">
+    <div class="pill active" onclick="irCaso(0)">Adenovírus</div>
+  </div>
+
+  <!-- CASO 1: Adenovírus -->
+  <div class="caso active" id="caso-0">
+    <div class="caso-header">
+      <div class="bacteria-tag">Vírus DNA · Família Adenoviridae</div>
+      <div class="caso-title">Febre Faringoconjuntival por Adenovírus</div>
+      <div class="caso-meta">Paciente: J.P., masculino, 4 anos · Pronto atendimento pediátrico · Nível: ★★☆☆☆</div>
+    </div>
+    <div class="caso-body">
+      <div class="section-label">Motivo de consulta</div>
+      <div class="caso-text">
+        "Meu filho está com febre alta, tosse e os olhos vermelhos" — refere a mãe.
+      </div>
+
+      <div class="section-label">História da doença atual</div>
+      <div class="caso-text">
+        A mãe relata que o quadro começou há 3 dias, de forma insidiosa, com <strong>febre de 39°C</strong> de predomínio vespertino, cedendo parcialmente com paracetamol. Associou-se <strong>tosse seca, irritativa</strong> (pior à noite) e <strong>rinorreia hialina</strong> abundante, além de odinofagia que dificulta a deglutição de sólidos. No dia anterior à consulta, a mãe notou <strong>hiperemia conjuntival bilateral</strong> com secreção ocular aquosa escassa, e o menino se queixava de sensação de "areia nos olhos". Está irritado, com apetite e atividade lúdica diminuídos. Nega vômitos, diarreia, disúria ou exantema.
+        <br><br>
+        <strong>Exposição relevante:</strong> há cerca de 1 semana, participou de uma festa de aniversário numa piscina pública — vários outros meninos que estiveram na mesma festa apresentaram sintomas semelhantes.
+      </div>
+
+      <div class="section-label">Exame físico — achados-chave</div>
+      <div class="caso-text">
+        Temperatura 38.8°C, FC 110 bpm, FR 28 rpm, SatO2 98%. Paciente irritado, hidratado. <strong>Conjuntivas bulbares e palpebrais hiperêmicas bilateralmente</strong>, com secreção aquosa escassa, sem edema palpebral significativo. Rinorreia hialina bilateral. <strong>Faringe eritematosa com amígdalas hipertróficas.</strong> <strong>Linfonodos pré-auriculares e cervicais anteriores aumentados</strong> (1-1.5cm), móveis, dolorosos, de consistência amolecida. Ausculta pulmonar limpa, sem ruídos adventícios. Restante do exame sem alterações.
+      </div>
+
+      <div class="section-label">Dados laboratoriais</div>
+      <div class="dados-grid">
+        <div class="dado"><div class="dado-label">Leucócitos</div><div class="dado-valor anormal">12.500/µL</div></div>
+        <div class="dado"><div class="dado-label">Neutrófilos</div><div class="dado-valor">40%</div></div>
+        <div class="dado"><div class="dado-label">Linfócitos</div><div class="dado-valor anormal">55% (elevado)</div></div>
+        <div class="dado"><div class="dado-label">PCR</div><div class="dado-valor anormal">15 mg/L</div></div>
+        <div class="dado"><div class="dado-label">VSG</div><div class="dado-valor anormal">20 mm/h</div></div>
+        <div class="dado"><div class="dado-label">Painel viral respiratório</div><div class="dado-valor normal">Negativo p/ Influenza, VSR, Metapneumovírus, Parainfluenza, Rinovírus/Enterovírus, Coronavírus</div></div>
+        <div class="dado"><div class="dado-label">Cultura de orofaringe</div><div class="dado-valor normal">Negativa (sem crescimento bacteriano)</div></div>
+        <div class="dado"><div class="dado-label">Cultura secreção conjuntival</div><div class="dado-valor normal">Negativa</div></div>
+        <div class="dado"><div class="dado-label">Rx de tórax</div><div class="dado-valor normal">Sem infiltrados ou consolidações</div></div>
+      </div>
+
+      <div class="diffdx-box">
+        <h4>⚠ Diagnósticos diferenciais considerados</h4>
+        <ul>
+          <li><strong>Faringoamigdalite estreptocócica</strong> — descartada (cultura negativa + predomínio linfocitário)</li>
+          <li><strong>Mononucleose infecciosa</strong> — menos provável (sem hepatoesplenomegalia, evolução rápida)</li>
+          <li><strong>Influenza</strong> — descartada (painel viral negativo)</li>
+          <li><strong>Resfriado comum</strong> — pouco provável (intensidade da febre + conjuntivite + adenopatia pré-auricular)</li>
+          <li><strong>Conjuntivite bacteriana</strong> — descartada (cultura negativa, secreção aquosa não purulenta)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="perguntas-section">
+      <div class="section-label">Perguntas do caso</div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">01</span>
+          <span class="pergunta-texto">Qual o diagnóstico mais provável nesse caso, e qual achado tríade (febre + X + Y) é característico dessa síndrome?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O diagnóstico é <strong>Febre Faringoconjuntival</strong>, causada por Adenovírus (sorotipos 3, 4 e 7 são os mais associados a surtos em piscinas). A tríade característica é: <strong>febre + faringite + conjuntivite</strong> (não purulenta, bilateral), frequentemente acompanhada de linfadenopatia pré-auricular — um achado bastante específico que ajuda a diferenciar de outras causas de faringite viral.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">02</span>
+          <span class="pergunta-texto">O Adenovírus é um vírus de DNA ou RNA? Descreva brevemente sua estrutura (envelope, simetria do capsídeo).</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O Adenovírus é um vírus de <strong>DNA de fita dupla</strong>, não envelopado, com <strong>capsídeo icosaédrico</strong>. A ausência de envelope o torna mais resistente no ambiente (superfícies, água de piscinas, fômites), o que explica sua transmissão eficiente em surtos comunitários como o desse caso.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">03</span>
+          <span class="pergunta-texto">Quais são as principais formas de contágio do Adenovírus, e como isso se relaciona com a história de exposição na piscina?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O Adenovírus se transmite por: <strong>via fecal-oral</strong>, <strong>via respiratória</strong> (secreções/gotículas), <strong>contato com fômites contaminados</strong>, e <strong>contato mão-olho</strong>. Sendo um vírus não envelopado, sobrevive bem em água clorada de piscinas mal tratadas, explicando os surtos característicos de "conjuntivite de piscina" após exposição coletiva — como o observado nesse caso, com múltiplas crianças da mesma festa afetadas.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">04</span>
+          <span class="pergunta-texto">Por que o hemograma desse paciente mostra predomínio de linfócitos (55%) em vez de neutrófilos, e qual a importância disso pro raciocínio diagnóstico?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O predomínio linfocitário é o padrão CLÁSSICO de infecções <strong>virais</strong> (diferente de infecções bacterianas, que tipicamente cursam com neutrofilia). Esse achado, somado à cultura faríngea negativa, ajuda a descartar uma etiologia bacteriana (como faringite estreptocócica) e reforça a hipótese viral — sendo uma das peças de evidência que orientam o diagnóstico diferencial nesse caso.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">05</span>
+          <span class="pergunta-texto">Além do quadro respiratório/ocular descrito, cite outras 3 manifestações clínicas causadas pelo Adenovírus.</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O Adenovírus também pode causar: <strong>gastroenterite aguda</strong> (sorotipos 40/41, importante causa de diarreia infantil), <strong>infecções do trato urinário</strong> (cistite hemorrágica, mais comum em imunossuprimidos), e <strong>pneumonia</strong> (podendo ser grave em lactentes e imunocomprometidos). Também é descrito como causa de ceratoconjuntivite epidêmica mais grave que a forma faringoconjuntival.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">06</span>
+          <span class="pergunta-texto">Qual o tratamento indicado para esse paciente? O Adenovírus tem antiviral específico disponível na prática clínica rotineira?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O tratamento é <strong>de suporte/sintomático</strong> — antitérmicos (paracetamol), hidratação adequada, higiene ocular com soro fisiológico, e repouso. NÃO há antiviral específico de uso rotineiro para adenovírus em pacientes imunocompetentes (o cidofovir existe, mas é reservado para casos graves em imunossuprimidos, dado seu perfil de toxicidade). A doença é autolimitada na grande maioria dos casos.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">07</span>
+          <span class="pergunta-texto">Que medidas de prevenção de contágio devem ser orientadas à família, considerando o contexto de surto na festa da piscina?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto"><strong>Higiene das mãos</strong> frequente (o vírus sobrevive bem em superfícies), evitar compartilhar toalhas/objetos de uso pessoal, afastamento da criança da escola/creche enquanto sintomática (principalmente na fase de conjuntivite/secreção ativa), e cloração adequada de piscinas públicas (medida de saúde pública, já que o vírus é resistente a níveis inadequados de cloro).</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">08</span>
+          <span class="pergunta-texto">Por que a mononucleose infecciosa foi considerada como diferencial, mas classificada como "menos provável" nesse caso?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">A mononucleose (causada pelo vírus Epstein-Barr) também cursa com <strong>linfocitose e adenopatias</strong>, o que a torna um diferencial razoável. Porém, é MENOS provável nesse caso pela <strong>ausência de hepatoesplenomegalia</strong> (achado clássico da mononucleose) e pela <strong>evolução mais rápida</strong> do quadro (a mononucleose tipicamente tem curso mais arrastado). Para confirmação/exclusão definitiva, seria necessária PCR ou sorologia específica para EBV.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">09</span>
+          <span class="pergunta-texto">Por que o painel viral respiratório negativo para influenza, VSR e outros vírus respiratórios comuns AINDA é compatível com o diagnóstico de adenovírus?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">O painel viral testado nesse caso não incluiu especificamente o Adenovírus entre os alvos pesquisados (testou influenza, VSR, metapneumovírus, parainfluenza, rinovírus/enterovírus e coronavírus) — ou seja, o resultado negativo apenas EXCLUI essas outras etiologias, sem descartar adenovírus. Esse é um raciocínio importante: um painel "negativo" só informa sobre os patógenos efetivamente testados, e a interpretação clínica (tríade febre-faringite-conjuntivite + contexto epidemiológico da piscina) continua sendo a base do diagnóstico presuntivo, podendo ser confirmado por PCR específica para adenovírus se necessário.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-item">
+        <div class="pergunta-header" onclick="toggleGabarito(this)">
+          <span class="pergunta-num">10</span>
+          <span class="pergunta-texto">Qual a importância epidemiológica de reconhecer esse padrão de surto (múltiplas crianças da mesma festa afetadas) em saúde pública?</span>
+          <span class="pergunta-toggle">▼</span>
+        </div>
+        <div class="gabarito">
+          <div class="gabarito-label">✓ Resposta esperada</div>
+          <div class="gabarito-texto">Reconhecer um padrão de <strong>surto comunitário</strong> associado a uma fonte comum (piscina) é importante porque permite: notificar autoridades sanitárias locais para investigar a qualidade da água/cloração da piscina, orientar as famílias das outras crianças expostas sobre sinais de alerta, implementar medidas de controle (fechamento temporário, correção da cloração) para prevenir novos casos, e reforçar a vigilância epidemiológica de conjuntivites/faringites em conglomerados — a "conjuntivite de piscina" por adenovírus é uma causa bem documentada de surtos recreacionais.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" id="btnPrev" onclick="navCaso(-1)" disabled>← Anterior</button>
+    <span class="caso-counter" id="casoCounter">1 / 1</span>
+    <button class="btn btn-next" id="btnNext" onclick="navCaso(1)" disabled>Próximo →</button>
+  </div>
+</div>
+
+<script>
+let casoAtual = 0;
+const total = 1;
+
+function irCaso(n) {
+  document.getElementById('caso-' + casoAtual).classList.remove('active');
+  document.querySelectorAll('.pill')[casoAtual].classList.remove('active');
+  casoAtual = n;
+  document.getElementById('caso-' + casoAtual).classList.add('active');
+  const pills = document.querySelectorAll('.pill');
+  pills[casoAtual].classList.add('active');
+  document.getElementById('casoCounter').textContent = (casoAtual + 1) + ' / ' + total;
+  document.getElementById('btnPrev').disabled = casoAtual === 0;
+  document.getElementById('btnNext').disabled = casoAtual === total - 1;
+  document.getElementById('progressFill').style.width = ((casoAtual + 1) / total * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navCaso(dir) {
+  const novo = casoAtual + dir;
+  if (novo >= 0 && novo < total) {
+    if (dir > 0) document.querySelectorAll('.pill')[casoAtual].classList.add('done');
+    irCaso(novo);
+  }
+}
+
+function toggleGabarito(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body>
+</html>
