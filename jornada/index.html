@@ -249,6 +249,7 @@ function slugify(str){
 
 function buildAccessIndex(data){
   const idx = {};
+  const todosArquivos = [];
   function parseEntry(arq, i, tipo, materiaNome, etapaNome){
     let label, url;
     if(arq.includes('::')){
@@ -266,6 +267,7 @@ function buildAccessIndex(data){
     sem.materias.forEach(m=>{
       const slugM = slugify(m.nome);
       const base = sem.slug+'-'+slugM;
+      const itensMateriaCompleta = [];
       ETAPA_ORDEM.forEach(etapaNome=>{
         const etapa = m.etapas[etapaNome];
         if(!etapa) return;
@@ -285,10 +287,33 @@ function buildAccessIndex(data){
           idx[keyBase+'-resumo'] = itens.filter(it=>it.tipo==='resumo');
           idx[keyBase+'-simulado'] = itens.filter(it=>it.tipo==='simulado');
           idx[keyBase+'-combo'] = itens;
+          todosArquivos.push(...itens);
+          itensMateriaCompleta.push(...itens);
         }
       });
+      if(m.comboGeralDisponivel && itensMateriaCompleta.length){
+        idx[base+'-completo'] = itensMateriaCompleta;
+      }
     });
   });
+  // pacotes por semestre: P1 (so etapa P1), P1+P2 (etapas P1+P2), Premium (tudo: P1+P2+Final)
+  data.semestres.forEach(sem=>{
+    let itensP1 = [], itensP1P2 = [], itensPremium = [];
+    sem.materias.forEach(m=>{
+      const slugM = slugify(m.nome);
+      const baseM = sem.slug+'-'+slugM;
+      const p1 = idx[baseM+'-p1-combo'] || [];
+      const p2 = idx[baseM+'-p2-combo'] || [];
+      const final = idx[baseM+'-combo'] || []; // Final nao tem sufixo (codigo legado)
+      itensP1.push(...p1);
+      itensP1P2.push(...p1, ...p2);
+      itensPremium.push(...p1, ...p2, ...final);
+    });
+    if(itensP1.length) idx[sem.slug+'-pacote-p1'] = itensP1;
+    if(itensP1P2.length) idx[sem.slug+'-pacote-p1p2'] = itensP1P2;
+    if(itensPremium.length) idx[sem.slug+'-pacote-premium'] = itensPremium;
+  });
+  idx['pacote'] = todosArquivos;
   return idx;
 }
 
