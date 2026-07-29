@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raio-X da Disciplina · Bioquímica I (Prof. Robert Vargas Bernal) · ClinicusMed</title>
+<style>
+:root{
+  --bg:#0d0f16; --card:#1b2130; --border:#264b4d;
+  --text:#e8f5f4; --text-dim:#a8b3c4;
+  --accent:#ffd166; --gold:#e8b84b; --ok:#4fd1a1; --bad:#e0505f;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;margin:0;line-height:1.6;}
+.wrap{max-width:820px;margin:0 auto;padding:24px 20px 60px;}
+header{text-align:center;padding:28px 0 20px;}
+.eyebrow{color:var(--gold);font-size:.8em;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+h1{font-size:1.7em;margin:8px 0 4px;}
+header p{color:var(--text-dim);font-size:.92em;margin:0;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px;margin-bottom:18px;}
+.card h2{font-size:1.15em;margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+.card p{color:var(--text-dim);font-size:.95em;margin:0 0 10px;}
+.card ul, .card ol{color:var(--text-dim);font-size:.95em;padding-left:20px;margin:0;}
+.card li{margin-bottom:6px;}
+/* Termometro */
+.termo-card{background:linear-gradient(135deg, rgba(255,209,102,.08), rgba(79,209,161,.05));border:1px solid var(--gold);}
+.termo-title{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.05em;margin-bottom:16px;color:var(--gold);}
+.termo-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.termo-row:last-child{border-bottom:none;}
+.termo-label{display:flex;align-items:center;gap:8px;font-size:.92em;color:var(--text);}
+.termo-stars{letter-spacing:2px;font-size:1em;}
+.star-on{color:var(--gold);}
+.star-off{color:rgba(255,255,255,.15);}
+/* Nivel badge */
+.nivel-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,209,161,.12);border:1px solid var(--ok);color:var(--ok);padding:6px 16px;border-radius:20px;font-weight:700;font-size:.9em;margin-bottom:10px;}
+/* Materiais */
+.mat-item{display:flex;align-items:center;gap:8px;color:var(--text);font-size:.95em;margin-bottom:8px;}
+/* Estrategia numerada */
+.estrategia-list{list-style:none;padding:0;counter-reset:estrat;}
+.estrategia-list li{counter-increment:estrat;position:relative;padding-left:36px;margin-bottom:12px;color:var(--text);}
+.estrategia-list li::before{content:counter(estrat);position:absolute;left:0;top:0;width:24px;height:24px;background:var(--accent);color:#0d0f16;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85em;}
+/* Erros */
+.erro-item{color:var(--bad);font-size:.95em;margin-bottom:6px;display:flex;gap:8px;}
+.erro-item::before{content:"⚠️";flex-shrink:0;}
+/* Dica final */
+.dica-card{background:rgba(255,209,102,.1);border:1px solid var(--accent);text-align:center;}
+.dica-card p{color:var(--text);font-size:1.02em;font-style:italic;margin:0;}
+.disclaimer{color:var(--text-dim);font-size:.78em;text-align:center;margin-top:24px;padding:0 10px;}
+.cta{display:flex;justify-content:center;margin-top:22px;}
+.cta a{background:var(--accent);color:#0d0f16;padding:12px 28px;border-radius:24px;font-weight:700;text-decoration:none;font-size:.95em;}
+footer{text-align:center;color:var(--text-dim);font-size:.8em;margin-top:30px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Bioquímica I</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Bioquímica I</span><span>1 de 17</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:6%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Bioquímica I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-03/bioquimica-robert/RaioX_Disciplina.html"><span class="ico">📋</span><span>🩺 Raio-X da Disciplina</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica-robert/Capitulo_01_Atomos_Tabela_Periodica.html"><span class="ico">📋</span><span>Capítulo 1 — Átomos, Tabela Periódica e Ligações Básicas (Prof. Robert Vargas Bernal)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica-robert/Capitulo_02_Numeros_Quanticos_Nomenclatura.html"><span class="ico">📋</span><span>Capítulo 2 — Números Quânticos, Ligações e Nomenclatura Inorgânica</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica-robert/Capitulo_03_Quimica_Organica.html"><span class="ico">📋</span><span>Capítulo 4 — Química Orgânica: Hidrocarbonetos e Álcoois</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica-robert/simulado_bioquimica_robert_p1.html"><span class="ico">📝</span><span>Simulado P1 — 40 Questões (25 MC + 10 V/F + 5 Associar)</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-03/Bioquimica_Bioelementos_Interativo.html"><span class="ico">📋</span><span>Bioelementos</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Carboidratos_Parte1_Interativo.html"><span class="ico">📋</span><span>Carboidratos Parte 1</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Carboidratos_Parte2_Interativo.html"><span class="ico">📋</span><span>Carboidratos Parte 2</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Lipidios_Parte1_Interativo.html"><span class="ico">📋</span><span>Lipídios Parte 1</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Lipidios_Parte2_Interativo.html"><span class="ico">📋</span><span>Lipídios Parte 2</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Vitaminas_Interativo.html"><span class="ico">📋</span><span>Vitaminas</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica_vargas_aminoacidos.html"><span class="ico">📋</span><span>Aminoácidos (Prof. Vargas)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica_vargas_proteinas.html"><span class="ico">📋</span><span>Proteínas (Prof. Vargas)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/bioquimica_vargas_enzimas.html"><span class="ico">📋</span><span>Enzimas (Prof. Vargas)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/simulado_master_bioquimica.html"><span class="ico">📝</span><span>Simulado - Bioquímica I</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/simulado_bioquimica_vargas_aminoacidos_proteinas_enzimas.html"><span class="ico">📝</span><span>Aminoácidos, Proteínas e Enzimas (Prof. Vargas)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/simulado_bioquimica_vargas_identificacao_diagramas.html"><span class="ico">📝</span><span>Identificação de Estruturas — Diagramas (Prof. Vargas)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Bioquímica I · P1 · Prof. Robert Vargas Bernal</span>
+  <h1>🔎 Raio-X da Disciplina</h1>
+  <p>O resumo ensina o conteúdo. O Raio-X da Disciplina ensina como estudar para este professor.</p>
+</header>
+
+<div class="card termo-card">
+  <div class="termo-title">🩺 Termômetro Clinicus</div>
+  <div class="termo-row"><span class="termo-label">📖 Leitura teórica</span><span class="termo-stars"><span class="star-on">★★★</span><span class="star-off">☆☆</span></span></div>
+  <div class="termo-row"><span class="termo-label">🧠 Raciocínio conceitual</span><span class="termo-stars"><span class="star-on">★★</span><span class="star-off">☆☆☆</span></span></div>
+  <div class="termo-row"><span class="termo-label">📝 Exercícios práticos</span><span class="termo-stars"><span class="star-on">★★★★★</span></span></div>
+  <div class="termo-row"><span class="termo-label">🎯 Foco nas aulas</span><span class="termo-stars"><span class="star-on">★★★★★</span></span></div>
+  <div class="termo-row"><span class="termo-label">📚 Livro-texto</span><span class="termo-stars"><span class="star-on">★</span><span class="star-off">☆☆☆☆</span></span></div>
+  <div class="termo-row"><span class="termo-label">📄 PDFs do professor</span><span class="termo-stars"><span class="star-on">★★★★★</span></span></div>
+</div>
+
+<div class="card">
+  <h2>👨‍🏫 Perfil do Professor</h2>
+  <p>O Prof. Robert possui um perfil de avaliação bastante objetivo e acessível. Durante as aulas, ele resolve diversos exercícios e costuma utilizar esses mesmos modelos como base para suas provas. Em geral, quem acompanha as aulas e pratica os exercícios apresentados tem uma excelente preparação para a avaliação.</p>
+</div>
+
+<div class="card">
+  <h2>🎯 Assuntos Prioritários</h2>
+  <ul>
+    <li>Resolva todos os exercícios propostos em sala.</li>
+    <li>Apresente as listas na data combinada para receber o visto do professor, pois essa atividade compõe a nota de processo.</li>
+    <li>Dê atenção especial aos exercícios resolvidos durante as aulas — nas avaliações anteriores, eles costumam refletir de perto o estilo de cobrança da prova.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>📊 Nível de Profundidade</h2>
+  <span class="nivel-badge">🟢 Básico</span>
+  <p>O foco da disciplina está na compreensão dos conceitos trabalhados em sala e na aplicação por meio dos exercícios apresentados pelo professor.</p>
+</div>
+
+<div class="card">
+  <h2>📚 Materiais Complementares</h2>
+  <div class="mat-item">✅ Material da Clinicus</div>
+  <div class="mat-item">✅ PDFs disponibilizados pelo professor durante as aulas</div>
+  <p style="margin-top:10px;">Para esta disciplina, os materiais fornecidos em sala complementam muito bem o conteúdo estudado.</p>
+</div>
+
+<div class="card">
+  <h2>🎯 Estratégia Clinicus</h2>
+  <p>Para obter um bom desempenho nesta disciplina:</p>
+  <ol class="estrategia-list">
+    <li>Estude o resumo antes da aula ou logo após a explicação do professor.</li>
+    <li>Resolva todos os exercícios propostos em sala.</li>
+    <li>Refaça os exercícios até conseguir resolvê-los sem consultar o material.</li>
+    <li>Utilize o simulado da Clinicus para verificar se realmente domina o conteúdo.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h2>⚠️ Erros Comuns</h2>
+  <div class="erro-item">Não resolver os exercícios apresentados em sala.</div>
+  <div class="erro-item">Deixar de entregar as listas que compõem a nota de processo.</div>
+  <div class="erro-item">Ler apenas a teoria e acreditar que isso será suficiente para a prova.</div>
+</div>
+
+<div class="card dica-card">
+  <h2 style="justify-content:center;">💡 Dica Clinicus</h2>
+  <p>"Se você dominar os exercícios resolvidos em sala e praticar repetidamente até conseguir resolvê-los sozinho, terá uma excelente preparação para a avaliação do Prof. Robert."</p>
+</div>
+
+<p class="disclaimer">📌 As informações acima refletem o padrão observado em avaliações anteriores desta disciplina e servem como orientação de estudo — não como garantia do conteúdo exato da próxima prova, que depende sempre da decisão do professor.</p>
+
+<footer>ClinicusMed · Raio-X da Disciplina · Inteligência de Prova</footer>
+</div>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <a class="cmed-nav-pn-btn next" href="/semestre-03/bioquimica-robert/Capitulo_01_Atomos_Tabela_Periodica.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Capítulo 1 — Átomos, Tabela Periódica e Ligações Básicas (Prof. Robert Vargas Bernal)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body>
+</html>
