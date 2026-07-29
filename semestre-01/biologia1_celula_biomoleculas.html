@@ -89,24 +89,31 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 <button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
 <div class="cmed-reading-progress" id="cmedReadingProgress"></div>
 <header class="cmed-nav-header">
-  <a class="cmed-nav-brand" href="/index.html#catalogo"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
-  <a class="cmed-nav-back" href="/index.html#catalogo">← Voltar para o Catálogo</a>
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
 </header>
 <nav class="cmed-nav-breadcrumb">
-  <a href="/index.html#catalogo">Início</a><span class="sep">›</span>
-  <a href="/index.html#catalogo">Biología</a><span class="sep">›</span>
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Biología</a><span class="sep">›</span>
   <span>Final</span><span class="sep">›</span>
   <span class="current">Guia de Estudo</span>
 </nav>
 <div class="cmed-nav-progress-wrap">
-  <div class="cmed-nav-progress-label"><span>Progresso em Biología</span><span>1 de 3</span></div>
-  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:33%"></div></div>
+  <div class="cmed-nav-progress-label"><span>Progresso em Biología</span><span>4 de 6</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:67%"></div></div>
 </div>
 <div class="cmed-nav-layout">
   <aside class="cmed-nav-sidebar">
     <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
     <div class="cmed-nav-sidebar-list">
     <p class="cmed-nav-sidebar-title">Biología</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_01_Celula_Bacterias.html"><span class="ico">📋</span><span>Capítulo 1 — A Célula: Características e Bactérias</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_02_Componentes_Quimicos.html"><span class="ico">📋</span><span>Capítulo 2 — Componentes Químicos das Células</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_03_Membrana_Celular.html"><span class="ico">📋</span><span>Capítulo 3 — Membrana Celular</span></a>
     <h4>Final</h4>
     <a class="cmed-nav-item is-current" href="/semestre-01/biologia1_celula_biomoleculas.html"><span class="ico">📋</span><span>Guia de Estudo - Biología</span></a>
     <a class="cmed-nav-item" href="/semestre-01/simulado_excelencia_citoplasma_citoesqueleto.html"><span class="ico">📝</span><span>Simulado de Excelencia - Citoplasma, Citoesqueleto y Organelas</span></a>
@@ -114,6 +121,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
     </div>
   </aside>
   <div class="cmed-nav-main">
+
 
 
 
@@ -590,10 +598,39 @@ startQuiz();
 
 
 
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Biología',
+    titulo: 'Guia de Estudo - Biología',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'Final',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Biología', titulo: 'Guia de Estudo - Biología', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
   </div>
 </div>
 <nav class="cmed-nav-prevnext">
-  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/biologia/Capitulo_03_Membrana_Celular.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 3 — Membrana Celular</span>
+  </a>
   <a class="cmed-nav-pn-btn next" href="/semestre-01/simulado_excelencia_citoplasma_citoesqueleto.html">
     <span class="cmed-nav-pn-label">Próximo →</span>
     <span class="cmed-nav-pn-title">Simulado de Excelencia - Citoplasma, Citoesqueleto y Organelas</span>
@@ -681,31 +718,6 @@ startQuiz();
     topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
   }
 })();
-</script>
-<script>
-try{
-  var jornadaItem = {
-    materia: 'Biología',
-    titulo: 'Guia de Estudo - Biología',
-    url: location.pathname,
-    tipo: 'Guia de Estudo',
-    etapa: 'Final',
-    timestamp: Date.now()
-  };
-  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
-}catch(e){}
-</script>
-<script>
-try{
-  if(typeof CHAPTER_ID !== 'undefined'){
-    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
-    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
-    var entry = { materia: 'Biología', titulo: 'Guia de Estudo - Biología', url: location.pathname, srsKey: srsKey };
-    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
-    srsReg.push(entry);
-    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
-  }
-}catch(e){}
 </script>
 </body>
 </html>

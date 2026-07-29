@@ -19,6 +19,7 @@ CATALOGO_PATH = os.path.join(REPO, 'catalogo.json')
 ETAPA_ORDEM = ['P1', 'P2', 'Final']
 CSS_HREF = '/assets/shell-nav.css'
 CATALOGO_HREF = '/index.html#catalogo'
+JORNADA_HREF = '/jornada/'
 
 def slugify(s):
     import unicodedata
@@ -93,13 +94,16 @@ def build_sidebar_html(seq, current_path):
 def build_header(back_href):
     return f'''<header class="cmed-nav-header">
   <a class="cmed-nav-brand" href="{back_href}"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
-  <a class="cmed-nav-back" href="{back_href}">← Voltar para o Catálogo</a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="{back_href}">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="{CATALOGO_HREF}">🛒 Catálogo</a>
+  </div>
 </header>'''
 
 def build_breadcrumb(item):
     return f'''<nav class="cmed-nav-breadcrumb">
-  <a href="{CATALOGO_HREF}">Início</a><span class="sep">›</span>
-  <a href="{CATALOGO_HREF}">{esc(item['materia'])}</a><span class="sep">›</span>
+  <a href="{JORNADA_HREF}">Início</a><span class="sep">›</span>
+  <a href="{JORNADA_HREF}">{esc(item['materia'])}</a><span class="sep">›</span>
   <span>{item['etapa']}</span><span class="sep">›</span>
   <span class="current">{esc(item['tipo'])}</span>
 </nav>'''
@@ -266,7 +270,7 @@ def inject_file(item, seq, idx, dry_run=False):
     html = html.replace('</head>', f'<link rel="stylesheet" href="{CSS_HREF}">\n</head>', 1)
 
     # 2. monta os blocos
-    back_href = CATALOGO_HREF
+    back_href = JORNADA_HREF
     header_html = build_header(back_href)
     breadcrumb_html = build_breadcrumb(item)
     progress_html = build_progress(idx, len(seq)).replace(
