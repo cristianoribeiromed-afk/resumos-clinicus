@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raio-X da Disciplina · Genética (Prof. Geovane) · ClinicusMed</title>
+<style>
+:root{
+  --bg:#1a0e10; --card:#2b171a; --border:#264b4d;
+  --text:#e8f5f4; --text-dim:#b8a3a5;
+  --accent:#d64550; --gold:#e8b84b; --ok:#4fd1a1; --bad:#e0505f;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;margin:0;line-height:1.6;}
+.wrap{max-width:820px;margin:0 auto;padding:24px 20px 60px;}
+header{text-align:center;padding:28px 0 20px;}
+.eyebrow{color:var(--accent);font-size:.8em;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+h1{font-size:1.7em;margin:8px 0 4px;}
+header p{color:var(--text-dim);font-size:.92em;margin:0;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px;margin-bottom:18px;}
+.card h2{font-size:1.15em;margin:0 0 14px;display:flex;align-items:center;gap:8px;}
+.card p{color:var(--text-dim);font-size:.95em;margin:0 0 10px;}
+.card ul, .card ol{color:var(--text-dim);font-size:.95em;padding-left:20px;margin:0;}
+.card li{margin-bottom:6px;}
+/* Termometro */
+.termo-card{background:linear-gradient(135deg, rgba(214,69,80,.10), rgba(232,184,75,.05));border:1px solid var(--accent);}
+.termo-title{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.05em;margin-bottom:16px;color:var(--accent);}
+.termo-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.termo-row:last-child{border-bottom:none;}
+.termo-label{display:flex;align-items:center;gap:8px;font-size:.92em;color:var(--text);}
+.termo-stars{letter-spacing:2px;font-size:1em;}
+.star-on{color:var(--gold);}
+.star-off{color:rgba(255,255,255,.15);}
+/* Assuntos prioritarios com estrelas */
+.assunto-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.95em;color:var(--text);}
+.assunto-row:last-child{border-bottom:none;}
+.assunto-stars{white-space:nowrap;letter-spacing:1px;}
+/* Nivel — 3 niveis */
+.nivel-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:.95em;color:var(--text);}
+.nivel-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dot-green{background:var(--ok);}
+.dot-yellow{background:var(--gold);}
+.dot-red{background:var(--bad);}
+/* Materiais */
+.mat-item{display:flex;align-items:center;gap:8px;color:var(--text);font-size:.95em;margin-bottom:8px;}
+/* Nota de processo destaque */
+.processo-highlight{background:rgba(232,184,75,.1);border:1px solid var(--gold);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:.92em;color:var(--text);}
+.processo-highlight b{color:var(--gold);}
+/* Erros */
+.erro-item{color:var(--bad);font-size:.95em;margin-bottom:6px;display:flex;gap:8px;}
+.erro-item::before{content:"⚠️";flex-shrink:0;}
+/* Dica/Conselho final */
+.dica-card{background:rgba(214,69,80,.12);border:1px solid var(--accent);}
+.dica-card p{color:var(--text);font-size:1em;font-style:italic;margin:0;}
+.conselho-card{background:rgba(79,209,161,.10);border:1px solid var(--ok);}
+.conselho-card p{color:var(--text);font-size:1em;font-style:italic;margin:0;}
+.disclaimer{color:var(--text-dim);font-size:.78em;text-align:center;margin-top:24px;padding:0 10px;}
+footer{text-align:center;color:var(--text-dim);font-size:.8em;margin-top:30px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Genética — Prof. Geovani</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Genética — Prof. Geovani</span><span>1 de 18</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:6%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Genética — Prof. Geovani</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-03/genetica/RaioX_Disciplina.html"><span class="ico">📋</span><span>🩺 Raio-X da Disciplina</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica-humana-p1.html"><span class="ico">📋</span><span>Leis de Mendel, Cromossomos, Herança e Erros do Metabolismo (Guia Geral)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica/Capitulo_01_Hemoglobinopatias_Talassemias.html"><span class="ico">📋</span><span>Capítulo 1 — Hemoglobinopatias e Talassemias</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_simulado_p1.html"><span class="ico">📝</span><span>Simulado P1 — 20 Questões (13 MC + 5 V/F + 2 Associar)</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_saldivar_herencia_eim_enfermedades.html"><span class="ico">📋</span><span>Tipos de Herencia, EIM y Enfermedades Comunes</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_geovani_herencia_monogenica.html"><span class="ico">📋</span><span>Herencia Monogénica: Huntington, Duchenne y Hemofilia</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_geovani_alteraciones_sexuales.html"><span class="ico">📋</span><span>Alteraciones Sexuales y Cromosómicas</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica-humana-p2.html"><span class="ico">📋</span><span>Genética P2</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Genetica_Cancer_Interativo.html"><span class="ico">📋</span><span>Genética del Cáncer</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/guia_genetica_p2_fixed2.html"><span class="ico">📋</span><span>Guía General</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_heranca_monogenica.html"><span class="ico">📋</span><span>Herencia Monogénica (Huntington/Duchenne/Hemofilia)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_determinacao_sexual.html"><span class="ico">📋</span><span>Herencia Sexual y Cromosómica (SRY/X Frágil/DDS)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_farmacogenetica.html"><span class="ico">📋</span><span>Farmacogenética</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_saldivar_simulado2_herencia_eim.html"><span class="ico">📝</span><span>Simulado — Herencia Monogénica y EIM (40 preguntas)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/simulado_master_genetica_p1.html"><span class="ico">📝</span><span>Simulado Master P1</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/simulado_genetica_p2_corrigido.html"><span class="ico">📝</span><span>Simulado - Anomalías Congénitas</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/simulado_master_genetica_p2.html"><span class="ico">📝</span><span>Simulado Master P2</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/genetica_simulado_final_40q.html"><span class="ico">📝</span><span>Simulado Final 40 Preguntas (Todo el Temario)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Genética · P1 · Prof. Geovane</span>
+  <h1>🔎 Raio-X da Disciplina</h1>
+  <p>O resumo ensina o conteúdo. O Raio-X da Disciplina ensina como estudar para este professor.</p>
+</header>
+
+<div class="card termo-card">
+  <div class="termo-title">🩺 Termômetro Clinicus</div>
+  <div class="termo-row"><span class="termo-label">📖 Leitura teórica</span><span class="termo-stars"><span class="star-on">★★★</span><span class="star-off">☆☆</span></span></div>
+  <div class="termo-row"><span class="termo-label">🧠 Raciocínio e Interpretação</span><span class="termo-stars"><span class="star-on">★★★★★</span></span></div>
+  <div class="termo-row"><span class="termo-label">🩺 Casos Clínicos</span><span class="termo-stars"><span class="star-on">★★★★★</span></span></div>
+  <div class="termo-row"><span class="termo-label">🧬 Heredogramas/Exercícios</span><span class="termo-stars"><span class="star-on">★★★★★</span></span></div>
+  <div class="termo-row"><span class="termo-label">🎯 Foco nas aulas</span><span class="termo-stars"><span class="star-on">★★★★</span><span class="star-off">☆</span></span></div>
+  <div class="termo-row"><span class="termo-label">📄 PDFs/Videoaulas do professor</span><span class="termo-stars"><span class="star-on">★★★</span><span class="star-off">☆☆</span></span></div>
+</div>
+
+<div class="card">
+  <h2>👨‍🏫 Perfil do Professor</h2>
+  <p>O Prof. Geovane possui excelente didática e conduz as aulas de forma clara, organizada e objetiva. Valoriza o comprometimento dos alunos, a participação em sala e o estudo contínuo ao longo do semestre.</p>
+  <p>Suas avaliações costumam abranger boa parte do conteúdo ministrado, exigindo principalmente interpretação e aplicação dos conceitos genéticos em situações clínicas.</p>
+</div>
+
+<div class="card">
+  <h2>🎯 Assuntos Prioritários</h2>
+  <p>Embora todo o conteúdo da disciplina seja importante, alguns temas costumam aparecer com maior frequência nas avaliações:</p>
+  <div class="assunto-row"><span>Padrões de herança (autossômica dominante, recessiva, ligada ao X, ligada ao Y, mitocondrial)</span><span class="assunto-stars star-on">★★★★★</span></div>
+  <div class="assunto-row"><span>Heredogramas e interpretação dos padrões de transmissão</span><span class="assunto-stars star-on">★★★★★</span></div>
+  <div class="assunto-row"><span>Sistema ABO e fator Rh</span><span class="assunto-stars star-on">★★★★★</span></div>
+  <div class="assunto-row"><span>Doenças monogênicas e doenças ligadas ao sexo</span><span class="assunto-stars"><span class="star-on">★★★★</span><span class="star-off">☆</span></span></div>
+  <div class="assunto-row"><span>Alterações cromossômicas</span><span class="assunto-stars"><span class="star-on">★★★★</span><span class="star-off">☆</span></span></div>
+  <div class="assunto-row"><span>Herança multifatorial</span><span class="assunto-stars"><span class="star-on">★★★</span><span class="star-off">☆☆</span></span></div>
+  <div class="assunto-row"><span>Erros Inatos do Metabolismo</span><span class="assunto-stars"><span class="star-on">★★★</span><span class="star-off">☆☆</span></span></div>
+  <p style="margin-top:12px;">💡 Dominar esses assuntos aumenta significativamente sua preparação para as avaliações.</p>
+</div>
+
+<div class="card">
+  <h2>📝 Como o Professor Costuma Cobrar</h2>
+  <ul>
+    <li>As provas costumam misturar conteúdos de diferentes aulas.</li>
+    <li>As questões geralmente são contextualizadas, com casos clínicos e enunciados detalhados.</li>
+    <li>A interpretação correta do enunciado é tão importante quanto conhecer o conteúdo.</li>
+    <li>Muitas respostas podem ser encontradas analisando cuidadosamente o caso clínico apresentado.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>📊 Nível de Profundidade</h2>
+  <div class="nivel-row"><span class="nivel-dot dot-green"></span> Conteúdos básicos</div>
+  <div class="nivel-row"><span class="nivel-dot dot-yellow"></span> Conteúdos intermediários</div>
+  <div class="nivel-row"><span class="nivel-dot dot-red"></span> Algumas questões mais elaboradas, principalmente envolvendo interpretação clínica</div>
+</div>
+
+<div class="card">
+  <h2>📚 Materiais Recomendados</h2>
+  <div class="mat-item">✅ Material Clinicus (desenvolvido com base nas aulas e materiais do professor)</div>
+  <div class="mat-item">✅ PDFs disponibilizados em sala</div>
+  <div class="mat-item">🎥 Videoaulas gravadas pelo professor (como complemento)</div>
+  <p style="margin-top:10px;">O material da Clinicus foi organizado seguindo a sequência de conteúdos apresentada pelo professor. Estudando os resumos, revisando os flashcards e resolvendo todas as questões da plataforma, o aluno estará muito bem preparado para a prova.</p>
+</div>
+
+<div class="card">
+  <h2>📝 Avaliação e Nota de Processo</h2>
+  <p>O Prof. Geovane valoriza a dedicação durante todo o semestre. As atividades realizadas em sala, listas de exercícios e trabalhos costumam compor a nota de processo, podendo representar aproximadamente 20 pontos da nota final.</p>
+  <div class="processo-highlight"><b>💡 Não deixe de participar</b> das atividades e entregar os trabalhos dentro do prazo.</div>
+</div>
+
+<div class="card">
+  <h2>⚠️ Erros Comuns</h2>
+  <div class="erro-item">Decorar padrões de herança sem praticar heredogramas.</div>
+  <div class="erro-item">Confundir os diferentes tipos de herança genética.</div>
+  <div class="erro-item">Não praticar exercícios sobre Sistema ABO e fator Rh.</div>
+  <div class="erro-item">Ler rapidamente os casos clínicos e perder informações importantes.</div>
+  <div class="erro-item">Estudar apenas definições, sem aplicar os conceitos em questões.</div>
+</div>
+
+<div class="card dica-card">
+  <h2>💡 Dica Clinicus</h2>
+  <p>Em Genética, resolver exercícios faz toda a diferença. Treine repetidamente heredogramas, padrões de herança, Sistema ABO e casos clínicos. Durante a prova, leia atentamente cada enunciado até o final e identifique exatamente o padrão genético apresentado antes de escolher a resposta. A interpretação correta costuma ser o fator decisivo para um bom desempenho.</p>
+</div>
+
+<div class="card conselho-card">
+  <h2>🩺 Conselho Clinicus</h2>
+  <p>Se você dominar os padrões de herança, interpretar heredogramas com segurança, compreender o Sistema ABO e praticar bastante os casos clínicos, estará muito bem preparado para a grande maioria das questões desta disciplina.</p>
+</div>
+
+<p class="disclaimer">📌 As informações acima refletem o padrão observado em avaliações anteriores desta disciplina e servem como orientação de estudo — não como garantia do conteúdo exato da próxima prova, que depende sempre da decisão do professor.</p>
+
+<footer>ClinicusMed · Raio-X da Disciplina · Inteligência de Prova</footer>
+</div>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <a class="cmed-nav-pn-btn next" href="/semestre-03/genetica-humana-p1.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Leis de Mendel, Cromossomos, Herança e Erros do Metabolismo (Guia Geral)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body>
+</html>
