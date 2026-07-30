@@ -200,6 +200,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
   </aside>
   <div class="cmed-nav-main">
 
+
 <div class="wrap">
 <header>
   <span class="eyebrow">Anatomía I — Prática · Esqueleto Axial · Coluna Vertebral</span>
@@ -216,7 +217,8 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 <nav class="tabs" id="tabs">
   <button data-p="p0" class="active">📋 Ficha Completa</button>
   <button data-p="p1">🏥 Correlação Clínica</button>
-  <button data-p="p2">📸 Imagens</button>
+  <button data-p="p2">⏱️ Treino</button>
+  <button data-p="p6">📸 Galeria</button>
   <button data-p="p3">🃏 Flashcards</button>
   <button data-p="p4">✅ Banco de Questões</button>
   <button data-p="p5">🎮 Quiz Rápido</button>
@@ -314,8 +316,17 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
   <div id="casesArea"></div>
 </section>
 
-<!-- ============ IMAGENS ============ -->
+<!-- ============ TREINO DE RECONHECIMENTO ============ -->
 <section class="panel" id="p2">
+  <div class="card">
+    <h2>⏱️ Treino de Reconhecimento — Sob Pressão</h2>
+    <p style="font-size:.88em;color:var(--text-dim);">10 rodadas, 1 estrutura numerada por vez, <b>60 segundos</b> pra você identificar. A imagem muda sozinha quando o tempo acaba (ou clica em "Já sei, próxima"). No final, você vê o gabarito completo de tudo.</p>
+    <div id="trainArea"></div>
+  </div>
+</section>
+
+<!-- ============ GALERIA ============ -->
+<section class="panel" id="p6">
   <div class="card">
     <h2>📸 Galeria de Imagens</h2>
     <p style="font-size:.9em;color:var(--text-dim);margin-bottom:10px;">Vista Numerada (identificação completa):</p>
@@ -324,6 +335,108 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
     <img src="img/atlas_axis_posterior.png" alt="Atlas e Axis vista posterior" style="max-width:100%;border-radius:8px;">
   </div>
 </section>
+
+
+<script>
+const trainRounds = [
+  {"img":"img/atlas_superior_1234.png","numero":1,"resposta":"Tubérculo anterior"},
+  {"img":"img/atlas_superior_1234.png","numero":2,"resposta":"Apófise transversa"},
+  {"img":"img/atlas_superior_1234.png","numero":3,"resposta":"Carilha articular superior da massa lateral (côndilo occipital)"},
+  {"img":"img/atlas_superior_1234.png","numero":4,"resposta":"Sulco da artéria vertebral"},
+  {"img":"img/atlas_inferior_5_6.png","numero":5,"resposta":"Forame transverso"},
+  {"img":"img/atlas_inferior_5_6.png","numero":6,"resposta":"Arco anterior"},
+  {"img":"img/axis_posterosuperior_7_8.png","numero":7,"resposta":"Apófise espinhosa"},
+  {"img":"img/axis_posterosuperior_7_8.png","numero":8,"resposta":"Dente (Apófise Odontoide)"},
+  {"img":"img/axis_anterior_9_10.png","numero":9,"resposta":"Carilha articular superior para o atlas"},
+  {"img":"img/axis_anterior_9_10.png","numero":10,"resposta":"Pedículo"}
+];
+
+let trainIdx = 0;
+let trainTimer = null;
+let trainSeconds = 60;
+let trainAnswers = [];
+const trainArea = document.getElementById('trainArea');
+
+function startTraining(){
+  trainIdx = 0;
+  trainAnswers = new Array(trainRounds.length).fill('');
+  renderTrainRound();
+}
+
+function renderTrainRound(){
+  clearInterval(trainTimer);
+  if(trainIdx >= trainRounds.length){
+    renderTrainGabarito();
+    return;
+  }
+  trainSeconds = 60;
+  const r = trainRounds[trainIdx];
+  trainArea.innerHTML = `
+    <div class="train-header">
+      <span class="train-progress">Rodada ${trainIdx+1} / ${trainRounds.length}</span>
+      <span class="train-clock" id="trainClock">⏱️ 60s</span>
+    </div>
+    <div class="train-question">Qual a estrutura indicada pelo número <b>${r.numero}</b>?</div>
+    <img src="${r.img}" alt="Estrutura ${r.numero}" class="train-img">
+    <input type="text" id="trainInput" class="train-input" placeholder="Digite sua resposta (opcional, só pra você conferir depois)" value="${trainAnswers[trainIdx]}">
+    <button class="reveal-btn" id="trainNextBtn">Já sei, próxima →</button>
+  `;
+  document.getElementById('trainNextBtn').addEventListener('click', advanceTrain);
+  document.getElementById('trainInput').addEventListener('input', (e)=>{ trainAnswers[trainIdx] = e.target.value; });
+
+  trainTimer = setInterval(()=>{
+    trainSeconds--;
+    const clockEl = document.getElementById('trainClock');
+    if(clockEl) clockEl.textContent = '⏱️ ' + trainSeconds + 's';
+    if(trainSeconds <= 10 && clockEl) clockEl.classList.add('train-clock-urgent');
+    if(trainSeconds <= 0){
+      advanceTrain();
+    }
+  }, 1000);
+}
+
+function advanceTrain(){
+  clearInterval(trainTimer);
+  trainIdx++;
+  renderTrainRound();
+}
+
+function renderTrainGabarito(){
+  let html = '<div class="train-gabarito-title">🏁 Treino Concluído — Gabarito Completo</div>';
+  trainRounds.forEach((r, i) => {
+    const userAns = trainAnswers[i] ? trainAnswers[i] : '(sem resposta)';
+    html += `
+      <div class="train-gab-item">
+        <img src="${r.img}" alt="Estrutura ${r.numero}" class="train-gab-img">
+        <div class="train-gab-info">
+          <div><b>Número ${r.numero}</b></div>
+          <div class="train-gab-user">Sua resposta: <i>${userAns}</i></div>
+          <div class="train-gab-correct">✅ Resposta correta: <b>${r.resposta}</b></div>
+        </div>
+      </div>`;
+  });
+  html += '<button class="reveal-btn" id="trainRestartBtn">🔄 Refazer o treino</button>';
+  trainArea.innerHTML = html;
+  document.getElementById('trainRestartBtn').addEventListener('click', startTraining);
+}
+
+startTraining();
+</script>
+<style>
+.train-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.train-progress{font-weight:600;color:var(--text-dim);font-size:.9em;}
+.train-clock{font-weight:700;font-size:1.1em;color:var(--ok);background:rgba(79,209,161,.1);padding:4px 12px;border-radius:20px;}
+.train-clock-urgent{color:var(--bad);background:rgba(224,80,95,.15);}
+.train-question{font-size:1.05em;font-weight:600;margin-bottom:12px;text-align:center;}
+.train-img{max-width:100%;border-radius:8px;display:block;margin:0 auto 14px;}
+.train-input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.95em;margin-bottom:12px;box-sizing:border-box;}
+.train-gabarito-title{font-size:1.2em;font-weight:700;margin-bottom:16px;text-align:center;color:var(--gold);}
+.train-gab-item{display:flex;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;align-items:center;}
+.train-gab-img{width:100px;height:100px;object-fit:cover;border-radius:6px;flex-shrink:0;}
+.train-gab-info{flex:1;font-size:.9em;}
+.train-gab-user{color:var(--text-dim);margin:4px 0;}
+.train-gab-correct{color:var(--ok);}
+</style>
 
 <!-- ============ FLASHCARDS ============ -->
 <section class="panel" id="p3">
@@ -937,6 +1050,7 @@ try{
   }
 }catch(e){}
 </script>
+
 
   </div>
 </div>
