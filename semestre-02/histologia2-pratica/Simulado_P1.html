@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado P1 | Histología II Prática | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0c1712; --bg2:#122019; --card:#0f1c15; --border:#1e3327;
+  --accent:#3aa66d; --ok:#4fd18a; --bad:#e0505f; --gold:#d4af37;
+  --text:#e8f2ec; --text-dim:#a3c2b0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(ellipse at top,var(--bg2),var(--bg));color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding-bottom:60px;}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px;}
+header{padding:28px 0 18px;text-align:center;border-bottom:1px solid var(--border);}
+.eyebrow{font-size:.78em;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase;}
+header h1{font-size:1.5rem;color:var(--ok);margin-top:6px;}
+header p{color:var(--text-dim);margin-top:4px;font-size:.88em;}
+.xpbar{max-width:420px;margin:16px auto 0;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:10px;font-size:.8em;color:var(--gold);}
+.xpouter{flex:1;height:6px;background:#081008;border-radius:4px;overflow:hidden;}
+.xpinner{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));width:0%;transition:width .4s ease;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:20px 0 0;}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.82em;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent);color:var(--text);}
+nav.tabs button.active{background:var(--accent);color:#04150c;border-color:var(--accent);font-weight:600;}
+section.panel{display:none;padding:20px 0;}
+section.panel.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;}
+.card h2{color:var(--gold);font-size:1.05em;margin-bottom:10px;}
+.card h3{font-size:.95em;color:var(--gold);margin:16px 0 8px;}
+.card p{margin-bottom:8px;line-height:1.55;}
+.card ul,.card ol{margin:8px 0 8px 20px;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88em;}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;}
+th{background:#0a1a10;color:var(--gold);}
+.criterio{background:rgba(58,166,109,.1);border-left:3px solid var(--accent);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.clinical{background:rgba(224,80,95,.1);border-left:3px solid var(--bad);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.mnemo{background:rgba(79,209,138,.08);border-left:3px solid var(--ok);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.prova{background:rgba(212,175,55,.1);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.hot{background:rgba(212,175,55,.12);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.cmed-fig{margin:14px 0;text-align:center;}
+.cmed-fig img{max-width:100%;max-height:640px;width:auto;height:auto;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;display:block;margin:0 auto;cursor:zoom-in;}
+.cmed-fig-cap{font-size:.82em;color:var(--text-dim);margin-top:6px;font-style:italic;}
+.cmed-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:12px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:220px;}
+.atlas-lightbox{display:none;position:fixed;inset:0;background:rgba(4,10,11,.94);z-index:1000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+.atlas-lightbox.show{display:flex;}
+.atlas-lightbox-inner{max-width:100%;max-height:100%;text-align:center;}
+.atlas-lightbox-inner img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:10px;background:#fff;box-shadow:0 0 40px rgba(0,0,0,.5);}
+.atlas-lightbox-inner p{color:#fff;margin-top:12px;font-size:.95em;}
+.srs-status{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-filters{display:flex;gap:8px;margin-bottom:12px;}
+.fc-filters button{background:var(--bg2);border:1px solid var(--border);color:var(--text-dim);padding:6px 12px;border-radius:16px;font-size:.8em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#04150c;border-color:var(--accent);}
+.fc-topbar{display:flex;justify-content:space-between;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;gap:12px;}
+.fc-card{perspective:1200px;min-height:180px;}
+.fc-inner{position:relative;width:100%;min-height:180px;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:center;}
+.fc-back{transform:rotateY(180deg);}
+.fc-tag{font-size:.7em;color:var(--gold);letter-spacing:1px;margin-bottom:8px;}
+.fc-controls{display:flex;gap:8px;justify-content:center;}
+.fc-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.85em;}
+.fc-btn.primary{background:var(--accent);color:#04150c;border-color:var(--accent);}
+.review-btns{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.review-btns button{flex:1;min-width:70px;padding:8px 6px;border-radius:8px;border:1px solid var(--border);font-size:.78em;cursor:pointer;color:#fff;}
+.btn-again{background:#8a2a34;} .btn-hard{background:#8a5a2a;} .btn-good{background:#2a7a4f;} .btn-easy{background:#1f9e6b;}
+.interval-preview{display:block;font-size:.7em;opacity:.8;}
+.fc-shuffle-row{text-align:center;}
+.qitem{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qmeta{display:flex;justify-content:space-between;font-size:.75em;color:var(--text-dim);margin-bottom:6px;}
+.qtxt{font-size:.92em;margin-bottom:10px;}
+ul.opts{list-style:none;margin:0;}
+ul.opts li{padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:.86em;}
+ul.opts li:hover{border-color:var(--accent);}
+ul.opts li.correct{background:rgba(79,209,138,.15);border-color:var(--ok);}
+ul.opts li.wrong{background:rgba(224,80,95,.15);border-color:var(--bad);}
+.reveal-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:6px 14px;border-radius:8px;font-size:.8em;cursor:pointer;margin-top:4px;}
+.comment{display:none;margin-top:10px;font-size:.85em;color:var(--text-dim);border-top:1px solid var(--border);padding-top:10px;}
+.comment.show{display:block;}
+.comment p{margin-bottom:6px;}
+.qz-btn{display:block;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:.86em;}
+.progresslabel{font-size:.78em;color:var(--text-dim);margin-bottom:8px;}
+.quiz-result{text-align:center;margin-top:14px;color:var(--gold);font-size:.95em;}
+footer{text-align:center;color:var(--text-dim);font-size:.78em;padding:24px 0 0;}
+</style>
+
+<style>
+.bloco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:14px 0;}
+.bloco-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:14px 10px;border-radius:10px;cursor:pointer;text-align:center;font-size:.88em;transition:.15s;}
+.bloco-btn:hover{border-color:var(--accent);}
+.bloco-btn b{display:block;font-size:1.3em;color:var(--gold);margin-bottom:2px;}
+.bloco-completo{background:linear-gradient(90deg,var(--accent),#2a7a55);color:#04150c;border:none;font-weight:700;padding:16px;border-radius:10px;cursor:pointer;width:100%;margin-top:6px;font-size:.95em;}
+.train-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.train-progress{font-weight:600;color:var(--text-dim);font-size:.9em;}
+.train-clock{font-weight:700;font-size:1.1em;color:var(--ok);background:rgba(79,209,138,.1);padding:4px 12px;border-radius:20px;}
+.train-clock-urgent{color:var(--bad);background:rgba(224,80,95,.15);}
+.train-question{font-size:1.02em;font-weight:600;margin-bottom:12px;text-align:center;}
+.train-img{max-width:100%;border-radius:8px;display:block;margin:0 auto 10px;border:1px solid var(--border);background:#fff;cursor:zoom-in;}
+.train-img-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.train-img-row img{max-width:48%;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:zoom-in;}
+.train-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.92em;margin-bottom:12px;font-family:inherit;resize:vertical;}
+.train-gabarito-title{font-size:1.1em;font-weight:700;color:var(--gold);text-align:center;margin-bottom:16px;}
+.train-gab-item{border-bottom:1px solid var(--border);padding:14px 0;}
+.train-gab-imgs{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.train-gab-imgs img{max-height:160px;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border);cursor:zoom-in;}
+.train-gab-q{font-size:.85em;color:var(--text-dim);margin-bottom:6px;}
+.train-gab-info{font-size:.88em;}
+.train-gab-user{color:var(--text-dim);margin:4px 0;}
+.train-gab-correct{color:var(--ok);}
+.atlas-lightbox{display:none;position:fixed;inset:0;background:rgba(4,10,11,.94);z-index:1000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+.atlas-lightbox.show{display:flex;}
+.atlas-lightbox-inner{max-width:100%;max-height:100%;text-align:center;}
+.atlas-lightbox-inner img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:10px;background:#fff;box-shadow:0 0 40px rgba(0,0,0,.5);}
+.back-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);padding:6px 14px;border-radius:8px;font-size:.8em;cursor:pointer;margin-bottom:14px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Histología II — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Simulado</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Histología II — Prática</span><span>3 de 3</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Histología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_01_Sistema_Cardiovascular.html"><span class="ico">📋</span><span>Capítulo 1 — Sistema Cardiovascular</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_02_Sistema_Linfatico.html"><span class="ico">📋</span><span>Capítulo 2 — Sistema Linfático</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-02/histologia2-pratica/Simulado_P1.html"><span class="ico">📝</span><span>Simulado P1 — 100 Lâminas</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Histología II Prática · Prof. Lindembergue Strutz</span>
+  <h1>🎯 Simulado P1 — Repasso de Lâminas</h1>
+  <p>ClinicusMed · 100 questões práticas, 1 minuto por lâmina</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<div id="mainArea"></div>
+
+<div id="atlasLightbox" class="atlas-lightbox" onclick="closeAtlasLightbox()">
+  <div class="atlas-lightbox-inner"><img id="atlasLightboxImg" src="" alt=""></div>
+</div>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const ALL_QUESTIONS = [{"bloco": "1", "q_num": 1, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R1_q1_1.jpg"], "resposta": "Timo."}, {"bloco": "1", "q_num": 2, "pergunta": "Nomeie corretamente a parede do coração indicada pela seta.", "images": ["R1_q2_1.jpg"], "resposta": "Miocárdio."}, {"bloco": "1", "q_num": 3, "pergunta": "Nomeie corretamente a imagem.", "images": ["R1_q3_1.jpg"], "resposta": "Gânglio Linfático."}, {"bloco": "1", "q_num": 4, "pergunta": "Nomeie corretamente a imagem.", "images": ["R1_q4_1.jpg"], "resposta": "Artéria Grande ou Artéria Elástica."}, {"bloco": "1", "q_num": 5, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R1_q5_1.jpg"], "resposta": "Baço."}, {"bloco": "1", "q_num": 6, "pergunta": "Nomeie corretamente.", "images": ["R1_q6_1.jpg"], "resposta": "Miocárdio."}, {"bloco": "1", "q_num": 7, "pergunta": "Estrutura indicada.", "images": ["R1_q7_1.jpg"], "resposta": "Corpúsculo de Hassall ou Corpúsculo Tímico."}, {"bloco": "1", "q_num": 8, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R1_q8_1.jpg"], "resposta": "Artéria Média ou Artéria Muscular."}, {"bloco": "1", "q_num": 9, "pergunta": "Estrutura indicada.", "images": ["R1_q9_1.jpg"], "resposta": "Nódulo Linfático Secundário."}, {"bloco": "1", "q_num": 10, "pergunta": "Estrutura indicada.", "images": ["R1_q10_1.jpg"], "resposta": "Arteríola."}, {"bloco": "3", "q_num": 1, "pergunta": "Estrutura indicada pela seta.", "images": ["R3_q1_1.jpg"], "resposta": "Endocárdio."}, {"bloco": "3", "q_num": 2, "pergunta": "Estrutura indicada pela seta.", "images": ["R3_q2_1.jpg"], "resposta": "Hilo."}, {"bloco": "3", "q_num": 3, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R3_q3_1.jpg"], "resposta": "Timo."}, {"bloco": "3", "q_num": 4, "pergunta": "Estrutura indicada pela seta.", "images": ["R3_q4_1.jpg"], "resposta": "Membrana Elástica Interna da Artéria Média/Muscular."}, {"bloco": "3", "q_num": 5, "pergunta": "Qual tecido está sendo visualizado (indicado)?", "images": ["R3_q5_1.jpg"], "resposta": "Tecido Linfático Nodular."}, {"bloco": "3", "q_num": 6, "pergunta": "Nas túnicas adventícias das artérias/veias grandes e médias, podemos encontrar as seguintes estruturas: vasa vasorum e nervi vasorum. Verdadeiro ou falso?", "images": [], "resposta": "Verdadeiro."}, {"bloco": "3", "q_num": 7, "pergunta": "Nomeie a túnica indicada.", "images": ["R3_q7_1.jpg"], "resposta": "Túnica Íntima da Artéria Média/Muscular."}, {"bloco": "3", "q_num": 8, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R3_q8_1.jpg"], "resposta": "Vaso Linfático."}, {"bloco": "3", "q_num": 9, "pergunta": "Estrutura indicada.", "images": ["R3_q9_1.jpg"], "resposta": "Trabéculas."}, {"bloco": "3", "q_num": 10, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R3_q10_1.jpg"], "resposta": "Artéria Média ou Artéria Muscular."}, {"bloco": "4", "q_num": 1, "pergunta": "Nomeie a túnica indicada.", "images": ["R4_q1_1.jpg"], "resposta": "Túnica Íntima da Veia Grande."}, {"bloco": "4", "q_num": 2, "pergunta": "Estrutura indicada pela seta.", "images": ["R4_q2_1.jpg"], "resposta": "Esqueleto fibroso (do coração)."}, {"bloco": "4", "q_num": 3, "pergunta": "Estrutura indicada pela seta.", "images": ["R4_q3_1.jpg"], "resposta": "Cápsula."}, {"bloco": "4", "q_num": 4, "pergunta": "Quais vasos estão sendo visualizados (1 e 2)?", "images": ["R4_q4_1.jpg"], "resposta": "1: Artéria Média ou Artéria Muscular. 2: Veia Mediana."}, {"bloco": "4", "q_num": 5, "pergunta": "Nomeie a túnica indicada.", "images": ["R4_q5_1.jpg"], "resposta": "Túnica Íntima da Artéria Média/Muscular."}, {"bloco": "4", "q_num": 6, "pergunta": "Qual polpa está sendo visualizada?", "images": ["R4_q6_1.jpg"], "resposta": "Polpa Vermelha."}, {"bloco": "4", "q_num": 7, "pergunta": "Nomeie a túnica indicada.", "images": ["R4_q7_1.jpg"], "resposta": "Túnica Íntima da Artéria Grande/Elástica."}, {"bloco": "4", "q_num": 8, "pergunta": "Estrutura indicada.", "images": ["R4_q8_1.jpg"], "resposta": "Córtex Superficial."}, {"bloco": "4", "q_num": 9, "pergunta": "Qual camada se observa na parede do coração indicada?", "images": ["R4_q9_1.jpg"], "resposta": "Camada Subendocárdica."}, {"bloco": "4", "q_num": 10, "pergunta": "Estrutura indicada.", "images": ["R4_q10_1.jpg"], "resposta": "Polpa Branca."}, {"bloco": "5", "q_num": 1, "pergunta": "Estrutura indicada.", "images": ["R5_q1_1.jpg"], "resposta": "Capilar."}, {"bloco": "5", "q_num": 2, "pergunta": "Nomeie a túnica indicada.", "images": ["R5_q2_1.jpg"], "resposta": "Túnica Íntima da Veia Grande."}, {"bloco": "5", "q_num": 3, "pergunta": "Em relação à válvula cardíaca, qual camada pode ser observada?", "images": ["R5_q3_1.jpg"], "resposta": "Camada esponjosa."}, {"bloco": "5", "q_num": 4, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R5_q4_1.jpg"], "resposta": "Baço."}, {"bloco": "5", "q_num": 5, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R5_q5_1.jpg"], "resposta": "Artéria Média ou Artéria Muscular."}, {"bloco": "5", "q_num": 6, "pergunta": "Estrutura indicada pela seta.", "images": ["R5_q6_1.jpg"], "resposta": "Trabéculas."}, {"bloco": "5", "q_num": 7, "pergunta": "Cite 3 características da parede do coração indicada.", "images": ["R5_q7_1.jpg"], "resposta": "Endocárdio: endotélio, tecido conjuntivo subendotelial, músculo liso, camada subendocárdica (Fibras de Purkinje)."}, {"bloco": "5", "q_num": 8, "pergunta": "Nomeie a túnica indicada.", "images": ["R5_q8_1.jpg"], "resposta": "Túnica Adventícia da Artéria Grande/Elástica."}, {"bloco": "5", "q_num": 9, "pergunta": "Estrutura indicada pela seta.", "images": ["R5_q9_1.jpg"], "resposta": "Cápsula."}, {"bloco": "5", "q_num": 10, "pergunta": "Cite 1 característica do miocárdio.", "images": [], "resposta": "Composto por músculo cardíaco (Cardiomiócitos)."}, {"bloco": "6", "q_num": 1, "pergunta": "Nomeie corretamente a parede do coração indicada pela seta.", "images": ["R6_q1_1.jpg"], "resposta": "Epicárdio."}, {"bloco": "6", "q_num": 2, "pergunta": "Estrutura indicada.", "images": ["R6_q2_1.jpg"], "resposta": "Tecido Linfático Difuso."}, {"bloco": "6", "q_num": 3, "pergunta": "Estrutura indicada.", "images": ["R6_q3_1.jpg"], "resposta": "Córtex."}, {"bloco": "6", "q_num": 4, "pergunta": "Estrutura indicada pela seta.", "images": ["R6_q4_1.jpg"], "resposta": "Membrana Elástica Interna da Artéria Média/Muscular."}, {"bloco": "6", "q_num": 5, "pergunta": "Cite 2 características do endocárdio.", "images": [], "resposta": "Endotélio, tecido conjuntivo subendotelial, músculo liso, camada subendocárdica (Fibras de Purkinje)."}, {"bloco": "6", "q_num": 6, "pergunta": "Qual estrutura está sendo visualizada neste nódulo?", "images": ["R6_q6_1.jpg"], "resposta": "Centro Germinativo."}, {"bloco": "6", "q_num": 7, "pergunta": "Nomeie corretamente a parede do coração indicada.", "images": ["R6_q7_1.jpg"], "resposta": "Miocárdio."}, {"bloco": "6", "q_num": 8, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R6_q8_1.jpg"], "resposta": "Veia Grande."}, {"bloco": "6", "q_num": 9, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R6_q9_1.jpg"], "resposta": "Artéria Grande ou Artéria Elástica."}, {"bloco": "6", "q_num": 10, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R6_q10_1.jpg"], "resposta": "Baço."}, {"bloco": "7", "q_num": 1, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R7_q1_1.jpg"], "resposta": "Artéria Média ou Artéria Muscular."}, {"bloco": "7", "q_num": 2, "pergunta": "Qual polpa está indicada?", "images": ["R7_q2_1.jpg"], "resposta": "Polpa Branca."}, {"bloco": "7", "q_num": 3, "pergunta": "Estrutura indicada pela seta.", "images": ["R7_q3_1.jpg"], "resposta": "Camada Subendocárdica (Fibras de Purkinje)."}, {"bloco": "7", "q_num": 4, "pergunta": "Estrutura indicada pela seta.", "images": ["R7_q4_1.jpg"], "resposta": "Nódulo Linfático Secundário."}, {"bloco": "7", "q_num": 5, "pergunta": "Cite 2 características do epicárdio.", "images": [], "resposta": "Células mesoteliais, tecido conjuntivo e tecido adiposo."}, {"bloco": "7", "q_num": 6, "pergunta": "Estrutura indicada pela seta.", "images": ["R7_q6_1.jpg"], "resposta": "Corpúsculo Tímico ou Corpúsculo de Hassall."}, {"bloco": "7", "q_num": 7, "pergunta": "Nomeie a túnica indicada.", "images": ["R7_q7_1.jpg"], "resposta": "Túnica Média da Artéria Média/Muscular."}, {"bloco": "7", "q_num": 8, "pergunta": "Qual tecido está sendo visualizado?", "images": ["R7_q8_1.jpg"], "resposta": "Tecido Linfático Difuso."}, {"bloco": "7", "q_num": 9, "pergunta": "Estrutura indicada.", "images": ["R7_q9_1.jpg"], "resposta": "Medula."}, {"bloco": "7", "q_num": 10, "pergunta": "Estrutura indicada pela seta.", "images": ["R7_q10_1.jpg"], "resposta": "Fibras de Purkinje."}, {"bloco": "8", "q_num": 1, "pergunta": "Nomeie a túnica indicada.", "images": ["R8_q1_1.jpg"], "resposta": "Túnica Adventícia da Artéria Média/Muscular."}, {"bloco": "8", "q_num": 2, "pergunta": "Estrutura indicada.", "images": ["R8_q2_1.jpg"], "resposta": "\"Manga Cardíaca\" da Veia Grande."}, {"bloco": "8", "q_num": 3, "pergunta": "Estrutura indicada pela seta.", "images": ["R8_q3_1.jpg"], "resposta": "Seio Coronário."}, {"bloco": "8", "q_num": 4, "pergunta": "Estrutura indicada pela seta.", "images": ["R8_q4_1.jpg"], "resposta": "Nódulo Linfático Secundário."}, {"bloco": "8", "q_num": 5, "pergunta": "Cite 2 características histológicas da túnica indicada.", "images": ["R8_q5_1.jpg"], "resposta": "Mais espessa; contém músculo liso, fibras colágenas e membrana elástica."}, {"bloco": "8", "q_num": 6, "pergunta": "Estrutura indicada.", "images": ["R8_q6_1.jpg"], "resposta": "Cápsula."}, {"bloco": "8", "q_num": 7, "pergunta": "Nomeie corretamente.", "images": ["R8_q7_1.jpg"], "resposta": "Apêndice."}, {"bloco": "8", "q_num": 8, "pergunta": "Nomeie corretamente a parede do coração indicada.", "images": ["R8_q8_1.jpg"], "resposta": "Epicárdio."}, {"bloco": "8", "q_num": 9, "pergunta": "Estrutura indicada.", "images": ["R8_q9_1.jpg"], "resposta": "Medula."}, {"bloco": "8", "q_num": 10, "pergunta": "Quais vasos estão sendo visualizados (1, 2 e 3)?", "images": ["R8_q10_1.jpg"], "resposta": "1: Veia. 2: Artéria. 3: Veia."}, {"bloco": "10", "q_num": 1, "pergunta": "Estrutura indicada pela seta.", "images": ["R10_q1_1.jpg"], "resposta": "Membrana Elástica Externa."}, {"bloco": "10", "q_num": 2, "pergunta": "Estrutura indicada.", "images": ["R10_q2_1.jpg"], "resposta": "Córtex Profundo (Paracórtex)."}, {"bloco": "10", "q_num": 3, "pergunta": "Verdadeiro ou falso: as fibras de Purkinje se encontram no subendotélio.", "images": [], "resposta": "Falso. Encontram-se na camada subendocárdica."}, {"bloco": "10", "q_num": 4, "pergunta": "Qual estrutura está indicada?", "images": ["R10_q4_1.jpg"], "resposta": "Polpa Branca."}, {"bloco": "10", "q_num": 5, "pergunta": "Qual estrutura está sendo visualizada neste nódulo?", "images": ["R10_q5_1.jpg"], "resposta": "Centro Germinativo."}, {"bloco": "10", "q_num": 6, "pergunta": "Estrutura indicada.", "images": ["R10_q6_1.jpg"], "resposta": "Tecido Linfático Difuso."}, {"bloco": "10", "q_num": 7, "pergunta": "Cite 2 características histológicas da túnica indicada.", "images": ["R10_q7_1.jpg"], "resposta": "Túnica Íntima da Artéria Média: delgada — endotélio, lâmina basal, escassa camada subendotelial, membrana elástica interna proeminente."}, {"bloco": "10", "q_num": 8, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R10_q8_1.jpg"], "resposta": "Baço."}, {"bloco": "10", "q_num": 9, "pergunta": "Quais vasos estão sendo visualizados (1 e 2)?", "images": ["R10_q9_1.jpg"], "resposta": "1: Artéria Média/Muscular. 2: Veia Mediana."}, {"bloco": "10", "q_num": 10, "pergunta": "Nomeie a túnica indicada.", "images": ["R10_q10_1.jpg"], "resposta": "Túnica Média da Artéria Grande/Elástica."}, {"bloco": "11", "q_num": 1, "pergunta": "Nomeie corretamente.", "images": ["R11_q1_1.jpg"], "resposta": "Veia Mediana."}, {"bloco": "11", "q_num": 2, "pergunta": "Estrutura indicada pela seta.", "images": ["R11_q2_1.jpg"], "resposta": "Corpúsculo Tímico ou Corpúsculo de Hassall."}, {"bloco": "11", "q_num": 3, "pergunta": "Estrutura indicada.", "images": ["R11_q3_1.jpg"], "resposta": "Medula."}, {"bloco": "11", "q_num": 4, "pergunta": "Cite 2 características do endocárdio.", "images": [], "resposta": "Endotélio, tecido conjuntivo subendotelial, músculo liso, camada subendocárdica (Fibras de Purkinje), tecido conjuntivo."}, {"bloco": "11", "q_num": 5, "pergunta": "Estrutura indicada pela seta.", "images": ["R11_q5_1.jpg"], "resposta": "Fibras de Purkinje."}, {"bloco": "11", "q_num": 6, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R11_q6_1.jpg"], "resposta": "Veia Pequena."}, {"bloco": "11", "q_num": 7, "pergunta": "As \"mangas cardíacas\" estão presentes unicamente na túnica média das veias grandes, e suas fibras musculares estão dispostas de forma longitudinal. Verdadeiro ou falso?", "images": [], "resposta": "Verdadeiro."}, {"bloco": "11", "q_num": 8, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R11_q8_1.jpg"], "resposta": "Veia Grande."}, {"bloco": "11", "q_num": 9, "pergunta": "Qual órgão está sendo visualizado?", "images": ["R11_q9_1.jpg"], "resposta": "Gânglio Linfático."}, {"bloco": "11", "q_num": 10, "pergunta": "Qual tecido está sendo visualizado (indicado)?", "images": ["R11_q10_1.jpg"], "resposta": "Tecido Linfático Nodular."}, {"bloco": "12.1", "q_num": 1, "pergunta": "Quais células podemos encontrar no centro germinativo?", "images": ["R12_1_q1_1.jpg"], "resposta": "Linfócitos T (linfoblastos), linfócitos B e células de sustentação."}, {"bloco": "12.1", "q_num": 2, "pergunta": "Estrutura indicada.", "images": ["R12_1_q2_1.jpg"], "resposta": "Cápsula."}, {"bloco": "12.1", "q_num": 3, "pergunta": "Estrutura indicada.", "images": ["R12_1_q3_1.jpg"], "resposta": "Capilares."}, {"bloco": "12.1", "q_num": 4, "pergunta": "Qual estrutura está sendo visualizada?", "images": ["R12_1_q4_1.jpg"], "resposta": "Corpúsculo Tímico ou Corpúsculo de Hassall."}, {"bloco": "12.1", "q_num": 5, "pergunta": "Estrutura indicada.", "images": ["R12_1_q5_1.jpg"], "resposta": "Coroa ou zona do manto."}, {"bloco": "12.1", "q_num": 6, "pergunta": "Quais vasos estão sendo visualizados (1 e 2)?", "images": ["R12_1_q6_1.jpg"], "resposta": "1: Veia Mediana. 2: Artéria Média/Muscular."}, {"bloco": "12.1", "q_num": 7, "pergunta": "Estrutura indicada.", "images": ["R12_1_q7_1.jpg"], "resposta": "Córtex."}, {"bloco": "12.1", "q_num": 8, "pergunta": "Nomeie corretamente as imagens (1 e 2).", "images": ["R12_1_q8_1.jpg", "R12_1_q8_2.jpg"], "resposta": "1: Polpa Branca. 2: Nódulo Linfático Secundário."}, {"bloco": "12.1", "q_num": 9, "pergunta": "Quais células podemos encontrar na estrutura indicada?", "images": ["R12_1_q9_1.jpg"], "resposta": "Linfócitos B virgens."}, {"bloco": "12.1", "q_num": 10, "pergunta": "Qual vaso está sendo visualizado?", "images": ["R12_1_q10_1.jpg"], "resposta": "Artéria Média ou Artéria Muscular."}];
+
+const BLOCOS = [...new Set(ALL_QUESTIONS.map(q=>q.bloco))];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+function openAtlasLightbox(src){
+  document.getElementById('atlasLightboxImg').src = src;
+  document.getElementById('atlasLightbox').classList.add('show');
+}
+function closeAtlasLightbox(){
+  document.getElementById('atlasLightbox').classList.remove('show');
+}
+
+const mainArea = document.getElementById('mainArea');
+
+function renderSelector(){
+  let html = `
+    <div class="card">
+      <h2>📋 Escolha o bloco pra treinar</h2>
+      <p style="font-size:.85em;color:var(--text-dim);">Cada bloco tem 10 lâminas, 1 minuto cada — igual uma prova prática de verdade. Ou treine tudo de uma vez no Simulado Completo.</p>
+      <div class="bloco-grid">
+  `;
+  BLOCOS.forEach(b=>{
+    html += `<button class="bloco-btn" onclick="startBloco('${b}')"><b>${b}</b>Bloco ${b}<br>10 lâminas</button>`;
+  });
+  html += `</div>
+      <button class="bloco-completo" onclick="startCompleto()">🏆 Simulado Completo — 100 lâminas (~1h40)</button>
+    </div>
+  `;
+  mainArea.innerHTML = html;
+}
+
+let currentSet = [];
+let curIdx = 0, curTimer = null, curSeconds = 60, curAnswers = [];
+
+function startBloco(b){
+  currentSet = ALL_QUESTIONS.filter(q=>q.bloco===b);
+  runExam();
+}
+function startCompleto(){
+  currentSet = ALL_QUESTIONS.slice();
+  runExam();
+}
+
+function runExam(){
+  curIdx = 0;
+  curAnswers = new Array(currentSet.length).fill('');
+  renderRound();
+}
+
+function renderRound(){
+  clearInterval(curTimer);
+  if(curIdx >= currentSet.length){ renderGabarito(); return; }
+  curSeconds = 60;
+  const q = currentSet[curIdx];
+  let imgsHtml = '';
+  if(q.images.length === 1){
+    imgsHtml = `<img src="img/simulado_p1/${q.images[0]}" alt="Lâmina" class="train-img" onclick="openAtlasLightbox(this.src)">`;
+  } else if(q.images.length > 1){
+    imgsHtml = '<div class="train-img-row">' + q.images.map(im=>`<img src="img/simulado_p1/${im}" alt="Lâmina" onclick="openAtlasLightbox(this.src)">`).join('') + '</div>';
+  }
+  mainArea.innerHTML = `
+    <div class="card">
+      <button class="back-btn" onclick="renderSelector()">← Escolher outro bloco</button>
+      <div class="train-header">
+        <span class="train-progress">Lâmina ${curIdx+1} / ${currentSet.length} — Bloco ${q.bloco}</span>
+        <span class="train-clock" id="trainClock">⏱️ 60s</span>
+      </div>
+      <div class="train-question">${q.pergunta}</div>
+      ${imgsHtml}
+      <input type="text" id="trainInput" class="train-input" placeholder="Sua resposta (opcional, só pra conferir depois)" value="${curAnswers[curIdx]}">
+      <button class="reveal-btn" id="nextBtn">Já sei, próxima →</button>
+    </div>
+  `;
+  document.getElementById('nextBtn').addEventListener('click', advance);
+  document.getElementById('trainInput').addEventListener('input', (e)=>{ curAnswers[curIdx] = e.target.value; });
+  curTimer = setInterval(()=>{
+    curSeconds--;
+    const clockEl = document.getElementById('trainClock');
+    if(clockEl) clockEl.textContent = '⏱️ ' + curSeconds + 's';
+    if(curSeconds <= 10 && clockEl) clockEl.classList.add('train-clock-urgent');
+    if(curSeconds <= 0){ advance(); }
+  }, 1000);
+}
+
+function advance(){
+  clearInterval(curTimer);
+  curIdx++;
+  renderRound();
+}
+
+function renderGabarito(){
+  let html = '<div class="card"><div class="train-gabarito-title">🏁 Simulado Concluído — Gabarito</div>';
+  currentSet.forEach((q,i)=>{
+    const userAns = curAnswers[i] ? curAnswers[i] : '(sem resposta)';
+    let imgsHtml = '';
+    if(q.images.length){
+      imgsHtml = '<div class="train-gab-imgs">' + q.images.map(im=>`<img src="img/simulado_p1/${im}" alt="Lâmina" onclick="openAtlasLightbox(this.src)">`).join('') + '</div>';
+    }
+    html += `
+      <div class="train-gab-item">
+        <div class="train-gab-q"><b>${i+1}.</b> ${q.pergunta}</div>
+        ${imgsHtml}
+        <div class="train-gab-info">
+          <div class="train-gab-user">Sua resposta: <i>${userAns}</i></div>
+          <div class="train-gab-correct">✅ Resposta correta: <b>${q.resposta}</b></div>
+        </div>
+      </div>`;
+  });
+  addXP(currentSet.length * 3);
+  html += '<button class="reveal-btn" id="restartBtn">🔄 Voltar aos blocos</button></div>';
+  mainArea.innerHTML = html;
+  document.getElementById('restartBtn').addEventListener('click', renderSelector);
+}
+
+renderSelector();
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-02/histologia2-pratica/Capitulo_02_Sistema_Linfatico.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 2 — Sistema Linfático</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body></html>
