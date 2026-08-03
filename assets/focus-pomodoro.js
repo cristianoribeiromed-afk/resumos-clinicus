@@ -6,6 +6,18 @@
 (function(){
   'use strict';
 
+  // Corrige o comportamento padrão do navegador de "lembrar" a posição de
+  // rolagem ao atualizar a página — sempre volta pro topo (a menos que a
+  // URL tenha uma âncora #, aí respeita ela).
+  try{
+    if('scrollRestoration' in history){
+      history.scrollRestoration = 'manual';
+    }
+    if(!window.location.hash){
+      window.scrollTo(0, 0);
+    }
+  }catch(e){}
+
   var STATE_KEY = 'clinicus_pomodoro_state';
   var STATS_KEY = 'clinicus_pomodoro_stats';
 
