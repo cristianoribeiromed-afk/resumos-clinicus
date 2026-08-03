@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metabolismo de los Carbohidratos | Bioquímica II Prof. Deborah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1a14;
+  --bg-panel:#122720;
+  --bg-card:#16302a;
+  --border:#254a3d;
+  --gold:#e0b84b;
+  --gold-soft:#c9a24d;
+  --green:#3fa17e;
+  --green-soft:#57c294;
+  --text:#eef3ef;
+  --text-dim:#a9c2b6;
+  --danger:#e0715a;
+  --info:#5aa9e0;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:radial-gradient(circle at top left,#123024,var(--bg) 60%);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.6;
+  padding-bottom:60px;
+}
+h1,h2,h3,h4{font-family:'Lora',serif;color:var(--gold);margin-top:0;}
+.container{max-width:960px;margin:0 auto;padding:20px;}
+
+.header{
+  text-align:center;
+  padding:28px 20px;
+  background:linear-gradient(135deg,#0f2b21,#1a3d2f);
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:20px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;top:-40%;right:-10%;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(224,184,75,0.15),transparent 70%);
+}
+.header h1{font-size:2rem;margin-bottom:4px;}
+.header p.sub{color:var(--text-dim);font-style:italic;margin:0;}
+.header p.docente{color:var(--green-soft);font-size:0.9rem;margin-top:10px;}
+
+.xp-panel{
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 16px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.xp-badge{
+  font-family:'Lora',serif;font-weight:700;color:#0d1a14;
+  background:linear-gradient(135deg,var(--gold),#f3d78a);
+  border-radius:50%;width:46px;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;
+}
+.xp-info{flex:1;min-width:180px;}
+.xp-info .label{font-size:0.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;}
+.xp-bar-track{background:#0a1a14;border-radius:8px;height:10px;overflow:hidden;margin-top:4px;border:1px solid var(--border);}
+.xp-bar-fill{background:linear-gradient(90deg,var(--green),var(--gold));height:100%;width:0%;transition:width .4s ease;}
+.xp-count{font-size:0.8rem;color:var(--gold-soft);white-space:nowrap;}
+
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+.tab-btn{
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  padding:9px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.85rem;
+  transition:all .2s;
+}
+.tab-btn:hover{color:var(--text);border-color:var(--green-soft);}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--green),#2b6f56);
+  color:#fff;border-color:var(--green-soft);
+  font-weight:700;
+}
+
+.tab-content{display:none;animation:fadeIn .3s ease;}
+.tab-content.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:16px;
+}
+.card h3{font-size:1.15rem;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;}
+.card h4{font-size:1rem;color:var(--green-soft);margin-top:18px;margin-bottom:8px;}
+.card p{color:var(--text);margin:8px 0;}
+.card ul{margin:8px 0;padding-left:20px;}
+.card li{margin-bottom:6px;}
+
+.box{
+  border-radius:10px;
+  padding:14px 16px;
+  margin:14px 0;
+  border-left:4px solid var(--green);
+  background:rgba(63,161,126,0.08);
+}
+.box.criterio{border-left-color:var(--gold);background:rgba(224,184,75,0.08);}
+.box.clinical{border-left-color:var(--danger);background:rgba(224,113,90,0.08);}
+.box.info{border-left-color:var(--info);background:rgba(90,169,224,0.08);}
+.box-title{
+  font-family:'Lora',serif;font-weight:700;font-size:0.85rem;
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.box.criterio .box-title{color:var(--gold);}
+.box.clinical .box-title{color:var(--danger);}
+.box.info .box-title{color:var(--info);}
+.box.green-box .box-title{color:var(--green-soft);}
+
+.diagram{
+  background:#0d211a;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  margin:14px 0;
+}
+.flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;font-family:'DM Sans',sans-serif;}
+.flow-box{
+  background:var(--bg-panel);border:1px solid var(--green-soft);
+  border-radius:10px;padding:10px 16px;font-size:0.9rem;color:var(--text);
+  min-width:90px;
+}
+.flow-arrow{color:var(--gold);font-size:1.3rem;}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.88rem;}
+th,td{border:1px solid var(--border);padding:9px 10px;text-align:left;}
+th{background:var(--bg-panel);color:var(--gold);font-family:'Lora',serif;}
+tr:nth-child(even){background:rgba(255,255,255,0.02);}
+
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+.flashcard{perspective:1000px;height:150px;cursor:pointer;}
+.flashcard-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform .5s;transform-style:preserve-3d;
+}
+.flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+.flashcard-face{
+  position:absolute;width:100%;height:100%;
+  backface-visibility:hidden;
+  border-radius:12px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:16px;font-size:0.92rem;
+}
+.flashcard-front{background:linear-gradient(135deg,#16302a,#1c3a32);color:var(--gold);font-family:'Lora',serif;font-weight:600;}
+.flashcard-back{background:linear-gradient(135deg,#1c3a32,#255043);color:var(--text);transform:rotateY(180deg);font-size:0.85rem;}
+
+.quiz-progress{color:var(--text-dim);font-size:0.85rem;margin-bottom:10px;}
+.q-block{margin-bottom:22px;}
+.q-text{font-weight:600;margin-bottom:10px;color:var(--text);}
+.opt{
+  display:block;width:100%;text-align:left;
+  background:var(--bg-panel);border:1px solid var(--border);
+  color:var(--text);padding:10px 14px;border-radius:8px;
+  margin-bottom:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.9rem;
+  transition:all .15s;
+}
+.opt:hover{border-color:var(--green-soft);}
+.opt.correct{background:rgba(63,161,126,0.25);border-color:var(--green);}
+.opt.wrong{background:rgba(224,113,90,0.2);border-color:var(--danger);}
+.opt:disabled{cursor:default;}
+.fill-input{
+  background:#0a1a14;border:1px solid var(--border);color:var(--text);
+  padding:8px 10px;border-radius:6px;font-family:'DM Sans',sans-serif;
+  width:220px;max-width:100%;
+}
+.fill-input.correct{border-color:var(--green);}
+.fill-input.wrong{border-color:var(--danger);}
+.check-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-soft));
+  color:#12241d;border:none;padding:8px 16px;border-radius:8px;
+  font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:6px;
+}
+.check-btn:hover{filter:brightness(1.08);}
+.feedback{font-size:0.85rem;margin-top:6px;min-height:18px;}
+.feedback.ok{color:var(--green-soft);}
+.feedback.bad{color:var(--danger);}
+.quiz-result{
+  text-align:center;padding:20px;background:var(--bg-panel);
+  border-radius:12px;border:1px solid var(--gold);margin-top:10px;display:none;
+}
+.quiz-result h3{color:var(--gold);}
+
+.matrix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.82rem;text-align:center;margin:14px 0;}
+.matrix-grid div{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:8px;}
+.matrix-grid .head{background:transparent;border:none;font-family:'Lora',serif;color:var(--gold);font-weight:700;}
+
+.reset-btn{
+  background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  padding:6px 12px;border-radius:8px;font-size:0.8rem;cursor:pointer;margin-top:20px;
+}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Bioquímica II — Prof. Deborah</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Bioquímica II — Prof. Deborah</span><span>1 de 1</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Bioquímica II — Prof. Deborah</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-04/bioquimica2-deborah/Capitulo_01_Metabolismo_Carbohidratos.html"><span class="ico">📋</span><span>Capítulo 1 — Metabolismo de los Carbohidratos</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="container">
+
+  <div class="header">
+    <h1>🍬 METABOLISMO DE LOS CARBOHIDRATOS</h1>
+    <p class="sub">Transportadores GLUT, vía glucolítica y destino del piruvato</p>
+    <p class="docente">Docente: Dra. Deborah Michelle Jurowski</p>
+  </div>
+
+  <div class="xp-panel">
+    <div class="xp-badge" id="levelBadge">1</div>
+    <div class="xp-info">
+      <div class="label">Nivel <span id="levelNum">1</span> — Estudiante de Bioquímica</div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill"></div></div>
+    </div>
+    <div class="xp-count"><span id="xpCount">0</span> / <span id="xpMax">100</span> XP</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="intro">1. Estructura y Función</button>
+    <button class="tab-btn" data-tab="glut">2. Transportadores GLUT</button>
+    <button class="tab-btn" data-tab="glucolisis">3. Vía Glucolítica</button>
+    <button class="tab-btn" data-tab="piruvato">4. Destino del Piruvato</button>
+    <button class="tab-btn" data-tab="flashcards">🗂️ Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">📝 Quiz</button>
+  </div>
+
+  <!-- 1. ESTRUCTURA Y FUNCION -->
+  <div class="tab-content active" id="intro">
+    <div class="card">
+      <h3>Estructura y función de los carbohidratos</h3>
+      <p>Los carbohidratos son un tipo de biomoléculas también llamadas <strong>glúcidos</strong> o <strong>hidratos de carbono</strong>, formadas por sustancias compuestas principalmente por <strong>Carbono (C), Hidrógeno (H) y Oxígeno (O)</strong>.</p>
+      <div class="box green-box">
+        <div class="box-title">⚡ Función principal</div>
+        <p>Servir de <strong>combustible energético</strong> para el cuerpo. La energía de la degradación de los carbohidratos potencia la contracción muscular y todas las demás formas de trabajo biológico.</p>
+      </div>
+      <p><strong>Otras funciones:</strong></p>
+      <ul>
+        <li>Biosíntesis de ácidos grasos y aminoácidos.</li>
+        <li>Constitución de moléculas complejas: glucolípidos, glucoproteínas, ácidos nucleicos.</li>
+        <li>Aporte de fibra a la dieta (glúcidos no digeribles que dan volumen a las heces).</li>
+        <li>Constitución de peptidoglicanos (pared bacteriana).</li>
+      </ul>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Importancia biológica — la pregunta favorita de la profesora</div>
+        <p>Los carbohidratos son <strong>esenciales para el Sistema Nervioso Central</strong>. Determinados tejidos NECESITAN un aporte CONTINUO de glucosa:</p>
+        <ul>
+          <li><strong>Cerebro:</strong> depende de la glucosa como combustible primario — utiliza casi exclusivamente glucosa sanguínea y esencialmente no tiene depósito de este alimento.</li>
+          <li><strong>Eritrocito:</strong> utiliza la glucosa como <strong>único</strong> combustible (no tiene mitocondrias para metabolizar otros sustratos).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. GLUT -->
+  <div class="tab-content" id="glut">
+    <div class="card">
+      <h3>Transportadores (GLUT)</h3>
+      <div class="box info">
+        <div class="box-title">💡 Concepto</div>
+        <p>Familia de proteínas que ayudan al <strong>transporte de la glucosa, galactosa y fructosa</strong> a través de las membranas hacia los diferentes tejidos. Si alguno de estos transportadores no funciona bien, puede comprometerse la llegada de glucosa a un órgano — como el cerebro.</p>
+      </div>
+      <table>
+        <tr><th>GLUT</th><th>Localización principal</th><th>Característica clave</th></tr>
+        <tr><td><strong>GLUT 1</strong></td><td>Cerebro, eritrocitos, endotelio, retina, riñón, barreras hematoencefálica y placentaria</td><td>Ingreso <strong>basal</strong> de glucosa; también permite entrada de galactosa</td></tr>
+        <tr><td><strong>GLUT 2</strong></td><td>Hígado, riñón, cerebro, intestino, células β del páncreas</td><td>Facilita el ingreso de glucosa en respuesta a <strong>hiperglucemia</strong>; muy sensible a cambios de glicemia</td></tr>
+        <tr><td><strong>GLUT 3</strong></td><td>Mayor expresión en el <strong>SNC</strong>; también placenta, riñón, corazón</td><td>Trabaja en secuencia con el GLUT 1</td></tr>
+        <tr><td><strong>GLUT 4</strong></td><td>Músculo y células adiposas</td><td>Isoforma <strong>dependiente de insulina</strong>; permanece almacenado en vesículas hasta el estímulo insulínico</td></tr>
+        <tr><td><strong>GLUT 5</strong></td><td>Intestino delgado, espermatozoide, riñón, microglía</td><td>Transporta específicamente la <strong>fructosa</strong></td></tr>
+      </table>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Pegadinha clásica de la profesora</div>
+        <p>Solo el <strong>GLUT 4</strong> depende de insulina — es el único que "espera una señal" para salir de las vesículas de almacenamiento. Los demás (GLUT 1, 2, 3, 5) transportan glucosa/fructosa de forma independiente de insulina. Si la pregunta menciona "insulinodependiente", la respuesta es siempre GLUT 4.</p>
+      </div>
+      <div class="box clinical">
+        <div class="box-title">🔥 Correlación clínica</div>
+        <p>En la <strong>Diabetes Mellitus tipo 2</strong>, hay resistencia a la acción de la insulina sobre el GLUT 4 — el músculo y el tejido adiposo no captan glucosa eficientemente, contribuyendo a la hiperglucemia.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. GLUCOLISIS -->
+  <div class="tab-content" id="glucolisis">
+    <div class="card">
+      <h3>Vía glucolítica anaeróbica y aeróbica</h3>
+      <p>La <strong>glucólisis</strong> o glicólisis (del griego <em>glycos</em>, azúcar y <em>lysis</em>, ruptura) es la vía metabólica encargada de <strong>oxidar la glucosa</strong> con la finalidad de obtener energía para la célula.</p>
+      <div class="box green-box">
+        <div class="box-title">✅ Lo esencial</div>
+        <p>Consiste en <strong>10 reacciones enzimáticas consecutivas</strong> que convierten a la glucosa en <strong>dos moléculas de piruvato</strong>, el cual puede seguir otras vías metabólicas y así continuar entregando energía al organismo.</p>
+      </div>
+      <p><strong>Funciones de la glucólisis:</strong></p>
+      <ul>
+        <li>Generación de moléculas de alta energía (<strong>ATP y NADH</strong>) como fuente de energía celular, tanto en respiración aeróbica como en fermentación (ausencia de O₂).</li>
+        <li><strong>(PRINCIPAL)</strong> Generación de piruvato, que pasará al Ciclo de Krebs, como parte de la respiración aeróbica.</li>
+        <li>Producción de intermediarios de 6 y 3 carbonos, utilizables en otros procesos celulares.</li>
+      </ul>
+      <div class="box criterio">
+        <div class="box-title">⚠️ Las 2 etapas — así es como ella pregunta</div>
+        <table>
+          <tr><th>Etapa</th><th>Reacciones</th><th>Lo que ocurre</th></tr>
+          <tr><td><strong>1ª etapa</strong></td><td>1 a 5</td><td><strong>Inversión</strong> de energía — consumo de ATP en las reacciones 1 y 3</td></tr>
+          <tr><td><strong>2ª etapa</strong></td><td>6 a 10</td><td><strong>Recuperación</strong> de energía — producción de ATP en las reacciones 7 y 10</td></tr>
+        </table>
+      </div>
+      <div class="box info">
+        <div class="box-title">💡 Puntos de control (enzimas irreversibles)</div>
+        <p>Los puntos de control de la vía glucolítica corresponden a las enzimas que catalizan reacciones <strong>irreversibles</strong>:</p>
+        <ul>
+          <li><strong>Hexocinasa</strong></li>
+          <li><strong>Fosfofructocinasa</strong> (la más importante regulatoriamente)</li>
+          <li><strong>Piruvato cinasa</strong></li>
+        </ul>
+      </div>
+      <div class="box clinical">
+        <div class="box-title">🧠 Macete de memorización</div>
+        <p>"1-3-7-10" — memoriza estos 4 números: las reacciones 1 y 3 <strong>gastan</strong> ATP (inversión), las reacciones 7 y 10 <strong>producen</strong> ATP (recuperación). Las 3 enzimas de control (Hexocinasa, Fosfofructocinasa, Piruvato cinasa) están, respectivamente, en las reacciones 1, 3 y 10 — justo donde la vía es irreversible.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. DESTINO DEL PIRUVATO -->
+  <div class="tab-content" id="piruvato">
+    <div class="card">
+      <h3>Destino del Piruvato</h3>
+      <p>El piruvato presenta <strong>dos destinos</strong>, dependiendo de la concentración de oxígeno disponible:</p>
+      <table>
+        <tr><th>Condición</th><th>Destino del piruvato</th><th>Producto final</th></tr>
+        <tr><td><strong>Aeróbico</strong> (presencia de O₂)</td><td>Se convierte en <strong>Acetil-CoA</strong></td><td>Entra al Ciclo de Krebs</td></tr>
+        <tr><td><strong>Anaeróbico</strong> (ausencia de O₂)</td><td>Fermentación</td><td><strong>Etanol</strong> (fermentación alcohólica) o <strong>Lactato</strong> (fermentación láctica)</td></tr>
+      </table>
+      <div class="box clinical">
+        <div class="box-title">🔥 Correlación clínica — fermentación láctica en el ejercicio</div>
+        <p>Durante un <strong>ejercicio físico intenso</strong>, el músculo consume oxígeno más rápido de lo que el sistema cardiorrespiratorio puede reponer — el músculo entra en condición anaeróbica y realiza <strong>fermentación láctica</strong> (piruvato → lactato, vía enzima <strong>Lactato Deshidrogenasa</strong>). La consecuencia es la acumulación de ácido láctico, asociada a la fatiga y el dolor muscular.</p>
+      </div>
+      <div class="box criterio">
+        <div class="box-title">⚠️ No confundir las dos fermentaciones</div>
+        <p><strong>Fermentación alcohólica:</strong> C₆H₁₂O₆ → 2 CO₂ + 2 CH₃CH₂OH + energía (produce etanol; ocurre en levaduras).</p>
+        <p><strong>Fermentación láctica:</strong> C₆H₁₂O₆ → 2 CH₃CHOHCOOH + energía (produce ácido láctico; ocurre en músculo humano bajo esfuerzo intenso).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="tab-content" id="flashcards">
+    <div class="card">
+      <h3>🗂️ Flashcards — clic para girar</h3>
+      <div class="flash-grid" id="flashGrid"></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="tab-content" id="quiz">
+    <div class="card">
+      <h3>📝 Quiz final</h3>
+      <p class="quiz-progress" id="quizProgress">0 / 0 respondidas</p>
+      <div id="quizContainer"></div>
+      <div class="quiz-result" id="quizResult">
+        <h3>¡Módulo completado!</h3>
+        <p id="quizScoreText"></p>
+      </div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetProgress()">↺ Reiniciar progreso</button>
+</div>
+<script>
+const STORAGE_KEY = 'bioq2_deborah_cap01_carbohidratos_xp';
+const XP_PER_LEVEL = 100;
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"xp":0,"answered":{}}');
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function addXP(amount, key){
+  if(key && state.answered[key]) return;
+  if(key) state.answered[key] = true;
+  state.xp += amount;
+  saveState();
+  renderXP();
+}
+
+function renderXP(){
+  const level = Math.floor(state.xp / XP_PER_LEVEL) + 1;
+  const xpInLevel = state.xp % XP_PER_LEVEL;
+  document.getElementById('levelBadge').textContent = level;
+  document.getElementById('levelNum').textContent = level;
+  document.getElementById('xpCount').textContent = xpInLevel;
+  document.getElementById('xpMax').textContent = XP_PER_LEVEL;
+  document.getElementById('xpBarFill').style.width = xpInLevel + '%';
+}
+
+function resetProgress(){
+  if(confirm('¿Reiniciar todo tu progreso y XP de este módulo?')){
+    localStorage.removeItem(STORAGE_KEY);
+    state = {xp:0, answered:{}};
+    renderXP();
+    document.querySelectorAll('.flashcard').forEach(f=>f.classList.remove('flipped'));
+    buildQuiz();
+  }
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    addXP(2, 'tab_'+btn.dataset.tab);
+  });
+});
+
+const flashcards = [
+  {f:"¿Qué elementos componen principalmente un carbohidrato?", b:"Carbono (C), Hidrógeno (H) y Oxígeno (O)."},
+  {f:"¿Por qué el cerebro depende tanto de la glucosa?", b:"Usa la glucosa sanguínea como combustible casi exclusivo y prácticamente no tiene depósito propio de este sustrato."},
+  {f:"¿Cuál es el único combustible del eritrocito?", b:"La glucosa — el eritrocito no tiene mitocondrias para usar otros sustratos."},
+  {f:"¿Cuál es el único GLUT dependiente de insulina?", b:"GLUT 4 — presente en músculo y tejido adiposo, almacenado en vesículas hasta el estímulo insulínico."},
+  {f:"¿Qué GLUT es sensible a hiperglucemia y actúa en el páncreas?", b:"GLUT 2 — hígado, riñón, cerebro, intestino y células β pancreáticas."},
+  {f:"¿Qué GLUT transporta específicamente fructosa?", b:"GLUT 5 — intestino delgado, espermatozoide, riñón, microglía."},
+  {f:"¿Cuántas reacciones tiene la glucólisis y cuál es su producto final?", b:"10 reacciones enzimáticas; producto final: 2 moléculas de piruvato."},
+  {f:"¿En qué reacciones de la glucólisis se consume ATP?", b:"Reacciones 1 y 3 (1ª etapa — inversión de energía)."},
+  {f:"¿En qué reacciones de la glucólisis se produce ATP?", b:"Reacciones 7 y 10 (2ª etapa — recuperación de energía)."},
+  {f:"¿Cuáles son las 3 enzimas de control (irreversibles) de la glucólisis?", b:"Hexocinasa, Fosfofructocinasa y Piruvato cinasa."},
+  {f:"¿Cuál es el destino aeróbico del piruvato?", b:"Se convierte en Acetil-CoA y entra al Ciclo de Krebs."},
+  {f:"¿Cuáles son los 2 destinos anaeróbicos del piruvato?", b:"Etanol (fermentación alcohólica) o Lactato (fermentación láctica)."},
+  {f:"¿Qué enzima convierte piruvato en lactato?", b:"Lactato Deshidrogenasa (LDH)."},
+  {f:"¿Por qué el músculo hace fermentación láctica en ejercicio intenso?", b:"El consumo de O₂ supera la reposición cardiorrespiratoria — el músculo entra en anaerobiosis."},
+];
+
+const flashGrid = document.getElementById('flashGrid');
+flashcards.forEach((card, i)=>{
+  const div = document.createElement('div');
+  div.className = 'flashcard';
+  div.innerHTML = `<div class="flashcard-inner">
+      <div class="flashcard-face flashcard-front">${card.f}</div>
+      <div class="flashcard-face flashcard-back">${card.b}</div>
+    </div>`;
+  div.addEventListener('click', ()=>{
+    div.classList.toggle('flipped');
+    if(div.classList.contains('flipped')) addXP(3, 'flash_'+i);
+  });
+  flashGrid.appendChild(div);
+});
+
+const quizData = [
+  {"type":"mcq","q":"¿Cuál es el único GLUT dependiente de insulina?","options":["GLUT 1","GLUT 2","GLUT 4","GLUT 5"],"correct":2},
+  {"type":"vf","q":"El GLUT 2 es el transportador insulinodependiente, presente en músculo y tejido adiposo.","correct":false,"explanation":"Falso — ese es el GLUT 4. El GLUT 2 actúa en hígado, riñón, cerebro, intestino y células β del páncreas, y es sensible a hiperglucemia."},
+  {"type":"fill","q":"El eritrocito utiliza exclusivamente _______ como combustible.","answer":"Glucosa","accept":["glucosa"]},
+  {"type":"mcq","q":"¿Cuántas reacciones enzimáticas consecutivas componen la vía glucolítica?","options":["10","8","6","12"],"correct":0},
+  {"type":"mcq","q":"¿En qué reacciones de la glucólisis ocurre el consumo de ATP (inversión de energía)?","options":["2 y 4","7 y 10","5 y 6","1 y 3"],"correct":3},
+  {"type":"vf","q":"La Fosfofructocinasa es una de las enzimas de control (irreversibles) de la glucólisis.","correct":true,"explanation":"Verdadero — junto con Hexocinasa y Piruvato cinasa."},
+  {"type":"fill","q":"En condiciones aeróbicas, el piruvato se convierte en _______ y entra al Ciclo de Krebs.","answer":"Acetil-CoA","accept":["acetil-coa","acetil coa","acetilcoa"]},
+  {"type":"mcq","q":"¿Qué producto se forma en la fermentación láctica del músculo humano durante ejercicio intenso?","options":["Etanol","Lactato","Acetil-CoA","CO₂"],"correct":1},
+  {"type":"vf","q":"El GLUT 3 tiene su mayor expresión en el Sistema Nervioso Central.","correct":true,"explanation":"Verdadero — trabaja en secuencia con el GLUT 1 en el SNC."},
+  {"type":"fill","q":"La enzima responsable de convertir piruvato en lactato se llama _______.","answer":"Lactato Deshidrogenasa","accept":["lactato deshidrogenasa","ldh"]},
+];
+
+let quizScore = 0;
+let quizAnswered = 0;
+
+function buildQuiz(){
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizScore = 0;
+  quizAnswered = 0;
+  document.getElementById('quizResult').style.display = 'none';
+  updateQuizProgress();
+
+  quizData.forEach((item, idx)=>{
+    const block = document.createElement('div');
+    block.className = 'q-block';
+    let inner = `<div class="q-text">${idx+1}. ${item.q}</div>`;
+
+    if(item.type === 'mcq'){
+      inner += item.options.map((opt,i)=>
+        `<button class="opt" data-idx="${i}">${opt}</button>`).join('');
+    } else if(item.type === 'vf'){
+      inner += `<button class="opt" data-val="true">Verdadero</button>
+                 <button class="opt" data-val="false">Falso</button>`;
+    } else if(item.type === 'fill'){
+      inner += `<input type="text" class="fill-input" placeholder="Escribe tu respuesta...">
+                 <button class="check-btn">Verificar</button>`;
+    }
+    inner += `<div class="feedback" id="fb-${idx}"></div>`;
+    block.innerHTML = inner;
+    container.appendChild(block);
+
+    if(item.type === 'mcq'){
+      block.querySelectorAll('.opt').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(block.dataset.done) return;
+          block.dataset.done = '1';
+          const chosen = parseInt(btn.dataset.idx);
+          const fb = document.getElementById('fb-'+idx);
+          block.querySelectorAll('.opt').forEach((b,i)=>{
+            b.disabled = true;
+            if(i === item.correct) b.classList.add('correct');
+            else if(i === chosen) b.classList.add('wrong');
+          });
+          if(chosen === item.correct){
+            fb.textContent = '¡Correcto!'; fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+          } else {
+            fb.textContent = 'Incorrecto. La respuesta correcta está marcada en verde.'; fb.className='feedback bad';
+          }
+          quizAnswered++; updateQuizProgress();
+        });
+      });
+    } else if(item.type === 'vf'){
+      block.querySelectorAll('.opt').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          if(block.dataset.done) return;
+          block.dataset.done = '1';
+          const chosen = btn.dataset.val === 'true';
+          const fb = document.getElementById('fb-'+idx);
+          block.querySelectorAll('.opt').forEach(b=>{
+            b.disabled = true;
+            const bVal = b.dataset.val === 'true';
+            if(bVal === item.correct) b.classList.add('correct');
+            else if(b === btn) b.classList.add('wrong');
+          });
+          if(chosen === item.correct){
+            fb.textContent = '¡Correcto! ' + (item.explanation||''); fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+          } else {
+            fb.textContent = 'Incorrecto. ' + (item.explanation||''); fb.className='feedback bad';
+          }
+          quizAnswered++; updateQuizProgress();
+        });
+      });
+    } else if(item.type === 'fill'){
+      const input = block.querySelector('.fill-input');
+      const btn = block.querySelector('.check-btn');
+      btn.addEventListener('click', ()=>{
+        if(block.dataset.done) return;
+        const val = input.value.trim().toLowerCase();
+        const fb = document.getElementById('fb-'+idx);
+        const isCorrect = item.accept.some(a => val === a);
+        block.dataset.done = '1';
+        input.disabled = true; btn.disabled = true;
+        if(isCorrect){
+          input.classList.add('correct');
+          fb.textContent = '¡Correcto!'; fb.className='feedback ok'; quizScore++; addXP(5,'q_'+idx);
+        } else {
+          input.classList.add('wrong');
+          fb.textContent = `Incorrecto. Respuesta esperada: "${item.answer}"`; fb.className='feedback bad';
+        }
+        quizAnswered++; updateQuizProgress();
+      });
+    }
+  });
+}
+
+function updateQuizProgress(){
+  document.getElementById('quizProgress').textContent = `${quizAnswered} / ${quizData.length} respondidas`;
+  if(quizAnswered === quizData.length){
+    const result = document.getElementById('quizResult');
+    result.style.display = 'block';
+    document.getElementById('quizScoreText').textContent = `Puntaje: ${quizScore} / ${quizData.length}`;
+    addXP(15, 'quiz_complete');
+  }
+}
+
+renderXP();
+buildQuiz();
+</script>
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Bioquímica II — Prof. Deborah',
+    titulo: 'Metabolismo de los Carbohidratos',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+</body></html>
