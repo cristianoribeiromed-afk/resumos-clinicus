@@ -99,6 +99,11 @@ button{font-family:inherit;cursor:pointer;}
   border:1px solid var(--green-dark);border-radius:16px;padding:22px 24px;margin-bottom:28px;
   display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
 }
+
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:22px;}
+.stats-strip .stat-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center;}
+.stats-strip .stat-box .stat-val{font-size:1.35em;font-weight:800;color:var(--gold);display:block;line-height:1.2;}
+.stats-strip .stat-box .stat-label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
 .continue-info{flex:1;min-width:200px;}
 .continue-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);font-weight:700;margin-bottom:6px;}
 .continue-title{font-size:16px;font-weight:700;color:#fff;margin:0 0 3px;}
@@ -170,6 +175,12 @@ button{font-family:inherit;cursor:pointer;}
 .jrn-tab-content{display:none;}
 .jrn-tab-content.active{display:block;}
 </style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 </head>
 <body>
 
@@ -210,6 +221,8 @@ button{font-family:inherit;cursor:pointer;}
     <div class="jrn-tab-content active" id="tabInicio">
       <h1 class="jrn-greeting" id="jrnGreeting">Bom dia 👋</h1>
       <p class="jrn-greeting-sub" id="jrnGreetingSub">Vamos continuar de onde você parou?</p>
+
+      <div id="statsStrip" class="stats-strip"></div>
 
       <div id="continueSlot"></div>
       <div id="revisaoSlot"></div>
@@ -491,6 +504,23 @@ function montarDashboard(){
 
   // Continuar de onde parei
   const ultima = getUltimaVisita();
+
+  // Faixa de estatisticas (tempo estudado, streak, pomodoros) -- vem do StorageService
+  const statsSlot = document.getElementById('statsStrip');
+  if(window.ClinicusStorage){
+    window.ClinicusStorage.getStudyStats().then(function(stats){
+      const hojeKey = window.ClinicusStorageUtils.todayStr();
+      const hoje = stats.dayLog[hojeKey] || {seconds:0, pomodoros:0};
+      const minHoje = Math.round(hoje.seconds/60);
+      statsSlot.innerHTML = `
+        <div class="stat-box"><span class="stat-val">${minHoje}min</span><span class="stat-label">Hoje</span></div>
+        <div class="stat-box"><span class="stat-val">🔥 ${stats.streakDays}</span><span class="stat-label">Dias seguidos</span></div>
+        <div class="stat-box"><span class="stat-val">🍅 ${stats.totalPomodoros}</span><span class="stat-label">Pomodoros</span></div>
+        <div class="stat-box"><span class="stat-val">${stats.questionsAnswered}</span><span class="stat-label">Questões</span></div>
+      `;
+    }).catch(function(){ statsSlot.innerHTML=''; });
+  }
+
   const continueSlot = document.getElementById('continueSlot');
   if(ultima){
     const quando = new Date(ultima.timestamp);
@@ -643,5 +673,6 @@ document.getElementById('jrnNav').addEventListener('click', (e)=>{
 </script>
 <script src="/assets/clinicus-storage.js" defer></script>
 <script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
 </body>
 </html>

@@ -267,7 +267,14 @@ def inject_file(item, seq, idx, dry_run=False):
     if '</head>' not in html:
         print(f"  ⚠️  sem </head>, pulando: {item['path']}")
         return False
-    html = html.replace('</head>', f'<link rel="stylesheet" href="{CSS_HREF}">\n</head>', 1)
+    html = html.replace('</head>', f'<link rel="stylesheet" href="{CSS_HREF}">\n'
+        '<link rel="manifest" href="/manifest.json">\n'
+        '<meta name="theme-color" content="#0a0e16">\n'
+        '<meta name="apple-mobile-web-app-capable" content="yes">\n'
+        '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n'
+        '<meta name="apple-mobile-web-app-title" content="Clinicus">\n'
+        '<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">\n'
+        '</head>', 1)
 
     # 2. monta os blocos
     back_href = JORNADA_HREF
@@ -301,6 +308,7 @@ def inject_file(item, seq, idx, dry_run=False):
 {MOBILE_TOGGLE_SCRIPT}
 <script src="/assets/clinicus-storage.js" defer></script>
 <script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
 '''
 
     # 3. injeta logo apos <body> e antes de </body>
