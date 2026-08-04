@@ -437,6 +437,23 @@ function calcularProgressoMateria(materiaNome, itensMateria){
   return Math.round((dominados/totalCards)*100);
 }
 
+// ===== CONCLUSÃO DE CAPÍTULOS (marcados manualmente pelo aluno) =====
+function getCompletedChaptersMap(){
+  try{ return JSON.parse(localStorage.getItem('clinicus_completed_chapters') || '{}'); }
+  catch(e){ return {}; }
+}
+function calcularCompletudeCapitulos(itensMateria){
+  const done = getCompletedChaptersMap();
+  const capitulos = itensMateria.filter(it=>it.tipo==='resumo');
+  const total = capitulos.length;
+  if(!total) return {completos:0, total:0, pct:0};
+  const completos = capitulos.filter(it=>{
+    const path = '/' + (it.url||'').replace(/^\//,'');
+    return !!done[path];
+  }).length;
+  return {completos, total, pct: Math.round((completos/total)*100)};
+}
+
 // ===== SUGESTÃO DE REVISÃO =====
 function calcularSugestaoRevisao(){
   const registry = getSrsRegistry();
@@ -558,13 +575,14 @@ function montarDashboard(){
   DISCIPLINAS_CACHE = [];
   grupos.forEach((itens, materiaNome)=>{
     const progresso = calcularProgressoMateria(materiaNome, itens);
+    const completude = calcularCompletudeCapitulos(itens);
     const registry = getSrsRegistry().filter(r=>r.materia===materiaNome);
     const ultimaDaMateria = registry.length ? registry[registry.length-1] : null;
     const qtdCapitulos = itens.filter(it=>it.tipo==='resumo').length;
     const qtdSimulados = itens.filter(it=>it.tipo==='simulado').length;
     const primeiroItem = itens[0];
     DISCIPLINAS_CACHE.push({
-      nome: materiaNome, itens, progresso, ultimaDaMateria, qtdCapitulos, qtdSimulados,
+      nome: materiaNome, itens, progresso, completude, ultimaDaMateria, qtdCapitulos, qtdSimulados,
       isFav: favoritos.includes(materiaNome), primeiroUrl: primeiroItem ? primeiroItem.url : null,
     });
   });
@@ -585,8 +603,11 @@ function montarDashboard(){
 }
 
 function cardDisciplinaHtml(d){
-  const progressoTxt = d.progresso === null ? 'Ainda não iniciado' : `${d.progresso}% dominado`;
-  const progressoPct = d.progresso || 0;
+  const completPct = d.completude ? d.completude.pct : 0;
+  const completTxt = d.completude && d.completude.total
+    ? `${d.completude.completos} de ${d.completude.total} capítulos concluídos`
+    : 'Ainda não iniciado';
+  const dominadoTxt = d.progresso !== null ? ` · ${d.progresso}% dominado` : '';
   const ultimaTxt = d.ultimaDaMateria ? `Último: ${d.ultimaDaMateria.titulo}` : '';
   return `<div class="disc-card" data-materia="${d.nome.replace(/"/g,'&quot;')}">
     <div class="disc-card-top">
@@ -595,8 +616,8 @@ function cardDisciplinaHtml(d){
     </div>
     <p class="disc-name">${d.nome}</p>
     <p class="disc-meta">${d.qtdCapitulos} capítulo${d.qtdCapitulos!==1?'s':''} · ${d.qtdSimulados} simulado${d.qtdSimulados!==1?'s':''}</p>
-    <div class="disc-progress-bar"><div class="disc-progress-fill" style="width:${progressoPct}%"></div></div>
-    <p class="disc-progress-label">${progressoTxt}</p>
+    <div class="disc-progress-bar"><div class="disc-progress-fill" style="width:${completPct}%"></div></div>
+    <p class="disc-progress-label">${completTxt}${dominadoTxt}</p>
     ${ultimaTxt ? `<p class="disc-last">📍 ${ultimaTxt}</p>` : ''}
     <a href="/${(d.ultimaDaMateria ? d.ultimaDaMateria.url : d.primeiroUrl).replace(/^\//,'')}" class="disc-btn">${d.ultimaDaMateria ? 'Continuar' : 'Começar'}</a>
   </div>`;
@@ -673,6 +694,8 @@ document.getElementById('jrnNav').addEventListener('click', (e)=>{
 </script>
 <script src="/assets/clinicus-storage.js" defer></script>
 <script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+
 <script src="/assets/pwa-register.js" defer></script>
 </body>
 </html>

@@ -172,6 +172,27 @@
           return {achievements: ach, isNew: true};
         });
       });
+    },
+
+    // -------------------------------------------------------
+    // Domínio: Progresso — capítulos marcados como concluídos
+    // Chave: caminho da página (ex: "/semestre-01/anatomia1/Capitulo_01_...")
+    // -------------------------------------------------------
+    getCompletedChapters: function(){
+      return this.get('completed_chapters', {});   // { "/caminho.html": "2026-08-05T..." }
+    },
+    isChapterComplete: function(path){
+      return this.getCompletedChapters().then(function(done){
+        return !!done[path];
+      });
+    },
+    setChapterComplete: function(path, completed){
+      var self = this;
+      return this.getCompletedChapters().then(function(done){
+        if(completed){ done[path] = new Date().toISOString(); }
+        else { delete done[path]; }
+        return self.set('completed_chapters', done).then(function(){ return done; });
+      });
     }
   };
 
