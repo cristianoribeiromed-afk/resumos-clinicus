@@ -299,6 +299,7 @@ def inject_file(item, seq, idx, dry_run=False):
 </div>
 {prevnext_html}
 {MOBILE_TOGGLE_SCRIPT}
+<script src="/assets/clinicus-storage.js" defer></script>
 <script src="/assets/focus-pomodoro.js" defer></script>
 '''
 
