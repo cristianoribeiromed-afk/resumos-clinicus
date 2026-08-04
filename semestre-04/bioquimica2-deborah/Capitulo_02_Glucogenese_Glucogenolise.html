@@ -149,6 +149,29 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 .btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
 .review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
 .fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+.cmed-video-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(79,209,161,.14);border:1px solid var(--ok);color:var(--ok);font-size:.72em;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:10px;}
+.cmed-video-sub{color:var(--text-dim);font-size:.85em;margin:-6px 0 14px 0;}
+.cmed-video-card{background:var(--card2,#0f1726);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.cmed-video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000 center/cover no-repeat;cursor:pointer;}
+.cmed-video-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;}
+.cmed-video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.cmed-video-play span{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:1.6em;color:#fff;transition:transform .15s;}
+.cmed-video-thumb:hover .cmed-video-play span{transform:scale(1.08);background:var(--accent);}
+.cmed-video-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:.75em;padding:2px 8px;border-radius:5px;}
+.cmed-video-body{padding:14px 16px;}
+.cmed-video-tag{color:var(--gold);font-size:.72em;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.cmed-video-title{color:var(--text);font-size:1.05em;font-weight:700;margin:4px 0 8px 0;}
+.cmed-video-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.cmed-video-stars{color:var(--gold);}
+.cmed-video-why{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.85em;margin:10px 0;color:var(--text-dim);}
+.cmed-video-why b{color:var(--gold);}
+.cmed-video-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.cmed-video-btn{background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:.82em;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.cmed-video-btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text-dim);}
+.cmed-video-btn:hover{opacity:.88;}
+.cmed-video-note{color:var(--text-dim);font-size:.8em;text-align:center;margin-top:6px;}
+.cmed-video-extra-label{font-size:.85em;color:var(--text-dim);margin:18px 0 8px 0;font-weight:700;}
+@media (max-width:600px){.cmed-video-play span{width:52px;height:52px;font-size:1.3em;}}
 </style>
 <link rel="stylesheet" href="/assets/shell-nav.css">
 <link rel="manifest" href="/manifest.json">
@@ -228,6 +251,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 <nav class="tabs" id="tabs">
   <button data-p="p0" class="active">📋 Guia de Estudo</button>
   <button data-p="p1">🩺 Correlação Clínica</button>
+  <button data-p="p2">🎥 Vídeo</button>
   <button data-p="p3">🃏 Flashcards</button>
   <button data-p="p4">✅ Banco de Questões</button>
   <button data-p="p5">🎮 Quiz Rápido</button>
@@ -290,6 +314,114 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
     <p>Durante ejercicio prolongado, el glucógeno muscular se agota localmente — pero el músculo no puede compartir su glucosa con la sangre (falta de glucosa-6-fosfatasa). Es el hígado, liberando su propio glucógeno almacenado, el que mantiene la glucemia estable para que el cerebro y otros tejidos sigan funcionando.</p>
   </div>
 </section>
+
+<!-- CMED-VIDEO-SECTION -->
+<section class="panel" id="p2">
+  <div class="card">
+    <span class="cmed-video-badge">🩺 Recomendado pela ClinicusMed</span>
+    <h2>🎥 Complemento em Vídeo</h2>
+    <p class="cmed-video-sub">A Clinicus selecionou este conteúdo para complementar seu estudo. Não substitui a leitura do resumo — o resumo ensina, o vídeo reforça.</p>
+    <div id="cmedVideoContainer">
+      <p style="color:var(--text-dim);font-size:.9em;">Carregando recomendações...</p>
+    </div>
+  </div>
+</section>
+<!-- /CMED-VIDEO-SECTION -->
+
+<!-- CMED-VIDEO-SCRIPT -->
+<script>
+(function(){
+  function ytThumb(id){ return 'https://img.youtube.com/vi/'+id+'/hqdefault.jpg'; }
+  function ytWatch(id){ return 'https://www.youtube.com/watch?v='+id; }
+  function stars(n){ n = n||5; return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+  function videoCard(v, isPrincipal){
+    if(!v || !v.id) return '';
+    var thumb = v.tipo === 'vimeo' ? '' : ytThumb(v.id);
+    var watchUrl = v.tipo === 'vimeo' ? ('https://vimeo.com/'+v.id) : ytWatch(v.id);
+    var tag = isPrincipal ? '🎥 Vídeo Principal' : '➕ Complementar';
+    var card = document.createElement('div');
+    card.className = 'cmed-video-card';
+    card.innerHTML =
+      '<div class="cmed-video-thumb" data-url="'+watchUrl+'" style="background-image:url(\''+thumb+'\')">' +
+        '<div class="cmed-video-play"><span>▶</span></div>' +
+        (v.duracao ? '<div class="cmed-video-dur">⏱ '+v.duracao+'</div>' : '') +
+      '</div>' +
+      '<div class="cmed-video-body">' +
+        '<div class="cmed-video-tag">'+tag+'</div>' +
+        '<div class="cmed-video-title">'+(v.titulo||'')+'</div>' +
+        '<div class="cmed-video-meta">' +
+          (v.duracao ? '<span>⏱ '+v.duracao+'</span>' : '') +
+          '<span class="cmed-video-stars">'+stars(v.estrelas)+'</span>' +
+          (v.canal ? '<span>· '+v.canal+'</span>' : '') +
+        '</div>' +
+        (v.motivo ? '<div class="cmed-video-why"><b>📌 Por que recomendamos este vídeo?</b><br>'+v.motivo+'</div>' : '') +
+        '<div class="cmed-video-btns">' +
+          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">▶ Assistir vídeo</a>' +
+          '<button class="cmed-video-btn secondary" data-copy="'+watchUrl+'">📋 Copiar link</button>' +
+        '</div>' +
+      '</div>';
+    return card;
+  }
+
+  function render(data){
+    var container = document.getElementById('cmedVideoContainer');
+    if(!container) return;
+    var entry = data && typeof CHAPTER_ID !== 'undefined' ? data[CHAPTER_ID] : null;
+
+    if(!entry || !entry.principal){
+      // Sem video cadastrado: esconde a secao inteira e o botao da aba
+      var section = document.getElementById('p2');
+      if(section) section.style.display = 'none';
+      var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+      if(navBtn) navBtn.style.display = 'none';
+      return;
+    }
+
+    container.innerHTML = '';
+    container.appendChild(videoCard(entry.principal, true));
+    if(entry.extras && entry.extras.length){
+      var label = document.createElement('div');
+      label.className = 'cmed-video-extra-label';
+      label.textContent = '📎 Vídeos complementares';
+      container.appendChild(label);
+      entry.extras.slice(0,3).forEach(function(ex){
+        container.appendChild(videoCard(ex, false));
+      });
+    }
+    var note = document.createElement('p');
+    note.className = 'cmed-video-note';
+    if(entry.verMaisEm && entry.verMaisEm.texto){
+      note.innerHTML = entry.verMaisEm.texto;
+    } else {
+      note.textContent = 'Este vídeo complementa o conteúdo estudado neste capítulo.';
+    }
+    container.appendChild(note);
+
+    container.addEventListener('click', function(e){
+      var thumb = e.target.closest('.cmed-video-thumb');
+      if(thumb){ window.open(thumb.dataset.url, '_blank', 'noopener'); return; }
+      var copyBtn = e.target.closest('[data-copy]');
+      if(copyBtn){
+        navigator.clipboard.writeText(copyBtn.dataset.copy).then(function(){
+          var old = copyBtn.textContent;
+          copyBtn.textContent = '✅ Copiado!';
+          setTimeout(function(){ copyBtn.textContent = old; }, 1800);
+        });
+      }
+    });
+  }
+
+  fetch('/videos.json').then(function(r){ return r.json(); }).then(render).catch(function(){
+    var section = document.getElementById('p2');
+    if(section) section.style.display = 'none';
+    var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+    if(navBtn) navBtn.style.display = 'none';
+  });
+})();
+</script>
+<!-- /CMED-VIDEO-SCRIPT -->
+
 
 <!-- ============ FLASHCARDS ============ -->
 <section class="panel" id="p3">
