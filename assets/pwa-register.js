@@ -36,7 +36,7 @@
   + ".cmed-pwa-banner .txt b{display:block;color:#ffd166;font-size:1.02em;margin-bottom:2px;}"
   + ".cmed-pwa-banner button{background:linear-gradient(135deg,#6bbf59,#a3d84a);border:none;color:#04150c;"
   + "font-weight:700;padding:8px 12px;border-radius:8px;font-size:.78em;cursor:pointer;white-space:nowrap;}"
-  + ".cmed-pwa-banner .close{background:none;border:none;color:#8b98ab;font-size:16px;cursor:pointer;padding:0 2px;font-weight:400;}";
+  + ".cmed-pwa-banner .close{background:none;border:none;color:#8b98ab;font-size:.78em;cursor:pointer;padding:8px 6px;font-weight:600;white-space:nowrap;text-decoration:underline;}";
   var styleTag = document.createElement('style');
   styleTag.textContent = css;
   document.head.appendChild(styleTag);
@@ -64,9 +64,9 @@
     deferredPrompt = e;
     banner.innerHTML =
       '<img src="/assets/pwa/icon-192.png" alt="Clinicus">' +
-      '<div class="txt"><b>📲 Instalar Clinicus</b>Acesso rápido, tela cheia, sem navegador.</div>' +
-      '<button id="cmedPwaInstallBtn">Instalar</button>' +
-      '<button class="close" id="cmedPwaCloseBtn">✕</button>';
+      '<div class="txt"><b>📲 Instale a Clinicus no seu dispositivo!</b>Estude com mais rapidez, receba notificações e tenha uma experiência semelhante à de um aplicativo.</div>' +
+      '<button id="cmedPwaInstallBtn">Instalar agora</button>' +
+      '<button class="close" id="cmedPwaCloseBtn">Mais tarde</button>';
     banner.classList.add('show');
     banner.querySelector('#cmedPwaInstallBtn').addEventListener('click', function(){
       banner.classList.remove('show');
@@ -87,8 +87,8 @@
   if(isIOS && isSafari){
     banner.innerHTML =
       '<img src="/assets/pwa/icon-192.png" alt="Clinicus">' +
-      '<div class="txt"><b>📲 Instalar Clinicus</b>Toque em <b>Compartilhar</b> (□↑) e depois em <b>"Adicionar à Tela de Início"</b>.</div>' +
-      '<button class="close" id="cmedPwaCloseBtnIos">✕</button>';
+      '<div class="txt"><b>📲 Instale a Clinicus no seu dispositivo!</b>Toque em <b>Compartilhar</b> (□↑) e depois em <b>"Adicionar à Tela de Início"</b> — estude com mais rapidez e uma experiência de aplicativo.</div>' +
+      '<button class="close" id="cmedPwaCloseBtnIos">Mais tarde</button>';
     banner.classList.add('show');
     banner.querySelector('#cmedPwaCloseBtnIos').addEventListener('click', dismiss);
   }
