@@ -47,17 +47,24 @@
     items.forEach(function(a){
       var path = normalizePath(a.getAttribute('href'));
       var isDone = !!done[path];
-      var icoSpan = a.querySelector('.ico');
-      if(!icoSpan) return;
-      if(isDone){
-        icoSpan.textContent = '✅';
-        a.classList.add('cmed-nav-item-done');
-      } else {
-        // restaura icone original (Guia = 📋, Simulado = 📝) se nao concluido
-        if(icoSpan.dataset.origIco){ icoSpan.textContent = icoSpan.dataset.origIco; }
-        else { icoSpan.dataset.origIco = icoSpan.textContent; }
-        a.classList.remove('cmed-nav-item-done');
+
+      a.classList.toggle('cmed-nav-item-done', isDone);
+
+      var box = a.querySelector('.cmed-item-checkbox');
+      if(!box){
+        box = document.createElement('span');
+        box.className = 'cmed-item-checkbox';
+        a.insertBefore(box, a.firstChild);
+        box.addEventListener('click', function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          DB.isChapterComplete(path).then(function(nowDone){
+            DB.setChapterComplete(path, !nowDone).then(function(){ mount(); });
+          });
+        });
       }
+      box.textContent = isDone ? '✅' : '☐';
+      box.title = isDone ? 'Marcado como concluído — clique pra desmarcar' : 'Marcar como concluído';
     });
   }
 
@@ -123,7 +130,10 @@
   + ".cmed-complete-btn:hover{border-color:#6bbf59;}"
   + ".cmed-complete-btn.is-done{background:rgba(107,191,89,.15);border-color:#6bbf59;color:#a3d84a;font-weight:700;}"
   + ".cmed-nav-item-done{opacity:.75;}"
-  + ".cmed-nav-item-done span:last-child{text-decoration:none;}";
+  + ".cmed-nav-item-done span:last-child{text-decoration:none;}"
+  + ".cmed-item-checkbox{cursor:pointer;margin-right:6px;font-size:.95em;flex-shrink:0;display:inline-block;"
+  + "transition:transform .12s;}"
+  + ".cmed-item-checkbox:hover{transform:scale(1.2);}";
   var styleTag = document.createElement('style');
   styleTag.textContent = css;
   document.head.appendChild(styleTag);
