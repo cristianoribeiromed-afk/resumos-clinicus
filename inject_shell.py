@@ -341,6 +341,7 @@ def inject_file(item, seq, idx, dry_run=False):
 <script src="/assets/clinicus-storage.js" defer></script>
 <script src="/assets/focus-pomodoro.js" defer></script>
 <script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
 <script src="/assets/pwa-register.js" defer></script>
 '''
 
