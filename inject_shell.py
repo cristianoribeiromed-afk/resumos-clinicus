@@ -295,22 +295,32 @@ def inject_file(item, seq, idx, dry_run=False):
     # corrige conflito de layout ANTES de injetar (ver funcao acima)
     html = fix_body_flex_grid_conflict(html)
 
-    # 1. injeta o <link> do CSS no <head> (idempotente -- nao duplica se ja tiver)
+    # 1. injeta favicon/manifest/CSS logo apos o <meta viewport> (inicio do <head>,
+    #    nao no final -- alguns navegadores nao "esperam" o favicon aparecer tarde
+    #    demais, depois de um <style> grande) -- idempotente, nao duplica se ja tiver
     if '</head>' not in html:
         print(f"  ⚠️  sem </head>, pulando: {item['path']}")
         return False
+
+    head_block = (
+        '<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">\n'
+        f'<link rel="stylesheet" href="{CSS_HREF}">\n'
+        '<link rel="manifest" href="/manifest.json">\n'
+        '<meta name="theme-color" content="#0a0e16">\n'
+        '<meta name="apple-mobile-web-app-capable" content="yes">\n'
+        '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n'
+        '<meta name="apple-mobile-web-app-title" content="Clinicus">\n'
+        '<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">\n'
+    )
+
     if 'rel="manifest"' not in html:
-        html = html.replace('</head>', f'<link rel="stylesheet" href="{CSS_HREF}">\n'
-            '<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">\n'
-            '<link rel="manifest" href="/manifest.json">\n'
-            '<meta name="theme-color" content="#0a0e16">\n'
-            '<meta name="apple-mobile-web-app-capable" content="yes">\n'
-            '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n'
-            '<meta name="apple-mobile-web-app-title" content="Clinicus">\n'
-            '<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">\n'
-            '</head>', 1)
+        viewport_pattern = re.compile(r'(<meta name="viewport"[^>]*>\n?)')
+        if viewport_pattern.search(html):
+            html = viewport_pattern.sub(lambda m: m.group(1) + head_block, html, count=1)
+        else:
+            # sem viewport encontrado -- fallback: injeta logo apos <head>
+            html = html.replace('<head>', '<head>\n' + head_block, 1)
     elif CSS_HREF not in html:
-        # tags PWA ja existem (de uma injecao anterior) mas o CSS do shell ainda nao -- so adiciona o CSS
         html = html.replace('</head>', f'<link rel="stylesheet" href="{CSS_HREF}">\n</head>', 1)
 
     # 2. monta os blocos
