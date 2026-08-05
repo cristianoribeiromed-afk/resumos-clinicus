@@ -151,7 +151,6 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 .review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
 .fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
 </style>
-<link rel="stylesheet" href="/assets/shell-nav.css">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0a0e16">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -162,6 +161,19 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 <script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
 
 <link rel="stylesheet" href="/assets/shell-nav.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<link rel="stylesheet" href="/assets/shell-nav.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
 </head>
 <body>
 <div class="cmed-reading-toolbar">
@@ -203,10 +215,12 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
     <div class="cmed-nav-sidebar-list">
     <p class="cmed-nav-sidebar-title">Anatomía II — Prática</p>
     <h4>P1</h4>
-    <a class="cmed-nav-item is-current" href="/semestre-02/anatomia2-pratica/osteologia/Craneo_Visao_Anterior.html"><span class="ico">📋</span><span>Osteologia — Crânio Visão Anterior</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-02/anatomia2-pratica/osteologia/Craneo_Visao_Anterior.html"><span class="ico">🦴</span><span>Osteologia — Crânio Visão Anterior</span></a>
     </div>
   </aside>
   <div class="cmed-nav-main">
+
+
 
 <div class="wrap">
 <header>
@@ -1305,95 +1319,6 @@ try{
 }catch(e){}
 </script>
 
-  </div>
-</div>
-<nav class="cmed-nav-prevnext">
-  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
-  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
-</nav>
-<script>
-(function(){
-  var sb = document.querySelector('.cmed-nav-sidebar');
-  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
-  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
-  // marca este item como "visto" no localStorage (progresso simples, sem backend)
-  try{
-    var key = 'cmed_visto_' + location.pathname;
-    localStorage.setItem(key, '1');
-  }catch(e){}
-})();
-</script>
-<script>
-(function(){
-  var MODE_KEY = 'cmed_reading_mode';
-  var THEME_KEY = 'cmed_reading_theme';
-  var html = document.documentElement;
-  var btn = document.getElementById('cmedReadingBtn');
-  var progressBar = document.getElementById('cmedReadingProgress');
-  var topBtn = document.getElementById('cmedReadingTop');
-  var timeLabel = document.getElementById('cmedReadingTime');
-  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
-
-  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
-  // (nunca ativa sozinho so por ter navegado no site antes)
-  try{
-    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
-    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
-    html.setAttribute('data-reading-theme', theme);
-  }catch(e){}
-
-  function setActiveThemeBtn(){
-    var current = html.getAttribute('data-reading-theme');
-    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
-  }
-  setActiveThemeBtn();
-
-  if(btn){
-    btn.onclick = function(){
-      html.classList.toggle('cmed-reading-mode');
-      var on = html.classList.contains('cmed-reading-mode');
-      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
-      if(on){ updateReadingTime(); updateProgress(); }
-    };
-  }
-
-  themeBtns.forEach(function(b){
-    b.onclick = function(){
-      html.setAttribute('data-reading-theme', b.dataset.theme);
-      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
-      setActiveThemeBtn();
-    };
-  });
-
-  function updateReadingTime(){
-    if(!timeLabel) return;
-    var content = document.querySelector('.wrap') || document.body;
-    var words = (content.innerText || '').trim().split(/\s+/).length;
-    var minutes = Math.max(1, Math.round(words / 200));
-    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
-  }
-  updateReadingTime();
-
-  var ticking = false;
-  function updateProgress(){
-    if(!progressBar) return;
-    var scrollTop = window.scrollY || document.documentElement.scrollTop;
-    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-    progressBar.style.width = pct + '%';
-    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
-    ticking = false;
-  }
-  window.addEventListener('scroll', function(){
-    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
-  }, {passive:true});
-  updateProgress();
-
-  if(topBtn){
-    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
-  }
-})();
-</script>
 
 <script>
 const trainRounds = [{"img": "img/craneo_anterior_numerado.png", "numero": 1, "resposta": "Osso Frontal"}, {"img": "img/craneo_anterior_numerado.png", "numero": 2, "resposta": "Escotadura (forame) supraorbitária"}, {"img": "img/craneo_anterior_numerado.png", "numero": 3, "resposta": "Osso Nasal"}, {"img": "img/craneo_anterior_numerado.png", "numero": 4, "resposta": "Osso Lacrimal"}, {"img": "img/craneo_anterior_numerado.png", "numero": 5, "resposta": "Osso Zigomático"}, {"img": "img/craneo_anterior_numerado.png", "numero": 6, "resposta": "Forame Infraorbitário"}, {"img": "img/craneo_anterior_numerado.png", "numero": 7, "resposta": "Maxila"}, {"img": "img/craneo_anterior_numerado.png", "numero": 8, "resposta": "Forame Mentoniano"}, {"img": "img/craneo_anterior_numerado.png", "numero": 9, "resposta": "Mandíbula"}, {"img": "img/craneo_anterior_numerado.png", "numero": 10, "resposta": "Osso Temporal"}, {"img": "img/craneo_lateral_numerado.png", "numero": 1, "resposta": "Osso Parietal"}, {"img": "img/craneo_lateral_numerado.png", "numero": 2, "resposta": "Sutura Coronal"}, {"img": "img/craneo_lateral_numerado.png", "numero": 3, "resposta": "Osso Esfenoide"}, {"img": "img/craneo_lateral_numerado.png", "numero": 4, "resposta": "Osso Lacrimal"}, {"img": "img/craneo_lateral_numerado.png", "numero": 5, "resposta": "Maxila (apófise frontal; apófise alveolar)"}, {"img": "img/craneo_lateral_numerado.png", "numero": 6, "resposta": "Osso Zigomático"}, {"img": "img/craneo_lateral_numerado.png", "numero": 7, "resposta": "Osso Occipital (protuberância occipital externa)"}, {"img": "img/craneo_lateral_numerado.png", "numero": 8, "resposta": "Sutura Lambdóidea"}, {"img": "img/craneo_lateral_numerado.png", "numero": 9, "resposta": "Osso Temporal (porção escamosa; apófise zigomática; conduto auditivo externo; apófise mastoide)"}, {"img": "img/craneo_sagital_numerado.png", "numero": 1, "resposta": "Osso Esfenoide (asa maior; asa menor; sela túrcica; seio esfenoidal)"}, {"img": "img/craneo_sagital_numerado.png", "numero": 2, "resposta": "Osso Frontal (seio frontal)"}, {"img": "img/craneo_sagital_numerado.png", "numero": 3, "resposta": "Osso Etmoide (lâmina perpendicular)"}, {"img": "img/craneo_sagital_numerado.png", "numero": 4, "resposta": "Maxila (canal incisivo; apófise palatina)"}, {"img": "img/craneo_sagital_numerado.png", "numero": 5, "resposta": "Vômer"}, {"img": "img/craneo_sagital_numerado.png", "numero": 6, "resposta": "Osso Palatino"}, {"img": "img/craneo_sagital_numerado.png", "numero": 7, "resposta": "Osso Occipital"}, {"img": "img/craneo_sagital_numerado.png", "numero": 8, "resposta": "Osso Temporal (porção escamosa; porção petrosa)"}, {"img": "img/craneo_sagital_numerado.png", "numero": 9, "resposta": "Osso Parietal"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 1, "resposta": "Osso Frontal (seio)"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 2, "resposta": "Osso Nasal"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 3, "resposta": "Cartilagem Alar Maior"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 4, "resposta": "Maxila (apófise frontal; canal incisivo; apófise palatina; apófise alveolar)"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 5, "resposta": "Concha Nasal Inferior"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 6, "resposta": "Osso Palatino (lâmina perpendicular; lâmina horizontal)"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 7, "resposta": "Osso Esfenoide (seio esfenoidal; lâminas medial e lateral da apófise pterigoide; gancho da pterigoide da lâmina medial)"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 8, "resposta": "Osso Etmoide (concha nasal média; lâmina cribosa; concha nasal superior)"}, {"img": "img/cavidade_nasal_lateral_numerado.png", "numero": 9, "resposta": "Osso Lacrimal"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 1, "resposta": "Maxila (fossa incisiva; apófise palatina; apófise zigomática)"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 2, "resposta": "Osso Zigomático"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 3, "resposta": "Osso Esfenoide (lâmina medial; lâmina lateral; asa maior)"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 4, "resposta": "Osso Temporal (apófise zigomática; fossa mandibular; apófise estiloide; conduto auditivo externo; apófise mastoide)"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 5, "resposta": "Osso Parietal"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 6, "resposta": "Osso Occipital (côndilo occipital; porção basilar; forame magno; protuberância occipital externa)"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 7, "resposta": "Vômer"}, {"img": "img/base_craneo_inferior_numerado.png", "numero": 8, "resposta": "Osso Palatino (lâmina horizontal)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 1, "resposta": "Orifícios da lâmina cribosa (filetes do nervo olfatório)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 2, "resposta": "Canal óptico (nervo óptico [NC II]; artéria oftálmica)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 3, "resposta": "Fissura orbitária superior (nervo oculomotor [NC III]; nervo troclear [NC IV]; ramos lacrimal, frontal e nasociliar do nervo oftálmico [V1]; nervo abducente [NC VI]; veia oftálmica superior)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 4, "resposta": "Forame redondo (nervo maxilar [V2])"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 5, "resposta": "Forame oval (nervo mandibular [V3]; artéria meníngea acessória; nervo petroso menor [ocasionalmente])"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 6, "resposta": "Forame espinhoso (artéria e veia meníngeas médias; ramo meníngeo do nervo mandibular)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 7, "resposta": "Forame lácero (rasgado)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 8, "resposta": "Canal carotídeo (artéria carótida interna; plexo carotídeo interno)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 9, "resposta": "Meato acústico interno (nervo facial [NC VII]; nervo vestibulococlear [NC VIII]; artéria labiríntica)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 10, "resposta": "Forame jugular (seio petroso inferior; nervo glossofaríngeo [NC IX]; nervo vago [NC X]; nervo acessório [NC XI]; seio sigmoide; artéria meníngea posterior)"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 11, "resposta": "Canal do nervo hipoglosso (nervo hipoglosso [NC XII])"}, {"img": "img/base_craneo_superior_numerado.png", "numero": 12, "resposta": "Forame magno (bulbo/medula oblonga; meninges; artérias vertebrais; ramos meníngeos das artérias vertebrais; raízes espinais dos nervos acessórios)"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 1, "resposta": "Apófise condilar (cabeça e colo)"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 2, "resposta": "Apófise coronoide"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 3, "resposta": "Fossa submandibular"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 4, "resposta": "Linha milo-hioidea"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 5, "resposta": "Forame mentoniano"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 6, "resposta": "Protuberância mentoniana"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 7, "resposta": "Corpo da mandíbula"}, {"img": "img/mandibula_anterolateral_numerado.png", "numero": 8, "resposta": "Ramo da mandíbula"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 1, "resposta": "Apófise condilar"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 2, "resposta": "Língula"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 3, "resposta": "Forame mandibular"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 4, "resposta": "Sulco milo-hioideo"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 5, "resposta": "Fossa submandibular"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 6, "resposta": "Fossa sublingual"}, {"img": "img/mandibula_posterior_numerado.png", "numero": 7, "resposta": "Espinhas mentonianas"}, {"img": "img/atm_numerado.png", "numero": 1, "resposta": "Cápsula articular"}, {"img": "img/atm_numerado.png", "numero": 2, "resposta": "Ligamento lateral (temporomandibular)"}, {"img": "img/atm_numerado.png", "numero": 3, "resposta": "Ligamento esfenomandibular (por transparência)"}, {"img": "img/atm_numerado.png", "numero": 4, "resposta": "Ligamento estilomandibular"}, {"img": "img/atm_numerado.png", "numero": 5, "resposta": "Fossa mandibular"}, {"img": "img/atm_numerado.png", "numero": 6, "resposta": "Disco articular"}, {"img": "img/atm_numerado.png", "numero": 7, "resposta": "Tubérculo articular"}, {"img": "img/atm_numerado.png", "numero": 8, "resposta": "Cápsula articular"}, {"img": "img/paladar_numerado.png", "numero": 1, "resposta": "Fossa incisiva"}, {"img": "img/paladar_numerado.png", "numero": 2, "resposta": "Apófise palatina da maxila"}, {"img": "img/paladar_numerado.png", "numero": 3, "resposta": "Lâmina horizontal do osso palatino"}, {"img": "img/paladar_numerado.png", "numero": 4, "resposta": "Forames palatinos maior e menor"}];
@@ -1489,5 +1414,104 @@ startTraining();
 <script src="/assets/focus-pomodoro.js" defer></script>
 <script src="/assets/progress-tracker.js" defer></script>
 
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
 <script src="/assets/pwa-register.js" defer></script>
 </body></html>

@@ -18,6 +18,38 @@ REPO = '/home/claude/resumos-clinicus'
 CATALOGO_PATH = os.path.join(REPO, 'catalogo.json')
 ETAPA_ORDEM = ['P1', 'P2', 'Final']
 CSS_HREF = '/assets/shell-nav.css'
+
+# mesmo mapeamento usado em jornada/index.html (MATERIA_ICONS) -- mantido
+# em sincronia manualmente, já que um é Python (build-time) e outro é JS (runtime)
+MATERIA_ICONS = [
+    ('anatom', '🦴'), ('histolog', '🧫'), ('fisiopatolog', '🩻'), ('fisiolog', '🫀'),
+    ('bioquim', '⚗️'), ('genetic', '🧬'), ('microbiolog', '🦠'), ('imunolog', '🛡️'),
+    ('inmunolog', '🛡️'), ('embriolog', '🐣'), ('biolog', '🔬'), ('bioetic', '⚖️'),
+    ('biofisic', '📡'), ('bioestadistic', '📈'), ('nutric', '🥗'), ('epidemiolog', '📊'),
+    ('medicina comunit', '🏥'), ('medicina de desastre', '🚑'), ('medicina interna', '🩺'),
+    ('medicina legal', '⚖️'), ('medicina de la familia', '👨‍👩‍👧'), ('psicolog', '🧠'),
+    ('psiquiatr', '🧠'), ('guaran', '🗣️'), ('cirugia', '🔪'), ('dermatolog', '🧴'),
+    ('farmacolog', '💊'), ('gineco', '🤰'), ('hematolog', '🩸'), ('historia de la medicina', '📜'),
+    ('gestion en salud', '📋'), ('imagenolog', '📷'), ('lengua castellana', '📖'),
+    ('neumolog', '🫁'), ('neurolog', '🧠'), ('oftalmolog', '👁️'), ('oncolog', '🎗️'),
+    ('ortopedia', '🦵'), ('traumatolog', '🦵'), ('otorrinolaringolog', '👂'),
+    ('pediatr', '🧒'), ('primeros auxilios', '🚑'), ('redaccion', '✍️'),
+    ('metodologia de la investigacion', '🔎'), ('rehabilitacion', '🏃'),
+    ('semiologia', '🩺'), ('toxicolog', '☠️'), ('urolog', '🚹'),
+]
+
+import unicodedata
+
+def _sem_acento(s):
+    nfkd = unicodedata.normalize('NFKD', s)
+    return ''.join(c for c in nfkd if not unicodedata.combining(c))
+
+def icon_materia(nome):
+    low = _sem_acento(nome.lower())
+    for chave, ico in MATERIA_ICONS:
+        if _sem_acento(chave) in low:
+            return ico
+    return '📘'
 CATALOGO_HREF = '/index.html#catalogo'
 JORNADA_HREF = '/jornada/'
 
@@ -86,7 +118,7 @@ def build_sidebar_html(seq, current_path):
         for it in by_etapa[etapa_nome]:
             is_current = (it['path'] == current_path)
             cls = 'cmed-nav-item is-current' if is_current else 'cmed-nav-item'
-            ico = '📋' if it['tipo'] == 'Guia de Estudo' else '📝'
+            ico = icon_materia(it['materia']) if it['tipo'] == 'Guia de Estudo' else '🎯'
             href = '/' + it['path']
             parts.append(f'<a class="{cls}" href="{href}"><span class="ico">{ico}</span><span>{esc(it["label"])}</span></a>')
     return '\n    '.join(parts)

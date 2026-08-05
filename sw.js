@@ -16,7 +16,7 @@
    CACHE_VERSION abaixo a cada atualização importante do site.
    ============================================================ */
 
-var CACHE_VERSION = 'clinicus-v3';
+var CACHE_VERSION = 'clinicus-v4';
 var SHELL_CACHE = CACHE_VERSION + '-shell';
 var PAGES_CACHE = CACHE_VERSION + '-pages';
 
