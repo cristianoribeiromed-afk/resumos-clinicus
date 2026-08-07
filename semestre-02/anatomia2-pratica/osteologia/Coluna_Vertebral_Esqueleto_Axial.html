@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Esqueleto Axial — Coluna Vertebral | Anatomía II Prática | ClinicusMed</title>
+<style>
+.cmed-fig{margin:14px 0; text-align:center;}
+.cmed-fig img{max-width:100%; max-height:640px; width:auto; height:auto; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#fff; display:block; margin:0 auto;}
+.cmed-fig-cap{font-size:.82em; color:var(--text-dim); margin-top:6px; font-style:italic;}
+.cmed-gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin:14px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:320px;}
+:root{
+  --bg:#0b0f0e; --card:#121917; --card2:#1c3033;
+  --accent:#1fb86a; --accent2:#7de0ac; --gold:#e8b84b;
+  --text:#e8f5f4; --text-dim:#9dc4c2; --ok:#4fd1a1; --bad:#e0505f; --border:#264b4d;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Anatomía II — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Anatomía II — Prática</span><span>2 de 2</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Anatomía II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-02/anatomia2-pratica/osteologia/Craneo_Visao_Anterior.html"><span class="ico">🦴</span><span>Osteologia — Crânio Visão Anterior</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-02/anatomia2-pratica/osteologia/Coluna_Vertebral_Esqueleto_Axial.html"><span class="ico">🦴</span><span>Osteologia — Coluna Vertebral (Esqueleto Axial)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Anatomía II — Prática · P1</span>
+  <h1>🦴 Esqueleto Axial — Coluna Vertebral</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Ficha Completa</button>
+  <button data-p="p1">🏥 Correlação Clínica</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ FICHA COMPLETA ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>Organização Geral da Coluna Vertebral</h2>
+    <p>A coluna vertebral (raquis) é formada por peças ósseas sobrepostas — as vértebras — organizadas em 4 regiões, de cima pra baixo:</p>
+    <table>
+      <tr><th>Região</th><th>Número de vértebras</th><th>Nomenclatura</th></tr>
+      <tr><td>Cervical</td><td>7</td><td>C1-C7</td></tr>
+      <tr><td>Torácica</td><td>12</td><td>T1-T12</td></tr>
+      <tr><td>Lombar</td><td>5</td><td>L1-L5</td></tr>
+      <tr><td>Sacral (fundida)</td><td>5 (fundidas em 1 osso)</td><td>Sacro</td></tr>
+      <tr><td>Coccígea (fundida)</td><td>3-5 (fundidas, variável)</td><td>Cóccix</td></tr>
+    </table>
+    <div class="mnemo"><b>🧠 Macete clássico:</b> "Café Toma Leite Sem Chocolate" — Cervical (7), Torácica (12), Lombar (5), Sacro (5), Cóccix (variável) — ajuda a lembrar a ordem das regiões, embora o número de vértebras precise ser decorado separadamente.</div>
+  </div>
+
+  <div class="card">
+    <h2>Curvaturas da Coluna Vertebral</h2>
+    <table>
+      <tr><th>Curvatura</th><th>Região</th><th>Direção</th><th>Tipo</th></tr>
+      <tr><td>Cervical</td><td>C1-C7</td><td>Convexa anteriormente</td><td>Lordose (secundária)</td></tr>
+      <tr><td>Torácica</td><td>T1-T12</td><td>Côncava anteriormente</td><td>Cifose (primária)</td></tr>
+      <tr><td>Lombar</td><td>L1-L5</td><td>Convexa anteriormente</td><td>Lordose (secundária)</td></tr>
+      <tr><td>Sacrococcígea</td><td>Sacro/Cóccix</td><td>Côncava anteriormente</td><td>Cifose (primária)</td></tr>
+    </table>
+    <div class="criterio"><b>✅ Diferença entre curvaturas primárias e secundárias:</b> as curvaturas PRIMÁRIAS (torácica, sacrococcígea) já existem no feto, mantendo a curvatura original da coluna fetal. As curvaturas SECUNDÁRIAS (cervical, lombar) se desenvolvem DEPOIS do nascimento — a cervical quando o bebê começa a sustentar a cabeça, a lombar quando começa a ficar em pé e andar.</div>
+    <div class="clinical"><b>🏥 Correlação clínica — curvaturas anormais:</b> Hipercifose (cifose excessiva), Hiperlordose (lordose excessiva), Escoliose (curvatura lateral anormal, geralmente com componente rotacional).</div>
+  </div>
+
+  <div class="card">
+    <h2>Estrutura Geral de uma Vértebra Típica</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Descrição</th></tr>
+      <tr><td><strong>Corpo vertebral</strong></td><td>Porção anterior, cilíndrica, principal estrutura de sustentação de peso</td></tr>
+      <tr><td><strong>Pedículos</strong></td><td>2 processos curtos que conectam o corpo ao arco vertebral</td></tr>
+      <tr><td><strong>Lâminas</strong></td><td>2 placas ósseas que se unem posteriormente, completando o arco vertebral</td></tr>
+      <tr><td><strong>Processo espinhoso</strong></td><td>Projeção posterior única, no ponto de união das lâminas</td></tr>
+      <tr><td><strong>Processos transversos</strong></td><td>2 projeções laterais, na junção entre pedículo e lâmina</td></tr>
+      <tr><td><strong>Processos articulares (superior/inferior)</strong></td><td>Formam as articulações facetárias com as vértebras adjacentes</td></tr>
+      <tr><td><strong>Forame vertebral</strong></td><td>Espaço central, formado pelo corpo + arco vertebral — os forames empilhados formam o canal vertebral (contém a medula espinal)</td></tr>
+    </table>
+    <div class="mnemo"><b>🧠 Ponto-chave:</b> o forame vertebral é o elemento de proteção do conteúdo nervoso (medula espinal) — nobre e frágil, que a coluna abriga ao longo de todo seu trajeto.</div>
+  </div>
+
+  <div class="card">
+    <h2>Características Regionais — A Tabela Mais Cobrada da Osteologia Vertebral</h2>
+    <table>
+      <tr><th>Característica</th><th>Cervical</th><th>Torácica</th><th>Lombar</th></tr>
+      <tr><td>Corpo vertebral</td><td>Pequeno, alongado transversalmente</td><td>Formato de coração, facetas costais</td><td>Grande, formato de rim</td></tr>
+      <tr><td>Forame vertebral</td><td>Grande, triangular</td><td>Pequeno, circular</td><td>Triangular</td></tr>
+      <tr><td>Processo espinhoso</td><td>Curto, geralmente bífido (exceto C7)</td><td>Longo, direcionado pra baixo</td><td>Curto, retangular, horizontal</td></tr>
+      <tr><td>Processo transverso</td><td>Possui forame transversário</td><td>Possui faceta costal (exceto T11-T12)</td><td>Sem forame nem faceta costal</td></tr>
+      <tr><td>Facetas articulares</td><td>Orientação mais horizontal</td><td>Orientação mais vertical (frontal)</td><td>Orientação mais sagital</td></tr>
+    </table>
+    <div class="criterio"><b>✅ Pegadinha clássica de prova:</b> só as vértebras CERVICAIS têm forame transversário (por onde passa a artéria vertebral) — nenhuma outra região tem essa estrutura.</div>
+  </div>
+
+  <div class="card">
+    <h2>Vértebras Cervicais Especiais — Atlas e Áxis</h2>
+    <table>
+      <tr><th>Vértebra</th><th>Característica única</th></tr>
+      <tr><td><strong>C1 (Atlas)</strong></td><td>NÃO tem corpo vertebral nem processo espinhoso — é um anel ósseo, com 2 massas laterais. Sustenta o crânio (articulação atlanto-occipital).</td></tr>
+      <tr><td><strong>C2 (Áxis)</strong></td><td>Tem o processo odontoide (dente do áxis) — projeção óssea que se projeta pra cima, encaixando no anel do Atlas. Permite o movimento de rotação da cabeça (articulação atlantoaxial).</td></tr>
+      <tr><td><strong>C7 (Vértebra proeminente)</strong></td><td>Processo espinhoso longo e NÃO bífido — facilmente palpável na base do pescoço, usado como referência anatômica de superfície.</td></tr>
+    </table>
+    <div class="mnemo"><b>🧠 Macete de memorização:</b> "Atlas sustenta o mundo (o crânio), Áxis permite girar a cabeça que dizemos 'não'" — Atlas (C1) = sustentação, Áxis (C2) = rotação.</div>
+  </div>
+
+  <div class="card">
+    <h2>Sacro e Cóccix</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Descrição</th></tr>
+      <tr><td><strong>Sacro</strong></td><td>Formado pela fusão de 5 vértebras sacrais — osso triangular, forma a parede posterior da pelve. Tem forames sacrais anteriores e posteriores, por onde passam os ramos dos nervos espinhais sacrais.</td></tr>
+      <tr><td><strong>Cóccix</strong></td><td>Formado pela fusão de 3 a 5 vértebras coccígeas rudimentares (número variável) — remanescente da "cauda" embrionária.</td></tr>
+      <tr><td><strong>Promontório sacral</strong></td><td>Borda anterior e superior do corpo de S1 — importante referência obstétrica (mede a conjugata diagonal na avaliação da pelve).</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Discos Intervertebrais</h2>
+    <p>Estruturas fibrocartilaginosas entre os corpos vertebrais adjacentes (exceto entre C1-C2, e ausentes no sacro/cóccix fundidos):</p>
+    <table>
+      <tr><th>Componente</th><th>Descrição</th></tr>
+      <tr><td><strong>Ânulo fibroso</strong></td><td>Camada externa, fibrocartilaginosa, formada por anéis concêntricos — dá resistência ao disco</td></tr>
+      <tr><td><strong>Núcleo pulposo</strong></td><td>Centro gelatinoso, rico em água — absorve e distribui as forças de compressão axial</td></tr>
+    </table>
+    <div class="clinical"><b>🏥 Correlação clínica — Hérnia de disco:</b> ocorre quando o núcleo pulposo se projeta através de uma ruptura no ânulo fibroso, podendo comprimir raízes nervosas adjacentes. Mais comum nas regiões cervical baixa e lombar baixa (L4-L5, L5-S1), onde a coluna sofre maior estresse mecânico.</div>
+  </div>
+
+  <div class="card">
+    <h2>Articulações da Coluna Vertebral</h2>
+    <table>
+      <tr><th>Articulação</th><th>Tipo</th><th>Função</th></tr>
+      <tr><td><strong>Atlanto-occipital</strong> (crânio-C1)</td><td>Sinovial</td><td>Flexão/extensão da cabeça ("sim")</td></tr>
+      <tr><td><strong>Atlantoaxial</strong> (C1-C2)</td><td>Sinovial, pivô</td><td>Rotação da cabeça ("não")</td></tr>
+      <tr><td><strong>Facetárias (zigapofisárias)</strong></td><td>Sinovial, plana</td><td>Guiam o tipo de movimento permitido em cada região</td></tr>
+      <tr><td><strong>Intervertebrais (via disco)</strong></td><td>Cartilaginosa secundária (sínfise)</td><td>Absorção de choque, pequena mobilidade somada ao longo de toda a coluna</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Principais Ligamentos Vertebrais</h2>
+    <table>
+      <tr><th>Ligamento</th><th>Trajeto/Função</th></tr>
+      <tr><td><strong>Longitudinal anterior</strong></td><td>Percorre toda a face anterior dos corpos vertebrais — limita a extensão excessiva</td></tr>
+      <tr><td><strong>Longitudinal posterior</strong></td><td>Percorre a face posterior dos corpos vertebrais (dentro do canal vertebral) — limita a flexão excessiva</td></tr>
+      <tr><td><strong>Amarelo (flavo)</strong></td><td>Conecta lâminas adjacentes — rico em fibras elásticas (daí a cor amarelada)</td></tr>
+      <tr><td><strong>Interespinhoso e supraespinhoso</strong></td><td>Conectam processos espinhosos adjacentes — limitam a flexão excessiva</td></tr>
+      <tr><td><strong>Nucal</strong></td><td>Extensão especializada do supraespinhoso, na região cervical — importante ponto de fixação muscular</td></tr>
+    </table>
+  </div>
+
+</section>
+
+<!-- ============ CORRELAÇÃO CLÍNICA ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🏥 Fratura do Odontoide (Processo Odontoide do Áxis)</h2>
+    <p>Fraturas do processo odontoide são potencialmente graves pela proximidade com a medula espinal e o tronco encefálico — podem ocorrer por trauma em hiperextensão ou hiperflexão cervical (ex: acidentes automobilísticos, quedas). Dependendo da localização da linha de fratura (classificação de Anderson & D'Alonzo, tipos I, II e III), o manejo varia de imobilização até fixação cirúrgica.</p>
+  </div>
+  <div class="card">
+    <h2>🏥 Espondilolistese</h2>
+    <p>Deslizamento anterior de uma vértebra em relação à vértebra imediatamente abaixo — mais comum na junção L5-S1. Pode ser causada por defeito congênito da pars interarticularis (espondilólise) ou por degeneração das articulações facetárias. Pode causar dor lombar e, em casos mais avançados, compressão de raízes nervosas.</p>
+  </div>
+  <div class="card">
+    <h2>🏥 Estenose do Canal Vertebral</h2>
+    <p>Estreitamento do canal vertebral (geralmente por alterações degenerativas: osteófitos, hipertrofia do ligamento amarelo, protrusão discal) — pode comprimir a medula espinal (região cervical/torácica) ou a cauda equina (região lombar), causando dor, parestesias e, em casos avançados, déficits motores.</p>
+  </div>
+  <div class="card">
+    <h2>🏥 Escoliose Idiopática do Adolescente</h2>
+    <p>Curvatura lateral anormal da coluna, com componente rotacional, sem causa identificável na maioria dos casos — tipicamente diagnosticada e monitorada durante o estirão de crescimento puberal. O ângulo de Cobb é a medida radiográfica padrão pra quantificar a gravidade e guiar decisões de tratamento (observação, colete ortopédico, ou cirurgia em casos graves).</p>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Escolhe uma alternativa, depois clica em "Ver comentário completo".</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+<script>
+const bank = [{"n": 1, "tema": "Organização Geral", "nivel": "🟢 Nível 1 — Essencial", "q": "Quantas vértebras compõem a região torácica da coluna vertebral?", "opts": ["12", "7", "5", "10"], "correct": 0, "justificativa": "A região torácica é composta por 12 vértebras (T1-T12) — cada uma articulada com um par de costelas, característica que a diferencia das demais regiões.", "analise": ["Incorrecto — 7 é o número de vértebras CERVICAIS, não torácicas.", "Incorrecto — 5 é o número de vértebras LOMBARES, não torácicas.", "Incorrecto — 10 não corresponde ao número real de vértebras de nenhuma região da coluna."], "analise_letters": ["B", "C", "D"], "conceito": "Coluna vertebral: 7 cervicais, 12 torácicas, 5 lombares, sacro (5 fundidas), cóccix (3-5 fundidas).", "pegadinha": "O número de vértebras torácicas (12) sempre bate com o número de pares de costelas.", "dica": "12 vértebras torácicas = 12 pares de costelas — números sempre iguais."}, {"n": 2, "tema": "Curvaturas da Coluna", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença entre curvaturas primárias e secundárias da coluna vertebral?", "opts": ["Primárias são patológicas, secundárias são normais", "Primárias já existem no feto; secundárias se desenvolvem após o nascimento", "Não existe diferença real entre os 2 termos", "Primárias só ocorrem na região cervical"], "correct": 1, "justificativa": "As curvaturas PRIMÁRIAS (torácica e sacrococcígea) já existem no feto, mantendo a curvatura original fetal. As curvaturas SECUNDÁRIAS (cervical e lombar) se desenvolvem DEPOIS do nascimento, conforme o bebê sustenta a cabeça e depois começa a andar.", "analise": ["Incorrecto — ambas (primárias e secundárias) são curvaturas NORMAIS da coluna, nenhuma delas é patológica por definição.", "Incorrecto — existe SIM uma diferença clara, relacionada ao momento de desenvolvimento (fetal vs. pós-natal).", "Incorrecto — as curvaturas primárias ocorrem nas regiões torácica e sacrococcígea, não na cervical."], "analise_letters": ["A", "C", "D"], "conceito": "Primárias (torácica, sacrococcígea) = já existem no feto. Secundárias (cervical, lombar) = desenvolvem após o nascimento.", "pegadinha": "A curvatura cervical se desenvolve quando o bebê sustenta a cabeça; a lombar, quando começa a ficar em pé/andar.", "dica": "Secundárias = 'conquistas motoras' do desenvolvimento (sustentar cabeça, andar)."}, {"n": 3, "tema": "Estrutura Vertebral Geral", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual estrutura vertebral forma o canal vertebral (que abriga a medula espinal) quando as vértebras se empilham?", "opts": ["Processo espinhoso", "Processo transverso", "Forame vertebral", "Corpo vertebral"], "correct": 2, "justificativa": "O Forame Vertebral, presente em cada vértebra, forma o Canal Vertebral quando as vértebras se empilham umas sobre as outras — é o espaço que protege e abriga a medula espinal ao longo de todo o trajeto da coluna.", "analise": ["Incorrecto — o processo espinhoso é uma projeção posterior, não o espaço central que abriga a medula.", "Incorrecto — os processos transversos são projeções laterais, não relacionados à formação do canal medular.", "Incorrecto — o corpo vertebral é a porção anterior de sustentação de peso, não o espaço que forma o canal vertebral (embora contribua para delimitar o forame)."], "analise_letters": ["A", "B", "D"], "conceito": "Forame vertebral (empilhado) = Canal Vertebral = protege a medula espinal.", "pegadinha": "Não confundir Forame VERTEBRAL (canal medular) com Forame INTERVERTEBRAL (saída lateral dos nervos espinhais) ou Forame TRANSVERSÁRIO (exclusivo cervical, artéria vertebral).", "dica": "Vertebral = central = medula. Intervertebral = lateral = nervo. Transversário = só cervical = artéria."}, {"n": 4, "tema": "Características Regionais", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual estrutura está presente APENAS nas vértebras cervicais, ausente em todas as outras regiões?", "opts": ["Processo espinhoso", "Corpo vertebral", "Processo articular", "Forame transversário"], "correct": 3, "justificativa": "O Forame Transversário é uma estrutura exclusiva das vértebras CERVICAIS — por ele passa a artéria vertebral (exceto em C7, onde geralmente passa apenas uma pequena veia). Nenhuma outra região da coluna tem essa estrutura.", "analise": ["Incorrecto — o processo espinhoso está presente em TODAS as regiões da coluna (com formatos diferentes), não é exclusivo cervical.", "Incorrecto — o corpo vertebral está presente em praticamente todas as vértebras (exceto no Atlas/C1), não é exclusivo cervical.", "Incorrecto — os processos articulares estão presentes em todas as vértebras móveis, permitindo as articulações facetárias em qualquer região."], "analise_letters": ["A", "B", "C"], "conceito": "Forame transversário = estrutura EXCLUSIVA das vértebras cervicais (passagem da artéria vertebral).", "pegadinha": "Um dos dados mais cobrados de toda a osteologia vertebral — memorizar essa exclusividade.", "dica": "'Transversário' = no processo TRANSVERSO, e só existe nas vértebras do PESCOÇO (cervicais)."}, {"n": 5, "tema": "Atlas e Áxis", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual característica torna o Atlas (C1) uma vértebra atípica?", "opts": ["Não tem corpo vertebral nem processo espinhoso — é um anel ósseo", "Tem processo odontoide próprio", "É a maior vértebra da coluna inteira", "Só existe em alguns indivíduos"], "correct": 0, "justificativa": "O Atlas (C1) é atípico por NÃO TER corpo vertebral nem processo espinhoso — é estruturado como um anel ósseo, com 2 massas laterais, especializado pra sustentar o crânio (articulação atlanto-occipital).", "analise": ["Incorrecto — o processo odontoide pertence ao Áxis (C2), não ao Atlas (C1) — é justamente essa estrutura do C2 que se encaixa no anel do Atlas.", "Incorrecto — o Atlas não é a maior vértebra da coluna; vértebras lombares, por exemplo, são consideravelmente maiores.", "Incorrecto — o Atlas é uma vértebra normal e constante, presente em todos os indivíduos com anatomia típica."], "analise_letters": ["B", "C", "D"], "conceito": "Atlas (C1): sem corpo vertebral, sem processo espinhoso, forma de anel — sustenta o crânio.", "pegadinha": "O Atlas 'empresta' seu nome da mitologia grega (Atlas sustentando o mundo nos ombros) — analogia com sua função de sustentar o crânio.", "dica": "Atlas = sustenta (o crânio). Áxis = permite girar (a cabeça, em torno de um eixo)."}, {"n": 6, "tema": "Discos Intervertebrais", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual componente do disco intervertebral é responsável por absorver e distribuir as forças de compressão axial?", "opts": ["Ânulo fibroso", "Núcleo pulposo", "Ligamento longitudinal anterior", "Processo articular"], "correct": 1, "justificativa": "O Núcleo Pulposo — centro gelatinoso e rico em água do disco intervertebral — é responsável por absorver e distribuir as forças de compressão axial que a coluna recebe.", "analise": ["Incorrecto — o ânulo fibroso é a camada EXTERNA, fibrocartilaginosa, que dá resistência estrutural ao disco, mas não é o componente principal de absorção de choque.", "Incorrecto — o ligamento longitudinal anterior é uma estrutura distinta, que limita a extensão excessiva da coluna, não relacionada à absorção de compressão axial do disco.", "Incorrecto — os processos articulares formam as articulações facetárias, não fazem parte do disco intervertebral."], "analise_letters": ["A", "C", "D"], "conceito": "Núcleo pulposo = centro gelatinoso do disco, absorve compressão axial. Ânulo fibroso = camada externa, dá resistência.", "pegadinha": "Na hérnia de disco, é justamente o núcleo pulposo que se projeta através de uma ruptura no ânulo fibroso.", "dica": "Núcleo = 'gel amortecedor' central. Ânulo = 'capa' fibrosa que contém esse gel."}, {"n": 7, "tema": "Correlação Clínica — Hérnia de Disco", "nivel": "🔴 Nível 3 — Correlação Clínica", "q": "Quais são os níveis mais comuns de ocorrência de hérnia de disco lombar?", "opts": ["L1-L2 e L2-L3", "T12-L1 exclusivamente", "L4-L5 e L5-S1", "Apenas na região cervical"], "correct": 2, "justificativa": "L4-L5 e L5-S1 são os níveis mais comuns de hérnia de disco lombar — regiões que sofrem maior estresse mecânico devido à sua posição na coluna e à distribuição de carga durante atividades cotidianas.", "analise": ["Incorrecto — L1-L2 e L2-L3 não são os níveis mais comumente afetados por hérnia de disco lombar.", "Incorrecto — T12-L1 (junção toracolombar) não é o local mais comum de hérnia discal lombar especificamente.", "Incorrecto — hérnias discais também ocorrem na região cervical (cervical baixa), mas a pergunta especificamente trata dos níveis LOMBARES mais comuns."], "analise_letters": ["A", "B", "D"], "conceito": "Hérnia de disco lombar: mais comum em L4-L5 e L5-S1 (maior estresse mecânico).", "pegadinha": "A região cervical baixa também é um local comum de hérnia discal, mas por um mecanismo/nível diferente da lombar — não confundir as 2 regiões na hora de responder.", "dica": "L4-L5/L5-S1 correspondem à parte mais baixa e mais sobrecarregada da coluna lombar, próxima à transição pro sacro."}, {"n": 8, "tema": "Articulações Vertebrais", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual articulação é responsável pelo movimento de rotação da cabeça (como no gesto de 'dizer não')?", "opts": ["Atlanto-occipital", "Facetárias torácicas", "Sacroilíaca", "Atlantoaxial"], "correct": 3, "justificativa": "A articulação Atlantoaxial (entre C1-Atlas e C2-Áxis) é do tipo pivô, especializada pra permitir o movimento de ROTAÇÃO da cabeça — o processo odontoide do Áxis gira dentro do anel do Atlas.", "analise": ["Incorrecto — a articulação atlanto-occipital (entre o crânio e C1) é responsável principalmente por flexão/extensão da cabeça (gesto de 'dizer sim'), não rotação.", "Incorrecto — as articulações facetárias torácicas permitem pequenos movimentos entre vértebras torácicas adjacentes, não são as responsáveis pela rotação da cabeça.", "Incorrecto — a articulação sacroilíaca conecta o sacro ao osso ilíaco da pelve, sem relação com o movimento da cabeça."], "analise_letters": ["A", "B", "C"], "conceito": "Atlantoaxial (C1-C2) = rotação da cabeça ('não'). Atlanto-occipital (crânio-C1) = flexão/extensão ('sim').", "pegadinha": "Fácil confundir as 2 articulações craniovertebrais — memorizar qual movimento cada uma permite através do gesto associado (sim/não).", "dica": "'Não' = giro lateral = Atlantoaxial. 'Sim' = flexão/extensão = Atlanto-occipital."}, {"n": 9, "tema": "Ligamentos Vertebrais", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual ligamento percorre a face anterior dos corpos vertebrais, limitando a extensão excessiva da coluna?", "opts": ["Ligamento longitudinal anterior", "Ligamento longitudinal posterior", "Ligamento amarelo (flavo)", "Ligamento interespinhoso"], "correct": 0, "justificativa": "O Ligamento Longitudinal Anterior percorre toda a face ANTERIOR dos corpos vertebrais, ao longo de toda a coluna — sua função principal é limitar a EXTENSÃO excessiva da coluna vertebral.", "analise": ["Incorrecto — o ligamento longitudinal posterior percorre a face POSTERIOR dos corpos (dentro do canal vertebral), limitando a FLEXÃO excessiva, não a extensão.", "Incorrecto — o ligamento amarelo conecta lâminas adjacentes, não percorre a face anterior dos corpos vertebrais.", "Incorrecto — o ligamento interespinhoso conecta processos espinhosos adjacentes, uma estrutura e localização diferentes."], "analise_letters": ["B", "C", "D"], "conceito": "Ligamento longitudinal anterior: face anterior dos corpos, limita extensão. Longitudinal posterior: face posterior, limita flexão.", "pegadinha": "Os 2 ligamentos longitudinais têm funções OPOSTAS (um limita extensão, outro limita flexão) — fácil de inverter na prova.", "dica": "Anterior limita ir 'pra trás' (extensão). Posterior limita ir 'pra frente' (flexão) — pense no ligamento como uma 'corda' que impede o movimento que o afastaria de sua posição."}, {"n": 10, "tema": "Correlação Clínica — Escoliose", "nivel": "🔴 Nível 3 — Correlação Clínica", "q": "Qual é a medida radiográfica padrão usada pra quantificar a gravidade da escoliose e guiar decisões de tratamento?", "opts": ["Índice de Cobb invertido", "Ângulo de Cobb", "Escala de Glasgow", "Índice de Apgar"], "correct": 1, "justificativa": "O Ângulo de Cobb é a medida radiográfica padrão usada pra quantificar a gravidade da curvatura escoliótica — calculado a partir de linhas traçadas nas vértebras mais inclinadas nos extremos da curva, orienta decisões sobre observação, uso de colete ortopédico, ou indicação cirúrgica.", "analise": ["Incorrecto — 'Índice de Cobb invertido' não é um termo/medida real usado na avaliação de escoliose.", "Incorrecto — a Escala de Glasgow avalia nível de consciência em trauma neurológico, sem relação com escoliose.", "Incorrecto — o Índice de Apgar avalia a vitalidade de recém-nascidos, sem relação com avaliação de escoliose."], "analise_letters": ["A", "C", "D"], "conceito": "Ângulo de Cobb = medida radiográfica padrão pra gravidade da escoliose.", "pegadinha": "Não confundir com outras escalas/índices médicos que soam parecido mas avaliam coisas completamente diferentes (Glasgow=consciência, Apgar=neonatal).", "dica": "Cobb mede o GRAU da curva escoliótica em graus angulares na radiografia — quanto maior o ângulo, mais grave a curvatura."}];
+const flashcards = [{"n": 1, "cat": "Organização Geral", "f": "Cite as 5 regiões da coluna vertebral e o número de vértebras de cada uma.", "b": "Cervical (7), Torácica (12), Lombar (5), Sacral (5 fundidas), Coccígea (3-5 fundidas)."}, {"n": 2, "cat": "Curvaturas", "f": "Diferencie curvaturas primárias e secundárias.", "b": "Primárias (torácica, sacrococcígea): já existem no feto. Secundárias (cervical, lombar): desenvolvem após o nascimento."}, {"n": 3, "cat": "Estrutura Geral", "f": "Cite os componentes principais de uma vértebra típica.", "b": "Corpo vertebral, pedículos, lâminas, processo espinhoso, processos transversos, processos articulares, forame vertebral."}, {"n": 4, "cat": "Características Regionais", "f": "Qual estrutura é exclusiva das vértebras cervicais?", "b": "Forame transversário (passagem da artéria vertebral)."}, {"n": 5, "cat": "Características Regionais", "f": "Qual formato tem o forame vertebral em cada região (cervical/torácica/lombar)?", "b": "Cervical: grande, triangular. Torácica: pequeno, circular. Lombar: triangular."}, {"n": 6, "cat": "Atlas e Áxis", "f": "O que torna o Atlas (C1) atípico?", "b": "Não tem corpo vertebral nem processo espinhoso — é um anel ósseo com 2 massas laterais."}, {"n": 7, "cat": "Atlas e Áxis", "f": "O que é o processo odontoide, e em qual vértebra ele está?", "b": "Projeção óssea do Áxis (C2) que se encaixa no anel do Atlas, permitindo a rotação da cabeça."}, {"n": 8, "cat": "Sacro e Cóccix", "f": "Como se forma o sacro?", "b": "Fusão de 5 vértebras sacrais — osso triangular, parede posterior da pelve."}, {"n": 9, "cat": "Discos Intervertebrais", "f": "Cite os 2 componentes do disco intervertebral e suas funções.", "b": "Ânulo fibroso (camada externa, resistência) e núcleo pulposo (centro gelatinoso, absorve compressão)."}, {"n": 10, "cat": "Articulações", "f": "Diferencie a função da articulação Atlanto-occipital e da Atlantoaxial.", "b": "Atlanto-occipital: flexão/extensão da cabeça ('sim'). Atlantoaxial: rotação da cabeça ('não')."}, {"n": 11, "cat": "Ligamentos", "f": "Diferencie a função dos ligamentos longitudinais anterior e posterior.", "b": "Anterior: limita extensão excessiva. Posterior: limita flexão excessiva."}, {"n": 12, "cat": "Correlação Clínica", "f": "Quais os níveis mais comuns de hérnia de disco lombar?", "b": "L4-L5 e L5-S1."}, {"n": 13, "cat": "Correlação Clínica", "f": "O que é o Ângulo de Cobb?", "b": "Medida radiográfica padrão pra quantificar a gravidade da escoliose."}];
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'anato2p_coluna_vertebral_esqueleto_axial';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+
+</script>
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Anatomía II — Prática',
+    titulo: 'Esqueleto Axial — Coluna Vertebral',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-02/anatomia2-pratica/osteologia/Craneo_Visao_Anterior.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Osteologia — Crânio Visão Anterior</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
