@@ -835,6 +835,10 @@ footer p:last-child{margin-bottom:0;}
     <a href="#faq">FAQ</a>
   </nav>
   <div class="nav-actions">
+    <span id="emailVerificadoBadge" style="display:none;align-items:center;gap:6px;font-size:.82em;color:var(--muted);margin-right:6px;">
+      <span>✓ <span id="emailVerificadoTexto"></span></span>
+      <a href="#" id="sairEmailBtn" style="color:var(--gold);text-decoration:underline;white-space:nowrap;">Sair</a>
+    </span>
     <a href="#" id="navMentorBtn" class="nav-mentor-btn" target="_blank" rel="noopener">💬 Falar com um Mentor</a>
     <a href="/jornada/" id="acessoBtn">🔓 <span class="btn-text-full">Já comprei</span><span class="btn-text-short">Acesso</span></a>
   </div>
@@ -1606,6 +1610,7 @@ async function checarAcesso(email){
       // Verificação deu certo — lembra esse email no navegador, pra não pedir de novo
       // toda vez que o aluno voltar pro catálogo (ex: clicando em "Voltar" dentro de um capítulo).
       try{ localStorage.setItem(EMAIL_LEMBRADO_KEY, email); }catch(e){}
+      if(typeof atualizarBadgeEmail === 'function') atualizarBadgeEmail();
       const idx = CATALOGO_DATA ? buildAccessIndex(CATALOGO_DATA) : {};
       const planosNomes = [];
       const itensMap = new Map(); // dedupe por url, caso dois planos compartilhem material
@@ -1689,6 +1694,7 @@ async function checarAcesso(email){
           try{ localStorage.removeItem(EMAIL_LEMBRADO_KEY); }catch(e){}
           document.getElementById('emailInput').value = '';
           msg.innerHTML = '';
+          if(typeof atualizarBadgeEmail === 'function') atualizarBadgeEmail();
         };
       } else {
         msg.innerHTML = `<span style="color:var(--gold)">Acesso confirmado (plano(s): ${planosNomes.join(', ')}), mas não encontramos os arquivos vinculados. Fale com o suporte no WhatsApp.</span>`;
@@ -1714,6 +1720,33 @@ function tentarAutoVerificar(){
     checarAcesso(emailLembrado);
   }
 }
+
+// Badge fixo no topo do site — mostra o email verificado e um link "Sair", sempre visível
+// (antes, só dava pra trocar de email depois de abrir o modal e ver a lista de conteúdo).
+function atualizarBadgeEmail(){
+  const badge = document.getElementById('emailVerificadoBadge');
+  const texto = document.getElementById('emailVerificadoTexto');
+  if(!badge || !texto) return;
+  let emailLembrado = null;
+  try{ emailLembrado = localStorage.getItem(EMAIL_LEMBRADO_KEY); }catch(e){}
+  if(emailLembrado){
+    texto.textContent = emailLembrado;
+    badge.style.display = 'inline-flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+atualizarBadgeEmail();
+const sairBtn = document.getElementById('sairEmailBtn');
+if(sairBtn) sairBtn.onclick = (e)=>{
+  e.preventDefault();
+  try{ localStorage.removeItem(EMAIL_LEMBRADO_KEY); }catch(e){}
+  const emailInput = document.getElementById('emailInput');
+  if(emailInput) emailInput.value = '';
+  const modalMsgEl = document.getElementById('modalMsg');
+  if(modalMsgEl) modalMsgEl.innerHTML = '';
+  atualizarBadgeEmail();
+};
 
 document.getElementById('modalCheck').onclick = ()=>{
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
