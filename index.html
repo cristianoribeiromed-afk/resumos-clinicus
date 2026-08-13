@@ -1623,6 +1623,14 @@ async function checarAcesso(email){
                     : null;
           if(alt && idx[alt]) found = idx[alt];
         }
+        // Alias histórico: Fisiología II perdeu o sufixo "-prof-gabriel-coronil" quando o nome
+        // do professor foi removido do catálogo (ago/2026). Alunos com acesso liberado ANTES
+        // dessa mudança ainda têm o identificador antigo gravado na planilha — sem esse alias,
+        // eles perderiam acesso mesmo com o "ativo" marcado como TRUE.
+        if(!found && planoKey.includes('fisiologia-ii-prof-gabriel-coronil')){
+          const alt2 = planoKey.replace('fisiologia-ii-prof-gabriel-coronil', 'fisiologia-ii');
+          if(idx[alt2]) found = idx[alt2];
+        }
         (found || []).forEach(it=>{ if(itensMap.has(it.url)) itensMap.delete(it.url); itensMap.set(it.url, it); });
       });
       const itens = Array.from(itensMap.values());
