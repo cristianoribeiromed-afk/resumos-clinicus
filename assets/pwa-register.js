@@ -7,10 +7,30 @@
 
   // ---------- registra o service worker ----------
   if('serviceWorker' in navigator && navigator.serviceWorker){
+    // Guarda se já havia um Service Worker controlando a página ANTES de
+    // qualquer coisa acontecer -- se não havia (aluno novo, primeira visita),
+    // não faz sentido recarregar quando o primeiro SW assumir o controle.
+    var jaTinhaControlador = !!navigator.serviceWorker.controller;
+
     window.addEventListener('load', function(){
-      navigator.serviceWorker.register('/sw.js').catch(function(){
+      navigator.serviceWorker.register('/sw.js').then(function(reg){
+        // Verifica ativamente se existe uma versão nova (não espera o navegador
+        // decidir sozinho quando checar — isso podia demorar horas/dias).
+        try{ reg.update(); }catch(e){}
+      }).catch(function(){
         // navegador sem suporte ou falha silenciosa -- site continua
         // funcionando normal, so sem cache offline
+      });
+
+      // Quando um Service Worker NOVO assume o controle da página (depois de
+      // um skipWaiting()), recarrega automaticamente uma única vez -- mas só
+      // se já existia um controlador antes (ou seja, é atualização de verdade,
+      // não a primeira instalação de um aluno novo).
+      var jaRecarregou = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function(){
+        if(jaRecarregou || !jaTinhaControlador) return;
+        jaRecarregou = true;
+        window.location.reload();
       });
     });
   }
