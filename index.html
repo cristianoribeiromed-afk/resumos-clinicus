@@ -835,10 +835,7 @@ footer p:last-child{margin-bottom:0;}
     <a href="#faq">FAQ</a>
   </nav>
   <div class="nav-actions">
-    <span id="emailVerificadoBadge" style="display:none;align-items:center;gap:6px;font-size:.82em;color:var(--muted);margin-right:6px;">
-      <span>✓ <span id="emailVerificadoTexto"></span></span>
-      <a href="#" id="sairEmailBtn" style="color:var(--gold);text-decoration:underline;white-space:nowrap;">Sair</a>
-    </span>
+    <a href="#" id="sairEmailBtn" style="color:var(--muted);font-size:12.5px;text-decoration:underline;white-space:nowrap;">Sair / trocar email</a>
     <a href="#" id="navMentorBtn" class="nav-mentor-btn" target="_blank" rel="noopener">💬 Falar com um Mentor</a>
     <a href="/jornada/" id="acessoBtn">🔓 <span class="btn-text-full">Já comprei</span><span class="btn-text-short">Acesso</span></a>
   </div>
@@ -1610,7 +1607,6 @@ async function checarAcesso(email){
       // Verificação deu certo — lembra esse email no navegador, pra não pedir de novo
       // toda vez que o aluno voltar pro catálogo (ex: clicando em "Voltar" dentro de um capítulo).
       try{ localStorage.setItem(EMAIL_LEMBRADO_KEY, email); }catch(e){}
-      if(typeof atualizarBadgeEmail === 'function') atualizarBadgeEmail();
       const idx = CATALOGO_DATA ? buildAccessIndex(CATALOGO_DATA) : {};
       const planosNomes = [];
       const itensMap = new Map(); // dedupe por url, caso dois planos compartilhem material
@@ -1694,7 +1690,6 @@ async function checarAcesso(email){
           try{ localStorage.removeItem(EMAIL_LEMBRADO_KEY); }catch(e){}
           document.getElementById('emailInput').value = '';
           msg.innerHTML = '';
-          if(typeof atualizarBadgeEmail === 'function') atualizarBadgeEmail();
         };
       } else {
         msg.innerHTML = `<span style="color:var(--gold)">Acesso confirmado (plano(s): ${planosNomes.join(', ')}), mas não encontramos os arquivos vinculados. Fale com o suporte no WhatsApp.</span>`;
@@ -1720,33 +1715,6 @@ function tentarAutoVerificar(){
     checarAcesso(emailLembrado);
   }
 }
-
-// Badge fixo no topo do site — mostra o email verificado e um link "Sair", sempre visível
-// (antes, só dava pra trocar de email depois de abrir o modal e ver a lista de conteúdo).
-function atualizarBadgeEmail(){
-  const badge = document.getElementById('emailVerificadoBadge');
-  const texto = document.getElementById('emailVerificadoTexto');
-  if(!badge || !texto) return;
-  let emailLembrado = null;
-  try{ emailLembrado = localStorage.getItem(EMAIL_LEMBRADO_KEY); }catch(e){}
-  if(emailLembrado){
-    texto.textContent = emailLembrado;
-    badge.style.display = 'inline-flex';
-  } else {
-    badge.style.display = 'none';
-  }
-}
-atualizarBadgeEmail();
-const sairBtn = document.getElementById('sairEmailBtn');
-if(sairBtn) sairBtn.onclick = (e)=>{
-  e.preventDefault();
-  try{ localStorage.removeItem(EMAIL_LEMBRADO_KEY); }catch(e){}
-  const emailInput = document.getElementById('emailInput');
-  if(emailInput) emailInput.value = '';
-  const modalMsgEl = document.getElementById('modalMsg');
-  if(modalMsgEl) modalMsgEl.innerHTML = '';
-  atualizarBadgeEmail();
-};
 
 document.getElementById('modalCheck').onclick = ()=>{
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
@@ -1893,6 +1861,27 @@ document.addEventListener('DOMContentLoaded', function(){
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.696 4.61 1.897 6.484L4 29l7.72-1.867A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm0 21.818a9.77 9.77 0 0 1-4.982-1.363l-.357-.213-4.583 1.108 1.127-4.47-.233-.366A9.78 9.78 0 0 1 5.818 15c0-5.614 4.568-10.182 10.183-10.182 5.613 0 10.181 4.568 10.181 10.182 0 5.615-4.568 10.182-10.181 10.182zm5.593-7.632c-.306-.153-1.81-.893-2.09-.995-.28-.102-.484-.153-.688.153-.204.306-.79.995-.968 1.199-.178.204-.357.23-.663.077-.306-.153-1.293-.477-2.463-1.52-.91-.812-1.525-1.815-1.703-2.121-.178-.306-.019-.472.134-.624.138-.137.306-.357.459-.535.153-.178.204-.306.306-.51.102-.204.051-.383-.026-.536-.077-.153-.688-1.658-.943-2.271-.248-.596-.5-.515-.688-.524-.178-.008-.382-.01-.586-.01a1.126 1.126 0 0 0-.816.383c-.28.306-1.07 1.046-1.07 2.55 0 1.505 1.095 2.96 1.248 3.164.153.204 2.155 3.29 5.223 4.615.73.315 1.298.503 1.742.644.732.233 1.398.2 1.925.121.587-.088 1.81-.74 2.065-1.454.255-.714.255-1.326.178-1.454-.076-.128-.28-.204-.586-.357z"/></svg>
 </a>
 <script src="/assets/pwa-register.js" defer></script>
+<script>
+// Link "Sair / trocar email" — script ISOLADO e independente do bloco principal, de
+// propósito. Se qualquer outra parte do site falhar (rede lenta, requisição bloqueada,
+// erro em outro trecho), esse botão continua funcionando, porque não depende de nada
+// que rodou antes dele. Limpa o email lembrado no navegador e abre o modal de
+// verificação, pronto pra digitar outro email.
+(function(){
+  var btn = document.getElementById('sairEmailBtn');
+  if(!btn) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    try{ localStorage.removeItem('clinicus_email_verificado'); }catch(err){}
+    var emailInput = document.getElementById('emailInput');
+    if(emailInput) emailInput.value = '';
+    var modalMsgEl = document.getElementById('modalMsg');
+    if(modalMsgEl) modalMsgEl.innerHTML = '';
+    var modal = document.getElementById('modalBg');
+    if(modal) modal.classList.add('show');
+  });
+})();
+</script>
 </body>
 </html>
 <!-- redeploy trigger 1783025005 -->
