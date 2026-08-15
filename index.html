@@ -1458,6 +1458,7 @@ function renderEtapaFolder(etapaNome, etapa, materiaNome, semSlug){
 function renderMateriaCard(m, meta, semSlug){
   const algumDisponivel = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].disponivel);
   const planoCompleto = planoKeyMateriaCompleta(semSlug, m.nome);
+  const avisoMateria = m.avisoMateria ? `<div class="pacotes-aviso-producao">📌 ${m.avisoMateria}</div>` : '';
   const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
       <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
@@ -1468,10 +1469,11 @@ function renderMateriaCard(m, meta, semSlug){
       <div class="subject-info">
         <p class="subject-title">${m.nome} ${isBestseller(m.nome) ? bestsellerBadge() : ''}</p>
         <p class="subject-sub">${statusEtapasTexto(m)}</p>
-        <p class="jornada-mini">📘 Guia Objetivo · 🔁 Revisão · ❓ Questões · 📝 Simulado</p>
+        ${m.avisoMateria ? '' : '<p class="jornada-mini">📘 Guia Objetivo · 🔁 Revisão · ❓ Questões · 📝 Simulado</p>'}
       </div>
     </div>
     <div class="subject-body"><div class="subject-body-inner">
+      ${avisoMateria}
       ${ETAPA_ORDEM.map(k => renderEtapaFolder(k, m.etapas[k], m.nome, semSlug)).join('')}
       ${comboGeral}
     </div></div>
