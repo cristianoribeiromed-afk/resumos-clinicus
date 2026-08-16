@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Quiz Básico — Anatomía I | Clinicus</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quiz Básico de Anatomía I — Planos, Huesos y Vértebras">
+<meta property="og:description" content="Quiz rápido de repaso: planos anatómicos, tipos de huesos y columna vertebral. Nivel básico.">
+<style>
+  :root{
+    --bg:#0e1420;
+    --card:#141c2b;
+    --card2:#0f1726;
+    --border:#232f42;
+    --text:#eaf0f6;
+    --text-dim:#93a2b8;
+    --accent:#3fb87f;
+    --accent-light:#8fe0b8;
+    --gold:#e8b84b;
+    --danger:#e35d5d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    padding:20px 14px 60px 14px;
+  }
+  .wrap{width:100%; max-width:480px;}
+  header{text-align:center; margin-bottom:18px;}
+  .brand{color:var(--gold); font-weight:700; font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; margin-bottom:6px;}
+  h1{font-size:1.35rem; margin:0 0 6px 0; line-height:1.3;}
+  .sub{color:var(--text-dim); font-size:.85rem; margin:0;}
+
+  .xp-wrap{display:flex; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:18px;}
+  .xp-badge{background:var(--gold); color:#1a1a1a; font-weight:700; font-size:.8rem; border-radius:999px; padding:4px 12px; flex-shrink:0;}
+  .xp-track{flex:1; height:7px; background:var(--border); border-radius:999px; overflow:hidden;}
+  .xp-fill{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-light)); width:0%; transition:width .3s;}
+
+  .card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,.25);}
+  .progress{font-size:.78rem; color:var(--text-dim); margin-bottom:4px;}
+  .tema{display:inline-block; font-size:.7rem; font-weight:700; color:var(--accent-light); background:rgba(63,184,127,.12); border:1px solid rgba(63,184,127,.35); border-radius:999px; padding:3px 10px; margin-bottom:10px;}
+  .quiz-q{font-size:1.08rem; font-weight:600; margin-bottom:16px; line-height:1.4;}
+  .opts{display:flex; flex-direction:column; gap:9px;}
+  .opt{
+    text-align:left; background:var(--card2); border:1px solid var(--border); color:var(--text);
+    border-radius:10px; padding:12px 14px; font-size:.92rem; cursor:pointer; font-family:inherit;
+    transition:border-color .15s, background .15s;
+  }
+  .opt:active{transform:scale(.99);}
+  .opt.correct{background:rgba(63,184,127,.18); border-color:var(--accent); font-weight:600;}
+  .opt.wrong{background:rgba(227,93,93,.15); border-color:var(--danger);}
+  .opt[disabled]{cursor:default;}
+  .exp{display:none; margin-top:14px; background:rgba(232,184,75,.08); border-left:3px solid var(--gold); border-radius:8px; padding:10px 13px; font-size:.85rem; color:var(--text-dim);}
+  .exp.show{display:block;}
+  .next-row{margin-top:16px; display:none;}
+  .next-row.show{display:block;}
+  .btn{
+    width:100%; background:var(--accent); color:#08150e; border:none; border-radius:10px;
+    padding:12px; font-weight:700; font-size:.92rem; cursor:pointer; font-family:inherit;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn.secondary{background:transparent; border:1px solid var(--border); color:var(--text);}
+
+  .result{text-align:center;}
+  .result .score{font-size:2.6rem; font-weight:800; color:var(--gold); margin:8px 0;}
+  .result .msg{font-size:.95rem; color:var(--text-dim); margin-bottom:18px;}
+  footer{margin-top:24px; text-align:center; color:var(--text-dim); font-size:.72rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Clinicus · Grupo de Estudio</div>
+    <h1>🦴 Quiz Básico de Anatomía I</h1>
+    <p class="sub">Planos anatómicos · Huesos · Columna Vertebral — nivel introductorio</p>
+  </header>
+
+  <div class="xp-wrap">
+    <span class="xp-badge" id="xpBadge">0 XP</span>
+    <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+    <span class="sub" id="scoreText" style="flex-shrink:0;">0/0</span>
+  </div>
+
+  <div class="card" id="quizCard"></div>
+
+  <footer>Hecho con ❤️ para el grupo de Anatomía I · Clinicus</footer>
+</div>
+
+<script id="quiz-data" type="application/json">[{"tema": "Planos Anatómicos", "q": "¿Qué plano divide el cuerpo en mitades derecha e izquierda?", "opts": ["Plano frontal (coronal)", "Plano sagital", "Plano transversal", "Plano oblicuo"], "correct": 1, "exp": "El plano sagital divide el cuerpo en una porción derecha y una izquierda. Cuando pasa exactamente por el centro, se llama sagital mediano."}, {"tema": "Planos Anatómicos", "q": "¿Qué plano divide el cuerpo en porciones anterior y posterior?", "opts": ["Plano frontal (coronal)", "Plano transversal", "Plano sagital", "Plano longitudinal"], "correct": 0, "exp": "El plano frontal (o coronal) divide el cuerpo en una parte anterior (adelante) y una posterior (atrás)."}, {"tema": "Planos Anatómicos", "q": "¿Qué plano divide el cuerpo en porciones superior e inferior?", "opts": ["Plano sagital", "Plano frontal", "Plano coronal", "Plano transversal (horizontal)"], "correct": 3, "exp": "El plano transversal (u horizontal) divide el cuerpo en una porción superior y una inferior."}, {"tema": "Posición Anatómica", "q": "En la posición anatómica de referencia, ¿hacia dónde miran las palmas de las manos?", "opts": ["Hacia atrás", "Hacia los lados", "Hacia adelante", "Hacia adentro"], "correct": 2, "exp": "En la posición anatómica: cuerpo de pie, mirada al frente, miembros superiores a los lados del tronco, con las palmas de las manos hacia adelante."}, {"tema": "Términos de Posición", "q": "Un dedo es \"distal\" respecto a la muñeca. ¿Qué significa distal?", "opts": ["Más cerca de la línea media", "Más lejos del tronco o punto de origen", "Más cerca de la superficie", "Hacia atrás"], "correct": 1, "exp": "Distal = más lejos del tronco o del punto de origen de una estructura. Lo opuesto es proximal (más cerca)."}, {"tema": "Términos de Posición", "q": "\"Medial\" significa que una estructura está...", "opts": ["Más lejos del plano sagital mediano", "Más profunda", "Más superficial", "Más cerca del plano sagital mediano"], "correct": 3, "exp": "Medial = hacia el plano sagital mediano (más cerca de la línea media del cuerpo). Lateral es lo opuesto."}, {"tema": "Términos de Posición", "q": "Lo opuesto de \"anterior\" es:", "opts": ["Posterior", "Superior", "Medial", "Distal"], "correct": 0, "exp": "Anterior (ventral) y posterior (dorsal) son términos opuestos que indican, respectivamente, adelante y atrás."}, {"tema": "Términos de Posición", "q": "\"Ipsilateral\" significa:", "opts": ["Del lado opuesto del cuerpo", "Más cerca de la superficie", "Del mismo lado del cuerpo", "Más lejos del centro de un órgano"], "correct": 2, "exp": "Ipsilateral (u homolateral) = del mismo lado del cuerpo. Lo opuesto es contralateral (lado opuesto)."}, {"tema": "Tipos de Huesos", "q": "El fémur es un ejemplo de hueso:", "opts": ["Corto", "Largo", "Plano", "Irregular"], "correct": 1, "exp": "Huesos largos: predomina el largo sobre el ancho/espesor. Tienen un cuerpo (diáfisis) y dos extremos (epífisis). El fémur es el ejemplo clásico."}, {"tema": "Tipos de Huesos", "q": "Los huesos del carpo (muñeca) son un ejemplo de hueso:", "opts": ["Largo", "Plano", "Sesamoideo", "Corto"], "correct": 3, "exp": "Huesos cortos: volumen reducido, con los 3 ejes de tamaño similar, generalmente cuboides. Ejemplos: huesos del carpo y del tarso."}, {"tema": "Tipos de Huesos", "q": "La escápula es un ejemplo de hueso:", "opts": ["Plano", "Largo", "Corto", "Irregular"], "correct": 0, "exp": "Huesos planos: espesor reducido, predominan el largo y el ancho. Forman las paredes de cavidades (craneal, pélvica). Ejemplos: escápula, hueso coxal, occipital."}, {"tema": "Estructura del Hueso Largo", "q": "La porción central y alargada de un hueso largo se llama:", "opts": ["Epífisis", "Metáfisis", "Diáfisis", "Periostio"], "correct": 2, "exp": "La diáfisis es el cuerpo (porción central) del hueso largo. Los extremos se llaman epífisis, y la unión entre ambos es la metáfisis."}, {"tema": "Estructura del Hueso Largo", "q": "¿Cómo se llama la membrana que recubre la superficie externa del hueso (excepto donde hay cartílago articular)?", "opts": ["Endostio", "Periostio", "Cartílago articular", "Cavidad medular"], "correct": 1, "exp": "El periostio es la membrana que recubre la superficie externa del hueso. El endostio, en cambio, recubre internamente la cavidad medular."}, {"tema": "División del Esqueleto", "q": "El cráneo, la columna vertebral y el esternón forman parte del esqueleto:", "opts": ["Apendicular", "Periférico", "Visceral", "Axial"], "correct": 3, "exp": "El esqueleto axial está formado por cráneo, columna vertebral, costillas y esternón — el \"eje\" central del cuerpo."}, {"tema": "División del Esqueleto", "q": "Los miembros superiores e inferiores, junto con las cinturas escapular y pélvica, forman el esqueleto:", "opts": ["Axial", "Central", "Apendicular", "Torácico"], "correct": 2, "exp": "El esqueleto apendicular está formado por los miembros (superiores e inferiores) y las cinturas que los conectan al esqueleto axial."}, {"tema": "Columna Vertebral", "q": "¿Cuántas vértebras cervicales tiene la columna vertebral?", "opts": ["7", "5", "12", "9"], "correct": 0, "exp": "7 vértebras cervicales (C1-C7). Mnemónico en portugués usado en Clinicus: \"Café Quente Todo Lugar Sempre Custa\" — Cervical(7)-Torácica(12)-Lumbar(5)-Sacra(5)-Coccígea(3-5)."}, {"tema": "Columna Vertebral", "q": "¿Cuántas vértebras torácicas tiene la columna vertebral?", "opts": ["7", "12", "5", "10"], "correct": 1, "exp": "12 vértebras torácicas (T1-T12), cada una articulada con un par de costillas, formando la caja torácica."}, {"tema": "Columna Vertebral", "q": "¿Cuántas vértebras lumbares tiene la columna vertebral?", "opts": ["7", "12", "4", "5"], "correct": 3, "exp": "5 vértebras lumbares (L1-L5) — las más grandes y robustas de la columna móvil, porque sostienen el peso del cuerpo."}, {"tema": "Columna Vertebral", "q": "La primera vértebra cervical (C1), que sostiene el cráneo, se llama:", "opts": ["Atlas", "Axis", "Sacro", "Odontoides"], "correct": 0, "exp": "C1 = Atlas. Se articula directamente con el cráneo (hueso occipital) y permite el movimiento de \"decir sí\" con la cabeza."}, {"tema": "Columna Vertebral", "q": "La segunda vértebra cervical (C2), que permite el movimiento de rotación de la cabeza, se llama:", "opts": ["Atlas", "Sacro", "Axis", "Vértebra prominente"], "correct": 2, "exp": "C2 = Axis. Tiene una proyección llamada apófisis odontoides (diente del axis), sobre la cual gira el Atlas, permitiendo el movimiento de \"decir no\" con la cabeza."}, {"tema": "Vértebra Típica", "q": "La parte anterior de la vértebra, que soporta el peso corporal, se llama:", "opts": ["Arco vertebral", "Cuerpo vertebral", "Apófisis espinosa", "Apófisis transversa"], "correct": 1, "exp": "El cuerpo vertebral es la parte anterior de la vértebra, la porción más robusta, encargada de soportar el peso."}, {"tema": "Vértebra Típica", "q": "El orificio por donde pasa la médula espinal en cada vértebra se llama:", "opts": ["Disco intervertebral", "Apófisis articular", "Núcleo pulposo", "Foramen (agujero) vertebral"], "correct": 3, "exp": "El foramen (agujero) vertebral es el orificio central, delimitado por el arco vertebral, por donde pasa la médula espinal."}, {"tema": "Curvaturas Fisiológicas", "q": "La curvatura fisiológica normal de la región cervical de la columna se llama:", "opts": ["Lordosis", "Cifosis", "Escoliosis", "Rectificación"], "correct": 0, "exp": "La región cervical tiene lordosis (cóncava hacia atrás), igual que la región lumbar. La región torácica y la sacra tienen cifosis (convexa hacia atrás)."}]
+</script>
+<script>
+const QUESTIONS = JSON.parse(document.getElementById('quiz-data').textContent);
+let idx = 0;
+let score = 0;
+let answered = false;
+
+function renderXP(){
+  document.getElementById('xpBadge').textContent = (score*10) + ' XP';
+  document.getElementById('scoreText').textContent = score + '/' + QUESTIONS.length;
+  const pct = QUESTIONS.length ? Math.round((idx/QUESTIONS.length)*100) : 0;
+  document.getElementById('xpFill').style.width = pct + '%';
+}
+
+function renderQuiz(){
+  const card = document.getElementById('quizCard');
+  if(idx >= QUESTIONS.length){
+    const pct = Math.round((score/QUESTIONS.length)*100);
+    let msg = '¡Sigue practicando!';
+    if(pct >= 90) msg = '¡Excelente! Dominas los conceptos básicos. 🎉';
+    else if(pct >= 70) msg = '¡Muy bien! Solo repasa algunos puntos.';
+    else if(pct >= 50) msg = 'Bien, pero vale la pena repasar el material.';
+    card.innerHTML = `
+      <div class="result">
+        <div class="tema">Resultado Final</div>
+        <div class="score">${score} / ${QUESTIONS.length}</div>
+        <p class="msg">${msg}</p>
+        <button class="btn" id="restartBtn">🔁 Repetir Quiz</button>
+      </div>
+    `;
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      idx = 0; score = 0; answered = false; renderXP(); renderQuiz();
+    });
+    renderXP();
+    return;
+  }
+
+  const item = QUESTIONS[idx];
+  answered = false;
+  card.innerHTML = `
+    <div class="progress">Pregunta ${idx+1} de ${QUESTIONS.length}</div>
+    <div class="tema">${item.tema}</div>
+    <div class="quiz-q">${item.q}</div>
+    <div class="opts">${item.opts.map((o,i) => `<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}) ${o}</button>`).join('')}</div>
+    <div class="exp" id="expBox"><b>💡 Explicación:</b> ${item.exp}</div>
+    <div class="next-row" id="nextRow"><button class="btn" id="nextBtn">${idx+1 < QUESTIONS.length ? 'Siguiente →' : 'Ver Resultado →'}</button></div>
+  `;
+
+  card.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const i = parseInt(btn.dataset.i, 10);
+      card.querySelectorAll('.opt').forEach(b => {
+        b.disabled = true;
+        const bi = parseInt(b.dataset.i, 10);
+        if(bi === item.correct) b.classList.add('correct');
+        else if(bi === i) b.classList.add('wrong');
+      });
+      if(i === item.correct) score++;
+      document.getElementById('expBox').classList.add('show');
+      document.getElementById('nextRow').classList.add('show');
+      renderXP();
+    });
+  });
+
+  document.getElementById('nextBtn')?.addEventListener('click', () => {
+    idx++; renderQuiz();
+  });
+
+  renderXP();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
