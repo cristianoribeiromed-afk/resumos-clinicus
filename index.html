@@ -1048,6 +1048,14 @@ footer p:last-child{margin-bottom:0;}
   <div class="modal" style="max-width:420px;">
     <span class="modal-x" id="checkoutModalX">✕</span>
     <h3 id="checkoutItemNome">Finalizar compra</h3>
+    <div id="checkoutSemestreAviso" style="display:none;background:rgba(232,184,75,.12);border:1.5px solid var(--gold,#e8b84b);border-radius:8px;padding:10px 12px;margin-bottom:10px;">
+      <p style="margin:0;font-size:13.5px;color:var(--gold,#e8b84b);font-weight:700;">⚠️ Confira antes de continuar</p>
+      <p style="margin:4px 0 8px;font-size:13.5px;">Você está comprando material do <b id="checkoutSemestreNum" style="font-size:15px;">?º Semestre</b>. Se você NÃO cursa esse semestre, cancele e procure o material certo antes de pagar — não fazemos reembolso por semestre errado.</p>
+      <label style="display:flex;align-items:flex-start;gap:8px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="checkoutSemestreConfirm" style="margin-top:2px;width:16px;height:16px;flex-shrink:0;">
+        <span>Sim, eu curso o <span id="checkoutSemestreNum2">?º Semestre</span> e quero comprar esse material.</span>
+      </label>
+    </div>
     <p id="checkoutValor" style="color:var(--green-light);font-size:20px;font-weight:700;font-family:'DM Mono',monospace;"></p>
     <p style="font-size:12.5px;margin-bottom:10px;">Digite seus dados pra gerar o link de pagamento seguro (PIX ou cartão):</p>
     <input type="text" id="checkoutNomeInput" placeholder="Seu nome completo" style="margin-bottom:8px;">
@@ -1158,6 +1166,26 @@ function abrirCheckout(itemNome, preco, planoKey){
   document.getElementById('checkoutEmailInput').value = '';
   document.getElementById('checkoutGoBtn').disabled = false;
   document.getElementById('checkoutGoBtn').textContent = 'Ir para pagamento';
+
+  // Extrai o numero do semestre direto do planoKey (todo plano comeca com "semestre-NN-")
+  // e mostra um aviso destacado pedindo pro aluno confirmar antes de pagar — pra evitar
+  // compra de material do semestre errado por distracao.
+  const avisoEl = document.getElementById('checkoutSemestreAviso');
+  const confirmCheckbox = document.getElementById('checkoutSemestreConfirm');
+  const goBtn = document.getElementById('checkoutGoBtn');
+  const semMatch = (planoKey||'').match(/^semestre-0*(\d+)-/);
+  if(semMatch){
+    document.getElementById('checkoutSemestreNum').textContent = semMatch[1] + 'º Semestre';
+    document.getElementById('checkoutSemestreNum2').textContent = semMatch[1] + 'º Semestre';
+    avisoEl.style.display = 'block';
+    confirmCheckbox.checked = false;
+    goBtn.disabled = true;
+    confirmCheckbox.onchange = function(){ goBtn.disabled = !confirmCheckbox.checked; };
+  } else {
+    avisoEl.style.display = 'none';
+    goBtn.disabled = false;
+  }
+
   document.getElementById('checkoutModalBg').classList.add('show');
 }
 
