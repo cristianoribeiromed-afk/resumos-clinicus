@@ -1500,19 +1500,52 @@ function renderEtapaFolder(etapaNome, etapa, materiaNome, semSlug){
   </div>`;
 }
 
-function valorEtapaParaEconomia(etapa){
-  if(!etapa || !etapa.disponivel) return 0;
-  const r = etapa.resumo && etapa.resumo.disponivel ? etapa.resumo.preco : 0;
-  const s = etapa.simulado && etapa.simulado.disponivel ? etapa.simulado.preco : 0;
-  if(r && s) return etapa.comboPreco ?? (r + s - 5);
-  return r + s;
+const PRECO_PADRAO_COMBO = 15.90;   // combo guia+simulado, valor vigente da plataforma
+const PRECO_PADRAO_RESUMO = 12.90;  // apenas guia (matérias sem simulado avulso, ex: Práticas)
+
+// Descobre se uma matéria segue o padrão "combo" (guia+simulado) ou "só guia",
+// olhando qualquer etapa já publicada dela. Sem nenhuma etapa publicada, assume
+// o padrão mais conservador (só guia) para não inflar a estimativa.
+function inferirPadraoMateria(m){
+  const temSimuladoPublicado = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].simulado && m.etapas[k].simulado.disponivel);
+  return temSimuladoPublicado ? PRECO_PADRAO_COMBO : PRECO_PADRAO_RESUMO;
+}
+
+// Valor de uma etapa: real, se já publicada; senão, o preço padrão vigente da
+// plataforma (mesmo valor cobrado hoje em qualquer etapa equivalente já publicada).
+// Isso reflete o valor TOTAL do semestre (P1+P2+Final), publicado ou não —
+// já que quem compra o pacote tem direito ao conteúdo futuro sem custo extra.
+function valorEtapaCompleto(etapa, precoPadrao){
+  if(etapa && etapa.disponivel){
+    const r = etapa.resumo && etapa.resumo.disponivel ? etapa.resumo.preco : 0;
+    const s = etapa.simulado && etapa.simulado.disponivel ? etapa.simulado.preco : 0;
+    if(r && s) return etapa.comboPreco ?? (r + s - 5);
+    return r + s;
+  }
+  return precoPadrao;
+}
+
+function valorMateriaCompleto(m, etapasKeys){
+  const precoPadrao = inferirPadraoMateria(m);
+  return etapasKeys.reduce((acc,k) => acc + valorEtapaCompleto(m.etapas[k], precoPadrao), 0);
+}
+
+function somaSemestreEtapas(materias, etapasKeys){
+  return materias.reduce((acc, m) => acc + valorMateriaCompleto(m, etapasKeys), 0);
+}
+
+function valorReferenciaPacote(sem, pacoteKey){
+  if(pacoteKey === 'p1') return somaSemestreEtapas(sem.materias, ['P1']);
+  if(pacoteKey === 'p1p2') return somaSemestreEtapas(sem.materias, ['P1','P2']);
+  if(pacoteKey === 'premium') return somaSemestreEtapas(sem.materias, ['P1','P2','Final']);
+  return 0;
 }
 
 function renderMateriaCard(m, meta, semSlug){
   const algumDisponivel = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].disponivel);
   const planoCompleto = planoKeyMateriaCompleta(semSlug, m.nome);
   const avisoMateria = m.avisoMateria ? `<div class="pacotes-aviso-producao">📌 ${m.avisoMateria}</div>` : '';
-  const somaEtapasIndividual = ETAPA_ORDEM.reduce((acc,k)=> acc + valorEtapaParaEconomia(m.etapas[k]), 0);
+  const somaEtapasIndividual = valorMateriaCompleto(m, ETAPA_ORDEM);
   const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
       <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)${formatEconomiaTag(somaEtapasIndividual, m.comboGeralPreco)}</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
@@ -1565,17 +1598,6 @@ function renderCatalogo(data){
         panelsHtml += `<div class="pacotes-aviso-producao">🚧 Semestre em construção — parte dos materiais ainda está em produção e vai sendo adicionada continuamente após a compra, sem custo extra.</div>`;
       }
       panelsHtml += `<div class="pacotes-semestre">`;
-function somaSemestreEtapas(materias, etapasKeys){
-  return materias.reduce((acc, m) => acc + etapasKeys.reduce((a2,k) => a2 + valorEtapaParaEconomia(m.etapas[k]), 0), 0);
-}
-
-function valorReferenciaPacote(sem, pacoteKey){
-  if(pacoteKey === 'p1') return somaSemestreEtapas(sem.materias, ['P1']);
-  if(pacoteKey === 'p1p2') return somaSemestreEtapas(sem.materias, ['P1','P2']);
-  if(pacoteKey === 'premium') return somaSemestreEtapas(sem.materias, ['P1','P2','Final']);
-  return 0;
-}
-
       pacotesAtivos.forEach(k=>{
         const p = sem.pacotes[k];
         const planoKey = planoKeyPacote(sem.slug, k);
