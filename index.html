@@ -338,6 +338,7 @@ a{color:inherit;}
 .pacote-card .pacote-desc{color:var(--muted);font-size:12.5px;line-height:1.4;min-height:36px;}
 .pacote-card .pacote-preco{font-size:22px;font-weight:800;color:var(--green-light);font-family:'DM Mono',monospace;margin:6px 0;}
 .pacote-card .btn-comprar{width:100%;}
+.pacote-card .economia-tag{align-self:center;margin-bottom:4px;}
 .pacote-destaque{
   border:2px solid var(--gold);
   background:linear-gradient(135deg, rgba(232,179,74,.10), rgba(31,184,106,.06));
@@ -576,6 +577,14 @@ a{color:inherit;}
   font-family:'DM Sans',sans-serif;
 }
 .btn-combo:hover{opacity:.88;}
+.economia-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(31,184,106,.16);color:var(--green-light);
+  border:1px solid rgba(31,184,106,.4);
+  font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;
+  white-space:nowrap;
+}
+.combo-row .produto-label,.combo-geral-row .produto-label{row-gap:4px;}
 
 .footer-columns{
   max-width:1000px;margin:0 auto 30px;padding:0 24px;
@@ -1430,6 +1439,14 @@ function bestsellerBadge(){ return `<span class="popular-badge">🔥 Popular</sp
 const ETAPA_ORDEM = ['P1', 'P2', 'Final'];
 const ETAPA_ICON = {'P1':'📁', 'P2':'📁', 'Final':'📁'};
 
+function formatEconomiaTag(precoIndividual, precoCombo){
+  const economia = precoIndividual - precoCombo;
+  if(!(economia > 0)) return '';
+  const pct = Math.round((economia / precoIndividual) * 100);
+  const valorFmt = economia.toFixed(2).replace('.', ',');
+  return `<span class="economia-tag">💰 Você economiza R$ ${valorFmt} (${pct}%)</span>`;
+}
+
 function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome, semSlug){
   const ambosDisponiveis = etapa.resumo.disponivel && etapa.simulado.disponivel;
   const itemPrefix = `${etapaNome} - ${materiaNome}`.replace(/'/g,"\\'");
@@ -1450,7 +1467,7 @@ function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome, semSlug){
         : `<span class="embreve-tag">em breve</span>`}
     </div>
     ${ambosDisponiveis ? `<div class="produto-row combo-row">
-      <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (guia + simulado)</span>
+      <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (guia + simulado)${formatEconomiaTag(etapa.resumo.preco + etapa.simulado.preco, etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5))}</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirCheckout('Combo - ${itemPrefix}', ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}, '${planoCombo}')">Comprar combo</button></span>
     </div>` : ``}`;
 }
@@ -1483,12 +1500,21 @@ function renderEtapaFolder(etapaNome, etapa, materiaNome, semSlug){
   </div>`;
 }
 
+function valorEtapaParaEconomia(etapa){
+  if(!etapa || !etapa.disponivel) return 0;
+  const r = etapa.resumo && etapa.resumo.disponivel ? etapa.resumo.preco : 0;
+  const s = etapa.simulado && etapa.simulado.disponivel ? etapa.simulado.preco : 0;
+  if(r && s) return etapa.comboPreco ?? (r + s - 5);
+  return r + s;
+}
+
 function renderMateriaCard(m, meta, semSlug){
   const algumDisponivel = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].disponivel);
   const planoCompleto = planoKeyMateriaCompleta(semSlug, m.nome);
   const avisoMateria = m.avisoMateria ? `<div class="pacotes-aviso-producao">📌 ${m.avisoMateria}</div>` : '';
+  const somaEtapasIndividual = ETAPA_ORDEM.reduce((acc,k)=> acc + valorEtapaParaEconomia(m.etapas[k]), 0);
   const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
-      <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)</span>
+      <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)${formatEconomiaTag(somaEtapasIndividual, m.comboGeralPreco)}</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
     </div>` : '';
   return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open">
@@ -1539,6 +1565,17 @@ function renderCatalogo(data){
         panelsHtml += `<div class="pacotes-aviso-producao">🚧 Semestre em construção — parte dos materiais ainda está em produção e vai sendo adicionada continuamente após a compra, sem custo extra.</div>`;
       }
       panelsHtml += `<div class="pacotes-semestre">`;
+function somaSemestreEtapas(materias, etapasKeys){
+  return materias.reduce((acc, m) => acc + etapasKeys.reduce((a2,k) => a2 + valorEtapaParaEconomia(m.etapas[k]), 0), 0);
+}
+
+function valorReferenciaPacote(sem, pacoteKey){
+  if(pacoteKey === 'p1') return somaSemestreEtapas(sem.materias, ['P1']);
+  if(pacoteKey === 'p1p2') return somaSemestreEtapas(sem.materias, ['P1','P2']);
+  if(pacoteKey === 'premium') return somaSemestreEtapas(sem.materias, ['P1','P2','Final']);
+  return 0;
+}
+
       pacotesAtivos.forEach(k=>{
         const p = sem.pacotes[k];
         const planoKey = planoKeyPacote(sem.slug, k);
@@ -1548,6 +1585,7 @@ function renderCatalogo(data){
           <b>${p.label}</b>
           <span class="pacote-desc">${p.descricao}</span>
           <span class="preco pacote-preco">R$ ${p.preco}</span>
+          ${formatEconomiaTag(valorReferenciaPacote(sem, k), p.preco)}
           <button class="btn-comprar" onclick="abrirCheckout('${p.label} — ${sem.semestre}º Semestre', ${p.preco}, '${planoKey}')">Comprar</button>
         </div>`;
       });
