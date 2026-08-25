@@ -1118,18 +1118,9 @@ document.querySelectorAll('.cmed-fig img').forEach(function(img){
 });
 </script>
 
-<script src="/assets/clinicus-storage.js" defer></script>
-<script src="/assets/focus-pomodoro.js" defer></script>
-<script src="/assets/progress-tracker.js" defer></script>
-<script src="/assets/pdf-export.js" defer></script>
 
 
-<script src="/assets/pwa-register.js" defer></script>
 
-<script src="/assets/clinicus-storage.js" defer></script>
-<script src="/assets/focus-pomodoro.js" defer></script>
-<script src="/assets/progress-tracker.js" defer></script>
-<script src="/assets/pwa-register.js" defer></script>
 
   </div>
 </div>
@@ -1152,79 +1143,9 @@ document.querySelectorAll('.cmed-fig img').forEach(function(img){
   }catch(e){}
 })();
 </script>
-<script>
-(function(){
-  var MODE_KEY = 'cmed_reading_mode';
-  var THEME_KEY = 'cmed_reading_theme';
-  var html = document.documentElement;
-  var btn = document.getElementById('cmedReadingBtn');
-  var progressBar = document.getElementById('cmedReadingProgress');
-  var topBtn = document.getElementById('cmedReadingTop');
-  var timeLabel = document.getElementById('cmedReadingTime');
-  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
-
-  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
-  // (nunca ativa sozinho so por ter navegado no site antes)
-  try{
-    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
-    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
-    html.setAttribute('data-reading-theme', theme);
-  }catch(e){}
-
-  function setActiveThemeBtn(){
-    var current = html.getAttribute('data-reading-theme');
-    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
-  }
-  setActiveThemeBtn();
-
-  if(btn){
-    btn.onclick = function(){
-      html.classList.toggle('cmed-reading-mode');
-      var on = html.classList.contains('cmed-reading-mode');
-      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
-      if(on){ updateReadingTime(); updateProgress(); }
-    };
-  }
-
-  themeBtns.forEach(function(b){
-    b.onclick = function(){
-      html.setAttribute('data-reading-theme', b.dataset.theme);
-      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
-      setActiveThemeBtn();
-    };
-  });
-
-  function updateReadingTime(){
-    if(!timeLabel) return;
-    var content = document.querySelector('.wrap') || document.body;
-    var words = (content.innerText || '').trim().split(/\s+/).length;
-    var minutes = Math.max(1, Math.round(words / 200));
-    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
-  }
-  updateReadingTime();
-
-  var ticking = false;
-  function updateProgress(){
-    if(!progressBar) return;
-    var scrollTop = window.scrollY || document.documentElement.scrollTop;
-    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-    progressBar.style.width = pct + '%';
-    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
-    ticking = false;
-  }
-  window.addEventListener('scroll', function(){
-    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
-  }, {passive:true});
-  updateProgress();
-
-  if(topBtn){
-    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
-  }
-})();
-</script>
 <script src="/assets/clinicus-storage.js" defer></script>
 <script src="/assets/focus-pomodoro.js" defer></script>
 <script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
 <script src="/assets/pwa-register.js" defer></script>
 </body></html>
