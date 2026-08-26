@@ -246,6 +246,10 @@ a{color:inherit;}
 .materiais-title-row{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
 .materiais-title-row h2{font-size:clamp(20px,4vw,26px);color:#fff;margin:0;}
 .materiais-title-row p{color:var(--muted);font-size:13px;margin:4px 0 0;}
+.uni-toggle-wrap{display:flex;gap:10px;margin:18px 0 4px;flex-wrap:wrap;}
+.uni-toggle-btn{flex:1;min-width:220px;background:var(--panel,#121917);border:1.5px solid var(--border,#22302a);color:var(--muted,#8fa39a);padding:12px 16px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s;}
+.uni-toggle-btn:hover{border-color:var(--green,#1fb86a);}
+.uni-toggle-btn.active{background:linear-gradient(135deg,rgba(31,184,106,.18),rgba(232,179,74,.10));border-color:var(--green,#1fb86a);color:var(--text,#e8efec);}
 .sem-tabs-wrap{overflow-x:auto;margin-bottom:22px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;}
 .sem-tabs{display:flex;gap:8px;padding-bottom:6px;min-width:max-content;}
 .sem-tab{
@@ -986,6 +990,10 @@ footer p:last-child{margin-bottom:0;}
       <p>Tudo o que você precisa, organizado para o seu sucesso.</p>
     </div>
   </div>
+  <div class="uni-toggle-wrap" id="uniToggleWrap">
+    <button class="uni-toggle-btn" data-uni="interamericana">🎓 Universidad Interamericana</button>
+    <button class="uni-toggle-btn" data-uni="cde">🏥 UCP — Ciudad del Este</button>
+  </div>
 </div>
 <div id="catalogo" class="wrap-wide" style="scroll-margin-top:78px;"></div>
 
@@ -1447,6 +1455,40 @@ function subjectGroupKey(nome){
   return nome.trim().split(' ')[0].toLowerCase();
 }
 
+// ===== FILTRO POR UNIVERSIDADE =====
+const UNI_KEY = 'clinicus_universidade';
+function getUniversidadeAtiva(){
+  try{ return localStorage.getItem(UNI_KEY) || 'interamericana'; }catch(e){ return 'interamericana'; }
+}
+function setUniversidadeAtiva(uni){
+  try{ localStorage.setItem(UNI_KEY, uni); }catch(e){}
+}
+function isMateriaCDE(nome){
+  return /\bCDE\b/i.test(nome);
+}
+function filterByUniversidade(data, uni){
+  const semestresFiltrados = data.semestres.map(sem=>{
+    const materiasFiltradas = sem.materias.filter(m => uni === 'cde' ? isMateriaCDE(m.nome) : !isMateriaCDE(m.nome));
+    return Object.assign({}, sem, { materias: materiasFiltradas });
+  }).filter(sem => sem.materias.length > 0);
+  return Object.assign({}, data, { semestres: semestresFiltrados });
+}
+function renderCatalogoFiltrado(){
+  const uni = getUniversidadeAtiva();
+  document.querySelectorAll('.uni-toggle-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.uni === uni);
+  });
+  if(!CATALOGO_DATA) return;
+  renderCatalogo(filterByUniversidade(CATALOGO_DATA, uni));
+}
+document.getElementById('uniToggleWrap').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.uni-toggle-btn');
+  if(!btn) return;
+  setUniversidadeAtiva(btn.dataset.uni);
+  renderCatalogoFiltrado();
+  document.getElementById('catalogo').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
 const BESTSELLER_MATERIAS = [
   'Bioquímica — Prof. Deborah',
   'Fisiología — Prof. Lisandro',
@@ -1702,7 +1744,7 @@ Promise.all([
   .then(([catalogo, materials])=>{
     CATALOGO_DATA = catalogo;
     MATERIALS_DATA = materials;
-    renderCatalogo(catalogo);
+    renderCatalogoFiltrado();
   })
   .catch(()=>{
     document.getElementById('catalogo').innerHTML = '<p style="text-align:center;color:var(--muted)">Não foi possível carregar o catálogo. Verifique se o catalogo.json está no mesmo diretório.</p>';
