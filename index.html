@@ -247,9 +247,14 @@ a{color:inherit;}
 .materiais-title-row h2{font-size:clamp(20px,4vw,26px);color:#fff;margin:0;}
 .materiais-title-row p{color:var(--muted);font-size:13px;margin:4px 0 0;}
 .uni-toggle-wrap{display:flex;gap:10px;margin:18px 0 4px;flex-wrap:wrap;}
-.uni-toggle-btn{flex:1;min-width:220px;background:var(--panel,#121917);border:1.5px solid var(--border,#22302a);color:var(--muted,#8fa39a);padding:12px 16px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s;}
-.uni-toggle-btn:hover{border-color:var(--green,#1fb86a);}
-.uni-toggle-btn.active{background:linear-gradient(135deg,rgba(31,184,106,.18),rgba(232,179,74,.10));border-color:var(--green,#1fb86a);color:var(--text,#e8efec);}
+.uni-toggle-btn{flex:1;min-width:220px;background:var(--panel,#121917);border:1.5px solid var(--gold,#e8b34a);color:var(--text,#e8efec);padding:14px 16px;border-radius:12px;font-size:14.5px;font-weight:700;cursor:pointer;transition:.15s;animation:uniPulse 2s ease-in-out infinite;}
+.uni-toggle-btn:hover{border-color:var(--green,#1fb86a);animation:none;}
+.uni-toggle-btn.active{background:linear-gradient(135deg,rgba(31,184,106,.18),rgba(232,179,74,.10));border-color:var(--green,#1fb86a);color:var(--text,#e8efec);animation:none;}
+@keyframes uniPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,179,74,.35);}50%{box-shadow:0 0 0 6px rgba(232,179,74,0);}}
+.uni-escolha-prompt{text-align:center;padding:40px 20px;color:var(--muted,#8fa39a);}
+.uni-escolha-icon{font-size:2rem;display:block;margin-bottom:10px;}
+.uni-escolha-prompt p{font-size:15px;margin:0;}
+.uni-escolha-prompt b{color:var(--text,#e8efec);}
 .sem-tabs-wrap{overflow-x:auto;margin-bottom:22px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;}
 .sem-tabs{display:flex;gap:8px;padding-bottom:6px;min-width:max-content;}
 .sem-tab{
@@ -1458,7 +1463,7 @@ function subjectGroupKey(nome){
 // ===== FILTRO POR UNIVERSIDADE =====
 const UNI_KEY = 'clinicus_universidade';
 function getUniversidadeAtiva(){
-  try{ return localStorage.getItem(UNI_KEY) || 'interamericana'; }catch(e){ return 'interamericana'; }
+  try{ return localStorage.getItem(UNI_KEY) || null; }catch(e){ return null; }
 }
 function setUniversidadeAtiva(uni){
   try{ localStorage.setItem(UNI_KEY, uni); }catch(e){}
@@ -1479,6 +1484,14 @@ function renderCatalogoFiltrado(){
     b.classList.toggle('active', b.dataset.uni === uni);
   });
   if(!CATALOGO_DATA) return;
+  const root = document.getElementById('catalogo');
+  if(!uni){
+    root.innerHTML = `<div class="uni-escolha-prompt">
+      <span class="uni-escolha-icon">👆</span>
+      <p><b>Escolha sua universidade acima</b> pra ver as matérias, valores e combos certos pra você.</p>
+    </div>`;
+    return;
+  }
   renderCatalogo(filterByUniversidade(CATALOGO_DATA, uni));
 }
 document.getElementById('uniToggleWrap').addEventListener('click', (e)=>{
