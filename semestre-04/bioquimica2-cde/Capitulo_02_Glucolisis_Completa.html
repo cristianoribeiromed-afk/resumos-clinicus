@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Bioquímica II CDE — Cap. 2: Glucólisis Completa | ClinicusMed</title>
+<style>
+.cmed-fig{margin:14px 0; text-align:center;}
+.cmed-fig img{max-width:100%; max-height:640px; width:auto; height:auto; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#fff; display:block; margin:0 auto;}
+.cmed-fig-cap{font-size:.82em; color:var(--text-dim); margin-top:6px; font-style:italic;}
+.cmed-gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin:14px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:320px;}
+:root{
+  --bg:#0b0f0e; --card:#121917; --card2:#1c3033;
+  --accent:#1fb86a; --accent2:#7de0ac; --gold:#e8b84b;
+  --text:#e8f5f4; --text-dim:#9dc4c2; --ok:#4fd1a1; --bad:#e0505f; --border:#264b4d;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.fenomeno{background:rgba(139,111,216,.10);border:1px solid rgba(139,111,216,.35);border-radius:10px;padding:14px 16px;margin:10px 0;font-size:.95em;}
+.fenomeno .fenomeno-tag{display:block;font-size:.72em;text-transform:uppercase;letter-spacing:.08em;color:#8b6fd8;font-weight:800;margin-bottom:6px;}
+.analogia{background:rgba(255,209,102,.08);border-left:4px solid var(--gold);border-radius:6px;padding:10px 14px;margin:10px 0;font-size:.9em;}
+.analogia .analogia-tag{font-weight:800;color:var(--gold);}
+.cascata{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0;}
+.cascata-passo{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border);}
+.cascata-passo:last-child{border-bottom:none;}
+.cascata-num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#0a0e16;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8em;}
+.cascata-txt b{color:var(--accent2);}
+.entenda-vs-decore{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;}
+@media(max-width:600px){.entenda-vs-decore{grid-template-columns:1fr;}}
+.ed-box{border-radius:10px;padding:12px 14px;font-size:.87em;}
+.ed-entenda{background:rgba(79,209,161,.10);border:1px solid rgba(79,209,161,.35);}
+.ed-decore{background:rgba(255,92,108,.08);border:1px solid rgba(255,92,108,.3);}
+.ed-box .ed-tag{display:block;font-weight:800;margin-bottom:6px;font-size:.85em;}
+.ed-entenda .ed-tag{color:var(--ok);}
+.ed-decore .ed-tag{color:#ff5c6c;}
+.nivel-tabs{display:flex;gap:8px;margin:14px 0 6px;flex-wrap:wrap;}
+.nivel-badge{font-size:.72em;font-weight:800;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;}
+.nivel-1{background:rgba(79,209,161,.15);color:var(--ok);}
+.nivel-2{background:rgba(255,209,102,.15);color:var(--gold);}
+.nivel-3{background:rgba(255,92,108,.15);color:#ff5c6c;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<!-- CMED-VIDEO-STYLE -->
+<style>
+.cmed-video-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(79,209,161,.14);border:1px solid var(--ok);color:var(--ok);font-size:.72em;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:10px;}
+.cmed-video-sub{color:var(--text-dim);font-size:.85em;margin:-6px 0 14px 0;}
+.cmed-video-card{background:var(--card2,#0f1726);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.cmed-video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000 center/cover no-repeat;cursor:pointer;}
+.cmed-video-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;}
+.cmed-video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.cmed-video-play span{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:1.6em;color:#fff;transition:transform .15s;}
+.cmed-video-thumb:hover .cmed-video-play span{transform:scale(1.08);background:var(--accent);}
+.cmed-video-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:.75em;padding:2px 8px;border-radius:5px;}
+.cmed-video-body{padding:14px 16px;}
+.cmed-video-tag{color:var(--gold);font-size:.72em;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.cmed-video-title{color:var(--text);font-size:1.05em;font-weight:700;margin:4px 0 8px 0;}
+.cmed-video-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.cmed-video-stars{color:var(--gold);}
+.cmed-video-why{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.85em;margin:10px 0;color:var(--text-dim);}
+.cmed-video-why b{color:var(--gold);}
+.cmed-video-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.cmed-video-btn{background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:.82em;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.cmed-video-btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text-dim);}
+.cmed-video-btn:hover{opacity:.88;}
+.cmed-video-note{color:var(--text-dim);font-size:.8em;text-align:center;margin-top:6px;}
+.cmed-video-extra-label{font-size:.85em;color:var(--text-dim);margin:18px 0 8px 0;font-weight:700;}
+@media (max-width:600px){.cmed-video-play span{width:52px;height:52px;font-size:1.3em;}}
+</style>
+<!-- /CMED-VIDEO-STYLE -->
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Bioquímica II — CDE</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Bioquímica II — CDE</span><span>2 de 2</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Bioquímica II — CDE</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-04/bioquimica2-cde/Capitulo_01_Metabolismo_Introducao.html"><span class="ico">⚗️</span><span>Capítulo 1 — Metabolismo: Introducción</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-04/bioquimica2-cde/Capitulo_02_Glucolisis_Completa.html"><span class="ico">⚗️</span><span>Capítulo 2 — Glucólisis Completa</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Bioquímica II — CDE · P1</span>
+  <h1>🍬 Capítulo 2 — Glucólisis Completa</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Ficha Completa</button>
+  <button data-p="p1">🏥 Correlação Clínica</button>
+  <button data-p="p2">🎥 Vídeo</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ FICHA COMPLETA ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois desse capítulo</h2>
+    <ul>
+      <li>Explicar as funções dos carboidratos e por que a glicose é o combustível mais importante</li>
+      <li>Explicar como a glicose entra na célula (GLUT × SGLT) — inclusive o mecanismo dependente de insulina</li>
+      <li>Descrever, passo a passo, os 10 passos da glicólise</li>
+      <li>Calcular o rendimento líquido de ATP da glicólise</li>
+      <li>Explicar os 2 destinos possíveis do piruvato (aeróbico × anaeróbico) e por que cada um acontece</li>
+      <li>Explicar o Ciclo de Cori e por que ele é energeticamente deficitário</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>1️⃣ Carboidratos — Por que a Glicose Importa Tanto</h2>
+    <table>
+      <tr><th>Função</th><th>Detalhe</th></tr>
+      <tr><td><b>Fonte principal de energia</b></td><td>Cada grama de glicose fornece 4 kcal</td></tr>
+      <tr><td><b>Reserva energética</b></td><td>Armazenada como glicogênio (fígado e músculo, em animais) ou amido (vegetais)</td></tr>
+      <tr><td><b>Função estrutural</b></td><td>Parede celular em bactérias e plantas (celulose); glicoconjugados em células animais</td></tr>
+      <tr><td><b>Intermediário metabólico</b></td><td>Precursora para síntese de outras biomoléculas (aminoácidos, ácidos graxos, nucleotídeos)</td></tr>
+    </table>
+    <div class="criterio">🟢 A glicose é o combustível metabólico principal de quase todos os mamíferos (exceto ruminantes) e o combustível universal do feto. É também precursora de TODOS os outros carboidratos do corpo: glicogênio (reserva), ribose/desoxirribose (ácidos nucleicos), galactose (lactose do leite), e componente de glicoproteínas e proteoglicanos.</div>
+  </div>
+
+  <div class="card">
+    <h2>2️⃣ Como a Glicose Entra na Célula — Transportadores GLUT e SGLT</h2>
+    <div class="fenomeno">
+      <span class="fenomeno-tag">🎬 O fenômeno</span>
+      A glicose é uma molécula muito "amiga da água" (polar/hidrofílica) — mas a membrana da célula é feita de gordura (apolar). É como tentar atravessar uma parede de óleo carregando um balde de água: não rola sem ajuda. A célula precisa de "portas" específicas pra deixar a glicose entrar.
+    </div>
+    <p>Existem 2 famílias de transportadores de glicose no ser humano:</p>
+    <table>
+      <tr><th>Família</th><th>Como funciona</th><th>Onde atua</th></tr>
+      <tr><td><b>GLUT</b> (Glucose Transporter)</td><td>Transporte facilitado — a favor do gradiente de concentração, sem gasto de energia direto</td><td>Praticamente todas as células</td></tr>
+      <tr><td><b>SGLT</b> (Sodium-Glucose Linked Transporter)</td><td>Transporte ativo secundário — a glicose "pega carona" com um íon sódio (simporte), contra o gradiente</td><td>Intestino, barreira hematoencefálica, túbulos renais</td></tr>
+    </table>
+
+    <div class="nivel-tabs"><span class="nivel-badge nivel-2">Domine os subtipos de GLUT</span></div>
+    <table>
+      <tr><th>Transportador</th><th>Onde atua</th><th>Dependência de insulina</th></tr>
+      <tr><td>GLUT 1, 2, 3</td><td>Cérebro, fígado, rim, hemácias, e outros tecidos</td><td>Independentes de insulina</td></tr>
+      <tr><td>GLUT 4, 8, GLTU 12</td><td>Músculo cardíaco, músculo estriado, tecido adiposo</td><td><b>Dependentes de insulina</b></td></tr>
+    </table>
+
+    <div class="nivel-tabs"><span class="nivel-badge nivel-3">A cascata completa do GLUT4</span></div>
+    <div class="analogia"><span class="analogia-tag">🚪 Analogia:</span> pense no GLUT4 como uma porta que fica guardada num depósito, não instalada na parede. Só quando chega a "ordem certa" (insulina) é que um time vai lá, pega a porta e a instala na parede — e quando a ordem passa, a porta é desmontada e guardada de novo.</div>
+    <div class="cascata">
+      <div class="cascata-passo"><div class="cascata-num">1</div><div class="cascata-txt">Em repouso, o GLUT4 fica <b>guardado dentro de vesículas</b> no citoplasma — não fica ancorado na membrana o tempo todo</div></div>
+      <div class="cascata-passo"><div class="cascata-num">2</div><div class="cascata-txt">A <b>insulina se liga ao seu receptor</b> na membrana da célula</div></div>
+      <div class="cascata-passo"><div class="cascata-num">3</div><div class="cascata-txt">Isso dispara sinais químicos que fazem a <b>vesícula se mover até a membrana</b> e se fundir a ela (translocação)</div></div>
+      <div class="cascata-passo"><div class="cascata-num">4</div><div class="cascata-txt">Agora o <b>GLUT4 está exposto na membrana</b>, pronto pra captar glicose</div></div>
+      <div class="cascata-passo"><div class="cascata-num">5</div><div class="cascata-txt">Quando o estímulo de insulina <b>diminui</b>, o GLUT4 é recolhido de volta pra dentro de vesículas</div></div>
+    </div>
+    <div class="hot">💭 É exatamente esse mecanismo que explica por que, na resistência à insulina (base da diabetes tipo 2), a glicose não consegue entrar direito no músculo e no tecido adiposo — mesmo com glicose alta no sangue, a "porta" (GLUT4) não recebe a ordem de sair do depósito.</div>
+
+    <div class="nivel-tabs"><span class="nivel-badge nivel-2">SGLT — o transportador que "puxa" glicose</span></div>
+    <table>
+      <tr><th>Transportador</th><th>Onde atua</th><th>Função</th></tr>
+      <tr><td>SGLT1</td><td>Intestino delgado, rins</td><td>Capta glicose, galactose e manose</td></tr>
+      <tr><td>SGLT2</td><td>Rins (túbulo proximal)</td><td>Reabsorção de glicose a nível renal</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>3️⃣ Glicólise — A Via Principal de Aproveitamento da Glicose</h2>
+    <div class="fenomeno">
+      <span class="fenomeno-tag">🎬 O fenômeno</span>
+      A glicólise é o motivo pelo qual seu músculo consegue trabalhar MUITO forte, mesmo por um instante em que o oxigênio não está chegando rápido o suficiente — ela consegue gerar energia sem precisar de O2. É por isso que ela é tão importante em situações de esforço extremo ou de anoxia.
+    </div>
+    <div class="criterio">🟢 A glicólise é a via principal de metabolismo da glicose — e também a principal via pra metabolizar frutose, galactose e outros carboidratos da dieta.</div>
+    <div class="hot">💭 O músculo cardíaco, ao contrário do esquelético, tem atividade glicolítica relativamente baixa (é adaptado pro desempenho aeróbico) — por isso sobrevive muito mal a episódios de isquemia. Deficiência de enzimas da glicólise causa doenças reais: deficiência de piruvato quinase → anemia hemolítica; deficiência de fosfofrutoquinase → fadiga muscular.</div>
+
+    <div class="nivel-tabs"><span class="nivel-badge nivel-3">A cascata completa — os 10 passos</span></div>
+    <p>A glicólise se divide em 2 fases: a <b>Fase Preparatória</b> (passos 1-5, GASTA energia) e a <b>Fase de Benefício</b> (passos 6-10, GERA energia).</p>
+    <div class="cascata">
+      <div class="cascata-passo"><div class="cascata-num">1</div><div class="cascata-txt"><b>Glicose</b> + ATP → (Hexocinase/Glicoquinase) → <b>Glicose 6-fosfato</b> — a fosforilação "prende" a glicose dentro da célula</div></div>
+      <div class="cascata-passo"><div class="cascata-num">2</div><div class="cascata-txt"><b>Glicose 6-fosfato</b> → (Glicose 6-fosfato isomerase) → <b>Frutose 6-fosfato</b></div></div>
+      <div class="cascata-passo"><div class="cascata-num">3</div><div class="cascata-txt"><b>Frutose 6-fosfato</b> + ATP → (Fosfofrutoquinase I) → <b>Frutose 1,6-bifosfato</b> — <u>principal ponto de regulação da via</u></div></div>
+      <div class="cascata-passo"><div class="cascata-num">4</div><div class="cascata-txt"><b>Frutose 1,6-bifosfato</b> → (Aldolase A) → se quebra em <b>Di-hidroxiacetona fosfato + Gliceraldeído 3-fosfato</b> (a molécula de 6C vira 2 moléculas de 3C)</div></div>
+      <div class="cascata-passo"><div class="cascata-num">5</div><div class="cascata-txt"><b>Di-hidroxiacetona fosfato</b> → (Triose fosfato isomerase) → <b>Gliceraldeído 3-fosfato</b> — agora temos 2 moléculas de G3P (fim da Fase Preparatória)</div></div>
+      <div class="cascata-passo"><div class="cascata-num">6</div><div class="cascata-txt">(×2) <b>Gliceraldeído 3-fosfato</b> + NAD⁺ → (G3P Deshidrogenase) → <b>1,3-Bifosfoglicerato</b> + NADH — aqui se formam as 2 moléculas de NADH</div></div>
+      <div class="cascata-passo"><div class="cascata-num">7</div><div class="cascata-txt">(×2) <b>1,3-Bifosfoglicerato</b> + ADP → (Fosfoglicerato quinase) → <b>3-Fosfoglicerato</b> + ATP — primeira produção de ATP</div></div>
+      <div class="cascata-passo"><div class="cascata-num">8</div><div class="cascata-txt">(×2) <b>3-Fosfoglicerato</b> → (Fosfoglicerato mutase) → <b>2-Fosfoglicerato</b></div></div>
+      <div class="cascata-passo"><div class="cascata-num">9</div><div class="cascata-txt">(×2) <b>2-Fosfoglicerato</b> → (Enolase) → <b>Fosfoenolpiruvato</b> + H₂O</div></div>
+      <div class="cascata-passo"><div class="cascata-num">10</div><div class="cascata-txt">(×2) <b>Fosfoenolpiruvato</b> + ADP → (Piruvato quinase) → <b>Piruvato</b> + ATP</div></div>
+    </div>
+
+    <div class="prova">📌 <b>Balanço final: 1 Glicose → 2 Piruvato + 2 NADH + 4 ATP (brutos) − 2 ATP (gastos nos passos 1 e 3) = 2 ATP líquidos</b></div>
+    <div class="hot">💭 Não confunda: se formam 4 ATP na Fase de Benefício (2 no passo 7, 2 no passo 10, já contando as 2 moléculas em paralelo) — mas como 2 ATP foram "emprestados" nos passos 1 e 3, o rendimento líquido real é de só 2 ATP por glicose.</div>
+
+    <div class="nivel-tabs"><span class="nivel-badge nivel-1">Ponto de regulação chave</span></div>
+    <p>A <b>Fosfofrutoquinase I</b> (passo 3) é uma enzima alostérica — seu efetor alostérico é o próprio ATP:</p>
+    <table>
+      <tr><th>Situação</th><th>Efeito sobre a Fosfofrutoquinase I</th></tr>
+      <tr><td>ATP alto (célula "cheia" de energia)</td><td>Se bloqueia — não faz sentido gastar mais glicose</td></tr>
+      <tr><td>ATP baixo (célula "precisando" de energia)</td><td>Se ativa — acelera a via pra produzir mais ATP</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>4️⃣ Destino Anaeróbico do Piruvato — Fermentação</h2>
+    <div class="fenomeno">
+      <span class="fenomeno-tag">🎬 O fenômeno</span>
+      Lá no passo 6 da glicólise, o NAD⁺ vira NADH. Só que a célula tem um estoque LIMITADO de NAD⁺ — se ele não for "reciclado" de volta, a glicólise trava (não tem mais NAD⁺ disponível pro passo 6 acontecer de novo). A fermentação existe justamente pra resolver esse problema: regenerar NAD⁺, mesmo sem oxigênio disponível.
+    </div>
+    <table>
+      <tr><th>Tipo</th><th>Onde ocorre</th><th>Produto final</th></tr>
+      <tr><td><b>Fermentação Alcoólica</b></td><td>Leveduras e bactérias</td><td>Etanol (álcool etílico) + CO₂</td></tr>
+      <tr><td><b>Fermentação Láctica</b></td><td>Células animais</td><td>Ácido láctico (dissocia-se em Lactato + próton no pH fisiológico)</td></tr>
+    </table>
+    <div class="cascata">
+      <div class="cascata-passo"><div class="cascata-num">A</div><div class="cascata-txt"><b>Fermentação Alcoólica:</b> Piruvato → (perde CO₂) → Acetaldeído → (ganha H do NADH) → Etanol, regenerando NAD⁺</div></div>
+      <div class="cascata-passo"><div class="cascata-num">B</div><div class="cascata-txt"><b>Fermentação Láctica:</b> Piruvato + NADH → (Lactato desidrogenase) → Ácido Láctico + NAD⁺, regenerando NAD⁺</div></div>
+    </div>
+    <div class="criterio">🟢 A fermentação láctica ocorre quando o músculo precisa de aporte contínuo de energia rápido demais pro oxigênio disponível dar conta — mas é uma solução limitada: o acúmulo de lactato está associado à fadiga muscular.</div>
+  </div>
+
+  <div class="card">
+    <h2>5️⃣ Destino Aeróbico do Piruvato</h2>
+    <p>Quando há oxigênio suficiente, o piruvato segue um caminho bem diferente — ele entra na mitocôndria:</p>
+    <div class="cascata">
+      <div class="cascata-passo"><div class="cascata-num">1</div><div class="cascata-txt"><b>Piruvato</b> → (Piruvato desidrogenase, perde CO₂, transfere H pro NAD⁺) → <b>Acetilo</b></div></div>
+      <div class="cascata-passo"><div class="cascata-num">2</div><div class="cascata-txt"><b>Acetilo</b> + Coenzima A → <b>Acetil-CoA</b></div></div>
+    </div>
+    <div class="prova">📌 O Acetil-CoA é a molécula que une/conecta a glicólise com o Ciclo de Krebs — é o "portão de entrada" pra respiração celular completa.</div>
+  </div>
+
+  <div class="card">
+    <h2>6️⃣ Ciclo de Cori — Reciclando o Lactato</h2>
+    <div class="fenomeno">
+      <span class="fenomeno-tag">🎬 O fenômeno</span>
+      Quando o músculo produz lactato em excesso (esforço intenso), esse lactato não é simplesmente descartado — ele viaja pelo sangue até o fígado, que o transforma de volta em glicose e manda essa glicose de volta pro sangue, disponível de novo pro músculo usar.
+    </div>
+    <div class="cascata">
+      <div class="cascata-passo"><div class="cascata-num">1</div><div class="cascata-txt">Músculo em atividade intensa produz <b>lactato</b> (via glicólise anaeróbica)</div></div>
+      <div class="cascata-passo"><div class="cascata-num">2</div><div class="cascata-txt">Lactato cai na <b>circulação sanguínea</b></div></div>
+      <div class="cascata-passo"><div class="cascata-num">3</div><div class="cascata-txt">O <b>fígado capta</b> esse lactato</div></div>
+      <div class="cascata-passo"><div class="cascata-num">4</div><div class="cascata-txt">O fígado converte lactato em <b>glicose (gliconeogênese)</b> ou glicogênio</div></div>
+      <div class="cascata-passo"><div class="cascata-num">5</div><div class="cascata-txt">Quando a glicemia cai, o fígado libera essa <b>glicose de volta na circulação</b>, disponível pro músculo de novo</div></div>
+    </div>
+    <div class="prova">📌 O Ciclo de Cori é <b>energeticamente deficitário</b>: o músculo produz 2 ATP (via glicólise anaeróbica), mas o fígado gasta 6 ATP pra reconverter o lactato em glicose (via gliconeogênese) — rendimento líquido: <b>−4 ATP</b>. O "custo" é pago pelo fígado, não pelo músculo.</div>
+    <div class="hot">💭 Isso não é um "desperdício" sem sentido — é uma forma do corpo permitir que o músculo continue trabalhando MUITO rápido no momento de esforço (sem depender do oxigênio disponível ali mesmo), transferindo o "custo" energético da reconversão pro fígado, que tem mais tempo/recursos pra pagar essa conta depois.</div>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação rápida</h2>
+    <div class="al-grid">
+      <div class="al-box"><b>✅ O que você deve lembrar</b><br>GLUT = transporte facilitado; SGLT = ativo secundário (com Na+). GLUT4 é dependente de insulina, fica guardado em vesículas. Glicólise: 10 passos, rendimento líquido = 2 ATP. Fosfofrutoquinase I = principal ponto de regulação. Fermentação existe pra regenerar NAD+. Piruvato aeróbico → Acetil-CoA → Ciclo de Krebs. Ciclo de Cori: rendimento −4 ATP (deficitário).</div>
+      <div class="al-box"><b>⚠️ Erro comum</b><br>Esquecer de descontar os 2 ATP gastos nos passos 1 e 3 — o rendimento líquido é 2, não 4. Achar que fermentação serve só pra produzir energia — o objetivo real é regenerar NAD+ pra glicólise continuar. Confundir GLUT (a maioria, facilitado) com SGLT (específico, ativo, dependente de sódio).</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ CORRELAÇÃO CLÍNICA ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🏥 Resistência à Insulina e Diabetes Tipo 2</h2>
+    <p>Na resistência à insulina, o sinal "insulina se liga ao receptor" não consegue disparar direito a translocação do GLUT4 pra membrana — mesmo com glicemia alta, a glicose não consegue entrar direito no músculo e no tecido adiposo. É a falha exata no passo 2-3 da cascata do GLUT4 vista nesse capítulo.</p>
+  </div>
+  <div class="card">
+    <h2>🏥 Deficiência de Piruvato Quinase e Anemia Hemolítica</h2>
+    <p>A hemácia depende exclusivamente da glicólise pra gerar ATP (não tem mitocôndria). Se falta a enzima piruvato quinase (passo 10), a produção de ATP cai — a hemácia perde a energia necessária pra manter sua forma e integridade de membrana, sendo destruída precocemente (hemólise).</p>
+  </div>
+  <div class="card">
+    <h2>🏥 Isquemia Cardíaca</h2>
+    <p>O músculo cardíaco tem baixa capacidade glicolítica (é adaptado ao metabolismo aeróbico) — por isso tolera muito mal episódios de isquemia (falta de O2), diferente do músculo esquelético, que consegue sustentar esforço via glicólise anaeróbica por mais tempo.</p>
+  </div>
+  <div class="card">
+    <h2>🏥 Acidose Láctica</h2>
+    <p>Em situações de hipóxia tecidual grave (choque, sepse), o metabolismo celular é forçado pra via anaeróbica em excesso — o acúmulo sistêmico de ácido láctico causa acidose metabólica, um achado grave que reflete sofrimento tecidual generalizado.</p>
+  </div>
+</section>
+
+<!-- CMED-VIDEO-SECTION -->
+<section class="panel" id="p2">
+  <div class="card">
+    <span class="cmed-video-badge">🩺 Recomendado pela ClinicusMed</span>
+    <h2>🎥 Complemento em Vídeo</h2>
+    <p class="cmed-video-sub">A Clinicus selecionou este conteúdo para complementar seu estudo. Não substitui a leitura da ficha — a ficha ensina, o vídeo reforça.</p>
+    <div id="cmedVideoContainer">
+      <p style="color:var(--text-dim);font-size:.9em;">Carregando recomendações...</p>
+    </div>
+  </div>
+</section>
+<!-- /CMED-VIDEO-SECTION -->
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Escolhe uma alternativa, depois clica em "Ver comentário completo".</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+<script>
+const bank = [{"n": 1, "tema": "Transportadores GLUT/SGLT", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a diferença fundamental entre o transporte de glicose via GLUT e via SGLT?", "opts": ["GLUT é ativo primário; SGLT é facilitado", "GLUT é transporte facilitado; SGLT é ativo secundário (dependente de sódio)", "Não há diferença, são sinônimos", "GLUT só existe no intestino; SGLT em todas as células"], "correct": 1, "justificativa": "GLUT realiza transporte facilitado (a favor do gradiente, sem gasto direto de energia); SGLT realiza transporte ativo secundário, onde a glicose é cotransportada com um íon sódio (simporte).", "analise": ["Incorreto — é o oposto: GLUT é facilitado, SGLT é ativo secundário.", "Incorreto — são famílias de transportadores com mecanismos diferentes, não são sinônimos.", "Incorreto — GLUT está presente em praticamente todas as células; é o SGLT que tem distribuição mais restrita (intestino, barreira hematoencefálica, túbulos renais)."], "analise_letters": ["A", "C", "D"], "conceito": "GLUT: transporte facilitado. SGLT: transporte ativo secundário (com Na+).", "pegadinha": "SGLT é o transportador relevante pra entender o mecanismo de ação dos inibidores de SGLT2, usados no tratamento da diabetes.", "dica": "S de SGLT = Sódio — sempre acompanhado do íon sódio."}, {"n": 2, "tema": "GLUT4", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Por que o GLUT4 é considerado um transportador 'dependente de insulina'?", "opts": ["Porque a insulina o sintetiza do zero a cada uso", "Porque ele só transporta insulina, não glicose", "Porque ele fica guardado em vesículas no citoplasma, e só é translocado pra membrana quando a insulina se liga ao seu receptor", "Porque a insulina inibe sua função"], "correct": 2, "justificativa": "O GLUT4 fica armazenado em vesículas dentro do citoplasma; quando a insulina se liga ao seu receptor, sinais químicos disparam a translocação dessas vesículas até a membrana plasmática, expondo o GLUT4 pra captação de glicose.", "analise": ["Incorreto — o GLUT4 não é sintetizado a cada uso; ele já existe pronto, guardado em vesículas, esperando o sinal de translocação.", "Incorreto — o GLUT4 transporta glicose, não insulina; a insulina atua como sinalizadora que promove a translocação do transportador.", "Incorreto — a insulina ATIVA (via translocação) o GLUT4, não o inibe."], "analise_letters": ["A", "B", "D"], "conceito": "GLUT4: guardado em vesículas, translocado à membrana quando insulina se liga ao receptor.", "pegadinha": "Esse mecanismo é a base para entender a resistência à insulina na diabetes tipo 2 — a falha está exatamente nessa translocação.", "dica": "GLUT4 = 'porta guardada' que só é instalada quando chega a ordem certa (insulina)."}, {"n": 3, "tema": "Glicólise", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual o rendimento líquido de ATP por molécula de glicose na glicólise?", "opts": ["2 ATP", "4 ATP", "6 ATP", "0 ATP"], "correct": 0, "justificativa": "Embora se formem 4 ATP brutos na Fase de Benefício, 2 ATP foram gastos na Fase Preparatória (passos 1 e 3) — o rendimento líquido real é de 2 ATP por molécula de glicose.", "analise": ["Incorreto — 4 ATP é o valor BRUTO produzido na Fase de Benefício, sem descontar os 2 ATP gastos na Fase Preparatória.", "Incorreto — 6 ATP não corresponde ao rendimento da glicólise; esse valor está associado ao CUSTO da gliconeogênese no Ciclo de Cori, não ao rendimento da glicólise.", "Incorreto — a glicólise tem rendimento líquido positivo (2 ATP), não é uma via neutra em termos energéticos."], "analise_letters": ["B", "C", "D"], "conceito": "Glicólise: rendimento líquido = 2 ATP (4 brutos − 2 gastos).", "pegadinha": "É um erro muito comum esquecer de descontar os 2 ATP gastos nos passos 1 (hexocinase) e 3 (fosfofrutoquinase).", "dica": "4 formados − 2 gastos = 2 líquidos, por molécula de glicose."}, {"n": 4, "tema": "Regulação da Glicólise", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual enzima é considerada o principal ponto de regulação da glicólise, sendo bloqueada por alta concentração de ATP?", "opts": ["Hexocinase", "Aldolase A", "Piruvato quinase", "Fosfofrutoquinase I"], "correct": 3, "justificativa": "A Fosfofrutoquinase I (passo 3) é uma enzima alostérica cujo efetor é o próprio ATP — alta concentração de ATP a bloqueia, baixa concentração a ativa, sendo o principal ponto de regulação da via.", "analise": ["Incorreto — a Hexocinase catalisa o passo 1, mas não é descrita como o principal ponto de regulação alostérica pelo ATP.", "Incorreto — a Aldolase A catalisa a quebra da frutose 1,6-bifosfato (passo 4), não é um ponto de regulação alostérica pelo ATP.", "Incorreto — a Piruvato quinase catalisa o último passo (10), mas o principal ponto de regulação citado é a Fosfofrutoquinase I."], "analise_letters": ["A", "B", "C"], "conceito": "Fosfofrutoquinase I: principal ponto de regulação da glicólise, efetor alostérico é o ATP.", "pegadinha": "Não confundir COM QUAL substrato a enzima trabalha (frutose 6-fosfato) com O QUE a regula (concentração de ATP).", "dica": "ATP alto = já tenho energia, não preciso acelerar = bloqueia a Fosfofrutoquinase I."}, {"n": 5, "tema": "Fermentação", "nivel": "🔴 Nível 3 — Excelência", "q": "Qual o principal objetivo biológico da fermentação (láctica ou alcoólica), além de gerar o produto final?", "opts": ["Produzir grandes quantidades de ATP adicional", "Regenerar NAD+, permitindo que a glicólise continue funcionando", "Degradar completamente a glicose em CO2 e água", "Consumir o excesso de piruvato sem propósito metabólico"], "correct": 1, "justificativa": "O objetivo central da fermentação é regenerar NAD+ (a partir do NADH formado no passo 6 da glicólise) — sem essa regeneração, o estoque limitado de NAD+ se esgotaria e a glicólise pararia por falta desse cofator.", "analise": ["Incorreto — a fermentação em si não produz ATP adicional; o ATP já foi todo gerado na glicólise. A fermentação apenas processa o piruvato final.", "Incorreto — a fermentação não degrada a glicose completamente em CO2 e água (isso seria característico da respiração aeróbica completa via Ciclo de Krebs e cadeia respiratória).", "Incorreto — o processamento do piruvato na fermentação tem um propósito metabólico bem definido: regenerar NAD+ pra manter a glicólise funcionando."], "analise_letters": ["A", "C", "D"], "conceito": "Fermentação: regenera NAD+, permitindo que a glicólise continue.", "pegadinha": "É fácil achar que a fermentação existe só 'pra produzir álcool ou lactato' — mas a função biológica real é viabilizar a continuidade da glicólise.", "dica": "Sem NAD+ disponível, o passo 6 da glicólise trava — fermentação existe pra evitar isso."}, {"n": 6, "tema": "Ciclo de Cori", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Por que o Ciclo de Cori é descrito como 'energeticamente deficitário'?", "opts": ["Porque não produz nenhum ATP em lugar nenhum do ciclo", "Porque o lactato é tóxico e precisa ser eliminado sem gerar energia", "Porque o músculo produz 2 ATP via glicólise anaeróbica, mas o fígado gasta 6 ATP pra reconverter o lactato em glicose — rendimento líquido de -4 ATP", "Porque o ciclo ocorre só uma vez na vida"], "correct": 2, "justificativa": "O Ciclo de Cori é deficitário porque o músculo gera apenas 2 ATP (via glicólise anaeróbica) ao produzir lactato, enquanto o fígado precisa gastar 6 ATP (via gliconeogênese) pra reconverter esse lactato em glicose — resultando num rendimento líquido de -4 ATP no ciclo como um todo.", "analise": ["Incorreto — o ciclo produz sim ATP na etapa muscular (2 ATP via glicólise); o problema é que o custo de reconversão no fígado é maior que esse ganho.", "Incorreto — a questão não é toxicidade do lactato, é o balanço energético do ciclo (o fígado gasta mais energia reconvertendo do que o músculo ganhou produzindo).", "Incorreto — o Ciclo de Cori é um processo contínuo e recorrente, não um evento único."], "analise_letters": ["A", "B", "D"], "conceito": "Ciclo de Cori: rendimento líquido de -4 ATP (2 ganhos no músculo − 6 gastos no fígado).", "pegadinha": "O 'déficit' é pago pelo fígado, não pelo músculo — isso permite ao músculo manter esforço intenso sem se preocupar com esse custo energético no momento.", "dica": "Músculo ganha 2, fígado gasta 6 pra reverter — resultado líquido do ciclo: -4 ATP."}];
+const flashcards = [
+  {"n": 1, "cat": "Transportadores", "f": "Diferencie GLUT de SGLT.", "b": "GLUT: transporte facilitado. SGLT: ativo secundário, cotransporte com sódio."},
+  {"n": 2, "cat": "GLUT4", "f": "Como funciona a translocação do GLUT4?", "b": "Fica guardado em vesículas; insulina liga ao receptor → vesícula se funde à membrana → GLUT4 exposto."},
+  {"n": 3, "cat": "Glicólise", "f": "Quantos passos tem a glicólise, e qual seu rendimento líquido de ATP?", "b": "10 passos; rendimento líquido = 2 ATP (4 brutos − 2 gastos)."},
+  {"n": 4, "cat": "Regulação", "f": "Qual a principal enzima reguladora da glicólise, e seu efetor?", "b": "Fosfofrutoquinase I; efetor alostérico é o próprio ATP (alto=bloqueia, baixo=ativa)."},
+  {"n": 5, "cat": "Fermentação", "f": "Qual o objetivo real da fermentação?", "b": "Regenerar NAD+ pra glicólise continuar funcionando."},
+  {"n": 6, "cat": "Destino do Piruvato", "f": "Qual a molécula que conecta glicólise ao Ciclo de Krebs?", "b": "Acetil-CoA."},
+  {"n": 7, "cat": "Ciclo de Cori", "f": "Por que o Ciclo de Cori é deficitário energeticamente?", "b": "Músculo ganha 2 ATP; fígado gasta 6 ATP pra reconverter lactato em glicose. Líquido: -4 ATP."},
+  {"n": 8, "cat": "Doenças", "f": "Qual a consequência da deficiência de piruvato quinase na hemácia?", "b": "Anemia hemolítica (hemácia depende só da glicólise pra ATP, sem mitocôndria)."}
+];
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'bioq2cde_cap02_glucolisis_completa';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+
+</script>
+
+<!-- CMED-VIDEO-SCRIPT -->
+<script>
+(function(){
+  function ytThumb(id){ return 'https://img.youtube.com/vi/'+id+'/hqdefault.jpg'; }
+  function ytWatch(id){ return 'https://www.youtube.com/watch?v='+id; }
+  function stars(n){ n = n||5; return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+  function videoCard(v, isPrincipal){
+    if(!v || !v.id) return '';
+    var thumb = v.tipo === 'vimeo' ? '' : ytThumb(v.id);
+    var watchUrl = v.tipo === 'vimeo' ? ('https://vimeo.com/'+v.id) : ytWatch(v.id);
+    var tag = isPrincipal ? '🎥 Vídeo Principal' : '➕ Complementar';
+    var card = document.createElement('div');
+    card.className = 'cmed-video-card';
+    card.innerHTML =
+      '<div class="cmed-video-thumb" data-url="'+watchUrl+'" style="background-image:url(\''+thumb+'\')">' +
+        '<div class="cmed-video-play"><span>▶</span></div>' +
+        (v.duracao ? '<div class="cmed-video-dur">⏱ '+v.duracao+'</div>' : '') +
+      '</div>' +
+      '<div class="cmed-video-body">' +
+        '<div class="cmed-video-tag">'+tag+'</div>' +
+        '<div class="cmed-video-title">'+(v.titulo||'')+'</div>' +
+        '<div class="cmed-video-meta">' +
+          (v.duracao ? '<span>⏱ '+v.duracao+'</span>' : '') +
+          '<span class="cmed-video-stars">'+stars(v.estrelas)+'</span>' +
+          (v.canal ? '<span>· '+v.canal+'</span>' : '') +
+        '</div>' +
+        (v.motivo ? '<div class="cmed-video-why"><b>📌 Por que recomendamos este vídeo?</b><br>'+v.motivo+'</div>' : '') +
+        '<div class="cmed-video-btns">' +
+          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">▶ Assistir vídeo</a>' +
+          '<button class="cmed-video-btn secondary" data-copy="'+watchUrl+'">📋 Copiar link</button>' +
+        '</div>' +
+      '</div>';
+    return card;
+  }
+
+  function render(data){
+    var container = document.getElementById('cmedVideoContainer');
+    if(!container) return;
+    var entry = data && typeof CHAPTER_ID !== 'undefined' ? data[CHAPTER_ID] : null;
+
+    if(!entry || !entry.principal){
+      var section = document.getElementById('p2');
+      if(section) section.style.display = 'none';
+      var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+      if(navBtn) navBtn.style.display = 'none';
+      return;
+    }
+
+    container.innerHTML = '';
+    container.appendChild(videoCard(entry.principal, true));
+    if(entry.extras && entry.extras.length){
+      var label = document.createElement('div');
+      label.className = 'cmed-video-extra-label';
+      label.textContent = '📎 Vídeos complementares';
+      container.appendChild(label);
+      entry.extras.slice(0,3).forEach(function(ex){
+        container.appendChild(videoCard(ex, false));
+      });
+    }
+    var note = document.createElement('p');
+    note.className = 'cmed-video-note';
+    if(entry.verMaisEm && entry.verMaisEm.texto){
+      note.innerHTML = entry.verMaisEm.texto;
+    } else {
+      note.textContent = 'Este vídeo complementa o conteúdo estudado neste capítulo.';
+    }
+    container.appendChild(note);
+
+    container.addEventListener('click', function(e){
+      var thumb = e.target.closest('.cmed-video-thumb');
+      if(thumb){ window.open(thumb.dataset.url, '_blank', 'noopener'); return; }
+      var copyBtn = e.target.closest('[data-copy]');
+      if(copyBtn){
+        navigator.clipboard.writeText(copyBtn.dataset.copy).then(function(){
+          var old = copyBtn.textContent;
+          copyBtn.textContent = '✅ Copiado!';
+          setTimeout(function(){ copyBtn.textContent = old; }, 1800);
+        });
+      }
+    });
+  }
+
+  fetch('/videos.json').then(function(r){ return r.json(); }).then(render).catch(function(){
+    var section = document.getElementById('p2');
+    if(section) section.style.display = 'none';
+    var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+    if(navBtn) navBtn.style.display = 'none';
+  });
+})();
+</script>
+<!-- /CMED-VIDEO-SCRIPT -->
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Bioquímica II — CDE',
+    titulo: 'Capítulo 1 — Ventilación y Circulación Pulmonar',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-04/bioquimica2-cde/Capitulo_01_Metabolismo_Introducao.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 1 — Metabolismo: Introducción</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
