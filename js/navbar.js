@@ -1,16 +1,49 @@
 /* ==========================================================================
    ClinicusMed — navbar.js
-   Comportamento da navbar premium (fixa, vidro/blur, muda ao scroll,
-   menu responsivo). Construído na Etapa 2.
+   Comportamento da navbar premium: muda de aparência ao rolar a página,
+   e controla o menu mobile (hambúrguer).
    ========================================================================== */
 
 window.CxNavbar = (function(){
   'use strict';
 
+  function initScrollBehavior(){
+    var nav = document.getElementById('cxNavbar');
+    if (!nav) return;
+
+    var SCROLL_THRESHOLD = 24;
+    function onScroll(){
+      if (window.scrollY > SCROLL_THRESHOLD) {
+        nav.classList.add('cx-navbar--scrolled');
+      } else {
+        nav.classList.remove('cx-navbar--scrolled');
+      }
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  function initMobileMenu(){
+    var burger = document.getElementById('cxNavbarBurger');
+    var panel = document.getElementById('cxNavbarMobilePanel');
+    if (!burger || !panel) return;
+
+    function closePanel(){
+      panel.classList.remove('cx-navbar-mobile-panel--open');
+    }
+
+    burger.addEventListener('click', function(){
+      panel.classList.toggle('cx-navbar-mobile-panel--open');
+    });
+
+    panel.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', closePanel);
+    });
+  }
+
   function init(){
-    // Implementação chega na Etapa 2, junto com o HTML/CSS da navbar nova.
-    // Mantido como stub registrado pra main.js já poder chamar init()
-    // sem precisar mudar nada quando a Etapa 2 for construída.
+    initScrollBehavior();
+    initMobileMenu();
   }
 
   return { init: init };
