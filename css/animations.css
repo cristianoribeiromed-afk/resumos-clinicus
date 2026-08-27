@@ -1,0 +1,56 @@
+/* ==========================================================================
+   ClinicusMed — Design System v2
+   animations.css — keyframes e classes de transição
+   ==========================================================================
+   Etapa 1: fundamentos (fade/slide de entrada, glow pulsante) usados como
+   base de qualquer microanimação futura. As animações específicas de cada
+   seção (contagem de estatística, hover de card de semestre, etc.) entram
+   junto com o componente, nas etapas seguintes.
+   Todas respeitam prefers-reduced-motion via a variável --cx-transition-*
+   já neutralizada em variables.css, e via a media query abaixo pra
+   desativar os keyframes também.
+   ========================================================================== */
+
+@keyframes cx-fade-in{
+  from{ opacity: 0; }
+  to{ opacity: 1; }
+}
+
+@keyframes cx-slide-up{
+  from{ opacity: 0; transform: translateY(24px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cx-glow-pulse{
+  0%, 100%{ opacity: .6; }
+  50%{ opacity: 1; }
+}
+
+.cx-anim-fade-in{
+  animation: cx-fade-in var(--cx-transition-slow) both;
+}
+
+.cx-anim-slide-up{
+  animation: cx-slide-up var(--cx-transition-slow) both;
+}
+
+/* Classe utilitária pra "scroll reveal" — controlada via animations.js,
+   que adiciona .cx-in-view quando o elemento entra na tela. */
+.cx-reveal{
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--cx-transition-slow), transform var(--cx-transition-slow);
+}
+.cx-reveal.cx-in-view{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .cx-anim-fade-in, .cx-anim-slide-up, .cx-reveal{
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
