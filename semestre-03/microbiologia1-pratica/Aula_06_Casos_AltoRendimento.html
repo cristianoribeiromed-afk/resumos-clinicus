@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/shell-nav.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Casos Clínicos de Alto Rendimento — Microbiologia</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #f5f3ee;
+  --card: #ffffff;
+  --text: #16213e;
+  --muted: #6b7280;
+  --border: #e0dbd0;
+  --accent: #1a3c6e;
+  --green: #1e6b45;
+  --red: #b91c1c;
+  --orange: #c2570a;
+  --purple: #6d28d9;
+  --teal: #0e7490;
+  --light-green: #dcfce7;
+  --light-red: #fee2e2;
+  --light-blue: #dbeafe;
+  --light-orange: #ffedd5;
+  --light-purple: #ede9fe;
+  --light-teal: #cffafe;
+  --gold: #b45309;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #0d1b2a 0%, #1a3c6e 70%, #16213e 100%);
+  color: white;
+  padding: 56px 40px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '🏥';
+  position: absolute; right: 56px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 160px; opacity: 0.05; pointer-events: none;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #93c5fd; font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 16px; border-radius: 20px; margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(26px, 4.5vw, 48px);
+  font-weight: 700; line-height: 1.15; margin-bottom: 12px;
+}
+.hero h1 span { color: #93c5fd; }
+.hero p { font-size: 14px; color: rgba(255,255,255,0.62); max-width: 600px; line-height: 1.7; }
+.hero-stats {
+  display: flex; flex-wrap: wrap; gap: 20px; margin-top: 24px;
+}
+.stat {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px; padding: 12px 20px; text-align: center; min-width: 90px;
+}
+.stat-n { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; color: #93c5fd; }
+.stat-l { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+/* CONTAINER */
+.container { max-width: 920px; margin: 0 auto; padding: 40px 22px 80px; }
+
+/* SECTION DIVIDER */
+.sdiv {
+  display: flex; align-items: center; gap: 14px; margin: 44px 0 24px;
+}
+.sdiv-line { flex: 1; height: 1px; background: var(--border); }
+.sdiv-badge {
+  font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 5px 18px; border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* CASE CARD */
+.case {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.05);
+}
+.case-head {
+  padding: 22px 28px;
+  cursor: pointer;
+  display: flex; align-items: flex-start; gap: 16px;
+  transition: background 0.15s;
+  user-select: none;
+}
+.case-head:hover { background: #faf9f6; }
+.case-num {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Lora', serif; font-size: 16px; font-weight: 700;
+  color: white; flex-shrink: 0;
+}
+.case-meta { flex: 1; }
+.case-title {
+  font-family: 'Lora', serif; font-size: 17px; font-weight: 700;
+  line-height: 1.3; margin-bottom: 6px;
+}
+.case-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ctag {
+  font-size: 11px; font-weight: 600; padding: 2px 10px;
+  border-radius: 10px; letter-spacing: 0.5px;
+}
+.case-arrow {
+  color: var(--muted); font-size: 20px;
+  transition: transform 0.3s; align-self: center; flex-shrink: 0;
+}
+.case.open .case-arrow { transform: rotate(180deg); }
+
+/* CASE BODY */
+.case-body { display: none; }
+.case.open .case-body { display: block; }
+
+/* SCENARIO */
+.scenario {
+  background: #f8f6f1;
+  border-top: 1px solid var(--border);
+  padding: 24px 28px 20px;
+}
+.scenario-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px;
+}
+.scenario-text {
+  font-size: 14.5px; line-height: 1.85; color: #222;
+}
+.scenario-text strong { color: var(--text); }
+
+/* VITALS */
+.vitals {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 16px;
+}
+.vital-pill {
+  background: white; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 14px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.vital-pill span { color: var(--muted); }
+
+/* QUESTIONS AREA */
+.questions { padding: 0 28px 28px; }
+
+.q-section {
+  margin-top: 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.q-section-head {
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.q-section-head:hover { filter: brightness(0.97); }
+.q-section-icon { font-size: 18px; }
+.q-section-title { font-size: 14px; font-weight: 700; flex: 1; }
+.q-section-toggle { color: rgba(255,255,255,0.7); transition: transform 0.3s; font-size: 16px; }
+.q-section.open .q-section-toggle { transform: rotate(180deg); }
+.q-section-body { display: none; padding: 18px; background: white; border-top: 1px solid var(--border); }
+.q-section.open .q-section-body { display: block; }
+
+/* OPTIONS */
+.opts { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.opt-btn {
+  background: #faf9f6; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 12px 16px;
+  font-size: 14px; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; text-align: left; color: var(--text);
+  transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px;
+}
+.opt-btn:hover:not(:disabled) {
+  background: var(--light-blue); border-color: #3b82f6; color: #1d4ed8;
+}
+.opt-btn.correct { background: var(--light-green); border-color: var(--green); color: var(--green); font-weight: 600; }
+.opt-btn.wrong { background: var(--light-red); border-color: var(--red); color: var(--red); }
+.opt-btn:disabled { cursor: default; }
+.opt-key { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; min-width: 20px; margin-top: 2px; }
+
+/* FEEDBACK */
+.q-feedback {
+  margin-top: 12px; padding: 14px 18px;
+  border-radius: 10px; font-size: 13.5px; line-height: 1.75;
+  display: none;
+}
+.q-feedback.show { display: block; }
+.q-feedback.ok { background: var(--light-green); border: 1px solid #86efac; color: #14532d; }
+.q-feedback.err { background: var(--light-red); border: 1px solid #fca5a5; color: #7f1d1d; }
+
+/* VF */
+.vf-row { display: flex; gap: 10px; margin-top: 12px; }
+.vf-btn {
+  flex: 1; padding: 11px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: #faf9f6;
+  color: var(--text); font-size: 14px; font-weight: 700;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+}
+.vf-btn:hover:not(:disabled) { background: var(--light-blue); border-color: #3b82f6; }
+.vf-btn:disabled { cursor: default; }
+.vf-btn.correct { background: var(--light-green); border-color: var(--green); color: var(--green); }
+.vf-btn.wrong { background: var(--light-red); border-color: var(--red); color: var(--red); }
+
+/* INFO BOXES */
+.info-box {
+  border-radius: 10px; padding: 14px 18px;
+  margin-top: 12px; font-size: 13.5px; line-height: 1.75;
+}
+.ib-green { background: var(--light-green); border-left: 4px solid var(--green); }
+.ib-blue { background: var(--light-blue); border-left: 4px solid #3b82f6; }
+.ib-orange { background: var(--light-orange); border-left: 4px solid var(--orange); }
+.ib-purple { background: var(--light-purple); border-left: 4px solid var(--purple); }
+.ib-teal { background: var(--light-teal); border-left: 4px solid var(--teal); }
+.ib-red { background: var(--light-red); border-left: 4px solid var(--red); }
+.info-box h4 { font-weight: 700; font-size: 13px; margin-bottom: 6px; letter-spacing: 0.5px; }
+.info-box ul { padding-left: 18px; }
+.info-box li { margin-bottom: 4px; }
+.info-box p { margin-top: 4px; }
+
+/* TWO COL */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+@media (max-width: 580px) { .two-col { grid-template-columns: 1fr; } }
+
+/* HIGHLIGHT */
+.hl { display: inline; padding: 1px 6px; border-radius: 4px; font-weight: 600; font-size: 0.95em; }
+.hl-g { background: var(--light-green); color: var(--green); }
+.hl-r { background: var(--light-red); color: var(--red); }
+.hl-b { background: var(--light-blue); color: #1d4ed8; }
+.hl-o { background: var(--light-orange); color: var(--orange); }
+.hl-p { background: var(--light-purple); color: var(--purple); }
+.hl-t { background: var(--light-teal); color: var(--teal); }
+
+/* SCORE PANEL */
+.score-panel {
+  background: linear-gradient(135deg, #0d1b2a, #1a3c6e);
+  border-radius: 18px; padding: 44px 36px; text-align: center;
+  margin-top: 52px; color: white;
+}
+.score-panel h2 { font-family: 'Lora', serif; font-size: 22px; color: #93c5fd; margin-bottom: 6px; }
+.score-panel p { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 28px; font-family: 'IBM Plex Mono', monospace; }
+.score-display {
+  font-family: 'Lora', serif; font-size: 80px; font-weight: 900;
+  color: #93c5fd; line-height: 1; margin-bottom: 6px;
+}
+.score-sub { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+.score-boxes { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+.score-box {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 16px 22px; min-width: 100px;
+}
+.score-box-n { font-family: 'Lora', serif; font-size: 32px; font-weight: 700; color: #93c5fd; }
+.score-box-l { font-size: 11px; color: rgba(255,255,255,0.45); font-family: 'IBM Plex Mono', monospace; }
+.score-msg { font-size: 18px; font-family: 'Lora', serif; margin-bottom: 6px; }
+.score-sub2 { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 28px; font-family: 'IBM Plex Mono', monospace; }
+.restart-btn {
+  background: #93c5fd; color: #0d1b2a;
+  border: none; padding: 13px 36px; border-radius: 10px;
+  font-size: 14px; font-weight: 700; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.restart-btn:hover { opacity: 0.85; }
+
+.footer {
+  text-align: center; padding: 40px 24px; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 12px; margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .hero { padding: 36px 20px 32px; }
+  .questions { padding: 0 18px 22px; }
+  .scenario { padding: 20px 18px 16px; }
+  .case-head { padding: 18px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Microbiología I — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Microbiología I — Prática</span><span>6 de 7</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:86%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Microbiología I — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_01_Bioseguridad.html"><span class="ico">🦠</span><span>Aula 1 — Bioseguridad</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_02_Morfologia_Estrutura.html"><span class="ico">🦠</span><span>Aula 2 — Morfologia e Estrutura Bacteriana (Prática)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_03_Esterilizacao_Desinfeccao.html"><span class="ico">🦠</span><span>Aula 3 — Esterilização e Desinfecção</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_04_Meios_Cultivo_Semeadura.html"><span class="ico">🦠</span><span>Aula 4 — Meios de Cultivo e Técnicas de Semeadura</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Aula_05_Guia_Iniciante_Bacterias.html"><span class="ico">🦠</span><span>Aula 5 — Guia do Iniciante: Bactérias Patogênicas</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-03/microbiologia1-pratica/Aula_06_Casos_AltoRendimento.html"><span class="ico">🦠</span><span>Aula 6 — Casos Clínicos de Alto Rendimento</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Simulado_Micro1_CasosClinicos.html"><span class="ico">🎯</span><span>Simulado — Casos Clínicos (Bioseguridad, Morfologia, Esterilização, Meios de Cultivo)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Microbiologia · Alto Rendimento para Provas</div>
+  <h1>Casos Clínicos<br><span>de Máxima Cobrança</span></h1>
+  <p>12 casos clínicos completos com diagnóstico, microrganismo, mecanismo patogênico, exames, tratamento e fatores de risco. O que mais cai em provas de Microbiologia Médica.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-n">12</div><div class="stat-l">Casos clínicos</div></div>
+    <div class="stat"><div class="stat-n">5+</div><div class="stat-l">Perguntas/caso</div></div>
+    <div class="stat"><div class="stat-n">60+</div><div class="stat-l">Questões</div></div>
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Alto rendimento</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="sdiv">
+  <div class="sdiv-line"></div>
+  <div class="sdiv-badge" style="background:#dbeafe;color:#1d4ed8;border:1.5px solid #93c5fd;">🔬 Casos 1–4 · Bactérias Gram Positivas</div>
+  <div class="sdiv-line"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 1 — S. aureus / SSTS
+══════════════════════════════════ -->
+<div class="case" id="c1">
+  <div class="case-head" onclick="tog('c1')">
+    <div class="case-num" style="background:#dc2626;">1</div>
+    <div class="case-meta">
+      <div class="case-title">Criança com pele em "escaldamento" após febre</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">Gram Positivo</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Pediatria</span>
+        <span class="ctag" style="background:#dcfce7;color:#166534;">Toxina</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Criança de <strong>3 anos</strong>, previamente saudável, levada ao pronto-socorro com <strong>febre de 38,8°C há 2 dias</strong>, irritabilidade e lesão eritematosa perioral que se espalhou rapidamente pelo tronco. Ao exame: <strong>eritema difuso com aspecto de queimadura superficial, bolhas flácidas, sinal de Nikolsky positivo</strong> (descolamento da pele com tração suave). A pele descola em lâminas. Mucosas preservadas. Leucograma: 15.000 com neutrofilia.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🌡️ <span>Temp:</span> 38,8°C</div>
+        <div class="vital-pill">👦 <span>Idade:</span> 3 anos</div>
+        <div class="vital-pill">🔬 <span>Nikolsky:</span> (+)</div>
+        <div class="vital-pill">💊 <span>Mucosas:</span> Preservadas</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c1q1">
+        <div class="q-section-head" onclick="togQ('c1q1')" style="background:#dc2626; color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Qual é o diagnóstico e o agente causador?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Síndrome de Stevens-Johnson envolve mucosas (oral, ocular, genital) — mucosas preservadas afasta esse diagnóstico. SJS é causada por reação a drogas, não bactérias.')"><span class="opt-key">A)</span> Síndrome de Stevens-Johnson — reação medicamentosa</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Síndrome da Pele Escaldada Estafilocócica (SSSS) causada por S. aureus produtor de toxina esfoliativa (ET-A e ET-B). A toxina cliva a desmogleína-1 na camada granulosa da epiderme → bolhas subcórneas superficiais. Mucosas PRESERVADAS diferencia de SJS.')"><span class="opt-key">B)</span> Síndrome da Pele Escaldada Estafilocócica (SSSS) — S. aureus</button>
+            <button class="opt-btn" onclick="ans(this,false,'Impetigo bolhoso é localizado, não generalizado. Sinal de Nikolsky negativo. Também é causado por S. aureus, mas não na forma disseminada.')"><span class="opt-key">C)</span> Impetigo bolhoso localizado — S. aureus</button>
+            <button class="opt-btn" onclick="ans(this,false,'Escarlatina causa eritema em lixa e fácies escarlatinosa, causada por S. pyogenes, não por S. aureus. Não forma bolhas.')"><span class="opt-key">D)</span> Escarlatina — Streptococcus pyogenes</button>
+          </div>
+          <div class="info-box ib-blue" style="margin-top:14px;">
+            <h4>💡 Nikolsky como diferencial obrigatório</h4>
+            <div class="two-col">
+              <div><strong>Nikolsky (+) + Mucosas preservadas:</strong><br>→ SSSS (S. aureus)</div>
+              <div><strong>Nikolsky (+) + Mucosas acometidas:</strong><br>→ Stevens-Johnson / NET (drogas)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c1q2">
+        <div class="q-section-head" onclick="togQ('c1q2')" style="background:#c2570a; color:white;">
+          <div class="q-section-icon">⚙️</div>
+          <div class="q-section-title">2. Qual é o mecanismo patogênico?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'A invasão direta do tecido cutâneo é o mecanismo do impetigo clássico, não da SSSS.')"><span class="opt-key">A)</span> Invasão direta da pele e necrose tecidual</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! A toxina esfoliativa (ET-A, ET-B) é uma serino-protease que cliva especificamente a desmogleína-1 — proteína dos desmossomos na camada granulosa da epiderme. Isso rompe a coesão celular → separação intraepidérmica superficial. A bactéria pode estar em foco distante (nasofaringe, umbigo) e a toxina age sistemicamente.')"><span class="opt-key">B)</span> Toxina esfoliativa cliva a desmogleína-1 nos desmossomos epidérmicos</button>
+            <button class="opt-btn" onclick="ans(this,false,'LPS é endotoxina de bactérias Gram negativas, não de S. aureus (Gram positivo).')"><span class="opt-key">C)</span> Endotoxina (LPS) que ativa complemento na pele</button>
+            <button class="opt-btn" onclick="ans(this,false,'Hipersensibilidade tipo IV é retardada (tuberculina, dermatite de contato) e não produz este quadro agudo com bolhas flácidas.')"><span class="opt-key">D)</span> Hipersensibilidade tipo IV contra antígenos estafilocócicos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c1q3">
+        <div class="q-section-head" onclick="togQ('c1q3')" style="background:#166534; color:white;">
+          <div class="q-section-icon">🧪</div>
+          <div class="q-section-title">3. Quais exames solicitar e qual é o tratamento?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'A cultura das bolhas é NEGATIVA — a lesão é causada pela toxina (não pela bactéria no local). Esse é um erro clássico de prova.')"><span class="opt-key">A)</span> Cultura do conteúdo das bolhas + antifúngico tópico</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Exames: hemograma, hemocultura, cultura de nasofaringe/umbigo/foco primário (onde a bactéria realmente está). Biópsia raramente necessária. Tratamento: oxacilina ou nafcilina IV (cepas sensíveis); vancomicina se MRSA. Cuidados de suporte: hidratação, controle da temperatura, curativos não aderentes.')"><span class="opt-key">B)</span> Cultura do foco primário (nasofaringe/umbigo) + hemocultura + oxacilina IV</button>
+            <button class="opt-btn" onclick="ans(this,false,'Corticosteroides são contraindicados — pioram a infecção bacteriana ao suprimir a imunidade.')"><span class="opt-key">C)</span> Corticosteroides sistêmicos + antihistamínico</button>
+            <button class="opt-btn" onclick="ans(this,false,'Penicilina G não cobre S. aureus produtor de penicilinase (90% das cepas).')"><span class="opt-key">D)</span> Cultura de pele + penicilina G</button>
+          </div>
+          <div class="info-box ib-orange">
+            <h4>⚠️ MRSA — quando suspeitar?</h4>
+            <p>Uso recente de antibióticos · hospitalização · contato com portador MRSA · falha ao tratamento com beta-lactâmico → usar <strong>vancomicina ou linezolida</strong></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 2 — S. pyogenes / Febre Reumática
+══════════════════════════════════ -->
+<div class="case" id="c2">
+  <div class="case-head" onclick="tog('c2')">
+    <div class="case-num" style="background:#dc2626;">2</div>
+    <div class="case-meta">
+      <div class="case-title">Adolescente com artrite + sopro cardíaco após "garganta inflamada"</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">Streptococcus pyogenes</span>
+        <span class="ctag" style="background:#ede9fe;color:#6d28d9;">Imunomediado</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Complicação pós-infecciosa</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Menino de <strong>10 anos</strong>, 3 semanas após episódio de faringite não tratada, apresenta <strong>febre (38,5°C), artrite migratória nas grandes articulações</strong> (joelhos → tornozelos → cotovelos), <strong>cardite com sopro mitral novo</strong> e eritema marginado no tronco. Sem lesão renal. ASLO: <strong>800 UI/mL (elevado)</strong>. PCR positivo. ECG: intervalo PR prolongado.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🌡️ <span>Temp:</span> 38,5°C</div>
+        <div class="vital-pill">🔬 <span>ASLO:</span> 800 UI/mL ↑</div>
+        <div class="vital-pill">💔 <span>Sopro:</span> Mitral novo</div>
+        <div class="vital-pill">📊 <span>PR:</span> Prolongado</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c2q1">
+        <div class="q-section-head" onclick="togQ('c2q1')" style="background:#dc2626;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Diagnóstico, agente e mecanismo?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Artrite reumatoide juvenil tem padrão diferente (crônica, simétrica) e não associa com ASLO elevado ou cardite aguda com sopro novo.')"><span class="opt-key">A)</span> Artrite reumatoide juvenil — processo autoimune primário</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Febre Reumática Aguda (FRA) por S. pyogenes (GABHS — Grupo A beta-hemolítico). Mecanismo: MIMETISMO MOLECULAR — anticorpos contra proteína M de S. pyogenes reagem cruzadamente com miosina e laminina cardíaca, valvulina, tropomiosina. Critérios de Jones: 2 maiores (cardite + artrite) + ASLO elevado = FRA confirmada.')"><span class="opt-key">B)</span> Febre Reumática Aguda — S. pyogenes / mimetismo molecular</button>
+            <button class="opt-btn" onclick="ans(this,false,'Endocardite infecciosa tem hemocultura positiva, fenômenos embólicos, febre mais alta. ASLO não é típico.')"><span class="opt-key">C)</span> Endocardite bacteriana subaguda — S. viridans</button>
+            <button class="opt-btn" onclick="ans(this,false,'Doença de Kawasaki ocorre em menores de 5 anos, com critérios próprios (conjuntivite, linfadenopatia, língua em framboesa). ASLO negativo.')"><span class="opt-key">D)</span> Doença de Kawasaki — vasculite sistêmica</button>
+          </div>
+          <div class="info-box ib-purple">
+            <h4>📋 Critérios de Jones (FRA) — decorar!</h4>
+            <div class="two-col">
+              <div><strong>MAIORES (CEASE):</strong><br>Cardite · Eritema marginado · Artrite · Sydenham (coreia) · Esleremia (nódulos subcutâneos)</div>
+              <div><strong>MENORES:</strong><br>Febre · PR prolongado · VHS/PCR elevados · ASLO+</div>
+            </div>
+            <p style="margin-top:8px;"><strong>Diagnóstico: 2 maiores OU 1 maior + 2 menores + evidência de infecção estreptocócica prévia</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c2q2">
+        <div class="q-section-head" onclick="togQ('c2q2')" style="background:#6d28d9;color:white;">
+          <div class="q-section-icon">🧪</div>
+          <div class="q-section-title">2. Exames + tratamento + profilaxia?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Corticosteroides podem ser usados na cardite grave, mas não são o tratamento de 1ª linha isolado. Penicilina V é para 10 dias, não 30.')"><span class="opt-key">A)</span> Corticosteroides + penicilina V por 30 dias</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Exames: ASLO (antistreptolisina O), anti-DNase B, hemograma, PCR/VHS, ecocardiograma, ECG, cultura de orofaringe. Tratamento da fase aguda: penicilina G benzatina IM dose única (ou penicilina V oral 10 dias) para erradicar o estreptococo + AAS para artrite. Profilaxia secundária: penicilina G benzatina 1,2 MUI IM/mês por ANOS (mínimo 5 anos ou até 21 anos) para prevenir novos surtos e cardiopatia reumática progressiva.')"><span class="opt-key">B)</span> ASLO + eco + penicilina G benzatina dose única + profilaxia secundária mensal</button>
+            <button class="opt-btn" onclick="ans(this,false,'Azitromicina é alternativa em alérgicos à penicilina, mas não é 1ª escolha. Sem profilaxia secundária, o paciente terá recidivas e dano valvular progressivo.')"><span class="opt-key">C)</span> Azitromicina por 5 dias apenas</button>
+            <button class="opt-btn" onclick="ans(this,false,'Cefalosporinas têm algum papel em alérgicos a penicilina, mas sem profilaxia a longo prazo, o caso evolui mal.')"><span class="opt-key">D)</span> Cefalosporina oral + corticoide + sem profilaxia</button>
+          </div>
+          <div class="info-box ib-teal">
+            <h4>🔑 Por que a profilaxia é obrigatória?</h4>
+            <p>Cada nova infecção estreptocócica = novo ataque reumático = mais dano valvular. A valvulopatia é <strong>cumulativa</strong>. Sem profilaxia: estenose mitral em 10–15 anos. A penicilina benzatina mensal prevende novos ataques e preserva a valva.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 3 — S. pneumoniae / Meningite
+══════════════════════════════════ -->
+<div class="case" id="c3">
+  <div class="case-head" onclick="tog('c3')">
+    <div class="case-num" style="background:#7c3aed;">3</div>
+    <div class="case-meta">
+      <div class="case-title">Idoso asplênico com meningite purulenta de início súbito</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">Gram Positivo</span>
+        <span class="ctag" style="background:#ede9fe;color:#6d28d9;">Neurologia</span>
+        <span class="ctag" style="background:#cffafe;color:#0e7490;">Imunossuprimido</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Homem de <strong>68 anos, esplenectomizado há 5 anos</strong> (trauma), diabético, tabagista. Admitido com <strong>febre alta (40°C), cefaleia intensa de início súbito, rigidez de nuca, fotofobia, confusão mental e rebaixamento do nível de consciência</strong>. Líquor: <strong>turvo, pressão aumentada, glicose 20 mg/dL, proteínas 380 mg/dL, células 2800/mm³ (90% PMN)</strong>. Gram: <strong>diplococos Gram positivos em forma de lança</strong>.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🌡️ <span>Temp:</span> 40°C</div>
+        <div class="vital-pill">🧠 <span>Glasgow:</span> 11</div>
+        <div class="vital-pill">🔬 <span>Glicose LCR:</span> 20 mg/dL</div>
+        <div class="vital-pill">⚡ <span>Células:</span> 2800 PMN</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c3q1">
+        <div class="q-section-head" onclick="togQ('c3q1')" style="background:#7c3aed;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Agente, fatores de risco e características do microrganismo?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Neisseria meningitidis são diplococos Gram NEGATIVOS (em grão de café). O caso mostra Gram positivos em lança.')"><span class="opt-key">A)</span> Neisseria meningitidis — diplococo Gram negativo</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Streptococcus pneumoniae: diplococo Gram positivo em forma de lança (lancetado), encapsulado, alfa-hemolítico, sensível à optoquina e solúvel em bile. Principal causa de meningite bacteriana em adultos e idosos. FATORES DE RISCO para pneumococo invasivo: asplenia (principal!), diabetes, alcoolismo, imunossupressão, DPOC, tabagismo, mieloma múltiplo. A cápsula polissacarídea é o principal fator de virulência — inibe fagocitose.')"><span class="opt-key">B)</span> Streptococcus pneumoniae — diplococo Gram+ lancetado, encapsulado</button>
+            <button class="opt-btn" onclick="ans(this,false,'Listeria causa meningite em neonatos e imunossuprimidos, mas é bacilo Gram positivo, não diplococo. LCR tem predomínio de mononucleares.')"><span class="opt-key">C)</span> Listeria monocytogenes — bacilo Gram positivo</button>
+            <button class="opt-btn" onclick="ans(this,false,'H. influenzae causa meningite em crianças não vacinadas, é bacilo Gram negativo pleomórfico.')"><span class="opt-key">D)</span> Haemophilus influenzae — bacilo Gram negativo</button>
+          </div>
+          <div class="info-box ib-purple">
+            <h4>🧬 Por que asplenia é fator de risco crítico para pneumococo?</h4>
+            <p>O baço é essencial para opsonização e fagocitose de bactérias encapsuladas. Sem o baço, o organismo não consegue eliminar eficientemente pneumococo, meningococo e Hib → risco de sepse fulminante (OPSI — Overwhelming Post-Splenectomy Infection).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c3q2">
+        <div class="q-section-head" onclick="togQ('c3q2')" style="background:#0e7490;color:white;">
+          <div class="q-section-icon">🧪</div>
+          <div class="q-section-title">2. Interpretação do líquor e tratamento?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="info-box ib-teal" style="margin-bottom:14px;">
+            <h4>📊 Padrão de LCR nas meningites — MEMORIZAR</h4>
+            <div class="two-col">
+              <div><strong>Bacteriana (PMN):</strong><br>Células: 1000–10000 PMN<br>Glicose: ↓↓ (&lt;45 ou &lt;60% glicemia)<br>Proteínas: ↑↑ (>150 mg/dL)<br>Aspecto: turvo/purulento</div>
+              <div><strong>Viral (MN):</strong><br>Células: 100–1000 MN<br>Glicose: Normal<br>Proteínas: levemente ↑<br>Aspecto: límpido</div>
+            </div>
+            <p style="margin-top:8px;"><strong>TB/Fúngica:</strong> MN, glicose muito baixa, proteínas muito altas, crônico</p>
+          </div>
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Aciclovir é antiviral para herpes — não trata pneumococo. Além disso, o padrão de LCR (PMN + glicose baixa) é bacteriano, não viral.')"><span class="opt-key">A)</span> Aciclovir IV — meningite viral por herpes</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Tratamento: ceftriaxona 4g/dia IV + dexametasona 0,15 mg/kg/dose 6h (iniciar ANTES ou junto com antibiótico para reduzir inflamação e sequelas — surdez, lesão neurológica). Em pneumococo resistente: adicionar vancomicina. Exames: LCR (Gram, cultura, citoquímico), hemocultura, antígeno polissacarídico pneumocócico, TC crânio (antes da PL se papiledema/focal).')"><span class="opt-key">B)</span> Ceftriaxona IV + dexametasona (antes do ATB) + hemocultura</button>
+            <button class="opt-btn" onclick="ans(this,false,'Penicilina G isolada pode não cobrir cepas resistentes. Dexametasona é essencial para reduzir sequelas.')"><span class="opt-key">C)</span> Penicilina G isolada, sem corticoide</button>
+            <button class="opt-btn" onclick="ans(this,false,'Ampicilina + gentamicina é esquema para Listeria e neonatos, não para meningite pneumocócica em adulto.')"><span class="opt-key">D)</span> Ampicilina + gentamicina</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 4 — S. agalactiae / Neonato
+══════════════════════════════════ -->
+<div class="case" id="c4">
+  <div class="case-head" onclick="tog('c4')">
+    <div class="case-num" style="background:#dc2626;">4</div>
+    <div class="case-meta">
+      <div class="case-title">Neonato com sepse nas primeiras 24h de vida — prevenção falhou</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">S. agalactiae GBS</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Neonatologia</span>
+        <span class="ctag" style="background:#dcfce7;color:#166534;">Prevenção</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        RN de termo, 18 horas de vida, parto vaginal, <strong>mãe sem pré-natal adequado</strong>. Apresenta <strong>gemência, hipotonia, recusa alimentar, febre (38,2°C) e cianose periférica</strong>. Hemograma: leucopenia, neutropenia, plaquetopenia. Hemocultura: crescimento de <strong>cocos Gram positivos beta-hemolíticos, catalase negativos, CAMP teste positivo</strong>. Líquor: turvo, PMN 1800.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">⏱️ <span>Vida:</span> 18 horas</div>
+        <div class="vital-pill">🔬 <span>CAMP:</span> Positivo</div>
+        <div class="vital-pill">🧪 <span>Beta-hemólise:</span> Sim</div>
+        <div class="vital-pill">💊 <span>Pré-natal:</span> Ausente</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c4q1">
+        <div class="q-section-head" onclick="togQ('c4q1')" style="background:#dc2626;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Identificação do agente + características + prevenção?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'S. pyogenes é Grupo A, CAMP negativo, bacitracina sensível. Causa faringite, não sepse neonatal típica.')"><span class="opt-key">A)</span> Streptococcus pyogenes — Grupo A</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! S. agalactiae (Streptococcus Grupo B — GBS): coco Gram+, beta-hemolítico, catalase−, CAMP teste positivo (sinergia com beta-toxina de S. aureus), hidrólise do hipurato. Coloniza vagina/reto de 15–30% das grávidas. Causa sepse neonatal precoce (<7 dias). PREVENÇÃO: triagem vaginal/retal entre 35–37 semanas + penicilina G intraparto se positiva.')"><span class="opt-key">B)</span> Streptococcus agalactiae (GBS) — CAMP+, Grupo B, colonização materna</button>
+            <button class="opt-btn" onclick="ans(this,false,'S. pneumoniae é alfa-hemolítico, CAMP negativo, sensível à optoquina. Não é o agente clássico de sepse neonatal precoce.')"><span class="opt-key">C)</span> Streptococcus pneumoniae — diplococo lancetado</button>
+            <button class="opt-btn" onclick="ans(this,false,'Enterococcus é catalase negativo mas CAMP negativo, não beta-hemolítico típico.')"><span class="opt-key">D)</span> Enterococcus faecalis — Grupo D</button>
+          </div>
+          <div class="info-box ib-green">
+            <h4>🛡️ Protocolo de prevenção do GBS — obrigatório saber</h4>
+            <ul>
+              <li>Triagem: cultura vaginal/retal 35–37 semanas</li>
+              <li>Profilaxia: penicilina G ou ampicilina IV no trabalho de parto</li>
+              <li>Alternativas em alérgicas: clindamicina ou vancomicina</li>
+              <li>Sepse precoce (<7d) → transmissão intraparto · Sepse tardia (7–90d) → ambiente</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="sdiv">
+  <div class="sdiv-line"></div>
+  <div class="sdiv-badge" style="background:#dbeafe;color:#1d4ed8;border:1.5px solid #93c5fd;">🔵 Casos 5–9 · Bactérias Gram Negativas</div>
+  <div class="sdiv-line"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 5 — N. meningitidis
+══════════════════════════════════ -->
+<div class="case" id="c5">
+  <div class="case-head" onclick="tog('c5')">
+    <div class="case-num" style="background:#1d4ed8;">5</div>
+    <div class="case-meta">
+      <div class="case-title">Universitário com púrpura fulminante e colapso hemodinâmico</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#dbeafe;color:#1d4ed8;">N. meningitidis</span>
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">Emergência</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Choque séptico</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Jovem de <strong>19 anos, morador de república universitária</strong>, levado ao PA por colegas com <strong>febre súbita de 39,8°C, cefaleia "a pior da vida", rigidez de nuca e confusão mental</strong>. Em 3 horas surgem <strong>petéquias confluindo em púrpura</strong> nos membros e tronco. PA: 80×50 mmHg. FC: 138 bpm. Nível de consciência em queda. Líquor (após estabilização): diplococos Gram negativos intracelulares.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🌡️ <span>Temp:</span> 39,8°C</div>
+        <div class="vital-pill">💔 <span>PA:</span> 80×50 mmHg</div>
+        <div class="vital-pill">⚡ <span>FC:</span> 138 bpm</div>
+        <div class="vital-pill">🔴 <span>Púrpura:</span> Sim</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c5q1">
+        <div class="q-section-head" onclick="togQ('c5q1')" style="background:#1d4ed8;color:white;">
+          <div class="q-section-icon">⚡</div>
+          <div class="q-section-title">1. Conduta de emergência — o que fazer PRIMEIRO?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Aguardar resultado de cultura antes de tratar é ERRO FATAL em meningococcemia. Cada hora sem antibiótico aumenta a mortalidade drasticamente.')"><span class="opt-key">A)</span> Aguardar resultado da hemocultura para iniciar antibiótico</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Meningococcemia = EMERGÊNCIA MÁXIMA. Conduta imediata: 1) Hemocultura (colher em 1 minuto); 2) Penicilina G IV ou ceftriaxona IV IMEDIATAMENTE; 3) Dexametasona IV; 4) Reposição volêmica agressiva (choque séptico); 5) UTI. NÃO aguardar punção lombar se instabilidade hemodinâmica ou sinais de herniação. A cada hora de atraso no antibiótico: mortalidade aumenta ~10%. Profilaxia dos contatos: rifampicina 600 mg 12/12h × 2 dias (ou ciprofloxacino dose única).')"><span class="opt-key">B)</span> Hemocultura imediata → ceftriaxona IV imediata → UTI → profilaxia dos contatos</button>
+            <button class="opt-btn" onclick="ans(this,false,'TC crânio pode atrasar o tratamento. Na suspeita clínica de meningococcemia, o antibiótico vem primeiro.')"><span class="opt-key">C)</span> TC de crânio primeiro, depois punção lombar, depois antibiótico</button>
+            <button class="opt-btn" onclick="ans(this,false,'Aciclovir é para herpes — não tem papel na meningococcemia bacteriana.')"><span class="opt-key">D)</span> Aciclovir IV e hidratação oral</button>
+          </div>
+          <div class="info-box ib-red">
+            <h4>🚨 Síndrome de Waterhouse-Friderichsen</h4>
+            <p>Meningococcemia fulminante → infarto hemorrágico bilateral das adrenais → insuficiência adrenal aguda → choque irreversível. Petéquias + hipotensão + febre = não espere nada — antibiótico AGORA.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c5q2">
+        <div class="q-section-head" onclick="togQ('c5q2')" style="background:#0e7490;color:white;">
+          <div class="q-section-icon">🧬</div>
+          <div class="q-section-title">2. Características do N. meningitidis e vacinação?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Não tem cápsula → não tem vacina é a descrição de N. gonorrhoeae, não meningitidis.')"><span class="opt-key">A)</span> Sem cápsula, sem vacina, transmissão sexual</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! N. meningitidis: diplococo Gram negativo (em grão de café), oxidase+, fermentador de glicose E maltose (diferencia de gonorrhoeae que fermenta só glicose). Possui cápsula polissacarídica → base das vacinas (ACWY para sorogrupos A,C,W,Y; vacina B para sorogrupo B). Grupos de risco para vacinação: adolescentes, recrutas militares, viajantes à África Subsaariana (cinturão meningocócico), asplênicos, déficit de complemento C5-C9.')"><span class="opt-key">B)</span> Diplococo Gram−, oxidase+, capsulado, fermenta glicose e maltose, vacina ACWY e B</button>
+            <button class="opt-btn" onclick="ans(this,false,'S. pneumoniae é Gram positivo, não negativo.')"><span class="opt-key">C)</span> Diplococo Gram+, capsulado, alfa-hemolítico</button>
+            <button class="opt-btn" onclick="ans(this,false,'Listeria é bacilo Gram positivo intracelular facultativo — características completamente diferentes.')"><span class="opt-key">D)</span> Bacilo Gram negativo, intracelular obrigatório</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 6 — E. coli / SHU
+══════════════════════════════════ -->
+<div class="case" id="c6">
+  <div class="case-head" onclick="tog('c6')">
+    <div class="case-num" style="background:#0e7490;">6</div>
+    <div class="case-meta">
+      <div class="case-title">Criança com diarreia sanguinolenta evolui para insuficiência renal</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#cffafe;color:#0e7490;">E. coli O157:H7</span>
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">SHU</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Toxina Shiga</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Menina de <strong>4 anos</strong>, 5 dias após ingerir <strong>hambúrguer malpassado em restaurante</strong>, apresenta <strong>diarreia inicialmente aquosa, evoluindo para sanguinolenta com cólicas intensas</strong>. Sem febre significativa. No 7º dia: <strong>oligúria, palidez, petéquias e irritabilidade</strong>. Laboratório: creatinina 4,2 mg/dL, Hb 7,1 g/dL, plaquetas 42.000/mm³, esquizócitos no esfregaço, LDH elevado.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🔬 <span>Plaquetas:</span> 42.000 ↓↓</div>
+        <div class="vital-pill">🩸 <span>Hb:</span> 7,1 g/dL</div>
+        <div class="vital-pill">💧 <span>Creatinina:</span> 4,2 ↑↑</div>
+        <div class="vital-pill">🔴 <span>Esquizócitos:</span> Sim</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c6q1">
+        <div class="q-section-head" onclick="togQ('c6q1')" style="background:#0e7490;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Diagnóstico + mecanismo patogênico?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'PTT também tem microangiopatia, mas é causada por deficiência de ADAMTS13 (protease do fator von Willebrand), mais comum em adultos. Sem associação com hambúrguer e diarreia prévia.')"><span class="opt-key">A)</span> PTT — Púrpura Trombocitopênica Trombótica</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Síndrome Hemolítico-Urêmica (SHU) tríade: anemia hemolítica microangiopática (esquizócitos) + trombocitopenia + IRA. Agente: E. coli O157:H7 (STEC — enteroHemorrágica). Mecanismo: toxina Shiga (Stx1/Stx2) → absorvida pela mucosa intestinal → liga-se ao receptor Gb3 nas células endoteliais renais → inibe síntese proteica → morte endotelial → microtrombos → oclusão glomerular → IRA. ATENÇÃO: NÃO dar antibiótico — lisa bactérias, libera mais toxina, piora o quadro!')"><span class="opt-key">B)</span> SHU — E. coli O157:H7, toxina Shiga lesa endotélio renal</button>
+            <button class="opt-btn" onclick="ans(this,false,'Glomerulonefrite pós-estreptocócica é causada por S. pyogenes após faringite/impetigo, tem hematúria mas sem esquizócitos típicos nem plaquetopenia.')"><span class="opt-key">C)</span> GNPE — Glomerulonefrite pós-estreptocócica</button>
+            <button class="opt-btn" onclick="ans(this,false,'Dengue causa plaquetopenia mas sem IRA e sem associação com diarreia sanguinolenta por alimento.')"><span class="opt-key">D)</span> Dengue hemorrágica com comprometimento renal</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c6q2">
+        <div class="q-section-head" onclick="togQ('c6q2')" style="background:#b91c1c;color:white;">
+          <div class="q-section-icon">⚠️</div>
+          <div class="q-section-title">2. Por que NÃO dar antibiótico? Qual é o tratamento?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Ciprofloxacino neste caso aumenta a liberação de toxina Shiga e piora o quadro renal. Esse é um erro grave e clássico de prova.')"><span class="opt-key">A)</span> Ciprofloxacino + hemodiálise precoce</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! ANTIBIÓTICO É CONTRAINDICADO na fase de SHU estabelecida: mata a bactéria rapidamente → libera grande quantidade de toxina Shiga de uma vez → piora o quadro renal. Tratamento: SUPORTE — hidratação, transfusão se necessário, diálise na IRA grave, controle pressórico. Eculizumabe (anti-C5) para formas atípicas/recorrentes. Monitorar ureia, creatinina, eletrólitos diariamente.')"><span class="opt-key">B)</span> Suporte intensivo (hidratação + diálise se IRA grave) — SEM antibiótico</button>
+            <button class="opt-btn" onclick="ans(this,false,'Prednisona não tem indicação na SHU típica associada a STEC.')"><span class="opt-key">C)</span> Prednisona + azitromicina</button>
+            <button class="opt-btn" onclick="ans(this,false,'Metronidazol é para anaeróbios e protozoários — sem papel na SHU.')"><span class="opt-key">D)</span> Metronidazol + plasma fresco congelado</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 7 — H. pylori
+══════════════════════════════════ -->
+<div class="case" id="c7">
+  <div class="case-head" onclick="tog('c7')">
+    <div class="case-num" style="background:#166534;">7</div>
+    <div class="case-meta">
+      <div class="case-title">Homem com epigastralgia crônica + úlcera duodenal recorrente</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#dcfce7;color:#166534;">H. pylori</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Gastroenterologia</span>
+        <span class="ctag" style="background:#ede9fe;color:#6d28d9;">Carcinogênese</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Homem de <strong>45 anos, tabagista, uso crônico de AINEs</strong>. Epigastralgia em queimação há 6 meses, piora em jejum, melhora com alimentação. EDA: <strong>úlcera duodenal de 1,2 cm com base limpa</strong>. Biópsia antral: <strong>gastrite ativa, inflamação mononuclear densa, bactérias em forma espiral sobre o muco gástrico</strong>. Urease: positiva. Teste respiratório com ureia marcada: positivo.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🔬 <span>Urease:</span> Positivo</div>
+        <div class="vital-pill">💨 <span>Teste respiratório:</span> Positivo</div>
+        <div class="vital-pill">🩺 <span>EDA:</span> Úlcera duodenal</div>
+        <div class="vital-pill">🧬 <span>Biópsia:</span> Espirais</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c7q1">
+        <div class="q-section-head" onclick="togQ('c7q1')" style="background:#166534;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Agente + mecanismo de sobrevivência no estômago?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Candida pode colonizar o esôfago/estômago em imunossuprimidos, mas não causa úlcera duodenal e não é detectada pela urease.')"><span class="opt-key">A)</span> Candida albicans — fungo oportunista</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! H. pylori: bacilo Gram negativo curvo/espiral, microaerófilo, oxidase+, catalase+, urease fortemente positiva. Sobrevivência no pH ácido gástrico: a urease converte ureia → amônia + CO₂ → neutraliza o pH ao redor da bactéria formando uma "nuvem protetora". Coloniza a camada de muco gástrico, especialmente no antro. CagA (citotoxina associada ao gene A) e VacA (citotoxina vacuolizante) são os principais fatores de virulência associados a úlcera e carcinoma gástrico.')"><span class="opt-key">B)</span> H. pylori — urease neutraliza o ácido, CagA/VacA como virulência</button>
+            <button class="opt-btn" onclick="ans(this,false,'Campylobacter jejuni causa diarreia aguda, não úlcera péptica crônica. Não coloniza o estômago.')"><span class="opt-key">C)</span> Campylobacter jejuni — zoonose alimentar</button>
+            <button class="opt-btn" onclick="ans(this,false,'Shigella causa disenteria — infecção colônica aguda, não úlcera gástrica crônica.')"><span class="opt-key">D)</span> Shigella — invasão da mucosa colônica</button>
+          </div>
+          <div class="info-box ib-orange">
+            <h4>⚠️ H. pylori e risco oncológico — prova adora!</h4>
+            <ul>
+              <li>Gastrite crônica → metaplasia intestinal → <strong>adenocarcinoma gástrico</strong> (carcinógeno classe I - OMS)</li>
+              <li>Estimulação crônica de MALT → <strong>linfoma MALT gástrico</strong></li>
+              <li>Erradicação do H. pylori pode regredir linfoma MALT localizado!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c7q2">
+        <div class="q-section-head" onclick="togQ('c7q2')" style="background:#c2570a;color:white;">
+          <div class="q-section-icon">🧪</div>
+          <div class="q-section-title">2. Métodos diagnósticos e tratamento?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="info-box ib-blue" style="margin-bottom:14px;">
+            <h4>🔬 Testes para H. pylori</h4>
+            <div class="two-col">
+              <div><strong>INVASIVOS (EDA):</strong><br>- Teste rápido da urease (CLO test) — rápido<br>- Histologia da biópsia — padrão ouro<br>- Cultura (resistência) — raro</div>
+              <div><strong>NÃO INVASIVOS:</strong><br>- Teste respiratório ureia-C13 — melhor controle de cura<br>- Antígeno fecal — alternativa barata<br>- Sorologia (IgG) — não confirma atividade atual</div>
+            </div>
+          </div>
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Monoterapia com omeprazol suprime sintomas mas não erradica H. pylori — a úlcera recidiva em >80% sem erradicação.')"><span class="opt-key">A)</span> Apenas omeprazol por 8 semanas</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Terapia Tríplice (1ª linha): IBP + claritromicina + amoxicilina por 14 dias. Em alérgicos à amoxicilina: IBP + claritromicina + metronidazol. Controle de cura: teste respiratório ou antígeno fecal, mínimo 4 semanas após término do tratamento (sorologia não serve para controle). Taxa de erradicação: 80–90% com tríplice. Se falha: terapia quádrupla com bismuto.')"><span class="opt-key">B)</span> IBP + claritromicina + amoxicilina 14 dias; controle com teste respiratório</button>
+            <button class="opt-btn" onclick="ans(this,false,'Ciprofloxacino não é esquema padrão de 1ª linha para H. pylori.')"><span class="opt-key">C)</span> Ciprofloxacino + IBP por 7 dias</button>
+            <button class="opt-btn" onclick="ans(this,false,'Metronidazol isolado tem alta taxa de resistência e é insuficiente para erradicação.')"><span class="opt-key">D)</span> Metronidazol isolado por 10 dias</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 8 — Salmonella / Febre Tifoide
+══════════════════════════════════ -->
+<div class="case" id="c8">
+  <div class="case-head" onclick="tog('c8')">
+    <div class="case-num" style="background:#1d4ed8;">8</div>
+    <div class="case-meta">
+      <div class="case-title">Viajante com febre escalonante, bradicardia e roséola tífica</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#dbeafe;color:#1d4ed8;">Salmonella typhi</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Medicina do Viajante</span>
+        <span class="ctag" style="background:#dcfce7;color:#166534;">Notificação compulsória</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Homem de <strong>28 anos, retornou de viagem à Índia há 10 dias</strong>. Febre em platô (39,5°C) há 8 dias, de início gradual. <strong>Bradicardia relativa</strong> (FC 58 bpm apesar da febre alta). <strong>Manchas rosadas maculares no abdome (roséola tífica)</strong>, esplenomegalia, diarreia em "sopa de ervilha", obstipação na 1ª semana. Hemograma: leucopenia, eosinopenia, linfocitose relativa.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🌡️ <span>Temp:</span> 39,5°C</div>
+        <div class="vital-pill">💔 <span>FC:</span> 58 bpm ← Bradicardia relativa</div>
+        <div class="vital-pill">🩺 <span>Baço:</span> Palpável</div>
+        <div class="vital-pill">🌿 <span>Leucócitos:</span> ↓</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c8q1">
+        <div class="q-section-head" onclick="togQ('c8q1')" style="background:#1d4ed8;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Diagnóstico + características clínicas + exames?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Malária causa febre intermitente/terçã e anemia hemolítica, mas sem roséola tífica e sem bradicardia relativa típica.')"><span class="opt-key">A)</span> Malária — febre periódica em viajante</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Febre Tifoide por Salmonella typhi. Achados clássicos: BRADICARDIA RELATIVA (dissociação pulso-temperatura — o coração não acelera proporcionalmente à febre → toxina bacteriana afeta o nó sinusal), roséola tífica (manchas rosadas no abdome, 2ª semana), esplenomegalia, febre em platô progressivo, leucopenia + eosinopenia + linfocitose. EXAMES: 1ª semana → hemocultura (sensibilidade 80%); 2ª–3ª semana → coprocultura, urocultura; Widal (soroaglutinação — inespecífico). Mielocultura = padrão ouro mas invasiva.')"><span class="opt-key">B)</span> Febre Tifoide — S. typhi, bradicardia relativa, roséola, hemocultura 1ª semana</button>
+            <button class="opt-btn" onclick="ans(this,false,'Leptospirose causa febre bifásica, icterícia, conjuntivite hemorrágica, IRA. Sem roséola tífica.')"><span class="opt-key">C)</span> Leptospirose — febre bifásica e icterícia</button>
+            <button class="opt-btn" onclick="ans(this,false,'Dengue causa leucopenia e febre, mas com dor retroorbital, exantema diferente, sem bradicardia relativa.')"><span class="opt-key">D)</span> Dengue clássica — trombocitopenia e leucopenia</button>
+          </div>
+          <div class="info-box ib-blue">
+            <h4>⚠️ Complicações da febre tifoide — alto risco em prova</h4>
+            <ul>
+              <li><strong>Perfuração intestinal</strong> (3ª semana) → peritonite → emergência cirúrgica</li>
+              <li><strong>Hemorragia intestinal</strong> → hematoquezia</li>
+              <li><strong>Portador crônico</strong> → bactéria persiste na vesícula biliar (especialmente com colelitíase)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c8q2">
+        <div class="q-section-head" onclick="togQ('c8q2')" style="background:#166534;color:white;">
+          <div class="q-section-icon">💊</div>
+          <div class="q-section-title">2. Tratamento e portador crônico?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Metronidazol é para Giardia, Entamoeba, anaeróbios — sem ação contra Salmonella.')"><span class="opt-key">A)</span> Metronidazol + hidratação oral</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Tratamento: ciprofloxacino (quinolona) por 7–14 dias — 1ª escolha na maioria dos países. Alternativa: ceftriaxona IV (casos graves ou resistência). Em cepas multirresistentes: azitromicina. PORTADOR CRÔNICO (excreção fecal >1 ano após infecção): ciprofloxacino por 4 semanas; se litiase biliar: colecistectomia. NOTIFICAÇÃO COMPULSÓRIA em vários países (incluindo Brasil e Paraguai).')"><span class="opt-key">B)</span> Ciprofloxacino 14 dias; portador crônico: cipro 4 semanas ± colecistectomia</button>
+            <button class="opt-btn" onclick="ans(this,false,'Amoxicilina tem alta resistência adquirida na Salmonella — não é mais recomendada como 1ª linha.')"><span class="opt-key">C)</span> Amoxicilina por 7 dias</button>
+            <button class="opt-btn" onclick="ans(this,false,'Suporte apenas não é suficiente — S. typhi é invasiva e requer antibioticoterapia ativa.')"><span class="opt-key">D)</span> Apenas suporte — a doença é autolimitada</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 9 — Campylobacter / Guillain-Barré
+══════════════════════════════════ -->
+<div class="case" id="c9">
+  <div class="case-head" onclick="tog('c9')">
+    <div class="case-num" style="background:#0e7490;">9</div>
+    <div class="case-meta">
+      <div class="case-title">Adulto com paralisia flácida ascendente 2 semanas após diarreia</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#cffafe;color:#0e7490;">Campylobacter jejuni</span>
+        <span class="ctag" style="background:#ede9fe;color:#6d28d9;">Guillain-Barré</span>
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">Neurologia urgência</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Homem de <strong>35 anos</strong>, 14 dias após episódio de diarreia sanguinolenta (associada a frango grelhado malpassado), retorna ao médico com <strong>fraqueza muscular simétrica em membros inferiores iniciando pelas extremidades, progressiva, com parestesias</strong>. Reflexos patelares e aquileus <strong>abolidos bilateralmente</strong>. Ascende para membros superiores. LCR: <strong>proteinorraquia elevada (180 mg/dL) com celularidade normal</strong> (dissociação albumino-citológica).
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🧠 <span>LCR proteína:</span> 180 mg/dL ↑</div>
+        <div class="vital-pill">🧠 <span>LCR células:</span> Normal</div>
+        <div class="vital-pill">⚡ <span>Reflexos:</span> Abolidos</div>
+        <div class="vital-pill">📈 <span>Padrão:</span> Ascendente</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c9q1">
+        <div class="q-section-head" onclick="togQ('c9q1')" style="background:#6d28d9;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Diagnóstico + mecanismo + risco de vida?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'ELA é doença crônica neurodegenerativa, sem associação com infecção prévia, sem dissociação albumino-citológica e sem parestesias.')"><span class="opt-key">A)</span> ELA — Esclerose Lateral Amiotrófica</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Síndrome de Guillain-Barré (SGB) pós-Campylobacter jejuni. Mecanismo: MIMETISMO MOLECULAR — o LPS do C. jejuni (especialmente o sorotipo O:19) imita gangliosídeos do nervo periférico (GM1, GD1b). Anticorpos formados contra o LPS atacam a mielina dos nervos periféricos → polirradiculoneuropatia inflamatória aguda → paralisia ascendente flácida + arreflexia. RISCO DE VIDA: comprometimento dos músculos respiratórios → insuficiência respiratória → ventilação mecânica necessária em 20–30% dos casos. Monitorar CVF!')"><span class="opt-key">B)</span> SGB pós-Campylobacter — mimetismo molecular anti-gangliosídeo, risco respiratório</button>
+            <button class="opt-btn" onclick="ans(this,false,'Botulismo também causa paralisia descendente (não ascendente!) + sem dissociação albumino-citológica + afeta nervos cranianos precocemente.')"><span class="opt-key">C)</span> Botulismo — toxina de C. botulinum</button>
+            <button class="opt-btn" onclick="ans(this,false,'Poliomielite é paralisia assimétrica, flácida, sem dissociação albumino-citológica e sem parestesias. Rara desde a vacinação.')"><span class="opt-key">D)</span> Poliomielite — poliovírus tipo 1</button>
+          </div>
+          <div class="info-box ib-purple">
+            <h4>🔑 Dissociação albumino-citológica — achado patognomônico do SGB</h4>
+            <p><strong>Proteínas ↑↑ + Células normais no LCR</strong> = SGB. As proteínas sobem porque a inflamação das raízes nervosas aumenta a permeabilidade vascular, mas sem resposta celular significativa no LCR.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c9q2">
+        <div class="q-section-head" onclick="togQ('c9q2')" style="background:#0e7490;color:white;">
+          <div class="q-section-icon">💊</div>
+          <div class="q-section-title">2. Tratamento do SGB?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Corticosteroides NÃO têm eficácia comprovada no SGB e podem piorar o prognóstico. Esse é um erro clássico.')"><span class="opt-key">A)</span> Corticosteroides IV em dose alta</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Tratamento do SGB: IVIG (imunoglobulina humana EV — 2g/kg em 5 dias) OU plasmaférese (troca de plasma). Ambas são equivalentes em eficácia. Não associar as duas — sem benefício adicional. SUPORTE VITAL: monitorar função respiratória (CVF < 15 mL/kg → IOT); fisioterapia precoce; heparina profilática (TEP é risco); nutrição; cateter urinário; reabilitação.')"><span class="opt-key">B)</span> IVIG ou plasmaférese + suporte respiratório intensivo</button>
+            <button class="opt-btn" onclick="ans(this,false,'Antibióticos não tratam a fase neurológica — a bactéria já foi eliminada. Não há papel nesta fase.')"><span class="opt-key">C)</span> Ciprofloxacino para erradicar Campylobacter residual</button>
+            <button class="opt-btn" onclick="ans(this,false,'Fisioterapia isolada é parte do suporte mas insuficiente como tratamento principal.')"><span class="opt-key">D)</span> Fisioterapia intensiva apenas — a doença é autolimitada</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="sdiv">
+  <div class="sdiv-line"></div>
+  <div class="sdiv-badge" style="background:#ede9fe;color:#6d28d9;border:1.5px solid #c4b5fd;">🟣 Casos 10–12 · Especiais de Alto Rendimento</div>
+  <div class="sdiv-line"></div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 10 — M. tuberculosis
+══════════════════════════════════ -->
+<div class="case" id="c10">
+  <div class="case-head" onclick="tog('c10')">
+    <div class="case-num" style="background:#6d28d9;">10</div>
+    <div class="case-meta">
+      <div class="case-title">HIV positivo com tosse, emagrecimento e cavitação pulmonar</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#ede9fe;color:#6d28d9;">M. tuberculosis</span>
+        <span class="ctag" style="background:#cffafe;color:#0e7490;">Imunossuprimido</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">BAAR</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Homem de <strong>38 anos, HIV+, CD4: 180 cel/mm³, em abandono de TARV</strong>. Tosse produtiva há <strong>6 semanas, escarro hemoptoico, sudorese noturna profusa, febre vespertina (38°C) e perda de 8 kg em 2 meses</strong>. RX tórax: <strong>infiltrado em lobo superior direito com cavitação</strong>. Baciloscopia de escarro: <strong>BAAR +++ (3 cruzes)</strong>.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">💊 <span>CD4:</span> 180 cel/mm³</div>
+        <div class="vital-pill">🫁 <span>RX:</span> Cavitação LSE</div>
+        <div class="vital-pill">🔬 <span>BAAR:</span> +++ </div>
+        <div class="vital-pill">⚖️ <span>Peso:</span> -8kg</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c10q1">
+        <div class="q-section-head" onclick="togQ('c10q1')" style="background:#6d28d9;color:white;">
+          <div class="q-section-icon">🧬</div>
+          <div class="q-section-title">1. Por que M. tuberculosis sobrevive na célula? Qual a coloração e o cultivo?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Coloração de Gram não detecta adequadamente M. tuberculosis — a parede rica em ácidos micólicos e ceras impede a coloração convencional.')"><span class="opt-key">A)</span> Coloração de Gram; cresce rápido em 48h em ágar sangue</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! M. tuberculosis: BAAR (Bacilo Álcool-Ácido Resistente) → parede altamente lipídica (ácidos micólicos, ceras) retém a fucsina e resiste à descoloração com álcool-ácido. Coloração: Ziehl-Neelsen (vermelho no microscópio óptico) ou Auramina-rodamina (fluorescência). Cultivo: Löwenstein-Jensen (meio sólido com ovo e glicerol) → cresce em 4–8 semanas (crescimento muito lento!); meio líquido MGIT: 2–3 semanas. Sobrevivência intracelular: inibe a fusão fagossomo-lisossomo nos macrófagos → survives inside the phagosome.')"><span class="opt-key">B)</span> Ziehl-Neelsen (BAAR); Löwenstein-Jensen 4–8 semanas; inibe fusão fagossomo-lisossomo</button>
+            <button class="opt-btn" onclick="ans(this,false,'PAS é para fungos e glicogênio — não para micobactérias.')"><span class="opt-key">C)</span> Coloração PAS; cresce em 7 dias em ágar chocolate</button>
+            <button class="opt-btn" onclick="ans(this,false,'Giemsa é para protozoários e hemácias — sem aplicação para M. tuberculosis.')"><span class="opt-key">D)</span> Giemsa; intracelular obrigatório como Chlamydia</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c10q2">
+        <div class="q-section-head" onclick="togQ('c10q2')" style="background:#c2570a;color:white;">
+          <div class="q-section-icon">💊</div>
+          <div class="q-section-title">2. Esquema RIPE + quando iniciar TARV no HIV+TB?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Monoterapia com isoniazida é apenas para profilaxia (ILTB), não para TB ativa. TB ativa sempre requer esquema combinado.')"><span class="opt-key">A)</span> Apenas isoniazida por 6 meses</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Esquema RIPE (Brasil/Paraguai): FASE INTENSIVA (2 meses): Rifampicina + Isoniazida + Pirazinamida + Etambutol. FASE DE MANUTENÇÃO (4 meses): Rifampicina + Isoniazida. Total: 6 meses. Em TB/HIV: iniciar TARV em até 2 semanas após início do RIPE se CD4 <50; em até 8 semanas se CD4 >50. ATENÇÃO: Rifampicina é potente indutor do CYP3A4 → reduz níveis de muitos ARVs → usar efavirenz (dose ajustada) ou raltegravir. Efeitos adversos: R=hepatite, visão vermelha de urina; I=neuropatia (dar B6), hepatite; P=hiperuricemia, hepatite; E=neurite óptica.')"><span class="opt-key">B)</span> RIPE 6 meses; TARV em 2 semanas se CD4<50; cuidado interação rifampicina-ARV</button>
+            <button class="opt-btn" onclick="ans(this,false,'Rifampicina + etambutol por 3 meses é insuficiente e não inclui a fase intensiva com pirazinamida e isoniazida.')"><span class="opt-key">C)</span> Rifampicina + etambutol por 3 meses</button>
+            <button class="opt-btn" onclick="ans(this,false,'A TARV não deve ser adiada por 6 meses — risco de mortalidade é alto em pacientes com CD4 baixo sem tratamento antirretroviral.')"><span class="opt-key">D)</span> RIPE 6 meses; adiar TARV até terminar o tratamento</button>
+          </div>
+          <div class="info-box ib-orange">
+            <h4>📋 Mnemônico RIPE dos efeitos adversos</h4>
+            <p><strong>R</strong>ifampicina = <strong>R</strong>oja la orina + hepatite · <strong>I</strong>soniazida = neuropatia periférica (<strong>I</strong>ngir B6) + hepatite · <strong>P</strong>irazinamida = <strong>P</strong>odagra (gota/hiperuricemia) + hepatite · <strong>E</strong>tambutol = <strong>E</strong>ye (neurite óptica) → testar acuidade visual mensal</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 11 — Listeria
+══════════════════════════════════ -->
+<div class="case" id="c11">
+  <div class="case-head" onclick="tog('c11')">
+    <div class="case-num" style="background:#166534;">11</div>
+    <div class="case-meta">
+      <div class="case-title">Gestante com febre após queijo não pasteurizado — feto em risco</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#dcfce7;color:#166534;">Listeria monocytogenes</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Gestação</span>
+        <span class="ctag" style="background:#fee2e2;color:#b91c1c;">Transmissão vertical</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Gestante de <strong>30 semanas</strong>, previamente saudável. Cinco dias após consumir <strong>queijo camembert não pasteurizado e frios em uma festa</strong>, apresenta <strong>febre (38°C), mialgia intensa, cefaleia e diarreia leve</strong>. Sem sinais neurológicos. Hemocultura: crescimento de <strong>bacilo Gram positivo, beta-hemolítico, catalase positivo, móvel, CAMP positivo, cresce a 4°C</strong>. Leucograma: 14.000 com monócitos 14%.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🤰 <span>Gestação:</span> 30 semanas</div>
+        <div class="vital-pill">🌡️ <span>Temp:</span> 38°C</div>
+        <div class="vital-pill">🔬 <span>Cultivo 4°C:</span> Crescimento</div>
+        <div class="vital-pill">🧫 <span>Monócitos:</span> 14% ↑</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c11q1">
+        <div class="q-section-head" onclick="togQ('c11q1')" style="background:#166534;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Identificação, características únicas e risco para o feto?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'S. agalactiae (GBS) é coco, não bacilo. CAMP positivo também, mas não cresce a 4°C.')"><span class="opt-key">A)</span> Streptococcus agalactiae — coco Gram positivo</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Listeria monocytogenes: bacilo Gram+, beta-hemolítico, catalase+, oxidase−, CAMP+, MÓVEL (tumbling motility — movimento de cambalhotas a 25°C, imóvel a 37°C). CARACTERÍSTICA ÚNICA: psicrotrófico — cresce a 4°C (geladeira!). Intracelular facultativo — usa actina do hospedeiro para mover-se célula a célula (via "rocket propulsion"). TRANSMISSÃO VERTICAL: Listeria atravessa a placenta → infecção fetal → aborto, natimorto, ou listeriose neonatal (sepse + granulomatosis infantiseptica). RISCO NEONATAL: meningite + sepse nas primeiras semanas de vida.')"><span class="opt-key">B)</span> Listeria monocytogenes — cresce a 4°C, atravessa placenta, risco de listeriose neonatal</button>
+            <button class="opt-btn" onclick="ans(this,false,'E. coli é Gram negativo, não Gram positivo. Não cresce a 4°C de forma característica.')"><span class="opt-key">C)</span> E. coli enteropatogênica — Gram negativo</button>
+            <button class="opt-btn" onclick="ans(this,false,'Bacillus anthracis é esporulado, CAMP negativo, não cresce de forma psicrotrópica diferenciada.')"><span class="opt-key">D)</span> Bacillus anthracis — formador de esporos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c11q2">
+        <div class="q-section-head" onclick="togQ('c11q2')" style="background:#b91c1c;color:white;">
+          <div class="q-section-icon">⚠️</div>
+          <div class="q-section-title">2. Tratamento — qual antibiótico NÃO funciona?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Cefalosporinas são INATIVAS contra Listeria — resistência intrínseca! Esse é um dos erros mais cobrados em prova.')"><span class="opt-key">A)</span> Ceftriaxona IV + azitromicina</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ CORRETO e CRÍTICO! CEFALOSPORINAS NÃO FUNCIONAM para Listeria (resistência intrínseca às cefalosporinas — PBP diferente). Tratamento: AMPICILINA IV (4–6g/dia) ± gentamicina (sinergia). Em alérgicos à penicilina: SMX-TMP. Na gestante: ampicilina + monitoramento fetal intensivo. Duração: 14–21 dias (mínimo). ATENÇÃO: Cefalosporinas cobrem S. pneumoniae e Neisseria na meningite, mas NÃO Listeria → em pacientes de risco (idosos, imunossuprimidos, gestantes), sempre adicionar ampicilina ao esquema!')"><span class="opt-key">B)</span> Ampicilina IV — cefalosporinas NÃO cobrem Listeria (resistência intrínseca)</button>
+            <button class="opt-btn" onclick="ans(this,false,'Metronidazol é para anaeróbios e protozoários — sem ação contra Listeria.')"><span class="opt-key">C)</span> Metronidazol + clindamicina</button>
+            <button class="opt-btn" onclick="ans(this,false,'Ciprofloxacino tem atividade variável e não é a escolha de 1ª linha para gestantes com listeriose.')"><span class="opt-key">D)</span> Ciprofloxacino IV</button>
+          </div>
+          <div class="info-box ib-red">
+            <h4>🚨 Regra de ouro da meningite em grupos de risco</h4>
+            <p>Meningite em: <strong>gestante, neonato, idoso >50 anos, imunossuprimido</strong> → SEMPRE adicionar <strong>ampicilina</strong> ao esquema de ceftriaxona → cobre Listeria que resistente a cefalosporinas!</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CASO 12 — Pseudomonas / Fibrose Cística
+══════════════════════════════════ -->
+<div class="case" id="c12">
+  <div class="case-head" onclick="tog('c12')">
+    <div class="case-num" style="background:#0e7490;">12</div>
+    <div class="case-meta">
+      <div class="case-title">Jovem com fibrose cística e pneumonia de repetição + secreção azul-esverdeada</div>
+      <div class="case-tags">
+        <span class="ctag" style="background:#cffafe;color:#0e7490;">Pseudomonas aeruginosa</span>
+        <span class="ctag" style="background:#ffedd5;color:#c2570a;">Fibrose Cística</span>
+        <span class="ctag" style="background:#ede9fe;color:#6d28d9;">Multirresistência</span>
+      </div>
+    </div>
+    <div class="case-arrow">▼</div>
+  </div>
+  <div class="case-body">
+    <div class="scenario">
+      <div class="scenario-label">📋 Cenário Clínico</div>
+      <div class="scenario-text">
+        Jovem de <strong>22 anos, diagnóstico de Fibrose Cística desde os 2 anos</strong>. Internação por <strong>exacerbação pulmonar: febre (38,5°C), piora da dispneia, aumento do escarro espesso com coloração <em>azul-esverdeada</em></strong>. RX: infiltrado bilateral com bronquiectasias. Cultura do escarro: colônias <strong>beta-hemolíticas, odor adocicado, pigmento verde-azulado em ágar, Gram negativo não fermentador de lactose, oxidase positivo</strong>. Antibiograma: resistência a múltiplos antibióticos.
+      </div>
+      <div class="vitals">
+        <div class="vital-pill">🫁 <span>Doença base:</span> FC</div>
+        <div class="vital-pill">🟢 <span>Escarro:</span> Azul-esverdeado</div>
+        <div class="vital-pill">🔬 <span>Oxidase:</span> Positivo</div>
+        <div class="vital-pill">⚠️ <span>ATB:</span> Multirresistente</div>
+      </div>
+    </div>
+    <div class="questions">
+
+      <div class="q-section" id="c12q1">
+        <div class="q-section-head" onclick="togQ('c12q1')" style="background:#0e7490;color:white;">
+          <div class="q-section-icon">🔍</div>
+          <div class="q-section-title">1. Características de P. aeruginosa + por que é tão resistente?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Klebsiella é Gram negativo fermentador (lactose+), não tem pigmento azul e é oxidase negativa.')"><span class="opt-key">A)</span> Klebsiella pneumoniae — fermentador de lactose, KPC</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Pseudomonas aeruginosa: bacilo Gram negativo NÃO fermentador de lactose, oxidase POSITIVO, aeróbio estrito. Pigmentos: piocianina (azul-esverdeado) e pioverdina (fluorescente amarelo-esverdeado). Odor adocicado característico. MECANISMOS DE RESISTÊNCIA: (1) Beta-lactamases (AmpC, metalo-beta-lactamase MBL); (2) Bombas de efluxo (expulsam antibióticos); (3) Perda de porinas (impermeabilidade); (4) Modificação de enzimas alvo. Na FC: forma biofilme mucóide com ácido algínico → impossível erradicar → tratamento supressor crônico. Causa infecções em: UTI, queimados, neutropênicos, FC, cateterizados, contatos com água contaminada.')"><span class="opt-key">B)</span> Pseudomonas aeruginosa — oxidase+, piocianina, não fermenta, bombas de efluxo</button>
+            <button class="opt-btn" onclick="ans(this,false,'H. influenzae é Gram negativo, mas fermenta lactose, oxidase positiva, sem pigmento azul — diferentes.')"><span class="opt-key">C)</span> Haemophilus influenzae — fastidioso, fatores X e V</button>
+            <button class="opt-btn" onclick="ans(this,false,'Shigella é Gram negativo fermentador, causa disenteria, sem pigmento e sem oxidase positiva.')"><span class="opt-key">D)</span> Shigella flexneri — disenteria bacilar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-section" id="c12q2">
+        <div class="q-section-head" onclick="togQ('c12q2')" style="background:#6d28d9;color:white;">
+          <div class="q-section-icon">💊</div>
+          <div class="q-section-title">2. Opções de tratamento para Pseudomonas multirresistente?</div>
+          <div class="q-section-toggle">▼</div>
+        </div>
+        <div class="q-section-body">
+          <div class="opts">
+            <button class="opt-btn" onclick="ans(this,false,'Amoxicilina-clavulanato não tem atividade contra Pseudomonas — não é considerado no arsenal antipseudomonas.')"><span class="opt-key">A)</span> Amoxicilina-clavulanato + azitromicina</button>
+            <button class="opt-btn" onclick="ans(this,true,'✅ Correto! Arsenal antipseudomonas: BETA-LACTÂMICOS anti-Pseudomonas: piperacilina-tazobactam, cefepima, ceftazidima, meropeném, imipeném. FLUOROQUINOLONAS: ciprofloxacino (única quinolona com cobertura confiável). AMINOGLICOSÍDEOS: amicacina, tobramicina (inalatória na FC). POLIMIXINAS: colistina/polimixina B (último recurso — MDR/XDR). Em FC: terapia inalatória com tobramicina ou aztreonam inalatório para controle crônico. NUNCA usar ampicilina, cefalosporinas de 1ª/2ª geração, eritromicina, clindamicina — resistência intrínseca.')"><span class="opt-key">B)</span> Piperacilina-tazobactam ou cefepima + aminoglicosídeo; colistina se XDR</button>
+            <button class="opt-btn" onclick="ans(this,false,'Penicilina G não tem ação contra Gram negativos — muito menos contra Pseudomonas.')"><span class="opt-key">C)</span> Penicilina G IV + claritromicina</button>
+            <button class="opt-btn" onclick="ans(this,false,'SMX-TMP tem cobertura variável e não é o padrão para Pseudomonas.')"><span class="opt-key">D)</span> SMX-TMP + cefalexina oral</button>
+          </div>
+          <div class="info-box ib-teal">
+            <h4>🎯 Macete antipseudomonas — o que FUNCIONA</h4>
+            <p><strong>PACT+C:</strong> <strong>P</strong>iperacilina-tazo · <strong>A</strong>micacina/aminoglicosídeo · <strong>C</strong>efepima/ceftazidima · <strong>T</strong>obramicina inalatória · <strong>C</strong>olistina (último recurso)</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div class="score-panel" id="scorePanel" style="display:none;">
+  <h2>◈ Resultado Final ◈</h2>
+  <p>casos clínicos de alto rendimento concluídos</p>
+  <div class="score-display" id="scoreN">—</div>
+  <div class="score-sub" id="scoreOf">de — questões corretas</div>
+  <div class="score-boxes">
+    <div class="score-box"><div class="score-box-n" id="sPct">—</div><div class="score-box-l">aproveitamento</div></div>
+    <div class="score-box"><div class="score-box-n" id="sRight">—</div><div class="score-box-l">corretas</div></div>
+    <div class="score-box"><div class="score-box-n" id="sWrong">—</div><div class="score-box-l">a revisar</div></div>
+  </div>
+  <div class="score-msg" id="sMsg"></div>
+  <div class="score-sub2" id="sSub"></div>
+  <button class="restart-btn" onclick="location.reload()">↺ Refazer todos os casos</button>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  Baseado em Murray — Microbiologia Médica · Jawetz · Harrison · Mandell · Diretrizes brasileiras e paraguaias<br>
+  Material para estudo exclusivo · Dr. Cristiano Ribeiro da Silva
+</div>
+
+<script>
+let total = 0, correct = 0;
+const totalQ = 22; // approximate total questions
+
+function tog(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function togQ(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function ans(btn, isCorrect, msg) {
+  const block = btn.closest('.q-section-body');
+  block.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (b.onclick.toString().includes('true,')) b.classList.add('correct');
+  });
+  if (!isCorrect) btn.classList.add('wrong');
+
+  let fb = block.querySelector('.q-feedback');
+  if (!fb) {
+    fb = document.createElement('div');
+    fb.className = 'q-feedback';
+    block.appendChild(fb);
+  }
+  fb.textContent = msg;
+  fb.className = 'q-feedback show ' + (isCorrect ? 'ok' : 'err');
+
+  total++;
+  if (isCorrect) correct++;
+  if (total >= 10) showScore();
+}
+
+function showScore() {
+  const panel = document.getElementById('scorePanel');
+  const pct = Math.round((correct/total)*100);
+  panel.style.display = 'block';
+  document.getElementById('scoreN').textContent = correct;
+  document.getElementById('scoreOf').textContent = `de ${total} questões respondidas`;
+  document.getElementById('sPct').textContent = pct + '%';
+  document.getElementById('sRight').textContent = correct;
+  document.getElementById('sWrong').textContent = total - correct;
+  let msg, sub;
+  if (pct >= 90) { msg = '🏆 Excelente! Domínio clínico de alto nível.'; sub = 'Está pronto para provas de microbiologia médica.'; }
+  else if (pct >= 75) { msg = '👍 Muito bom — alguns pontos a consolidar.'; sub = 'Revise os mecanismos patogênicos que errou.'; }
+  else if (pct >= 60) { msg = '📚 Bom progresso — continue revisando.'; sub = 'Foque nos tratamentos e diferencias laboratoriais.'; }
+  else { msg = '⚠️ Precisa reforçar os casos clínicos.'; sub = 'Refaça o material didático e retorne a estes casos.'; }
+  document.getElementById('sMsg').textContent = msg;
+  document.getElementById('sSub').textContent = sub;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-03/microbiologia1-pratica/Aula_05_Guia_Iniciante_Bacterias.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Aula 5 — Guia do Iniciante: Bactérias Patogênicas</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-03/microbiologia1-pratica/Simulado_Micro1_CasosClinicos.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Simulado — Casos Clínicos (Bioseguridad, Morfologia, Esterilização, Meios de Cultivo)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>

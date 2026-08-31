@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="stylesheet" href="/assets/shell-nav.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Microbiologia Clínica — Guia do Iniciante</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #f7f4ef;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #6b6b80;
+  --border: #e0dbd0;
+  --gram-pos: #c0392b;    /* vermelho — gram+ */
+  --gram-neg: #1a6b9a;    /* azul — gram- */
+  --myco: #7b4f9e;        /* roxo — micobactérias */
+  --green: #2d6a4f;
+  --orange: #e67e22;
+  --light-pos: #fdecea;
+  --light-neg: #e8f4fd;
+  --light-myco: #f3e8ff;
+  --light-green: #e9f5ee;
+  --light-orange: #fef5e7;
+  --gold: #d4a017;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  color: white;
+  padding: 52px 40px 44px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '🦠';
+  position: absolute;
+  right: 48px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 140px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #a8d8b9;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 16px; border-radius: 20px;
+  margin-bottom: 18px;
+}
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: #a8d8b9; border-radius: 50%;
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(26px, 4vw, 46px);
+  font-weight: 700; line-height: 1.15;
+  margin-bottom: 12px; position: relative;
+}
+.hero h1 span { color: #a8d8b9; }
+.hero p { font-size: 14px; color: rgba(255,255,255,0.65); max-width: 560px; }
+.hero-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.pill {
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white; font-size: 12px;
+  padding: 4px 14px; border-radius: 12px;
+}
+
+/* ── GRAM KEY ── */
+.gram-key {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  position: sticky; top: 0; z-index: 100;
+}
+.gk-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 600;
+}
+.gk-dot { width: 12px; height: 12px; border-radius: 50%; }
+.gk-pos { background: var(--gram-pos); }
+.gk-neg { background: var(--gram-neg); }
+.gk-myco { background: var(--myco); }
+
+/* ── LAYOUT ── */
+.container { max-width: 900px; margin: 0 auto; padding: 0 22px 80px; }
+
+/* ── SECTION ── */
+.section-block { margin: 44px 0; }
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 22px;
+}
+.section-header-line { flex: 1; height: 1px; background: var(--border); }
+.section-badge {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 18px; border-radius: 20px;
+  font-size: 13px; font-weight: 700;
+  white-space: nowrap;
+}
+.sb-pos { background: var(--light-pos); color: var(--gram-pos); border: 1.5px solid #f0b8b4; }
+.sb-neg { background: var(--light-neg); color: var(--gram-neg); border: 1.5px solid #b8d8f0; }
+.sb-myco { background: var(--light-myco); color: var(--myco); border: 1.5px solid #d8b8f0; }
+
+/* ── INTRO CARD ── */
+.intro-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.intro-card p { font-size: 14.5px; color: #333; line-height: 1.75; }
+.intro-card p+p { margin-top: 10px; }
+
+/* ── ANALOGY ── */
+.analogy {
+  background: var(--light-orange);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  margin: 14px 0;
+  font-size: 14px;
+}
+.analogy strong { color: var(--orange); }
+
+/* ── ORGANISM CARD ── */
+.org-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.org-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  border-top: 4px solid;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.org-card.pos { border-top-color: var(--gram-pos); }
+.org-card.neg { border-top-color: var(--gram-neg); }
+.org-card.myco { border-top-color: var(--myco); }
+.org-name {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.org-name.pos { color: var(--gram-pos); }
+.org-name.neg { color: var(--gram-neg); }
+.org-name.myco { color: var(--myco); }
+.org-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 8px;
+  margin-bottom: 10px;
+}
+.tag-pos { background: var(--light-pos); color: var(--gram-pos); }
+.tag-neg { background: var(--light-neg); color: var(--gram-neg); }
+.tag-myco { background: var(--light-myco); color: var(--myco); }
+.org-card ul { padding-left: 16px; font-size: 13.5px; }
+.org-card li { margin-bottom: 4px; line-height: 1.5; }
+.org-card li strong { color: var(--text); }
+
+/* ── MNEMONIC ── */
+.mnemonic {
+  background: #fff9e6;
+  border: 2px dashed var(--gold);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 14px 0;
+}
+.mnemonic h4 { color: var(--gold); font-weight: 700; font-size: 13px; margin-bottom: 7px; letter-spacing: 1px; }
+.mnemonic p { font-size: 14px; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13.5px;
+}
+th {
+  padding: 10px 14px; text-align: left;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 0.5px;
+}
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: #faf9f6; }
+tr:hover td { background: var(--light-green); transition: background 0.15s; }
+.th-pos { background: var(--gram-pos); color: white; }
+.th-neg { background: var(--gram-neg); color: white; }
+.th-neutral { background: var(--text); color: white; }
+
+/* ── CLINICAL CASE ── */
+.case-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+.case-header {
+  padding: 16px 24px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.case-header:hover { opacity: 0.9; }
+.case-icon { font-size: 22px; }
+.case-title { font-size: 15px; font-weight: 700; flex: 1; }
+.case-diff {
+  font-size: 11px; font-weight: 700;
+  padding: 3px 12px; border-radius: 10px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.diff-easy { background: var(--light-green); color: var(--green); }
+.diff-mid { background: var(--light-orange); color: var(--orange); }
+.diff-hard { background: var(--light-pos); color: var(--gram-pos); }
+.case-arrow { color: var(--muted); transition: transform 0.3s; font-size: 18px; }
+.case-card.open .case-arrow { transform: rotate(180deg); }
+
+.case-body { display: none; padding: 0 24px 22px; }
+.case-card.open .case-body { display: block; }
+
+.case-scenario {
+  background: #f8f6f0;
+  border-left: 3px solid var(--border);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.case-scenario strong { color: var(--text); }
+
+.case-question { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+.case-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.case-opt {
+  background: #faf9f6;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  transition: all 0.15s;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.case-opt:hover:not(:disabled) {
+  background: var(--light-neg);
+  border-color: var(--gram-neg);
+  color: var(--gram-neg);
+}
+.case-opt.correct { background: var(--light-green); border-color: var(--green); color: var(--green); font-weight: 600; }
+.case-opt.wrong { background: var(--light-pos); border-color: var(--gram-pos); color: var(--gram-pos); }
+.case-opt:disabled { cursor: default; }
+.opt-letter { font-weight: 700; font-size: 13px; min-width: 20px; margin-top: 1px; font-family: 'IBM Plex Mono', monospace; }
+
+.case-feedback {
+  background: var(--light-green);
+  border: 1px solid #b0d9c0;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  display: none;
+  color: #1a4a35;
+}
+.case-feedback.show { display: block; }
+.case-feedback.err { background: var(--light-pos); border-color: #f0b8b4; color: #6a1020; }
+
+/* ── QUIZ FINAL ── */
+.quiz-section {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 18px;
+  padding: 36px 30px;
+  margin: 48px 0 0;
+  color: white;
+}
+.quiz-section h2 {
+  font-family: 'Lora', serif;
+  font-size: 22px;
+  color: #a8d8b9;
+  margin-bottom: 6px;
+}
+.quiz-section > p { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+
+.q-block {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.q-block p { font-size: 14.5px; font-weight: 500; color: white; margin-bottom: 14px; }
+.q-opts { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+  transition: all 0.15s;
+  display: flex; gap: 10px;
+}
+.q-opt:hover:not(:disabled) { background: rgba(255,255,255,0.12); }
+.q-opt.correct { background: rgba(45,106,79,0.4); border-color: #a8d8b9; color: #a8d8b9; font-weight: 600; }
+.q-opt.wrong { background: rgba(192,57,43,0.3); border-color: #f0a09a; color: #f0a09a; }
+.q-opt:disabled { cursor: default; }
+.q-fb { font-size: 13px; margin-top: 10px; padding: 10px 14px; border-radius: 8px; display: none; }
+.q-fb.show { display: block; }
+.q-fb.ok { background: rgba(45,106,79,0.2); color: #a8d8b9; }
+.q-fb.err { background: rgba(192,57,43,0.2); color: #f0a09a; }
+
+/* ── SUMMARY TABLE ── */
+.summary-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin: 24px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.summary-card h3 {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ── HIGHLIGHT ── */
+.hl { display: inline-block; padding: 1px 7px; border-radius: 4px; font-weight: 600; font-size: 0.95em; }
+.hl-pos { background: var(--light-pos); color: var(--gram-pos); }
+.hl-neg { background: var(--light-neg); color: var(--gram-neg); }
+.hl-myco { background: var(--light-myco); color: var(--myco); }
+.hl-green { background: var(--light-green); color: var(--green); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 40px 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .hero { padding: 36px 20px 32px; }
+  .org-grid { grid-template-columns: 1fr; }
+  .gram-key { padding: 12px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Microbiología I — Prática</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Microbiología I — Prática</span><span>5 de 7</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:71%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Microbiología I — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_01_Bioseguridad.html"><span class="ico">🦠</span><span>Aula 1 — Bioseguridad</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_02_Morfologia_Estrutura.html"><span class="ico">🦠</span><span>Aula 2 — Morfologia e Estrutura Bacteriana (Prática)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_03_Esterilizacao_Desinfeccao.html"><span class="ico">🦠</span><span>Aula 3 — Esterilização e Desinfecção</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Capitulo_04_Meios_Cultivo_Semeadura.html"><span class="ico">🦠</span><span>Aula 4 — Meios de Cultivo e Técnicas de Semeadura</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-03/microbiologia1-pratica/Aula_05_Guia_Iniciante_Bacterias.html"><span class="ico">🦠</span><span>Aula 5 — Guia do Iniciante: Bactérias Patogênicas</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Aula_06_Casos_AltoRendimento.html"><span class="ico">🦠</span><span>Aula 6 — Casos Clínicos de Alto Rendimento</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/microbiologia1-pratica/Simulado_Micro1_CasosClinicos.html"><span class="ico">🎯</span><span>Simulado — Casos Clínicos (Bioseguridad, Morfologia, Esterilização, Meios de Cultivo)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-tag">Microbiologia Clínica · Exame Prático</div>
+  <h1>Bactérias <span>Patogênicas</span><br>do Zero ao Caso Clínico</h1>
+  <p>Guia completo para quem nunca viu o assunto. Gram+, Gram−, Micobactérias + casos práticos no formato da sua prova.</p>
+  <div class="hero-pills">
+    <span class="pill">🔬 24 microrganismos</span>
+    <span class="pill">🏥 6 casos clínicos</span>
+    <span class="pill">✅ Quiz final</span>
+    <span class="pill">💡 Macetes e analogias</span>
+  </div>
+</div>
+
+<!-- ═══════ CHAVE DE CORES ═══════ -->
+<div class="gram-key">
+  <div class="gk-item"><div class="gk-dot gk-pos"></div> Gram Positivo (roxo/violeta na coloração)</div>
+  <div class="gk-item"><div class="gk-dot gk-neg"></div> Gram Negativo (rosa/vermelho na coloração)</div>
+  <div class="gk-item"><div class="gk-dot gk-myco"></div> Micobactéria (BAAR — coloração especial)</div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════
+     CONCEITO BÁSICO
+═══════════════════════════════════ -->
+<div class="section-block">
+  <div class="section-header" style="margin-top:36px;">
+    <div class="section-header-line"></div>
+    <div class="section-badge" style="background:#f0f0f8;color:#333;border:1.5px solid #ddd;">🔬 O Básico Primeiro</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="intro-card">
+    <p>Antes de memorizar bactérias, você precisa entender <strong>por que a coloração de Gram importa</strong>. Ela divide as bactérias em dois grandes grupos com base na estrutura da parede celular — e isso determina quais antibióticos funcionam!</p>
+  </div>
+
+  <div class="analogy">
+    <strong>🧠 Analogia da parede:</strong> Pense nas bactérias como casas. As <strong>Gram+ têm paredes grossas de tijolos</strong> (peptideoglicano espesso) que retêm o corante roxo. As <strong>Gram− têm duas paredes com uma membrana extra por fora</strong> (a membrana externa com LPS) — essa membrana remove o roxo na descoloração, e elas ficam rosa. A membrana externa das Gram− é uma barreira extra para antibióticos.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th class="th-pos">Gram Positivo (+)</th>
+        <th class="th-neg">Gram Negativo (−)</th>
+      </tr>
+      <tr>
+        <td>Parede de peptideoglicano <strong>espessa</strong></td>
+        <td>Peptideoglicano <strong>fino</strong> + membrana externa</td>
+      </tr>
+      <tr>
+        <td>Cor: <strong>roxo/violeta</strong> no microscópio</td>
+        <td>Cor: <strong>rosa/vermelho</strong> no microscópio</td>
+      </tr>
+      <tr>
+        <td>Sem membrana externa</td>
+        <td>Possui <strong>LPS (endotoxina)</strong> — causa choque séptico</td>
+      </tr>
+      <tr>
+        <td>Ex: Staphylococcus, Streptococcus</td>
+        <td>Ex: E. coli, Neisseria, Pseudomonas</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     COCOS GRAM POSITIVOS
+═══════════════════════════════════ -->
+<div class="section-block">
+  <div class="section-header">
+    <div class="section-header-line"></div>
+    <div class="section-badge sb-pos">🔴 Cocos Gram Positivos</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="intro-card">
+    <p><strong>Cocos</strong> = forma arredondada (esférica). Os cocos Gram+ são identificados pela disposição: <span class="hl hl-pos">cachos de uva</span> → Staphylococcus | <span class="hl hl-pos">correntes/pares</span> → Streptococcus. Outro teste rápido: <strong>catalase+</strong> = Staph | <strong>catalase−</strong> = Strep.</p>
+  </div>
+
+  <div class="mnemonic">
+    <h4>💡 MACETE — Staph vs Strep</h4>
+    <p><strong>"Staph tem Catálise, Strep não tem" → CAT-alase: C=Coagulase (S.aureus), A=Aureus, T=sTaph</strong><br>
+    Staphylococcus = catalase <strong>positivo</strong> · Streptococcus = catalase <strong>negativo</strong></p>
+  </div>
+
+  <div class="org-grid">
+
+    <div class="org-card pos">
+      <div class="org-name pos">S. aureus</div>
+      <div class="org-tag tag-pos">Staph · Coagulase+</div>
+      <ul>
+        <li><strong>Habitat:</strong> pele, narinas (portadores)</li>
+        <li><strong>Doenças:</strong> furúnculos, abscessos, pneumonia, osteomielite, endocardite, intoxicação alimentar (toxina pré-formada)</li>
+        <li><strong>MRSA:</strong> resistente à meticilina — problema hospitalar grave</li>
+        <li><strong>Toxinas:</strong> TSST-1 (síndrome choque tóxico), toxina esfoliativa (síndrome da pele escaldada)</li>
+        <li><strong>Virulência:</strong> coagulase+ → diferencia de outros Staph</li>
+      </ul>
+    </div>
+
+    <div class="org-card pos">
+      <div class="org-name pos">S. epidermidis</div>
+      <div class="org-tag tag-pos">Staph · Coagulase−</div>
+      <ul>
+        <li><strong>Habitat:</strong> flora normal da pele</li>
+        <li><strong>Doenças:</strong> infecções em próteses, cateteres, válvulas cardíacas artificiais</li>
+        <li><strong>Mecanismo:</strong> forma biofilme em dispositivos médicos</li>
+        <li><strong>Perfil:</strong> patógeno oportunista — inofensivo em sadios</li>
+      </ul>
+    </div>
+
+    <div class="org-card pos">
+      <div class="org-name pos">S. saprophyticus</div>
+      <div class="org-tag tag-pos">Staph · Coagulase−</div>
+      <ul>
+        <li><strong>Clínica clássica:</strong> ITU em mulheres jovens sexualmente ativas</li>
+        <li><strong>Diferencial da E. coli:</strong> Gram+ (E. coli é Gram−)</li>
+        <li><strong>Teste:</strong> resistente à novobiocina (diferencia de S. epidermidis)</li>
+        <li><strong>Macete:</strong> "Saprófito = Sexualmente ativa"</li>
+      </ul>
+    </div>
+
+    <div class="org-card pos">
+      <div class="org-name pos">S. pyogenes</div>
+      <div class="org-tag tag-pos">Strep · β-hemolítico Grupo A</div>
+      <ul>
+        <li><strong>Doenças:</strong> faringite, impetigo, erisipela, celulite, escarlatina</li>
+        <li><strong>Complicações pós-infecção:</strong> febre reumática (coração), glomerulonefrite pós-estreptocócica (rim)</li>
+        <li><strong>Toxinas:</strong> estreptolisinas O e S, estreptoquinase, hialuronidase</li>
+        <li><strong>Teste:</strong> sensível à bacitracina</li>
+      </ul>
+    </div>
+
+    <div class="org-card pos">
+      <div class="org-name pos">S. agalactiae</div>
+      <div class="org-tag tag-pos">Strep · β-hemolítico Grupo B</div>
+      <ul>
+        <li><strong>Clínica clássica:</strong> sepse e meningite neonatal (transmissão no parto)</li>
+        <li><strong>Habitat:</strong> vagina e reto de mulheres adultas (colonização assintomática)</li>
+        <li><strong>Conduta:</strong> triagem em gestantes (35–37 semanas) + penicilina intraparto</li>
+        <li><strong>Macete:</strong> "aGalactiae = neonato/Gestante"</li>
+      </ul>
+    </div>
+
+    <div class="org-card pos">
+      <div class="org-name pos">S. pneumoniae</div>
+      <div class="org-tag tag-pos">Strep · α-hemolítico · Diplococos</div>
+      <ul>
+        <li><strong>Morfologia:</strong> diplococos em forma de lança, capsulados</li>
+        <li><strong>Doenças:</strong> pneumonia lobar (adultos), meningite, otite média, sinusite</li>
+        <li><strong>Fatores de risco:</strong> asplenia, idosos, imunossuprimidos</li>
+        <li><strong>Teste:</strong> sensível à optoquina · solúvel em bile</li>
+        <li><strong>Prevenção:</strong> vacina pneumocócica (PCV13, PPSV23)</li>
+      </ul>
+    </div>
+
+  </div><!-- /org-grid -->
+
+  <div class="mnemonic">
+    <h4>💡 MACETE — 3 Staphylococcus</h4>
+    <p><strong>AuSE</strong>: <strong>Au</strong>reus (coagulase+, virulento) · <strong>S</strong>aprophyticus (ITU jovem) · <strong>E</strong>pidermidis (biofilme/prótese)</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     COCOS GRAM NEGATIVOS
+═══════════════════════════════════ -->
+<div class="section-block">
+  <div class="section-header">
+    <div class="section-header-line"></div>
+    <div class="section-badge sb-neg">🔵 Cocos Gram Negativos</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="intro-card">
+    <p>Os únicos cocos Gram negativos relevantes na clínica são as <strong>Neisserias</strong>. Diplococos em forma de grão de café, intracelulares (dentro de leucócitos). Ambas causam doenças graves mas muito distintas.</p>
+  </div>
+
+  <div class="org-grid">
+
+    <div class="org-card neg">
+      <div class="org-name neg">N. gonorrhoeae</div>
+      <div class="org-tag tag-neg">Diplococo · IST</div>
+      <ul>
+        <li><strong>Doenças:</strong> gonorreia (uretrite/cervicite), doença inflamatória pélvica (DIP), conjuntivite neonatal (oftalmia neonatorum)</li>
+        <li><strong>Transmissão:</strong> sexual ou vertical (parto)</li>
+        <li><strong>Sem cápsula</strong> → não tem vacina</li>
+        <li><strong>Diagnóstico:</strong> diplococos intracelulares no esfregaço</li>
+        <li><strong>Tto:</strong> ceftriaxona + azitromicina (coinfecção com Clamídia)</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">N. meningitidis</div>
+      <div class="org-tag tag-neg">Diplococo · Capsulado</div>
+      <ul>
+        <li><strong>Doenças:</strong> meningite meningocócica, meningococcemia (sepse fulminante)</li>
+        <li><strong>Sinal clássico:</strong> petéquias/púrpura + rigidez de nuca + febre</li>
+        <li><strong>Urgência:</strong> pode matar em horas — penicilina imediata</li>
+        <li><strong>Tem cápsula</strong> → vacina disponível (ACWY, B)</li>
+        <li><strong>Fator de risco:</strong> asplenia, déficit de complemento (C5-C9)</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="mnemonic">
+    <h4>💡 MACETE — Gonorrhoeae vs Meningitidis</h4>
+    <p><strong>G</strong>onorrhoeae = <strong>G</strong>enitália / <strong>G</strong>onorreia (sem cápsula, sem vacina)<br>
+    <strong>M</strong>eningitidis = <strong>M</strong>eningite / <strong>M</strong>ata rápido (com cápsula, com vacina)</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     BACILOS GRAM NEGATIVOS
+═══════════════════════════════════ -->
+<div class="section-block">
+  <div class="section-header">
+    <div class="section-header-line"></div>
+    <div class="section-badge sb-neg">🔵 Bacilos Gram Negativos</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="intro-card">
+    <p><strong>Bacilos</strong> = forma de bastonete. Os Gram negativos incluem a família <span class="hl hl-neg">Enterobacteriaceae</span> (E. coli, Klebsiella, Salmonella, Shigella) e bacilos não fermentadores (Pseudomonas). Todos possuem <strong>LPS</strong> na membrana externa, responsável pelo choque séptico.</p>
+  </div>
+
+  <div class="org-grid">
+
+    <div class="org-card neg">
+      <div class="org-name neg">E. coli</div>
+      <div class="org-tag tag-neg">Enterobactéria · Fermentadora</div>
+      <ul>
+        <li><strong>Flora normal</strong> do cólon — torna-se patogênica fora do lugar</li>
+        <li><strong>Doenças:</strong> ITU (causa mais comum), meningite neonatal, diarreia do viajante, sepse</li>
+        <li><strong>STEC O157:H7:</strong> síndrome hemolítico-urêmica (SHU) — diarreia sanguinolenta + IRA + anemia hemolítica</li>
+        <li><strong>Fator de virulência:</strong> fímbrias (adesão), toxinas (LT, ST)</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">Klebsiella pneumoniae</div>
+      <div class="org-tag tag-neg">Enterobactéria · Capsulada</div>
+      <ul>
+        <li><strong>Doenças:</strong> pneumonia lobar (alcoolistas, DM), ITU hospitalar, sepse</li>
+        <li><strong>Escarro clássico:</strong> "geleia de groselha" — espesso, gelatinoso, sanguinolento</li>
+        <li><strong>KPC:</strong> Klebsiella produtora de carbapenemase — resistência extrema</li>
+        <li><strong>Fatores de risco:</strong> alcoolismo, DM, hospitalização</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">K. granulomatis</div>
+      <div class="org-tag tag-neg">IST · Donovanose</div>
+      <ul>
+        <li><strong>Doença:</strong> donovanose (granuloma inguinal) — IST</li>
+        <li><strong>Lesão:</strong> úlcera indolor, granulomatosa, com bordas irregulares na genitália</li>
+        <li><strong>Diagnóstico:</strong> "Corpos de Donovan" no esfregaço da lesão</li>
+        <li><strong>Tratamento:</strong> azitromicina ou doxiciclina por 3 semanas</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">Pseudomonas aeruginosa</div>
+      <div class="org-tag tag-neg">Não fermentador · Oportunista</div>
+      <ul>
+        <li><strong>Características:</strong> produz pigmento verde-azulado (piocianina), odor adocicado</li>
+        <li><strong>Doenças:</strong> pneumonia em UTI/fibrose cística, queimados, otite externa maligna, infecções em imunossuprimidos</li>
+        <li><strong>Resistência:</strong> naturalmente resistente a muitos antibióticos</li>
+        <li><strong>Macete:</strong> "Pseudo = azul-esverdeado = UTI"</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">Salmonella spp.</div>
+      <div class="org-tag tag-neg">Enterobactéria · Intracelular</div>
+      <ul>
+        <li><strong>S. typhi:</strong> febre tifoide — febre alta, bradicardia relativa, roséola tífica, esplenomegalia</li>
+        <li><strong>S. não-typhi:</strong> gastrenterite (frango cru, ovos) — autolimitada</li>
+        <li><strong>Reservatório:</strong> aves, répteis, humanos (portadores crônicos: vesícula biliar)</li>
+        <li><strong>Não dar antibiótico</strong> na gastroenterite simples — prolonga portador</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">Shigella spp.</div>
+      <div class="org-tag tag-neg">Enterobactéria · Disenteria</div>
+      <ul>
+        <li><strong>Doença:</strong> disenteria bacilar — diarreia com sangue, muco e pus + tenesmo + febre</li>
+        <li><strong>Dose infectante:</strong> muito baixa (10–200 bactérias) — altamente contagiosa</li>
+        <li><strong>Mecanismo:</strong> invasão da mucosa colônica (não penetra vasos)</li>
+        <li><strong>Toxina Shiga:</strong> S. dysenteriae — SHU em crianças</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">H. influenzae</div>
+      <div class="org-tag tag-neg">Bacilo · Fastidioso</div>
+      <ul>
+        <li><strong>Tipo b (Hib):</strong> meningite bacteriana (crianças não vacinadas), epiglotite</li>
+        <li><strong>Não tipável:</strong> otite média, sinusite, DPOC exacerbação</li>
+        <li><strong>Cultivo:</strong> requer fatores X (hemina) e V (NAD) — cresce em ágar-chocolate</li>
+        <li><strong>Prevenção:</strong> vacina Hib (esquema básico da infância)</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">H. ducreyi</div>
+      <div class="org-tag tag-neg">IST · Cancroide</div>
+      <ul>
+        <li><strong>Doença:</strong> cancroide (cancro mole) — IST</li>
+        <li><strong>Lesão:</strong> úlcera genital <strong>dolorosa</strong>, base mole, borda irregular + bubão inguinal</li>
+        <li><strong>Diferencial:</strong> sífilis (úlcera indolor, dura) vs. cancroide (dolorosa, mole)</li>
+        <li><strong>Macete:</strong> "H. ducreyi = Dói (Dolorosa)"</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">Helicobacter pylori</div>
+      <div class="org-tag tag-neg">Bacilo Curvo · Gástrico</div>
+      <ul>
+        <li><strong>Habitat:</strong> mucosa gástrica (pH ácido) — produz urease para neutralizar</li>
+        <li><strong>Doenças:</strong> úlcera péptica (gástrica e duodenal), gastrite crônica, <strong>adenocarcinoma gástrico</strong>, linfoma MALT</li>
+        <li><strong>Diagnóstico:</strong> teste respiratório da ureia, antígeno nas fezes, biópsia</li>
+        <li><strong>Tratamento:</strong> IBP + claritromicina + amoxicilina (tríplice)</li>
+      </ul>
+    </div>
+
+    <div class="org-card neg">
+      <div class="org-name neg">Campylobacter jejuni</div>
+      <div class="org-tag tag-neg">Bacilo Curvo · Zoonose</div>
+      <ul>
+        <li><strong>Principal causa</strong> de diarreia bacteriana no mundo</li>
+        <li><strong>Fonte:</strong> frango mal cozido, leite não pasteurizado, água contaminada</li>
+        <li><strong>Complicação grave:</strong> Síndrome de Guillain-Barré (paralisia ascendente pós-infecção)</li>
+        <li><strong>Macete:</strong> "Campy + Frango = Guillain-Barré"</li>
+      </ul>
+    </div>
+
+  </div><!-- /org-grid -->
+
+  <div class="mnemonic">
+    <h4>💡 MACETE — Enterobactérias com diarreia sanguinolenta</h4>
+    <p><strong>SESC</strong>: <strong>S</strong>higella (disenteria bacilar) · <strong>E</strong>nteroHemorrágica E.coli O157 (SHU) · <strong>S</strong>almonella typhi (febre tifoide com sangue tardio) · <strong>C</strong>ampylobacter (diarreia sanguinolenta + Guillain)</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     MICOBACTÉRIAS + BACILOS GRAM+
+═══════════════════════════════════ -->
+<div class="section-block">
+  <div class="section-header">
+    <div class="section-header-line"></div>
+    <div class="section-badge sb-myco">🟣 Micobactéria + Bacilo Gram Positivo</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="org-grid">
+
+    <div class="org-card myco">
+      <div class="org-name myco">M. tuberculosis</div>
+      <div class="org-tag tag-myco">BAAR · Crescimento Lento</div>
+      <ul>
+        <li><strong>Coloração especial:</strong> BAAR (Bacilo Álcool-Ácido Resistante) — Ziehl-Neelsen (cor vermelha)</li>
+        <li><strong>Não classifica no Gram</strong> — parede rica em ácidos micólicos</li>
+        <li><strong>Doenças:</strong> TB pulmonar (tosse >3 semanas, hemoptise, sudorese noturna), TB miliar, meningite tuberculosa, TB extrapulmonar</li>
+        <li><strong>Diagnóstico:</strong> baciloscopia, cultura em Löwenstein-Jensen (cresce lento: 4-8 semanas), PCR, PPD/IGRA</li>
+        <li><strong>Tratamento:</strong> RIPE — Rifampicina, Isoniazida, Pirazinamida, Etambutol (6 meses)</li>
+        <li><strong>Transmissão:</strong> aerossóis (tosse, espirro) — bacilo mais infeccioso do mundo</li>
+      </ul>
+    </div>
+
+    <div class="org-card pos">
+      <div class="org-name pos">Listeria monocytogenes</div>
+      <div class="org-tag tag-pos">Bacilo Gram+ · Intracelular</div>
+      <ul>
+        <li><strong>Habitat:</strong> solo, animais, alimentos refrigerados (cresce em 4°C!)</li>
+        <li><strong>Fontes:</strong> queijos moles não pasteurizados, frios/embutidos, peixe defumado</li>
+        <li><strong>Grupos de risco:</strong> gestantes, neonatos, idosos, imunossuprimidos</li>
+        <li><strong>Doenças:</strong> listeriose neonatal (sepse, meningite), meningoencefalite em adultos imunocomprometidos</li>
+        <li><strong>Peculiaridade:</strong> cresce sob refrigeração (diferente da maioria das bactérias)</li>
+        <li><strong>Tratamento:</strong> ampicilina (NÃO usar cefalosporinas — resistente)</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="mnemonic">
+    <h4>💡 MACETE — Listeria</h4>
+    <p><strong>"Listeria LISTA o que comer:"</strong> Leite não pasteurizado · frios/embutidos · Iogurte/queijo mole · Salmão defumado · TAvuk (frango cru) · Idosos e grávidas em risco<br>
+    <strong>"Listeria não tem medo do frio"</strong> — cresce em 4°C (geladeira)</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     TABELA RESUMO GERAL
+═══════════════════════════════════ -->
+<div class="summary-card">
+  <h3>📋 Tabela-Cola — Bactéria × Doença Clássica × Macete</h3>
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th class="th-neutral">Bactéria</th>
+        <th class="th-neutral">Gram</th>
+        <th class="th-neutral">Doença Clássica</th>
+        <th class="th-neutral">Macete / Pegadinha</th>
+      </tr>
+      <tr><td><em>S. aureus</em></td><td><span class="hl hl-pos">Coco+</span></td><td>Abscessos, intox. alimentar, TSST-1</td><td>Coagulase+ · MRSA</td></tr>
+      <tr><td><em>S. saprophyticus</em></td><td><span class="hl hl-pos">Coco+</span></td><td>ITU em mulher jovem</td><td>Sexualmente ativa · novobiocina-R</td></tr>
+      <tr><td><em>S. epidermidis</em></td><td><span class="hl hl-pos">Coco+</span></td><td>Infecção em próteses</td><td>Biofilme · coagulase−</td></tr>
+      <tr><td><em>S. pyogenes</em></td><td><span class="hl hl-pos">Coco+</span></td><td>Faringite → febre reumática</td><td>Bacitracina-S · GABHS</td></tr>
+      <tr><td><em>S. agalactiae</em></td><td><span class="hl hl-pos">Coco+</span></td><td>Sepse/meningite neonatal</td><td>Grupo B · triagem 35-37sem</td></tr>
+      <tr><td><em>S. pneumoniae</em></td><td><span class="hl hl-pos">Coco+</span></td><td>Pneumonia lobar, meningite</td><td>Lanceta · optoquina-S · vacina</td></tr>
+      <tr><td><em>N. gonorrhoeae</em></td><td><span class="hl hl-neg">Coco−</span></td><td>Gonorreia, DIP</td><td>Sem cápsula · sem vacina</td></tr>
+      <tr><td><em>N. meningitidis</em></td><td><span class="hl hl-neg">Coco−</span></td><td>Meningite purulenta, meningococcemia</td><td>Cápsula · vacina · petéquias</td></tr>
+      <tr><td><em>E. coli</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>ITU, diarreia do viajante, SHU</td><td>O157:H7 → SHU</td></tr>
+      <tr><td><em>K. pneumoniae</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Pneumonia em alcoolista</td><td>Geleia de groselha · KPC</td></tr>
+      <tr><td><em>K. granulomatis</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Donovanose (IST)</td><td>Corpos de Donovan · úlcera indolor</td></tr>
+      <tr><td><em>P. aeruginosa</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Pneumonia em UTI/queimados</td><td>Piocianina azul-esverdeada</td></tr>
+      <tr><td><em>Salmonella</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Febre tifoide, gastrenterite</td><td>Portador crônico vesícula</td></tr>
+      <tr><td><em>Shigella</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Disenteria bacilar</td><td>Dose baixa · não passa vasos</td></tr>
+      <tr><td><em>H. influenzae</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Meningite Hib, epiglotite</td><td>Fatores X e V · ágar-chocolate</td></tr>
+      <tr><td><em>H. ducreyi</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Cancroide (IST)</td><td>Úlcera DOLOROSA · mole</td></tr>
+      <tr><td><em>H. pylori</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Úlcera péptica, câncer gástrico</td><td>Urease+ · MALT linfoma</td></tr>
+      <tr><td><em>C. jejuni</em></td><td><span class="hl hl-neg">Bacilo−</span></td><td>Diarreia sanguinolenta</td><td>Frango → Guillain-Barré</td></tr>
+      <tr><td><em>M. tuberculosis</em></td><td><span class="hl hl-myco">BAAR</span></td><td>Tuberculose pulmonar</td><td>RIPE · Ziehl-Neelsen</td></tr>
+      <tr><td><em>L. monocytogenes</em></td><td><span class="hl hl-pos">Bacilo+</span></td><td>Meningite neonatal, listeriose</td><td>Cresce 4°C · queijos moles</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     CASOS CLÍNICOS
+═══════════════════════════════════ -->
+<div class="section-block">
+  <div class="section-header">
+    <div class="section-header-line"></div>
+    <div class="section-badge" style="background:#fff3e0;color:#e67e22;border:1.5px solid #f0c898;">🏥 Casos Clínicos Práticos</div>
+    <div class="section-header-line"></div>
+  </div>
+
+  <div class="intro-card">
+    <p>Os casos abaixo seguem o formato da sua prova. Clique em cada caso para abrir, leia o cenário e responda. O raciocínio clínico é mais importante que a memorização pura.</p>
+  </div>
+
+  <!-- CASO 1 -->
+  <div class="case-card" id="case1">
+    <div class="case-header" onclick="toggleCase('case1')">
+      <div class="case-icon">👶</div>
+      <div class="case-title">Caso 1 — Recém-nascido com febre e rigidez</div>
+      <div class="case-diff diff-easy">Fácil</div>
+      <div class="case-arrow">▼</div>
+    </div>
+    <div class="case-body">
+      <div class="case-scenario">
+        Neonato de 18 horas de vida, nascido de parto vaginal, apresenta <strong>febre, irritabilidade, hipotonia e recusa alimentar</strong>. A mãe não realizou triagem pré-natal para colonização bacteriana no 3º trimestre. Hemograma: leucocitose com desvio à esquerda. Líquor: turvo, glicose baixa, proteínas altas, predomínio de PMN. Coloração de Gram do líquor: <strong>cocos Gram positivos em pares e cadeias curtas</strong>.
+      </div>
+      <div class="case-question">Qual é o agente etiológico mais provável e qual falha na prevenção ocorreu?</div>
+      <div class="case-options">
+        <button class="case-opt" onclick="caseAns('case1','A',false)"><span class="opt-letter">A)</span> Listeria monocytogenes — deveria ter sido feita cesárea</button>
+        <button class="case-opt" onclick="caseAns('case1','B',true)"><span class="opt-letter">B)</span> Streptococcus agalactiae — faltou triagem e penicilina intraparto</button>
+        <button class="case-opt" onclick="caseAns('case1','C',false)"><span class="opt-letter">C)</span> Neisseria meningitidis — faltou vacinação materna</button>
+        <button class="case-opt" onclick="caseAns('case1','D',false)"><span class="opt-letter">D)</span> E. coli — faltou higiene no parto</button>
+      </div>
+      <div class="case-feedback" id="cfb1"></div>
+    </div>
+  </div>
+
+  <!-- CASO 2 -->
+  <div class="case-card" id="case2">
+    <div class="case-header" onclick="toggleCase('case2')">
+      <div class="case-icon">🍗</div>
+      <div class="case-title">Caso 2 — Diarreia após churrasco + fraqueza nas pernas</div>
+      <div class="case-diff diff-easy">Fácil</div>
+      <div class="case-arrow">▼</div>
+    </div>
+    <div class="case-body">
+      <div class="case-scenario">
+        Jovem de 22 anos, 10 dias após um churrasco com frango malpassado, apresenta <strong>diarreia aquosa que evoluiu para sanguinolenta, cólicas intensas e febre (38,5°C)</strong>. Após 1 semana, a diarreia cedeu, mas o paciente voltou ao pronto-socorro com <strong>fraqueza simétrica nos membros inferiores, iniciando pelos pés e subindo progressivamente</strong>. Reflexos miotáticos abolidos.
+      </div>
+      <div class="case-question">Qual o agente responsável pela diarreia e qual é a complicação neurológica apresentada?</div>
+      <div class="case-options">
+        <button class="case-opt" onclick="caseAns('case2','A',false)"><span class="opt-letter">A)</span> Salmonella typhi — febre tifoide com neuropatia periférica</button>
+        <button class="case-opt" onclick="caseAns('case2','B',false)"><span class="opt-letter">B)</span> Shigella — disenteria com envolvimento do SNC</button>
+        <button class="case-opt" onclick="caseAns('case2','C',true)"><span class="opt-letter">C)</span> Campylobacter jejuni — diarreia seguida de Síndrome de Guillain-Barré</button>
+        <button class="case-opt" onclick="caseAns('case2','D',false)"><span class="opt-letter">D)</span> E. coli O157:H7 — SHU com acometimento neurológico</button>
+      </div>
+      <div class="case-feedback" id="cfb2"></div>
+    </div>
+  </div>
+
+  <!-- CASO 3 -->
+  <div class="case-card" id="case3">
+    <div class="case-header" onclick="toggleCase('case3')">
+      <div class="case-icon">🫁</div>
+      <div class="case-title">Caso 3 — Pneumonia em alcoolista</div>
+      <div class="case-diff diff-mid">Intermediário</div>
+      <div class="case-arrow">▼</div>
+    </div>
+    <div class="case-body">
+      <div class="case-scenario">
+        Homem, 55 anos, alcoolista crônico, diabético. Deu entrada no pronto-socorro com <strong>febre alta (39,8°C), tosse produtiva com escarro espesso de coloração avermelhada e aspecto gelatinoso</strong>, dispneia e dor pleurítica à direita. Radiografia: consolidação lobar em lobo superior direito. Leucograma: 18.000 cel/mm³. Coloração de Gram do escarro: <strong>bacilos Gram negativos capsulados</strong>, mucoides.
+      </div>
+      <div class="case-question">Qual é o agente etiológico mais provável, e qual achado do escarro é patognomônico?</div>
+      <div class="case-options">
+        <button class="case-opt" onclick="caseAns('case3','A',false)"><span class="opt-letter">A)</span> Pseudomonas aeruginosa — escarro azul-esverdeado com odor adocicado</button>
+        <button class="case-opt" onclick="caseAns('case3','B',true)"><span class="opt-letter">B)</span> Klebsiella pneumoniae — escarro em "geleia de groselha" (espesso, sanguinolento)</button>
+        <button class="case-opt" onclick="caseAns('case3','C',false)"><span class="opt-letter">C)</span> S. pneumoniae — escarro enferrujado em pneumonia lobar</button>
+        <button class="case-opt" onclick="caseAns('case3','D',false)"><span class="opt-letter">D)</span> H. influenzae — escarro mucopurulento em DPOC</button>
+      </div>
+      <div class="case-feedback" id="cfb3"></div>
+    </div>
+  </div>
+
+  <!-- CASO 4 -->
+  <div class="case-card" id="case4">
+    <div class="case-header" onclick="toggleCase('case4')">
+      <div class="case-icon">🧫</div>
+      <div class="case-title">Caso 4 — ITU recorrente em jovem</div>
+      <div class="case-diff diff-mid">Intermediário</div>
+      <div class="case-arrow">▼</div>
+    </div>
+    <div class="case-body">
+      <div class="case-scenario">
+        Mulher, 20 anos, sexualmente ativa, sem comorbidades. Apresenta <strong>disúria, polaciúria e urgência miccional há 3 dias</strong>. Nega febre ou dor lombar. Urinocultura: crescimento de bactéria coagulase-negativa, resistente à novobiocina. Coloração de Gram: <strong>cocos Gram positivos em cachos</strong>.
+      </div>
+      <div class="case-question">Qual é o agente e como diferenciá-lo das outras ITUs bacterianas mais comuns?</div>
+      <div class="case-options">
+        <button class="case-opt" onclick="caseAns('case4','A',false)"><span class="opt-letter">A)</span> E. coli — principal causa de ITU, Gram negativo</button>
+        <button class="case-opt" onclick="caseAns('case4','B',false)"><span class="opt-letter">B)</span> S. aureus — coagulase positiva, mais virulento</button>
+        <button class="case-opt" onclick="caseAns('case4','C',true)"><span class="opt-letter">C)</span> S. saprophyticus — ITU em jovem sexualmente ativa, coagulase−, novobiocina-R, Gram+</button>
+        <button class="case-opt" onclick="caseAns('case4','D',false)"><span class="opt-letter">D)</span> S. epidermidis — coagulase−, novobiocina-sensível, causa ITU em cateterizados</button>
+      </div>
+      <div class="case-feedback" id="cfb4"></div>
+    </div>
+  </div>
+
+  <!-- CASO 5 -->
+  <div class="case-card" id="case5">
+    <div class="case-header" onclick="toggleCase('case5')">
+      <div class="case-icon">🔴</div>
+      <div class="case-title">Caso 5 — Adolescente com febre e manchas na pele</div>
+      <div class="case-diff diff-hard">Avançado</div>
+      <div class="case-arrow">▼</div>
+    </div>
+    <div class="case-body">
+      <div class="case-scenario">
+        Adolescente, 16 anos, estudante em dormitório universitário. Início súbito de <strong>febre alta (40°C), cefaleia intensa, rigidez de nuca e fotofobia</strong>. Nas primeiras 6 horas, surgem <strong>petéquias que evoluem rapidamente para púrpura</strong> no tronco e membros. Pressão arterial cai progressivamente. Líquor turvo: diplococos Gram negativos intracelulares em PMN.
+      </div>
+      <div class="case-question">Qual o agente, qual a urgência terapêutica e qual grupo de risco específico deve ser vacinado?</div>
+      <div class="case-options">
+        <button class="case-opt" onclick="caseAns('case5','A',false)"><span class="opt-letter">A)</span> N. gonorrhoeae — tratar com ceftriaxona IM ambulatorial</button>
+        <button class="case-opt" onclick="caseAns('case5','B',false)"><span class="opt-letter">B)</span> S. pneumoniae — vacinar idosos e asplênicos prioritariamente</button>
+        <button class="case-opt" onclick="caseAns('case5','C',true)"><span class="opt-letter">C)</span> N. meningitidis — penicilina IV imediata, vacinar adolescentes e comunicantes</button>
+        <button class="case-opt" onclick="caseAns('case5','D',false)"><span class="opt-letter">D)</span> H. influenzae — vacina Hib para crianças menores de 5 anos</button>
+      </div>
+      <div class="case-feedback" id="cfb5"></div>
+    </div>
+  </div>
+
+  <!-- CASO 6 -->
+  <div class="case-card" id="case6">
+    <div class="case-header" onclick="toggleCase('case6')">
+      <div class="case-icon">🫙</div>
+      <div class="case-title">Caso 6 — Gestante com febre após ingerir queijo</div>
+      <div class="case-diff diff-hard">Avançado</div>
+      <div class="case-arrow">▼</div>
+    </div>
+    <div class="case-body">
+      <div class="case-scenario">
+        Gestante, 32 semanas, refere ter consumido queijo brie (não pasteurizado) e presunto fatiado em uma festa há 5 dias. Apresenta agora <strong>febre (38,2°C), mialgia, cefaleia e dor lombar leve</strong>. Hemograma: leucocitose com monócitos aumentados. Hemocultura em andamento. O laboratório informa que, após cultura a 4°C, houve crescimento de <strong>bacilo Gram positivo móvel</strong>, beta-hemolítico.
+      </div>
+      <div class="case-question">Qual o agente, por que cresce em 4°C e qual antibiótico NÃO deve ser usado?</div>
+      <div class="case-options">
+        <button class="case-opt" onclick="caseAns('case6','A',false)"><span class="opt-letter">A)</span> S. agalactiae — não cresce em 4°C, tratar com penicilina</button>
+        <button class="case-opt" onclick="caseAns('case6','B',false)"><span class="opt-letter">B)</span> S. aureus — toxina pré-formada, antibiótico não resolve a intoxicação</button>
+        <button class="case-opt" onclick="caseAns('case6','C',false)"><span class="opt-letter">C)</span> Salmonella — bacilo Gram negativo, tratar com ciprofloxacino</button>
+        <button class="case-opt" onclick="caseAns('case6','D',true)"><span class="opt-letter">D)</span> Listeria monocytogenes — cresce em 4°C (psicrotrófio), NÃO usar cefalosporinas (resistente), usar ampicilina</button>
+      </div>
+      <div class="case-feedback" id="cfb6"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     QUIZ FINAL
+═══════════════════════════════════ -->
+<div class="quiz-section">
+  <h2>🎯 Quiz Rápido de Fixação</h2>
+  <p>8 perguntas diretas para testar seus pontos-chave</p>
+
+  <div class="q-block">
+    <p>1. Qual bactéria gram-positiva produz a toxina responsável pela "síndrome da pele escaldada" em recém-nascidos?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Streptococcus pyogenes produz estreptolisinas, não a toxina esfoliativa.')"><span class="opt-letter">A)</span> Streptococcus pyogenes</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! S. aureus produz a toxina esfoliativa (ET-A, ET-B) que cliva a desmogleína-1 na pele, causando a síndrome de Ritter (pele escaldada).')"><span class="opt-letter">B)</span> Staphylococcus aureus</button>
+      <button class="q-opt" onclick="qans(this,false,'S. epidermidis é coagulase-negativo e pouco virulento — não produz toxina esfoliativa.')"><span class="opt-letter">C)</span> Staphylococcus epidermidis</button>
+      <button class="q-opt" onclick="qans(this,false,'S. agalactiae causa sepse neonatal mas não a síndrome da pele escaldada.')"><span class="opt-letter">D)</span> Streptococcus agalactiae</button>
+    </div>
+    <div class="q-fb" id="qfb1"></div>
+  </div>
+
+  <div class="q-block">
+    <p>2. Uma paciente com úlcera gástrica crônica tem biópsia positiva para H. pylori. Qual esquema terapêutico é correto?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Monoterapia com antibiótico tem taxa de erradicação inferior a 50% — inaceitável.')"><span class="opt-letter">A)</span> Apenas omeprazol por 30 dias</button>
+      <button class="q-opt" onclick="qans(this,false,'Metronidazol + tetraciclina é esquema de 2ª linha (terapia quádrupla com bismuto).')"><span class="opt-letter">B)</span> Metronidazol + tetraciclina isolados</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! Tríplice terapia: IBP + claritromicina + amoxicilina por 14 dias é o esquema padrão de 1ª linha para H. pylori.')"><span class="opt-letter">C)</span> IBP + claritromicina + amoxicilina por 14 dias</button>
+      <button class="q-opt" onclick="qans(this,false,'Ciprofloxacino não faz parte da terapia de 1ª linha para H. pylori.')"><span class="opt-letter">D)</span> Ciprofloxacino + IBP por 7 dias</button>
+    </div>
+    <div class="q-fb" id="qfb2"></div>
+  </div>
+
+  <div class="q-block">
+    <p>3. Paciente com tosse produtiva há 4 semanas, sudorese noturna, perda de peso e hemoptise. A baciloscopia do escarro é positiva. Qual é a coloração utilizada?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Gram não funciona para micobactérias — a parede rica em ácidos micólicos é álcool-ácido resistente.')"><span class="opt-letter">A)</span> Coloração de Gram</button>
+      <button class="q-opt" onclick="qans(this,false,'Giemsa é usada para protozoários (Plasmodium, Leishmania) e células do sangue.')"><span class="opt-letter">B)</span> Coloração de Giemsa</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! Ziehl-Neelsen detecta BAAR (Bacilos Álcool-Ácido Resistentes). M. tuberculosis aparece em vermelho sobre fundo azul. Alternativa: Auramina (fluorescência).')"><span class="opt-letter">C)</span> Ziehl-Neelsen (BAAR)</button>
+      <button class="q-opt" onclick="qans(this,false,'PAS (ácido periódico de Schiff) é para fungos e glicogênio, não para micobactérias.')"><span class="opt-letter">D)</span> Coloração PAS</button>
+    </div>
+    <div class="q-fb" id="qfb3"></div>
+  </div>
+
+  <div class="q-block">
+    <p>4. Qual característica diferencia Neisseria meningitidis de N. gonorrhoeae do ponto de vista epidemiológico e de prevenção?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Ambas são diplococos Gram negativos. A morfologia é idêntica.')"><span class="opt-letter">A)</span> N. meningitidis é bacilo, N. gonorrhoeae é coco</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! N. meningitidis tem cápsula polissacarídea → vacina disponível. N. gonorrhoeae não tem cápsula → sem vacina. A cápsula é o principal alvo das vacinas bacterianas capsuladas.')"><span class="opt-letter">B)</span> N. meningitidis é capsulada e tem vacina; N. gonorrhoeae não tem cápsula e não tem vacina</button>
+      <button class="q-opt" onclick="qans(this,false,'Ambas são Gram negativas. Não existe Neisseria Gram positiva.')"><span class="opt-letter">C)</span> N. gonorrhoeae é Gram positiva</button>
+      <button class="q-opt" onclick="qans(this,false,'N. gonorrhoeae causa gonorreia/IST. N. meningitidis causa meningite. A transmissão é diferente.')"><span class="opt-letter">D)</span> Ambas causam meningite com o mesmo perfil de transmissão</button>
+    </div>
+    <div class="q-fb" id="qfb4"></div>
+  </div>
+
+  <div class="q-block">
+    <p>5. Qual das bactérias abaixo pode ser transmitida por alimentos refrigerados e cresce em temperatura de 4°C?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Salmonella não cresce bem em 4°C e é Gram negativa.')"><span class="opt-letter">A)</span> Salmonella typhi</button>
+      <button class="q-opt" onclick="qans(this,false,'S. aureus produz toxina a temperatura ambiente, mas não cresce eficientemente a 4°C.')"><span class="opt-letter">B)</span> Staphylococcus aureus</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! Listeria monocytogenes é psicrotrófica — cresce entre 1°C e 45°C. Isso a torna única entre as bactérias patogênicas, podendo contaminar alimentos mesmo sob refrigeração adequada.')"><span class="opt-letter">C)</span> Listeria monocytogenes</button>
+      <button class="q-opt" onclick="qans(this,false,'Campylobacter cresce melhor a 42°C (temperatura das aves) e não a 4°C.')"><span class="opt-letter">D)</span> Campylobacter jejuni</button>
+    </div>
+    <div class="q-fb" id="qfb5"></div>
+  </div>
+
+  <div class="q-block">
+    <p>6. Uma criança de 3 anos desenvolve diarreia sanguinolenta após comer hambúrguer malpassado. Evoluiu com oligúria, palidez e petéquias. Qual é o diagnóstico e o agente?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Shigella causa disenteria e pode causar SHU, mas o contexto (hambúrguer) aponta para E. coli O157:H7.')"><span class="opt-letter">A)</span> Disenteria bacilar — Shigella dysenteriae</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! E. coli O157:H7 (STEC) produz toxina Shiga → lesa endotélio renal → SHU = tríade: anemia hemolítica microangiopática + plaquetopenia + IRA. Hambúrguer malpassado é a fonte clássica. NÃO dar antibiótico — piora a liberação de toxina!')"><span class="opt-letter">B)</span> Síndrome Hemolítico-Urêmica (SHU) — E. coli O157:H7</button>
+      <button class="q-opt" onclick="qans(this,false,'Salmonella raramente causa SHU e está mais associada a aves, não hambúrguer.')"><span class="opt-letter">C)</span> Febre tifoide — Salmonella typhi</button>
+      <button class="q-opt" onclick="qans(this,false,'Campylobacter causa diarreia e se associa a Guillain-Barré, não SHU tipicamente.')"><span class="opt-letter">D)</span> Guillain-Barré — Campylobacter jejuni</button>
+    </div>
+    <div class="q-fb" id="qfb6"></div>
+  </div>
+
+  <div class="q-block">
+    <p>7. Qual característica microbiológica é EXCLUSIVA do Pseudomonas aeruginosa entre os bacilos Gram negativos da lista?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Vários bacilos Gram negativos são fermentadores. P. aeruginosa é NÃO fermentador.')"><span class="opt-letter">A)</span> É o único fermentador de lactose</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! P. aeruginosa produz piocianina (azul-esverdeado) e pioverdina (fluorescente). Essas pigmentações são características únicas e podem ser observadas nas culturas e até nas secreções de pacientes infectados.')"><span class="opt-letter">B)</span> Produz pigmento azul-esverdeado (piocianina)</button>
+      <button class="q-opt" onclick="qans(this,false,'A produção de urease é característica do H. pylori, não de Pseudomonas.')"><span class="opt-letter">C)</span> Produz urease para sobreviver em pH ácido</button>
+      <button class="q-opt" onclick="qans(this,false,'Corpos de Donovan são específicos de Klebsiella granulomatis.')"><span class="opt-letter">D)</span> Forma corpos de Donovan intracelulares</button>
+    </div>
+    <div class="q-fb" id="qfb7"></div>
+  </div>
+
+  <div class="q-block">
+    <p>8. Paciente com faringite exsudativa por S. pyogenes não tratada. Qual é a principal complicação cardíaca que pode ocorrer semanas depois e como ela é mediada?</p>
+    <div class="q-opts">
+      <button class="q-opt" onclick="qans(this,false,'Endocardite bacteriana aguda é tipicamente causada por S. aureus, que invade diretamente a válvula.')"><span class="opt-letter">A)</span> Endocardite bacteriana aguda — invasão direta do S. pyogenes</button>
+      <button class="q-opt" onclick="qans(this,false,'Miocardite viral é causada por vírus (enterovírus, adenovírus), não por S. pyogenes.')"><span class="opt-letter">B)</span> Miocardite viral — reativação por imunossupressão</button>
+      <button class="q-opt" onclick="qans(this,true,'✅ Correto! A febre reumática ocorre 2-4 semanas após faringite por S. pyogenes Grupo A. É mediada por mimetismo molecular — anticorpos anti-estreptocócicos reagem cruzadamente com proteínas cardíacas (proteína M vs miosina cardíaca). Causa cardite, valvulopatia crônica (estenose mitral é a sequela mais comum).')"><span class="opt-letter">C)</span> Febre reumática — mimetismo molecular (anticorpos anti-estreptocócicos atacam o coração)</button>
+      <button class="q-opt" onclick="qans(this,false,'Pericardite tuberculosa é complicação da TB, não de S. pyogenes.')"><span class="opt-letter">D)</span> Pericardite tuberculosa — disseminação hematogênica</button>
+    </div>
+    <div class="q-fb" id="qfb8"></div>
+  </div>
+
+</div><!-- /quiz-section -->
+
+</div><!-- /container -->
+
+<div class="footer">
+  Material baseado em Murray — Microbiologia Médica · Jawetz · Tortora<br>
+  Para uso educacional exclusivo · Dr. Cristiano Ribeiro da Silva
+</div>
+
+<script>
+// TOGGLE CASES
+function toggleCase(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// CASE ANSWERS
+const caseFeedbacks = {
+  case1: {
+    B: '✅ Correto! Streptococcus agalactiae (Grupo B) coloniza o trato genital de 15–30% das mulheres. A triagem entre 35–37 semanas de gestação e a profilaxia com penicilina intraparto previne a transmissão vertical. Cocos Gram+ em pares/cadeias no líquor + neonato = GBS até prova em contrário.',
+    default: '❌ Incorreto. Cocos Gram positivos em pares/cadeias no neonato = Streptococcus agalactiae (Grupo B). Listeria é bacilo, não coco. Neisseria é Gram negativa. E. coli é Gram negativa. A falta de triagem e profilaxia intraparto é a falha preventiva clássica neste caso.'
+  },
+  case2: {
+    C: '✅ Correto! Campylobacter jejuni é a principal causa de diarreia bacteriana no mundo. Frango malpassado é a fonte clássica. A complicação mais temida é a Síndrome de Guillain-Barré: paralisia flácida ascendente pós-infecciosa por mimetismo molecular (LPS do Campylobacter simula gangliosídeos dos nervos periféricos). Reflexos abolidos + fraqueza ascendente = SGB.',
+    default: '❌ Incorreto. Frango malpassado + diarreia + paralisia ascendente com arreflexia semanas depois = padrão clássico de Campylobacter jejuni → Síndrome de Guillain-Barré. E. coli O157:H7 causa SHU (rim), não paralisia. Salmonella causa febre tifoide/gastroenterite, sem essa complicação neurológica típica.'
+  },
+  case3: {
+    B: '✅ Correto! Klebsiella pneumoniae é a pneumonia clássica em alcoolistas e diabéticos. O escarro em "geleia de groselha" (currant jelly sputum) — espesso, gelatinoso, sanguinolento — é o achado patognomônico. A cápsula polissacarídea confere aspecto mucoide na cultura. KPC é a variante multirresistente hospitalar.',
+    default: '❌ Incorreto. Alcoolista + DM + escarro gelatinoso avermelhado + bacilos Gram negativos capsulados = Klebsiella pneumoniae. Pseudomonas tem pigmento azul-esverdeado. S. pneumoniae tem escarro enferrujado e é Gram positivo (diplococo). H. influenzae causa exacerbações de DPOC, não este quadro.'
+  },
+  case4: {
+    C: '✅ Correto! S. saprophyticus é a 2ª causa mais comum de ITU em mulheres jovens sexualmente ativas (depois de E. coli). Diferencia-se: Gram+ (cocos em cachos) vs E. coli (Gram−). Coagulase-negativo (diferente de S. aureus). Resistente à novobiocina (diferente de S. epidermidis, que é sensível). Essa resistência é o teste diferencial padrão nos laboratórios.',
+    default: '❌ Incorreto. O conjunto diagnóstico é perfeito para S. saprophyticus: mulher jovem sexualmente ativa + cocos Gram+ em cachos + coagulase− + resistente à novobiocina. E. coli é Gram negativo. S. aureus é coagulase positivo. S. epidermidis é novobiocina-sensível.'
+  },
+  case5: {
+    C: '✅ Correto! N. meningitidis (meningococo): meningite + petéquias evoluindo para púrpura fulminans + instabilidade hemodinâmica = quadro fulminante. Diplococos Gram negativos intracelulares no líquor confirma. Tratamento: penicilina G IV imediata (não esperar cultura). Profilaxia dos comunicantes: rifampicina. Vacinar: adolescentes, recrutas militares, asplênicos, déficit de complemento.',
+    default: '❌ Incorreto. Adolescente em dormitório + meningite + petéquias/púrpura + evolução rápida + diplococos Gram− no líquor = Neisseria meningitidis. Penicilina IV imediata salva vidas. N. gonorrhoeae causa IST, não meningite com petéquias. H. influenzae afeta crianças não vacinadas, não adolescentes típicos.'
+  },
+  case6: {
+    D: '✅ Correto! Listeria monocytogenes é psicrotrófica — cresce em 4°C (única bactéria patogênica com essa propriedade). Fontes: queijos moles não pasteurizados, frios, peixe defumado. Bacilo Gram+ móvel + beta-hemolítico. ATENÇÃO: cefalosporinas NÃO funcionam (resistência intrínseca). Tratar com ampicilina (± gentamicina em imunocomprometidos). Em gestantes, atravessa a placenta e causa aborto, prematuridade ou listeriose neonatal.',
+    default: '❌ Incorreto. Gestante + queijo não pasteurizado + bacilo Gram positivo móvel que cresce a 4°C = Listeria monocytogenes. Nenhuma outra bactéria patogênica cresce eficientemente em temperatura de geladeira. Ponto crucial: cefalosporinas NÃO funcionam contra Listeria — usar ampicilina!'
+  }
+};
+
+function caseAns(caseId, letter, isCorrect) {
+  const card = document.getElementById(caseId);
+  const opts = card.querySelectorAll('.case-opt');
+  opts.forEach(b => {
+    b.disabled = true;
+    if (b.onclick.toString().includes(',true)')) b.classList.add('correct');
+  });
+  const letters = ['A','B','C','D'];
+  const idx = letters.indexOf(letter);
+  if (!isCorrect && opts[idx]) opts[idx].classList.add('wrong');
+
+  const fb = document.getElementById('cfb' + caseId.replace('case',''));
+  const data = caseFeedbacks[caseId];
+  const msg = isCorrect ? data[letter] : data.default;
+  fb.textContent = msg;
+  fb.className = 'case-feedback show' + (isCorrect ? '' : ' err');
+}
+
+// QUIZ
+function qans(btn, isCorrect, msg) {
+  const block = btn.closest('.q-block');
+  block.querySelectorAll('.q-opt').forEach(b => {
+    b.disabled = true;
+    if (b.onclick.toString().includes('true,')) b.classList.add('correct');
+  });
+  if (!isCorrect) btn.classList.add('wrong');
+  const fbs = block.querySelectorAll('.q-fb');
+  fbs.forEach(fb => {
+    fb.textContent = (isCorrect ? '✅ ' : '❌ ') + msg;
+    fb.className = 'q-fb show ' + (isCorrect ? 'ok' : 'err');
+  });
+}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-03/microbiologia1-pratica/Capitulo_04_Meios_Cultivo_Semeadura.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Aula 4 — Meios de Cultivo e Técnicas de Semeadura</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-03/microbiologia1-pratica/Aula_06_Casos_AltoRendimento.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Aula 6 — Casos Clínicos de Alto Rendimento</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
