@@ -444,6 +444,7 @@
 
 
 
+
 <div class="hero">
   <div class="hero-tag">Imunologia · Cap. 15 — Abbas</div>
   <h1>Tolerância Imunológica<br>& <span>Células Treg</span></h1>
@@ -907,6 +908,12 @@ try{
 <script src="/assets/progress-tracker.js" defer></script>
 <script src="/assets/pwa-register.js" defer></script>
 
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
   </div>
 </div>
 <nav class="cmed-nav-prevnext">
@@ -928,6 +935,21 @@ try{
   try{
     var key = 'cmed_visto_' + location.pathname;
     localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
   }catch(e){}
 })();
 </script>

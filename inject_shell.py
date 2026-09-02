@@ -103,6 +103,16 @@ def build_sequence(materia, sem_nome):
                 })
     return seq
 
+def load_novidades():
+    path = os.path.join(REPO, 'novidades.json')
+    try:
+        with open(path, encoding='utf-8') as f:
+            return set(json.load(f))
+    except Exception:
+        return set()
+
+NOVIDADES = load_novidades()
+
 def esc(s):
     return (s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
 
@@ -120,7 +130,8 @@ def build_sidebar_html(seq, current_path):
             cls = 'cmed-nav-item is-current' if is_current else 'cmed-nav-item'
             ico = icon_materia(it['materia']) if it['tipo'] == 'Guia de Estudo' else '🎯'
             href = '/' + it['path']
-            parts.append(f'<a class="{cls}" href="{href}"><span class="ico">{ico}</span><span>{esc(it["label"])}</span></a>')
+            novo_attr = ' data-novo="1"' if it['path'] in NOVIDADES else ''
+            parts.append(f'<a class="{cls}" href="{href}"{novo_attr}><span class="ico">{ico}</span><span>{esc(it["label"])}</span></a>')
     return '\n    '.join(parts)
 
 def build_header(back_href):
@@ -175,6 +186,21 @@ MOBILE_TOGGLE_SCRIPT = '''<script>
   try{
     var key = 'cmed_visto_' + location.pathname;
     localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
   }catch(e){}
 })();
 </script>

@@ -256,10 +256,12 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
     <a class="cmed-nav-item" href="/semestre-04/bioquimica2-cde/Capitulo_01_Metabolismo_Introducao.html"><span class="ico">⚗️</span><span>Capítulo 1 — Metabolismo: Introducción</span></a>
     <a class="cmed-nav-item" href="/semestre-04/bioquimica2-cde/Capitulo_02_Glucolisis_Completa.html"><span class="ico">⚗️</span><span>Capítulo 2 — Glucólisis Completa</span></a>
     <a class="cmed-nav-item" href="/semestre-04/bioquimica2-cde/Capitulo_03_Pentosas_Gluconeogenesis.html"><span class="ico">⚗️</span><span>Capítulo 3 — Vía de las Pentosas Fosfato y Gluconeogénesis</span></a>
-    <a class="cmed-nav-item is-current" href="/semestre-04/bioquimica2-cde/Capitulo_04_Glucogeno_Insulina_Diabetes.html"><span class="ico">⚗️</span><span>Capítulo 4 — Glucógeno, Insulina/Glucagón e Diabetes Mellitus</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-04/bioquimica2-cde/Capitulo_04_Glucogeno_Insulina_Diabetes.html" data-novo="1"><span class="ico">⚗️</span><span>Capítulo 4 — Glucógeno, Insulina/Glucagón e Diabetes Mellitus</span></a>
     </div>
   </aside>
   <div class="cmed-nav-main">
+
+
 
 
 
@@ -999,6 +1001,18 @@ try{
 <script src="/assets/pdf-export.js" defer></script>
 <script src="/assets/pwa-register.js" defer></script>
 
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
   </div>
 </div>
 <nav class="cmed-nav-prevnext">
@@ -1017,6 +1031,21 @@ try{
   try{
     var key = 'cmed_visto_' + location.pathname;
     localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
   }catch(e){}
 })();
 </script>
