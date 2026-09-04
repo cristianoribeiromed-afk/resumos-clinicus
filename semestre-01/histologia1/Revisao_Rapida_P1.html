@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Histología I — Revisão Rápida P1 | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0d1b16; --card:#132a22; --card2:#183327;
+  --accent:#2fae7a; --accent2:#5fd9a8; --gold:#e8b84b;
+  --text:#eef5f1; --text-dim:#a8c4b8; --ok:#4fd1a1; --bad:#e0505f; --border:#204534;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#0f2a20 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(95,217,168,.12);border:1px solid rgba(95,217,168,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#1c7a52);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(95,217,168,.12);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#122720;}
+ul,ol{margin:6px 0;padding-left:20px;}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.qz-btn:disabled{cursor:default;}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.85em;}
+.al-box b{display:block;margin-bottom:4px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Histología I</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Histología I</span><span>7 de 12</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:58%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Histología I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_01_Introducao_Celula.html"><span class="ico">🧫</span><span>Capítulo 1 — Introdução à Histologia e a Célula</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_02_Tecnicas_Histologicas.html"><span class="ico">🧫</span><span>Capítulo 2 — Técnicas Histológicas e Métodos de Coloração</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_03_Tecido_Epitelial.html"><span class="ico">🧫</span><span>Capítulo 3 — Tecido Epitelial: Características e Classificação</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_04_Especializacoes_Membrana_Basal.html"><span class="ico">🧫</span><span>Capítulo 4 — Especializações da Superfície Celular e Membrana Basal</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_05_Glandulas_Epiteliais.html"><span class="ico">🧫</span><span>Capítulo 5 — Glândulas Epiteliais</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_06_Transicoes_Folhetos_Embrionarios.html"><span class="ico">🧫</span><span>Capítulo 6 — Transições Epiteliais, Endotélio/Mesotélio/Urotélio e Folhetos Embrionários</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-01/histologia1/Revisao_Rapida_P1.html"><span class="ico">🧫</span><span>📋 Revisão Rápida P1 (Interativa)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/simulado_histologia1_p1.html"><span class="ico">🎯</span><span>Simulado P1 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-01/final/histologia1_teorica_p1.html"><span class="ico">🧫</span><span>Teórica P1</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/histologia1_teorica_p2.html"><span class="ico">🧫</span><span>Teórica P2</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/tabela_excelencia_histologia.html"><span class="ico">🧫</span><span>Tabela de Excelência</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/simulado_top_histologia.html"><span class="ico">🎯</span><span>Simulado Top — 30 Questões (MC + V/F + Associar)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+<div class="wrap">
+
+  <span class="eyebrow">Histología I · Revisão Rápida</span>
+  <h1 style="text-align:center;">📋 Revisão Rápida — P1 (até Glândulas Exócrinas)</h1>
+  <p style="text-align:center;color:var(--text-dim);font-size:.85em;margin-bottom:16px;">Material único e condensado, direto ao ponto — organizado a partir do seu próprio resumo pessoal. Depois de cada revisão, 10 questões pra testar se ficou de verdade.</p>
+
+  <nav class="tabs">
+    <button data-p="p0" class="active">🧱 Tecido Epitelial de Revestimento</button>
+    <button data-p="p1">🧪 Tecido Epitelial Glandular Exócrino</button>
+  </nav>
+
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🧱 Tecido Epitelial de Revestimento (TER)</h2>
+    <div class="criterio">🟢 Função geral: revestir grandes (mesotélio) e pequenas (endotélio) cavidades — células bem juntas, sem espaço entre elas.</div>
+    <table>
+      <tr><th>Característica</th><th>Detalhe</th></tr>
+      <tr><td>União lateral entre células</td><td>Junção de oclusão, junção de adesão, desmossomo, junção comunicante</td></tr>
+      <tr><td>União basal</td><td>Hemidesmossomo</td></tr>
+      <tr><td>Vascularização</td><td>AVASCULAR — nutrição por difusão do tecido conjuntivo subjacente</td></tr>
+      <tr><td>Inervação</td><td>Altamente inervado</td></tr>
+      <tr><td>Sustentação</td><td>Membrana basal (rica em Colágeno tipo IV) — lâmina lúcida, densa e reticular</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Classificação por Morfologia</h2>
+    <table>
+      <tr><th>Forma</th><th>Detalhe</th></tr>
+      <tr><td>Plano (Pavimentoso/Escamoso)</td><td>Células achatadas</td></tr>
+      <tr><td>Cúbico</td><td>Sem especialidades apicais</td></tr>
+      <tr><td>Cilíndrico</td><td>Pode ter cílios, microvilosidades, estereocílios</td></tr>
+      <tr><td>Urotélio (Transição)</td><td>Ápice arredondado — exclusivo do trato urinário</td></tr>
+    </table>
+    <div class="mnemo">🧠 Camadas: Simples = 1 camada. Estratificado = 2+ camadas. Pseudoestratificado = "falso estratificado" — SEMPRE cilíndrico.</div>
+  </div>
+
+  <div class="card">
+    <h2>Tecido Epitelial Plano — Onde Encontrar</h2>
+    <table>
+      <tr><th></th><th>Simples</th><th>Estratificado</th></tr>
+      <tr><td>Local</td><td>Endotélio (vasos), Mesotélio (pleura/peritônio/pericárdio/túnica vaginal), Pulmões</td><td>Cavidade oral, canal vaginal, faringe, esôfago</td></tr>
+      <tr><td>Detalhe</td><td>—</td><td>Pode ser QUERATINIZADO (só na epiderme)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Tecido Epitelial Cúbico e Cilíndrico</h2>
+    <table>
+      <tr><th>Tipo</th><th>Onde encontrar</th></tr>
+      <tr><td>Cúbico Simples</td><td>Túbulos renais</td></tr>
+      <tr><td>Cúbico Estratificado</td><td>Raro — junção anorretal</td></tr>
+      <tr><td>Cilíndrico Simples</td><td>Intestino delgado, estômago, vesícula biliar (pode ter microvilosidades)</td></tr>
+      <tr><td>Cilíndrico Estratificado</td><td>Raro — canal anal</td></tr>
+      <tr><td>Cilíndrico Pseudoestratificado</td><td>Vias aéreas, epidídimo — tem células caliciformes, pode ter cílios/estereocílios</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Especialidades Apicais</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Mobilidade</th><th>Função</th><th>Exemplo</th></tr>
+      <tr><td>Cílios</td><td>Móvel</td><td>Transporte de partículas</td><td>Trato respiratório, trompas uterinas</td></tr>
+      <tr><td>Estereocílios</td><td>Imóvel</td><td>Captação sensorial ou secreção; aumentam superfície</td><td>Ouvido interno, epidídimo</td></tr>
+      <tr><td>Microvilosidades</td><td>Imóvel</td><td>Aumentam superfície de absorção</td><td>Intestino delgado, túbulos renais</td></tr>
+    </table>
+    <div class="prova">📌 Cílios e estereocílios são ambos "longos" — a diferença central é MOBILIDADE (cílio se move, estereocílio não) e FUNÇÃO (cílio transporta, estereocílio capta/secreta).</div>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <div class="al-grid">
+      <div class="al-box"><b>✅ Lembre disso</b>Epitélio = avascular + muito inervado. Simples=1 camada, Estratificado=2+, Pseudoestratificado=sempre cilíndrico. Cílios=móvel/transporte. Estereocílios=imóvel/captação-secreção. Microvilosidades=imóvel/absorção. Urotélio=exclusivo trato urinário.</div>
+      <div class="al-box"><b>⚠️ Erro comum</b>Achar que pseudoestratificado pode ser plano ou cúbico — NUNCA é, sempre cilíndrico. Confundir cílios com estereocílios (mobilidade é a chave).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎮 Quiz — Tecido Epitelial de Revestimento (10 questões)</h2>
+    <div id="quizArea0"></div>
+    <div class="quiz-result" id="quizResult0"></div>
+  </div>
+</section>
+
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🧪 Tecido Epitelial Glandular Exócrino (TEG)</h2>
+    <table>
+      <tr><th>Parte</th><th>Função</th></tr>
+      <tr><td>Parênquima</td><td>Parte funcional — células secretoras</td></tr>
+      <tr><td>Estroma</td><td>Parte estrutural — tecido conjuntivo que envolve o parênquima</td></tr>
+      <tr><td>Ducto excretor</td><td>Transporta a secreção pro meio externo</td></tr>
+      <tr><td>Adenômero (porção secretora)</td><td>Onde a secreção é produzida</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Classificação por Quantidade de Células</h2>
+    <table>
+      <tr><th>Tipo</th><th>Exemplo</th></tr>
+      <tr><td>Unicelular</td><td>Célula caliciforme</td></tr>
+      <tr><td>Multicelular</td><td>Tubular, Acinar, Alveolar</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Classificação por Modo de Secreção — A Mais Cobrada</h2>
+    <table>
+      <tr><th>Mecanismo</th><th>O que é expelido</th><th>Exemplo</th></tr>
+      <tr><td>Merócrina/Écrina</td><td>Só a secreção (exocitose, célula intacta)</td><td>Glândulas sudoríparas</td></tr>
+      <tr><td>Apócrina</td><td>Secreção + parte do citoplasma da célula</td><td>Glândulas mamárias</td></tr>
+      <tr><td>Holócrina</td><td>Secreção + a célula INTEIRA (célula se destrói)</td><td>Glândulas sebáceas</td></tr>
+    </table>
+    <div class="mnemo">🧠 Merócrina = "limpa" (só sai o produto). Apócrina = "meio-termo" (produto + um pedaço da célula). Holócrina = "tudo" (produto + célula inteira morre).</div>
+  </div>
+
+  <div class="card">
+    <h2>Classificação por Morfologia (Forma do Ducto/Adenômero)</h2>
+    <table>
+      <tr><th>Forma</th><th>Subtipos</th></tr>
+      <tr><td>Tubular</td><td>Simples (sem ramificação), Ramificada, Espiralada/Enrolada</td></tr>
+      <tr><td>Acinar</td><td>Célula triangular preenchendo a glândula — Simples ou Ramificada</td></tr>
+      <tr><td>Alveolar</td><td>Simples ou Ramificada</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Classificação por Substância Secretada</h2>
+    <table>
+      <tr><th>Tipo</th><th>Núcleo</th><th>Citoplasma</th></tr>
+      <tr><td>Serosa</td><td>Centralizado</td><td>"Corado" (mais escuro/basofílico)</td></tr>
+      <tr><td>Mucosa</td><td>Basal (achatado na base)</td><td>Esbranquiçado/claro</td></tr>
+      <tr><td>Mista</td><td colspan="2">Possui os 2 tipos de célula na mesma glândula</td></tr>
+    </table>
+    <div class="prova">📌 Diferenciação rápida ao microscópio: célula MUCOSA parece "vazia/clara" com núcleo empurrado pra base; célula SEROSA parece "cheia/escura" com núcleo no centro.</div>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <div class="al-grid">
+      <div class="al-box"><b>✅ Lembre disso</b>Parênquima=funcional, Estroma=estrutural. Merócrina=só secreção. Apócrina=secreção+parte da célula. Holócrina=secreção+célula inteira. Serosa=núcleo central/citoplasma corado. Mucosa=núcleo basal/citoplasma claro.</div>
+      <div class="al-box"><b>⚠️ Erro comum</b>Trocar apócrina com holócrina — apócrina perde só UM PEDAÇO da célula, holócrina perde a célula INTEIRA. Confundir célula serosa com mucosa pela posição do núcleo.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎮 Quiz — Tecido Glandular Exócrino (10 questões)</h2>
+    <div id="quizArea1"></div>
+    <div class="quiz-result" id="quizResult1"></div>
+  </div>
+</section>
+
+</div>
+<script>
+// Troca de abas
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.p).classList.add('active');
+  });
+});
+
+const letters = ['A','B','C','D'];
+function shuffleArr(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+window.__quizzes = {};
+function makeQuiz(id, bankArr, areaId, resultId){
+  let quizSet=[], quizIdx=0, quizScore=0;
+  function start(){
+    quizSet = shuffleArr([...bankArr]);
+    quizIdx=0; quizScore=0;
+    const res = document.getElementById(resultId);
+    if(res) res.style.display='none';
+    render();
+  }
+  function render(){
+    const area = document.getElementById(areaId);
+    if(quizIdx>=quizSet.length){
+      area.innerHTML='';
+      const res = document.getElementById(resultId);
+      res.style.display='block';
+      res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="window.__quizzes['${id}'].start()">Repetir Quiz</button>`;
+      return;
+    }
+    const item = quizSet[quizIdx];
+    area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length}</p>
+      <p style="font-weight:600;">${item.q}</p>
+      ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}
+      <div style="margin-top:8px;font-size:.82em;color:var(--text-dim);display:none;" id="${areaId}-just"></div>`;
+    area.querySelectorAll('.qz-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        const i = parseInt(btn.dataset.i);
+        const just = document.getElementById(areaId+'-just');
+        if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+        else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+        area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+        if(just){ just.style.display='block'; just.innerHTML = '💡 ' + item.justificativa; }
+        setTimeout(()=>{quizIdx++;render();},1600);
+      };
+    });
+  }
+  window.__quizzes[id] = {start};
+  start();
+}
+
+const bankTER = [{"q": "Por que o tecido epitelial de revestimento é classificado como avascular?", "opts": ["Porque não precisa de nutrição", "Porque não possui vasos sanguíneos próprios — a nutrição vem por difusão do tecido conjuntivo subjacente", "Porque é feito só de células mortas", "Porque fica sempre embaixo da pele"], "correct": 1, "justificativa": "O epitélio não possui vasos sanguíneos próprios (é avascular) — sua nutrição ocorre por difusão a partir do tecido conjuntivo subjacente, que sim é vascularizado."}, {"q": "Qual estrutura é responsável pela união BASAL das células epiteliais (ligação com a membrana basal)?", "opts": ["Desmossomo", "Junção de oclusão", "Hemidesmossomo", "Junção comunicante"], "correct": 2, "justificativa": "O hemidesmossomo é a estrutura responsável pela união basal — ligando a célula epitelial à membrana basal subjacente."}, {"q": "Um epitélio com 2 ou mais camadas de células é classificado como:", "opts": ["Simples", "Nenhuma das anteriores", "Pseudoestratificado", "Estratificado"], "correct": 3, "justificativa": "Estratificado = 2 ou mais camadas de células. Simples = apenas 1 camada."}, {"q": "Por que o epitélio pseudoestratificado é chamado de 'falso estratificado'?", "opts": ["Porque parece ter várias camadas, mas na verdade todas as células tocam a membrana basal (é sempre cilíndrico)", "Porque tem várias camadas verdadeiras de células", "Porque não existe de verdade", "Porque é sempre plano"], "correct": 0, "justificativa": "No pseudoestratificado, todas as células tocam a membrana basal (por isso é sempre CILÍNDRICO), mas nem todas alcançam a superfície — dando a falsa impressão visual de estratificação."}, {"q": "Qual tipo de epitélio de revestimento é encontrado exclusivamente no trato urinário?", "opts": ["Cúbico simples", "Plano estratificado queratinizado", "Urotélio (transição)", "Cilíndrico pseudoestratificado"], "correct": 2, "justificativa": "O Urotélio (epitélio de transição), com seu ápice arredondado característico, é encontrado exclusivamente no trato urinário."}, {"q": "Onde se encontra o Mesotélio, um tipo de epitélio plano simples?", "opts": ["Túbulos renais", "Pleura, peritônio, pericárdio, túnica vaginal", "Intestino delgado", "Epiderme"], "correct": 1, "justificativa": "O Mesotélio (epitélio plano simples) reveste grandes cavidades corporais: pleura, peritônio, pericárdio e túnica vaginal."}, {"q": "Qual a principal diferença funcional entre cílios e estereocílios?", "opts": ["Não há diferença, são sinônimos", "Cílios são móveis (transporte); estereocílios são imóveis (captação sensorial/secreção)", "Estereocílios são móveis; cílios são imóveis", "Cílios só existem no intestino"], "correct": 1, "justificativa": "Cílios são MÓVEIS e fazem transporte de partículas (ex: trato respiratório). Estereocílios são IMÓVEIS e atuam em captação sensorial ou secreção (ex: epidídimo, ouvido interno)."}, {"q": "Qual estrutura aumenta a superfície de absorção no intestino delgado e nos túbulos renais?", "opts": ["Cílios", "Estereocílios", "Microvilosidades", "Junções comunicantes"], "correct": 2, "justificativa": "As microvilosidades (imóveis, curtas) aumentam a superfície de absorção — encontradas classicamente no intestino delgado e túbulos renais."}, {"q": "O epitélio cilíndrico pseudoestratificado das vias aéreas classicamente apresenta qual tipo de célula secretora?", "opts": ["Célula caliciforme", "Célula de Sertoli", "Célula parietal", "Célula principal"], "correct": 0, "justificativa": "As vias aéreas (epitélio pseudoestratificado ciliado) apresentam classicamente células caliciformes, produtoras de muco."}, {"q": "A membrana basal do epitélio é rica em qual tipo de colágeno?", "opts": ["Colágeno tipo I", "Colágeno tipo II", "Colágeno tipo III", "Colágeno tipo IV"], "correct": 3, "justificativa": "A membrana basal é rica em Colágeno tipo IV, organizado em lâmina lúcida, lâmina densa e lâmina reticular."}];
+const bankTEG = [{"q": "No tecido glandular exócrino, qual a diferença entre parênquima e estroma?", "opts": ["São sinônimos", "Parênquima é a parte funcional (células secretoras); estroma é a parte estrutural (tecido conjuntivo)", "Estroma é a parte funcional; parênquima é a estrutural", "Nenhum dos 2 tem função real"], "correct": 1, "justificativa": "Parênquima = parte FUNCIONAL (células secretoras). Estroma = parte ESTRUTURAL (tecido conjuntivo que envolve o parênquima)."}, {"q": "Qual mecanismo de secreção libera APENAS o produto de secreção, mantendo a célula intacta?", "opts": ["Holócrino", "Apócrino", "Merócrino/Écrino", "Nenhum dos 3"], "correct": 2, "justificativa": "O mecanismo Merócrino/Écrino libera apenas a secreção por exocitose, sem perda de citoplasma ou destruição celular — típico das glândulas sudoríparas."}, {"q": "Qual mecanismo de secreção é característico das glândulas SEBÁCEAS, onde a célula inteira se destrói pra liberar o produto?", "opts": ["Holócrino", "Apócrino", "Merócrino", "Écrino"], "correct": 0, "justificativa": "O mecanismo Holócrino, característico das glândulas sebáceas, envolve a destruição COMPLETA da célula para liberar a secreção (sebo)."}, {"q": "Nas glândulas mamárias, qual mecanismo de secreção ocorre, envolvendo perda de parte do citoplasma?", "opts": ["Merócrino", "Nenhum dos 3", "Holócrino", "Apócrino"], "correct": 3, "justificativa": "As glândulas mamárias utilizam o mecanismo Apócrino — a secreção é liberada junto com parte do citoplasma da célula, sem destruição celular completa."}, {"q": "Uma glândula exócrina UNICELULAR é exemplificada por qual tipo de célula?", "opts": ["Célula acinar", "Célula caliciforme", "Célula tubular", "Célula alveolar"], "correct": 1, "justificativa": "A célula caliciforme é o exemplo clássico de glândula exócrina UNICELULAR — uma única célula secretora isolada, dispersa no epitélio."}, {"q": "Numa célula glandular SEROSA, como se apresentam tipicamente o núcleo e o citoplasma?", "opts": ["Núcleo basal, citoplasma esbranquiçado", "Núcleo ausente, citoplasma transparente", "Núcleo centralizado, citoplasma 'corado' (mais escuro)", "Núcleo apical, citoplasma granular claro"], "correct": 2, "justificativa": "Na célula SEROSA, o núcleo é tipicamente centralizado, e o citoplasma aparece mais 'corado' (mais escuro, basofílico) ao microscópio."}, {"q": "Numa célula glandular MUCOSA, onde tipicamente se localiza o núcleo?", "opts": ["Basal (na base da célula)", "Apical", "Centralizado", "Não possui núcleo"], "correct": 0, "justificativa": "Na célula MUCOSA, o núcleo tipicamente se localiza na posição BASAL (achatado na base da célula), com citoplasma esbranquiçado/claro."}, {"q": "Uma glândula que possui tanto células serosas quanto mucosas é classificada como:", "opts": ["Serosa pura", "Mucosa pura", "Nenhuma classificação existe pra esse caso", "Mista"], "correct": 3, "justificativa": "Uma glândula com os 2 tipos de célula (serosa e mucosa) é classificada como MISTA."}, {"q": "Na classificação morfológica das glândulas exócrinas multicelulares, qual termo descreve uma célula de formato triangular preenchendo a porção secretora?", "opts": ["Tubular", "Acinar", "Alveolar", "Nenhuma das anteriores"], "correct": 1, "justificativa": "A forma ACINAR é caracterizada por células de formato triangular preenchendo a porção secretora da glândula (o ácino)."}, {"q": "Qual estrutura da glândula exócrina é responsável por transportar a secreção até o meio externo?", "opts": ["Parênquima", "Estroma", "Ducto excretor", "Adenômero"], "correct": 2, "justificativa": "O ducto (conducto) excretor é a estrutura responsável por transportar a secreção produzida até o meio externo."}];
+makeQuiz('ter', bankTER, 'quizArea0', 'quizResult0');
+makeQuiz('teg', bankTEG, 'quizArea1', 'quizResult1');
+
+try{
+  var jornadaItem = {
+    materia: 'Histología I',
+    titulo: 'Revisão Rápida P1',
+    url: location.pathname,
+    tipo: 'Revisão',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/histologia1/Capitulo_06_Transicoes_Folhetos_Embrionarios.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 6 — Transições Epiteliais, Endotélio/Mesotélio/Urotélio e Folhetos Embrionários</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-01/histologia1/simulado_histologia1_p1.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Simulado P1 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
