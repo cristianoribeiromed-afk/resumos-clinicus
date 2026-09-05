@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Embriología — Revisão Rápida P1 | ClinicusMed</title>
+<style>
+:root{
+  --bg:#1a0f1a; --card:#2a1a2a; --card2:#332033;
+  --accent:#b355a8; --accent2:#d98bd0; --gold:#e8b84b;
+  --text:#f5eef5; --text-dim:#c4a8c0; --ok:#4fd1a1; --bad:#e0505f; --border:#4a2e48;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#331f33 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(217,139,208,.12);border:1px solid rgba(217,139,208,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#7a3a74);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(217,139,208,.12);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#241624;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.qz-btn:disabled{cursor:default;}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.85em;}
+.al-box b{display:block;margin-bottom:4px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Embriología</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Embriología</span><span>15 de 18</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:83%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Embriología</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_01_CGP_Divisao_Anomalias.html"><span class="ico">🐣</span><span>Capítulo 1 — Origem das Células Germinativas, Divisão Celular e Anomalias Cromossômicas</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_02_Ovogenese_Espermatogenese.html"><span class="ico">🐣</span><span>Capítulo 2 — Ovogênese e Espermatogênese</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_03_Ciclo_Ovariano.html"><span class="ico">🐣</span><span>Capítulo 3 — Ciclo Ovariano</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_04_Fecundacao_Segmentacao.html"><span class="ico">🐣</span><span>Capítulo 4 — Fecundação e Segmentação</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_05_Gastrulacao_Notocorda.html"><span class="ico">🐣</span><span>Capítulo 5 — Gastrulação e Notocorda</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_06_Neurulacao_Cristas_Neurais.html"><span class="ico">🐣</span><span>Capítulo 6 — Neurulação e Cristas Neurais</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_07_Mesoderma_Endoderma.html"><span class="ico">🐣</span><span>Capítulo 7 — Mesoderma e Endoderma</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_08_Periodo_Fetal.html"><span class="ico">🐣</span><span>Capítulo 8 — Período Fetal</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_09_Placenta_Membranas_Fetais.html"><span class="ico">🐣</span><span>Capítulo 9 — Placenta e Membranas Fetais</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_10_Medula_Encefalo.html"><span class="ico">🐣</span><span>Capítulo 10 — Desenvolvimento da Medula Espinal e Encéfalo</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_11_Nervos_Cranianos_SNA.html"><span class="ico">🐣</span><span>Capítulo 11 — Nervos Cranianos e Sistema Nervoso Autônomo</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Capitulo_12_Malformacoes_Teratogenos.html"><span class="ico">🐣</span><span>Capítulo 12 — Malformações Congênitas e Teratógenos</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Materiais_Complementares.html"><span class="ico">🐣</span><span>Capítulo 13 — Materiais Complementares Gratuitos</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/Revisao_Integradora_P1.html" data-novo="1"><span class="ico">🐣</span><span>Revisão Integradora P1 — Semanas 1 a 3</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-01/embriologia/Revisao_Rapida_P1.html"><span class="ico">🐣</span><span>📋 Revisão Rápida P1 (Interativa)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/embriologia/simulado_embriologia_p1.html"><span class="ico">🎯</span><span>Simulado P1 — 40 Questões (25 MC + 10 V/F + 5 Associar)</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-01/final/embriologia_guia_final.html"><span class="ico">🐣</span><span>Guia de Estudo - Embriología</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/simulado_top_embriologia.html"><span class="ico">🎯</span><span>Simulado Top — 50 Questões (MC + V/F + Associar)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="wrap">
+  <span class="eyebrow">Embriología · Revisão Rápida</span>
+  <h1 style="text-align:center;">📋 Revisão Rápida — P1</h1>
+  <p style="text-align:center;color:var(--text-dim);font-size:.85em;margin-bottom:16px;">Material único e condensado, direto ao ponto. Depois de cada revisão, 10 questões pra testar se ficou de verdade.</p>
+  <nav class="tabs">
+    <button data-p="p0" class="active">🥚 Gametogênese e Ciclo Ovariano</button>
+    <button data-p="p1">🌀 Fecundação até Neurulação</button>
+    <button data-p="p2">🤰 Período Fetal e Placenta</button>
+    <button data-p="p3">🧠 SNC e Malformações</button>
+  </nav>
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🥚 Gametogênese</h2>
+    <table>
+      <tr><th>Etapa</th><th>Detalhe</th></tr>
+      <tr><td>Ovogônia</td><td>Mitose fetal → Ovócito Primário, para em prófase I até a puberdade</td></tr>
+      <tr><td>Ovócito Secundário</td><td>Para em metáfase II — só completa a meiose SE houver fecundação</td></tr>
+      <tr><td>Espermatogônia</td><td>Mitose contínua (não para) → Espermatócitos → Espermátides → Espermatozoides</td></tr>
+    </table>
+    <div class="prova">📌 A diferença crucial: na mulher, a meiose FICA PARADA por décadas (prófase I, depois metáfase II) — no homem, é um processo contínuo, sem pausas longas.</div>
+  </div>
+  <div class="card">
+    <h2>Ciclo Ovariano — As 3 Fases</h2>
+    <table>
+      <tr><th>Fase</th><th>Hormônio Principal</th><th>Evento</th></tr>
+      <tr><td>Folicular</td><td>FSH</td><td>15-25 folículos recrutados, 1 domina</td></tr>
+      <tr><td>Ovulação</td><td>Pico de LH</td><td>Dia 14 (ciclo de 28 dias) — libera o ovócito</td></tr>
+      <tr><td>Lútea</td><td>Progesterona</td><td>Corpo lúteo mantém o endométrio</td></tr>
+    </table>
+    <div class="mnemo">🧠 Pico de LH = gatilho da ovulação. Sem gravidez, o corpo lúteo regride (~14 dias) → menstruação.</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Gametogênese e Ciclo Ovariano (10 questões)</h2>
+    <div id="quizArea0"></div>
+    <div class="quiz-result" id="quizResult0"></div>
+  </div>
+</section>
+
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🌀 Fecundação → Gastrulação → Neurulação</h2>
+    <div class="cascata-simples">
+      <table>
+        <tr><th>Semana</th><th>Evento Central</th></tr>
+        <tr><td>1</td><td>Fecundação (ampola tubária) → zigoto → mórula → blastocisto (trofoblasto + embrioblasto)</td></tr>
+        <tr><td>2</td><td>Implantação → disco bilaminar (epiblasto + hipoblasto) → sincitiotrofoblasto produz hCG</td></tr>
+        <tr><td>3</td><td>Gastrulação (linha primitiva → 3 camadas germinativas + notocorda) → início da neurulação</td></tr>
+      </table>
+    </div>
+    <table>
+      <tr><th>Camada</th><th>Destino</th></tr>
+      <tr><td>Ectoderma</td><td>Pele + Sistema Nervoso</td></tr>
+      <tr><td>Mesoderma</td><td>Músculo, osso, cardiovascular, urogenital</td></tr>
+      <tr><td>Endoderma</td><td>Epitélio digestivo e respiratório</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Neurulação e Defeitos do Tubo Neural</h2>
+    <div class="criterio">🟢 A notocorda induz o ectoderma a formar a placa neural → sulco neural → tubo neural.</div>
+    <table>
+      <tr><th>Neuroporo</th><th>Fecha em</th><th>Falha causa</th></tr>
+      <tr><td>Rostral</td><td>~Dia 25</td><td>Anencefalia</td></tr>
+      <tr><td>Caudal</td><td>~Dia 27-28</td><td>Espinha Bífida</td></tr>
+    </table>
+    <div class="prova">📌 O fechamento do tubo neural ocorre tão cedo (Semana 3-4) que a suplementação de ácido fólico precisa começar ANTES da concepção pra ser eficaz.</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Fecundação até Neurulação (10 questões)</h2>
+    <div id="quizArea1"></div>
+    <div class="quiz-result" id="quizResult1"></div>
+  </div>
+</section>
+
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🤰 Período Fetal</h2>
+    <div class="criterio">🟢 Período Embrionário: Semanas 1-8 (organogênese). Período Fetal: Semana 9 até o nascimento (crescimento e maturação).</div>
+    <div class="hot">💭 A maioria das malformações estruturais graves ocorre no período EMBRIONÁRIO (organogênese) — é a janela de maior vulnerabilidade a teratógenos.</div>
+  </div>
+  <div class="card">
+    <h2>Placenta e Membranas Fetais</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Função</th></tr>
+      <tr><td>Placenta</td><td>Trocas metabólicas/gasosas mãe-feto, produção hormonal (hCG, progesterona)</td></tr>
+      <tr><td>Âmnio</td><td>Envolve o feto, contém o líquido amniótico</td></tr>
+      <tr><td>Cório</td><td>Camada externa, forma as vilosidades coriônicas (parte fetal da placenta)</td></tr>
+      <tr><td>Saco Vitelino</td><td>Nutrição inicial + origem das células germinativas primordiais</td></tr>
+      <tr><td>Alantoide</td><td>Origina o Úraco (vestígio: Ligamento Umbilical Mediano)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Período Fetal e Placenta (10 questões)</h2>
+    <div id="quizArea2"></div>
+    <div class="quiz-result" id="quizResult2"></div>
+  </div>
+</section>
+
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🧠 Desenvolvimento do SNC</h2>
+    <table>
+      <tr><th>Vesícula Primária</th><th>Deriva</th></tr>
+      <tr><td>Prosencéfalo</td><td>Telencéfalo + Diencéfalo</td></tr>
+      <tr><td>Mesencéfalo</td><td>Permanece mesencéfalo</td></tr>
+      <tr><td>Rombencéfalo</td><td>Metencéfalo + Mielencéfalo</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Nervos Cranianos e Malformações</h2>
+    <div class="hot">💭 Os 12 pares de nervos cranianos derivam de diferentes arcos faríngeos e placódios — cada par tem origem embriológica específica.</div>
+    <table>
+      <tr><th>Teratógeno</th><th>Malformação Clássica</th></tr>
+      <tr><td>Ácido Valproico</td><td>Defeitos do tubo neural</td></tr>
+      <tr><td>Álcool</td><td>Síndrome Alcoólica Fetal</td></tr>
+      <tr><td>Talidomida</td><td>Focomelia (encurtamento dos membros)</td></tr>
+      <tr><td>Rubéola</td><td>Catarata, surdez, cardiopatia congênita</td></tr>
+    </table>
+    <div class="prova">📌 O período de maior risco teratogênico é o EMBRIONÁRIO (semanas 3-8) — é quando os órgãos estão se formando (organogênese).</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — SNC e Malformações (10 questões)</h2>
+    <div id="quizArea3"></div>
+    <div class="quiz-result" id="quizResult3"></div>
+  </div>
+</section>
+</div>
+<script>
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.p).classList.add('active');
+  });
+});
+const letters = ['A','B','C','D'];
+function shuffleArr(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+window.__quizzes = {};
+function makeQuiz(id, bankArr, areaId, resultId){
+  let quizSet=[], quizIdx=0, quizScore=0;
+  function start(){
+    quizSet = shuffleArr([...bankArr]);
+    quizIdx=0; quizScore=0;
+    const res = document.getElementById(resultId);
+    if(res) res.style.display='none';
+    render();
+  }
+  function render(){
+    const area = document.getElementById(areaId);
+    if(quizIdx>=quizSet.length){
+      area.innerHTML='';
+      const res = document.getElementById(resultId);
+      res.style.display='block';
+      res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="window.__quizzes['${id}'].start()">Repetir Quiz</button>`;
+      return;
+    }
+    const item = quizSet[quizIdx];
+    area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length}</p>
+      <p style="font-weight:600;">${item.q}</p>
+      ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}
+      <div style="margin-top:8px;font-size:.82em;color:var(--text-dim);display:none;" id="${areaId}-just"></div>`;
+    area.querySelectorAll('.qz-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        const i = parseInt(btn.dataset.i);
+        const just = document.getElementById(areaId+'-just');
+        if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+        else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+        area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+        if(just){ just.style.display='block'; just.innerHTML = '💡 ' + item.justificativa; }
+        setTimeout(()=>{quizIdx++;render();},1600);
+      };
+    });
+  }
+  window.__quizzes[id] = {start};
+  start();
+}
+const bank0 = [{"q": "Em que fase da meiose o ovócito primário permanece parado, desde a vida fetal até a puberdade?", "opts": ["Metáfase I", "Anáfase I", "Metáfase II", "Prófase I"], "correct": 3, "justificativa": "O ovócito primário permanece parado em Prófase I desde a vida fetal até a puberdade."}, {"q": "Em que fase da meiose o ovócito secundário permanece parado, só completando a divisão se houver fecundação?", "opts": ["Prófase I", "Metáfase II", "Metáfase I", "Telófase II"], "correct": 1, "justificativa": "O ovócito secundário para em Metáfase II, só completando a meiose se houver fecundação."}, {"q": "Diferente da ovogênese, a espermatogênese se caracteriza por ser um processo:", "opts": ["Contínuo, sem pausas longas", "Interrompido por décadas", "Que ocorre só uma vez na vida", "Idêntico à ovogênese"], "correct": 0, "justificativa": "A espermatogênese é um processo contínuo, sem as pausas longas características da ovogênese."}, {"q": "Qual hormônio predomina na fase Folicular do ciclo ovariano?", "opts": ["LH", "FSH", "Progesterona", "hCG"], "correct": 1, "justificativa": "O FSH (hormônio folículo-estimulante) predomina na fase Folicular, recrutando os folículos."}, {"q": "Qual evento hormonal desencadeia a ovulação?", "opts": ["Queda do FSH", "Aumento da progesterona", "Pico de LH", "Queda do estrogênio"], "correct": 2, "justificativa": "O pico de LH é o evento hormonal que desencadeia a ovulação."}, {"q": "Em um ciclo de 28 dias, em que dia tipicamente ocorre a ovulação?", "opts": ["Dia 14", "Dia 7", "Dia 21", "Dia 28"], "correct": 0, "justificativa": "Em um ciclo de 28 dias, a ovulação tipicamente ocorre no dia 14."}, {"q": "Qual estrutura mantém o endométrio durante a fase Lútea, produzindo progesterona?", "opts": ["Folículo primordial", "Zona pelúcida", "Corpo albicans", "Corpo lúteo"], "correct": 3, "justificativa": "O corpo lúteo, formado após a ovulação, produz progesterona e mantém o endométrio na fase Lútea."}, {"q": "Quantos folículos são tipicamente recrutados no início da fase Folicular, mesmo que só 1 domine?", "opts": ["1-2", "5-10", "15-25", "50-100"], "correct": 2, "justificativa": "Tipicamente 15-25 folículos são recrutados no início da fase Folicular, com apenas 1 se tornando dominante."}, {"q": "A ovogônia sofre qual tipo de divisão durante a vida fetal, antes de virar ovócito primário?", "opts": ["Mitose", "Meiose completa", "Fissão binária", "Nenhuma divisão"], "correct": 0, "justificativa": "A ovogônia sofre mitose durante a vida fetal, antes de se diferenciar em ovócito primário e entrar em meiose."}, {"q": "O que acontece com o corpo lúteo se não houver gravidez?", "opts": ["Se torna permanente", "Regride, levando à menstruação", "Se transforma em óvulo", "Aumenta indefinidamente"], "correct": 1, "justificativa": "Sem gravidez, o corpo lúteo regride após cerca de 14 dias, levando à queda de progesterona e à menstruação."}];
+const bank1 = [{"q": "Onde tipicamente ocorre a fecundação?", "opts": ["Ampola tubária", "Útero", "Ovário", "Vagina"], "correct": 0, "justificativa": "A fecundação tipicamente ocorre na ampola tubária (parte da tuba uterina)."}, {"q": "O blastocisto é formado por quais 2 componentes principais?", "opts": ["Trofoblasto e embrioblasto", "Epiblasto e hipoblasto", "Ectoderma e mesoderma", "Âmnio e cório"], "correct": 0, "justificativa": "O blastocisto é formado por trofoblasto (formará a placenta) e embrioblasto (formará o embrião)."}, {"q": "Qual estrutura produz a hCG, hormônio detectado em testes de gravidez?", "opts": ["Citotrofoblasto", "Sincitiotrofoblasto", "Epiblasto", "Hipoblasto"], "correct": 1, "justificativa": "O sincitiotrofoblasto produz hCG, hormônio que mantém o corpo lúteo até a placenta assumir a produção hormonal."}, {"q": "Qual o primeiro sinal morfológico de que a gastrulação começou?", "opts": ["Formação da notocorda", "Fechamento do tubo neural", "Linha primitiva", "Formação da placenta"], "correct": 2, "justificativa": "A linha primitiva é o primeiro sinal morfológico da gastrulação, surgindo no epiblasto."}, {"q": "Qual estrutura formada na gastrulação induz o ectoderma a formar a placa neural?", "opts": ["Hipoblasto", "Notocorda", "Trofoblasto", "Saco vitelino"], "correct": 1, "justificativa": "A notocorda, formada durante a gastrulação, induz o ectoderma sobrejacente a formar a placa neural."}, {"q": "Onde começa o fechamento do tubo neural, progredindo em 2 direções?", "opts": ["Região cranial", "Simultaneamente em toda extensão", "Região caudal", "Região cervical"], "correct": 3, "justificativa": "O fechamento do tubo neural começa na região cervical, progredindo tanto para cranial quanto para caudal."}, {"q": "Uma falha no fechamento do neuroporo ROSTRAL causa qual defeito?", "opts": ["Espinha bífida", "Lábio leporino", "Anencefalia", "Cardiopatia congênita"], "correct": 2, "justificativa": "Uma falha no fechamento do neuroporo rostral causa anencefalia."}, {"q": "Uma falha no fechamento do neuroporo CAUDAL causa qual defeito?", "opts": ["Espinha bífida", "Anencefalia", "Onfalocele", "Hidrocefalia"], "correct": 0, "justificativa": "Uma falha no fechamento do neuroporo caudal causa espinha bífida."}, {"q": "Qual camada germinativa origina o Sistema Nervoso?", "opts": ["Endoderma", "Ectoderma", "Mesoderma", "Trofoblasto"], "correct": 1, "justificativa": "O ectoderma origina a pele e o Sistema Nervoso."}, {"q": "Por que a suplementação de ácido fólico deve começar antes da concepção?", "opts": ["Porque não faz diferença o momento", "Porque previne apenas doenças cardíacas", "Porque só funciona no 3º trimestre", "Porque o fechamento do tubo neural ocorre muito precocemente (Semana 3-4)"], "correct": 3, "justificativa": "O fechamento do tubo neural ocorre muito precocemente (Semana 3-4), antes de muitas mulheres saberem que estão grávidas — por isso a suplementação precisa ser pré-concepcional."}];
+const bank2 = [{"q": "O período embrionário corresponde a quais semanas de gestação?", "opts": ["Semanas 1-2", "Semanas 1-8", "Semanas 9-20", "Semanas 30-40"], "correct": 1, "justificativa": "O período embrionário corresponde às semanas 1-8, quando ocorre a organogênese."}, {"q": "O período fetal se inicia em qual semana e vai até o nascimento?", "opts": ["Semana 4", "Semana 9", "Semana 16", "Semana 24"], "correct": 1, "justificativa": "O período fetal se inicia na semana 9 e vai até o nascimento, focado em crescimento e maturação."}, {"q": "Em qual período ocorre a maioria das malformações estruturais graves, por ser a janela de organogênese?", "opts": ["Período embrionário", "Período fetal", "Apenas no 3º trimestre", "Apenas no parto"], "correct": 0, "justificativa": "A maioria das malformações estruturais graves ocorre no período embrionário, durante a organogênese."}, {"q": "Qual estrutura fetal é responsável pelas trocas metabólicas e gasosas entre mãe e feto?", "opts": ["Placenta", "Âmnio", "Saco vitelino", "Alantoide"], "correct": 0, "justificativa": "A placenta é responsável pelas trocas metabólicas e gasosas entre mãe e feto, além da produção hormonal."}, {"q": "Qual membrana fetal envolve o feto e contém o líquido amniótico?", "opts": ["Cório", "Alantoide", "Âmnio", "Saco vitelino"], "correct": 2, "justificativa": "O Âmnio envolve o feto e contém o líquido amniótico."}, {"q": "Qual estrutura forma as vilosidades coriônicas, correspondendo à parte fetal da placenta?", "opts": ["Âmnio", "Cório", "Alantoide", "Saco vitelino"], "correct": 1, "justificativa": "O Cório forma as vilosidades coriônicas, correspondendo à parte fetal da placenta."}, {"q": "Qual estrutura embrionária é responsável pela nutrição inicial e pela origem das células germinativas primordiais?", "opts": ["Âmnio", "Cório", "Alantoide", "Saco vitelino"], "correct": 3, "justificativa": "O saco vitelino é responsável pela nutrição inicial do embrião e pela origem das células germinativas primordiais."}, {"q": "O Alantoide origina qual estrutura remanescente no adulto?", "opts": ["Ligamento Umbilical Mediano (via úraco)", "Ligamento redondo do fígado", "Ligamento arterioso", "Forame oval"], "correct": 0, "justificativa": "O Alantoide origina o úraco, cujo vestígio no adulto é o Ligamento Umbilical Mediano."}, {"q": "Qual hormônio placentário é o principal responsável por manter o corpo lúteo no início da gravidez?", "opts": ["Progesterona", "Estrogênio", "hCG", "Prolactina"], "correct": 2, "justificativa": "A hCG (produzida pelo sincitiotrofoblasto/placenta) é o principal hormônio responsável por manter o corpo lúteo no início da gravidez."}, {"q": "O crescimento e a maturação dos órgãos já formados são características de qual período?", "opts": ["Período embrionário", "Período de implantação", "Período de segmentação", "Período fetal"], "correct": 3, "justificativa": "O período fetal é caracterizado por crescimento e maturação dos órgãos já formados no período embrionário."}];
+const bank3 = [{"q": "Qual vesícula encefálica primária origina o Telencéfalo e o Diencéfalo?", "opts": ["Mesencéfalo", "Prosencéfalo", "Rombencéfalo", "Metencéfalo"], "correct": 1, "justificativa": "O Prosencéfalo origina o Telencéfalo e o Diencéfalo."}, {"q": "Qual vesícula encefálica primária permanece como Mesencéfalo, sem se subdividir?", "opts": ["Mesencéfalo", "Prosencéfalo", "Rombencéfalo", "Nenhuma — todas se subdividem"], "correct": 0, "justificativa": "O Mesencéfalo é a única vesícula primária que permanece sem se subdividir em estruturas secundárias distintas."}, {"q": "Qual vesícula encefálica primária origina o Metencéfalo e o Mielencéfalo?", "opts": ["Prosencéfalo", "Rombencéfalo", "Mesencéfalo", "Diencéfalo"], "correct": 1, "justificativa": "O Rombencéfalo origina o Metencéfalo e o Mielencéfalo."}, {"q": "Qual malformação clássica está associada ao uso de Talidomida durante a gestação?", "opts": ["Catarata congênita", "Fenda palatina", "Surdez congênita", "Focomelia (encurtamento dos membros)"], "correct": 3, "justificativa": "A Talidomida está classicamente associada à Focomelia — encurtamento grave dos membros."}, {"q": "Qual malformação clássica está associada à infecção materna por Rubéola?", "opts": ["Focomelia", "Catarata, surdez e cardiopatia congênita", "Espinha bífida", "Anencefalia"], "correct": 1, "justificativa": "A infecção materna por Rubéola está classicamente associada à tríade catarata, surdez e cardiopatia congênita."}, {"q": "Qual teratógeno está classicamente associado a defeitos do tubo neural?", "opts": ["Talidomida", "Rubéola", "Ácido Valproico", "Álcool"], "correct": 2, "justificativa": "O Ácido Valproico (anticonvulsivante) está classicamente associado a defeitos do tubo neural."}, {"q": "O consumo de álcool durante a gestação está associado a qual síndrome?", "opts": ["Síndrome Alcoólica Fetal", "Síndrome de Down", "Síndrome de Turner", "Síndrome de Klinefelter"], "correct": 0, "justificativa": "O consumo de álcool durante a gestação está associado à Síndrome Alcoólica Fetal."}, {"q": "Qual o período de maior risco teratogênico durante a gestação?", "opts": ["Período embrionário (semanas 3-8)", "Período fetal (semanas 9-40)", "Apenas a primeira semana", "Apenas o momento do parto"], "correct": 0, "justificativa": "O período embrionário (semanas 3-8) é o de maior risco teratogênico, por ser a janela de organogênese."}, {"q": "Os 12 pares de nervos cranianos derivam de estruturas embriológicas como:", "opts": ["Apenas do mesoderma", "Apenas do endoderma", "Arcos faríngeos e placódios, entre outras origens", "Apenas da notocorda"], "correct": 2, "justificativa": "Os nervos cranianos derivam de diferentes estruturas embriológicas, incluindo arcos faríngeos e placódios, cada par com origem específica."}, {"q": "Teratógenos têm maior potencial de causar malformações estruturais graves quando a exposição ocorre em qual momento?", "opts": ["Após o parto", "O momento da exposição não importa", "Apenas no período neonatal", "Durante a organogênese (período embrionário)"], "correct": 3, "justificativa": "A exposição a teratógenos durante a organogênese (período embrionário) tem o maior potencial de causar malformações estruturais graves."}];
+makeQuiz('q0', bank0, 'quizArea0', 'quizResult0');
+makeQuiz('q1', bank1, 'quizArea1', 'quizResult1');
+makeQuiz('q2', bank2, 'quizArea2', 'quizResult2');
+makeQuiz('q3', bank3, 'quizArea3', 'quizResult3');
+try{
+  var jornadaItem = { materia: 'Embriología', titulo: 'Revisão Rápida P1', url: location.pathname, tipo: 'Revisão', etapa: 'P1', timestamp: Date.now() };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/embriologia/Revisao_Integradora_P1.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Revisão Integradora P1 — Semanas 1 a 3</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-01/embriologia/simulado_embriologia_p1.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Simulado P1 — 40 Questões (25 MC + 10 V/F + 5 Associar)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
