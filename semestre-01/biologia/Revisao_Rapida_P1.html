@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Biología — Revisão Rápida P1 | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0d1a1e; --card:#132530; --card2:#183042;
+  --accent:#2f96ae; --accent2:#5fc9d9; --gold:#e8b84b;
+  --text:#eef4f5; --text-dim:#a8bfc4; --ok:#4fd1a1; --bad:#e0505f; --border:#204354;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#0f2733 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(95,201,217,.12);border:1px solid rgba(95,201,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#1c6a7a);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(95,201,217,.12);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#122730;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.qz-btn:disabled{cursor:default;}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.85em;}
+.al-box b{display:block;margin-bottom:4px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Biología</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Biología</span><span>6 de 11</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:55%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Biología</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_01_Celula_Bacterias.html"><span class="ico">🔬</span><span>Capítulo 1 — A Célula: Características e Bactérias</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_02_Componentes_Quimicos.html"><span class="ico">🔬</span><span>Capítulo 2 — Componentes Químicos das Células</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_03_Membrana_Celular.html"><span class="ico">🔬</span><span>Capítulo 3 — Membrana Celular</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_04_Citoplasma.html"><span class="ico">🔬</span><span>Capítulo 4 — Citoplasma</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Capitulo_05_Citoesqueleto.html"><span class="ico">🔬</span><span>Capítulo 5 — Citoesqueleto</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-01/biologia/Revisao_Rapida_P1.html"><span class="ico">🔬</span><span>📋 Revisão Rápida P1 (Interativa)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Simulado_P1_Biologia_20Q.html"><span class="ico">🔬</span><span>🎯 Simulado — Revisão Rápida (20 Questões)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/biologia/Simulado_P1_Biologia.html"><span class="ico">🎯</span><span>Simulado P1 — Biología</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-01/biologia1_celula_biomoleculas.html"><span class="ico">🔬</span><span>Guia de Estudo - Biología</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/simulado_excelencia_citoplasma_citoesqueleto.html"><span class="ico">🎯</span><span>Simulado de Excelencia - Citoplasma, Citoesqueleto y Organelas</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/simulado_final2_biologia_completo.html"><span class="ico">🎯</span><span>Simulado Final 2 - Célula, Núcleo e Ciclo Celular</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+<div class="wrap">
+  <span class="eyebrow">Biología · Revisão Rápida</span>
+  <h1 style="text-align:center;">📋 Revisão Rápida — P1</h1>
+  <p style="text-align:center;color:var(--text-dim);font-size:.85em;margin-bottom:16px;">Material único e condensado, direto ao ponto. Depois de cada revisão, 10 questões pra testar se ficou de verdade.</p>
+  <nav class="tabs">
+    <button data-p="p0" class="active">🧫 A Célula e Bactérias</button>
+    <button data-p="p1">🧬 Componentes Químicos</button>
+    <button data-p="p2">🧱 Membrana Celular</button>
+    <button data-p="p3">🔬 Citoplasma</button>
+    <button data-p="p4">🕸️ Citoesqueleto</button>
+  </nav>
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🧫 A Célula e Bactérias</h2>
+    <table>
+      <tr><th>Organela</th><th>Função</th></tr>
+      <tr><td>Mitocôndria</td><td>Produção de ATP (respiração celular)</td></tr>
+      <tr><td>Retículo Endoplasmático Rugoso</td><td>Síntese de proteínas (tem ribossomos)</td></tr>
+      <tr><td>Retículo Endoplasmático Liso</td><td>Síntese de lipídios, detoxificação</td></tr>
+      <tr><td>Complexo de Golgi</td><td>Modificação, empacotamento e endereçamento de proteínas</td></tr>
+      <tr><td>Lisossomo</td><td>Digestão intracelular (enzimas hidrolíticas)</td></tr>
+      <tr><td>Peroxissomo</td><td>Degradação de ácidos graxos, neutraliza peróxido</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Bactérias — Estrutura e Coloração de Gram</h2>
+    <table>
+      <tr><th></th><th>Gram-Positiva</th><th>Gram-Negativa</th></tr>
+      <tr><td>Peptidoglicano</td><td>Espesso</td><td>Fino</td></tr>
+      <tr><td>Membrana externa</td><td>Ausente</td><td>Presente (com LPS)</td></tr>
+      <tr><td>Cor final</td><td>Roxo/Violeta</td><td>Rosa/Vermelho</td></tr>
+    </table>
+    <div class="criterio">🟢 Reprodução bacteriana: Fissão Binária — divisão assexuada, gera 2 células idênticas.</div>
+    <div class="mnemo">🧠 Gram+ retém o cristal violeta por causa do peptidoglicano espesso. Gram- perde a cor (é "descorada" pelo álcool) e fica rosa com a safranina.</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — A Célula e Bactérias (10 questões)</h2>
+    <div id="quizArea0"></div>
+    <div class="quiz-result" id="quizResult0"></div>
+  </div>
+</section>
+
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🧬 Componentes Químicos das Células</h2>
+    <table>
+      <tr><th>Biomolécula</th><th>Função Principal</th></tr>
+      <tr><td>Carboidratos</td><td>Energia rápida (glicose) e estrutural (glicocálice)</td></tr>
+      <tr><td>Lipídios</td><td>Reserva energética, estrutura de membrana, hormônios</td></tr>
+      <tr><td>Ácidos Nucleicos (ADN/ARN)</td><td>Armazenamento e expressão da informação genética</td></tr>
+      <tr><td>Proteínas</td><td>Estrutural, enzimática, transporte, defesa</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>ADN × ARN</h2>
+    <table>
+      <tr><th></th><th>ADN</th><th>ARN</th></tr>
+      <tr><td>Açúcar</td><td>Desoxirribose</td><td>Ribose</td></tr>
+      <tr><td>Bases</td><td>A, T, C, G</td><td>A, U, C, G</td></tr>
+      <tr><td>Fita</td><td>Dupla (hélice)</td><td>Simples</td></tr>
+      <tr><td>Tipos</td><td>—</td><td>mRNA, tRNA, rRNA</td></tr>
+    </table>
+    <div class="prova">📌 No ARN, a Uracila substitui a Timina — troca clássica de prova.</div>
+  </div>
+  <div class="card">
+    <h2>Proteínas — 4 Níveis Estruturais</h2>
+    <table>
+      <tr><th>Nível</th><th>Descrição</th></tr>
+      <tr><td>Primária</td><td>Sequência linear de aminoácidos</td></tr>
+      <tr><td>Secundária</td><td>Alfa-hélice ou folha beta-pregueada</td></tr>
+      <tr><td>Terciária</td><td>Dobramento tridimensional completo</td></tr>
+      <tr><td>Quaternária</td><td>União de 2+ cadeias polipeptídicas</td></tr>
+    </table>
+    <div class="hot">💭 Enzimas são proteínas que aceleram reações químicas sem serem consumidas — ex.: lactase quebra a lactose (deficiência = intolerância à lactose).</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Componentes Químicos (10 questões)</h2>
+    <div id="quizArea1"></div>
+    <div class="quiz-result" id="quizResult1"></div>
+  </div>
+</section>
+
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🧱 Membrana Celular</h2>
+    <div class="criterio">🟢 Modelo do Mosaico Fluido: bicamada lipídica com proteínas "flutuando" nela.</div>
+    <table>
+      <tr><th>Componente</th><th>Função</th></tr>
+      <tr><td>Fosfolipídios</td><td>Formam a bicamada — cabeça hidrofílica, cauda hidrofóbica</td></tr>
+      <tr><td>Colesterol</td><td>Regula a fluidez da membrana</td></tr>
+      <tr><td>Proteínas Integrais</td><td>Atravessam a membrana — canais, transportadores</td></tr>
+      <tr><td>Glicocálice</td><td>Carboidratos na superfície — reconhecimento celular</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Tipos de Transporte</h2>
+    <table>
+      <tr><th>Tipo</th><th>Gasta ATP?</th><th>A favor do gradiente?</th><th>Exemplo</th></tr>
+      <tr><td>Difusão Simples</td><td>Não</td><td>Sim</td><td>O2, CO2</td></tr>
+      <tr><td>Difusão Facilitada</td><td>Não</td><td>Sim</td><td>Glicose (via GLUT)</td></tr>
+      <tr><td>Osmose</td><td>Não</td><td>Sim (água)</td><td>Água através da membrana</td></tr>
+      <tr><td>Transporte Ativo</td><td>Sim</td><td>Não (contra gradiente)</td><td>Bomba Na+/K+</td></tr>
+    </table>
+    <div class="prova">📌 A Bomba de Sódio-Potássio move 3 Na+ pra FORA e 2 K+ pra DENTRO, a cada ciclo, gastando 1 ATP.</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Membrana Celular (10 questões)</h2>
+    <div id="quizArea2"></div>
+    <div class="quiz-result" id="quizResult2"></div>
+  </div>
+</section>
+
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🔬 Citoplasma</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Função</th></tr>
+      <tr><td>Citosol</td><td>Meio aquoso onde as reações ocorrem</td></tr>
+      <tr><td>Peptídeo-sinal</td><td>"Endereço" que direciona a proteína pro seu destino certo</td></tr>
+      <tr><td>Chaperonas</td><td>Auxiliam o dobramento correto das proteínas</td></tr>
+      <tr><td>Proteassomo</td><td>Degrada proteínas defeituosas ou desnecessárias</td></tr>
+    </table>
+    <div class="hot">💭 Quando o dobramento de proteínas falha e as chaperonas/proteassomo não dão conta, o acúmulo de proteínas mal dobradas pode causar doenças (ex: Alzheimer, Parkinson).</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Citoplasma (10 questões)</h2>
+    <div id="quizArea3"></div>
+    <div class="quiz-result" id="quizResult3"></div>
+  </div>
+</section>
+
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>🕸️ Citoesqueleto — As 3 Estruturas</h2>
+    <table>
+      <tr><th>Estrutura</th><th>Espessura</th><th>Função Principal</th></tr>
+      <tr><td>Filamentos de Actina (Microfilamentos)</td><td>Mais fina</td><td>Motilidade, contração, microvilosidades</td></tr>
+      <tr><td>Filamentos Intermediários</td><td>Intermediária</td><td>Resistência mecânica/estrutural (ex: queratina)</td></tr>
+      <tr><td>Microtúbulos</td><td>Mais espessa</td><td>Transporte intracelular, cílios/flagelos, divisão celular</td></tr>
+    </table>
+    <div class="prova">📌 Cílios e flagelos são formados por microtúbulos com a Dineína Ciliar — defeito nela causa Discinesia Ciliar Primária (infertilidade + infecções respiratórias recorrentes).</div>
+    <div class="mnemo">🧠 Actina = mais FINA, movimento. Intermediário = resistência (nome já entrega o tamanho). Microtúbulo = mais GROSSA, transporte/divisão.</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Citoesqueleto (10 questões)</h2>
+    <div id="quizArea4"></div>
+    <div class="quiz-result" id="quizResult4"></div>
+  </div>
+</section>
+</div>
+<script>
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.p).classList.add('active');
+  });
+});
+
+const letters = ['A','B','C','D'];
+function shuffleArr(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+window.__quizzes = {};
+function makeQuiz(id, bankArr, areaId, resultId){
+  let quizSet=[], quizIdx=0, quizScore=0;
+  function start(){
+    quizSet = shuffleArr([...bankArr]);
+    quizIdx=0; quizScore=0;
+    const res = document.getElementById(resultId);
+    if(res) res.style.display='none';
+    render();
+  }
+  function render(){
+    const area = document.getElementById(areaId);
+    if(quizIdx>=quizSet.length){
+      area.innerHTML='';
+      const res = document.getElementById(resultId);
+      res.style.display='block';
+      res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="window.__quizzes['${id}'].start()">Repetir Quiz</button>`;
+      return;
+    }
+    const item = quizSet[quizIdx];
+    area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length}</p>
+      <p style="font-weight:600;">${item.q}</p>
+      ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}
+      <div style="margin-top:8px;font-size:.82em;color:var(--text-dim);display:none;" id="${areaId}-just"></div>`;
+    area.querySelectorAll('.qz-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        const i = parseInt(btn.dataset.i);
+        const just = document.getElementById(areaId+'-just');
+        if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+        else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+        area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+        if(just){ just.style.display='block'; just.innerHTML = '💡 ' + item.justificativa; }
+        setTimeout(()=>{quizIdx++;render();},1600);
+      };
+    });
+  }
+  window.__quizzes[id] = {start};
+  start();
+}
+
+const bank0 = [{"q": "Qual organela é responsável pela produção de ATP através da respiração celular?", "opts": ["Complexo de Golgi", "Mitocôndria", "Lisossomo", "Peroxissomo"], "correct": 1, "justificativa": "A mitocôndria é a organela responsável pela produção de ATP via respiração celular."}, {"q": "Qual organela contém ribossomos aderidos e é responsável pela síntese de proteínas?", "opts": ["Retículo Endoplasmático Rugoso", "Retículo Endoplasmático Liso", "Complexo de Golgi", "Citosol"], "correct": 0, "justificativa": "O Retículo Endoplasmático Rugoso tem ribossomos aderidos e é responsável pela síntese de proteínas."}, {"q": "Qual organela é responsável por modificar, empacotar e endereçar proteínas?", "opts": ["Mitocôndria", "Lisossomo", "Complexo de Golgi", "Peroxissomo"], "correct": 2, "justificativa": "O Complexo de Golgi modifica, empacota e endereça as proteínas para seus destinos corretos."}, {"q": "Qual organela contém enzimas hidrolíticas responsáveis pela digestão intracelular?", "opts": ["Peroxissomo", "Golgi", "Retículo Liso", "Lisossomo"], "correct": 3, "justificativa": "O Lisossomo contém enzimas hidrolíticas responsáveis pela digestão intracelular."}, {"q": "Na coloração de Gram, o que explica a bactéria Gram-positiva reter a cor roxa/violeta?", "opts": ["Ausência de parede celular", "Peptidoglicano espesso na parede celular", "Presença de membrana externa", "Ausência de citoplasma"], "correct": 1, "justificativa": "O peptidoglicano espesso da parede Gram-positiva retém o cristal violeta, mantendo a cor roxa."}, {"q": "Qual estrutura está presente na parede de bactérias Gram-negativas, mas ausente nas Gram-positivas?", "opts": ["Peptidoglicano", "Membrana plasmática", "Membrana externa (com LPS)", "Ribossomos"], "correct": 2, "justificativa": "A membrana externa contendo LPS é exclusiva das bactérias Gram-negativas."}, {"q": "Qual o mecanismo de reprodução bacteriana?", "opts": ["Fissão binária", "Mitose", "Meiose", "Fecundação"], "correct": 0, "justificativa": "Bactérias se reproduzem por fissão binária — divisão assexuada que gera 2 células idênticas."}, {"q": "Qual organela realiza a degradação de ácidos graxos e neutraliza peróxido de hidrogênio?", "opts": ["Peroxissomo", "Lisossomo", "Mitocôndria", "Complexo de Golgi"], "correct": 0, "justificativa": "O peroxissomo degrada ácidos graxos e neutraliza peróxido de hidrogênio (via catalase)."}, {"q": "Qual organela é responsável pela síntese de lipídios e detoxificação celular?", "opts": ["Retículo Endoplasmático Rugoso", "Retículo Endoplasmático Liso", "Lisossomo", "Núcleo"], "correct": 1, "justificativa": "O Retículo Endoplasmático Liso sintetiza lipídios e participa da detoxificação celular."}, {"q": "Após a coloração de Gram, qual cor final indica uma bactéria Gram-negativa?", "opts": ["Roxo/Violeta", "Amarelo", "Preto", "Rosa/Vermelho"], "correct": 3, "justificativa": "Bactérias Gram-negativas, após perderem o cristal violeta, são contracoradas pela safranina e ficam rosa/vermelhas."}];
+const bank1 = [{"q": "Qual açúcar (pentose) compõe o ADN?", "opts": ["Ribose", "Desoxirribose", "Glicose", "Frutose"], "correct": 1, "justificativa": "O ADN é composto por desoxirribose; o ARN é composto por ribose."}, {"q": "Qual base nitrogenada está presente no ARN, mas NÃO no ADN?", "opts": ["Adenina", "Guanina", "Citosina", "Uracila"], "correct": 3, "justificativa": "A Uracila substitui a Timina no ARN — a Timina é exclusiva do ADN."}, {"q": "O ADN apresenta fita dupla (dupla hélice); o ARN apresenta:", "opts": ["Fita dupla também", "Fita tripla", "Fita simples", "Não possui fita"], "correct": 2, "justificativa": "O ARN é tipicamente de fita simples, diferente do ADN, que é de fita dupla (dupla hélice)."}, {"q": "Qual tipo de ARN carrega a informação genética do núcleo até os ribossomos para tradução?", "opts": ["tRNA", "rRNA", "mRNA", "Nenhum dos anteriores"], "correct": 2, "justificativa": "O mRNA (RNA mensageiro) carrega a informação genética do núcleo até os ribossomos."}, {"q": "Qual nível estrutural das proteínas corresponde à sequência linear de aminoácidos?", "opts": ["Primária", "Secundária", "Terciária", "Quaternária"], "correct": 0, "justificativa": "A estrutura Primária é a sequência linear de aminoácidos, o nível mais básico."}, {"q": "A união de 2 ou mais cadeias polipeptídicas forma qual nível estrutural das proteínas?", "opts": ["Primária", "Secundária", "Terciária", "Quaternária"], "correct": 3, "justificativa": "A estrutura Quaternária corresponde à união de 2 ou mais cadeias polipeptídicas (subunidades)."}, {"q": "O que caracteriza uma enzima?", "opts": ["Proteína que acelera reações químicas, sendo consumida no processo", "Proteína que acelera reações químicas, sem ser consumida", "Lipídio que armazena energia", "Ácido nucleico que armazena informação genética"], "correct": 1, "justificativa": "Enzimas são proteínas que aceleram reações químicas SEM serem consumidas no processo."}, {"q": "A intolerância à lactose está relacionada à deficiência de qual enzima?", "opts": ["Amilase", "Lactase", "Pepsina", "Lipase"], "correct": 1, "justificativa": "A intolerância à lactose ocorre por deficiência da enzima lactase, que quebra a lactose."}, {"q": "Qual biomolécula é a principal fonte de energia rápida para a célula?", "opts": ["Proteínas", "Ácidos nucleicos", "Carboidratos", "Nenhuma das anteriores"], "correct": 2, "justificativa": "Carboidratos (como a glicose) são a principal fonte de energia rápida para a célula."}, {"q": "Qual estrutura secundária de proteína é formada por um enrolamento helicoidal da cadeia polipeptídica?", "opts": ["Folha beta-pregueada", "Alfa-hélice", "Estrutura terciária", "Estrutura quaternária"], "correct": 1, "justificativa": "A alfa-hélice é uma das 2 formas clássicas de estrutura secundária, formada pelo enrolamento helicoidal da cadeia."}];
+const bank2 = [{"q": "Qual modelo descreve a organização da membrana plasmática?", "opts": ["Modelo do Mosaico Fluido", "Modelo Rígido Estático", "Modelo de Camada Única", "Modelo Cristalino"], "correct": 0, "justificativa": "O Modelo do Mosaico Fluido descreve a membrana como uma bicamada lipídica com proteínas 'flutuando' nela."}, {"q": "Qual componente da membrana regula sua fluidez?", "opts": ["Glicocálice", "Colesterol", "Proteínas periféricas", "Ácidos nucleicos"], "correct": 1, "justificativa": "O colesterol, intercalado na bicamada lipídica, regula a fluidez da membrana."}, {"q": "O que é o Glicocálice?", "opts": ["Uma camada de proteínas apenas", "Uma camada lipídica interna", "Carboidratos na superfície da membrana, envolvidos em reconhecimento celular", "Um tipo de canal iônico"], "correct": 2, "justificativa": "O Glicocálice é formado por carboidratos na superfície da membrana, importante no reconhecimento celular."}, {"q": "Qual tipo de transporte pela membrana NÃO gasta ATP e ocorre a favor do gradiente de concentração?", "opts": ["Transporte ativo", "Exocitose", "Endocitose", "Difusão simples"], "correct": 3, "justificativa": "A difusão simples não gasta ATP e ocorre a favor do gradiente de concentração."}, {"q": "A Bomba de Sódio-Potássio move quantos íons de Na+ para fora e K+ para dentro, por ciclo?", "opts": ["2 Na+ fora, 3 K+ dentro", "3 Na+ fora, 2 K+ dentro", "1 Na+ fora, 1 K+ dentro", "3 Na+ dentro, 2 K+ fora"], "correct": 1, "justificativa": "A Bomba de Sódio-Potássio move 3 Na+ para FORA e 2 K+ para DENTRO da célula, a cada ciclo, gastando 1 ATP."}, {"q": "Qual processo transporta água através da membrana, a favor do gradiente?", "opts": ["Transporte ativo", "Fagocitose", "Osmose", "Exocitose"], "correct": 2, "justificativa": "A Osmose é o transporte de água através da membrana, a favor do gradiente de concentração."}, {"q": "Qual processo celular envolve a captura de partículas grandes ou líquidos por invaginação da membrana?", "opts": ["Difusão facilitada", "Endocitose", "Transporte ativo primário", "Osmose"], "correct": 1, "justificativa": "A Endocitose envolve a captura de partículas/líquidos através da invaginação da membrana plasmática."}, {"q": "A difusão facilitada da glicose ocorre através de qual estrutura?", "opts": ["Bomba de Na+/K+", "Colesterol", "Glicocálice", "Canais GLUT"], "correct": 3, "justificativa": "A difusão facilitada de glicose ocorre através de proteínas transportadoras específicas chamadas GLUT."}, {"q": "Qual tipo de transporte ocorre CONTRA o gradiente de concentração, exigindo gasto de energia (ATP)?", "opts": ["Transporte ativo", "Difusão facilitada", "Osmose", "Difusão simples"], "correct": 0, "justificativa": "O Transporte Ativo ocorre contra o gradiente de concentração, exigindo gasto de ATP."}, {"q": "Qual processo celular libera substâncias de dentro da célula para o meio extracelular através de vesículas?", "opts": ["Endocitose", "Exocitose", "Osmose", "Difusão simples"], "correct": 1, "justificativa": "A Exocitose libera substâncias de dentro da célula para o meio extracelular, através da fusão de vesículas com a membrana."}];
+const bank3 = [{"q": "O que é o Citosol?", "opts": ["A membrana que envolve a célula", "O meio aquoso do citoplasma onde ocorrem reações químicas", "Um tipo de organela", "O núcleo da célula"], "correct": 1, "justificativa": "O Citosol é o meio aquoso do citoplasma, onde diversas reações químicas celulares ocorrem."}, {"q": "Qual a função do Peptídeo-sinal numa proteína recém-sintetizada?", "opts": ["Funcionar como 'endereço', direcionando a proteína pro destino certo", "Fornecer energia à célula", "Degradar proteínas antigas", "Formar a membrana celular"], "correct": 0, "justificativa": "O Peptídeo-sinal funciona como um 'endereço' que direciona a proteína pro seu destino celular correto."}, {"q": "Qual estrutura auxilia no dobramento correto de proteínas recém-sintetizadas?", "opts": ["Proteassomo", "Ribossomos livres", "Chaperonas", "Peroxissomo"], "correct": 2, "justificativa": "As Chaperonas são proteínas que auxiliam no dobramento correto de outras proteínas."}, {"q": "Qual estrutura é responsável por degradar proteínas defeituosas ou desnecessárias?", "opts": ["Chaperonas", "Proteassomo", "Peptídeo-sinal", "Retículo Liso"], "correct": 1, "justificativa": "O Proteassomo é responsável por degradar proteínas defeituosas ou que já não são mais necessárias."}, {"q": "Doenças causadas por acúmulo de proteínas mal dobradas (quando chaperonas/proteassomo falham) incluem classicamente:", "opts": ["Apenas infecções bacterianas", "Nenhuma doença conhecida", "Apenas doenças cardíacas", "Doenças neurodegenerativas como Alzheimer e Parkinson"], "correct": 3, "justificativa": "O acúmulo de proteínas mal dobradas está classicamente associado a doenças neurodegenerativas, como Alzheimer e Parkinson."}, {"q": "Inibidores de Proteassomo são utilizados clinicamente em qual contexto?", "opts": ["Tratamento de infecções virais", "Tratamento de certos tipos de câncer", "Tratamento de fraturas ósseas", "Tratamento de anemia"], "correct": 1, "justificativa": "Inibidores de Proteassomo são utilizados no tratamento de certos tipos de câncer (ex: mieloma múltiplo)."}, {"q": "Inclusões citoplasmáticas correspondem a:", "opts": ["Depósitos temporários de substâncias (ex: gordura, glicogênio), sem membrana própria", "Organelas obrigatórias em toda célula", "Estruturas exclusivas do núcleo", "Parte da membrana plasmática"], "correct": 0, "justificativa": "Inclusões citoplasmáticas são depósitos temporários de substâncias (como gordura ou glicogênio), geralmente sem membrana própria."}, {"q": "Doenças de depósito (armazenamento) ocorrem classicamente por qual mecanismo?", "opts": ["Excesso de síntese proteica", "Excesso de mitocôndrias", "Deficiência de uma enzima lisossômica específica, causando acúmulo de substrato", "Falta de citosol"], "correct": 2, "justificativa": "Doenças de depósito ocorrem classicamente pela deficiência de uma enzima lisossômica específica, levando ao acúmulo do substrato não degradado."}, {"q": "A síntese de proteínas no citoplasma ocorre em qual estrutura?", "opts": ["Núcleo", "Ribossomos", "Mitocôndria", "Complexo de Golgi"], "correct": 1, "justificativa": "A síntese de proteínas (tradução) ocorre nos ribossomos, presentes livres no citosol ou aderidos ao Retículo Rugoso."}, {"q": "Qual das opções abaixo é uma função geral do citoplasma?", "opts": ["Armazenar exclusivamente o material genético", "Realizar exclusivamente a divisão celular", "Formar apenas a membrana celular", "Servir como meio pra reações metabólicas e abrigar as organelas"], "correct": 3, "justificativa": "O citoplasma serve como meio pra diversas reações metabólicas e abriga as organelas celulares."}];
+const bank4 = [{"q": "Qual estrutura do citoesqueleto é a mais FINA?", "opts": ["Microtúbulos", "Filamentos Intermediários", "Filamentos de Actina (Microfilamentos)", "Todas têm a mesma espessura"], "correct": 2, "justificativa": "Os Filamentos de Actina (Microfilamentos) são os mais finos entre as 3 estruturas do citoesqueleto."}, {"q": "Qual estrutura do citoesqueleto é a mais ESPESSA, envolvida em transporte intracelular e divisão celular?", "opts": ["Microtúbulos", "Filamentos Intermediários", "Filamentos de Actina", "Nenhuma das anteriores"], "correct": 0, "justificativa": "Os Microtúbulos são a estrutura mais espessa do citoesqueleto, envolvidos em transporte intracelular, cílios/flagelos e divisão celular."}, {"q": "A queratina é um exemplo de qual estrutura do citoesqueleto?", "opts": ["Microtúbulo", "Filamento de Actina", "Filamento Intermediário", "Centríolo"], "correct": 2, "justificativa": "A queratina é um tipo de Filamento Intermediário, conferindo resistência mecânica às células epiteliais."}, {"q": "Cílios e flagelos são formados principalmente por qual estrutura do citoesqueleto?", "opts": ["Filamentos de Actina", "Microtúbulos", "Filamentos Intermediários", "Nenhuma das anteriores"], "correct": 1, "justificativa": "Cílios e flagelos são formados principalmente por microtúbulos, organizados com auxílio da dineína ciliar."}, {"q": "Qual proteína motora está associada ao batimento dos cílios (dineína ciliar), cuja deficiência causa uma doença específica?", "opts": ["Miosina", "Queratina", "Actina", "Dineína"], "correct": 3, "justificativa": "A Dineína Ciliar é a proteína motora associada ao batimento ciliar — sua deficiência causa a Discinesia Ciliar Primária."}, {"q": "A Discinesia Ciliar Primária está classicamente associada a qual combinação de achados clínicos?", "opts": ["Infertilidade e infecções respiratórias recorrentes", "Apenas problemas cardíacos", "Apenas problemas de pele", "Apenas problemas ósseos"], "correct": 0, "justificativa": "A Discinesia Ciliar Primária está classicamente associada a infertilidade e infecções respiratórias recorrentes, por disfunção ciliar."}, {"q": "Microvilosidades são sustentadas principalmente por qual estrutura do citoesqueleto?", "opts": ["Microtúbulos", "Filamentos Intermediários", "Filamentos de Actina", "Centríolos"], "correct": 2, "justificativa": "As microvilosidades são sustentadas principalmente por filamentos de actina em seu核心 (core)."}, {"q": "Drogas quimioterápicas que atuam nos microtúbulos (ex: taxanos, alcaloides da vinca) interferem em qual processo celular?", "opts": ["Respiração celular", "Divisão celular (mitose)", "Digestão intracelular", "Síntese de lipídios"], "correct": 1, "justificativa": "Drogas que atuam nos microtúbulos interferem na divisão celular (mitose), já que o fuso mitótico é formado por microtúbulos."}, {"q": "Cardiomiopatias podem estar relacionadas a mutações em qual filamento intermediário específico?", "opts": ["Queratina", "Actina", "Vimentina", "Desmina"], "correct": 3, "justificativa": "Mutações no filamento intermediário Desmina estão relacionadas a certas cardiomiopatias."}, {"q": "Centríolos e corpos basais são estruturas formadas por qual componente do citoesqueleto?", "opts": ["Filamentos de Actina", "Filamentos Intermediários", "Microtúbulos", "Nenhuma das anteriores"], "correct": 2, "justificativa": "Centríolos e corpos basais são estruturas formadas por microtúbulos organizados em uma configuração específica."}];
+makeQuiz('q0', bank0, 'quizArea0', 'quizResult0');
+makeQuiz('q1', bank1, 'quizArea1', 'quizResult1');
+makeQuiz('q2', bank2, 'quizArea2', 'quizResult2');
+makeQuiz('q3', bank3, 'quizArea3', 'quizResult3');
+makeQuiz('q4', bank4, 'quizArea4', 'quizResult4');
+
+try{
+  var jornadaItem = { materia: 'Biología', titulo: 'Revisão Rápida P1', url: location.pathname, tipo: 'Revisão', etapa: 'P1', timestamp: Date.now() };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/biologia/Capitulo_05_Citoesqueleto.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 5 — Citoesqueleto</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-01/biologia/Simulado_P1_Biologia_20Q.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">🎯 Simulado — Revisão Rápida (20 Questões)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
