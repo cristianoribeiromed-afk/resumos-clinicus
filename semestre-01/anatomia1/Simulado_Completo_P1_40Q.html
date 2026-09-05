@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Simulado Completo P1 — Anatomía I (40 Questões) | ClinicusMed</title>
+<style>
+.cmed-fig{margin:14px 0; text-align:center;}
+.cmed-fig img{max-width:100%; max-height:640px; width:auto; height:auto; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#fff; display:block; margin:0 auto;}
+.cmed-fig-cap{font-size:.82em; color:var(--text-dim); margin-top:6px; font-style:italic;}
+.cmed-gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin:14px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:320px;}
+:root{
+  --bg:#1c1410; --card:#2a1f18; --card2:#33261c;
+  --accent:#c1793f; --accent2:#e8ab6f; --gold:#e8b84b;
+  --text:#f5eee6; --text-dim:#c2ab98; --ok:#4fd1a1; --bad:#e0505f; --border:#453224;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Anatomía I</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Anatomía I</span><span>16 de 19</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:84%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Anatomía I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/RaioX_Disciplina.html"><span class="ico">🦴</span><span>🩺 Raio-X da Disciplina</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_01_Generalidades.html"><span class="ico">🦴</span><span>Capítulo 1 — Generalidades de Anatomia</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_02_Osteologia.html"><span class="ico">🦴</span><span>Capítulo 2 — Osteologia</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_03_Artrologia.html"><span class="ico">🦴</span><span>Capítulo 3 — Artrologia</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_04_Miologia.html"><span class="ico">🦴</span><span>Capítulo 4 — Miologia</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_05_Coluna_Vertebral.html"><span class="ico">🦴</span><span>Capítulo 5 — Coluna Vertebral</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_06_Esqueleto_Toracico.html"><span class="ico">🦴</span><span>Capítulo 6 — Esqueleto Torácico</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_07_Diafragma.html"><span class="ico">🦴</span><span>Capítulo 7 — Diafragma</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_08_Musculos_Nervos_Torax.html"><span class="ico">🦴</span><span>Capítulo 8 — Músculos e Nervos do Tórax</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_09_Mediastino_Pericardio.html"><span class="ico">🦴</span><span>Capítulo 9 — Mediastino e Pericárdio</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_10_Configuracao_Coracao.html"><span class="ico">🦴</span><span>Capítulo 10 — Configuração do Coração</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_11_Aparelho_Valvular.html" data-novo="1"><span class="ico">🦴</span><span>Capítulo 11 — Aparelho Valvular</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Capitulo_12_Sistema_Conducao_Vascularizacao.html" data-novo="1"><span class="ico">🦴</span><span>Capítulo 12 — Sistema de Condução e Vascularização Coronária</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Simulado_Coracao.html" data-novo="1"><span class="ico">🦴</span><span>Simulado — Coração (Unidad 3)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Revisao_Rapida_P1.html"><span class="ico">🦴</span><span>📋 Revisão Rápida P1 (Interativa)</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-01/anatomia1/Simulado_Completo_P1_40Q.html"><span class="ico">🦴</span><span>🎯 Simulado Completo P1 (40 Questões)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1/Simulado_P1_Anatomia1.html"><span class="ico">🎯</span><span>Simulado P1 — Anatomía I (104 Questões, com Coração)</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1_gabarito.html"><span class="ico">🦴</span><span>Gabarito Tórax, Corazón y Cuello</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1_master_osteoartromiologia.html"><span class="ico">🦴</span><span>Master Osteo/Artro/Miología, Columna y Diafragma</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Anatomía I · Simulado P1</span>
+  <h1>🦴 Simulado Completo P1 (40 Questões)</h1>
+  <p>ClinicusMed · Banco de Questões Comentadas + Quiz Rápido</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p4" class="active">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel active" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">40 questões — 10 de cada bloco temático (Osteologia e Artrologia, Miologia e Coluna, Tórax e Diafragma, Coração Completo). Uma versão mais enxuta e rápida de revisar, cobrindo os pontos mais importantes de toda a P1. Escolhe uma alternativa, depois clica em "Ver comentário completo".</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+<script>
+const bank = [{"n": 1, "tema": "Planos Anatômicos", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar o plano sagital", "q": "Qual plano anatômico divide o corpo em porções direita e esquerda?", "opts": ["Plano Frontal", "Plano Sagital", "Plano Transversal", "Plano Oblíquo"], "correct": 1, "justificativa": "O Plano Sagital divide o corpo em porções direita e esquerda.", "analise": ["Incorreto — o plano frontal divide em anterior/posterior.", "Incorreto — o plano transversal divide em superior/inferior.", "Incorreto — plano oblíquo não é um dos 3 planos anatômicos padrão."], "analise_letters": ["A", "C", "D"], "conceito": "Plano Sagital: direita × esquerda.", "pegadinha": "Não confundir com o frontal (anterior/posterior).", "dica": "Sagital = como uma flecha atravessando de frente pra trás, dividindo em 2 lados."}, {"n": 2, "tema": "Tipos de Osso", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Classificar ossos longos", "q": "Fêmur e úmero são exemplos de qual tipo de osso?", "opts": ["Curto", "Plano", "Irregular", "Longo"], "correct": 3, "justificativa": "Fêmur e úmero são ossos longos, com comprimento predominante sobre largura.", "analise": ["Incorreto — ossos curtos são exemplificados pelo carpo/tarso.", "Incorreto — ossos planos são exemplificados pelo esterno/escápula.", "Incorreto — ossos irregulares são exemplificados pelas vértebras."], "analise_letters": ["A", "B", "C"], "conceito": "Osso Longo: fêmur, úmero.", "pegadinha": "Comprimento >> largura é o critério central.", "dica": "Longo = mais 'comprido' que largo."}, {"n": 3, "tema": "Tipos de Osso", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Classificar vértebras", "q": "As vértebras são classificadas como qual tipo de osso?", "opts": ["Longo", "Curto", "Irregular", "Plano"], "correct": 2, "justificativa": "Vértebras são ossos irregulares, com forma complexa que não se encaixa nas outras categorias.", "analise": ["Incorreto — ossos longos têm forma alongada simples, diferente da vértebra.", "Incorreto — ossos curtos são cuboides, diferente da forma vertebral.", "Incorreto — ossos planos são achatados, diferente da forma vertebral complexa."], "analise_letters": ["A", "B", "D"], "conceito": "Osso Irregular: vértebras.", "pegadinha": "É a categoria 'coringa' pra formas que não se encaixam nas outras 3.", "dica": "Vértebra tem forma complexa demais pra ser longo/curto/plano."}, {"n": 4, "tema": "Sinartrose", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Reconhecer articulação imóvel", "q": "As suturas do crânio são exemplo de qual tipo de articulação?", "opts": ["Sinartrose", "Anfiartrose", "Diartrose", "Sínfise"], "correct": 0, "justificativa": "As suturas do crânio são Sinartroses — articulações fibrosas, completamente imóveis.", "analise": ["Incorreto — anfiartroses têm mobilidade reduzida, mas não são o exemplo das suturas.", "Incorreto — diartroses são livremente móveis, diferente das suturas.", "Incorreto — sínfise é um subtipo de anfiartrose, não o termo geral pra suturas."], "analise_letters": ["B", "C", "D"], "conceito": "Sinartrose: suturas do crânio, imóvel.", "pegadinha": "É a única categoria totalmente imóvel entre as 3.", "dica": "Sinartrose = 'sem movimento' — suturas do crânio."}, {"n": 5, "tema": "Anfiartrose", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Reconhecer articulação pouco móvel", "q": "O disco intervertebral é exemplo de qual tipo de articulação?", "opts": ["Diartrose", "Anfiartrose", "Sinartrose", "Nenhuma das anteriores"], "correct": 1, "justificativa": "O disco intervertebral é uma Anfiartrose — articulação cartilaginosa, com mobilidade reduzida.", "analise": ["Incorreto — diartroses são livremente móveis, mais que o disco intervertebral permite.", "Incorreto — sinartroses são imóveis, diferente do disco intervertebral que permite algum movimento.", "Incorreto — existe sim uma classificação específica (anfiartrose) pra esse tipo de articulação."], "analise_letters": ["A", "C", "D"], "conceito": "Anfiartrose: disco intervertebral, pouco móvel.", "pegadinha": "Fica no meio-termo entre sinartrose (imóvel) e diartrose (livre).", "dica": "Anfiartrose = mobilidade limitada, nem travada nem livre."}, {"n": 6, "tema": "Diartrose", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer articulação sinovial", "q": "Joelho e ombro são exemplos de qual tipo de articulação?", "opts": ["Diartrose", "Anfiartrose", "Sinartrose", "Sínfise"], "correct": 0, "justificativa": "Joelho e ombro são Diartroses — articulações sinoviais, livremente móveis.", "analise": ["Incorreto — anfiartroses têm mobilidade reduzida, menor que joelho/ombro.", "Incorreto — sinartroses são imóveis, diferente de joelho/ombro.", "Incorreto — sínfise é subtipo de anfiartrose, não a classificação de joelho/ombro."], "analise_letters": ["B", "C", "D"], "conceito": "Diartrose: joelho, ombro — livremente móvel.", "pegadinha": "É a categoria de maior mobilidade entre as 3.", "dica": "Diartrose = movimento livre, como joelho e ombro."}, {"n": 7, "tema": "Líquido Sinovial", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Reconhecer a função do líquido sinovial", "q": "Qual a função do líquido sinovial numa articulação diartrose?", "opts": ["Formar o osso", "Produzir hemácias", "Reduzir atrito e nutrir a cartilagem articular", "Conduzir impulso nervoso"], "correct": 2, "justificativa": "O líquido sinovial reduz o atrito entre as superfícies articulares e nutre a cartilagem articular.", "analise": ["Incorreto — formar osso não é função do líquido sinovial.", "Incorreto — produção de hemácias ocorre na medula óssea, não no líquido sinovial.", "Incorreto — condução de impulso nervoso não é função do líquido sinovial."], "analise_letters": ["A", "B", "D"], "conceito": "Líquido sinovial: reduz atrito, nutre a cartilagem.", "pegadinha": "Está dentro da cápsula articular, específico de articulações sinoviais (diartroses).", "dica": "Líquido sinovial = 'óleo lubrificante' da articulação."}, {"n": 8, "tema": "Ossos Planos", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer exemplo de osso plano", "q": "A escápula é um exemplo de qual tipo de osso?", "opts": ["Longo", "Irregular", "Curto", "Plano"], "correct": 3, "justificativa": "A escápula é um osso plano — achatado, com função de proteção/inserção muscular.", "analise": ["Incorreto — ossos longos têm comprimento predominante, diferente da forma achatada da escápula.", "Incorreto — ossos irregulares têm forma complexa não-achatada, diferente da escápula.", "Incorreto — ossos curtos são cuboides pequenos, diferente da escápula."], "analise_letters": ["A", "B", "C"], "conceito": "Osso Plano: escápula, esterno.", "pegadinha": "Ossos planos costumam ter função de proteção ou grande área de inserção muscular.", "dica": "Escápula = achatada = osso plano."}, {"n": 9, "tema": "Posição Anatômica", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Descrever a posição anatômica padrão", "q": "Na posição anatômica padrão, para onde ficam voltadas as palmas das mãos?", "opts": ["Para frente", "Para trás", "Para os lados do corpo", "Para cima"], "correct": 0, "justificativa": "Na posição anatômica padrão de referência, as palmas das mãos ficam voltadas pra frente.", "analise": ["Incorreto — não é essa a orientação padrão das palmas na posição anatômica.", "Incorreto — não é essa a orientação padrão; é especificamente pra frente.", "Incorreto — não é essa a orientação; as palmas ficam voltadas pra frente, não pra cima."], "analise_letters": ["B", "C", "D"], "conceito": "Posição anatômica: palmas voltadas pra frente.", "pegadinha": "Essa é a referência padrão usada pra descrever qualquer posição/movimento anatômico.", "dica": "Posição anatômica = em pé, olhando pra frente, palmas pra frente."}, {"n": 10, "tema": "Plano Transversal", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar o plano transversal", "q": "Qual plano anatômico divide o corpo em porções superior e inferior?", "opts": ["Transversal", "Frontal", "Sagital", "Nenhum dos anteriores"], "correct": 0, "justificativa": "O Plano Transversal divide o corpo em porções superior e inferior.", "analise": ["Incorreto — o frontal divide em anterior/posterior.", "Incorreto — o sagital divide em direita/esquerda.", "Incorreto — existe sim um plano específico (transversal) pra essa divisão."], "analise_letters": ["B", "C", "D"], "conceito": "Plano Transversal: superior × inferior.", "pegadinha": "É o único dos 3 planos principais que corta 'na horizontal'.", "dica": "Transversal = corte horizontal, tipo fatiar em cima/embaixo."}, {"n": 11, "tema": "Contração Concêntrica", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar contração concêntrica", "q": "Numa contração concêntrica, o que acontece com o músculo?", "opts": ["Alonga", "Encurta", "Permanece igual", "Se rompe"], "correct": 1, "justificativa": "Na contração concêntrica, o músculo encurta enquanto se contrai.", "analise": ["Incorreto — alongamento durante contração é característico da contração EXCÊNTRICA.", "Incorreto — permanecer igual é característico da contração ISOMÉTRICA.", "Incorreto — ruptura não é uma classificação de tipo de contração."], "analise_letters": ["A", "C", "D"], "conceito": "Concêntrica: músculo encurta.", "pegadinha": "É o tipo de contração mais 'intuitivo' — o que a maioria imagina ao pensar em contração muscular.", "dica": "Concêntrica = fica mais curto (concentra)."}, {"n": 12, "tema": "Contração Isométrica", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar contração isométrica", "q": "Numa contração isométrica, o que acontece com o comprimento do músculo?", "opts": ["Permanece igual (sem mudança)", "Alonga", "Encurta", "Duplica"], "correct": 0, "justificativa": "Na contração isométrica, o músculo se contrai sem alterar seu comprimento.", "analise": ["Incorreto — alongamento é característico da contração EXCÊNTRICA.", "Incorreto — encurtamento é característico da contração CONCÊNTRICA.", "Incorreto — o músculo não duplica de tamanho em nenhum tipo de contração."], "analise_letters": ["B", "C", "D"], "conceito": "Isométrica: comprimento não muda.", "pegadinha": "'Iso' = igual/mesmo — daí o nome, o comprimento permanece igual.", "dica": "Isométrica = 'mesma medida' (iso=igual, métrica=medida)."}, {"n": 13, "tema": "Coluna Cervical", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer o número de vértebras cervicais", "q": "Quantas vértebras compõem a região cervical da coluna?", "opts": ["5", "5 fundidas", "12", "7"], "correct": 3, "justificativa": "A região cervical é composta por 7 vértebras.", "analise": ["Incorreto — 5 é o número de vértebras lombares, não cervicais.", "Incorreto — 5 fundidas descreve o sacro, não a região cervical.", "Incorreto — 12 é o número de vértebras torácicas, não cervicais."], "analise_letters": ["A", "B", "C"], "conceito": "Cervical: 7 vértebras.", "pegadinha": "Fácil de lembrar: 7 vértebras cervicais em todos os mamíferos, até na girafa.", "dica": "Cervical = 7, sempre — regra universal em mamíferos."}, {"n": 14, "tema": "Coluna Torácica", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer o número de vértebras torácicas", "q": "Quantas vértebras compõem a região torácica da coluna?", "opts": ["7", "5", "12", "5 fundidas"], "correct": 2, "justificativa": "A região torácica é composta por 12 vértebras, cada uma articulada com um par de costelas.", "analise": ["Incorreto — 7 é o número de vértebras cervicais, não torácicas.", "Incorreto — 5 é o número de vértebras lombares, não torácicas.", "Incorreto — 5 fundidas descreve o sacro, não a região torácica."], "analise_letters": ["A", "B", "D"], "conceito": "Torácica: 12 vértebras.", "pegadinha": "12 vértebras torácicas correspondem aos 12 pares de costelas.", "dica": "Torácica = 12 (mesmo número dos pares de costelas)."}, {"n": 15, "tema": "Curvatura Cervical", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Classificar a curvatura cervical", "q": "A curvatura da região cervical da coluna é classificada como:", "opts": ["Lordose", "Cifose", "Escoliose", "Nenhuma curvatura"], "correct": 0, "justificativa": "A curvatura cervical é classificada como lordose (concavidade posterior).", "analise": ["Incorreto — cifose é a classificação das curvaturas torácica e sacral, não da cervical.", "Incorreto — escoliose é uma curvatura lateral anormal, não a curvatura fisiológica cervical.", "Incorreto — a região cervical tem sim uma curvatura fisiológica normal."], "analise_letters": ["B", "C", "D"], "conceito": "Cervical: lordose.", "pegadinha": "Cervical e lombar são lordoses; torácica e sacral são cifoses.", "dica": "Lordose = 'pra dentro' nas regiões cervical e lombar."}, {"n": 16, "tema": "Curvaturas Primárias", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Reconhecer quando surgem as curvaturas primárias", "q": "As curvaturas primárias da coluna (cifose torácica e sacral) estão presentes:", "opts": ["Somente na vida adulta", "Somente após caminhar", "Ao nascer", "Nunca se desenvolvem naturalmente"], "correct": 2, "justificativa": "As curvaturas primárias (cifose torácica e sacral) já estão presentes ao nascer.", "analise": ["Incorreto — as curvaturas primárias já existem desde o nascimento, não surgem só na vida adulta.", "Incorreto — não dependem de caminhar; já estão presentes ao nascer.", "Incorreto — as curvaturas primárias se desenvolvem sim, e o fazem antes do nascimento."], "analise_letters": ["A", "B", "D"], "conceito": "Curvaturas primárias: já presentes ao nascer.", "pegadinha": "Diferente das curvaturas secundárias (lordose cervical/lombar), que se desenvolvem depois.", "dica": "Primárias = já vêm 'de fábrica' desde o nascimento."}, {"n": 17, "tema": "Curvaturas Secundárias", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Reconhecer quando surgem as curvaturas secundárias", "q": "As curvaturas secundárias (lordose cervical e lombar) se desenvolvem:", "opts": ["Ao nascer", "Nunca se desenvolvem", "Apenas em idosos", "Depois do nascimento, com sustentação da cabeça e postura ereta"], "correct": 3, "justificativa": "As curvaturas secundárias se desenvolvem depois do nascimento, conforme a criança sustenta a cabeça e adota a postura ereta.", "analise": ["Incorreto — diferente das primárias, as secundárias NÃO estão presentes ao nascer.", "Incorreto — as curvaturas secundárias se desenvolvem sim, em resposta ao desenvolvimento motor da criança.", "Incorreto — se desenvolvem na infância, não especificamente em idosos."], "analise_letters": ["A", "B", "C"], "conceito": "Curvaturas secundárias: desenvolvem-se após o nascimento.", "pegadinha": "A lordose cervical surge quando o bebê sustenta a cabeça; a lombar, quando começa a andar.", "dica": "Secundárias = se desenvolvem 'depois', junto com marcos motores."}, {"n": 18, "tema": "Contração Excêntrica", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar contração excêntrica", "q": "Numa contração excêntrica, o que acontece com o músculo enquanto se contrai?", "opts": ["Encurta", "Permanece igual", "Alonga (resistindo a uma força)", "Fica flácido"], "correct": 2, "justificativa": "Na contração excêntrica, o músculo alonga enquanto se contrai, tipicamente resistindo a uma força externa (ex: descer um agachamento controladamente).", "analise": ["Incorreto — encurtamento é característico da contração CONCÊNTRICA, não da excêntrica.", "Incorreto — permanecer igual é característico da contração ISOMÉTRICA, não da excêntrica.", "Incorreto — o músculo permanece ativo/tenso durante a contração excêntrica, não fica flácido."], "analise_letters": ["A", "B", "D"], "conceito": "Excêntrica: músculo alonga durante a contração.", "pegadinha": "É o tipo de contração associado a mais dor muscular tardia (DOMS) após exercício.", "dica": "Excêntrica = alonga enquanto resiste — tipo freio controlado."}, {"n": 19, "tema": "Sacro", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer o número de vértebras sacrais fundidas", "q": "A região sacral da coluna é composta por quantas vértebras fundidas?", "opts": ["3", "5", "7", "12"], "correct": 1, "justificativa": "A região sacral é composta por 5 vértebras fundidas, formando o osso sacro.", "analise": ["Incorreto — 3 não é o número correto de vértebras sacrais fundidas.", "Incorreto — 7 é o número de vértebras cervicais, não sacrais.", "Incorreto — 12 é o número de vértebras torácicas, não sacrais."], "analise_letters": ["A", "C", "D"], "conceito": "Sacro: 5 vértebras fundidas.", "pegadinha": "A fusão dessas 5 vértebras forma um osso único e resistente, o sacro.", "dica": "Sacro = 5 vértebras que 'colam' e viram 1 osso só."}, {"n": 20, "tema": "Curvatura Torácica", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Classificar a curvatura torácica", "q": "A curvatura da região torácica da coluna é classificada como:", "opts": ["Lordose", "Escoliose", "Cifose", "Nenhuma curvatura"], "correct": 2, "justificativa": "A curvatura torácica é classificada como cifose (concavidade anterior).", "analise": ["Incorreto — lordose é a classificação das curvaturas cervical e lombar, não da torácica.", "Incorreto — escoliose é uma curvatura lateral anormal, não a curvatura fisiológica torácica.", "Incorreto — a região torácica tem sim uma curvatura fisiológica normal (cifose)."], "analise_letters": ["A", "B", "D"], "conceito": "Torácica: cifose.", "pegadinha": "Torácica e sacral são cifoses; cervical e lombar são lordoses.", "dica": "Cifose = curva torácica e sacral (as 2 primárias)."}, {"n": 21, "tema": "Costelas Verdadeiras", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar as costelas verdadeiras", "q": "Quais costelas são classificadas como 'verdadeiras', articulando-se diretamente com o esterno?", "opts": ["1ª a 7ª", "8ª a 10ª", "11ª e 12ª", "Todas as costelas"], "correct": 0, "justificativa": "As costelas verdadeiras (1ª a 7ª) se articulam diretamente com o esterno.", "analise": ["Incorreto — a 8ª a 10ª são as costelas FALSAS, com articulação indireta.", "Incorreto — a 11ª e 12ª são as costelas FLUTUANTES, sem articulação com o esterno.", "Incorreto — nem todas as costelas se articulam diretamente; existe a classificação em verdadeiras/falsas/flutuantes."], "analise_letters": ["B", "C", "D"], "conceito": "Costelas verdadeiras: 1ª-7ª, articulação direta com o esterno.", "pegadinha": "São exatamente 7 pares — mesmo número das vértebras cervicais, mas sem relação direta entre os 2 fatos.", "dica": "Verdadeiras = as primeiras 7, ligação direta."}, {"n": 22, "tema": "Costelas Flutuantes", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar as costelas flutuantes", "q": "Quais costelas são classificadas como 'flutuantes', sem articulação com o esterno?", "opts": ["1ª a 7ª", "8ª a 10ª", "Nenhuma costela é flutuante", "11ª e 12ª"], "correct": 3, "justificativa": "As costelas flutuantes (11ª e 12ª) não se articulam com o esterno de forma alguma.", "analise": ["Incorreto — a 1ª a 7ª são as costelas VERDADEIRAS.", "Incorreto — a 8ª a 10ª são as costelas FALSAS, ainda com articulação indireta.", "Incorreto — existem sim 2 pares de costelas flutuantes (11ª e 12ª)."], "analise_letters": ["A", "B", "C"], "conceito": "Costelas flutuantes: 11ª e 12ª, sem articulação esternal.", "pegadinha": "São as costelas mais curtas e mais 'livres' de todas.", "dica": "Flutuantes = 'soltas', sem prender no esterno."}, {"n": 23, "tema": "Diafragma — Inspiração", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Relacionar contração diafragmática com volume torácico", "q": "O que acontece com o volume torácico durante a contração do diafragma?", "opts": ["Diminui", "Aumenta", "Permanece igual", "O diafragma não afeta o volume torácico"], "correct": 1, "justificativa": "A contração do diafragma aumenta o volume torácico, permitindo a entrada de ar (inspiração).", "analise": ["Incorreto — é o oposto: a contração AUMENTA o volume torácico.", "Incorreto — há mudança significativa de volume durante a contração diafragmática.", "Incorreto — o diafragma é o principal músculo responsável pela mudança de volume torácico na respiração."], "analise_letters": ["A", "C", "D"], "conceito": "Contração do diafragma: aumenta volume torácico (inspiração).", "pegadinha": "A contração empurra as vísceras abdominais pra baixo, aumentando o espaço disponível no tórax.", "dica": "Diafragma contrai = tórax expande = ar entra."}, {"n": 24, "tema": "Hiato Caval", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar a estrutura do hiato caval", "q": "Qual estrutura passa pelo Hiato Caval do diafragma, no nível vertebral T8?", "opts": ["Aorta", "Veia Cava Inferior", "Esôfago", "Ducto torácico"], "correct": 1, "justificativa": "A Veia Cava Inferior passa pelo Hiato Caval, no nível vertebral T8.", "analise": ["Incorreto — a Aorta passa pelo Hiato Aórtico (T12), não pelo Caval.", "Incorreto — o esôfago passa pelo Hiato Esofágico (T10), não pelo Caval.", "Incorreto — o ducto torácico acompanha a Aorta pelo Hiato Aórtico, não pelo Caval."], "analise_letters": ["A", "C", "D"], "conceito": "Hiato Caval (T8): Veia Cava Inferior.", "pegadinha": "Mnemônico clássico: 'I 8 10 Eggs At 12' — I(VCI)=8.", "dica": "Caval = Cava = VCI, no nível T8."}, {"n": 25, "tema": "Hiato Esofágico", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar as estruturas do hiato esofágico", "q": "Quais estruturas passam pelo Hiato Esofágico do diafragma, no nível T10?", "opts": ["Veia Cava Inferior", "Nervo frênico", "Aorta e ducto torácico", "Esôfago e nervos vagos"], "correct": 3, "justificativa": "O esôfago e os nervos vagos passam pelo Hiato Esofágico, no nível vertebral T10.", "analise": ["Incorreto — a Veia Cava Inferior passa pelo Hiato Caval (T8), não pelo Esofágico.", "Incorreto — o nervo frênico não passa por nenhum dos 3 hiatos principais do diafragma.", "Incorreto — Aorta e ducto torácico passam pelo Hiato Aórtico (T12), não pelo Esofágico."], "analise_letters": ["A", "B", "C"], "conceito": "Hiato Esofágico (T10): esôfago + nervos vagos.", "pegadinha": "'Eggs' no mnemônico corresponde a Esôfago = 10.", "dica": "Esofágico = Esôfago + Vagos, no nível T10."}, {"n": 26, "tema": "Hiato Aórtico", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar as estruturas do hiato aórtico", "q": "Quais estruturas passam pelo Hiato Aórtico do diafragma, no nível T12?", "opts": ["Aorta e ducto torácico", "Esôfago", "Veia Cava Inferior", "Nervo frênico"], "correct": 0, "justificativa": "A Aorta e o ducto torácico passam pelo Hiato Aórtico, no nível vertebral T12.", "analise": ["Incorreto — o esôfago passa pelo Hiato Esofágico (T10), não pelo Aórtico.", "Incorreto — a Veia Cava Inferior passa pelo Hiato Caval (T8), não pelo Aórtico.", "Incorreto — o nervo frênico não passa por nenhum dos 3 hiatos principais do diafragma."], "analise_letters": ["B", "C", "D"], "conceito": "Hiato Aórtico (T12): Aorta + ducto torácico.", "pegadinha": "'At 12' no mnemônico corresponde a Aorta = nível 12.", "dica": "Aórtico = Aorta + ducto torácico, no nível T12 (o mais baixo dos 3)."}, {"n": 27, "tema": "Escápula Alada", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Relacionar lesão nervosa à escápula alada", "q": "A lesão de qual nervo, que inerva o Serrátil Anterior, causa Escápula Alada?", "opts": ["Nervo Frênico", "Nervo Axilar", "Nervo Vago", "Nervo Torácico Longo"], "correct": 3, "justificativa": "A lesão do Nervo Torácico Longo paralisa o músculo Serrátil Anterior, causando Escápula Alada — a escápula se projeta pra trás por perda da estabilização contra a parede torácica.", "analise": ["Incorreto — o nervo frênico inerva o diafragma, não relacionado à Escápula Alada.", "Incorreto — o nervo axilar inerva o deltoide/redondo menor, não o Serrátil Anterior.", "Incorreto — o nervo vago tem funções autonômicas diversas, não relacionado ao Serrátil Anterior."], "analise_letters": ["A", "B", "C"], "conceito": "Nervo Torácico Longo: inerva Serrátil Anterior; lesão causa Escápula Alada.", "pegadinha": "O Serrátil Anterior estabiliza a escápula contra a parede torácica — sem ele, ela 'flutua' pra trás.", "dica": "Torácico Longo → Serrátil Anterior → sem ele, escápula fica 'alada'."}, {"n": 28, "tema": "Peitoral Maior", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer a ação do peitoral maior", "q": "Qual a ação principal do músculo Peitoral Maior?", "opts": ["Abdução do braço", "Adução e rotação medial do braço", "Flexão do cotovelo", "Extensão da coluna"], "correct": 1, "justificativa": "O Peitoral Maior realiza adução e rotação medial do braço.", "analise": ["Incorreto — abdução é ação de outros músculos (como o deltoide), não do peitoral maior.", "Incorreto — flexão do cotovelo é ação do bíceps braquial, não do peitoral maior.", "Incorreto — extensão da coluna não é ação do peitoral maior, que age sobre o braço."], "analise_letters": ["A", "C", "D"], "conceito": "Peitoral Maior: adução + rotação medial do braço.", "pegadinha": "É um dos músculos mais testados em exame físico do ombro/tórax.", "dica": "Peitoral Maior = puxa o braço pra dentro (adução) e gira pra dentro."}, {"n": 29, "tema": "Costelas Falsas", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar as costelas falsas", "q": "Quais costelas são classificadas como 'falsas', com articulação indireta via cartilagem da 7ª costela?", "opts": ["1ª a 7ª", "11ª e 12ª", "8ª a 10ª", "Nenhuma costela é falsa"], "correct": 2, "justificativa": "As costelas falsas (8ª a 10ª) se articulam indiretamente com o esterno, através da cartilagem da 7ª costela.", "analise": ["Incorreto — a 1ª a 7ª são as costelas VERDADEIRAS, com articulação direta.", "Incorreto — a 11ª e 12ª são as costelas FLUTUANTES, sem articulação nenhuma.", "Incorreto — existem sim 3 pares de costelas classificadas como falsas."], "analise_letters": ["A", "B", "D"], "conceito": "Costelas falsas: 8ª-10ª, articulação indireta via cartilagem da 7ª.", "pegadinha": "Diferente das flutuantes, as falsas ainda têm alguma conexão (indireta) com o esterno.", "dica": "Falsas = conectam 'por tabela', via cartilagem da 7ª costela."}, {"n": 30, "tema": "Intercostais", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer a função dos músculos intercostais", "q": "Qual a função principal dos músculos intercostais?", "opts": ["Movimentar as costelas durante a respiração", "Sustentar a coluna vertebral", "Flexionar o quadril", "Estabilizar a escápula"], "correct": 0, "justificativa": "Os músculos intercostais movimentam as costelas durante os movimentos respiratórios.", "analise": ["Incorreto — sustentar a coluna não é função dos intercostais, que agem sobre as costelas.", "Incorreto — flexão do quadril não é função dos músculos intercostais.", "Incorreto — estabilizar a escápula é função do Serrátil Anterior, não dos intercostais."], "analise_letters": ["B", "C", "D"], "conceito": "Intercostais: movimentam as costelas na respiração.", "pegadinha": "Trabalham junto com o diafragma no mecanismo geral da respiração.", "dica": "Intercostais = ficam ENTRE as costelas, movimentando-as."}, {"n": 31, "tema": "Pericárdio Seroso", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar a hoja visceral do pericárdio", "q": "A hoja visceral do pericárdio seroso corresponde a qual estrutura?", "opts": ["Miocárdio", "Endocárdio", "Epicárdio", "Pericárdio fibroso"], "correct": 2, "justificativa": "A hoja visceral do pericárdio seroso é o próprio epicárdio — mesma estrutura, 2 nomes.", "analise": ["Incorreto — o miocárdio é a camada muscular média, não a hoja visceral do pericárdio.", "Incorreto — o endocárdio é a camada mais interna, não a hoja visceral do pericárdio.", "Incorreto — o pericárdio fibroso é a camada externa resistente, diferente da hoja visceral do pericárdio seroso."], "analise_letters": ["A", "B", "D"], "conceito": "Hoja visceral do pericárdio seroso = epicárdio.", "pegadinha": "Mesma estrutura, 2 nomes diferentes — um dos pontos mais cobrados sobre pericárdio.", "dica": "Visceral = colada no coração = epicárdio."}, {"n": 32, "tema": "Base e Vértice", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Localizar base e vértice do coração", "q": "Onde ficam a base e o vértice do coração, respectivamente?", "opts": ["Base anterior/esquerda; vértice posterior/direito", "Ambos são posteriores", "Ambos são anteriores", "Base posterior/direita; vértice anterior/esquerdo"], "correct": 3, "justificativa": "A base do coração é posterior e à direita; o vértice é anterior e à esquerda.", "analise": ["Incorreto — é o oposto da orientação real.", "Incorreto — base e vértice têm orientações opostas, não são ambos posteriores.", "Incorreto — base e vértice têm orientações opostas, não são ambos anteriores."], "analise_letters": ["A", "B", "C"], "conceito": "Base: posterior/direita. Vértice: anterior/esquerdo.", "pegadinha": "Bem contraintuitivo — muita gente espera o oposto.", "dica": "Vértice = a ponta que bate no peito, na frente e à esquerda."}, {"n": 33, "tema": "Válvula Mitral", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar a válvula bicúspide", "q": "Qual válvula cardíaca é bicúspide, com apenas 2 valvas?", "opts": ["Tricúspide", "Mitral", "Pulmonar", "Aórtica"], "correct": 1, "justificativa": "A válvula Mitral é bicúspide, com apenas 2 valvas (Anterior e Posterior).", "analise": ["Incorreto — a tricúspide tem 3 valvas, não 2.", "Incorreto — a pulmonar é uma válvula arterial semilunar, com 3 valvas, não bicúspide.", "Incorreto — a aórtica é uma válvula arterial semilunar, com 3 valvas, não bicúspide."], "analise_letters": ["A", "C", "D"], "conceito": "Mitral = bicúspide: 2 valvas.", "pegadinha": "Cúspide é sinônimo de valva — bicúspide=2, tricúspide=3.", "dica": "Bi-cúspide = 2 valvas = Mitral."}, {"n": 34, "tema": "Válvulas Arteriais", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Diferenciar válvulas arteriais de AV", "q": "Qual a principal diferença estrutural entre válvulas arteriais e auriculoventriculares?", "opts": ["Arteriais têm mais valvas", "AV não têm anel fibroso", "Arteriais NÃO têm cordas tendíneas nem músculos papilares", "Não há diferença real"], "correct": 2, "justificativa": "Válvulas arteriais (pulmonar e aórtica) não possuem cordas tendíneas nem músculos papilares, diferente das auriculoventriculares.", "analise": ["Incorreto — tricúspide e as arteriais têm 3 valvas cada; número não é a diferença principal.", "Incorreto — ambos os tipos de válvula têm anel fibroso.", "Incorreto — há diferença estrutural real e clinicamente relevante entre os 2 tipos."], "analise_letters": ["A", "B", "D"], "conceito": "Arteriais: sem cordas/papilares. AV: com cordas/papilares.", "pegadinha": "Explica por que prolapso por ruptura de corda é impossível nas arteriais.", "dica": "Arteriais fecham só pela física da pressão, sem precisar de cordas."}, {"n": 35, "tema": "Sistema Cardionector", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Identificar o marca-passo normal", "q": "Qual estrutura é o marca-passo normal do coração?", "opts": ["Nodo Sinoauricular", "Nodo Atrioventricular", "Feixe de His", "Fibras de Purkinje"], "correct": 0, "justificativa": "O Nodo Sinoauricular (NSA), perto da veia cava superior, é o marca-passo normal do coração.", "analise": ["Incorreto — o NAV retransmite o impulso, não é ele quem o gera.", "Incorreto — o Feixe de His conduz o impulso já gerado, não é o marca-passo original.", "Incorreto — as Fibras de Purkinje são a etapa final de distribuição, não a origem do impulso."], "analise_letters": ["B", "C", "D"], "conceito": "NSA: marca-passo normal do coração.", "pegadinha": "Não confundir NSA (gera) com NAV (retransmite, com atraso).", "dica": "NSA = onde o batimento COMEÇA."}, {"n": 36, "tema": "Triângulo de Koch", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Localizar o Nodo AV", "q": "O Triângulo de Koch contém qual estrutura importante do sistema de condução?", "opts": ["Nodo Sinoauricular", "Fibras de Purkinje", "Nodo Atrioventricular", "Feixe de His completo"], "correct": 2, "justificativa": "O Triângulo de Koch, delimitado pelo Tendão de Todaro, orifício do seio coronário e valva septal da tricúspide, contém o Nodo Atrioventricular.", "analise": ["Incorreto — o NSA fica na parede anterolateral do átrio direito, não no Triângulo de Koch.", "Incorreto — as Fibras de Purkinje se distribuem pelos ventrículos, não estão no Triângulo de Koch.", "Incorreto — o Feixe de His atravessa a porção membranosa do tabique, não está contido no Triângulo de Koch."], "analise_letters": ["A", "B", "D"], "conceito": "Triângulo de Koch: contém o Nodo AV.", "pegadinha": "Referência anatômica de altíssima relevância cirúrgica.", "dica": "Koch = onde mora o Nodo AV."}, {"n": 37, "tema": "Território Coronariano", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Aplicar o território da CD ao bloqueio AV", "q": "Por que infarto de coronária direita tem maior risco de bloqueio atrioventricular?", "opts": ["A CD irriga a Circunflexa", "A CD nunca causa arritmias", "Não há relação entre território coronariano e bloqueio AV", "A CD irriga tanto a parede inferior quanto o NSA/NAV"], "correct": 3, "justificativa": "A Coronária Direita irriga tanto a parede inferior do coração quanto o NSA e o NAV — por isso sua oclusão pode causar tanto infarto quanto bloqueios AV.", "analise": ["Incorreto — a Circunflexa é ramo da coronária ESQUERDA, não irrigada pela CD.", "Incorreto — é justamente o contrário: a CD tem associação clássica com bradiarritmias/bloqueios AV.", "Incorreto — há relação direta e bem estabelecida entre esse território coronariano e bloqueios AV."], "analise_letters": ["A", "B", "C"], "conceito": "CD: irriga parede inferior + NSA + NAV.", "pegadinha": "Raciocínio clínico integrado muito cobrado em prova.", "dica": "Coronária direita = parede inferior + NSA + NAV, andam sempre juntos."}, {"n": 38, "tema": "Ramos da Coronária Esquerda", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar os ramos terminais", "q": "Quais são os ramos terminais da Artéria Coronária Esquerda?", "opts": ["Apenas Interventricular Posterior", "Interventricular Anterior (IVA) e Circunflexa", "Apenas Artéria do Cone Arterioso", "Ramo Marginal Direito e Ramo do NAV"], "correct": 1, "justificativa": "A coronária esquerda se divide em 2 ramos terminais: Interventricular Anterior (IVA) e Circunflexa.", "analise": ["Incorreto — a Interventricular Posterior é ramo terminal da coronária DIREITA.", "Incorreto — a Artéria do Cone Arterioso é ramo colateral da coronária direita.", "Incorreto — Ramo Marginal Direito e Ramo do NAV são ramos colaterais da coronária direita."], "analise_letters": ["A", "C", "D"], "conceito": "Coronária Esquerda: 2 ramos terminais — IVA e Circunflexa.", "pegadinha": "A Direita tem só 1 ramo terminal (IV posterior).", "dica": "Esquerda se divide em 2 (IVA+Cx)."}, {"n": 39, "tema": "Perfusão Coronariana", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Compreender quando ocorre a irrigação coronariana", "q": "Em qual fase do ciclo cardíaco ocorre principalmente a irrigação coronariana?", "opts": ["Sístole", "Diástole", "Igualmente em ambas", "Apenas em esforço físico"], "correct": 1, "justificativa": "A irrigação coronariana ocorre principalmente na diástole — a sístole comprime os vasos coronários.", "analise": ["Incorreto — a sístole COMPRIME os vasos, dificultando o fluxo.", "Incorreto — há predomínio significativo na diástole.", "Incorreto — esse mecanismo ocorre sempre, não só em esforço."], "analise_letters": ["A", "C", "D"], "conceito": "Irrigação coronariana: principalmente na diástole.", "pegadinha": "Explica por que taquicardias extremas comprometem a perfusão coronariana.", "dica": "Sístole aperta os vasos. Diástole deixa o sangue entrar."}, {"n": 40, "tema": "Válvula Tricúspide", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Localizar a válvula tricúspide", "q": "Qual válvula, composta por 3 valvas, se localiza entre o átrio direito e o ventrículo direito?", "opts": ["Mitral", "Aórtica", "Pulmonar", "Tricúspide"], "correct": 3, "justificativa": "A válvula Tricúspide, com 3 valvas (Anterior, Posterior, Septal), se localiza entre o átrio direito e o ventrículo direito.", "analise": ["Incorreto — a mitral tem 2 valvas e se localiza do lado esquerdo do coração.", "Incorreto — a aórtica é uma válvula arterial do lado esquerdo, entre VE e aorta.", "Incorreto — a pulmonar é uma válvula arterial, entre o VD e a artéria pulmonar, não entre AD e VD."], "analise_letters": ["A", "B", "C"], "conceito": "Tricúspide: 3 valvas, entre AD e VD.", "pegadinha": "É a única válvula com 3 valvas do lado DIREITO — não confundir com a aórtica/pulmonar (também 3 valvas, mas arteriais).", "dica": "Tricúspide = 3 valvas + lado direito do coração."}];
+const flashcards = [];
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'anatomia1_simulado_completo_40q';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+</script>
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Anatomía I',
+    titulo: 'Simulado Completo P1 (40 Questões)',
+    url: location.pathname,
+    tipo: 'Simulado',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+
+
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/anatomia1/Revisao_Rapida_P1.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">📋 Revisão Rápida P1 (Interativa)</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-01/anatomia1/Simulado_P1_Anatomia1.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Simulado P1 — Anatomía I (104 Questões, com Coração)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
