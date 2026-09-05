@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Biofísica — Revisão Rápida P1 | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0d1420; --card:#152030; --card2:#1c2b3f;
+  --accent:#3a86c9; --accent2:#6bb0e8; --gold:#e8b84b;
+  --text:#eef2f5; --text-dim:#a8b8c4; --ok:#4fd1a1; --bad:#e0505f; --border:#20344a;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#0f2338 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(107,176,232,.12);border:1px solid rgba(107,176,232,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#1c5a8a);color:#fff;border-color:transparent;}
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(107,176,232,.12);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#16233a;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.qz-btn:disabled{cursor:default;}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.85em;}
+.al-box b{display:block;margin-bottom:4px;}
+</style>
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Biofísica</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Biofísica</span><span>5 de 15</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:33%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Biofísica</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica/RaioX_Disciplina.html"><span class="ico">📡</span><span>🩺 Raio-X da Disciplina</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica/Capitulo_01_Fisica_Liquidos.html"><span class="ico">📡</span><span>Capítulo 1 — Física dos Líquidos</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica/Capitulo_02_Potencial_Membrana.html"><span class="ico">📡</span><span>Capítulo 2 — Potencial de Membrana</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica/Capitulo_03_Sistemas_Dispersos.html"><span class="ico">📡</span><span>Capítulo 3 — Sistemas Dispersos</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-03/biofisica/Revisao_Rapida_P1.html"><span class="ico">📡</span><span>📋 Revisão Rápida P1 (Interativa)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica/simulado_biofisica_p1.html"><span class="ico">🎯</span><span>Simulado P1 — 40 Questões (25 MC + 10 V/F + 5 Associar)</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-03/Biofisica_P1_Interativo.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Biofisica_Respiratoria_Interativo.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica (parte 2)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Bioeletricidad_Potencial_Accion_Interativo.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica (parte 3)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/Biofisica_Muscular_Interativo.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica (parte 4)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica_cardiaca_completo.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica (parte 5)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica_cardiaca_compilado.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica (parte 6)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/ECG_Biofisica_Dr_Saldivar.html"><span class="ico">📡</span><span>Guia de Estudo - Biofísica (parte 7)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/ecg-treinamento/atlas_ecg.html"><span class="ico">📡</span><span>🫀 Treinamiento de ECG (Ritmos Reales + Eje)</span></a>
+    <a class="cmed-nav-item" href="/semestre-03/biofisica_revisao_direcionada.html"><span class="ico">📡</span><span>🎯 Revisão Direcionada — Pontos de Prova</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+<div class="wrap">
+  <span class="eyebrow">Biofísica · Revisão Rápida</span>
+  <h1 style="text-align:center;">📋 Revisão Rápida — P1</h1>
+  <p style="text-align:center;color:var(--text-dim);font-size:.85em;margin-bottom:16px;">Material único e condensado, direto ao ponto. Depois de cada revisão, 10 questões pra testar se ficou de verdade.</p>
+  <nav class="tabs">
+    <button data-p="p0" class="active">🌊 Física dos Líquidos</button>
+    <button data-p="p1">⚡ Potencial de Membrana</button>
+    <button data-p="p2">🧫 Sistemas Dispersos</button>
+  </nav>
+<section class="panel active" id="p0">
+  <div class="card">
+    <h2>🌊 Física dos Líquidos</h2>
+    <div class="criterio">🟢 Densidade = Massa/Volume. A água tem Dilatação Anômala — fica MENOS densa ao congelar (por isso o gelo flutua).</div>
+    <table>
+      <tr><th>Propriedade</th><th>Definição</th></tr>
+      <tr><td>Densidade</td><td>Massa por unidade de volume</td></tr>
+      <tr><td>Viscosidade</td><td>Resistência interna de um fluido ao escoamento</td></tr>
+      <tr><td>Tensão Superficial</td><td>Força que faz a superfície do líquido se comportar como uma "película elástica"</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Viscosidade do Sangue e Fåhræus-Lindqvist</h2>
+    <div class="hot">💭 O sangue é um fluido NÃO-newtoniano — sua viscosidade muda conforme a taxa de cisalhamento (diferente da água, que é newtoniana).</div>
+    <div class="prova">📌 Efeito Fåhræus-Lindqvist: em vasos de calibre muito pequeno (capilares), a viscosidade aparente do sangue DIMINUI — as hemácias se alinham no centro do vaso, formando uma camada de plasma (menos viscosa) próxima à parede.</div>
+  </div>
+  <div class="card">
+    <h2>Tensão Superficial e Surfactante</h2>
+    <p>O surfactante pulmonar reduz a tensão superficial dos alvéolos — sem ele (como em prematuros), a Lei de Laplace prevê colapso alveolar (Síndrome do Desconforto Respiratório do RN).</p>
+    <div class="mnemo">🧠 Lei de Laplace: P = 2T/r — quanto MENOR o raio (alvéolo pequeno), MAIOR a pressão necessária pra mantê-lo aberto, se a tensão superficial for constante.</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Física dos Líquidos (10 questões)</h2>
+    <div id="quizArea0"></div>
+    <div class="quiz-result" id="quizResult0"></div>
+  </div>
+</section>
+
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>⚡ Concentrações Iônicas — LEC × LIC</h2>
+    <table>
+      <tr><th>Íon</th><th>Predomina em</th></tr>
+      <tr><td>Sódio (Na+)</td><td>Líquido Extracelular (LEC)</td></tr>
+      <tr><td>Potássio (K+)</td><td>Líquido Intracelular (LIC)</td></tr>
+    </table>
+    <div class="criterio">🟢 O potencial de repouso da membrana é negativo por dentro (~-70mV), mantido principalmente pelo efluxo de K+ e pela Bomba Na+/K+.</div>
+  </div>
+  <div class="card">
+    <h2>Canais de Sódio Voltagem-Dependentes — 3 Estados</h2>
+    <table>
+      <tr><th>Estado</th><th>Condição</th></tr>
+      <tr><td>Repouso</td><td>Fechado, mas pode ser ativado</td></tr>
+      <tr><td>Ativado</td><td>Aberto — Na+ entra na célula (despolarização)</td></tr>
+      <tr><td>Inativado</td><td>Fechado e NÃO pode reabrir até retornar ao repouso (período refratário)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Fases do Potencial de Ação</h2>
+    <table>
+      <tr><th>Fase</th><th>O que ocorre</th></tr>
+      <tr><td>Despolarização</td><td>Abertura dos canais de Na+, influxo rápido</td></tr>
+      <tr><td>Repolarização</td><td>Fechamento dos canais de Na+, abertura de canais de K+ (efluxo)</td></tr>
+      <tr><td>Hiperpolarização</td><td>Potencial fica mais negativo que o repouso, antes de estabilizar</td></tr>
+    </table>
+    <div class="prova">📌 Lei de Tudo ou Nada: se o estímulo atingir o limiar, o potencial de ação ocorre SEMPRE com a mesma amplitude máxima — não existe "meio potencial de ação".</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Potencial de Membrana (10 questões)</h2>
+    <div id="quizArea1"></div>
+    <div class="quiz-result" id="quizResult1"></div>
+  </div>
+</section>
+
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>🧫 Sistemas Dispersos — Classificação por Tamanho</h2>
+    <table>
+      <tr><th>Tipo</th><th>Tamanho da Partícula</th><th>Exemplo</th></tr>
+      <tr><td>Solução Verdadeira</td><td>&lt;1nm</td><td>Sal dissolvido em água</td></tr>
+      <tr><td>Solução Coloidal</td><td>1-1000nm</td><td>Proteínas plasmáticas</td></tr>
+      <tr><td>Suspensão</td><td>&gt;1000nm</td><td>Hemácias no plasma</td></tr>
+    </table>
+    <div class="hot">💭 Soluções coloidais apresentam Efeito Tyndall (dispersão visível de luz) e Movimento Browniano (movimento aleatório das partículas por colisão com o solvente).</div>
+  </div>
+  <div class="card">
+    <h2>Solubilidade e Saturação</h2>
+    <table>
+      <tr><th>Tipo de Solução</th><th>Característica</th></tr>
+      <tr><td>Insaturada</td><td>Contém menos soluto que o máximo possível</td></tr>
+      <tr><td>Saturada</td><td>Contém a quantidade máxima de soluto dissolvido</td></tr>
+      <tr><td>Sobresaturada</td><td>Contém MAIS soluto que o máximo estável — instável, propensa a cristalizar</td></tr>
+    </table>
+    <div class="prova">📌 A Gota (crise de ácido úrico) ocorre quando o ácido úrico ultrapassa o limite de solubilidade no plasma/articulações, formando cristais (solução sobresaturada instável).</div>
+  </div>
+  <div class="card">
+    <h2>🎮 Quiz — Sistemas Dispersos (10 questões)</h2>
+    <div id="quizArea2"></div>
+    <div class="quiz-result" id="quizResult2"></div>
+  </div>
+</section>
+</div>
+<script>
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.p).classList.add('active');
+  });
+});
+const letters = ['A','B','C','D'];
+function shuffleArr(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+window.__quizzes = {};
+function makeQuiz(id, bankArr, areaId, resultId){
+  let quizSet=[], quizIdx=0, quizScore=0;
+  function start(){
+    quizSet = shuffleArr([...bankArr]);
+    quizIdx=0; quizScore=0;
+    const res = document.getElementById(resultId);
+    if(res) res.style.display='none';
+    render();
+  }
+  function render(){
+    const area = document.getElementById(areaId);
+    if(quizIdx>=quizSet.length){
+      area.innerHTML='';
+      const res = document.getElementById(resultId);
+      res.style.display='block';
+      res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="window.__quizzes['${id}'].start()">Repetir Quiz</button>`;
+      return;
+    }
+    const item = quizSet[quizIdx];
+    area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length}</p>
+      <p style="font-weight:600;">${item.q}</p>
+      ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}
+      <div style="margin-top:8px;font-size:.82em;color:var(--text-dim);display:none;" id="${areaId}-just"></div>`;
+    area.querySelectorAll('.qz-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        const i = parseInt(btn.dataset.i);
+        const just = document.getElementById(areaId+'-just');
+        if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+        else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+        area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+        if(just){ just.style.display='block'; just.innerHTML = '💡 ' + item.justificativa; }
+        setTimeout(()=>{quizIdx++;render();},1600);
+      };
+    });
+  }
+  window.__quizzes[id] = {start};
+  start();
+}
+const bank0 = [{"q": "Como se define a Densidade de uma substância?", "opts": ["Volume por unidade de massa", "Massa por unidade de volume", "Peso por unidade de área", "Força por unidade de volume"], "correct": 1, "justificativa": "Densidade é definida como massa por unidade de volume."}, {"q": "O que caracteriza a Dilatação Anômala da água?", "opts": ["A água fica MENOS densa ao congelar, fazendo o gelo flutuar", "A água fica mais densa ao esquentar", "A água nunca muda de densidade", "A água só dilata acima de 100°C"], "correct": 0, "justificativa": "A Dilatação Anômala da água faz com que ela fique menos densa ao congelar — por isso o gelo flutua na água líquida."}, {"q": "O que é Viscosidade?", "opts": ["A cor de um fluido", "A temperatura de ebulição de um líquido", "A resistência interna de um fluido ao escoamento", "A pressão exercida por um gás"], "correct": 2, "justificativa": "Viscosidade é a resistência interna de um fluido ao escoamento."}, {"q": "O sangue é classificado como um fluido:", "opts": ["Newtoniano, com viscosidade constante", "Idêntico à água em todas as propriedades", "Sem viscosidade alguma", "Não-newtoniano, com viscosidade variável conforme a taxa de cisalhamento"], "correct": 3, "justificativa": "O sangue é um fluido não-newtoniano — sua viscosidade varia conforme a taxa de cisalhamento, diferente da água (newtoniana)."}, {"q": "O que descreve o Efeito Fåhræus-Lindqvist?", "opts": ["Aumento da viscosidade sanguínea em vasos grandes", "Ausência total de viscosidade em capilares", "Diminuição da viscosidade aparente do sangue em vasos de calibre muito pequeno", "Um fenômeno exclusivo de fluidos newtonianos"], "correct": 2, "justificativa": "O Efeito Fåhræus-Lindqvist descreve a diminuição da viscosidade aparente do sangue em vasos de calibre muito pequeno (capilares), pelo alinhamento central das hemácias."}, {"q": "O que é Tensão Superficial?", "opts": ["A força que faz a superfície de um líquido se comportar como uma película elástica", "A pressão interna de um gás", "A resistência ao escoamento de um fluido", "A temperatura de fusão de um sólido"], "correct": 0, "justificativa": "Tensão Superficial é a força que faz a superfície de um líquido se comportar como uma película elástica."}, {"q": "Qual a função do surfactante pulmonar?", "opts": ["Aumentar a tensão superficial alveolar", "Reduzir a tensão superficial alveolar, prevenindo colapso", "Aumentar a viscosidade do muco pulmonar", "Impedir a troca gasosa"], "correct": 1, "justificativa": "O surfactante pulmonar reduz a tensão superficial dos alvéolos, prevenindo seu colapso."}, {"q": "Segundo a Lei de Laplace (P=2T/r), o que acontece com a pressão necessária pra manter um alvéolo aberto quando seu raio é MENOR?", "opts": ["A pressão necessária aumenta (se a tensão for constante)", "A pressão necessária diminui", "A pressão não depende do raio", "O alvéolo nunca colapsa, independente do raio"], "correct": 0, "justificativa": "Pela Lei de Laplace, quanto menor o raio, maior a pressão necessária pra manter o alvéolo aberto, se a tensão superficial permanecer constante."}, {"q": "Recém-nascidos prematuros têm risco de Síndrome do Desconforto Respiratório por deficiência de qual substância?", "opts": ["Muco brônquico", "Insulina", "Bile", "Surfactante pulmonar"], "correct": 3, "justificativa": "A deficiência de surfactante pulmonar em prematuros aumenta a tensão superficial alveolar, favorecendo colapso e causando a Síndrome do Desconforto Respiratório."}, {"q": "As hemácias, ao se alinharem no centro de um capilar de calibre pequeno, criam uma camada periférica de plasma que:", "opts": ["Aumenta a viscosidade total do vaso", "Reduz a viscosidade aparente do sangue nesse vaso", "Não tem nenhum efeito na viscosidade", "Bloqueia completamente o fluxo sanguíneo"], "correct": 1, "justificativa": "A camada periférica de plasma (menos viscosa) formada pelo alinhamento central das hemácias reduz a viscosidade aparente do sangue nesse vaso — é o mecanismo do Efeito Fåhræus-Lindqvist."}];
+const bank1 = [{"q": "Qual íon predomina no Líquido Extracelular (LEC)?", "opts": ["Potássio", "Magnésio", "Cálcio", "Sódio"], "correct": 3, "justificativa": "O Sódio (Na+) predomina no Líquido Extracelular (LEC)."}, {"q": "Qual íon predomina no Líquido Intracelular (LIC)?", "opts": ["Sódio", "Cloro", "Potássio", "Cálcio"], "correct": 2, "justificativa": "O Potássio (K+) predomina no Líquido Intracelular (LIC)."}, {"q": "No estado 'Inativado' de um canal de sódio voltagem-dependente, o que acontece?", "opts": ["O canal está aberto e conduzindo Na+", "O canal está fechado e NÃO pode reabrir até retornar ao repouso", "O canal está fechado, mas pode reabrir imediatamente", "O canal nunca fica inativado"], "correct": 1, "justificativa": "No estado Inativado, o canal está fechado e não pode reabrir até retornar ao estado de repouso — correspondendo ao período refratário."}, {"q": "Qual evento caracteriza a fase de Despolarização do potencial de ação?", "opts": ["Efluxo de K+", "Bomba Na+/K+ trabalhando ao máximo", "Influxo rápido de Na+ pela abertura dos canais", "Fechamento de todos os canais iônicos"], "correct": 2, "justificativa": "A Despolarização é caracterizada pela abertura dos canais de Na+ e influxo rápido desse íon."}, {"q": "Qual evento caracteriza a fase de Repolarização do potencial de ação?", "opts": ["Fechamento dos canais de Na+ e abertura de canais de K+ (efluxo)", "Influxo de Na+", "Abertura máxima de canais de Cálcio", "Ausência de qualquer movimento iônico"], "correct": 0, "justificativa": "A Repolarização envolve o fechamento dos canais de Na+ e a abertura de canais de K+, com efluxo desse íon."}, {"q": "O que caracteriza a fase de Hiperpolarização do potencial de ação?", "opts": ["O potencial fica mais positivo que o repouso", "É a mesma coisa que a despolarização", "Não há alteração de potencial nessa fase", "O potencial fica mais negativo que o repouso, antes de estabilizar"], "correct": 3, "justificativa": "Na Hiperpolarização, o potencial de membrana fica transitoriamente mais negativo que o potencial de repouso, antes de estabilizar."}, {"q": "O que estabelece a Lei de Tudo ou Nada sobre o potencial de ação?", "opts": ["Potenciais de ação podem ter amplitudes variáveis, proporcionais ao estímulo", "Se o limiar for atingido, o potencial de ação ocorre sempre com a mesma amplitude máxima", "O potencial de ação nunca ocorre, independente do estímulo", "A amplitude depende só da temperatura corporal"], "correct": 1, "justificativa": "A Lei de Tudo ou Nada estabelece que, uma vez atingido o limiar, o potencial de ação ocorre sempre com a mesma amplitude máxima, independente da intensidade do estímulo acima do limiar."}, {"q": "Estímulos elétricos que não atingem o limiar de despolarização resultam em:", "opts": ["Potencial de ação completo", "Nenhum potencial de ação (resposta subliminar)", "Potencial de ação de menor amplitude", "Hiperpolarização permanente"], "correct": 1, "justificativa": "Estímulos que não atingem o limiar resultam em resposta subliminar, sem disparar potencial de ação."}, {"q": "Qual estrutura é a principal responsável por manter o gradiente de concentração de Na+ e K+ através da membrana, a longo prazo?", "opts": ["Bomba de Sódio-Potássio (Na+/K+ ATPase)", "Canais de Cálcio", "Canais de Cloro", "Receptores de membrana"], "correct": 0, "justificativa": "A Bomba de Sódio-Potássio (Na+/K+ ATPase) é a principal responsável por manter os gradientes de concentração desses íons, usando ATP."}, {"q": "O potencial de repouso da membrana é tipicamente:", "opts": ["Negativo por dentro da célula (cerca de -70mV)", "Positivo por dentro da célula", "Sempre igual a zero", "Extremamente variável, sem valor típico"], "correct": 0, "justificativa": "O potencial de repouso é tipicamente negativo por dentro da célula, em torno de -70mV, mantido principalmente pelo efluxo de K+ e pela Bomba Na+/K+."}];
+const bank2 = [{"q": "Qual o tamanho de partícula característico de uma Solução Verdadeira?", "opts": ["Entre 1-1000nm", "Menor que 1nm", "Maior que 1000nm", "Não tem tamanho definido"], "correct": 1, "justificativa": "Soluções verdadeiras têm partículas de soluto menores que 1nm (ex: sal dissolvido em água)."}, {"q": "Qual o tamanho de partícula característico de uma Solução Coloidal?", "opts": ["Menor que 1nm", "Maior que 1000nm", "Entre 1-1000nm", "Sempre maior que 1 metro"], "correct": 2, "justificativa": "Soluções coloidais têm partículas entre 1-1000nm (ex: proteínas plasmáticas)."}, {"q": "Hemácias dispersas no plasma sanguíneo são um exemplo de qual sistema disperso?", "opts": ["Suspensão", "Solução coloidal", "Solução verdadeira", "Nenhum dos anteriores"], "correct": 0, "justificativa": "Hemácias no plasma são um exemplo de Suspensão, já que as partículas (hemácias) são maiores que 1000nm."}, {"q": "O Efeito Tyndall (dispersão visível de luz) é característico de qual tipo de sistema disperso?", "opts": ["Solução verdadeira", "Nenhum sistema apresenta esse efeito", "Suspensão sedimentada", "Solução coloidal"], "correct": 3, "justificativa": "O Efeito Tyndall é característico das soluções coloidais, pela dispersão da luz pelas partículas de tamanho intermediário."}, {"q": "O Movimento Browniano corresponde a:", "opts": ["Movimento ordenado de partículas numa direção só", "Movimento aleatório de partículas por colisão com moléculas do solvente", "Ausência total de movimento das partículas", "Um fenômeno exclusivo de suspensões"], "correct": 1, "justificativa": "O Movimento Browniano é o movimento aleatório de partículas coloidais, causado por colisões com as moléculas do solvente."}, {"q": "Uma solução que contém MENOS soluto que o máximo possível de ser dissolvido é classificada como:", "opts": ["Saturada", "Coloidal", "Sobresaturada", "Insaturada"], "correct": 3, "justificativa": "Uma solução Insaturada contém menos soluto que o máximo possível de ser dissolvido naquela condição."}, {"q": "Uma solução que contém MAIS soluto que o máximo estável, sendo instável e propensa a cristalizar, é classificada como:", "opts": ["Insaturada", "Saturada", "Sobresaturada", "Suspensão"], "correct": 2, "justificativa": "Uma solução Sobresaturada contém mais soluto que o máximo estável, sendo instável e propensa a formar cristais."}, {"q": "A crise de Gota (dor articular) está relacionada a qual fenômeno físico-químico envolvendo o ácido úrico?", "opts": ["Cristalização do ácido úrico por sobresaturação em articulações", "Dissolução completa do ácido úrico no plasma", "Ausência total de ácido úrico no organismo", "Formação de uma solução verdadeira estável"], "correct": 0, "justificativa": "A crise de Gota ocorre pela cristalização do ácido úrico, quando sua concentração ultrapassa o limite de solubilidade (sobresaturação) em articulações/plasma."}, {"q": "Uma solução que contém exatamente a quantidade máxima de soluto dissolvido, em equilíbrio, é classificada como:", "opts": ["Saturada", "Insaturada", "Sobresaturada", "Suspensão"], "correct": 0, "justificativa": "Uma solução Saturada contém exatamente a quantidade máxima de soluto que pode ser dissolvida naquela condição, em equilíbrio."}, {"q": "Qual das opções é um exemplo clássico de Solução Coloidal biológica?", "opts": ["Sal dissolvido em água", "Proteínas plasmáticas", "Hemácias no sangue", "Areia em suspensão na água"], "correct": 1, "justificativa": "Proteínas plasmáticas (como a albumina) são um exemplo clássico de solução coloidal biológica, com partículas de tamanho intermediário."}];
+makeQuiz('q0', bank0, 'quizArea0', 'quizResult0');
+makeQuiz('q1', bank1, 'quizArea1', 'quizResult1');
+makeQuiz('q2', bank2, 'quizArea2', 'quizResult2');
+try{
+  var jornadaItem = { materia: 'Biofísica', titulo: 'Revisão Rápida P1', url: location.pathname, tipo: 'Revisão', etapa: 'P1', timestamp: Date.now() };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-03/biofisica/Capitulo_03_Sistemas_Dispersos.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 3 — Sistemas Dispersos</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-03/biofisica/simulado_biofisica_p1.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Simulado P1 — 40 Questões (25 MC + 10 V/F + 5 Associar)</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
