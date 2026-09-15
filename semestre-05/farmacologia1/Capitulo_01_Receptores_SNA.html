@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Farmacología I — Cap. 1: Receptores del SNA | ClinicusMed</title>
+<style>
+:root{
+  --bg:#160f24; --card:#251a3d; --card2:#2e2049;
+  --accent:#7c3aed; --accent2:#a78bfa; --gold:#e8b84b;
+  --text:#f0eaf9; --text-dim:#bfa8dc; --ok:#4fd1a1; --bad:#e0505f; --border:#3d2a5c;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Farmacología I</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Farmacología I</span><span>1 de 1</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Farmacología I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-05/farmacologia1/Capitulo_01_Receptores_SNA.html"><span class="ico">💊</span><span>Capítulo 1 — Receptores del SNA</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Farmacología I · P1 · Farmacología del SNA</span>
+  <h1>⚡ Capítulo 1 — Receptores del Sistema Nervioso Autónomo</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois dessa aula</h2>
+    <ul>
+      <li>Diferenciar a organização anatômica das vias simpática, parassimpática e somática</li>
+      <li>Classificar os receptores colinérgicos (nicotínicos e muscarínicos) e adrenérgicos (alfa e beta)</li>
+      <li>Associar cada subtipo de receptor à sua localização e efeito farmacológico</li>
+      <li>Relacionar os efeitos autonômicos por órgão efetor (simpático x parassimpático)</li>
+      <li>Reconhecer os principais agonistas e antagonistas de cada receptor, com aplicação clínica</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📖 Organização do Sistema Nervoso Eferente</h2>
+    <table>
+      <tr><th>Via</th><th>Organização anatômica</th><th>Neurotransmissores</th></tr>
+      <tr><td><b>Simpático</b></td><td>Toracolombar (T1-L2)</td><td>Fibras pré-ganglionares CURTAS e pós-ganglionares LONGAS. Libera NORADRENALINA no órgão efetor (exceto glândulas sudoríparas)</td></tr>
+      <tr><td><b>Parassimpático</b></td><td>Craniossacral (pares cranianos III, VII, IX, X e S2-S4)</td><td>Fibras pré-ganglionares LONGAS e pós-ganglionares CURTAS. Libera ACETILCOLINA no órgão efetor</td></tr>
+      <tr><td><b>Somático</b></td><td>Motoneurônio único</td><td>Uma única neurônio do SNC até o músculo esquelético — libera acetilcolina na placa motora</td></tr>
+    </table>
+    <div class="hot">💭 Repare no padrão INVERSO entre simpático e parassimpático: o simpático tem fibra pré-ganglionar CURTA (gânglios próximos à medula) e pós-ganglionar LONGA; o parassimpático tem o padrão OPOSTO (pré-ganglionar longa, pós-ganglionar curta, já que os gânglios ficam próximos ou dentro do órgão-alvo).</div>
+  </div>
+
+  <div class="card">
+    <h2>🔀 Vias Eferentes e Localização dos Receptores</h2>
+    <div class="criterio"><b>✅ Ideia-chave central desse capítulo:</b> TODA via autônoma usa ACETILCOLINA (receptor Nn) no gânglio — o neurotransmissor e o receptor pós-ganglionar é que mudam conforme a via.</div>
+    <table>
+      <tr><th>Via</th><th>No gânglio</th><th>No órgão efetor</th></tr>
+      <tr><td>Simpático</td><td>ACh → receptor Nn</td><td>Noradrenalina → receptores α/β</td></tr>
+      <tr><td>Parassimpático</td><td>ACh → receptor Nn</td><td>Acetilcolina → receptores M1-M5</td></tr>
+      <tr><td>Somático</td><td>Sinapse única (sem gânglio autônomo)</td><td>Acetilcolina → receptor Nm (placa motora)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📋 Classificação Geral dos Receptores</h2>
+    <table>
+      <tr><th>Receptores Colinérgicos (ativados por ACh)</th><th>Receptores Adrenérgicos (ativados por NA e Adrenalina)</th></tr>
+      <tr><td>Nicotínicos (Nn, Nm) — canais iônicos ligante-dependentes (IONOTRÓPICOS)</td><td>Alfa (α1, α2) — acoplados à proteína G (METABOTRÓPICOS)</td></tr>
+      <tr><td>Muscarínicos (M1-M5) — acoplados à proteína G (METABOTRÓPICOS)</td><td>Beta (β1, β2, β3) — acoplados à proteína G (METABOTRÓPICOS)</td></tr>
+    </table>
+    <div class="prova">📝 Ponto-chave de prova: os ÚNICOS receptores IONOTRÓPICOS dessa classificação são os Nicotínicos (Nn e Nm) — todos os demais (Muscarínicos, Alfa e Beta) são METABOTRÓPICOS (acoplados à proteína G).</div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Receptores Colinérgicos Nicotínicos (Ionotrópicos)</h2>
+    <table>
+      <tr><th>Subtipo</th><th>Localização</th><th>Mecanismo e Efeito</th></tr>
+      <tr><td><b>Nm (muscular)</b></td><td>Placa motora do músculo esquelético</td><td>Canal catiônico (Na⁺/K⁺) → despolarização RÁPIDA → contração muscular</td></tr>
+      <tr><td><b>Nn (neuronal)</b></td><td>Gânglios autônomos (simpáticos e parassimpáticos) e SNC</td><td>Canal catiônico → despolarização do gânglio (PEPS) → propaga o impulso pós-ganglionar</td></tr>
+    </table>
+    <div class="clinical"><b>🩺 Relevância clínica:</b> os bloqueadores neuromusculares (succinilcolina, rocurônio) atuam sobre o Nm; os bloqueadores ganglionares (trimetafan) atuam sobre o Nn.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Receptores Colinérgicos Muscarínicos (M1-M5, Metabotrópicos)</h2>
+    <table>
+      <tr><th>Receptor</th><th>Localização Principal</th><th>Efeito</th></tr>
+      <tr><td><b>M1</b></td><td>SNC, gânglios autônomos, mucosa gástrica</td><td>Excitação neuronal, secreção ácida gástrica</td></tr>
+      <tr><td><b>M2</b></td><td>Coração (nó SA e AV)</td><td>Bradicardia, ↓condução AV, ↓contratilidade atrial</td></tr>
+      <tr><td><b>M3</b></td><td>Músculo liso (brônquios, bexiga, TGI), glândulas exócrinas</td><td>Contração do músculo liso, secreção glandular (salivar, sudorípara, brônquica)</td></tr>
+      <tr><td><b>M4</b></td><td>SNC (predominante)</td><td>Modulação da neurotransmissão central</td></tr>
+      <tr><td><b>M5</b></td><td>SNC (substância negra), vasos cerebrais</td><td>Vasodilatação cerebral</td></tr>
+    </table>
+    <div class="mnemo"><b>🧠 M2 e M3 são os mais cobrados clinicamente:</b> M2 = CORAÇÃO (bradicardia). M3 = MÚSCULO LISO e GLÂNDULAS (contração/secreção) — são os principais alvos terapêuticos (ex.: broncoconstrição por M3 na crise colinérgica; antagonistas M3 usados em asma/DPOC e bexiga hiperativa).</div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Receptores Adrenérgicos Alfa (α)</h2>
+    <table>
+      <tr><th>Receptor</th><th>Subtipos</th><th>Localização</th><th>Efeito Principal</th></tr>
+      <tr><td><b>α1</b></td><td>A, B, D</td><td>Músculo liso vascular, íris (dilatador da pupila), esfíncteres GI/vesical, fígado</td><td>Vasoconstrição, midríase, contração de esfíncteres, glicogenólise hepática</td></tr>
+      <tr><td><b>α2</b></td><td>A, B, C</td><td>Terminais pré-sinápticos, SNC (locus coeruleus), plaquetas, pâncreas</td><td>↓liberação de noradrenalina (autorreceptor), agregação plaquetária, ↓liberação de insulina</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Receptores Adrenérgicos Beta (β)</h2>
+    <p>Todos os receptores beta atuam via proteína <b>Gs → aumento de AMPc</b>.</p>
+    <table>
+      <tr><th>Receptor</th><th>Localização Principal</th><th>Efeito</th></tr>
+      <tr><td><b>β1</b></td><td>Coração (predominante), aparelho justaglomerular renal</td><td>↑Frequência cardíaca, ↑contratilidade, ↑condução AV, liberação de renina</td></tr>
+      <tr><td><b>β2</b></td><td>Músculo liso brônquico e vascular, útero, fígado, músculo esquelético</td><td>Broncodilatação, vasodilatação, relaxamento uterino, glicogenólise</td></tr>
+      <tr><td><b>β3</b></td><td>Tecido adiposo, bexiga (músculo detrusor)</td><td>Lipólise, relaxamento do detrusor</td></tr>
+    </table>
+    <div class="prova">📝 Ponto-chave: α1 e β2 têm efeitos OPOSTOS na vasculatura (α1 = vasoconstrição; β2 = vasodilatação) — o efeito final depende de qual receptor predomina em cada leito vascular específico.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Efeitos Autonômicos por Órgão Efetor</h2>
+    <table>
+      <tr><th>Órgão</th><th>Simpático (receptor/efeito)</th><th>Parassimpático (receptor/efeito)</th></tr>
+      <tr><td>Coração</td><td>β1: ↑FC, ↑contratilidade</td><td>M2: ↓FC, ↓condução AV</td></tr>
+      <tr><td>Vasos sanguíneos</td><td>α1: vasoconstrição / β2: vasodilatação</td><td>Sem inervação direta relevante</td></tr>
+      <tr><td>Brônquios</td><td>β2: broncodilatação</td><td>M3: broncoconstrição, secreção</td></tr>
+      <tr><td>Pupila (íris)</td><td>α1: midríase</td><td>M3: miose</td></tr>
+      <tr><td>Tubo digestivo</td><td>α/β: ↓motilidade e secreção</td><td>M3: ↑motilidade e secreção</td></tr>
+      <tr><td>Bexiga (detrusor)</td><td>β3: relaxamento / α1: contrai o trígono</td><td>M3: contração do detrusor</td></tr>
+      <tr><td>Glândulas sudoríparas</td><td>M (colinérgico simpático!): sudorese</td><td>—</td></tr>
+    </table>
+    <div class="hot">💭 Exceção importante: as glândulas sudoríparas são inervadas pelo SIMPÁTICO, mas usam ACETILCOLINA (receptor muscarínico) como neurotransmissor pós-ganglionar — a única exceção à regra geral de que o simpático libera noradrenalina no órgão efetor.</div>
+  </div>
+
+  <div class="card">
+    <h2>💊 Correlação Farmacológica — Agonistas e Antagonistas</h2>
+    <table>
+      <tr><th>Receptor</th><th>Agonistas (exemplos)</th><th>Antagonistas (exemplos)</th></tr>
+      <tr><td>Nm</td><td>Succinilcolina</td><td>Rocurônio, vecurônio (bloqueio neuromuscular)</td></tr>
+      <tr><td>Nn</td><td>Nicotina</td><td>Trimetafan (bloqueio ganglionar, histórico)</td></tr>
+      <tr><td>M3</td><td>Pilocarpina, betanecol</td><td>Atropina, ipratrópio, oxibutinina</td></tr>
+      <tr><td>α1</td><td>Fenilefrina (descongestionante)</td><td>Prazosina, doxazosina (HAS, HPB)</td></tr>
+      <tr><td>α2</td><td>Clonidina (anti-hipertensivo)</td><td>Ioimbina</td></tr>
+      <tr><td>β1</td><td>Dobutamina</td><td>Metoprolol, atenolol (cardiosseletivos)</td></tr>
+      <tr><td>β2</td><td>Salbutamol, terbutalina</td><td>Propranolol (não seletivo, cautela em asma)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <ul>
+      <li>Simpático: toracolombar, pré-gang. curta/pós-gang. longa, libera NA (exceto glândulas sudoríparas)</li>
+      <li>Parassimpático: craniossacral, pré-gang. longa/pós-gang. curta, libera ACh</li>
+      <li>TODA via autônoma usa ACh (receptor Nn) no gânglio</li>
+      <li>Únicos receptores IONOTRÓPICOS: Nn e Nm. Todos os demais (M1-M5, α, β) são metabotrópicos (proteína G)</li>
+      <li>M2 = coração (bradicardia). M3 = músculo liso/glândulas (contração/secreção)</li>
+      <li>α1 = vasoconstrição/midríase. α2 = autorreceptor (↓NA). β1 = coração (↑FC). β2 = broncodilatação/vasodilatação. β3 = lipólise</li>
+      <li>Glândulas sudoríparas: simpático, mas libera ACETILCOLINA (exceção à regra)</li>
+      <li>Bloqueadores neuromusculares (rocurônio) → Nm. Bloqueadores ganglionares (trimetafan) → Nn</li>
+    </ul>
+  </div>
+
+</section>
+
+
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🏥 Caso Clínico — "O paciente asmático que não podia tomar propranolol"</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Paciente hipertenso, com histórico de asma brônquica moderada, é encaminhado para iniciar tratamento anti-hipertensivo. O médico residente considera prescrever propranolol (betabloqueador não seletivo), mas o preceptor orienta trocar por metoprolol (betabloqueador cardiosseletivo).</p>
+    <p><b>Pergunta:</b> Qual o raciocínio farmacológico por trás dessa recomendação, com base na seletividade de receptores adrenérgicos?</p>
+    <p><b>Resposta comentada:</b> O propranolol é um betabloqueador NÃO SELETIVO — bloqueia tanto receptores β1 (predominantes no coração) quanto β2 (predominantes na musculatura lisa brônquica, entre outros locais). Ao bloquear os receptores β2 brônquicos, o propranolol remove o tônus broncodilatador basal mediado por esses receptores, podendo precipitar BRONCOESPASMO em pacientes asmáticos — um efeito adverso grave e potencialmente perigoso. Já o metoprolol é CARDIOSSELETIVO, com maior afinidade pelos receptores β1 (cardíacos) em relação aos β2 — reduzindo (embora não eliminando completamente, em doses altas) o risco de broncoespasmo, sendo por isso a escolha mais segura em pacientes com histórico de asma que necessitam de betabloqueio.</p>
+  </div>
+
+  <div class="card">
+    <h2>🏥 Caso Clínico — "A intoxicação com muitos sinais colinérgicos"</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Paciente é levado à emergência após exposição a um inseticida organofosforado. Apresenta salivação intensa, lacrimejamento, sudorese profusa, miose bilateral, broncoconstrição com sibilos difusos, bradicardia e cólicas abdominais com diarreia.</p>
+    <p><b>Pergunta:</b> Qual classe de receptores está sendo excessivamente estimulada nesse quadro, e por qual mecanismo os organofosforados causam essa intoxicação?</p>
+    <p><b>Resposta comentada:</b> O quadro descrito é uma clássica <b>crise colinérgica</b>, por estimulação excessiva de receptores MUSCARÍNICOS (principalmente M2 e M3). Os organofosforados agem inibindo a enzima acetilcolinesterase, responsável por degradar a acetilcolina na fenda sináptica — com isso, a ACh se acumula e estimula excessivamente os receptores muscarínicos em todo o corpo. Cada sintoma pode ser explicado por um receptor/órgão específico: salivação e broncoconstrição/secreção brônquica (M3 nas glândulas exócrinas e músculo liso brônquico), miose (M3 na íris), bradicardia (M2 cardíaco), e hipermotilidade intestinal com diarreia (M3 no TGI). O tratamento clássico envolve a ATROPINA, um antagonista muscarínico competitivo, que bloqueia esses receptores e reverte os sintomas colinérgicos.</p>
+  </div>
+
+  <div class="card">
+    <h2>🏥 Caso Clínico — "A midríase que não combinava com o resto"</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Paciente em uso de descongestionante nasal tópico contendo fenilefrina para tratamento de congestão nasal relata, após uso prolongado, que sua pupila ficou dilatada e a pressão arterial subiu discretamente.</p>
+    <p><b>Pergunta:</b> Qual receptor a fenilefrina ativa, e como isso explica tanto o efeito desejado (descongestionante) quanto os efeitos observados (midríase e elevação da PA)?</p>
+    <p><b>Resposta comentada:</b> A fenilefrina é um agonista do receptor <b>α1-adrenérgico</b>. No nariz, a ativação do α1 no músculo liso vascular da mucosa nasal causa VASOCONSTRIÇÃO, reduzindo o edema e a congestão — esse é o efeito terapêutico desejado. Porém, o receptor α1 também está presente no músculo dilatador da pupila (íris), onde sua ativação causa MIDRÍASE (dilatação pupilar) — explicando o achado ocular relatado. Além disso, a ativação de receptores α1 no músculo liso vascular sistêmico (não apenas nasal, especialmente com uso prolongado/absorção sistêmica) pode causar vasoconstrição generalizada, contribuindo para a elevação discreta da pressão arterial observada. Esse caso ilustra bem como um mesmo receptor, presente em múltiplos tecidos, pode gerar tanto o efeito terapêutico desejado quanto efeitos colaterais previsíveis, a depender de onde está localizado.</p>
+  </div>
+</section>
+
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Organização do SNA", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a organização anatômica do sistema nervoso SIMPÁTICO, e qual neurotransmissor libera no órgão efetor?", "opts": ["Toracolombar (T1-L2), fibras pré-ganglionares curtas e pós-ganglionares longas, libera noradrenalina", "Craniossacral, fibras pré-ganglionares longas e pós-ganglionares curtas, libera acetilcolina", "Motoneurônio único do SNC até o músculo esquelético, libera acetilcolina", "Toracolombar, mas sempre libera dopamina no órgão efetor"], "correct": 0, "justificativa": "O sistema simpático tem organização toracolombar (T1-L2), com fibras pré-ganglionares CURTAS e pós-ganglionares LONGAS, liberando NORADRENALINA no órgão efetor (exceto nas glândulas sudoríparas).", "analise": ["Essa descrição (craniossacral, pré-ganglionar longa, libera ACh) corresponde ao sistema PARASSIMPÁTICO, não ao simpático.", "Motoneurônio único do SNC até o músculo esquelético descreve o sistema SOMÁTICO, não o simpático.", "O simpático libera NORADRENALINA (não dopamina) na maioria dos órgãos efetores."], "analise_letters": ["B", "C", "D"], "conceito": "Simpático: toracolombar (T1-L2), pré-gang. curta/pós-gang. longa, libera noradrenalina (exceto glândulas sudoríparas).", "pegadinha": "O padrão de comprimento das fibras é INVERSO entre simpático (curta/longa) e parassimpático (longa/curta).", "dica": "Simpático = T-L (Toraco-Lombar) — assim como 'TL' de 'To Long' (fibra pós-ganglionar longa)."}, {"n": 2, "tema": "Vias Eferentes", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a 'ideia-chave' central sobre o neurotransmissor usado no GÂNGLIO autônomo, válida tanto para a via simpática quanto parassimpática?", "opts": ["O gânglio simpático usa noradrenalina; o parassimpático usa acetilcolina", "TODA via autônoma usa acetilcolina (receptor Nn) no gânglio, mudando apenas o neurotransmissor pós-ganglionar", "Nenhuma via autônoma usa acetilcolina no nível ganglionar", "O gânglio autônomo usa sempre dopamina, independente da via"], "correct": 1, "justificativa": "A ideia-chave é que TODA via autônoma (simpática e parassimpática) usa ACETILCOLINA, atuando sobre o receptor Nn, no nível do gânglio — o que muda entre as vias é o neurotransmissor e receptor PÓS-ganglionar (noradrenalina/α-β no simpático; acetilcolina/M1-M5 no parassimpático).", "analise": ["Incorreto — o gânglio SIMPÁTICO também usa acetilcolina (não noradrenalina) — a noradrenalina só aparece na sinapse PÓS-ganglionar (órgão efetor).", "Incorreto — pelo contrário, AMBAS as vias usam acetilcolina no nível ganglionar.", "Incorreto — a dopamina não é o neurotransmissor ganglionar padrão descrito para o sistema nervoso autônomo nessa classificação."], "analise_letters": ["A", "C", "D"], "conceito": "TODA via autônoma usa ACh (receptor Nn) no gânglio — a diferença entre simpático/parassimpático está no neurotransmissor PÓS-ganglionar.", "pegadinha": "Não confundir o neurotransmissor GANGLIONAR (sempre ACh/Nn) com o neurotransmissor PÓS-ganglionar (que varia: NA no simpático, ACh no parassimpático).", "dica": "Gânglio = sempre ACh (Nn). Órgão efetor = muda (NA no simpático, ACh no parassimpático)."}, {"n": 3, "tema": "Classificação dos Receptores", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Quais são os ÚNICOS receptores IONOTRÓPICOS (canais iônicos ligante-dependentes) entre os receptores colinérgicos e adrenérgicos estudados?", "opts": ["Receptores Alfa (α1 e α2)", "Receptores Muscarínicos (M1 a M5)", "Receptores Nicotínicos (Nn e Nm)", "Receptores Beta (β1, β2 e β3)"], "correct": 2, "justificativa": "Os receptores Nicotínicos (Nn e Nm) são os ÚNICOS ionotrópicos (canais iônicos ligante-dependentes) entre os estudados — todos os demais (Muscarínicos, Alfa e Beta) são metabotrópicos, acoplados à proteína G.", "analise": ["Os receptores Alfa são METABOTRÓPICOS (acoplados à proteína G), não ionotrópicos.", "Os receptores Muscarínicos também são METABOTRÓPICOS (acoplados à proteína G), não ionotrópicos.", "Os receptores Beta são igualmente METABOTRÓPICOS (proteína G, via Gs/AMPc), não ionotrópicos."], "analise_letters": ["A", "B", "D"], "conceito": "Nicotínicos (Nn, Nm): ÚNICOS ionotrópicos. Muscarínicos, Alfa e Beta: todos metabotrópicos (proteína G).", "pegadinha": "É fácil assumir que só os colinérgicos são ionotrópicos, mas os Muscarínicos (também colinérgicos) são metabotrópicos — a divisão ionotrópico/metabotrópico não segue a divisão colinérgico/adrenérgico.", "dica": "Nicotínicos = canal iônico direto = resposta RÁPIDA. Todos os outros = proteína G = resposta mais lenta/moduladora."}, {"n": 4, "tema": "Receptores Nicotínicos", "nivel": "🟢 Nível 1 — Essencial", "q": "Onde se localiza o receptor nicotínico Nm, e qual sua relevância farmacológica?", "opts": ["Nos gânglios autônomos; alvo dos bloqueadores ganglionares como o trimetafan", "No SNC exclusivamente; sem relevância farmacológica direta", "Nos receptores muscarínicos cardíacos; alvo da atropina", "Na placa motora do músculo esquelético; alvo dos bloqueadores neuromusculares como succinilcolina e rocurônio"], "correct": 3, "justificativa": "O receptor Nm se localiza na placa motora do músculo esquelético, sendo o alvo farmacológico dos bloqueadores neuromusculares, como a succinilcolina (agonista despolarizante) e o rocurônio/vecurônio (antagonistas competitivos).", "analise": ["Essa descrição (gânglios autônomos, alvo do trimetafan) corresponde ao receptor Nn, não ao Nm.", "O Nm não está localizado exclusivamente no SNC; sua localização principal e farmacologicamente relevante é a placa motora do músculo esquelético.", "O Nm é um receptor NICOTÍNICO (ionotrópico), não um receptor muscarínico cardíaco — a atropina atua sobre receptores muscarínicos, não sobre o Nm."], "analise_letters": ["A", "B", "C"], "conceito": "Nm: placa motora do músculo esquelético — alvo dos bloqueadores neuromusculares (succinilcolina, rocurônio, vecurônio).", "pegadinha": "Não confundir Nm (muscular, placa motora) com Nn (neuronal, gânglios autônomos e SNC) — ambos são nicotínicos, mas com localizações e fármacos-alvo diferentes.", "dica": "Nm = Muscular (placa motora). Nn = Neuronal (gânglios)."}, {"n": 5, "tema": "Receptor M2", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual o principal efeito da ativação do receptor muscarínico M2, localizado predominantemente no coração?", "opts": ["Bradicardia, com redução da condução AV e da contratilidade atrial", "Taquicardia e aumento da contratilidade ventricular", "Broncoconstrição e aumento da secreção brônquica", "Midríase e vasodilatação cerebral"], "correct": 0, "justificativa": "O receptor M2, localizado predominantemente no coração (nó SA e AV), causa bradicardia, redução da condução AV e redução da contratilidade atrial quando ativado.", "analise": ["Taquicardia e aumento da contratilidade ventricular são efeitos de receptores β1 (adrenérgicos), não do M2 (que causa o efeito OPOSTO no coração).", "Broncoconstrição e secreção brônquica são efeitos do receptor M3, não do M2.", "Midríase é efeito do receptor α1; vasodilatação cerebral é efeito do receptor M5 — nenhum dos dois corresponde ao M2."], "analise_letters": ["B", "C", "D"], "conceito": "M2 (coração): bradicardia, ↓condução AV, ↓contratilidade atrial.", "pegadinha": "M2 e β1 têm efeitos OPOSTOS no coração — M2 desacelera, β1 acelera. Não confundir os 2 receptores cardíacos.", "dica": "M2 = 'Menos 2' batimentos — reduz a frequência cardíaca."}, {"n": 6, "tema": "Receptor M3", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Quais os principais efeitos da ativação do receptor muscarínico M3?", "opts": ["Exclusivamente excitação neuronal central, sem efeitos periféricos", "Contração do músculo liso (brônquios, bexiga, TGI) e secreção glandular exócrina (salivar, sudorípara, brônquica)", "Exclusivamente modulação da neurotransmissão no SNC, sem efeito muscular", "Vasodilatação cerebral isolada, sem efeito em músculo liso periférico"], "correct": 1, "justificativa": "O receptor M3 causa contração do músculo liso (brônquios, bexiga, trato gastrointestinal) e secreção glandular exócrina (salivar, sudorípara, brônquica) — sendo um dos receptores muscarínicos mais relevantes clinicamente.", "analise": ["Excitação neuronal central isolada é mais característica do receptor M1, não do M3, que tem ampla ação periférica.", "Modulação da neurotransmissão central isolada é mais característica do receptor M4, não do M3.", "Vasodilatação cerebral isolada é o efeito do receptor M5, não do M3, que tem ação principal em músculo liso e glândulas periféricas."], "analise_letters": ["A", "C", "D"], "conceito": "M3: contração de músculo liso (brônquios, bexiga, TGI) + secreção glandular exócrina — um dos receptores muscarínicos mais clinicamente relevantes.", "pegadinha": "M3 é o alvo terapêutico de vários fármacos: antagonistas M3 (ipratrópio, oxibutinina) tratam DPOC/asma e bexiga hiperativa, respectivamente.", "dica": "M3 = Músculo liso + glândulas — pense em 'contrai e secreta'."}, {"n": 7, "tema": "Receptores Alfa", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença fundamental entre os efeitos dos receptores α1 e α2?", "opts": ["Ambos causam exatamente o mesmo efeito, sem diferenças relevantes", "α1 é exclusivamente cardíaco; α2 é exclusivamente vascular", "α1 causa vasoconstrição/midríase (efeitos pós-sinápticos); α2 atua como autorreceptor pré-sináptico, reduzindo a liberação de noradrenalina", "α1 reduz a pressão arterial; α2 sempre aumenta a pressão arterial de forma potente"], "correct": 2, "justificativa": "O α1 é um receptor tipicamente PÓS-sináptico, causando vasoconstrição, midríase e contração de esfíncteres. Já o α2 atua principalmente como AUTORRECEPTOR PRÉ-sináptico, reduzindo a liberação de noradrenalina — além de participar da agregação plaquetária e reduzir a liberação de insulina.", "analise": ["Incorreto — os 2 subtipos têm localizações e efeitos predominantes bem distintos (pós-sináptico x pré-sináptico/autorreceptor).", "Incorreto — nenhum dos 2 é exclusivamente cardíaco ou vascular; ambos têm distribuição mais ampla (α1: vascular, íris, esfíncteres, fígado; α2: terminais pré-sinápticos, SNC, plaquetas, pâncreas).", "Incorreto — o α2, por reduzir a liberação de noradrenalina, é classicamente usado como ANTI-hipertensivo (ex.: clonidina) — não aumenta a pressão de forma potente."], "analise_letters": ["A", "B", "D"], "conceito": "α1: pós-sináptico, vasoconstrição/midríase. α2: autorreceptor pré-sináptico, ↓liberação de NA (alvo de anti-hipertensivos como clonidina).", "pegadinha": "O α2 sendo um AUTORRECEPTOR (feedback negativo) explica por que agonistas α2 (clonidina) são usados como anti-hipertensivos, ao reduzir a liberação central de noradrenalina.", "dica": "α1 = ação no órgão-alvo (pós-sináptico). α2 = 'freio' da própria liberação de noradrenalina (pré-sináptico)."}, {"n": 8, "tema": "Receptores Beta", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença de localização/efeito predominante entre os receptores β1 e β2?", "opts": ["β1 e β2 têm exatamente os mesmos efeitos e localizações, sendo intercambiáveis", "β1 causa broncodilatação; β2 causa taquicardia cardíaca", "Nenhum dos 2 está relacionado a mecanismos de AMPc", "β1 predomina no coração (↑FC, ↑contratilidade); β2 predomina no músculo liso brônquico/vascular (broncodilatação, vasodilatação)"], "correct": 3, "justificativa": "O β1 predomina no CORAÇÃO, causando aumento da frequência cardíaca, contratilidade e condução AV, além de liberação de renina. O β2 predomina no músculo liso BRÔNQUICO e VASCULAR, causando broncodilatação, vasodilatação e relaxamento uterino.", "analise": ["Incorreto — β1 e β2 têm localizações predominantes e efeitos claramente diferentes, não sendo intercambiáveis na prática clínica (daí a importância da cardiosseletividade de fármacos como o metoprolol).", "Incorreto — essa descrição está invertida: é o β2 que causa broncodilatação, e nenhum dos 2 causa 'taquicardia cardíaca' como descrito para o β2 (essa é função do β1).", "Incorreto — pelo contrário, TODOS os receptores beta (β1, β2, β3) atuam via proteína Gs, aumentando o AMPc intracelular."], "analise_letters": ["A", "B", "C"], "conceito": "β1: predomina no coração (↑FC, ↑contratilidade, liberação de renina). β2: predomina em brônquios/vasos (broncodilatação, vasodilatação).", "pegadinha": "Essa diferença de localização é a base farmacológica da cardiosseletividade de betabloqueadores (metoprolol/atenolol = mais seguros em asmáticos que o propranolol não seletivo).", "dica": "β1 = 1 coração (só um órgão principal). β2 = 2 ou mais locais (brônquios E vasos)."}, {"n": 9, "tema": "Exceção — Glândulas Sudoríparas", "nivel": "🔴 Nível 3 — Correlação Clínica", "q": "Por que as glândulas sudoríparas são consideradas uma EXCEÇÃO à regra geral do sistema simpático?", "opts": ["São inervadas pelo simpático, mas usam acetilcolina (não noradrenalina) como neurotransmissor pós-ganglionar", "São inervadas exclusivamente pelo parassimpático, ao contrário de todos os outros órgãos", "Não respondem a nenhum neurotransmissor do sistema nervoso autônomo", "Usam dopamina como neurotransmissor exclusivo, diferente de todos os outros órgãos simpáticos"], "correct": 0, "justificativa": "As glândulas sudoríparas são inervadas pelo sistema SIMPÁTICO, mas — diferente da regra geral (que prevê liberação de noradrenalina) — usam ACETILCOLINA como neurotransmissor pós-ganglionar, atuando sobre receptores muscarínicos.", "analise": ["Incorreto — as glândulas sudoríparas SÃO inervadas pelo simpático (não pelo parassimpático); a exceção está no neurotransmissor usado, não na via.", "Incorreto — as glândulas sudoríparas respondem sim à acetilcolina liberada pela via simpática (colinérgica simpática).", "Incorreto — o neurotransmissor excepcional usado é a ACETILCOLINA, não a dopamina."], "analise_letters": ["B", "C", "D"], "conceito": "Glândulas sudoríparas: inervação SIMPÁTICA, mas neurotransmissor pós-ganglionar é ACETILCOLINA (não noradrenalina) — a única exceção a essa regra geral.", "pegadinha": "Essa é uma pegadinha clássica de prova: alguém pode assumir erroneamente que sudorese é sempre 'parassimpática' por usar ACh, mas a via é SIMPÁTICA.", "dica": "Simpático 'colinérgico' = exceção rara — só as glândulas sudoríparas fogem à regra da noradrenalina."}, {"n": 10, "tema": "Correlação Farmacológica", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual fármaco é um agonista do receptor α2, usado como anti-hipertensivo por reduzir a liberação central de noradrenalina?", "opts": ["Prazosina", "Clonidina", "Salbutamol", "Atropina"], "correct": 1, "justificativa": "A clonidina é um agonista do receptor α2 (autorreceptor pré-sináptico), usada como anti-hipertensivo justamente por reduzir a liberação de noradrenalina no SNC (locus coeruleus) e na periferia.", "analise": ["A prazosina é um ANTAGONISTA α1 (não agonista α2), usada no tratamento de hipertensão e hiperplasia prostática benigna por bloquear a vasoconstrição mediada por α1.", "O salbutamol é um agonista β2, usado como broncodilatador — não tem relação com o receptor α2.", "A atropina é um antagonista MUSCARÍNICO (não relacionado a receptores alfa-adrenérgicos), usada, por exemplo, no tratamento de bradicardia e intoxicação colinérgica."], "analise_letters": ["A", "C", "D"], "conceito": "Clonidina: agonista α2 — anti-hipertensivo, por reduzir a liberação de noradrenalina (efeito autorreceptor pré-sináptico).", "pegadinha": "Não confundir a clonidina (agonista α2, reduz PA) com fármacos que atuam no α1 (como a prazosina, antagonista, também usada em HAS, mas por mecanismo diferente).", "dica": "Clonidina = 'clona' o efeito inibitório natural do α2 sobre a liberação de noradrenalina."}];
+const flashcards = [{"n": 1, "cat": "Organização do SNA", "f": "Qual a organização anatômica do simpático e do parassimpático?", "b": "Simpático: toracolombar (T1-L2). Parassimpático: craniossacral (pares III, VII, IX, X e S2-S4)."}, {"n": 2, "cat": "Neurotransmissores", "f": "Qual neurotransmissor cada via libera no órgão efetor?", "b": "Simpático: noradrenalina (exceto glândulas sudoríparas). Parassimpático: acetilcolina. Somático: acetilcolina (placa motora)."}, {"n": 3, "cat": "Ideia-Chave", "f": "Qual neurotransmissor é usado no GÂNGLIO, em ambas as vias autônomas?", "b": "Acetilcolina, atuando sobre o receptor Nn — em ambas as vias (simpática e parassimpática)."}, {"n": 4, "cat": "Classificação", "f": "Quais são os únicos receptores ionotrópicos entre os estudados?", "b": "Nicotínicos (Nn e Nm). Todos os demais (M1-M5, α, β) são metabotrópicos (proteína G)."}, {"n": 5, "cat": "Nicotínicos", "f": "Onde se localizam Nm e Nn, e quais fármacos atuam neles?", "b": "Nm: placa motora (bloqueadores neuromusculares: succinilcolina, rocurônio). Nn: gânglios autônomos (bloqueadores ganglionares: trimetafan)."}, {"n": 6, "cat": "Muscarínicos", "f": "Quais os efeitos de M2 e M3?", "b": "M2 (coração): bradicardia, ↓condução AV. M3 (músculo liso/glândulas): contração e secreção."}, {"n": 7, "cat": "Alfa", "f": "Qual a diferença entre α1 e α2?", "b": "α1: pós-sináptico, vasoconstrição/midríase. α2: autorreceptor pré-sináptico, ↓liberação de noradrenalina."}, {"n": 8, "cat": "Beta", "f": "Qual a diferença entre β1, β2 e β3?", "b": "β1: coração (↑FC). β2: brônquios/vasos (broncodilatação/vasodilatação). β3: tecido adiposo/bexiga (lipólise/relaxamento do detrusor)."}, {"n": 9, "cat": "Exceção", "f": "Qual a exceção à regra do neurotransmissor simpático?", "b": "Glândulas sudoríparas: inervação simpática, mas usa ACETILCOLINA (não noradrenalina)."}, {"n": 10, "cat": "Farmacologia Clínica", "f": "Cite um agonista e um antagonista do receptor β2.", "b": "Agonista: salbutamol/terbutalina (broncodilatadores). Antagonista: propranolol (não seletivo, cautela em asma)."}, {"n": 11, "cat": "Farmacologia Clínica", "f": "Por que betabloqueadores cardiosseletivos (metoprolol) são preferidos em asmáticos, em vez do propranolol?", "b": "Propranolol bloqueia β1 E β2 (não seletivo) — pode causar broncoespasmo. Metoprolol é mais seletivo para β1 (cardíaco)."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+// ===== BANCO DE QUESTÕES =====
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  const nivelClean = item.nivel.replace(/^[^\s]+\s/, '');
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+// ===== MOTOR DE REPETIÇÃO ESPAÇADA REAL (SM-2, 4 níveis) + INTERFACE ANKI =====
+// Reutilizável: basta trocar CHAPTER_ID em cada capítulo futuro.
+const CHAPTER_ID = 'farmacologia1_cap01_receptores_sna';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+// quality: 0=De novo, 1=Difícil, 2=Bem, 3=Fácil (escala real de 4 pontos, como o Anki de verdade)
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+// ===== FLASHCARDS =====
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+// ===== QUIZ RÁPIDO =====
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+// ===== CASOS CLÍNICOS =====
+const cases = [
+  {
+    "nivel": "NÍVEL 1 — FUNDAMENTAL",
+    "hist": "Sr. Ezequiel, 45 anos, Testemunha de Jeová, dá entrada no PS após acidente de trânsito com hemorragia interna grave. A equipe médica avalia que uma transfusão sanguínea é necessária para salvar sua vida. Ele está consciente e recusa firmemente a transfusão, mesmo sendo informado do risco de morte.",
+    "dados": "A equipe médica precisa decidir como proceder diante dessa recusa consciente.",
+    "perguntas": [
+      {
+        "q": "Qual princípio bioético fundamenta o direito do Sr. Ezequiel de recusar a transfusão, mesmo com risco de morte, e qual sua origem filosófica?",
+        "a": "O princípio é o da AUTONOMIA — conceito derivado de Immanuel Kant, que a definiu como a propriedade da vontade que, racional e livremente, se autoprescreve uma norma para agir em consequência. A autonomia leva implícito o direito de aceitar ou recusar qualquer procedimento diagnóstico ou de tratamento, incluindo a recusa de transfusões sanguíneas por Testemunhas de Jeová, uma decisão fundamentada em convicções religiosas profundas baseadas em passagens bíblicas específicas (Levítico, Gênesis, Atos dos Apóstolos)."
+      }
+    ]
+  },
+  {
+    "nivel": "NÍVEL 2 — INTERMEDIÁRIO",
+    "hist": "Antes de aceitar definitivamente a recusa, o médico responsável conversa longamente com Sr. Ezequiel, explicando detalhadamente os riscos e buscando entender se ele compreende plenamente a decisão.",
+    "dados": "O médico não tenta forçar a transfusão, mas também não aceita a recusa sem antes explorar a situação.",
+    "perguntas": [
+      {
+        "q": "Essa conduta do médico — conversar, explicar e buscar entendimento antes de aceitar a recusa — está de acordo com os princípios bioéticos de autonomia? Por quê?",
+        "a": "Sim, está totalmente de acordo. O texto de referência é claro: em ocasiões o enfermo mostra uma atitude negativa ante uma recomendação, mas isso não significa necessariamente que o médico deva aceitar de imediato essa atitude. Se o médico consegue penetrar nos fatores que influenciaram a decisão e o grau de autonomia em que ela está baseada, pode tentar modificar uma decisão negativa — oferecendo intermediação familiar, esclarecendo algum conceito mal entendido, ou dando uma explicação mais ampla. Porém, se a decisão do paciente foi tomada livremente, congruente com seus valores, planos e interesses, e é resultado de uma ampla informação e de uma cuidadosa reflexão moral, o médico deve respeitar essa opinião — em última instância, deve prevalecer a decisão do enfermo."
+      }
+    ]
+  },
+  {
+    "nivel": "NÍVEL 3 — APLICAÇÃO INTEGRADA",
+    "hist": "Meses depois, Sr. Ezequiel retorna ao hospital com diagnóstico de tuberculose ativa. Ele novamente invoca sua autonomia, agora recusando o isolamento respiratório recomendado, alegando que é um direito seu decidir sobre seu próprio corpo e tratamento.",
+    "dados": "A equipe médica precisa avaliar se esse novo pedido de autonomia deve ser respeitado da mesma forma que a recusa de transfusão.",
+    "perguntas": [
+      {
+        "q": "A recusa do Sr. Ezequiel ao isolamento respiratório para tuberculose deve ser tratada da mesma forma que sua recusa anterior de transfusão sanguínea? Justifique com base nos limites da autonomia.",
+        "a": "Não, essas duas situações são fundamentalmente diferentes do ponto de vista bioético, apesar de ambas envolverem a autonomia do Sr. Ezequiel. A recusa de transfusão sanguínea é uma decisão que afeta primariamente a ELE MESMO — é uma expressão legítima de autonomia sobre seu próprio corpo, mesmo com risco à sua própria vida. Já a recusa do isolamento para tuberculose é diferente: essa é explicitamente citada como uma das LIMITAÇÕES da autonomia do paciente, porque coloca em risco a saúde de terceiros através da disseminação de uma doença contagiosa. Assim como um paciente com HIV não pode escolher não informar seu parceiro sobre o risco de contaminação, a autonomia do Sr. Ezequiel não se estende ao ponto de permitir que ele exponha outras pessoas ao risco de contrair tuberculose. Nesse segundo cenário, os princípios de não-maleficência (não causar dano a terceiros) e justiça (proteção da saúde coletiva) legitimamente limitam o alcance de sua autonomia individual, e a equipe médica/de saúde pública pode e deve insistir no isolamento, mesmo contra a vontade explícita do paciente."
+      }
+    ]
+  }
+];
+
+const casesArea = document.getElementById('casesArea');
+cases.forEach((c, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'case-level';
+  let qHtml = '';
+  c.perguntas.forEach((p, pi)=>{
+    qHtml += `<div class="case-q">
+      <b>${pi+1})</b> ${p.q}
+      <br><button class="case-answer-btn" data-ci="${ci}" data-pi="${pi}">Ver resposta comentada</button>
+      <div class="case-answer" id="case-answer-${ci}-${pi}">${p.a}</div>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="case-level-head" data-ci="${ci}">
+      <span>${c.nivel}</span><span>▼</span>
+    </div>
+    <div class="case-level-body" id="case-body-${ci}">
+      <div class="case-hist"><b>História Clínica:</b> ${c.hist}</div>
+      <div class="case-hist"><b>Dados:</b> ${c.dados}</div>
+      ${qHtml}
+    </div>`;
+  casesArea.appendChild(div);
+});
+
+casesArea.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('case-level-head') || e.target.closest('.case-level-head')){
+    const head = e.target.closest('.case-level-head');
+    const ci = head.dataset.ci;
+    document.getElementById('case-body-'+ci).classList.toggle('show');
+  }
+  if(e.target.classList.contains('case-answer-btn')){
+    const ci = e.target.dataset.ci, pi = e.target.dataset.pi;
+    document.getElementById(`case-answer-${ci}-${pi}`).classList.toggle('show');
+  }
+});
+// abre o nivel 1 por padrao
+document.getElementById('case-body-0').classList.add('show');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Farmacología I',
+    titulo: 'Capítulo 1 — Receptores del SNA',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Farmacología I', titulo: 'Capítulo 1 — Receptores del SNA', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
