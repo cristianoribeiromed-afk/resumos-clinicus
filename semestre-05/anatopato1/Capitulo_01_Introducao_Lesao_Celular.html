@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Anatomía Patológica I — Cap. 1: Introducción y Lesión Celular | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0a1a1c; --card:#0f2528; --card2:#123338;
+  --accent:#1a8a94; --accent2:#5ec4cc; --gold:#e8b84b;
+  --text:#e8f5f6; --text-dim:#9dc9cc; --ok:#4fd1a1; --bad:#e0505f; --border:#1e4145;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Anatomía Patológica I</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Anatomía Patológica I</span><span>1 de 1</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Anatomía Patológica I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-05/anatopato1/Capitulo_01_Introducao_Lesao_Celular.html"><span class="ico">🦴</span><span>Capítulo 1 — Introdução e Lesão Celular</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Anatomía Patológica I · P1 · Patología General</span>
+  <h1>🔬 Capítulo 1 — Introdução à Anatomia Patológica e Lesão Celular</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois dessa aula</h2>
+    <ul>
+      <li>Definir Anatomia Patológica, seu objetivo e classificação</li>
+      <li>Diferenciar os métodos de estudo: autópsia, biópsia e método experimental</li>
+      <li>Explicar o conceito de homeostasia e a resposta celular ao estresse</li>
+      <li>Diferenciar lesão celular reversível de irreversível</li>
+      <li>Classificar os tipos de necrose por causa e morfologia</li>
+      <li>Diferenciar necrose de apoptose</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📖 Anatomia Patológica — Definição e Classificação</h2>
+    <div class="criterio"><b>✅ Definição:</b> ramo da Patologia que se encarrega do estudo das MUDANÇAS MORFOLÓGICAS/ESTRUTURAIS que aparecem nas células, tecidos ou órgãos como consequência das doenças.</div>
+    <table>
+      <tr><th>Aspecto</th><th>Detalhe</th></tr>
+      <tr><td>Objetivo</td><td>Explicar com detalhes os motivos pelos quais os sinais e sintomas são manifestados pelo paciente</td></tr>
+      <tr><td>Formas de estudo</td><td>Macroscópica (a olho nu) e Microscópica (ao microscópio)</td></tr>
+      <tr><td>Classificação Geral</td><td>Estuda as mudanças estruturais básicas COMUNS a várias doenças (ex.: inflamação, necrose — mecanismos gerais)</td></tr>
+      <tr><td>Classificação Especial</td><td>Aplica os conhecimentos da anatomia patológica geral ao estudo das doenças de um órgão ou aparato ESPECÍFICO</td></tr>
+    </table>
+    <p><b>4 aspectos fundamentais da Anatomia Patológica:</b> Etiologia, Patogenia (fisiopatologia), Alterações morfológicas, Manifestações clínicas.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔬 Métodos de Estudo</h2>
+    <table>
+      <tr><th>Método</th><th>Descrição</th></tr>
+      <tr><td>Autópsia (Necropsia)</td><td>Estudo de um cadáver, seus órgãos e tecidos — macro e microscopicamente — com o objetivo de determinar a CAUSA DA MORTE e outros possíveis transtornos associados</td></tr>
+      <tr><td>Biópsia</td><td>Operação exploratória que consiste em separar de um ser VIVO uma amostra de tecido ou órgão, pra determinar com precisão a causa/natureza de uma patologia</td></tr>
+      <tr><td>Método Experimental</td><td>Geralmente utiliza animais de laboratório/experimentação, pra estudar processos patológicos de forma controlada</td></tr>
+    </table>
+    <table>
+      <tr><th>Formas de obtenção da Biópsia</th><th>Detalhe</th></tr>
+      <tr><td>Raspado (citológico)</td><td>Coleta superficial de células — ex.: Papanicolau</td></tr>
+      <tr><td>PAG — Punção por Agulha Grossa</td><td>Permite obter um fragmento de tecido (não só células isoladas), possibilitando avaliar a arquitetura tecidual</td></tr>
+      <tr><td>Biópsia excisional/incisional</td><td>Remoção cirúrgica total ou parcial da lesão</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Homeostasia e Resposta Celular ao Estresse</h2>
+    <div class="criterio"><b>✅ Homeostasia:</b> propriedade do organismo de manter o EQUILÍBRIO interno, mesmo quando ocorrem mudanças no meio externo — é a forma "normal" e estável de funcionamento celular.</div>
+    <p>Quando as células sofrem estresse fisiológico ou um estímulo patológico, podem responder de 3 formas principais:</p>
+    <ol>
+      <li><b>Adaptação</b> — a célula alcança um novo estado de equilíbrio, preservando sua viabilidade (resposta REVERSÍVEL)</li>
+      <li><b>Lesão</b> — se a capacidade adaptativa é excedida, ou o estresse é diretamente nocivo, desenvolve-se lesão celular (pode ser reversível ou não)</li>
+      <li><b>Acúmulos</b> — depósito anormal de substâncias dentro ou fora das células</li>
+    </ol>
+    <div class="hot">💭 Dentro de certos limites, a lesão é REVERSÍVEL, e a célula retorna a um estado basal estável. Porém, um estresse GRAVE, PERSISTENTE e/ou de início muito RÁPIDO resulta em lesão IRREVERSÍVEL e morte celular (necrose ou apoptose).</div>
+  </div>
+
+  <div class="card">
+    <h2>🟡 Lesão Celular Reversível</h2>
+    <div class="criterio"><b>✅ Características morfológicas:</b> a célula ainda está viva, mas com alterações funcionais/estruturais que podem se reverter se o estímulo lesivo cessar.</div>
+    <ul>
+      <li>Aumento de tamanho celular (edema celular / tumefação hidrópica) — por falha da bomba Na⁺/K⁺-ATPase, levando a entrada de água na célula</li>
+      <li>Diminuição da eosinofilia citoplasmática (aumento relativo de água, diluindo as proteínas coráveis)</li>
+      <li>Formação de "blebs" (bolhas) na membrana plasmática</li>
+      <li>Dilatação do Retículo Endoplasmático, destacamento de ribossomos</li>
+      <li>Alterações mitocondriais (tumefação, mas ainda reversível)</li>
+      <li>Núcleo ainda com padrão normal de cromatina</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Lesão Celular Irreversível — Necrose</h2>
+    <div class="criterio"><b>✅ Conceito de Necrose:</b> conjunto de mudanças celulares que se seguem à MORTE celular NÃO PROGRAMADA (acidental) num tecido vivo. É SEMPRE um processo PATOLÓGICO, e induz uma resposta INFLAMATÓRIA no tecido adjacente (diferente da apoptose).</div>
+    <table>
+      <tr><th>Alteração Nuclear</th><th>Descrição</th></tr>
+      <tr><td>Picnose</td><td>Retração e condensação nuclear (núcleo pequeno, escuro, denso)</td></tr>
+      <tr><td>Cariorrexe</td><td>Fragmentação do núcleo em múltiplos pedaços</td></tr>
+      <tr><td>Cariólise</td><td>Dissolução/desaparecimento completo do núcleo (por ação de DNAses/RNAses)</td></tr>
+    </table>
+    <p><b>Características morfológicas gerais da célula necrótica:</b> aumento da eosinofilia citoplasmática (perda de RNA + desnaturação proteica), aspecto vítreo/homogêneo do citoplasma, ruptura da membrana plasmática (extravasamento do conteúdo celular pro interstício — é isso que desencadeia a resposta inflamatória).</p>
+  </div>
+
+  <div class="card">
+    <h2>📋 Tipos de Necrose — Causas e Morfologia</h2>
+    <table>
+      <tr><th>Tipo</th><th>Morfologia/Mecanismo</th><th>Causas/Exemplos Clássicos</th></tr>
+      <tr><td>Coagulativa</td><td>Preserva a arquitetura básica do tecido morto por vários dias — a desnaturação proteica excede a ação das enzimas hidrolíticas. Aspecto firme, pálido</td><td>Infarto isquêmico (EXCETO no cérebro) — ex.: infarto do miocárdio, rim, baço</td></tr>
+      <tr><td>Liquefativa</td><td>Digestão enzimática predomina sobre a desnaturação proteica — o tecido se transforma em massa viscosa/líquida</td><td>Infartos no SISTEMA NERVOSO CENTRAL (o cérebro tem pouco tecido conjuntivo de sustentação); infecções bacterianas focais (abscessos, formação de pus)</td></tr>
+      <tr><td>Caseosa</td><td>Combinação de coagulativa+liquefativa — aspecto macroscópico "queijoso" (branco-amarelado, friável). Microscopicamente: debris granulares eosinofílicos, sem preservar a arquitetura</td><td>TUBERCULOSE (necrose caseosa é praticamente patognomônica), reação granulomatosa</td></tr>
+      <tr><td>Gordurosa (esteatonecrose)</td><td>Destruição focal de tecido adiposo, tipicamente pela liberação de LIPASES pancreáticas ativadas — os ácidos graxos liberados se combinam com cálcio, formando SABÕES DE CÁLCIO (aspecto branco-gredoso/"giz")</td><td>Pancreatite aguda necro-hemorrágica; trauma direto no tecido adiposo (necrose gordurosa traumática, ex.: mama)</td></tr>
+      <tr><td>Fibrinoide</td><td>Depósitos de material amorfo, róseo/eosinofílico e "fibrina-símile" nas paredes dos vasos sanguíneos — por depósito de imunocomplexos + proteínas plasmáticas extravasadas</td><td>Doenças autoimunes/vasculites (ex.: poliarterite nodosa), hipertensão maligna</td></tr>
+      <tr><td>Gangrenosa</td><td>NÃO é um tipo histológico próprio — é um termo CLÍNICO aplicado quando a necrose coagulativa (isquêmica) de um membro se sobrepõe à ação de bactérias saprófitas. Gangrena SECA (só necrose coagulativa) x Gangrena ÚMIDA (+ ação bacteriana/liquefação sobreposta) x Gangrena GASOSA (infecção por Clostridium, produção de gás nos tecidos)</td><td>Isquemia de membros inferiores (ex.: doença arterial periférica grave, diabetes)</td></tr>
+    </table>
+    <div class="prova">📝 Ponto-chave de prova: a necrose caseosa é a MAIS associada à Tuberculose — e a necrose liquefativa é a EXCEÇÃO à regra geral de que infartos isquêmicos causam necrose coagulativa (o cérebro foge à regra, sofrendo necrose liquefativa).</div>
+  </div>
+
+  <div class="card">
+    <h2>🟢 Apoptose</h2>
+    <div class="criterio"><b>✅ Conceito:</b> morte celular PROGRAMADA (geneticamente controlada), que ocorre tanto em condições FISIOLÓGICAS (normais) quanto PATOLÓGICAS. NÃO desencadeia resposta inflamatória.</div>
+    <table>
+      <tr><th>Contexto</th><th>Exemplos</th></tr>
+      <tr><td>Fisiológico</td><td>Embriogênese (eliminação de tecido entre os dedos), renovação celular normal de tecidos (endométrio no ciclo menstrual), eliminação de linfócitos autorreativos</td></tr>
+      <tr><td>Patológico</td><td>Lesão do DNA (radiação, quimioterápicos), acúmulo de proteínas mal dobradas, morte celular em infecções virais específicas</td></tr>
+    </table>
+    <p><b>Características morfológicas da célula apoptótica:</b></p>
+    <ul>
+      <li>Retração celular (a célula fica menor, citoplasma denso)</li>
+      <li>Condensação da cromatina (mais marcante e característica que na necrose) — se agrupa em massas densas periféricas, coladas à membrana nuclear</li>
+      <li>Formação de "corpos apoptóticos" — fragmentos da célula envoltos por membrana, contendo organelas e núcleo condensado</li>
+      <li>Fagocitose RÁPIDA dos corpos apoptóticos por macrófagos/células vizinhas — SEM extravasamento de conteúdo celular, e por isso SEM inflamação</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Necrose x Apoptose — Comparação Direta</h2>
+    <table>
+      <tr><th>Característica</th><th>Necrose</th><th>Apoptose</th></tr>
+      <tr><td>Tipo de morte</td><td>NÃO programada, acidental</td><td>PROGRAMADA, regulada geneticamente</td></tr>
+      <tr><td>Contexto</td><td>SEMPRE patológica</td><td>Fisiológica OU patológica</td></tr>
+      <tr><td>Membrana plasmática</td><td>Rompida — extravasa conteúdo celular</td><td>Preservada (até a fagocitose)</td></tr>
+      <tr><td>Resposta inflamatória</td><td>SIM, desencadeia inflamação</td><td>NÃO desencadeia inflamação</td></tr>
+      <tr><td>Tamanho celular</td><td>Aumentado (edema/tumefação)</td><td>Diminuído (retração)</td></tr>
+      <tr><td>Núcleo</td><td>Picnose → Cariorrexe → Cariólise</td><td>Condensação da cromatina em massas periféricas densas</td></tr>
+      <tr><td>Destino final</td><td>Debris celulares liberados no interstício</td><td>Corpos apoptóticos, fagocitados rapidamente</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <ul>
+      <li>Anatomia Patológica: estuda mudanças MORFOLÓGICAS causadas por doenças — macro e microscópica. Geral (mecanismos comuns) x Especial (órgão específico)</li>
+      <li>Métodos: Autópsia (cadáver, causa da morte), Biópsia (vivo, amostra de tecido), Método Experimental (animais)</li>
+      <li>Homeostasia: equilíbrio interno. Resposta ao estresse: Adaptação (reversível) → Lesão (reversível ou irreversível) → Acúmulos</li>
+      <li>Lesão reversível: edema celular, ↓eosinofilia, blebs de membrana. Lesão irreversível: necrose ou apoptose</li>
+      <li>Necrose: SEMPRE patológica, INFLAMA. Alterações nucleares: Picnose → Cariorrexe → Cariólise</li>
+      <li>Tipos de necrose: Coagulativa (isquemia, exceto cérebro), Liquefativa (SNC, abscessos), Caseosa (Tuberculose), Gordurosa (pancreatite, sabões de cálcio), Fibrinoide (vasculites), Gangrenosa (termo clínico: seca/úmida/gasosa)</li>
+      <li>Apoptose: PROGRAMADA, fisiológica OU patológica, NÃO inflama. Célula RETRAI, cromatina condensa nas bordas, forma corpos apoptóticos fagocitados</li>
+    </ul>
+  </div>
+
+</section>
+
+
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🩺 Caso Clínico Progressivo — 3 Tipos de Necrose, 1 Só Paciente</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Vamos acompanhar um paciente que, ao longo de sua história clínica, desenvolve 3 processos necróticos completamente diferentes — uma ótima forma de fixar as diferenças entre os tipos de necrose. O caso evolui em 3 níveis.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟢 Nível 1 — Fundamental</h2>
+    <p><b>Homem de 52 anos, etilista crônico, é internado com dor abdominal intensa em faixa, náuseas e vômitos. Exames mostram lipase sérica muito elevada. A tomografia mostra áreas de destruição focal do tecido adiposo peripancreático, com aspecto branco-gredoso.</b></p>
+    <p><b>Pergunta:</b> Qual o tipo de necrose presente nesse paciente, qual o mecanismo bioquímico específico, e por que o aspecto é descrito como "branco-gredoso" (como giz)?</p>
+    <p><b>Resposta comentada:</b> O quadro é de PANCREATITE AGUDA com NECROSE GORDUROSA (esteatonecrose). O mecanismo envolve a liberação de LIPASES PANCREÁTICAS ATIVADAS (normalmente contidas e inativas dentro do pâncreas) diretamente no tecido adiposo peripancreático — essas lipases hidrolisam os triglicerídeos das células adiposas, liberando ÁCIDOS GRAXOS LIVRES. Esses ácidos graxos livres então se COMBINAM COM O CÁLCIO circulante, formando SABÕES DE CÁLCIO (saponificação) — é exatamente esse depósito de sabões de cálcio que confere o aspecto macroscópico branco-gredoso, semelhante a giz, característico desse tipo específico de necrose.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟡 Nível 2 — Intermediário</h2>
+    <p><b>Dias depois, o paciente evolui com hipotensão prolongada (choque) durante a internação, e os exames mostram lesão renal aguda. Uma biópsia renal (realizada por outro motivo concomitante) mostra túbulos renais necróticos, mas com a arquitetura geral do parênquima ainda reconhecível ao microscópio.</b></p>
+    <p><b>Pergunta:</b> Qual o tipo de necrose renal mais provável nesse contexto de hipotensão prolongada, e por que a ARQUITETURA do tecido permanece reconhecível, diferente do que ocorreria se essa mesma isquemia tivesse ocorrido no cérebro?</p>
+    <p><b>Resposta comentada:</b> O quadro é compatível com NECROSE COAGULATIVA renal, secundária à ISQUEMIA por hipotensão prolongada (choque) — o padrão clássico de necrose em infartos isquêmicos na MAIORIA dos órgãos sólidos (rim, coração, baço). Na necrose coagulativa, a DESNATURAÇÃO PROTEICA (causada pela acidose intracelular e lesão isquêmica) ocorre mais rapidamente e de forma mais intensa que a ação das enzimas hidrolíticas liberadas pelos lisossomos — isso faz com que as proteínas estruturais e enzimas do citoplasma fiquem "bloqueadas"/desnaturadas antes de serem digeridas, PRESERVANDO a arquitetura básica do tecido (os contornos celulares e a estrutura tecidual geral) por vários dias, mesmo com as células já mortas. Isso é DIFERENTE do que ocorreria no CÉREBRO — lá, a necrose por isquemia é do tipo LIQUEFATIVA, porque o tecido cerebral tem pouquíssimo tecido conjuntivo de sustentação e é rico em enzimas hidrolíticas/lipídios, fazendo a digestão enzimática predominar sobre a desnaturação proteica, transformando o tecido numa massa liquefeita, SEM preservar a arquitetura.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Nível 3 — Aplicação Integrada</h2>
+    <p><b>Meses depois, o mesmo paciente retorna com tosse crônica, febre baixa e perda de peso. Uma biópsia pulmonar mostra um granuloma com uma área central de material amorfo, granular, eosinofílico, sem qualquer arquitetura tecidual reconhecível — como uma massa "amorfa e queijosa".</b></p>
+    <p><b>Pergunta:</b> Qual o tipo de necrose presente nesse novo achado, qual a doença mais associada a esse padrão específico, e como esse tipo de necrose se diferencia BIOQUIMICAMENTE tanto da necrose coagulativa (Nível 2) quanto da necrose gordurosa (Nível 1) vistas anteriormente nesse mesmo paciente?</p>
+    <p><b>Resposta comentada:</b> O achado é de NECROSE CASEOSA, cujo nome vem justamente do aspecto macroscópico "queijoso" (caseum = queijo) — um material amorfo, branco-amarelado e friável. A doença CLASSICAMENTE associada a esse padrão é a TUBERCULOSE (a necrose caseosa é praticamente patognomônica de infecção por Mycobacterium tuberculosis, embora também possa ocorrer em outras infecções granulomatosas). Bioquimicamente, a necrose caseosa representa uma COMBINAÇÃO das outras 2: há tanto desnaturação proteica quanto digestão enzimática significativas, mas de forma tão completa e desorganizada que NENHUMA arquitetura tecidual é preservada (diferente da necrose coagulativa do Nível 2, que preserva contornos teciduais) — e o mecanismo não envolve lipases/ácidos graxos/sabões de cálcio (diferente da necrose gordurosa do Nível 1), mas sim uma resposta imune GRANULOMATOSA intensa contra a micobactéria, com ativação de macrófagos que liberam enzimas e mediadores que destroem completamente a estrutura tecidual local. Esse caso ilustra bem como o MESMO mecanismo básico (morte celular não programada = necrose) pode se manifestar de formas morfológica e bioquimicamente muito distintas, dependendo do tecido afetado e do processo patológico subjacente.</p>
+  </div>
+</section>
+
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Anatomia Patológica — Definição", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a diferença entre Anatomia Patológica Geral e Especial?", "opts": ["Geral estuda mudanças estruturais básicas comuns a várias doenças; Especial aplica esses conhecimentos ao estudo de doenças de um órgão/aparato específico", "Ambas estudam exatamente a mesma coisa, sem distinção real", "Geral estuda apenas doenças infecciosas; Especial estuda apenas doenças genéticas", "Especial é sinônimo de exame macroscópico; Geral é sinônimo de exame microscópico"], "correct": 0, "justificativa": "A Anatomia Patológica GERAL estuda as mudanças estruturais básicas COMUNS a várias doenças (mecanismos gerais como necrose, inflamação). A Anatomia Patológica ESPECIAL aplica esses conhecimentos gerais ao estudo das doenças de um órgão ou aparato ESPECÍFICO.", "analise": ["Incorreto — as 2 têm escopos distintos e complementares (mecanismos gerais x aplicação a órgãos específicos), não são idênticas.", "Incorreto — essa divisão não é por tipo de doença (infecciosa/genética), mas sim pela abrangência do estudo (mecanismos gerais x órgão específico).", "Incorreto — tanto a forma Geral quanto a Especial podem usar exame macroscópico E microscópico; essa não é a distinção entre elas."], "analise_letters": ["B", "C", "D"], "conceito": "Anatomia Patológica Geral: mecanismos comuns a várias doenças. Especial: aplicação a um órgão/aparato específico.", "pegadinha": "Não confundir essa classificação (Geral x Especial) com as formas de estudo (Macroscópica x Microscópica) — são 2 eixos de classificação diferentes.", "dica": "Geral = os 'princípios universais' da patologia. Especial = como esses princípios aparecem em CADA órgão."}, {"n": 2, "tema": "Métodos de Estudo", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a diferença fundamental entre Autópsia e Biópsia?", "opts": ["Ambas são realizadas exclusivamente em pacientes vivos", "Autópsia é realizada em um CADÁVER (determina causa da morte); Biópsia é realizada num ser VIVO (amostra de tecido/órgão)", "Biópsia é realizada exclusivamente em cadáveres", "Não há diferença real entre os 2 métodos"], "correct": 1, "justificativa": "A Autópsia (necropsia) é o estudo de um CADÁVER, seus órgãos e tecidos, com objetivo de determinar a causa da morte. A Biópsia é a separação de uma amostra de tecido/órgão de um ser VIVO, pra determinar a causa/natureza de uma patologia.", "analise": ["Incorreto — a autópsia é realizada em CADÁVERES, não em pacientes vivos.", "Incorreto — a biópsia é realizada em seres VIVOS, não em cadáveres (isso é a autópsia).", "Incorreto — existe uma diferença fundamental e bem estabelecida entre os 2 métodos, relacionada ao estado vital do paciente/sujeito estudado."], "analise_letters": ["A", "C", "D"], "conceito": "Autópsia: cadáver, determina causa da morte. Biópsia: ser vivo, amostra de tecido pra diagnóstico.", "pegadinha": "A biópsia pode ser obtida por diferentes técnicas: raspado (citológico), PAG (punção por agulha grossa), ou biópsia excisional/incisional cirúrgica.", "dica": "Autópsia = depois da morte. Biópsia = durante a vida."}, {"n": 3, "tema": "Homeostasia e Resposta ao Estresse", "nivel": "🟢 Nível 1 — Essencial", "q": "Quais as 3 formas principais de resposta celular ao estresse, vistas nesse capítulo?", "opts": ["Apenas necrose, sem outras formas de resposta", "Apenas inflamação e infecção", "Adaptação, Lesão (reversível ou irreversível) e Acúmulos", "Apenas neoplasia, sem outras respostas possíveis"], "correct": 2, "justificativa": "As 3 formas principais de resposta celular ao estresse são: Adaptação (novo estado de equilíbrio, reversível), Lesão (pode ser reversível ou evoluir pra irreversível/morte celular) e Acúmulos (depósito anormal de substâncias).", "analise": ["Incorreto — a necrose é apenas UM possível desfecho da lesão irreversível, não a única forma de resposta celular ao estresse.", "Incorreto — inflamação e infecção não são as 3 formas de resposta celular ao estresse discutidas nesse contexto introdutório.", "Incorreto — a neoplasia é um processo patológico distinto, não uma das 3 respostas celulares básicas ao estresse vistas nesse capítulo introdutório."], "analise_letters": ["A", "B", "D"], "conceito": "Resposta celular ao estresse: Adaptação (reversível) → Lesão (reversível ou irreversível) → Acúmulos.", "pegadinha": "A Adaptação e a Lesão reversível são processos que ainda preservam a viabilidade celular — só a lesão IRREVERSÍVEL leva à morte celular (necrose/apoptose).", "dica": "3 respostas: Adaptação, Lesão, Acúmulos — a base de toda a patologia celular."}, {"n": 4, "tema": "Lesão Celular Reversível", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual característica é típica da lesão celular REVERSÍVEL, e não da necrose (lesão irreversível)?", "opts": ["Cariólise (dissolução completa do núcleo)", "Ruptura da membrana plasmática com extravasamento do conteúdo celular", "Cariorrexe (fragmentação nuclear)", "Edema celular (tumefação hidrópica), com núcleo ainda de padrão normal"], "correct": 3, "justificativa": "O edema celular (tumefação hidrópica) é uma característica típica da lesão REVERSÍVEL — a célula aumenta de tamanho pela entrada de água (falha da bomba Na⁺/K⁺-ATPase), mas o núcleo ainda mantém padrão normal de cromatina, indicando que a célula ainda está viva e pode se recuperar.", "analise": ["Incorreto — a cariólise é uma alteração nuclear da NECROSE (lesão irreversível), não da lesão reversível.", "Incorreto — a ruptura da membrana plasmática com extravasamento de conteúdo é característica da NECROSE, não da lesão reversível (na lesão reversível a membrana permanece íntegra).", "Incorreto — a cariorrexe é uma alteração nuclear da NECROSE, não da lesão reversível."], "analise_letters": ["A", "B", "C"], "conceito": "Lesão reversível: edema celular, ↓eosinofilia, blebs de membrana — núcleo ainda NORMAL, membrana ainda ÍNTEGRA.", "pegadinha": "A chave pra diferenciar reversível de irreversível está justamente no núcleo e na membrana plasmática: se ainda estão íntegros/normais, a lesão ainda pode reverter.", "dica": "Lesão reversível = célula 'incha' mas o núcleo continua intacto — ainda dá tempo de recuperar."}, {"n": 5, "tema": "Alterações Nucleares na Necrose", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a sequência correta das alterações nucleares que ocorrem na necrose?", "opts": ["Picnose → Cariorrexe → Cariólise", "Cariólise → Cariorrexe → Picnose", "Cariorrexe → Picnose → Cariólise", "Não existe uma sequência definida; as 3 alterações ocorrem simultaneamente sempre"], "correct": 0, "justificativa": "A sequência correta é: PICNOSE (retração/condensação nuclear) → CARIORREXE (fragmentação do núcleo em múltiplos pedaços) → CARIÓLISE (dissolução/desaparecimento completo do núcleo, por ação de DNAses/RNAses).", "analise": ["Incorreto — essa sequência está invertida em relação à ordem real das alterações nucleares na necrose.", "Incorreto — essa sequência também está incorreta; a cariorrexe não é a primeira alteração, a picnose é.", "Incorreto — embora possa haver alguma sobreposição temporal, existe SIM uma sequência progressiva reconhecida (picnose → cariorrexe → cariólise), não uma ocorrência simultânea aleatória."], "analise_letters": ["B", "C", "D"], "conceito": "Sequência das alterações nucleares na necrose: Picnose (retração) → Cariorrexe (fragmentação) → Cariólise (dissolução completa).", "pegadinha": "Mnemônico útil: as 3 começam com 'C' ou têm relação com o núcleo diminuindo, se fragmentando, e por fim desaparecendo — em ordem progressiva de destruição.", "dica": "P-C-C: Picnose (encolhe) → Cariorrexe (quebra) → Cariólise (some)."}, {"n": 6, "tema": "Necrose Coagulativa", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Por que a necrose coagulativa PRESERVA a arquitetura básica do tecido por vários dias, apesar das células já estarem mortas?", "opts": ["Porque não há nenhuma alteração proteica nesse tipo de necrose", "Porque a desnaturação proteica predomina sobre a ação das enzimas hidrolíticas, 'bloqueando' a digestão enzimática do tecido", "Porque esse tipo de necrose nunca ocorre em órgãos sólidos", "Porque as células nesse tipo de necrose nunca morrem de fato"], "correct": 1, "justificativa": "Na necrose coagulativa, a DESNATURAÇÃO PROTEICA (causada pela lesão isquêmica/acidose) ocorre de forma mais rápida e intensa que a ação das enzimas hidrolíticas lisossômicas — isso 'bloqueia' a digestão enzimática do tecido, preservando a arquitetura básica (contornos celulares/teciduais) por vários dias, mesmo com as células mortas.", "analise": ["Incorreto — há SIM alteração proteica significativa (desnaturação) nesse tipo de necrose; é justamente esse o mecanismo central.", "Incorreto — a necrose coagulativa é justamente o padrão TÍPICO em órgãos sólidos (rim, coração, baço) na maioria dos infartos isquêmicos, exceto no cérebro.", "Incorreto — as células ESTÃO mortas na necrose coagulativa; a preservação é apenas da ARQUITETURA/contornos teciduais, não da viabilidade celular."], "analise_letters": ["A", "C", "D"], "conceito": "Necrose coagulativa: desnaturação proteica > digestão enzimática → preserva arquitetura tecidual. Padrão típico de infartos isquêmicos (exceto SNC).", "pegadinha": "O cérebro é a EXCEÇÃO clássica — infartos cerebrais isquêmicos causam necrose LIQUEFATIVA, não coagulativa, pela riqueza de enzimas hidrolíticas e pouco tecido conjuntivo de sustentação.", "dica": "Coagulativa = 'time freeze' da arquitetura — as proteínas desnaturadas 'travam' a estrutura antes que as enzimas consigam digerir tudo."}, {"n": 7, "tema": "Necrose Liquefativa e Caseosa", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual tecido/órgão sofre classicamente necrose LIQUEFATIVA quando acometido por isquemia, e qual doença está classicamente associada à necrose CASEOSA?", "opts": ["Rim (liquefativa) e Pancreatite (caseosa)", "Coração (liquefativa) e Vasculite (caseosa)", "Sistema Nervoso Central/cérebro (liquefativa) e Tuberculose (caseosa)", "Baço (liquefativa) e Trauma adiposo (caseosa)"], "correct": 2, "justificativa": "O SISTEMA NERVOSO CENTRAL (cérebro) sofre classicamente necrose LIQUEFATIVA quando acometido por isquemia (infarto cerebral) — exceção à regra geral da necrose coagulativa em órgãos sólidos. A TUBERCULOSE é a doença classicamente associada à necrose CASEOSA (aspecto 'queijoso').", "analise": ["Incorreto — o rim sofre classicamente necrose COAGULATIVA (não liquefativa) por isquemia; e a pancreatite está associada à necrose GORDUROSA, não à caseosa.", "Incorreto — o coração sofre necrose COAGULATIVA por isquemia (infarto do miocárdio), não liquefativa; e vasculites estão associadas à necrose FIBRINOIDE, não à caseosa.", "Incorreto — o baço sofre necrose COAGULATIVA por isquemia, não liquefativa; e trauma adiposo está associado à necrose GORDUROSA, não à caseosa."], "analise_letters": ["A", "B", "D"], "conceito": "Necrose liquefativa: SNC/cérebro (isquemia). Necrose caseosa: Tuberculose (praticamente patognomônica).", "pegadinha": "O cérebro é sempre a exceção mencionada quando se fala em necrose por isquemia — todos os outros órgãos sólidos tendem à coagulativa, só o SNC vai pra liquefativa.", "dica": "Cérebro isquêmico 'derrete' (liquefativa). Tuberculose faz 'queijo' (caseosa)."}, {"n": 8, "tema": "Necrose Gordurosa", "nivel": "🔴 Nível 3 — Correlação Clínica", "q": "Qual o mecanismo bioquímico da necrose gordurosa (esteatonecrose) na pancreatite aguda, e por que o aspecto macroscópico é descrito como 'branco-gredoso'?", "opts": ["Ocorre por depósito direto de colesterol nos tecidos, sem relação com enzimas pancreáticas", "Ocorre por desnaturação proteica isolada, sem formação de nenhum composto novo", "Ocorre por proliferação bacteriana direta no tecido adiposo", "Lipases pancreáticas ativadas liberam ácidos graxos livres do tecido adiposo, que se combinam com cálcio formando sabões de cálcio (saponificação) — daí o aspecto 'branco-gredoso'"], "correct": 3, "justificativa": "Na pancreatite aguda, LIPASES PANCREÁTICAS ATIVADAS extravasam e atuam sobre o tecido adiposo peripancreático, liberando ÁCIDOS GRAXOS LIVRES — que se combinam com CÁLCIO circulante, formando SABÕES DE CÁLCIO (processo de saponificação). É esse depósito de sabões de cálcio que confere o aspecto macroscópico branco-gredoso, semelhante a giz.", "analise": ["Incorreto — o mecanismo não envolve depósito direto de colesterol; envolve a ação de lipases sobre triglicerídeos, liberando ácidos graxos.", "Incorreto — o mecanismo NÃO é apenas desnaturação proteica isolada; envolve especificamente a ação enzimática (lipases) e a formação de um composto novo (sabões de cálcio).", "Incorreto — a necrose gordurosa da pancreatite não depende de proliferação bacteriana; é um processo enzimático estéril (lipases pancreáticas), não infeccioso."], "analise_letters": ["A", "B", "C"], "conceito": "Necrose gordurosa: lipases pancreáticas → ácidos graxos livres → + cálcio → sabões de cálcio (saponificação) → aspecto branco-gredoso.", "pegadinha": "A hipocalcemia é uma complicação sistêmica conhecida da pancreatite aguda grave — justamente porque o cálcio é 'consumido' na formação desses sabões de cálcio nos focos de necrose gordurosa.", "dica": "Necrose gordurosa = lipase + gordura + cálcio = sabão (literalmente) — daí o aspecto de giz."}, {"n": 9, "tema": "Apoptose", "nivel": "🟢 Nível 1 — Essencial", "q": "A apoptose pode ocorrer em quais contextos?", "opts": ["Tanto em contextos FISIOLÓGICOS (normais) quanto PATOLÓGICOS", "Exclusivamente em contextos patológicos, nunca em condições normais", "Exclusivamente durante infecções bacterianas", "Exclusivamente em processos neoplásicos malignos"], "correct": 0, "justificativa": "A apoptose é um processo de morte celular PROGRAMADA que pode ocorrer TANTO em contextos FISIOLÓGICOS (ex.: embriogênese, renovação celular normal, eliminação de linfócitos autorreativos) QUANTO em contextos PATOLÓGICOS (ex.: lesão do DNA, acúmulo de proteínas mal dobradas).", "analise": ["Incorreto — a apoptose NÃO ocorre exclusivamente em contextos patológicos; ela é um processo NORMAL e essencial em muitas situações fisiológicas (diferente da necrose, que é sempre patológica).", "Incorreto — a apoptose não está restrita a infecções bacterianas; ocorre numa ampla variedade de contextos fisiológicos e patológicos diversos.", "Incorreto — embora a apoptose seja relevante em neoplasias (inclusive sua evasão é uma característica de células malignas), ela não ocorre EXCLUSIVAMENTE nesse contexto."], "analise_letters": ["B", "C", "D"], "conceito": "Apoptose: pode ser FISIOLÓGICA (embriogênese, renovação tecidual, eliminação de linfócitos autorreativos) ou PATOLÓGICA (lesão de DNA, proteínas mal dobradas).", "pegadinha": "Essa é uma diferença fundamental em relação à necrose: a necrose é SEMPRE patológica, mas a apoptose pode ser um processo perfeitamente NORMAL e necessário à vida.", "dica": "Apoptose = a 'morte celular do bem' — acontece o tempo todo em processos normais do corpo, não só quando algo dá errado."}, {"n": 10, "tema": "Necrose x Apoptose", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Por que a necrose desencadeia resposta inflamatória, enquanto a apoptose tipicamente NÃO desencadeia?", "opts": ["Porque a apoptose sempre ocorre em tecidos sem vascularização, impedindo qualquer inflamação", "Porque na necrose a membrana plasmática se rompe, extravasando conteúdo celular pro interstício; na apoptose a membrana permanece íntegra até a fagocitose rápida dos corpos apoptóticos", "Porque a necrose nunca envolve morte celular real, apenas alteração funcional temporária", "Não há realmente diferença relevante entre as 2 quanto à resposta inflamatória"], "correct": 1, "justificativa": "Na NECROSE, a membrana plasmática se ROMPE, extravasando o conteúdo intracelular (enzimas, DAMPs) pro interstício — esses componentes ativam a resposta inflamatória. Na APOPTOSE, a membrana permanece ÍNTEGRA, e os corpos apoptóticos são rapidamente FAGOCITADOS por macrófagos/células vizinhas, sem extravasamento de conteúdo — por isso, tipicamente, NÃO há inflamação.", "analise": ["Incorreto — a apoptose pode ocorrer em qualquer tecido, vascularizado ou não; a ausência de inflamação não depende da vascularização, mas da preservação da membrana e fagocitose rápida.", "Incorreto — a necrose envolve SIM morte celular real e definitiva (não é uma alteração temporária); é justamente essa morte com ruptura de membrana que causa a inflamação.", "Incorreto — existe SIM uma diferença fundamental e bem estabelecida entre as 2 quanto à resposta inflamatória — é um dos pontos mais cobrados na diferenciação entre necrose e apoptose."], "analise_letters": ["A", "C", "D"], "conceito": "Necrose: ruptura de membrana → extravasamento → inflamação. Apoptose: membrana íntegra → fagocitose rápida → SEM inflamação.", "pegadinha": "Essa diferença na resposta inflamatória é um dos critérios mais usados pra diferenciar necrose de apoptose tanto na prova quanto na prática clínica/histopatológica.", "dica": "Necrose = 'vaza e suja' (inflama). Apoptose = 'empacota e recolhe' (sem sujeira, sem inflamação)."}];
+const flashcards = [{"n": 1, "cat": "Anatomia Patológica", "f": "Diferencie Anatomia Patológica Geral de Especial.", "b": "Geral: mecanismos comuns a várias doenças. Especial: aplicação a um órgão/aparato específico."}, {"n": 2, "cat": "Métodos de Estudo", "f": "Diferencie Autópsia de Biópsia.", "b": "Autópsia: cadáver, determina causa da morte. Biópsia: ser vivo, amostra de tecido pra diagnóstico."}, {"n": 3, "cat": "Resposta ao Estresse", "f": "Quais as 3 respostas celulares principais ao estresse?", "b": "Adaptação (reversível), Lesão (reversível ou irreversível), Acúmulos."}, {"n": 4, "cat": "Lesão Reversível", "f": "Quais as características da lesão celular reversível?", "b": "Edema celular, ↓eosinofilia, blebs de membrana — núcleo normal, membrana íntegra."}, {"n": 5, "cat": "Alterações Nucleares", "f": "Qual a sequência das alterações nucleares na necrose?", "b": "Picnose (retração) → Cariorrexe (fragmentação) → Cariólise (dissolução completa)."}, {"n": 6, "cat": "Necrose Coagulativa", "f": "Onde ocorre classicamente a necrose coagulativa, e qual sua característica?", "b": "Órgãos sólidos (rim, coração, baço) por isquemia — preserva a arquitetura tecidual por dias."}, {"n": 7, "cat": "Necrose Liquefativa/Caseosa", "f": "Onde ocorre a necrose liquefativa por isquemia, e qual doença causa necrose caseosa?", "b": "Liquefativa: SNC/cérebro. Caseosa: Tuberculose (aspecto 'queijoso')."}, {"n": 8, "cat": "Necrose Gordurosa", "f": "Qual o mecanismo da necrose gordurosa na pancreatite?", "b": "Lipases pancreáticas → ácidos graxos livres → + cálcio → sabões de cálcio (aspecto branco-gredoso)."}, {"n": 9, "cat": "Apoptose", "f": "Em quais contextos a apoptose pode ocorrer?", "b": "Fisiológicos (embriogênese, renovação tecidual) e patológicos (lesão de DNA)."}, {"n": 10, "cat": "Necrose x Apoptose", "f": "Por que a necrose inflama e a apoptose não?", "b": "Necrose: rompe membrana, extravasa conteúdo. Apoptose: membrana íntegra, fagocitose rápida dos corpos apoptóticos."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+// ===== BANCO DE QUESTÕES =====
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  const nivelClean = item.nivel.replace(/^[^\s]+\s/, '');
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+// ===== MOTOR DE REPETIÇÃO ESPAÇADA REAL (SM-2, 4 níveis) + INTERFACE ANKI =====
+// Reutilizável: basta trocar CHAPTER_ID em cada capítulo futuro.
+const CHAPTER_ID = 'anatopato1_cap01_introducao_lesao_celular';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+// quality: 0=De novo, 1=Difícil, 2=Bem, 3=Fácil (escala real de 4 pontos, como o Anki de verdade)
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+// ===== FLASHCARDS =====
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+// ===== QUIZ RÁPIDO =====
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Anatomía Patológica I',
+    titulo: 'Capítulo 1 — Introdução e Lesão Celular',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Anatomía Patológica I', titulo: 'Capítulo 1 — Introdução e Lesão Celular', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
