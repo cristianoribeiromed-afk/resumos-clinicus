@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Epidemiología CDE — Cap. 1: Salud, Salud Pública y Sistemas de Salud | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0c1a12; --card:#122419; --card2:#173420;
+  --accent:#2a9d5c; --accent2:#6fd99a; --gold:#e8b84b;
+  --text:#e9f5ee; --text-dim:#a3cbb3; --ok:#4fd1a1; --bad:#e0505f; --border:#204a2e;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Epidemiología — CDE</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Epidemiología — CDE</span><span>1 de 1</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Epidemiología — CDE</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-04/epidemiologia-cde/Capitulo_01_Salud_Sistemas.html"><span class="ico">📊</span><span>Capítulo 1 — Salud, Salud Pública e Sistemas de Salud</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Epidemiología — CDE · P1 · Unidad I</span>
+  <h1>🌍 Capítulo 1 — Salud, Salud Pública e Sistemas de Salud</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois dessa aula</h2>
+    <ul>
+      <li>Definir Saúde segundo diferentes autores (OMS, Terris, Dubos)</li>
+      <li>Explicar de que depende a saúde das pessoas (determinantes)</li>
+      <li>Definir Saúde Pública e diferenciá-la da medicina individual</li>
+      <li>Descrever os 4 enfoques da Saúde Pública (Fomento, Prevenção, Organização/Provisão, Reabilitação)</li>
+      <li>Listar os níveis de prevenção em saúde pública</li>
+      <li>Definir Sistema de Saúde e explicar suas características essenciais</li>
+      <li>Descrever o Sistema de Saúde do Paraguai e o papel da APS</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📖 Por Onde Começar — a Pergunta Mais Básica de Todas</h2>
+    <p>Antes de estudar qualquer doença específica, Epidemiologia e Saúde Pública começam com uma pergunta que parece óbvia, mas na verdade não é: o que é SAÚDE? Se você perguntar pra 5 pessoas diferentes, provavelmente vai ouvir 5 respostas diferentes — "não estar doente", "se sentir bem", "conseguir trabalhar"... E é exatamente essa dificuldade de definir o conceito que fez vários autores, ao longo da história, proporem definições formais e complementares entre si. Vamos ver as principais.</p>
+  </div>
+
+  <div class="card">
+    <h2>🌍 Definições de Saúde</h2>
+    <div class="criterio"><b>✅ Definição da OMS (1948):</b> "A saúde é o estado de completo bem-estar físico, mental e social, e não somente a ausência de enfermidade" — considerada revolucionária pra época, porque pela primeira vez uma definição oficial deixava de tratar saúde como um conceito puramente NEGATIVO (a mera ausência de doença) e passava a tratá-la como algo POSITIVO, amplo, envolvendo 3 dimensões simultâneas: física, mental e social.</div>
+    <table>
+      <tr><th>Autor</th><th>Definição/Ideia central</th></tr>
+      <tr><td>René Dubos</td><td>"A saúde é como um espelhismo" — "um estado físico e mental razoavelmente livre de incômodo e dor, que permite à pessoa funcionar efetivamente pelo maior tempo possível no ambiente onde a sorte ou a escolha o colocou". Repara que Dubos é bem mais PRAGMÁTICO que a OMS: ele não fala de "completo" bem-estar (que seria quase inatingível), e sim de conseguir FUNCIONAR efetivamente, apesar de eventuais limitações</td></tr>
+      <tr><td>Milton Terris</td><td>"Um estado de bem-estar físico, mental e social, com capacidade de funcionamento, e não só a ausência de doença" — Terris é geralmente citado como quem "corrigiu" um ponto criticado na definição da OMS: ele adiciona explicitamente a CAPACIDADE DE FUNCIONAMENTO como parte da definição, reconhecendo que existem graus de saúde (não é um estado tudo-ou-nada de "completo bem-estar")</td></tr>
+    </table>
+    <div class="hot">💭 Repara na evolução do pensamento aqui: a OMS (1948) foi revolucionária ao ampliar o conceito além da simples ausência de doença — mas sua definição de "completo" bem-estar é quase impossível de alcançar na prática (quem está SEMPRE em completo bem-estar físico, mental E social?). Dubos e Terris, vindo depois, tentam tornar o conceito mais REALISTA e OPERACIONAL, focando na capacidade de FUNCIONAMENTO da pessoa, não num estado perfeito e estático.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ De Que Depende a Saúde das Pessoas?</h2>
+    <p>Se saúde não é só "não estar doente", então quais fatores realmente determinam se uma pessoa está saudável ou não? A resposta clássica organiza isso em 4 grandes grupos — e vale notar que a distribuição de IMPORTÂNCIA entre esses grupos costuma surpreender quem não estudou o tema antes.</p>
+    <table>
+      <tr><th>Determinante</th><th>O que inclui</th></tr>
+      <tr><td>Biologia Humana</td><td>Fatores genéticos, envelhecimento, processos internos do corpo</td></tr>
+      <tr><td>Meio Ambiente</td><td>Condições sociais, econômicas, culturais, de moradia, trabalho, educação</td></tr>
+      <tr><td>Estilos de Vida</td><td>Condutas, atitudes, hábitos, valores — as escolhas que a pessoa faz no dia a dia</td></tr>
+      <tr><td>Serviços de Saúde</td><td>Estrutura, cuidados médicos, prevenção, tratamento disponíveis pra pessoa</td></tr>
+    </table>
+    <div class="prova">📝 Ponto-chave (e que costuma surpreender): pesquisas clássicas de saúde pública mostram que os SERVIÇOS DE SAÚDE — ou seja, hospitais, médicos, remédios — são responsáveis por apenas uma FRAÇÃO relativamente pequena da saúde de uma população, enquanto o MEIO AMBIENTE e os ESTILOS DE VIDA respondem pela maior parte. Isso é fundamental pra entender por que a Saúde Pública se preocupa tanto com prevenção/promoção, e não só com "ter mais hospitais".</div>
+  </div>
+
+  <div class="card">
+    <h2>🏛️ Definição de Saúde Pública</h2>
+    <div class="criterio"><b>✅ Definição clássica (Milton Terris, 1990):</b> "A ciência e a arte de prevenir as doenças e as incapacidades, prolongar a vida e fomentar a saúde física e mental, mediante esforços organizados da comunidade, pra saneamento do meio ambiente, controle das enfermidades infecciosas e não infecciosas, assim como das lesões; a educação do indivíduo em princípios de higiene pessoal; a organização dos serviços pra o diagnóstico e tratamento das enfermidades e pra a reabilitação, assim como o desenvolvimento da maquinaria social que assegure a cada membro da comunidade um nível de vida adequado pra a manutenção da saúde."</div>
+    <p>É uma definição longa, mas repara que ela já antecipa praticamente TUDO que vamos ver no resto desse capítulo: saneamento ambiental, controle de doenças, educação, organização de serviços, reabilitação e — o ponto final, muitas vezes esquecido — garantir um nível de vida adequado. Uma definição mais recente (OPS, 2002) resume bem essa mesma ideia: "A Saúde Pública é o esforço organizado da sociedade, principalmente através de suas instituições de caráter público, pra melhorar, promover, proteger e restaurar a saúde das populações por meio de ações de alcance coletivo."</p>
+    <div class="prova">📝 A palavra-chave que aparece em TODAS as definições de Saúde Pública é "COLETIVO"/"comunidade"/"sociedade" — diferente da medicina clínica tradicional, que trata UM paciente de cada vez, a Saúde Pública sempre pensa em POPULAÇÕES inteiras. Guarda essa diferença, porque ela é a base de tudo que diferencia Saúde Pública de Medicina Individual (que vamos ver mais adiante nesse capítulo).</div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Missão e Campo de Atuação da Saúde Pública</h2>
+    <p>De forma resumida, a MISSÃO da saúde pública é PREVENIR a doença e PROMOVER a saúde. E o campo de atuação dela é bem mais amplo do que se costuma imaginar: tanto a SOCIEDADE em seu conjunto, quanto cada uma de suas partes e estruturas — desde as populações até o INDIVÍDUO isoladamente. Por isso, suas funções fundamentais consistem em: vigiar o estado de saúde da sociedade e suas necessidades; eleger e desenvolver as melhores políticas de saúde; e garantir a prestação dos serviços sanitários necessários.</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">Atores da Saúde Pública</h2>
+    <p>Quem efetivamente PARTICIPA e EXECUTA a saúde pública? Não é só o governo — são 5 grandes atores atuando (idealmente) de forma coordenada:</p>
+    <ul>
+      <li><b>Sociedade</b></li>
+      <li><b>Estado</b></li>
+      <li><b>O Público não estatal</b> (organizações sem fins lucrativos, ONGs de saúde)</li>
+      <li><b>O Privado</b></li>
+      <li><b>Profissões e profissionais</b> de saúde</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🧭 As 5 Funções Essenciais da Saúde Pública (FESP)</h2>
+    <p>Além dos atores (QUEM faz), existem as funções essenciais (O QUE precisa ser feito) — um conjunto de atuações concretas que toda boa saúde pública precisa cumprir:</p>
+    <ol>
+      <li><b>Seguimento, avaliação e análise</b> da situação de saúde</li>
+      <li><b>Vigilância e controle</b> (de surtos epidemiológicos)</li>
+      <li><b>Promoção da saúde</b></li>
+      <li><b>Participação dos cidadãos</b> na saúde</li>
+      <li><b>Desenvolvimento de políticas e capacidade institucional</b> pra a planificação em matéria de Saúde Pública (objetivos, desenvolvimento, seguimento e avaliação de decisões políticas)</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Os 4 Enfoques da Saúde Pública</h2>
+    <p>Chegamos num dos pontos mais importantes desse capítulo. Toda a atuação da Saúde Pública pode ser organizada em 4 grandes ENFOQUES (abordagens) — e cada um deles responde a um momento diferente da história natural de uma doença: ANTES dela aparecer, no momento em que ela é DETECTADA, na hora de ORGANIZAR o cuidado, e DEPOIS que a pessoa já foi tratada.</p>
+    <table>
+      <tr><th>Enfoque</th><th>O que envolve</th></tr>
+      <tr><td>1. Fomento da Saúde</td><td>Higiene pessoal, educação sanitária, exercício físico, práticas dietéticas, códigos de conduta/autodisciplina, sanidade ambiental — tudo que promove ativamente a saúde, mesmo sem doença presente</td></tr>
+      <tr><td>2. Prevenção da Enfermidade</td><td>Vacinação, abastecimento de água potável, sistemas de esgoto, controle sanitário — medidas que EVITAM que a doença apareça</td></tr>
+      <tr><td>3. Organização e Provisão de Serviços</td><td>Serviços sanitários (médicos e pessoal médico assalariado que trabalha em hospitais e centros de saúde dependentes do Estado)</td></tr>
+      <tr><td>4. Reabilitação</td><td>Grande desenvolvimento de programas e serviços de reabilitação pra reintegrar o indivíduo — não é só recuperação física, também os aspectos sociais/psicológicos são importantes nos serviços de saúde</td></tr>
+    </table>
+    <div class="hot">💭 Repara na lógica temporal por trás desses 4 enfoques: Fomento e Prevenção acontecem ANTES da doença (evitando que ela sequer apareça); Organização/Provisão de Serviços acontece DURANTE (quando a pessoa já está doente e precisa de cuidado); e Reabilitação acontece DEPOIS (reintegrando a pessoa à sua vida normal). Essa mesma lógica temporal vai reaparecer, de forma ainda mais estruturada, nos níveis de prevenção que vemos a seguir.</div>
+  </div>
+
+  <div class="card">
+    <h2>🛡️ Os 3 Níveis de Prevenção em Saúde Pública</h2>
+    <p>Se os 4 enfoques que acabamos de ver organizam a saúde pública por TIPO de ação, os níveis de prevenção organizam especificamente a relação entre a AÇÃO e o MOMENTO da doença — antes dela começar, logo no início (ainda sem sintomas), ou depois que ela já se instalou.</p>
+    <table>
+      <tr><th>Nível</th><th>Objetivo</th><th>Exemplos práticos</th></tr>
+      <tr><td>Primária</td><td>Atuar ANTES que a doença apareça, protegendo populações vulneráveis dos agentes que podem gerar a enfermidade</td><td>Melhora das condições sociais/econômicas (previne um amplo leque de problemas de saúde); Vacinação (previne doenças contagiosas); Política laboral de defesa da segurança do trabalhador (previne acidentes, doenças mentais e cardiovasculares)</td></tr>
+      <tr><td>Secundária</td><td>Intervir na fase PRÉ-SINTOMÁTICA da doença, pra frear seu curso</td><td>Detecção precoce de câncer (ex.: câncer de mama — detectar antes de causar sintomas pode evitar a morte); Detecção do risco cardiovascular (a doença subjacente começa na juventude — a prevenção pode atrasar o aparecimento de sintomas)</td></tr>
+      <tr><td>Terciária</td><td>Quando a pessoa JÁ ESTÁ doente — reduzir complicações, curar, reabilitar e reintegrar à sua função ativa</td><td>Assistência sanitária habitual (tratamento que evita complicações); Reabilitação pra recuperar função física/psíquica; Atenção às necessidades sociais que permitem a reintegração</td></tr>
+    </table>
+    <div class="prova">📝 Ponto-chave de prova: a diferença entre Primária e Secundária NÃO é "antes x depois da doença começar" de forma simples — é mais sutil: a Primária atua ANTES da doença existir; a Secundária atua quando a doença JÁ EXISTE, mas ainda na fase PRÉ-SINTOMÁTICA (silenciosa) — o objetivo é encontrá-la antes que ela dê sinais. Já a Terciária entra em ação quando a doença já está clinicamente manifesta (com sintomas).</div>
+    <div class="hot">💭 Repara na conexão direta com o Capítulo de Anatomia Patológica sobre Adaptação Celular, se você já estudou: a lógica de "atuar antes que o dano se torne irreversível" está por toda a medicina — na prevenção secundária, detectar o câncer de mama ainda na fase pré-sintomática é justamente aproveitar essa janela de tempo antes que o processo patológico se torne mais avançado/irreversível.</div>
+  </div>
+
+  <div class="card">
+    <h2>🏥 O Que é um Sistema de Saúde?</h2>
+    <div class="criterio"><b>✅ Definição (OMS):</b> o conjunto de organizações, instituições e recursos cujo objetivo principal é melhorar a saúde nos lares, locais de trabalho, lugares públicos e nas comunidades, assim como no meio ambiente físico e psicossocial.</div>
+    <p style="text-align:center;font-weight:600;margin:10px 0;">"A razão de ser de TODO sistema sanitário é MELHORAR A SAÚDE."</p>
+    <p>Mas melhorar a saúde não é suficiente se isso não chegar a TODO MUNDO, de forma completa, justa e sustentável ao longo do tempo. Por isso, segundo a OPS (2007), todo sistema de saúde DEVE SER:</p>
+    <table>
+      <tr><th>Característica</th><th>O que significa</th></tr>
+      <tr><td>Universal</td><td>Todas as pessoas DEVERIAM ter a possibilidade de acessá-lo</td></tr>
+      <tr><td>Integral</td><td>Deve satisfazer a DIVERSIDADE de necessidades de saúde da população — não cobrir só uma parte</td></tr>
+      <tr><td>Equitativo</td><td>Distribuição justa dos recursos e do acesso, conforme a necessidade de cada pessoa/grupo</td></tr>
+      <tr><td>Economicamente Sustentável</td><td>Precisa conseguir se manter financeiramente ao longo do tempo — de nada adianta um sistema ideal que quebra em poucos anos</td></tr>
+    </table>
+    <div class="hot">💭 Um Sistema de Saúde Baseado na APS (Atenção Primária de Saúde) é um enfoque amplo da organização e operação dos sistemas de saúde, que faz do direito a alcançar o maior nível possível de saúde seu principal objetivo, ao mesmo tempo em que MAXIMIZA a equidade e a solidariedade do sistema (OPS, 2007). Isso já antecipa o tema da próxima aula (Clase 2 — Atenção Primária de Saúde) — a APS não é apenas "um nível de atenção", é a FILOSOFIA que deveria organizar o sistema inteiro.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Medicina Individual x Medicina Social</h2>
+    <p>Voltando àquela distinção-chave que mencionamos antes (Saúde Pública sempre pensa em COLETIVO) — vale formalizar a diferença entre os 2 grandes enfoques que convivem dentro da atenção à saúde:</p>
+    <table>
+      <tr><th>Aspecto</th><th>Medicina Individual</th><th>Medicina Social</th></tr>
+      <tr><td>Foco</td><td>O PACIENTE, individualmente</td><td>A POPULAÇÃO/comunidade como um todo</td></tr>
+      <tr><td>Abordagem típica</td><td>Diagnóstico e tratamento de UMA pessoa por vez, na consulta</td><td>Vigilância epidemiológica, políticas públicas, ações coletivas de prevenção/promoção</td></tr>
+      <tr><td>Onde se conectam</td><td colspan="2" style="text-align:center;">As 2 abordagens são COMPLEMENTARES, não competem entre si — um sistema de saúde funcional precisa das 2 trabalhando juntas</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🇵🇾 O Sistema de Saúde do Paraguai</h2>
+    <div class="criterio"><b>✅ Composição:</b> o Sistema de Saúde do Paraguai compreende os subsetores PÚBLICO e PRIVADO. O subsetor público é representado pelo Ministério de Saúde Pública e Bem-Estar Social (MSPyBS), o Instituto de Previdência Social (IPS), a Sanidade Militar, a Sanidade Policial, a Universidade Nacional de Assunção, e os serviços assistenciais das empresas descentralizadas Itaipu e Yacyretá.</div>
+    <p>Um dado importante pra dimensionar esse sistema: o MSPyBS atende cerca de 65% da população total do país, com ênfase especial na população VULNERÁVEL e pobre — reforçando o papel do setor público como a principal porta de entrada ao sistema de saúde pra maior parte dos paraguaios, especialmente os mais vulneráveis.</p>
+  </div>
+
+  <div class="card">
+    <h2>🏘️ "O Sistema de Saúde do Paraguai é Baseado na Atenção Primária de Saúde"</h2>
+    <p>Essa frase resume a filosofia oficial do sistema paraguaio, e conecta diretamente com o que vimos sobre sistemas baseados em APS. O que é a Atenção Primária de Saúde, nesse contexto? É definida como o ambiente sanitário essencial e a porta de entrada do sistema de saúde — a forma INTEGRAL de desenvolvimento socioeconômico geral da comunidade.</p>
+    <p>Na prática, isso se organiza através das USF (Unidades de Saúde da Família) — que veremos em detalhe na próxima aula, mas que já vale adiantar aqui: são equipes multidisciplinares integradas por médico generalista/especialista em medicina familiar, enfermeira, auxiliar de enfermagem, agentes comunitários e odontologia — trabalhando em territórios sociais definidos, incorporando eixos estratégicos baseados na criação e implementação dessas unidades.</p>
+  </div>
+
+  <div class="card">
+    <h2>💰 Financiamento — Tipos de Sistemas Sanitários</h2>
+    <p>Por fim, vale entender como um sistema de saúde pode ser FINANCIADO — porque isso determina bastante sua estrutura e acessibilidade:</p>
+    <table>
+      <tr><th>Tipo</th><th>Como funciona</th><th>Exemplo</th></tr>
+      <tr><td>Universalista (Beveridge)</td><td>Financiamento público (impostos), cobertura universal</td><td>Espanha, Suécia</td></tr>
+      <tr><td>Seguro Social (Bismark)</td><td>Financiamento através de contribuições obrigatórias/institucionais</td><td>Alemanha, Áustria, Suíça</td></tr>
+      <tr><td>Seguro Privado</td><td>Financiamento privado, acessibilidade dependendo da renda dos usuários — envolve contrato entre o sanitário e o cidadão</td><td>—</td></tr>
+      <tr><td>Misto</td><td>Diferentes fontes de financiamento combinadas, fragmentação do sistema sanitário</td><td>Peru</td></tr>
+    </table>
+    <div class="prova">📝 A diferença central entre público e privado, em termos de ACESSO: o sistema PÚBLICO busca assegurar a acessibilidade de TODOS os cidadãos à saúde pública, fomentando promoção/prevenção/reabilitação, organizado por NÍVEIS de atenção em hospitais e centros de saúde. Já o sistema PRIVADO tem acessibilidade LIMITADA dependendo da renda dos usuários, organizado através de clínicas ou hospitais privados.</div>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <ul>
+      <li>OMS (1948): saúde = completo bem-estar físico/mental/social, não só ausência de doença. Terris adiciona: capacidade de FUNCIONAMENTO</li>
+      <li>4 determinantes da saúde: Biologia Humana, Meio Ambiente, Estilos de Vida, Serviços de Saúde — os 2 do meio pesam mais que os serviços de saúde isoladamente</li>
+      <li>Saúde Pública (Terris/OPS): esforço ORGANIZADO da sociedade/comunidade — sempre pensa em COLETIVO, diferente da medicina individual</li>
+      <li>5 atores da Saúde Pública: Sociedade, Estado, Público não estatal, Privado, Profissões/profissionais</li>
+      <li>5 Funções Essenciais (FESP): Seguimento/avaliação, Vigilância/controle, Promoção, Participação cidadã, Políticas/capacidade institucional</li>
+      <li>4 Enfoques: Fomento (antes), Prevenção (evita), Organização/Provisão de Serviços (durante), Reabilitação (depois)</li>
+      <li>3 Níveis de Prevenção: Primária (antes da doença existir), Secundária (doença já existe, fase pré-sintomática), Terciária (doença já manifesta — reduzir complicações/reabilitar)</li>
+      <li>Sistema de Saúde deve ser: Universal, Integral, Equitativo, Economicamente Sustentável</li>
+      <li>Sistema de Saúde do Paraguai: público (MSPyBS ~65% da população, IPS, Sanidade Militar/Policial, UNA, Itaipu/Yacyretá) + privado — baseado na APS</li>
+      <li>4 tipos de financiamento: Universalista/Beveridge (impostos), Seguro Social/Bismark (contribuições), Privado (renda), Misto (combinado)</li>
+    </ul>
+  </div>
+
+</section>
+
+
+
+
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🏘️ Caso Progressivo — A Comunidade Rural e o Câncer de Colo do Útero</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Vamos acompanhar uma equipe de Saúde Pública trabalhando numa comunidade rural com alta incidência de câncer de colo do útero em estágio avançado. O caso evolui em 3 níveis.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟢 Nível 1 — Fundamental</h2>
+    <p><b>Uma equipe de saúde pública identifica que, numa comunidade rural, a maioria dos casos de câncer de colo do útero é diagnosticada em estágio JÁ AVANÇADO, quando as opções de tratamento são limitadas. A equipe decide implementar 2 ações: campanha de vacinação contra o HPV pras adolescentes da região, e rastreamento periódico com Papanicolau pras mulheres adultas.</b></p>
+    <p><b>Pergunta:</b> Classificando essas 2 ações segundo os 3 níveis de prevenção vistos nesse capítulo, em qual nível se encaixa cada uma, e por quê?</p>
+    <p><b>Resposta comentada:</b> A campanha de VACINAÇÃO contra o HPV se encaixa na PREVENÇÃO PRIMÁRIA — porque atua ANTES que a doença apareça, protegendo uma população vulnerável (adolescentes) do agente (HPV) que pode gerar a enfermidade (câncer de colo do útero), exatamente como no exemplo de vacinação visto nesse capítulo. Já o rastreamento com PAPANICOLAU se encaixa na PREVENÇÃO SECUNDÁRIA — porque intervém na fase PRÉ-SINTOMÁTICA da doença (detectando alterações celulares antes que a mulher tenha qualquer sintoma), buscando frear o curso da doença através da detecção precoce — o mesmo princípio do exemplo de detecção precoce de câncer de mama mencionado nesse capítulo. Repara que as 2 ações são complementares: a vacinação tenta EVITAR que a doença apareça; o rastreamento tenta PEGAR a doença cedo, caso ela já tenha começado a se desenvolver apesar da prevenção primária.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟡 Nível 2 — Intermediário</h2>
+    <p><b>Ao investigar por que os diagnósticos chegam tão tarde, a equipe descobre que o posto de saúde mais próximo fica a 3 horas de distância, o exame de Papanicolau tem fila de espera de meses, e muitas mulheres relatam não ter dinheiro pro transporte até o posto.</b></p>
+    <p><b>Pergunta:</b> Analisando essa situação segundo as características que todo Sistema de Saúde DEVE ter (vistas nesse capítulo), qual(is) característica(s) está(ão) sendo violada(s) nessa comunidade específica?</p>
+    <p><b>Resposta comentada:</b> Está sendo violada principalmente a característica de UNIVERSALIDADE — lembrando que "todas as pessoas DEVERIAM ter a possibilidade de acessar" o sistema, e nesse caso a distância de 3 horas e a falta de dinheiro pro transporte criam uma barreira de ACESSO real, mesmo que o serviço formalmente "exista". Também está sendo comprometida a EQUIDADE — já que mulheres em situação de maior vulnerabilidade geográfica/econômica estão recebendo, na prática, MENOS acesso efetivo ao cuidado preventivo do que mulheres em áreas urbanas mais bem servidas, mesmo tendo a MESMA (ou até maior) necessidade de saúde. A fila de espera de meses também compromete a INTEGRALIDADE do serviço, já que a capacidade de atender à diversidade/volume de necessidades de saúde da população está claramente insuficiente. Esse caso ilustra bem como um sistema pode ter as políticas "corretas" no papel (rastreamento disponível), mas falhar na prática por não garantir essas características essenciais de forma efetiva.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Nível 3 — Aplicação Integrada</h2>
+    <p><b>Diante desse diagnóstico, a equipe de saúde pública decide não apenas melhorar o acesso ao exame, mas também treinar os Agentes Comunitários de Saúde locais pra fazerem visitas domiciliares, identificando mulheres em risco e orientando sobre a importância do rastreamento — trabalhando em conjunto com os ginecologistas do posto de saúde, que continuam responsáveis pelo diagnóstico e tratamento individual de cada caso identificado.</b></p>
+    <p><b>Pergunta:</b> Integrando os conceitos de Medicina Individual x Social, e os 4 Enfoques da Saúde Pública vistos nesse capítulo, como essa nova estratégia representa a articulação entre esses 2 níveis de atuação, e qual(is) enfoque(s) da saúde pública ela está mobilizando?</p>
+    <p><b>Resposta comentada:</b> Essa estratégia é um exemplo claro e bem desenhado de como MEDICINA SOCIAL e MEDICINA INDIVIDUAL se complementam, em vez de competirem: os Agentes Comunitários atuando em nível COMUNITÁRIO/populacional (identificação de risco, educação, mobilização social) representam a Medicina Social; enquanto os ginecologistas, tratando cada mulher diagnosticada individualmente no posto de saúde, representam a Medicina Individual — e o sistema como um todo só funciona bem quando essas 2 dimensões trabalham JUNTAS, como vimos nesse capítulo. Em termos dos 4 Enfoques da Saúde Pública, essa estratégia mobiliza principalmente: o FOMENTO DA SAÚDE (a educação sanitária feita pelos agentes comunitários, informando as mulheres sobre a importância do autocuidado); a PREVENÇÃO DA ENFERMIDADE (ao facilitar o acesso ao rastreamento precoce); e a ORGANIZAÇÃO E PROVISÃO DE SERVIÇOS (ao estruturar melhor a articulação entre agentes comunitários e o atendimento médico especializado no posto de saúde) — mostrando como uma única intervenção bem planejada pode, na prática, mobilizar SIMULTANEAMENTE vários desses enfoques que, no papel, parecem categorias separadas.</p>
+  </div>
+</section>
+
+
+
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Definição de Saúde (OMS)", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a definição de Saúde estabelecida pela OMS em 1948, e por que ela foi considerada revolucionária?", "opts": ["Estado de completo bem-estar físico, mental e social, e não somente a ausência de enfermidade — revolucionária por tratar saúde como algo POSITIVO, não só a ausência de doença", "Ausência total e completa de qualquer sintoma físico, sem menção a aspectos mentais ou sociais", "Capacidade exclusiva de realizar trabalho remunerado, sem outras dimensões envolvidas", "Definição puramente biológica, sem qualquer componente social ou mental"], "correct": 0, "justificativa": "A OMS (1948) define saúde como 'o estado de completo bem-estar físico, mental e social, e não somente a ausência de enfermidade' — considerada revolucionária por deixar de tratar saúde apenas como ausência de doença (conceito negativo) e passar a incluir bem-estar POSITIVO em 3 dimensões.", "analise": ["Incorreto — essa definição reduz saúde apenas ao aspecto físico, ignorando as dimensões mental e social que são centrais na definição da OMS.", "Incorreto — restringir saúde à capacidade de trabalho remunerado é uma visão muito mais limitada do que a definição ampla da OMS.", "Incorreto — a definição da OMS é justamente o OPOSTO de puramente biológica; ela inclui explicitamente os componentes mental e social."], "analise_letters": ["B", "C", "D"], "conceito": "OMS (1948): saúde = completo bem-estar físico/mental/social, não só ausência de doença — revolucionária por ser um conceito POSITIVO, não negativo.", "pegadinha": "'Completo' bem-estar é um padrão extremamente alto, quase inatingível na prática — é exatamente esse ponto que outros autores (Dubos, Terris) vão tentar tornar mais realista/operacional depois.", "dica": "OMS 1948 = a 1ª definição a tratar saúde como algo POSITIVO (bem-estar), não só a ausência de doença."}, {"n": 2, "tema": "Terris e Dubos", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "O que Milton Terris adiciona à definição de saúde da OMS, tornando-a mais operacional?", "opts": ["Terris elimina completamente a dimensão social da definição de saúde", "Terris adiciona explicitamente a CAPACIDADE DE FUNCIONAMENTO como parte da definição, reconhecendo graus de saúde (não um estado tudo-ou-nada)", "Terris restringe a definição exclusivamente a aspectos econômicos", "Terris define saúde como sinônimo exato e idêntico de riqueza material"], "correct": 1, "justificativa": "Terris adiciona à definição a CAPACIDADE DE FUNCIONAMENTO — reconhecendo que existem graus de saúde, não um estado absoluto e perfeito de 'completo' bem-estar como sugere a definição original da OMS.", "analise": ["Incorreto — Terris mantém as dimensões física, mental e social; ele não elimina a dimensão social, apenas adiciona o elemento de funcionamento.", "Incorreto — Terris não restringe a definição a aspectos econômicos; ele adiciona a capacidade de funcionamento, mantendo a amplitude da definição original.", "Incorreto — Terris não define saúde como sinônimo de riqueza material; sua contribuição é sobre capacidade de funcionamento, não sobre recursos econômicos."], "analise_letters": ["A", "C", "D"], "conceito": "Terris: adiciona a capacidade de FUNCIONAMENTO à definição de saúde — torna o conceito mais operacional/realista, reconhecendo graus de saúde.", "pegadinha": "Não confundir Terris (capacidade de funcionamento) com Dubos (saúde como 'espelhismo', foco em funcionar efetivamente apesar de limitações) — os 2 são complementares, mas com ênfases um pouco diferentes.", "dica": "Terris = 'saúde não é tudo ou nada' — existem graus, medidos pela capacidade de funcionar."}, {"n": 3, "tema": "Determinantes da Saúde", "nivel": "🟢 Nível 1 — Essencial", "q": "Quais os 4 grandes grupos de determinantes de que depende a saúde de uma pessoa?", "opts": ["Apenas fatores genéticos, isoladamente, sem outras influências", "Biologia Humana, Meio Ambiente, Estilos de Vida e Serviços de Saúde", "Exclusivamente a renda familiar e o nível educacional dos pais", "Apenas o acesso a hospitais e médicos especialistas"], "correct": 2, "justificativa": "Os 4 grandes determinantes da saúde são: Biologia Humana (genética, envelhecimento), Meio Ambiente (condições sociais/econômicas/culturais), Estilos de Vida (condutas, hábitos, valores) e Serviços de Saúde (estrutura/cuidados médicos disponíveis).", "analise": ["Incorreto — fatores genéticos (Biologia Humana) são apenas UM dos 4 determinantes, não o único.", "Incorreto — renda e educação são aspectos específicos que se encaixam dentro do determinante 'Meio Ambiente', mas não são os 4 determinantes completos.", "Incorreto — serviços de saúde são apenas UM dos 4 determinantes, e — como vimos — nem o mais influente isoladamente."], "analise_letters": ["A", "B", "D"], "conceito": "4 determinantes da saúde: Biologia Humana, Meio Ambiente, Estilos de Vida, Serviços de Saúde.", "pegadinha": "É um erro comum assumir que 'mais hospitais/médicos' é a principal forma de melhorar a saúde de uma população — Meio Ambiente e Estilos de Vida, juntos, costumam ter peso maior que os Serviços de Saúde isoladamente.", "dica": "4 determinantes: Biologia, Ambiente, Estilo de Vida, Serviços de Saúde — nem sempre esse último é o mais importante."}, {"n": 4, "tema": "Definição de Saúde Pública", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual palavra-chave aparece em TODAS as definições clássicas de Saúde Pública, diferenciando-a da medicina clínica individual?", "opts": ["Hospitalar", "Farmacológico", "Cirúrgico", "Coletivo (comunidade/sociedade)"], "correct": 3, "justificativa": "A palavra-chave que aparece em todas as definições de Saúde Pública é 'COLETIVO'/'comunidade'/'sociedade' — diferente da medicina clínica tradicional (que trata um paciente de cada vez), a Saúde Pública sempre pensa em POPULAÇÕES inteiras.", "analise": ["Incorreto — 'hospitalar' não é a palavra-chave central que diferencia Saúde Pública de medicina individual; a Saúde Pública vai muito além do ambiente hospitalar.", "Incorreto — o aspecto farmacológico não é o elemento definidor central da Saúde Pública.", "Incorreto — o aspecto cirúrgico não é a palavra-chave que diferencia Saúde Pública de medicina individual."], "analise_letters": ["A", "B", "C"], "conceito": "Saúde Pública: palavra-chave central = COLETIVO/comunidade/sociedade — diferente da medicina individual (um paciente por vez).", "pegadinha": "Isso não significa que a Saúde Pública IGNORE o indivíduo — ela atua também no indivíduo (ver 'campo de atuação'), mas sempre com uma lente coletiva/populacional por trás.", "dica": "Se a definição fala em 'esforços organizados da comunidade/sociedade', é definição de Saúde Pública — o foco é sempre coletivo."}, {"n": 5, "tema": "4 Enfoques da Saúde Pública", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Quais os 4 enfoques (abordagens) da Saúde Pública vistos nesse capítulo?", "opts": ["Fomento da Saúde, Prevenção da Enfermidade, Organização/Provisão de Serviços, Reabilitação", "Apenas Diagnóstico e Tratamento, isoladamente, sem outras dimensões", "Exclusivamente Vacinação e Saneamento Básico", "Apenas Cirurgia e Farmacologia Clínica"], "correct": 0, "justificativa": "Os 4 enfoques da Saúde Pública são: 1) Fomento da Saúde (higiene, educação sanitária, exercício); 2) Prevenção da Enfermidade (vacinação, água potável); 3) Organização e Provisão de Serviços (serviços sanitários/hospitais); 4) Reabilitação (programas de reintegração).", "analise": ["Incorreto — diagnóstico e tratamento se encaixam dentro do enfoque de 'Organização e Provisão de Serviços', mas não são os 4 enfoques completos.", "Incorreto — vacinação e saneamento são exemplos específicos dentro do enfoque de 'Prevenção da Enfermidade', não os 4 enfoques completos.", "Incorreto — cirurgia e farmacologia clínica não são os 4 enfoques da Saúde Pública descritos nesse capítulo."], "analise_letters": ["B", "C", "D"], "conceito": "4 Enfoques da Saúde Pública: Fomento da Saúde, Prevenção da Enfermidade, Organização/Provisão de Serviços, Reabilitação.", "pegadinha": "Esses 4 enfoques seguem uma lógica temporal: Fomento/Prevenção (ANTES da doença), Organização/Provisão de Serviços (DURANTE), Reabilitação (DEPOIS).", "dica": "4 enfoques = antes (fomento+prevenção), durante (serviços), depois (reabilitação) da doença."}, {"n": 6, "tema": "Prevenção Primária x Secundária", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença fundamental entre Prevenção Primária e Prevenção Secundária?", "opts": ["Ambos os níveis são exatamente idênticos, sem distinção real", "Primária atua ANTES que a doença exista; Secundária atua quando a doença JÁ EXISTE, mas ainda na fase pré-sintomática (detecção precoce)", "Primária só se aplica a doenças infecciosas; Secundária só a doenças crônicas", "Secundária sempre ocorre antes da Primária, nunca depois"], "correct": 1, "justificativa": "A Prevenção PRIMÁRIA atua ANTES que a doença apareça (ex.: vacinação). A Prevenção SECUNDÁRIA intervém quando a doença JÁ EXISTE, mas ainda na fase PRÉ-SINTOMÁTICA — buscando detectá-la precocemente antes que cause sintomas (ex.: rastreamento de câncer).", "analise": ["Incorreto — os 2 níveis têm momentos de atuação claramente DIFERENTES em relação à doença (antes de existir x já existindo silenciosamente).", "Incorreto — essa restrição por tipo de doença (infecciosa x crônica) não é o critério real que diferencia prevenção primária de secundária; ambas podem se aplicar a diferentes tipos de doença.", "Incorreto — a ordem lógica e cronológica correta é Primária ANTES de Secundária, não o contrário."], "analise_letters": ["A", "C", "D"], "conceito": "Prevenção Primária: antes da doença existir. Prevenção Secundária: doença já existe, fase pré-sintomática (detecção precoce).", "pegadinha": "A diferença NÃO é simplesmente 'antes x depois da doença começar' — a Secundária também é uma forma de prevenção, só que atuando numa doença que já começou, mas ainda silenciosa.", "dica": "Primária = evitar que comece. Secundária = pegar cedo, antes de dar sintoma."}, {"n": 7, "tema": "Prevenção Terciária", "nivel": "🟢 Nível 1 — Essencial", "q": "O que caracteriza a Prevenção Terciária?", "opts": ["Atua exclusivamente antes que qualquer doença exista", "É idêntica à prevenção primária, apenas com nome diferente", "Age quando a pessoa JÁ ESTÁ doente (com sintomas) — reduzindo complicações, curando, reabilitando e reintegrando à função ativa", "Aplica-se exclusivamente a populações saudáveis, sem qualquer doença presente"], "correct": 2, "justificativa": "A Prevenção TERCIÁRIA age quando a pessoa JÁ ESTÁ doente (com sintomas manifestos) — buscando reduzir complicações, curar, reabilitar e reintegrar a pessoa à sua função ativa (ex.: assistência sanitária habitual, reabilitação física/psíquica).", "analise": ["Incorreto — atuar antes de qualquer doença existir é a definição de Prevenção PRIMÁRIA, não terciária.", "Incorreto — a prevenção terciária tem características e momento de atuação BEM diferentes da primária (doença já manifesta x doença inexistente).", "Incorreto — a prevenção terciária se aplica justamente a pessoas JÁ DOENTES (com sintomas), não a populações saudáveis."], "analise_letters": ["A", "B", "D"], "conceito": "Prevenção Terciária: doença já manifesta (com sintomas) — reduzir complicações, curar, reabilitar, reintegrar.", "pegadinha": "A Terciária é a única das 3 que trabalha com a doença já plenamente estabelecida e sintomática — Primária e Secundária atuam ambas ANTES dos sintomas aparecerem (a diferença entre elas é se a doença já existe silenciosamente ou não).", "dica": "Terciária = a doença já 'deu as caras' — foco em reduzir dano e reabilitar."}, {"n": 8, "tema": "Características do Sistema de Saúde", "nivel": "🟢 Nível 1 — Essencial", "q": "Segundo a OPS (2007), quais características todo Sistema de Saúde DEVE ter?", "opts": ["Apenas ser financeiramente lucrativo, sem outras exigências", "Ser exclusivamente privado e restrito a quem pode pagar", "Ser organizado exclusivamente em torno de hospitais de alta complexidade", "Universal, Integral, Equitativo e Economicamente Sustentável"], "correct": 3, "justificativa": "Segundo a OPS (2007), todo sistema de saúde DEVE SER: Universal (todos podem acessar), Integral (satisfaz a diversidade de necessidades), Equitativo (distribuição justa conforme necessidade) e Economicamente Sustentável (se mantém financeiramente ao longo do tempo).", "analise": ["Incorreto — 'ser financeiramente lucrativo' não é uma das 4 características exigidas; a exigência é ser SUSTENTÁVEL economicamente, não necessariamente lucrativo.", "Incorreto — pelo contrário, a característica de UNIVERSALIDADE exige justamente o oposto de restringir o acesso só a quem pode pagar.", "Incorreto — organização em torno de hospitais de alta complexidade não é uma das 4 características exigidas pela OPS pra um sistema de saúde."], "analise_letters": ["A", "B", "C"], "conceito": "Sistema de Saúde (OPS, 2007) deve ser: Universal, Integral, Equitativo, Economicamente Sustentável.", "pegadinha": "Essas 4 características não são independentes — um sistema pode falhar em uma delas mesmo cumprindo bem as outras (ex.: universal no papel, mas inequitativo na prática por barreiras de acesso geográfico).", "dica": "4 características: Universal, Integral, Equitativo, Sustentável — U.I.E.S., um sistema completo precisa dos 4 juntos."}, {"n": 9, "tema": "Sistema de Saúde do Paraguai", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a composição do subsetor PÚBLICO do Sistema de Saúde do Paraguai, e qual percentual da população o MSPyBS atende aproximadamente?", "opts": ["MSPyBS, IPS, Sanidade Militar, Sanidade Policial, UNA e empresas descentralizadas (Itaipu/Yacyretá) — MSPyBS atende cerca de 65% da população", "Exclusivamente hospitais privados, sem qualquer instituição pública envolvida", "Apenas o Ministério de Saúde, sem qualquer outra instituição — atendendo 100% da população", "Exclusivamente seguros privados de saúde, sem componente estatal algum"], "correct": 0, "justificativa": "O subsetor público do Sistema de Saúde do Paraguai é composto por: MSPyBS, IPS (Instituto de Previdência Social), Sanidade Militar, Sanidade Policial, Universidade Nacional de Assunção, e os serviços assistenciais de Itaipu/Yacyretá. O MSPyBS atende aproximadamente 65% da população total do país, com ênfase na população vulnerável/pobre.", "analise": ["Incorreto — o subsetor público do Paraguai inclui várias instituições estatais (MSPyBS, IPS, etc.), não é composto exclusivamente por hospitais privados.", "Incorreto — o subsetor público paraguaio é composto por VÁRIAS instituições (não apenas o Ministério de Saúde isoladamente), e o MSPyBS especificamente atende cerca de 65%, não 100%, da população.", "Incorreto — o Paraguai TEM um componente estatal robusto (MSPyBS, IPS e outros), não é composto exclusivamente por seguros privados."], "analise_letters": ["B", "C", "D"], "conceito": "Subsetor público do Paraguai: MSPyBS (~65% da população), IPS, Sanidade Militar/Policial, UNA, Itaipu/Yacyretá.", "pegadinha": "O MSPyBS não atende 100% da população — atende cerca de 65%, com ênfase específica nos grupos vulneráveis/pobres; o restante da população é coberto por outras instituições públicas (IPS, etc.) ou pelo setor privado.", "dica": "MSPyBS = ~65% da população paraguaia, com foco nos mais vulneráveis — não é o único componente do subsetor público."}, {"n": 10, "tema": "Tipos de Financiamento", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença entre o modelo de financiamento Universalista (Beveridge) e o modelo de Seguro Social (Bismark)?", "opts": ["Ambos os modelos são exatamente idênticos, sem distinção real de financiamento", "Universalista (Beveridge): financiamento público via impostos, cobertura universal. Seguro Social (Bismark): financiamento via contribuições obrigatórias/institucionais", "Beveridge é exclusivo do Paraguai; Bismark é exclusivo da Alemanha, sem uso em nenhum outro lugar", "O modelo Bismark não permite nenhum tipo de cobertura de saúde à população"], "correct": 1, "justificativa": "O modelo Universalista (Beveridge) se baseia em financiamento PÚBLICO, através de impostos, com cobertura universal (ex.: Espanha, Suécia). O modelo de Seguro Social (Bismark) se baseia em financiamento através de CONTRIBUIÇÕES obrigatórias/institucionais (ex.: Alemanha, Áustria, Suíça).", "analise": ["Incorreto — os 2 modelos têm fontes de financiamento e lógicas de funcionamento DIFERENTES (impostos gerais x contribuições específicas).", "Incorreto — embora Bismark tenha se originado na Alemanha, o modelo não é exclusivo desse país (é usado também em Áustria, Suíça, entre outros) — e Beveridge não é exclusivo do Paraguai.", "Incorreto — o modelo Bismark PERMITE cobertura de saúde à população; ele apenas se financia por uma via diferente (contribuições) do modelo Beveridge (impostos gerais)."], "analise_letters": ["A", "C", "D"], "conceito": "Beveridge (Universalista): financiamento por impostos, cobertura universal. Bismark (Seguro Social): financiamento por contribuições obrigatórias.", "pegadinha": "Não confundir esses 2 modelos com o modelo PRIVADO (financiamento pela renda do usuário) nem com o MISTO (combinação de fontes, mais fragmentado) — são 4 modelos distintos no total.", "dica": "Beveridge = imposto geral, todo mundo coberto. Bismark = contribuição específica, geralmente ligada ao emprego/instituição."}];
+const flashcards = [{"n": 1, "cat": "Definição de Saúde", "f": "Qual a definição de Saúde da OMS (1948)?", "b": "Estado de completo bem-estar físico, mental e social, não só ausência de doença."}, {"n": 2, "cat": "Terris", "f": "O que Terris adiciona à definição de saúde?", "b": "A capacidade de FUNCIONAMENTO — reconhecendo graus de saúde, não um estado tudo-ou-nada."}, {"n": 3, "cat": "Determinantes", "f": "Quais os 4 determinantes da saúde?", "b": "Biologia Humana, Meio Ambiente, Estilos de Vida, Serviços de Saúde."}, {"n": 4, "cat": "Saúde Pública", "f": "Qual a palavra-chave de toda definição de Saúde Pública?", "b": "COLETIVO / comunidade / sociedade — diferente da medicina individual."}, {"n": 5, "cat": "4 Enfoques", "f": "Quais os 4 enfoques da Saúde Pública?", "b": "Fomento da Saúde, Prevenção da Enfermidade, Organização/Provisão de Serviços, Reabilitação."}, {"n": 6, "cat": "Níveis de Prevenção", "f": "Diferencie Prevenção Primária de Secundária.", "b": "Primária: antes da doença existir. Secundária: doença já existe, fase pré-sintomática (detecção precoce)."}, {"n": 7, "cat": "Prevenção Terciária", "f": "O que caracteriza a Prevenção Terciária?", "b": "Doença já manifesta (com sintomas) — reduzir complicações, curar, reabilitar, reintegrar."}, {"n": 8, "cat": "Sistema de Saúde", "f": "Quais as 4 características que todo Sistema de Saúde deve ter?", "b": "Universal, Integral, Equitativo, Economicamente Sustentável."}, {"n": 9, "cat": "Sistema Paraguai", "f": "Quais instituições compõem o subsetor público do sistema de saúde do Paraguai?", "b": "MSPyBS (~65% da população), IPS, Sanidade Militar/Policial, UNA, Itaipu/Yacyretá."}, {"n": 10, "cat": "Financiamento", "f": "Diferencie os modelos Beveridge e Bismark.", "b": "Beveridge: financiamento por impostos, cobertura universal. Bismark: financiamento por contribuições obrigatórias."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+// ===== BANCO DE QUESTÕES =====
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  const nivelClean = item.nivel.replace(/^[^\s]+\s/, '');
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+// ===== MOTOR DE REPETIÇÃO ESPAÇADA REAL (SM-2, 4 níveis) + INTERFACE ANKI =====
+// Reutilizável: basta trocar CHAPTER_ID em cada capítulo futuro.
+const CHAPTER_ID = 'epidemiocde_cap01_salud_sistemas';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+// quality: 0=De novo, 1=Difícil, 2=Bem, 3=Fácil (escala real de 4 pontos, como o Anki de verdade)
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+// ===== FLASHCARDS =====
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+// ===== QUIZ RÁPIDO =====
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Epidemiología — CDE',
+    titulo: 'Capítulo 1 — Salud, Salud Pública e Sistemas de Salud',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Epidemiología — CDE', titulo: 'Capítulo 1 — Salud, Salud Pública e Sistemas de Salud', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <span class="cmed-nav-pn-btn prev disabled"><span class="cmed-nav-pn-label">← Anterior</span><span class="cmed-nav-pn-title">Início da disciplina</span></span>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
