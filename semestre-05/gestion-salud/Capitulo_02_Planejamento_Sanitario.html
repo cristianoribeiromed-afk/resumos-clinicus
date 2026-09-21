@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Gestión en Salud — Cap. 2: Planificación Sanitaria | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0d1526; --card:#141f38; --card2:#1a2846;
+  --accent:#3b5ba8; --accent2:#7b9cdc; --gold:#e8b84b;
+  --text:#eaeef7; --text-dim:#a8b5d1; --ok:#4fd1a1; --bad:#e0505f; --border:#26355c;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Gestión en Salud</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Gestión en Salud</span><span>2 de 2</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Gestión en Salud</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-05/gestion-salud/Capitulo_01_Fundamentos_Gestao.html"><span class="ico">📋</span><span>Capítulo 1 — Fundamentos da Gestão Clínica e Hospitalar</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-05/gestion-salud/Capitulo_02_Planejamento_Sanitario.html"><span class="ico">📋</span><span>Capítulo 2 — Planejamento Sanitário</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Gestión en Salud · P1 · Unidad I</span>
+  <h1>📐 Capítulo 2 — Planejamento Sanitário</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois dessa aula</h2>
+    <ul>
+      <li>Definir Planejamento em saúde e o que precisa ser planejado</li>
+      <li>Explicar os Determinantes Sociais da Saúde (estruturais e intermediários)</li>
+      <li>Diferenciar os 4 coletivos envolvidos na planificação hospitalar e seus interesses</li>
+      <li>Aplicar as fórmulas de Necessidade e Eficácia hospitalar</li>
+      <li>Listar os fatores que alongam, encurtam ou variam a estância média</li>
+      <li>Diferenciar Eficiência, Equidade e Qualidade em saúde</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📖 Planejamento — Retomando de Onde Paramos</h2>
+    <p>No Capítulo 1, vimos que Gestão é o "agora" (decidir com números e responsabilidade), enquanto Planejamento é o "antes" — pensar no cenário ANTES de agir. Esse capítulo mergulha justamente nesse segundo eixo.</p>
+    <div class="criterio"><b>✅ Definição de Planejamento:</b> a PREVISÃO ANTECIPADA de qualquer acontecimento — nesse caso, aplicada à saúde. Não é reagir ao que já aconteceu, é se ANTECIPAR ao que provavelmente vai acontecer.</div>
+    <p>E o que exatamente precisa ser planejado, dentro da prestação sanitária? 5 elementos, que vão ser o fio condutor de boa parte desse capítulo: a NECESSIDADE, a EFICÁCIA, a EFICIÊNCIA, a EQUIDADE e a QUALIDADE do serviço. Repara que esses 5 conceitos vão voltar, um por um, em detalhe, nas próximas seções — eles não são só uma lista solta, são literalmente o roteiro do que vem a seguir.</p>
+  </div>
+
+  <div class="card">
+    <h2>🌍 Determinantes da Saúde</h2>
+    <p>Antes de planejar qualquer coisa em saúde, você precisa entender POR QUE algumas pessoas adoecem mais que outras — e a resposta raramente está só na biologia. Os Determinantes Sociais da Saúde são os mecanismos que configuram oportunidades MELHORES ou PIORES pra saúde e o bem-estar de cada pessoa, de acordo com diferenças em vulnerabilidade, exposição a agentes nocivos e acesso a serviços básicos.</p>
+    <div class="hot">💭 Um ponto central pra entender aqui: a posição SOCIOECONÔMICA de uma pessoa não influencia sua saúde de forma DIRETA — ela influencia de forma INDIRETA, através de fatores INTERMEDIÁRIOS. Uma pessoa pobre não adoece "porque é pobre" num sentido mágico e direto — ela adoece mais porque a pobreza se traduz em pior qualidade de moradia, pior acesso a alimentos, mais exposição a riscos ambientais, etc. É essa cadeia de fatores intermediários que efetivamente causa o dano à saúde.</div>
+    <table>
+      <tr><th>Nível</th><th>O que inclui</th></tr>
+      <tr><td>Contexto Socioeconômico e Político</td><td>Globalização, cultura, religião, seguridade social, direitos humanos, relações de produção, mercado de trabalho, sistema educacional</td></tr>
+      <tr><td>Determinantes Estruturais</td><td>Os que produzem a ESTRATIFICAÇÃO social: renda, educação, sexualidade, gênero e etnicidade</td></tr>
+      <tr><td>Determinantes Intermediários</td><td>As condições de VIDA e de TRABALHO, a disponibilidade alimentar e as barreiras pra adotar estilos de vida saudáveis — são justamente esses fatores que GERAM a vulnerabilidade concreta</td></tr>
+    </table>
+    <div class="prova">📝 Ponto-chave de prova: os Determinantes ESTRUTURAIS (renda, educação, gênero, etnicidade) criam a estratificação social de base — mas são os Determinantes INTERMEDIÁRIOS (condições de vida/trabalho concretas) que traduzem essa estratificação em vulnerabilidade REAL e mensurável.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Presiones Sociales e Modelo Sanitário — Os 4 Coletivos</h2>
+    <p>Aqui chegamos num dos pontos mais ricos desse capítulo. Um hospital não serve a um único "cliente" — ele precisa conciliar os interesses de 4 grupos diferentes, que muitas vezes QUEREM coisas distintas (e às vezes até conflitantes) entre si: os doentes, os profissionais, os gestores e os proprietários. Entender o interesse CENTRAL de cada um é essencial pra entender por que a gestão hospitalar é, no fundo, um exercício constante de equilíbrio.</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">1º Coletivo — Cidadãos e Doentes</h2>
+    <p>São, ao mesmo tempo, VOTANTES e CONTRIBUINTES — e o que mais valorizam é a QUALIDADE PERCEBIDA (ou aparente), porque, acima de tudo, não querem esperar pra ser atendidos. Querem: confiança na instituição e nos profissionais, não esperar, ser informados, participar da decisão terapêutica, e não se arruinar financeiramente ao usar o hospital. Cada vez mais, exigem uma medicina de RESULTADOS, com profissionais competentes e responsáveis.</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">2º Coletivo — Médicos e Enfermeiros</h2>
+    <p>Estão interessados, sobretudo nos modelos públicos, na qualidade CIENTÍFICA/TÉCNICA — querem ter acesso a todo tipo de meio tecnológico, docente e de pesquisa, muitas vezes sem que lhes importe tanto o custo, a efetividade ou o rendimento disso. O interesse fundamental aqui é o RECONHECIMENTO e a PARTICIPAÇÃO. Vale notar: o fator mais importante pra qualidade técnica é a capacidade profissional, seguida pela motivação — e a docência/pesquisa influenciam DIRETAMENTE a qualidade assistencial, por aumentarem conhecimento, rigor metodológico e motivação.</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">3º Coletivo — Gestores, Administradores e Diretivos</h2>
+    <p>Tentam conseguir EFICIÊNCIA — ou seja, alcançar metas (objetivos operativos) com o MENOR consumo de recursos possível e qualidade suficiente. Pra isso, precisam definir claramente o número, a data e o responsável por cada meta. O interesse dos gestores é que locais, instalações e instrumentos sejam usados adequadamente, e que as pessoas dediquem aos doentes o tempo pelo qual foram contratadas. Interesse fundamental: EFICIÊNCIA.</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">4º Coletivo — Proprietários</h2>
+    <p>No caso de serviços PÚBLICOS, são os políticos, cujo maior interesse é manter a PAZ sociolaboral do hospital. No caso de serviços PRIVADOS, são os acionistas, cujo objetivo fundamental é conseguir RENTABILIDADE pro seu investimento econômico.</p>
+
+    <div class="prova">📝 Conciliar esses 4 interesses (confiança/não esperar dos doentes + reconhecimento/participação dos profissionais + eficiência dos gestores + paz social/rentabilidade dos proprietários) exige justamente planejar e expressar em números: o que se NECESSITA (necessidade), o que se PODE fazer com o que se tem (eficácia), a que PREÇO (eficiência), pra QUEM (equidade), com que NÍVEL (qualidade) — e então conseguir GERIR o que foi planejado. Veja como esses 5 conceitos da introdução voltam aqui, agora conectados aos 4 coletivos.</div>
+  </div>
+
+  <div class="card">
+    <h2>🛏️ Necessidade — Quantos Leitos um Hospital Precisa?</h2>
+    <p>O primeiro dos 5 elementos que precisam ser planejados é a NECESSIDADE. Na prática, isso se traduz numa pergunta bem concreta: quantos leitos hospitalares uma população precisa? E a resposta não é um "achismo" — existe uma relação matemática por trás.</p>
+    <div class="criterio"><b>✅ A lógica da fórmula:</b> o número de leitos necessários é DIRETAMENTE proporcional ao número de doentes internados (e) e à estância média (em — quanto tempo, em média, cada um fica internado); e é INVERSAMENTE proporcional à taxa de ocupação (io) e ao tempo considerado (t).</div>
+    <p>Pensa na lógica por trás disso: quanto MAIS pacientes entram, e quanto MAIS TEMPO cada um fica internado, MAIS leitos você precisa (proporção direta). Mas se a ocupação já está bem otimizada (io alto) ou se você está olhando um período de tempo mais longo (t), MENOS leitos adicionais são necessários pra dar conta da mesma demanda (proporção inversa).</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">Os 13 Fatores Que Condicionam a Frequentação Hospitalar</h2>
+    <p>Mas o número de leitos necessários não depende só dessa fórmula "fria" — existem 13 fatores concretos, do mundo real, que fazem a demanda por hospitalização variar bastante de uma população pra outra. Vale a pena entender a LÓGICA de cada um, não só decorar a lista:</p>
+    <table>
+      <tr><th>#</th><th>Fator</th><th>Como influencia</th></tr>
+      <tr><td>1</td><td>Disponibilidade de serviços</td><td>Na saúde, a OFERTA condiciona a demanda — se o serviço é gratuito, a demanda tende a ser praticamente ilimitada</td></tr>
+      <tr><td>2</td><td>Sistema de pagamento</td><td>A forma como se paga pelo serviço também condiciona quanto ele é demandado</td></tr>
+      <tr><td>3</td><td>Idade e cultura da população</td><td>Populações mais jovens/"progressivas" x mais velhas/"regressivas" (medido pelo Índice de Friz); e o % de escolarização (cultura) também influencia</td></tr>
+      <tr><td>4</td><td>Organização da atenção primária</td><td>Se o cidadão pode ir DIRETO ao hospital, ou precisa passar antes por um serviço extra-hospitalar, isso muda completamente a frequentação hospitalar</td></tr>
+      <tr><td>5</td><td>Proximidade do hospital</td><td>Acesso gratuito e próximo aumenta a utilização</td></tr>
+      <tr><td>6</td><td>Morbidade (tipo de doença predominante)</td><td>Patologia infecciosa/aguda (típica de populações "progressivas"/jovens) x Patologia degenerativa/vascular (estância mais longa, típica de populações ricas/velhas/"regressivas")</td></tr>
+      <tr><td>7</td><td>Hospitais privados</td><td>Geralmente têm estâncias mais breves, precisando de MENOS leitos pro mesmo número de doentes</td></tr>
+      <tr><td>8</td><td>Hospitais universitários/docentes</td><td>Tendem a ALARGAR a estância média (mais tempo por paciente), exigindo MAIS leitos</td></tr>
+      <tr><td>9</td><td>Funcionamento dos serviços centrais</td><td>Rapidez na entrega de exames/resultados afeta diretamente a duração da internação</td></tr>
+      <tr><td>10</td><td>Provisão de médicos</td><td>Mais médicos em exercício → MAIOR utilização hospitalar total</td></tr>
+      <tr><td>11</td><td>Hábitos médicos e normas sociais</td><td>Tradições e costumes (tanto de médicos quanto da população) mudam devagar, mas influenciam a frequentação</td></tr>
+      <tr><td>12</td><td>Moradia e companhia familiar</td><td>Moradia adequada + apoio familiar → alta mais precoce → estância mais curta → menos leitos necessários</td></tr>
+      <tr><td>13</td><td>Organização interna</td><td>Estrutura funcional correta + atitude favorável dos responsáveis → melhora o rendimento dos leitos, reduzindo a necessidade pra igual número de ingressos</td></tr>
+    </table>
+    <div class="hot">💭 Repara que vários desses fatores (7, 8, 12, 13) têm relação DIRETA com a ESTÂNCIA MÉDIA — o tempo que cada paciente fica internado. Isso já é um gancho direto pro próximo tópico: a Eficácia, que é justamente o critério calculado em função dessa estância média.</div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Eficácia — A Capacidade Real do Hospital</h2>
+    <div class="criterio"><b>✅ Definição:</b> mede a CAPACIDADE do hospital de prestar serviços em condições ordinárias. Pra hospitalização, é DIRETAMENTE proporcional ao número de leitos (c), à ocupação (io) e ao tempo considerado (t) — e INVERSAMENTE proporcional à estância média (em).</div>
+    <p>Repara numa coisa interessante aqui: no cálculo de NECESSIDADE (visto acima), a estância média (em) entra como fator que AUMENTA a necessidade de leitos (proporção direta). Já no cálculo de EFICÁCIA, a estância média entra como fator que DIMINUI a eficácia (proporção inversa) — porque quanto mais tempo cada paciente ocupa um leito, MENOS pacientes DIFERENTES aquele mesmo leito consegue atender no período. É a mesma variável, olhada de 2 ângulos complementares.</p>
+    <p>Justamente por essa importância central da estância média, existem 23 fatores catalogados que influenciam ela — sendo 10 que ALONGAM (aumentam), 8 que ENCURTAM (diminuem), e 5 que são apenas VARIÁVEIS (podem ir em qualquer direção, dependendo do contexto).</p>
+
+    <h2 style="font-size:1em;margin-top:14px;">⬆️ 10 Fatores Que ALONGAM a Estância Média</h2>
+    <ol>
+      <li>Maior número de leitos</li>
+      <li>Número mais elevado de médicos</li>
+      <li>Índice de mortalidade mais alto</li>
+      <li>Maior número de doentes por médico</li>
+      <li>Entrada de novos residentes</li>
+      <li>Maior antiguidade na especialidade</li>
+      <li>Existência de programa docente</li>
+      <li>Maior dotação em pesquisa</li>
+      <li>Maior percentual de ingressos de urgência</li>
+      <li>Pior estado socioeconômico da população</li>
+    </ol>
+
+    <h2 style="font-size:1em;margin-top:14px;">⬇️ 8 Fatores Que ENCURTAM a Estância Média</h2>
+    <ol>
+      <li>Baixa dotação de leitos</li>
+      <li>Maior demanda</li>
+      <li>Melhor acesso a hospitais de crônicos</li>
+      <li>Elevado número de pessoal médico</li>
+      <li>A protocolização na enfermagem</li>
+      <li>Maior atividade em consultas externas</li>
+      <li>Controle mais estrito sobre as estâncias</li>
+      <li>Melhor dotação tecnológica</li>
+    </ol>
+
+    <h2 style="font-size:1em;margin-top:14px;">↔️ 5 Fatores VARIÁVEIS</h2>
+    <ol>
+      <li>Preferências culturais dos usuários</li>
+      <li>Tipo de diagnóstico</li>
+      <li>Juízo clínico e hábitos médicos</li>
+      <li>Dia da semana do ingresso</li>
+      <li>Estilo administrativo dos centros</li>
+    </ol>
+
+    <div class="prova">📝 Pegadinha clássica de prova: repara que "Número mais elevado de médicos" ALONGA a estância (fator 2 da lista que alonga), enquanto "Elevado número de pessoal médico" ENCURTA (fator 4 da lista que encurta) — à primeira vista parecem contraditórios, mas geralmente essa distinção se refere a médicos ASSISTENTES/em formação (que tendem a alongar, associados a docência/investigação) x pessoal médico de forma mais ampla/staff consolidado (que, com boa organização, tende a encurtar). Ao estudar, preste atenção ao contexto exato de cada fator, não só à palavra isolada.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ Eficiência</h2>
+    <div class="criterio"><b>✅ Definição:</b> consiste em OBTER METAS — objetivos que são quantificados, datados e com um responsável designado pra alcançá-los — ao MENOR custo possível, e com qualidade adequada.</div>
+    <p>Repara que essa definição amarra diretamente com o que vimos no Capítulo 1 sobre o 3º coletivo (gestores): o interesse fundamental deles era justamente EFICIÊNCIA — e agora temos a definição técnica precisa desse conceito: metas quantificadas + menor custo + qualidade adequada, tudo junto, não um substituindo o outro.</p>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Equidade</h2>
+    <div class="criterio"><b>✅ Definição:</b> ausência de diferenças EVITÁVEIS ou INJUSTAS no acesso e na qualidade da atenção médica — garantindo que todas as pessoas tenham a oportunidade de alcançar seu máximo potencial de saúde, independente de origem social, econômica, étnica ou geográfica.</div>
+    <p>Isso implica que os recursos sejam alocados de acordo com a NECESSIDADE (voltando a esse conceito do início do capítulo), abordando as desigualdades pra que todos possam ter uma vida saudável. Vale notar: equidade NÃO é sinônimo de "dar exatamente a mesma coisa pra todo mundo" — é dar recursos proporcionais à necessidade de cada um, justamente pra corrigir desigualdades de ponto de partida.</p>
+  </div>
+
+  <div class="card">
+    <h2>⭐ Qualidade</h2>
+    <p>A qualidade e o preço são os 2 fatores mais repetidamente citados como fundamentais pra definir um bom produto ou serviço — e em saúde não é diferente.</p>
+    <div class="criterio"><b>✅ Definição de Qualidade Assistencial Hospitalar:</b> a satisfação das necessidades e aspirações dos doentes — tanto as REAIS quanto as PERCEBIDAS — com o MENOR consumo possível de recursos.</div>
+    <p>A qualidade tem 2 componentes, e essa divisão conecta diretamente de volta aos 2 primeiros coletivos que vimos: os doentes (que valorizam a qualidade PERCEBIDA/aparente) e os profissionais (que valorizam a qualidade CIENTÍFICA/técnica):</p>
+    <table>
+      <tr><th>Componente</th><th>Definição</th></tr>
+      <tr><td>Científico (intrínseco)</td><td>Consiste em diagnosticar CORRETAMENTE e aplicar a terapêutica CONVENIENTE — a qualidade "de verdade", tecnicamente falando</td></tr>
+      <tr><td>Aparente (extrínseco)</td><td>Se concretiza na SENSAÇÃO que o doente e seus familiares têm de serem tratados com interesse e educação — é a qualidade PERCEBIDA, que nem sempre reflete com precisão a qualidade técnica real</td></tr>
+    </table>
+    <div class="hot">💭 É perfeitamente possível um atendimento tecnicamente EXCELENTE (componente científico impecável) ser percebido como de baixa qualidade pelo paciente, se ele se sentiu mal tratado ou pouco informado (componente aparente ruim) — e vice-versa. Um bom serviço de saúde precisa cuidar dos 2 componentes simultaneamente, não só de um deles.</div>
+    <p style="text-align:center;font-style:italic;margin-top:10px;">"A qualidade, em síntese, consiste em fazer o correto, corretamente."</p>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <ul>
+      <li>Planejamento = previsão ANTECIPADA. Precisa planejar: Necessidade, Eficácia, Eficiência, Equidade e Qualidade</li>
+      <li>Determinantes: a posição socioeconômica afeta a saúde de forma INDIRETA, via fatores intermediários (não diretamente)</li>
+      <li>Determinantes Estruturais (renda, educação, gênero, etnicidade) → geram estratificação social. Determinantes Intermediários (condições de vida/trabalho) → geram vulnerabilidade real</li>
+      <li>4 Coletivos: Doentes (qualidade percebida, não esperar), Profissionais (reconhecimento/participação, qualidade técnica), Gestores (EFICIÊNCIA), Proprietários (paz social/rentabilidade)</li>
+      <li>Necessidade (leitos): diretamente proporcional a doentes internados (e) e estância média (em); inversamente proporcional à ocupação (io) e tempo (t)</li>
+      <li>13 fatores da frequentação hospitalar: disponibilidade, pagamento, idade/cultura, atenção primária, proximidade, morbidade, hospital privado, hospital universitário, serviços centrais, provisão médica, hábitos, moradia/família, organização interna</li>
+      <li>Eficácia: diretamente proporcional a leitos (c), ocupação (io) e tempo (t); inversamente proporcional à estância média (em)</li>
+      <li>Estância média: 10 fatores ALONGAM, 8 ENCURTAM, 5 são VARIÁVEIS</li>
+      <li>Eficiência: metas quantificadas + menor custo + qualidade adequada</li>
+      <li>Equidade: ausência de diferenças evitáveis/injustas — recursos por NECESSIDADE, não igualdade cega</li>
+      <li>Qualidade: satisfação de necessidades reais/percebidas + menor consumo de recursos. 2 componentes: Científico (intrínseco) x Aparente (extrínseco)</li>
+    </ul>
+  </div>
+
+</section>
+
+
+
+
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🏥 Caso Progressivo — Planejando a Expansão do Hospital Municipal</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Vamos acompanhar o Secretário de Saúde de um município que precisa decidir se expande a capacidade de leitos do hospital local. O caso evolui em 3 níveis.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟢 Nível 1 — Fundamental</h2>
+    <p><b>O hospital municipal está constantemente lotado, com pacientes esperando por leitos. O Secretário de Saúde percebe que, nos últimos 2 anos, a região recebeu um grande contingente de famílias jovens (aumentando a natalidade local) e também abriu um novo posto de atenção primária que agora encaminha mais pacientes direto pro hospital.</b></p>
+    <p><b>Pergunta:</b> Aplicando os 13 fatores que condicionam a frequentação hospitalar vistos nesse capítulo, quais 2 fatores específicos estão contribuindo pro aumento da demanda por leitos nesse cenário, e por quê?</p>
+    <p><b>Resposta comentada:</b> Os 2 fatores mais claramente presentes são: 1) IDADE E CULTURA DA POPULAÇÃO — o aumento de famílias jovens e da natalidade local torna essa uma população mais "progressiva" (mais jovem), tipicamente associada a maior necessidade de atenção materno-infantil e patologia aguda/infecciosa, que embora geralmente tenha estâncias mais curtas individualmente, aumenta o VOLUME de ingressos; 2) ORGANIZAÇÃO DA ATENÇÃO PRIMÁRIA — a abertura do novo posto que agora encaminha mais pacientes DIRETO pro hospital altera justamente esse fator, que trata de como o cidadão acessa o hospital (direto x via atenção primária prévia) — nesse caso, facilitando/aumentando esse acesso direto, o que naturalmente eleva a frequentação hospitalar. Juntos, esses 2 fatores ajudam a explicar por que a demanda por leitos aumentou, mesmo sem necessariamente ter havido nenhuma mudança na capacidade física do hospital.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟡 Nível 2 — Intermediário</h2>
+    <p><b>Analisando os dados internos, o Secretário percebe que a estância média no hospital também aumentou bastante nos últimos meses. Investigando a causa, descobre que o hospital recentemente se tornou centro de formação de residência médica, recebendo vários médicos residentes novos, e que o número de ingressos de urgência (sem programação prévia) também cresceu.</b></p>
+    <p><b>Pergunta:</b> Segundo os 23 fatores da estância média vistos nesse capítulo, esses 2 achados (entrada de residentes + mais ingressos de urgência) tendem a ALONGAR ou ENCURTAR a estância média, e o que isso significa pro cálculo de Eficácia do hospital?</p>
+    <p><b>Resposta comentada:</b> Ambos os fatores identificados — "Entrada de novos residentes" e "Maior percentual de ingressos de urgência" — estão EXPLICITAMENTE na lista dos 10 fatores que ALONGAM a estância média. Isso faz sentido: médicos residentes, ainda em formação, tendem a ser mais cautelosos e menos ágeis nas decisões de alta (parte do próprio processo de aprendizado), alongando a permanência dos pacientes; e ingressos de urgência, por não serem programados, costumam envolver quadros mais graves/complexos, que também tendem a exigir internações mais longas. Em termos da fórmula de EFICÁCIA (vista nesse capítulo), lembre que a estância média (em) é INVERSAMENTE proporcional à eficácia — ou seja, esse alongamento da estância média está DIMINUINDO a eficácia do hospital: com o mesmo número de leitos, ocupação e tempo considerado, o hospital agora consegue atender MENOS pacientes diferentes no mesmo período, porque cada leito está sendo ocupado por mais tempo antes de ficar disponível de novo.</p>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Nível 3 — Aplicação Integrada</h2>
+    <p><b>Diante desse cenário, o Secretário de Saúde precisa decidir entre 2 propostas: a) Investir em mais leitos e infraestrutura física (o que os MÉDICOS defendem, priorizando capacidade técnica/científica); b) Investir em protocolos de alta mais rigorosos e mais consultas externas de acompanhamento (o que os GESTORES administrativos defendem, priorizando eficiência de custo).</b></p>
+    <p><b>Pergunta:</b> Integrando o conceito dos 4 Coletivos e o conceito de Equidade vistos nesse capítulo, como o Secretário poderia avaliar essas 2 propostas de forma mais completa, além de simplesmente escolher o interesse de um coletivo em detrimento do outro?</p>
+    <p><b>Resposta comentada:</b> Esse é um caso clássico de conflito entre o interesse do 2º Coletivo (Médicos/Enfermeiros — qualidade CIENTÍFICA/técnica, querendo mais recursos/infraestrutura, "sem que geralmente lhes importe tanto o custo") e do 3º Coletivo (Gestores — EFICIÊNCIA, buscando o menor custo possível com qualidade suficiente). Em vez de escolher um lado isoladamente, a abordagem mais completa é lembrar que ambas as propostas precisam ser avaliadas, ao mesmo tempo, sob a ótica dos OUTROS 2 coletivos também esquecidos nessa discussão: o 1º Coletivo (Doentes, que querem sobretudo NÃO ESPERAR e ter confiança/informação — ambas as propostas poderiam atender isso, mas de formas diferentes) e o 4º Coletivo (Proprietários/políticos, preocupados com a PAZ SOCIAL — uma decisão que pareça beneficiar só um grupo profissional pode gerar conflito). Além disso, aplicando o conceito de EQUIDADE, o Secretário deveria perguntar: qual das 2 propostas aloca melhor os recursos conforme a NECESSIDADE real da população (não apenas conforme a preferência de um grupo profissional específico)? Se os protocolos de alta mais eficientes (proposta B) liberam recursos que podem ser redirecionados pra outras necessidades da comunidade sem comprometer a qualidade CIENTÍFICA do cuidado (ela pode continuar excelente com um protocolo bem desenhado), essa pode ser, na verdade, a opção que melhor concilia TODOS os interesses simultaneamente — não apenas o mais barato, mas o mais equilibrado entre os 4 coletivos e a real necessidade populacional.</p>
+  </div>
+</section>
+
+
+
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Planejamento", "nivel": "🟢 Nível 1 — Essencial", "q": "Quais os 5 elementos que devem ser planejados na prestação sanitária, segundo esse capítulo?", "opts": ["Necessidade, Eficácia, Eficiência, Equidade e Qualidade", "Apenas o orçamento financeiro anual, isoladamente", "Número de médicos, enfermeiros e leitos, exclusivamente", "Localização geográfica do hospital e cor da fachada"], "correct": 0, "justificativa": "Devem ser planejados: a NECESSIDADE, a EFICÁCIA, a EFICIÊNCIA, a EQUIDADE e a QUALIDADE da prestação sanitária — esses 5 elementos formam o roteiro central desse capítulo.", "analise": ["Incorreto — o orçamento financeiro é apenas um aspecto relacionado à eficiência, não a totalidade dos 5 elementos que devem ser planejados.", "Incorreto — número de profissionais e leitos são dados que ALIMENTAM alguns desses cálculos (como necessidade e eficácia), mas não são os 5 elementos centrais do planejamento em si.", "Incorreto — aspectos físicos/estéticos não fazem parte dos 5 elementos centrais de planejamento sanitário discutidos nesse capítulo."], "analise_letters": ["B", "C", "D"], "conceito": "5 elementos do planejamento sanitário: Necessidade, Eficácia, Eficiência, Equidade, Qualidade.", "pegadinha": "Esses 5 conceitos não são uma lista solta — cada um deles é desenvolvido em detalhe ao longo do capítulo, com definição própria e (nos casos de necessidade e eficácia) fórmulas específicas.", "dica": "5 elementos: Necessidade, Eficácia, Eficiência, Equidade, Qualidade — o 'roteiro' de todo o capítulo."}, {"n": 2, "tema": "Determinantes da Saúde", "nivel": "🟢 Nível 1 — Essencial", "q": "Como a posição socioeconômica de um indivíduo influencia sua saúde, segundo o conceito de determinantes sociais?", "opts": ["De forma direta e imediata, sem nenhum fator intermediário envolvido", "De forma indireta, através de fatores INTERMEDIÁRIOS (como condições de vida e trabalho)", "A posição socioeconômica não tem nenhuma relação com a saúde do indivíduo", "Apenas através de fatores genéticos herdados, sem relação com o ambiente social"], "correct": 1, "justificativa": "A influência da posição socioeconômica sobre a saúde NÃO é direta — é produto da atuação de fatores INTERMEDIÁRIOS, como as condições materiais (ex.: qualidade da moradia), condições de trabalho e disponibilidade alimentar.", "analise": ["Incorreto — a relação é justamente o CONTRÁRIO de direta; ela passa por fatores intermediários específicos.", "Incorreto — existe SIM uma relação bem documentada entre posição socioeconômica e saúde, só que mediada por fatores intermediários, não ausente.", "Incorreto — fatores genéticos não são o mecanismo discutido nos determinantes SOCIAIS da saúde; o foco aqui é justamente nos fatores sociais/ambientais intermediários."], "analise_letters": ["A", "C", "D"], "conceito": "Posição socioeconômica → influencia saúde de forma INDIRETA, via fatores intermediários (condições de vida/trabalho, alimentação).", "pegadinha": "Essa distinção entre influência 'direta' e 'indireta/mediada' é sutil, mas central pro conceito de determinantes sociais — não é a pobreza em si que adoece, é o que ela GERA em termos de condições concretas de vida.", "dica": "Posição socioeconômica não adoece diretamente — ela adoece através das condições concretas que gera (moradia, trabalho, alimentação)."}, {"n": 3, "tema": "Determinantes Estruturais x Intermediários", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença entre Determinantes Sociais Estruturais e Intermediários?", "opts": ["Ambos são exatamente a mesma coisa, apenas com nomes diferentes", "Estruturais são exclusivamente biológicos; Intermediários são exclusivamente psicológicos", "Estruturais (renda, educação, gênero, etnicidade) produzem a estratificação social; Intermediários (condições de vida/trabalho) geram a vulnerabilidade concreta", "Intermediários só existem em países desenvolvidos; Estruturais só em países em desenvolvimento"], "correct": 2, "justificativa": "Os Determinantes ESTRUTURAIS (renda, educação, sexualidade, gênero, etnicidade) são os que PRODUZEM a estratificação social. Os Determinantes INTERMEDIÁRIOS (condições de vida, de trabalho, disponibilidade alimentar, barreiras a estilos de vida saudáveis) são os que efetivamente GERAM a vulnerabilidade concreta a partir dessa estratificação.", "analise": ["Incorreto — os 2 tipos têm definições e papéis DISTINTOS na cadeia causal dos determinantes sociais, não são idênticos.", "Incorreto — nenhum dos 2 tipos é definido como exclusivamente biológico ou psicológico; ambos são de natureza SOCIAL.", "Incorreto — essa distinção geográfica por nível de desenvolvimento não é o critério que diferencia determinantes estruturais de intermediários."], "analise_letters": ["A", "B", "D"], "conceito": "Determinantes Estruturais: produzem a estratificação social (renda, educação, gênero, etnicidade). Determinantes Intermediários: geram a vulnerabilidade concreta (condições de vida/trabalho).", "pegadinha": "Os estruturais são mais 'de base'/abstratos (posição na sociedade); os intermediários são mais 'concretos'/tangíveis (o que essa posição efetivamente gera no dia a dia da pessoa).", "dica": "Estruturais = a POSIÇÃO na sociedade. Intermediários = o que essa posição CAUSA na prática (moradia, trabalho, comida)."}, {"n": 4, "tema": "Os 4 Coletivos", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual o interesse fundamental do 3º Coletivo (Gestores, Administradores e Diretivos) na planificação hospitalar?", "opts": ["Qualidade percebida e não esperar pelo atendimento", "Reconhecimento e participação nas decisões científicas", "Paz sociolaboral e rentabilidade econômica", "Eficiência — alcançar metas com o menor consumo de recursos e qualidade suficiente"], "correct": 3, "justificativa": "O interesse fundamental do 3º Coletivo (Gestores) é a EFICIÊNCIA — alcançar metas (objetivos operativos quantificados, datados e com responsável definido) com o MENOR consumo possível de recursos, e com qualidade suficiente.", "analise": ["Incorreto — 'qualidade percebida e não esperar' é o interesse fundamental do 1º Coletivo (Doentes/cidadãos), não dos gestores.", "Incorreto — 'reconhecimento e participação' é o interesse fundamental do 2º Coletivo (Médicos/Enfermeiros), não dos gestores.", "Incorreto — 'paz sociolaboral e rentabilidade' é o interesse fundamental do 4º Coletivo (Proprietários), não dos gestores."], "analise_letters": ["A", "B", "C"], "conceito": "3º Coletivo (Gestores): interesse fundamental = EFICIÊNCIA (metas + menor custo + qualidade suficiente).", "pegadinha": "Cada um dos 4 coletivos tem um interesse fundamental BEM específico e distinto — decorar a associação certa (Doentes=qualidade percebida, Profissionais=reconhecimento, Gestores=eficiência, Proprietários=paz social/rentabilidade) é essencial pra não confundir na prova.", "dica": "Gestor = quem se preocupa em fazer mais com menos, dentro do prazo — a própria definição de eficiência."}, {"n": 5, "tema": "Fórmula da Necessidade", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Segundo a fórmula de Necessidade hospitalar vista nesse capítulo, o número de leitos necessários é diretamente proporcional a quais fatores?", "opts": ["Número de doentes internados (e) e estância média (em)", "Apenas ao número de médicos disponíveis no hospital", "Apenas à localização geográfica do hospital", "Taxa de ocupação (io) e tempo considerado (t), exclusivamente"], "correct": 0, "justificativa": "O número de leitos necessários é DIRETAMENTE proporcional ao número de doentes internados (e) e à estância média (em) — quanto mais pacientes entram e quanto mais tempo cada um fica internado, mais leitos são necessários. É INVERSAMENTE proporcional à ocupação (io) e ao tempo considerado (t).", "analise": ["Incorreto — o número de médicos não é uma das variáveis da fórmula de necessidade de leitos apresentada nesse capítulo.", "Incorreto — a localização geográfica não é uma variável dessa fórmula matemática específica.", "Incorreto — ocupação (io) e tempo (t) são, na verdade, INVERSAMENTE proporcionais à necessidade de leitos, não diretamente — essa alternativa inverteu a relação."], "analise_letters": ["B", "C", "D"], "conceito": "Necessidade de leitos: diretamente proporcional a doentes internados (e) e estância média (em); inversamente proporcional à ocupação (io) e tempo (t).", "pegadinha": "Não confundir com a fórmula de EFICÁCIA (próxima seção), onde a estância média (em) entra de forma INVERSA, não direta — são fórmulas relacionadas, mas com a mesma variável atuando de formas opostas.", "dica": "Mais doentes + mais tempo internado = mais leitos necessários (proporção direta com 'e' e 'em')."}, {"n": 6, "tema": "Fatores de Frequentação Hospitalar", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Segundo os 13 fatores que condicionam a frequentação hospitalar, o que ocorre quando um serviço de saúde é oferecido gratuitamente à população?", "opts": ["A demanda tende a permanecer completamente inalterada, sem qualquer efeito", "A oferta gratuita tende a gerar uma demanda praticamente ilimitada — a oferta condiciona a demanda", "A demanda sempre diminui, independente de qualquer outro fator", "Isso afeta exclusivamente hospitais privados, nunca públicos"], "correct": 1, "justificativa": "Segundo o fator 'Disponibilidade de serviços', nos serviços sanitários a OFERTA condiciona a demanda — e, se a oferta é gratuita, a demanda tende a ser praticamente ILIMITADA.", "analise": ["Incorreto — a gratuidade do serviço TEM um efeito bem documentado sobre a demanda, tornando-a praticamente ilimitada, não inalterada.", "Incorreto — a relação descrita é o oposto: gratuidade tende a AUMENTAR (não diminuir) a demanda.", "Incorreto — esse princípio de oferta/demanda em saúde se aplica tanto a serviços públicos quanto, em menor grau, a dinâmicas de acesso em geral, não é exclusivo de hospitais privados."], "analise_letters": ["A", "C", "D"], "conceito": "Fator 'Disponibilidade de serviços': oferta condiciona a demanda — serviço gratuito tende a gerar demanda praticamente ilimitada.", "pegadinha": "Esse é um dos 13 fatores mais citados em discussões de política de saúde pública — a gratuidade, embora essencial pro acesso equitativo, precisa ser planejada considerando esse efeito sobre a demanda.", "dica": "Gratuito + saúde = demanda tende ao ilimitado — um princípio econômico clássico aplicado à saúde."}, {"n": 7, "tema": "Fórmula da Eficácia", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Segundo a fórmula de Eficácia hospitalar, ela é inversamente proporcional a qual variável?", "opts": ["Número de leitos (c)", "Taxa de ocupação (io)", "Estância média (em)", "Tempo considerado (t)"], "correct": 2, "justificativa": "A Eficácia é INVERSAMENTE proporcional à ESTÂNCIA MÉDIA (em) — quanto mais tempo cada paciente permanece internado, menos pacientes diferentes aquele mesmo leito consegue atender no período considerado, reduzindo a eficácia do hospital.", "analise": ["Incorreto — o número de leitos (c) é DIRETAMENTE (não inversamente) proporcional à eficácia.", "Incorreto — a taxa de ocupação (io) é DIRETAMENTE (não inversamente) proporcional à eficácia.", "Incorreto — o tempo considerado (t) é DIRETAMENTE (não inversamente) proporcional à eficácia."], "analise_letters": ["A", "B", "D"], "conceito": "Eficácia: diretamente proporcional a leitos (c), ocupação (io) e tempo (t); inversamente proporcional à estância média (em).", "pegadinha": "É a ÚNICA variável inversa nessa fórmula — todas as outras 3 (leitos, ocupação, tempo) são diretamente proporcionais à eficácia.", "dica": "Quanto maior a estância média, MENOR a eficácia — é a única relação inversa da fórmula."}, {"n": 8, "tema": "Fatores da Estância Média", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Segundo os 23 fatores da estância média vistos nesse capítulo, qual das opções abaixo é um fator que tende a ENCURTAR (diminuir) a estância média?", "opts": ["Maior número de médicos residentes recém-chegados", "Maior percentual de ingressos de urgência", "Pior estado socioeconômico da população", "Maior dotação tecnológica do hospital"], "correct": 3, "justificativa": "A 'Melhor dotação tecnológica' está explicitamente entre os 8 fatores que ENCURTAM a estância média — melhores recursos tecnológicos tendem a agilizar diagnóstico e tratamento, reduzindo o tempo de internação necessário.", "analise": ["Incorreto — a entrada de novos residentes está entre os fatores que ALONGAM (não encurtam) a estância média.", "Incorreto — maior percentual de ingressos de urgência está entre os fatores que ALONGAM a estância média.", "Incorreto — pior estado socioeconômico da população está entre os fatores que ALONGAM a estância média."], "analise_letters": ["A", "B", "C"], "conceito": "Fatores que ENCURTAM a estância média incluem: melhor dotação tecnológica, maior demanda, protocolização em enfermagem, controle mais estrito sobre estâncias, entre outros.", "pegadinha": "Essa questão testa se você sabe diferenciar corretamente quais fatores estão na lista dos 10 que ALONGAM versus os 8 que ENCURTAM — vale a pena revisar as 2 listas lado a lado até fixar bem.", "dica": "Melhor tecnologia = diagnóstico/tratamento mais rápido = estância mais curta."}, {"n": 9, "tema": "Eficiência x Equidade", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a diferença conceitual entre Eficiência e Equidade em saúde?", "opts": ["Eficiência é obter metas com o menor custo e qualidade adequada; Equidade é a ausência de diferenças evitáveis/injustas no acesso, alocando recursos conforme a necessidade", "Os 2 conceitos são exatamente sinônimos, sem qualquer distinção", "Eficiência trata exclusivamente de questões éticas; Equidade trata exclusivamente de questões financeiras", "Equidade significa dar exatamente os mesmos recursos a todas as pessoas, independente de sua necessidade"], "correct": 0, "justificativa": "EFICIÊNCIA consiste em obter metas (quantificadas, datadas, com responsável) ao menor custo possível e com qualidade adequada. EQUIDADE é a ausência de diferenças evitáveis ou injustas no acesso/qualidade da atenção, alocando recursos segundo a NECESSIDADE de cada pessoa, não de forma idêntica pra todos.", "analise": ["Incorreto — os 2 conceitos têm focos bem diferentes (otimização de custo/meta x justiça na distribuição de acesso), não são sinônimos.", "Incorreto — essa distinção não corresponde à definição real de cada conceito; eficiência tem foco em custo/meta, não exclusivamente ética; equidade envolve questões éticas, mas não é definida como exclusivamente financeira.", "Incorreto — essa é justamente uma concepção ERRADA de equidade; equidade significa alocar recursos conforme a NECESSIDADE (que varia entre pessoas), não distribuir de forma idêntica/igualitária cega."], "analise_letters": ["B", "C", "D"], "conceito": "Eficiência: metas + menor custo + qualidade. Equidade: ausência de diferenças evitáveis/injustas, recursos por NECESSIDADE (não igualdade cega).", "pegadinha": "Um erro comum é confundir Equidade com Igualdade — equidade reconhece que pessoas com necessidades diferentes devem receber recursos proporcionalmente diferentes, não a mesma quantidade fixa pra todos.", "dica": "Eficiência = fazer bem com pouco. Equidade = dar a cada um conforme sua NECESSIDADE real, não a mesma coisa pra todos."}, {"n": 10, "tema": "Qualidade", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Quais os 2 componentes da Qualidade Assistencial Hospitalar vistos nesse capítulo?", "opts": ["Apenas o componente financeiro, isoladamente, sem outras dimensões", "Científico (intrínseco — diagnóstico/terapêutica corretos) e Aparente (extrínseco — sensação do doente/família de serem bem tratados)", "Apenas o componente estético da instalação física do hospital", "Exclusivamente indicadores de mortalidade hospitalar, sem outras dimensões"], "correct": 1, "justificativa": "A Qualidade tem 2 componentes: CIENTÍFICO (intrínseco) — diagnosticar corretamente e aplicar a terapêutica conveniente; e APARENTE (extrínseco) — a sensação que o doente e seus familiares têm de serem tratados com interesse e educação.", "analise": ["Incorreto — o componente financeiro isolado não é um dos 2 componentes descritos da qualidade assistencial nesse capítulo.", "Incorreto — o componente estético da instalação física não é um dos 2 componentes descritos da qualidade assistencial.", "Incorreto — indicadores de mortalidade seriam, no máximo, um dado dentro do componente Científico, não a totalidade dos 2 componentes descritos."], "analise_letters": ["A", "C", "D"], "conceito": "Qualidade: 2 componentes — Científico/intrínseco (diagnóstico e terapêutica corretos) e Aparente/extrínseco (sensação de bom tratamento/educação percebida pelo doente e família).", "pegadinha": "Um atendimento pode ser cientificamente excelente mas percebido como ruim (componente aparente falho), ou vice-versa — os 2 componentes precisam ser cuidados SIMULTANEAMENTE pra uma qualidade assistencial completa.", "dica": "Científico = o que é FEITO corretamente (técnica). Aparente = como isso é PERCEBIDO pelo paciente (relação humana)."}];
+const flashcards = [{"n": 1, "cat": "Planejamento", "f": "Quais os 5 elementos que devem ser planejados na saúde?", "b": "Necessidade, Eficácia, Eficiência, Equidade, Qualidade."}, {"n": 2, "cat": "Determinantes", "f": "Como a posição socioeconômica influencia a saúde?", "b": "De forma INDIRETA, via fatores intermediários (condições de vida/trabalho/alimentação)."}, {"n": 3, "cat": "Determinantes", "f": "Diferencie determinantes estruturais de intermediários.", "b": "Estruturais: produzem estratificação social (renda, educação, gênero). Intermediários: geram vulnerabilidade concreta (condições de vida/trabalho)."}, {"n": 4, "cat": "4 Coletivos", "f": "Qual o interesse fundamental de cada um dos 4 coletivos?", "b": "Doentes: qualidade percebida/não esperar. Profissionais: reconhecimento/participação. Gestores: eficiência. Proprietários: paz social/rentabilidade."}, {"n": 5, "cat": "Necessidade", "f": "A necessidade de leitos é proporcional a quê?", "b": "Diretamente: doentes internados (e) e estância média (em). Inversamente: ocupação (io) e tempo (t)."}, {"n": 6, "cat": "Eficácia", "f": "A eficácia é proporcional a quê?", "b": "Diretamente: leitos (c), ocupação (io), tempo (t). Inversamente: estância média (em)."}, {"n": 7, "cat": "Estância Média", "f": "Quantos fatores alongam, encurtam e variam a estância média?", "b": "10 alongam, 8 encurtam, 5 são variáveis."}, {"n": 8, "cat": "Eficiência", "f": "O que é Eficiência em gestão de saúde?", "b": "Obter metas (quantificadas/datadas/com responsável) com o menor custo e qualidade adequada."}, {"n": 9, "cat": "Equidade", "f": "O que é Equidade em saúde? (não confundir com igualdade)", "b": "Ausência de diferenças evitáveis/injustas no acesso — recursos alocados por NECESSIDADE, não igualmente pra todos."}, {"n": 10, "cat": "Qualidade", "f": "Quais os 2 componentes da Qualidade Assistencial?", "b": "Científico/intrínseco (diagnóstico/terapêutica corretos) e Aparente/extrínseco (sensação de bom tratamento)."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+// ===== BANCO DE QUESTÕES =====
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  const nivelClean = item.nivel.replace(/^[^\s]+\s/, '');
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+// ===== MOTOR DE REPETIÇÃO ESPAÇADA REAL (SM-2, 4 níveis) + INTERFACE ANKI =====
+// Reutilizável: basta trocar CHAPTER_ID em cada capítulo futuro.
+const CHAPTER_ID = 'gestaosaude_cap02_planejamento';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+// quality: 0=De novo, 1=Difícil, 2=Bem, 3=Fácil (escala real de 4 pontos, como o Anki de verdade)
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+// ===== FLASHCARDS =====
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+// ===== QUIZ RÁPIDO =====
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Gestión en Salud',
+    titulo: 'Capítulo 2 — Planejamento Sanitário',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Gestión en Salud', titulo: 'Capítulo 2 — Planejamento Sanitário', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-05/gestion-salud/Capitulo_01_Fundamentos_Gestao.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 1 — Fundamentos da Gestão Clínica e Hospitalar</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
