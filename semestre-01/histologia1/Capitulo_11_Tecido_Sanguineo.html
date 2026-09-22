@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap"></noscript>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Histologia I — Tecido Sanguíneo (P2)</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg); color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;}
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+.trilha{max-width:1100px; margin:14px auto 0; padding:0 20px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:.72rem; color:var(--text-dim);}
+.trilha .etapa{padding:3px 9px; border-radius:999px; border:1px solid var(--border); background:var(--bg-alt);}
+.trilha .etapa.ativa{color:#0d0f16; background:linear-gradient(135deg,var(--green1),var(--green2)); border-color:transparent; font-weight:700;}
+.trilha .seta{opacity:.5;}
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px 10px; display:flex; gap:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:var(--green1) var(--bg-alt);}
+nav::-webkit-scrollbar{height:6px;} nav::-webkit-scrollbar-track{background:var(--bg-alt); border-radius:4px;} nav::-webkit-scrollbar-thumb{background:var(--green1); border-radius:4px;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; flex-shrink:0; white-space:nowrap;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.scroll-hint{max-width:1100px; margin:0 auto; padding:0 20px; display:none; font-size:.72rem; color:var(--text-dim); align-items:center; gap:6px;}
+@media(max-width:700px){ .scroll-hint{display:flex;} }
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;} .section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);} .card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;} .hero p{font-size:1rem; max-width:640px;}
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;} .analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;} .clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;} .mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;} .criterio b{color:var(--green2);}
+.prova{background:rgba(255,209,102,.06); border:1px dashed var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;} .prova b{color:var(--gold);}
+.example{background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;} .example b{color:var(--text);}
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;} th{background:var(--bg-alt); color:var(--green2); font-weight:700;} tr:nth-child(even){background:rgba(255,255,255,.02);}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;} .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;} .mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+.fig{margin:18px 0; text-align:center;} .fig img{max-width:100%; border-radius:12px; border:1px solid var(--border);} .fig figcaption{font-size:.78rem; color:var(--text-dim); margin-top:8px;}
+.srs-status{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:.8rem; color:var(--text-dim); background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:14px;}
+.flash-controls{display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.flash-controls button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:.78rem;}
+.flashcard-wrap{perspective:1000px; margin:10px 0;} .flashcard{position:relative; min-height:180px; cursor:pointer;}
+.face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt);}
+.face-back{display:none; background:rgba(163,216,74,.08); border-color:var(--green2);} .flashcard.flipped .face-front{display:none;} .flashcard.flipped .face-back{display:flex;}
+.flash-tag{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--green2); margin-bottom:8px;}
+.review-btns{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+.review-btns button{flex:1; min-width:80px; padding:10px 6px; border-radius:8px; border:none; font-weight:700; font-size:.78rem; cursor:pointer; color:#0d0f16; display:flex; flex-direction:column; gap:2px; align-items:center;}
+.review-btns button small{font-weight:400; font-size:.68rem; opacity:.75;}
+.btn-again{background:var(--red);} .btn-hard{background:#ffa552;} .btn-good{background:var(--green2);} .btn-easy{background:var(--blue);}
+.nav-flash{display:flex; justify-content:space-between; margin-top:12px;} .nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.82rem;}
+.quiz-progress{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:14px;} .quiz-q{font-size:1.05rem; font-weight:600; margin-bottom:14px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:11px 14px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:.9rem;}
+.option:hover:not(.disabled){border-color:var(--green2);} .option.correct{background:rgba(163,216,74,.15); border-color:var(--green2);} .option.incorrect{background:rgba(255,92,108,.12); border-color:var(--red);} .option.disabled{cursor:default;}
+#quizFeedback{font-size:.85rem; color:var(--text-dim); margin:10px 0;} .quiz-nav{margin-top:10px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.88rem;} .btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--green2); color:var(--text); padding:10px 20px; border-radius:10px; font-size:.85rem; opacity:0; pointer-events:none; transition:.3s; z-index:200;} .toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="#a3d84a" stroke-width="1.5"/><path d="M8 12h8M12 8v8" stroke="#a3d84a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="logo-text"><h1>Histologia I</h1><span>Clinicus — Padrão de Excelência</span></div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">🔥</span> <span id="xpTotal">0</span> XP</div>
+      <div class="level-badge">Nv. 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span>Progresso do capítulo</span><span id="progressPct">0%</span></div>
+  </div>
+  <div class="trilha">
+    <span class="etapa ativa" data-goto="visao">Visão Geral</span><span class="seta">→</span>
+    <span class="etapa" data-goto="eritrocitos">Eritrócitos</span><span class="seta">→</span>
+    <span class="etapa" data-goto="leucocitos">Leucócitos</span><span class="seta">→</span>
+    <span class="etapa" data-goto="plaquetas">Plaquetas</span><span class="seta">→</span>
+    <span class="etapa" data-goto="flashcards">Flashcards</span><span class="seta">→</span>
+    <span class="etapa" data-goto="quiz">Quiz</span>
+  </div>
+</header>
+
+<nav id="tabNav">
+  <button class="tab-btn active" data-tab="visao">📋 Visão Geral</button>
+  <button class="tab-btn" data-tab="eritrocitos">🔴 Eritrócitos</button>
+  <button class="tab-btn" data-tab="leucocitos">⚪ Leucócitos</button>
+  <button class="tab-btn" data-tab="plaquetas">🟡 Plaquetas</button>
+  <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
+  <button class="tab-btn" data-tab="quiz">✅ Quiz Rápido</button>
+</nav>
+<div class="scroll-hint">⇠ Arraste pra ver todas as abas ⇢</div>
+
+<main>
+
+<section class="section active" id="tab-visao">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 11 · Histologia I · P2</span>
+    <h2>Tecido Sanguíneo</h2>
+    <p>O sangue é, tecnicamente, um tecido conjuntivo especializado — só que com uma particularidade: sua matriz extracelular (o plasma) é <b>líquida</b>, não sólida ou em gel. Centrifugado, o sangue se separa em três camadas visíveis, cada uma correspondendo a um grupo de elementos com função própria.</p>
+  </div>
+  <div class="card">
+    <h3>O que você vai conseguir fazer depois deste capítulo</h3>
+    <ul>
+      <li>Descrever a organização do sangue centrifugado (hematócrito) e o que cada camada representa</li>
+      <li>Explicar a estrutura do eritrócito e relacioná-la à sua função de transporte de gases</li>
+      <li>Diferenciar os 5 tipos de leucócitos — morfologia e função de cada um</li>
+      <li>Explicar a origem e a função das plaquetas na hemostasia</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Por que isso cai tanto em prova</h3>
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> reconhecer cada leucócito numa imagem de esfregaço (morfologia do núcleo e da granulação é a chave) e saber a ordem de abundância relativa deles no sangue periférico normal.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-eritrocitos">
+  <div class="card">
+    <span class="eyebrow">Hematócrito e transporte de gases</span>
+    <h2>Eritrócitos (Hemácias)</h2>
+    <p>Ao centrifugar uma amostra de sangue com anticoagulante, ela se separa em três camadas: o <b>plasma</b> (fração líquida, acima), uma fina camada esbranquiçada chamada <b>buffy coat</b> (leucócitos + plaquetas) e, na base, os <b>eritrócitos</b> — que sozinhos ocupam cerca de 45% do volume total (o valor do hematócrito).</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/sangue_eritrocito_forma.jpg" alt="Diagrama esquemático do eritrócito mostrando o formato de disco bicôncavo, em seção lateral (2,5 micrômetros de espessura) e vista superior (7,5 micrômetros de diâmetro)" loading="lazy">
+      <figcaption>Eritrócito: disco bicôncavo — cerca de 7,5 µm de diâmetro por 2,5 µm de espessura na borda.</figcaption>
+    </div>
+
+    <h3>Por que a forma bicôncava importa</h3>
+    <p>O eritrócito humano maduro <b>não tem núcleo nem organelas</b> — foi expulso durante a maturação, abrindo espaço extra pra hemoglobina. O formato de disco bicôncavo aumenta a área de superfície em relação ao volume (facilitando a troca gasosa) e dá à célula flexibilidade suficiente pra se deformar e atravessar capilares mais estreitos que seu próprio diâmetro.</p>
+
+    <div class="analogy">
+      <b>💡 Pensa assim:</b> um disco bicôncavo é como uma rosquinha achatada, sem o buraco no meio — essa forma maximiza a superfície de contato com o plasma ao redor, exatamente o que uma célula sem outra função além de transportar gás precisa.
+    </div>
+
+    <div class="clinical">
+      <b>🩺 Correlação clínica:</b> na <b>anemia falciforme</b>, uma mutação pontual na hemoglobina (HbS) faz o eritrócito perder a forma bicôncava sob baixa tensão de oxigênio, assumindo formato de foice — essas células deformadas obstruem capilares e são removidas precocemente do baço.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-leucocitos">
+  <div class="card">
+    <span class="eyebrow">Defesa</span>
+    <h2>Leucócitos — os 5 tipos</h2>
+    <p>Divididos em dois grandes grupos conforme a presença de grânulos específicos visíveis ao microscópio óptico: <b>granulócitos</b> (neutrófilo, eosinófilo, basófilo) e <b>agranulócitos</b> (linfócito, monócito).</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/sangue_esfregaco_neutrofilo.jpg" alt="Esfregaço de sangue periférico corado, mostrando numerosos eritrócitos e um neutrófilo segmentado no centro do campo" loading="lazy">
+      <figcaption>Esfregaço de sangue periférico — neutrófilo segmentado no centro, entre os eritrócitos.</figcaption>
+    </div>
+
+    <div class="grid-3">
+      <div class="mini-card">
+        <h4>Neutrófilo</h4>
+        <p style="margin:0; font-size:.85rem;">O leucócito mais abundante (~60-70%). Núcleo segmentado (3-5 lóbulos). Primeira linha de defesa contra bactérias, por fagocitose.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Eosinófilo</h4>
+        <p style="margin:0; font-size:.85rem;">Núcleo bilobulado. Grânulos grandes, alaranjados. Combate parasitas e participa de reações alérgicas.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Basófilo</h4>
+        <p style="margin:0; font-size:.85rem;">O mais raro dos leucócitos. Grânulos grandes e escuros que cobrem o núcleo. Libera histamina — irmão circulante do mastócito tecidual.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Linfócito</h4>
+        <p style="margin:0; font-size:.85rem;">Núcleo grande, redondo, ocupando quase toda a célula. Imunidade específica (linfócitos B e T).</p>
+      </div>
+      <div class="mini-card">
+        <h4>Monócito</h4>
+        <p style="margin:0; font-size:.85rem;">O maior leucócito. Núcleo em forma de rim/feijão. Vira macrófago ao migrar pro tecido conjuntivo.</p>
+      </div>
+    </div>
+
+    <div class="mnemo">
+      <b>🎵 Mnemônico de abundância relativa:</b> "Nunca Deixe Levar Meu Boné" — <b>N</b>eutrófilo (60-70%) → <b>E</b>osinófilo (2-4%) — pense em "Deixe" como lembrete do segundo lugar dos granulócitos — → <b>L</b>infócito (20-30%) → <b>M</b>onócito (3-8%) → <b>B</b>asófilo (&lt;1%, o mais raro).
+    </div>
+
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> associar o formato do núcleo a cada célula é o critério nº1 de identificação em prova prática — segmentado (neutrófilo), bilobulado (eosinófilo), redondo grande (linfócito), em rim (monócito).
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-plaquetas">
+  <div class="card">
+    <span class="eyebrow">Hemostasia</span>
+    <h2>Plaquetas (Trombócitos)</h2>
+    <p>Não são células completas — são fragmentos citoplasmáticos anucleados, originados a partir da fragmentação do citoplasma do <b>megacariócito</b> (uma célula gigante da medula óssea). Circulam no sangue com a função central de iniciar a coagulação e reparar pequenas lesões vasculares.</p>
+
+    <div class="example">
+      <b>📎 Exemplo prático:</b> ao se cortar, as plaquetas aderem ao colágeno exposto na parede do vaso lesado, se agregam e formam o "tampão plaquetário" — a primeira resposta hemostática, antes mesmo da cascata de coagulação plasmática entrar em ação por completo.
+    </div>
+
+    <div class="clinical">
+      <b>🩺 Correlação clínica:</b> a <b>trombocitopenia</b> (plaquetas baixas) se manifesta clinicamente com petéquias e sangramento fácil de mucosas — sinais diretos da falha no tampão plaquetário inicial.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-flashcards">
+  <div class="card">
+    <h2>🎴 Flashcards — Repetição Espaçada</h2>
+    <div class="srs-status" id="srsStatus">Carregando...</div>
+    <div class="flash-controls">
+      <span>Cartão <b id="fcIndex">1</b> / <span id="fcTotal">0</span> · Dominados: <b id="fcMastered">0</b></span>
+      <button onclick="shuffleCards()">🔀 Misturar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front"><div><span class="flash-tag" id="fcTag">—</span><div id="fcFront">Carregando...</div></div></div>
+        <div class="face face-back"><div><span class="flash-tag">Resposta</span><div id="fcBack"></div></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCurrentCard(0)">😵 De novo<small id="prevAgain">1d</small></button>
+      <button class="btn-hard" onclick="reviewCurrentCard(1)">😓 Difícil<small id="prevHard">1d</small></button>
+      <button class="btn-good" onclick="reviewCurrentCard(2)">🙂 Bem<small id="prevGood">3d</small></button>
+      <button class="btn-easy" onclick="reviewCurrentCard(3)">😎 Fácil<small id="prevEasy">6d</small></button>
+    </div>
+    <div class="nav-flash"><button onclick="prevCard()">← Anterior</button><button onclick="nextCard()">Próximo →</button></div>
+  </div>
+</section>
+
+<section class="section" id="tab-quiz">
+  <div class="card"><h2>✅ Quiz Rápido</h2><div id="quizArea"></div></div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const tabs = document.querySelectorAll('.tab-btn');
+const sections = document.querySelectorAll('.section');
+function goToTab(name){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  sections.forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  document.querySelectorAll('.trilha .etapa').forEach(e=>e.classList.toggle('ativa', e.dataset.goto===name));
+  if(name==='quiz' && quizIndex===0 && quizLog.length===0) initQuiz();
+  if(name==='flashcards') initFlashcards();
+  updateProgress();
+}
+tabs.forEach(t=>t.addEventListener('click', ()=>goToTab(t.dataset.tab)));
+document.querySelectorAll('.trilha .etapa').forEach(e=>e.addEventListener('click', ()=>goToTab(e.dataset.goto)));
+
+let xp = 0;
+const seenTabs = new Set(['visao']);
+function addXP(n, motivo){ xp += n; document.getElementById('xpTotal').textContent = xp; if(motivo) showToast('+' + n + ' XP — ' + motivo); }
+function updateProgress(){
+  const activo = document.querySelector('.section.active');
+  if(activo) seenTabs.add(activo.id.replace('tab-',''));
+  const pct = Math.round((seenTabs.size / tabs.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+function showToast(msg){
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastTimer); window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+const CHAPTER_ID = 'histo1_cap11_tecido_sanguineo';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+function simulateReview(state, quality){
+  let s = Object.assign({}, state);
+  if(quality === 0){ s.reps = 0; s.interval = 1; s.ef = Math.max(1.3, s.ef - 0.2); }
+  else {
+    s.reps += 1;
+    if(s.reps === 1) s.interval = 1; else if(s.reps === 2) s.interval = 3; else s.interval = Math.round(s.interval * s.ef);
+    if(quality === 1) s.ef = Math.max(1.3, s.ef - 0.15);
+    if(quality === 3) s.ef = s.ef + 0.15;
+  }
+  return s;
+}
+function reviewCard(id, quality){
+  const data = loadSRS(); const s = simulateReview(getCardState(data, id), quality);
+  s.due = Date.now() + s.interval * DAY_MS; s.lastReview = Date.now(); data[id] = s; saveSRS(data); return s;
+}
+function isDue(data, id){ const s = data[id]; if(!s) return true; return s.due <= Date.now(); }
+
+const flashData = [
+  {tag:'Eritrócitos', front:'Qual a forma característica do eritrócito e por que ela é vantajosa?', back:'Disco bicôncavo — aumenta a área de superfície em relação ao volume (facilita troca gasosa) e dá flexibilidade pra atravessar capilares estreitos.'},
+  {tag:'Eritrócitos', front:'O eritrócito maduro humano tem núcleo?', back:'Não — é expulso durante a maturação, abrindo espaço extra pra hemoglobina.'},
+  {tag:'Eritrócitos', front:'Na anemia falciforme, o que acontece com a forma do eritrócito sob baixa tensão de O2?', back:'Perde a forma bicôncava e assume formato de foice, devido a uma mutação pontual na hemoglobina (HbS).'},
+  {tag:'Leucócitos', front:'Qual é o leucócito mais abundante no sangue periférico normal?', back:'O neutrófilo (cerca de 60-70% dos leucócitos).'},
+  {tag:'Leucócitos', front:'Qual leucócito tem núcleo bilobulado e grânulos alaranjados, associado a combate a parasitas e reações alérgicas?', back:'O eosinófilo.'},
+  {tag:'Leucócitos', front:'Qual é o leucócito mais raro no sangue periférico?', back:'O basófilo (menos de 1%).'},
+  {tag:'Leucócitos', front:'Em qual célula o monócito se transforma ao migrar para o tecido conjuntivo?', back:'Macrófago.'},
+  {tag:'Leucócitos', front:'Qual critério morfológico é o principal pra diferenciar leucócitos numa lâmina?', back:'O formato do núcleo (segmentado, bilobulado, redondo grande, em rim) e a presença/cor de grânulos.'},
+  {tag:'Plaquetas', front:'De onde vêm as plaquetas?', back:'São fragmentos citoplasmáticos anucleados do megacariócito, célula gigante da medula óssea.'},
+  {tag:'Plaquetas', front:'Qual é o primeiro passo da resposta hemostática após uma lesão vascular?', back:'Formação do tampão plaquetário — plaquetas aderem ao colágeno exposto e se agregam, antes mesmo da cascata de coagulação plasmática completa.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  updateSrsStatus(); renderCard();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashData.filter((_,i) => isDue(data, 'fc'+i)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML = '📅 <b>' + dueCount + '</b> card' + (dueCount===1?'':'s') + ' pra revisar hoje &nbsp;·&nbsp; ✅ <b>' + totalReviewed + '</b>/' + flashData.length + ' já iniciados';
+}
+function renderCard(){
+  const id = 'fc' + fcOrder[fcPos]; const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+  const data = loadSRS(); const estado = getCardState(data, id);
+  [0,1,2,3].forEach((q, idx)=>{ const sim = simulateReview(estado, q); document.getElementById(['prevAgain','prevHard','prevGood','prevEasy'][idx]).textContent = sim.interval + 'd'; });
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Cartões misturados');
+}
+function reviewCurrentCard(quality){
+  const id = 'fc' + fcOrder[fcPos]; const s = reviewCard(id, quality);
+  const labels = ['De novo','Difícil','Bem','Fácil']; const xpMap = [1,2,4,6];
+  addXP(xpMap[quality], 'Flashcard: ' + labels[quality] + ' (volta em ' + s.interval + 'd)');
+  if(quality >= 2) fcMastered++; updateSrsStatus(); nextCard();
+}
+
+const quizData = [
+{"q":"Ao centrifugar o sangue, qual camada representa o hematócrito?","options":["Plasma","Buffy coat","Eritrócitos","Soro"],"correct":2,"exp":"O hematócrito é a fração ocupada pelos eritrócitos, cerca de 45% do volume total."},
+{"q":"Por que o eritrócito maduro tem forma de disco bicôncavo?","options":["Pra reduzir sua área de superfície","Pra aumentar área de superfície e dar flexibilidade em capilares","Pra facilitar a fagocitose","Pra ancorar o núcleo"],"correct":1,"exp":"A forma bicôncava aumenta a área de superfície relativa ao volume (troca gasosa) e dá flexibilidade pra atravessar capilares estreitos."},
+{"q":"O que caracteriza estruturalmente a anemia falciforme, no nível celular?","options":["Ausência total de hemoglobina","Perda da forma bicôncava sob baixa tensão de O2, assumindo formato de foice","Núcleo hipersegmentado","Aumento do número de mitocôndrias"],"correct":1,"exp":"Na anemia falciforme, a HbS mutada faz o eritrócito perder a forma bicôncava e assumir formato de foice sob baixa tensão de oxigênio."},
+{"q":"Qual é o leucócito mais abundante no sangue periférico normal?","options":["Linfócito","Monócito","Neutrófilo","Basófilo"],"correct":2,"exp":"O neutrófilo é o mais abundante, correspondendo a cerca de 60-70% dos leucócitos circulantes."},
+{"q":"Qual leucócito tem núcleo bilobulado e está associado a combate a parasitas?","options":["Eosinófilo","Basófilo","Monócito","Linfócito"],"correct":0,"exp":"O eosinófilo tem núcleo bilobulado e grânulos alaranjados, atuando contra parasitas e em reações alérgicas."},
+{"q":"Qual é o leucócito mais raro no sangue periférico normal?","options":["Neutrófilo","Linfócito","Basófilo","Monócito"],"correct":2,"exp":"O basófilo é o mais raro, representando menos de 1% dos leucócitos."},
+{"q":"O monócito se transforma em qual célula ao migrar para o tecido conjuntivo?","options":["Neutrófilo","Macrófago","Linfócito B","Plasmócito"],"correct":1,"exp":"O monócito, ao migrar pro tecido conjuntivo, se diferencia em macrófago."},
+{"q":"De onde se originam as plaquetas?","options":["Fragmentação do citoplasma do megacariócito","Divisão direta de eritrócitos","Diferenciação de linfócitos B","Fragmentação de neutrófilos"],"correct":0,"exp":"As plaquetas são fragmentos anucleados do citoplasma do megacariócito, célula da medula óssea."},
+{"q":"Qual é o primeiro evento da hemostasia após lesão vascular?","options":["Ativação da cascata de coagulação plasmática completa","Formação do tampão plaquetário","Fibrinólise","Vasodilatação prolongada"],"correct":1,"exp":"O tampão plaquetário se forma primeiro, quando plaquetas aderem ao colágeno exposto e se agregam."},
+{"q":"Quais sinais clínicos são característicos de trombocitopenia (plaquetas baixas)?","options":["Febre alta isolada","Petéquias e sangramento fácil de mucosas","Icterícia","Hipertensão arterial"],"correct":1,"exp":"A falha no tampão plaquetário inicial se manifesta com petéquias e sangramento fácil de mucosas."}
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex]; quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Questão ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Pontos: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return; quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  if(correct){ quizScore++; addXP(5); }
+  document.getElementById('quizFeedback').textContent = item.exp;
+  document.getElementById('quizNextBtn').disabled = false;
+  quizLog.push(correct);
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const pct = Math.round((quizScore / quizData.length) * 100);
+  document.getElementById('quizArea').innerHTML =
+    '<div style="text-align:center; padding:20px 0;"><h3>Resultado: ' + quizScore + ' / ' + quizData.length + ' (' + pct + '%)</h3>' +
+    '<p style="color:var(--text-dim);">' + (pct>=70 ? 'Muito bem! Você domina o essencial do capítulo.' : 'Vale revisar Leucócitos antes de tentar de novo.') + '</p>' +
+    '<button class="btn-primary" onclick="initQuiz()">Tentar novamente</button></div>';
+}
+updateProgress();
+</script>
+
+</body>
+</html>
