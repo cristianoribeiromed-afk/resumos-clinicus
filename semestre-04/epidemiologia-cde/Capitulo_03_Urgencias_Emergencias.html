@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Epidemiología CDE — Cap. 3: Organización de Urgencias y Emergencias | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0c1a12; --card:#122419; --card2:#173420;
+  --accent:#2a9d5c; --accent2:#6fd99a; --gold:#e8b84b;
+  --text:#e9f5ee; --text-dim:#a3cbb3; --ok:#4fd1a1; --bad:#e0505f; --border:#204a2e;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Epidemiología — CDE</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Epidemiología — CDE</span><span>3 de 3</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Epidemiología — CDE</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-04/epidemiologia-cde/Capitulo_01_Salud_Sistemas.html"><span class="ico">📊</span><span>Capítulo 1 — Salud, Salud Pública e Sistemas de Salud</span></a>
+    <a class="cmed-nav-item" href="/semestre-04/epidemiologia-cde/Capitulo_02_APS.html"><span class="ico">📊</span><span>Capítulo 2 — Atenção Primária de Saúde (APS)</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-04/epidemiologia-cde/Capitulo_03_Urgencias_Emergencias.html"><span class="ico">📊</span><span>Capítulo 3 — Organização de Urgências e Emergências</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Epidemiología — CDE · P1 · Unidad I</span>
+  <h1>🚑 Capítulo 3 — Organização de Urgências e Emergências</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois dessa aula</h2>
+    <ul>
+      <li>Diferenciar Urgência, Urgência Real e Urgência Sentida, e Emergência</li>
+      <li>Descrever a organização estrutural de um serviço de urgências (áreas e fluxo)</li>
+      <li>Definir Triagem e suas funções</li>
+      <li>Comparar os principais sistemas de triagem (Manchester, ESI, Canadiense, SET)</li>
+      <li>Diferenciar os tipos de triagem por momento (primário, secundário, terciário)</li>
+      <li>Diferenciar os métodos SHORT e START pra vítimas múltiplas</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📖 O Ponto de Partida — Nem Toda "Urgência" é a Mesma Coisa</h2>
+    <p>Se você já trabalhou (ou vai trabalhar) numa emergência, sabe que a palavra "urgente" é usada o tempo todo — pelo paciente, pela família, pelo próprio serviço. Só que, tecnicamente, existem VÁRIOS conceitos diferentes escondidos atrás dessa mesma palavra, e diferenciar eles é o primeiro passo pra entender como um serviço de urgências deveria funcionar.</p>
+    <table>
+      <tr><th>Conceito</th><th>Definição</th></tr>
+      <tr><td>Urgência (definição da OMS)</td><td>Aparição FORTUITA (imprevista/inesperada), em qualquer lugar ou atividade, de um problema de saúde de causa diversa e gravidade variável, que gera na pessoa (ou em sua família) a CONSCIÊNCIA de uma necessidade IMINENTE de atenção</td></tr>
+      <tr><td>Urgência Real ou Objetiva</td><td>Procedimento ou dano que coloca em RISCO algum órgão vital ou a vida do paciente — perigo IMEDIATO. É uma classificação decidida por um MÉDICO</td></tr>
+      <tr><td>Urgência Sentida ou Subjetiva</td><td>Necessidade de atenção motivada pelo PRÓPRIO PACIENTE, na qual NÃO existe risco real de órgãos — mas o paciente considera, por múltiplos fatores possíveis, que precisa ser atendido</td></tr>
+      <tr><td>Emergência</td><td>Situação que coloca em perigo IMEDIATO a vida do paciente (ou de algum órgão/parte de seu organismo) SE NÃO houver ação imediata, exigindo recursos especiais (serviços de Emergência)</td></tr>
+    </table>
+    <div class="hot">💭 Repara na distinção crucial entre Urgência REAL e Urgência SENTIDA: a definição da OMS já antecipa que a "consciência de necessidade" é do PACIENTE/família — mas isso não significa que exista, de fato, um risco médico real. Um serviço de emergência lida constantemente com essa tensão: atender pela GRAVIDADE clínica real, e não pela ORDEM em que as pessoas acham que deveriam ser atendidas. É exatamente esse conflito que o TRIAGEM (que vamos ver adiante) existe pra resolver de forma organizada e justa.</div>
+  </div>
+
+  <div class="card">
+    <h2>📍 Prestação de Assistência — Onde a Urgência Acontece</h2>
+    <p>Segundo as características da demanda solicitada aos Centros Coordenadores de Urgência (CCU), a assistência pode ocorrer em 3 contextos bem diferentes:</p>
+    <table>
+      <tr><th>Local</th><th>Exemplos</th></tr>
+      <tr><td>Via Pública</td><td>Acidentes de trânsito, acidentes laborais, parada cardiorrespiratória na via pública, intoxicações</td></tr>
+      <tr><td>Domicílio da vítima</td><td>Parada cardiorrespiratória, patologia médico-cirúrgica, intoxicações</td></tr>
+      <tr><td>Pontos de Atenção Contínua da Atenção Primária</td><td>Atenção solicitada pelos próprios profissionais de atenção primária (lembra da APS, vista no capítulo anterior?)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📋 Cartera de Serviços — O Que o Sistema de Urgência Gerencia</h2>
+    <ul>
+      <li>Gestão de traslados secundários ou inter-hospitalares</li>
+      <li>Gestão de alertas epidemiológicas</li>
+      <li>Gestão dos traslados involuntários</li>
+      <li>Gestão de Códigos Regionais de ativação precoce</li>
+    </ul>
+    <p>Esses "Códigos" merecem atenção especial — são protocolos de ativação IMEDIATA e coordenada entre serviços, criados pra situações onde CADA MINUTO conta:</p>
+    <table>
+      <tr><th>Código</th><th>Situação</th><th>Destino</th></tr>
+      <tr><td>Código Ictus</td><td>Avaliação e tratamento urgente de AVC — "O TEMPO É CÉREBRO!"</td><td>Unidade de Ictus/Neurologia</td></tr>
+      <tr><td>Código Grande Queimado</td><td>Atenção especializada imediata pra pacientes com queimaduras críticas (mais de 20% da Superfície Corporal Queimada)</td><td>Unidade de Queimados</td></tr>
+      <tr><td>Código Infarto</td><td>Intervenção rápida pra infartos agudos do miocárdio</td><td>Hemodinâmica/Cardiologia</td></tr>
+    </table>
+    <div class="prova">📝 "O tempo é cérebro" é um lema clássico de prova — resume por que o Código Ictus prioriza minutos: em um AVC isquêmico, quanto mais tempo passa sem reperfusão, mais tecido cerebral morre irreversivelmente. O mesmo raciocínio de "tempo = tecido perdido" se aplica ao Código Infarto (tempo = músculo cardíaco) e ao Código Grande Queimado (tempo = maior risco de choque/infecção).</div>
+  </div>
+
+  <div class="card">
+    <h2>👥 A Equipe (Plantilla) de um Serviço de Urgências</h2>
+    <p>Um serviço de urgências funciona com uma combinação de pessoal ESTÁVEL (que trabalha ali de forma fixa) e pessoal ROTATIVO:</p>
+    <table>
+      <tr><th>Função</th><th>Característica</th></tr>
+      <tr><td>Médicos Adjuntos</td><td>Plantilla estável</td></tr>
+      <tr><td>Médicos Residentes</td><td>Rotantes, e cobrindo plantões de diferentes especialidades</td></tr>
+      <tr><td>Médicos especialistas hospitalares</td><td>De plantão (guardia)</td></tr>
+      <tr><td>Enfermagem, Auxiliares de Clínica, Pessoal de apoio (celadores), Administrativos</td><td>Todos como plantilla estável</td></tr>
+    </table>
+    <p>E quem, na prática, atua como "Médico de Urgências Hospitalares"? Se existe essa figura profissional específica, ótimo — mas na prática, essa função costuma ser exercida por MÉDICOS DE FAMÍLIA ou MÉDICOS INTERNISTAS, que assumem esse papel mesmo sem um título formal de "especialista em urgências".</p>
+  </div>
+
+  <div class="card">
+    <h2>🏥 Delimitação Estrutural — Como o Espaço Físico Organiza o Fluxo</h2>
+    <p>Um serviço de urgências bem desenhado não é só "um monte de macas numa sala grande" — o espaço físico é organizado em ÁREAS específicas, cada uma com uma função no fluxo do paciente:</p>
+    <table>
+      <tr><th>Área</th><th>Função</th></tr>
+      <tr><td>Acesso</td><td>Atualmente há uma entrada DIFERENCIADA pra pacientes trazidos por ambulâncias do sistema de emergências, separada dos que chegam por meios próprios</td></tr>
+      <tr><td>Área de Admissão</td><td>Onde os pacientes são registrados e ocorre todo o trabalho administrativo</td></tr>
+      <tr><td>Área de Classificação (Triagem)</td><td>O local destinado à recepção assistencial e atenção imediata dos pacientes que chegam</td></tr>
+      <tr><td>Área de Críticos e Paradas</td><td>Onde se atendem pacientes com instabilidade hemodinâmica, que precisam de técnicas avançadas de ressuscitação</td></tr>
+      <tr><td>Boxes/Consultas</td><td>Onde se atendem inicialmente as prioridades III, IV e V</td></tr>
+      <tr><td>Área de Observação</td><td>Macas ou poltronas — onde os pacientes já avaliados nos Boxes ficam aguardando resultados de exames complementares ou reavaliação clínica após algum tratamento</td></tr>
+      <tr><td>Outras Áreas</td><td>Postos de controle de enfermagem, salas de espera, consultórios pra informação médica, etc.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Área de Críticos e Paradas — Prioridades I e II</h2>
+    <p>Essa é a área pra pacientes com instabilidade HEMODINÂMICA, que exigem atenção imediata e monitorização contínua durante sua estância. Dentro dela, existem 2 subdivisões:</p>
+    <table>
+      <tr><th>Subárea</th><th>Quem é atendido</th></tr>
+      <tr><td>BOX de Paradas (Prioridade I)</td><td>Reanimação cardiopulmonar, trauma grave INSTÁVEL, pacientes intubados</td></tr>
+      <tr><td>Monitorização (Prioridade II)</td><td>Choque (de diferentes etiologias); trauma grave ESTÁVEL; síndrome coronariano agudo/arritmias instáveis/edema agudo de pulmão; alteração do nível de consciência/convulsões; distress respiratório; procedimentos terapêuticos de risco (cardioversão, drenagem de pneumotórax, ventilação mecânica não invasiva); qualquer paciente com comprometimento vital</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🟡 Área de Boxes/Consultas — Prioridades II a V</h2>
+    <p>Aqui são atendidas patologias de diferentes especialidades — principalmente Medicina Interna e Cirurgia Geral — além de Boxes ESPECÍFICOS pra: Traumatologia, Curas/Cirurgia Menor, ORL (Otorrinolaringologia), Oftalmologia e Psiquiatria.</p>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Triagem — O Coração Organizacional da Urgência</h2>
+    <div class="criterio"><b>✅ O que é:</b> o método utilizado atualmente pra classificação/priorização da atenção urgente dos pacientes. Existem 2 grandes contextos de aplicação: Triagem HOSPITALAR e Triagem em Acidentes com MÚLTIPLAS VÍTIMAS.</div>
+    <p>Voltando ao problema que vimos lá no início (Urgência Real x Urgência Sentida) — é justamente a triagem que resolve esse conflito na prática: ela organiza a fila NÃO pela ordem de chegada, mas pela GRAVIDADE CLÍNICA real. Isso explica por que às vezes um paciente que chegou depois de você é atendido primeiro — ele não "furou a fila", ele foi classificado com maior prioridade clínica.</p>
+    <h2 style="font-size:1em;margin-top:14px;">As Funções da Triagem</h2>
+    <p>A triagem cumpre várias funções simultâneas, além da óbvia "definir quem é mais grave":</p>
+    <ul>
+      <li>Identificação de pacientes em situação de RISCO VITAL</li>
+      <li>Assegurar a PRIORIZAÇÃO em função do nível de classificação</li>
+      <li>Assegurar a REAVALIAÇÃO dos pacientes que precisam esperar (a condição de alguém pode mudar enquanto espera!)</li>
+      <li>Decidir a área mais apropriada pra atender cada paciente</li>
+      <li>Aportar informação sobre o processo assistencial</li>
+      <li>Dispor de informação pros familiares</li>
+      <li>Melhorar o fluxo de pacientes e reduzir a congestão do serviço</li>
+      <li>Aportar informação de melhoria pro funcionamento do serviço</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🇬🇧 Sistema de Triagem Manchester</h2>
+    <p>O Manchester classifica o paciente segundo sua QUEIXA PRINCIPAL e os SINAIS/SINTOMAS, usando cores pra determinar prioridade e tempo de atenção:</p>
+    <table>
+      <tr><th>Categoria</th><th>Nível</th><th>Cor</th><th>Tempo de Atenção</th></tr>
+      <tr><td>1</td><td>Emergência</td><td>🔴 Vermelho</td><td>0 minutos</td></tr>
+      <tr><td>2</td><td>Muito Urgente</td><td>🟠 Laranja</td><td>10 minutos</td></tr>
+      <tr><td>3</td><td>Urgente</td><td>🟡 Amarelo</td><td>30 minutos</td></tr>
+      <tr><td>4</td><td>Pouco Urgente</td><td>🟢 Verde</td><td>120 minutos</td></tr>
+      <tr><td>5</td><td>Não Urgente</td><td>🔵 Azul</td><td>180 minutos</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🇺🇸 Sistema ESI (Emergency Severity Index)</h2>
+    <p>Diferente do Manchester (que olha sinais/sintomas), o ESI classifica o paciente principalmente pela GRAVIDADE do estado E pela QUANTIDADE DE RECURSOS que ele provavelmente vai precisar durante o atendimento:</p>
+    <table>
+      <tr><th>Nível</th><th>Critério</th><th>Exemplos</th><th>Recursos</th></tr>
+      <tr><td>1 — Reanimação (Imediato)</td><td>Risco vital imediato, requer intervenção pra salvar a vida</td><td>Parada cardiorrespiratória, anafilaxia grave, traumatismo severo</td><td>Imediatos e contínuos</td></tr>
+      <tr><td>2 — Emergência (Alto Risco)</td><td>Situação de alto risco, confusão/letargia ou dor muito intensa</td><td>Dor torácica aguda, alteração do estado mental, dispneia grave</td><td>Atende em &lt;10 minutos</td></tr>
+      <tr><td>3 — Urgente (Múltiplos Recursos)</td><td>Paciente estável, mas precisa de DOIS OU MAIS recursos diagnósticos/médicos</td><td>Dor abdominal severa, fraturas simples, febre alta com tosse</td><td>Exame laboratorial + Radiografia / Medicação IV</td></tr>
+      <tr><td>4 — Menos Urgente (Um Só Recurso)</td><td>Paciente estável que precisa de UM ÚNICO recurso diagnóstico/terapêutico</td><td>Laceração menor (sutura), radiografia por entorse leve</td><td>Só RX ou só sutura</td></tr>
+      <tr><td>5 — Não Urgente (Sem Recursos)</td><td>Paciente estável que NÃO precisa de recursos adicionais</td><td>Resfriado comum, renovação de receita, consulta preventiva</td><td>Nenhum (só exame físico e orientação)</td></tr>
+    </table>
+    <div class="prova">📝 A diferença-chave entre Manchester e ESI, que é MUITO cobrada em prova: Manchester = sintomas → cor → tempo de espera. ESI = gravidade + recursos necessários → nível de 1 a 5. Ou seja, o ESI é o único que INCORPORA explicitamente a previsão de quantos recursos (exames, especialistas) o paciente vai consumir — não só o quão grave ele parece no momento.</div>
+  </div>
+
+  <div class="card">
+    <h2>🇨🇦 Triagem Canadense (CTAS)</h2>
+    <p>A Escala Canadense de Triagem e Urgência (CTAS) também usa 5 níveis de prioridade, com uma lógica bem parecida com o Manchester/ESI combinados:</p>
+    <table>
+      <tr><th>Nível</th><th>Categoria</th><th>Descrição</th></tr>
+      <tr><td>1</td><td>Reanimação</td><td>Ameaça imediata à vida</td></tr>
+      <tr><td>2</td><td>Emergência</td><td>Ameaça potencial à vida, extremidade ou função</td></tr>
+      <tr><td>3</td><td>Urgência</td><td>Condição grave, risco de progressão</td></tr>
+      <tr><td>4</td><td>Menos Urgência</td><td>Condição menor aguda ou angústia</td></tr>
+      <tr><td>5</td><td>Não Urgência</td><td>Condição menor ou crônica estável</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🇪🇸 Sistema Espanhol de Triagem (SET)</h2>
+    <p>O SET serve pra classificar os pacientes segundo a gravidade do seu estado, definindo quem deve ser atendido primeiro. A lógica é simples: QUANTO MENOR o número, MAIS GRAVE é o paciente, e MAIS RÁPIDO ele deve ser atendido.</p>
+    <table>
+      <tr><th>Nível</th><th>Cor</th><th>Classificação</th><th>Exemplo</th></tr>
+      <tr><td>1</td><td>🔴 Vermelho</td><td>Crítico — atenção imediata, risco de vida</td><td>Parada cardíaca, hemorragia grave</td></tr>
+      <tr><td>2</td><td>🟠 Laranja</td><td>Emergência — muito grave, atenção rápida</td><td>Dor torácico intenso, queimaduras extensas</td></tr>
+      <tr><td>3</td><td>🟡 Amarelo</td><td>Urgente — precisa de atenção médica, mas pode esperar um pouco</td><td>—</td></tr>
+      <tr><td>4</td><td>🟢 Verde</td><td>Menos urgente — paciente estável, pode esperar mais tempo</td><td>Ferida superficial, febre sem complicações</td></tr>
+      <tr><td>5</td><td>🔵 Azul</td><td>Não urgente — problema leve, sem risco importante</td><td>—</td></tr>
+    </table>
+    <div class="mnemo"><b>🧠 Pra memorizar (SET):</b> 1 Vermelho = agora. 2 Laranja = muito rápido. 3 Amarelo = urgente. 4 Verde = pode esperar. 5 Azul = não urgente.</div>
+  </div>
+
+  <div class="card">
+    <h2>⏱️ Tipos de Triagem — Por MOMENTO da Avaliação</h2>
+    <p>Além dos SISTEMAS de triagem (Manchester, ESI, etc. — que definem COMO classificar), existe também uma classificação por MOMENTO/LOCAL onde a triagem acontece — isso é especialmente relevante em situações com múltiplas vítimas:</p>
+    <table>
+      <tr><th>Tipo</th><th>Onde ocorre</th><th>O que acontece</th></tr>
+      <tr><td>1. Triagem Primário</td><td>No LOCAL do acidente</td><td>Avaliação RÁPIDA pra identificar quem está mais grave e precisa de atenção primeiro — é uma classificação INICIAL</td></tr>
+      <tr><td>2. Triagem Secundário</td><td>No Posto Médico Avançado (PMA)</td><td>O paciente é reavaliado de forma mais COMPLETA, realizam-se medidas de reanimação necessárias, e se decide COMO ele deve ser transportado</td></tr>
+      <tr><td>3. Triagem Terciário (ou Hospitalar)</td><td>No HOSPITAL</td><td>Os pacientes são avaliados NOVAMENTE, determinando a prioridade pra receber o tratamento DEFINITIVO e, se necessário, ingressar em cuidados específicos</td></tr>
+    </table>
+    <div class="hot">💭 Repara na lógica: a cada etapa (local → PMA → hospital), a avaliação fica mais COMPLETA e mais PRECISA — porque também existem mais recursos disponíveis em cada etapa sucessiva. No local do acidente, você só tem alguns segundos e recursos mínimos; no hospital, já dá pra fazer uma avaliação completa com exames.</div>
+  </div>
+
+  <div class="card">
+    <h2>🚨 Métodos SHORT x START — Triagem em Múltiplas Vítimas</h2>
+    <table>
+      <tr><th>Método</th><th>Quem pode aplicar</th><th>Característica</th></tr>
+      <tr><td>SHORT</td><td>QUALQUER pessoa, mesmo sem formação em saúde (desde que previamente orientada/capacitada)</td><td>Método simples, com um acrônimo (SHORT) representando os passos a seguir — pensado pra classificação rápida em situações com múltiplas vítimas, aplicável no próprio local do incidente</td></tr>
+      <tr><td>START</td><td>Principalmente pessoal de SAÚDE ou capacitado em atenção de emergências</td><td>Avaliação rápida pra determinar a prioridade de atendimento — "Simple Triage And Rapid Treatment"</td></tr>
+    </table>
+    <div class="prova">📝 A diferença-chave entre esses 2 métodos NÃO é a velocidade (ambos são rápidos) — é QUEM PODE APLICAR: SHORT foi desenhado justamente pra ser usado por leigos/não-profissionais de saúde num cenário de desastre onde talvez não haja profissional médico disponível nos primeiros minutos; START pressupõe que quem está aplicando já tem alguma formação em saúde/emergências.</div>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação Rápida</h2>
+    <ul>
+      <li>Urgência (OMS): aparição fortuita, gera consciência de necessidade IMINENTE. Urgência Real/Objetiva: risco de órgão vital, decidido por médico. Urgência Sentida/Subjetiva: motivada pelo paciente, sem risco real. Emergência: perigo imediato à vida, exige recursos especiais</li>
+      <li>Prestação de assistência: via pública, domicílio, pontos de atenção contínua da APS</li>
+      <li>Códigos regionais: Ictus (AVC — "tempo é cérebro"), Grande Queimado (&gt;20% SCQ), Infarto (hemodinâmica/cardiologia)</li>
+      <li>Áreas do serviço: Acesso, Admissão, Classificação/Triagem, Críticos e Paradas (Prioridades I-II), Boxes/Consultas (Prioridades III-V), Observação</li>
+      <li>Triagem: classifica pela GRAVIDADE clínica, não pela ordem de chegada. 8 funções, incluindo reavaliação de quem espera</li>
+      <li>Manchester: sintomas → cor → tempo (Vermelho-0min, Laranja-10min, Amarelo-30min, Verde-120min, Azul-180min)</li>
+      <li>ESI: gravidade + RECURSOS necessários → nível 1-5 (Nível 3 = 2+ recursos; Nível 4 = 1 recurso; Nível 5 = nenhum recurso)</li>
+      <li>Canadense (CTAS): 5 níveis (Reanimação, Emergência, Urgência, Menos Urgência, Não Urgência)</li>
+      <li>SET (Espanhol): 5 níveis coloridos, quanto MENOR o número, MAIS grave e MAIS rápido o atendimento</li>
+      <li>Tipos por momento: Primário (local do acidente) → Secundário (Posto Médico Avançado) → Terciário/Hospitalar</li>
+      <li>SHORT: qualquer pessoa (mesmo leiga) pode aplicar. START: pessoal de saúde/capacitado em emergências</li>
+    </ul>
+  </div>
+
+</section>
+
+
+
+
+
+
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+  <div class="card">
+    <h2>🚑 Caso Clínico Progressivo — Uma Noite Movimentada na Emergência</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Vamos acompanhar 3 pacientes que chegam à emergência quase ao mesmo tempo, aplicando os conceitos de triagem vistos nesse capítulo. O caso evolui em 3 níveis.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟢 Nível 1 — Fundamental</h2>
+    <p><b>Às 22h, 2 pacientes chegam simultaneamente à recepção: Paciente A relata dor de cabeça leve, presente há 3 dias, e insiste que precisa ser atendido "agora" porque já está cansado de esperar. Paciente B chega trazido por ambulância, inconsciente, após acidente de moto, com sinais de trauma torácico.</b></p>
+    <p><b>Pergunta:</b> Classificando esses 2 pacientes segundo os conceitos de Urgência Real/Objetiva x Urgência Sentida/Subjetiva vistos nesse capítulo, como cada um se enquadra, e por que a ORDEM de atendimento não deve seguir a ordem de CHEGADA nesse caso?</p>
+    <p><b>Resposta comentada:</b> O Paciente A representa um caso de URGÊNCIA SENTIDA/SUBJETIVA — ele próprio sente a necessidade de atenção imediata, mas pela descrição (dor de cabeça leve, há 3 dias) não há indicação de risco real a órgãos vitais; a "urgência" aqui é definida pela PERCEPÇÃO do paciente, não por um médico. Já o Paciente B representa uma URGÊNCIA REAL/OBJETIVA (na verdade, uma EMERGÊNCIA) — inconsciência + trauma torácico após acidente indicam risco IMEDIATO à vida, uma situação que precisa ser decidida e confirmada por avaliação médica, mas cujos sinais já apontam claramente pra risco vital. A ordem de atendimento NÃO deve seguir a chegada porque, como vimos nesse capítulo, é justamente a função da TRIAGEM organizar o atendimento pela GRAVIDADE CLÍNICA real — e não pela ordem em que as pessoas chegam ou pela urgência que elas SENTEM ter. O Paciente B precisa ser atendido primeiro, mesmo tendo "chegado" praticamente ao mesmo tempo que o Paciente A.</p>
+  </div>
+
+  <div class="card">
+    <h2>🟡 Nível 2 — Intermediário</h2>
+    <p><b>O Paciente B (trauma) é imediatamente levado pra Área de Críticos e Paradas, onde é intubado e monitorizado continuamente. Nesse momento, chega um 3º paciente (Paciente C), consciente, relatando dor abdominal moderada, sem sinais de instabilidade, mas que provavelmente vai precisar de exames laboratoriais E uma radiografia pra fechar o diagnóstico.</b></p>
+    <p><b>Pergunta:</b> Aplicando o Sistema ESI visto nesse capítulo, em qual nível o Paciente C provavelmente se classificaria, e qual a diferença conceitual entre classificar esse paciente pelo ESI versus classificá-lo pelo Sistema de Manchester?</p>
+    <p><b>Resposta comentada:</b> Pelo Sistema ESI, o Paciente C provavelmente se classificaria no NÍVEL 3 (Urgente/Múltiplos Recursos) — porque, apesar de ESTÁVEL (sem sinais de instabilidade), ele precisa de DOIS OU MAIS recursos diagnósticos (exames laboratoriais + radiografia), exatamente o critério definidor desse nível no ESI. A diferença conceitual em relação ao Manchester é justamente o que vimos nesse capítulo: o Manchester classificaria esse paciente baseado PRINCIPALMENTE em sua queixa principal e sinais/sintomas atuais (dor abdominal moderada, sem instabilidade — provavelmente também resultando numa prioridade intermediária, como Amarelo/Urgente), enquanto o ESI incorpora EXPLICITAMENTE a PREVISÃO de quantos recursos esse paciente vai consumir durante o atendimento (nesse caso, 2 recursos = Nível 3) como parte central do próprio critério de classificação — não é só "quão grave ele parece agora", mas também "quanto trabalho diagnóstico ele provavelmente vai exigir".</p>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Nível 3 — Aplicação Integrada</h2>
+    <p><b>Horas depois, ocorre um acidente com um ônibus escolar, gerando MÚLTIPLAS vítimas no local. A primeira equipe a chegar é composta por policiais e populares (sem nenhum profissional de saúde presente ainda), que precisam começar a organizar as vítimas antes da chegada da ambulância.</b></p>
+    <p><b>Pergunta:</b> Integrando os conceitos de Tipos de Triagem por Momento e os Métodos SHORT/START vistos nesse capítulo, qual método deveria ser usado NESSE momento específico, por quem, e como esse momento se encaixa na sequência Primário→Secundário→Terciário?</p>
+    <p><b>Resposta comentada:</b> Nesse momento específico (chegada de policiais/populares, SEM profissional de saúde ainda presente), o método adequado é o SHORT — justamente porque ele foi desenhado pra ser aplicado por QUALQUER pessoa, mesmo sem formação em saúde (desde que previamente orientada/capacitada), diferente do START, que pressupõe pessoal de saúde ou capacitado especificamente em emergências (que ainda não chegou ao local). Esse momento se encaixa exatamente na etapa de TRIAGEM PRIMÁRIO — realizada NO LOCAL do acidente, com avaliação rápida pra identificar quem está mais grave e precisa de atenção primeiro, configurando uma classificação apenas INICIAL. Quando a ambulância chegar e as vítimas forem levadas a um Posto Médico Avançado (se houver), ocorrerá o TRIAGEM SECUNDÁRIO (reavaliação mais completa, medidas de reanimação, decisão sobre transporte) — possivelmente já usando o método START, já que a partir daí normalmente há pessoal capacitado envolvido. Só depois, no HOSPITAL, ocorrerá o TRIAGEM TERCIÁRIO/HOSPITALAR, com sistemas mais completos como Manchester ou ESI, determinando a prioridade pro tratamento definitivo. Esse caso ilustra bem como a resposta a um evento com múltiplas vítimas é um processo em CAMADAS sucessivas, cada uma com o método e o nível de precisão apropriados aos recursos e à formação de quem está disponível naquele momento específico.</p>
+  </div>
+</section>
+
+
+
+
+
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Urgência Real x Sentida", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a diferença entre Urgência Real (Objetiva) e Urgência Sentida (Subjetiva)?", "opts": ["Real: risco a órgão vital, decidida por médico. Sentida: motivada pelo próprio paciente, sem risco real de órgãos", "Ambos os termos são exatamente sinônimos, sem qualquer distinção", "Real é sempre menos grave que Sentida, nunca o contrário", "Sentida é decidida exclusivamente por exames laboratoriais, sem participação do paciente"], "correct": 0, "justificativa": "A Urgência REAL/OBJETIVA é um procedimento/dano que coloca em risco um órgão vital ou a vida do paciente, sendo uma classificação decidida por um MÉDICO. A Urgência SENTIDA/SUBJETIVA é uma necessidade de atenção motivada pelo PRÓPRIO PACIENTE, na qual não existe risco real de órgãos.", "analise": ["Incorreto — os 2 conceitos têm origem e natureza bem diferentes (avaliação médica objetiva x percepção subjetiva do paciente), não são sinônimos.", "Incorreto — não existe essa hierarquia fixa de gravidade entre os 2; a Urgência Real, por definição, envolve risco objetivo, enquanto a Sentida não necessariamente indica gravidade real.", "Incorreto — a Urgência Sentida é definida pela PERCEPÇÃO do próprio paciente, não por exames laboratoriais."], "analise_letters": ["B", "C", "D"], "conceito": "Urgência Real/Objetiva: risco a órgão vital, decisão médica. Urgência Sentida/Subjetiva: percepção do paciente, sem risco real.", "pegadinha": "A Urgência Sentida não é 'menos importante' do ponto de vista humano/psicológico — mas do ponto de vista CLÍNICO, é a Urgência Real que orienta a priorização no triagem.", "dica": "Real = o médico decide, com base em risco de órgão. Sentida = o paciente sente, mesmo sem risco real."}, {"n": 2, "tema": "Emergência", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a definição de Emergência, segundo esse capítulo?", "opts": ["Qualquer desconforto leve relatado pelo paciente, sem outro critério", "Situação que coloca em perigo IMEDIATO a vida do paciente (ou de algum órgão/parte do organismo) se não houver ação imediata, exigindo recursos especiais", "Consulta de rotina agendada com antecedência", "Procedimento eletivo programado para data futura"], "correct": 1, "justificativa": "Emergência é a situação que coloca em perigo IMEDIATO a vida do paciente, ou de algum de seus órgãos/parte do organismo, SE NÃO houver ação imediata — exigindo recursos especiais como os serviços de Emergência.", "analise": ["Incorreto — desconforto leve sem outro critério corresponde mais a uma urgência sentida/subjetiva ou situação não urgente, não à definição de Emergência.", "Incorreto — consultas de rotina agendadas são o oposto de uma emergência, que exige ação IMEDIATA e não planejada.", "Incorreto — procedimentos eletivos programados são justamente o oposto de uma emergência, que não pode esperar por agendamento."], "analise_letters": ["A", "C", "D"], "conceito": "Emergência: perigo IMEDIATO à vida/órgão se não houver ação imediata — exige recursos especiais.", "pegadinha": "Emergência é o grau mais extremo dentro do espectro de urgências — sempre envolve risco IMINENTE e necessidade de ação SEM demora.", "dica": "Emergência = 'agora ou nunca' — perigo imediato exigindo recursos especiais sem demora."}, {"n": 3, "tema": "Códigos Regionais", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual código de ativação precoce está associado ao lema 'O tempo é cérebro', e pra onde o paciente é direcionado?", "opts": ["Código Grande Queimado — Unidade de Queimados", "Código Infarto — Hemodinâmica/Cardiologia", "Código Ictus — Unidade de Ictus/Neurologia", "Nenhum código está associado a esse lema específico"], "correct": 2, "justificativa": "O CÓDIGO ICTUS está associado ao lema 'O tempo é cérebro!' — refere-se à avaliação e tratamento urgente de AVC, direcionando o paciente à Unidade de Ictus/Neurologia, já que quanto mais tempo passa sem reperfusão, mais tecido cerebral é perdido irreversivelmente.", "analise": ["Incorreto — o Código Grande Queimado está relacionado a queimaduras críticas (>20% SCQ) e direciona à Unidade de Queimados, não ao lema 'tempo é cérebro'.", "Incorreto — o Código Infarto está relacionado a infartos agudos do miocárdio e direciona à Hemodinâmica/Cardiologia, não ao lema 'tempo é cérebro'.", "Incorreto — existe SIM um código especificamente associado a esse lema (Código Ictus), amplamente conhecido nesse contexto."], "analise_letters": ["A", "B", "D"], "conceito": "Código Ictus: 'O tempo é cérebro!' — AVC, direcionado à Unidade de Ictus/Neurologia.", "pegadinha": "Cada código tem seu próprio 'lema'/lógica de urgência temporal — Ictus (cérebro), Infarto (músculo cardíaco), Grande Queimado (risco de choque/infecção) — todos compartilham a ideia de que tempo perdido = tecido/função perdida.", "dica": "'Tempo é cérebro' = Código Ictus = AVC = Neurologia."}, {"n": 4, "tema": "Áreas do Serviço de Urgências", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a diferença entre a Área de Críticos e Paradas e a Área de Boxes/Consultas, em termos de prioridades atendidas?", "opts": ["Ambas atendem exatamente as mesmas prioridades, sem distinção", "Críticos e Paradas atende exclusivamente Prioridade V; Boxes atende exclusivamente Prioridade I", "Não existe relação entre área física e nível de prioridade do paciente", "Críticos e Paradas atende Prioridades I e II (instabilidade hemodinâmica); Boxes/Consultas atende Prioridades II a V (patologias diversas, estáveis)"], "correct": 3, "justificativa": "A Área de Críticos e Paradas atende pacientes com instabilidade HEMODINÂMICA, correspondendo às Prioridades I e II. A Área de Boxes/Consultas atende as Prioridades II a V, com patologias de diferentes especialidades, geralmente pacientes mais ESTÁVEIS.", "analise": ["Incorreto — as 2 áreas atendem níveis de prioridade DIFERENTES, com sobreposição apenas na Prioridade II (que pode aparecer em ambas dependendo da situação específica).", "Incorreto — essa descrição está invertida e simplificada incorretamente; Críticos/Paradas atende as prioridades MAIS graves (I-II), não a mais leve (V).", "Incorreto — existe SIM uma relação direta e organizada entre a área física do serviço e o nível de prioridade/gravidade do paciente atendido ali."], "analise_letters": ["A", "B", "C"], "conceito": "Área de Críticos/Paradas: Prioridades I-II (instabilidade hemodinâmica). Área de Boxes/Consultas: Prioridades II-V (patologias diversas, mais estáveis).", "pegadinha": "A Prioridade II pode aparecer em ambas as áreas dependendo do contexto específico — mas de forma geral, quanto mais grave/instável, mais a Área de Críticos é o destino principal.", "dica": "Críticos/Paradas = instabilidade (I-II). Boxes = estável, várias especialidades (II-V)."}, {"n": 5, "tema": "Funções da Triagem", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual das opções abaixo é uma das funções da Triagem, vista nesse capítulo?", "opts": ["Assegurar a reavaliação dos pacientes que precisam esperar, já que sua condição pode mudar nesse período", "Garantir que todos os pacientes sejam atendidos rigorosamente pela ordem de chegada", "Eliminar completamente a necessidade de avaliação médica posterior", "Impedir qualquer comunicação de informações aos familiares dos pacientes"], "correct": 0, "justificativa": "Uma das funções centrais da Triagem é ASSEGURAR A REAVALIAÇÃO dos pacientes que precisam esperar — reconhecendo que a condição clínica de alguém pode mudar (piorar) durante o período de espera, exigindo reclassificação se necessário.", "analise": ["Incorreto — a Triagem existe justamente para organizar o atendimento pela GRAVIDADE CLÍNICA, não pela ordem de chegada; essa é uma característica central e definidora do processo.", "Incorreto — a Triagem não elimina a necessidade de avaliação médica posterior; ela é uma primeira classificação que direciona o paciente, mas a avaliação médica completa continua sendo necessária.", "Incorreto — dispor de informação para familiares é justamente uma das funções da Triagem, não seu oposto (impedir comunicação)."], "analise_letters": ["B", "C", "D"], "conceito": "Funções da Triagem incluem: identificação de risco vital, priorização, REAVALIAÇÃO de quem espera, decisão de área apropriada, informação ao processo assistencial e aos familiares, melhoria do fluxo.", "pegadinha": "A reavaliação contínua é frequentemente esquecida — a triagem não é um evento único no momento da chegada, é um processo que continua enquanto o paciente aguarda.", "dica": "Triagem não é só 'classificar uma vez' — inclui reavaliar continuamente quem ainda está esperando."}, {"n": 6, "tema": "Sistema Manchester", "nivel": "🟢 Nível 1 — Essencial", "q": "No Sistema de Triagem Manchester, qual cor e tempo de atenção correspondem à categoria 'Urgente' (nível 3)?", "opts": ["Vermelho, 0 minutos", "Amarelo, 30 minutos", "Verde, 120 minutos", "Azul, 180 minutos"], "correct": 1, "justificativa": "No Sistema Manchester, a categoria 3 (Urgente) corresponde à cor AMARELA, com tempo de atenção de 30 MINUTOS.", "analise": ["Incorreto — Vermelho e 0 minutos correspondem à categoria 1 (Emergência), não à categoria 3 (Urgente).", "Incorreto — Verde e 120 minutos correspondem à categoria 4 (Pouco Urgente), não à categoria 3 (Urgente).", "Incorreto — Azul e 180 minutos correspondem à categoria 5 (Não Urgente), não à categoria 3 (Urgente)."], "analise_letters": ["A", "C", "D"], "conceito": "Manchester: 1-Vermelho-Emergência-0min; 2-Laranja-Muito Urgente-10min; 3-Amarelo-Urgente-30min; 4-Verde-Pouco Urgente-120min; 5-Azul-Não Urgente-180min.", "pegadinha": "É fácil confundir a ordem das cores entre os diferentes sistemas de triagem (Manchester, SET, Canadense) — embora sejam parecidas, vale conferir os tempos específicos de cada sistema.", "dica": "Manchester nível 3 = Amarelo = 30 minutos — o 'meio do caminho' entre emergência e não urgência."}, {"n": 7, "tema": "Sistema ESI", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a principal diferença entre os sistemas Manchester e ESI (Emergency Severity Index)?", "opts": ["Ambos os sistemas são idênticos, apenas com nomes diferentes", "Manchester nunca usa cores; ESI usa exclusivamente cores, sem números", "Manchester classifica por queixa principal/sinais e sintomas (com cores); ESI classifica pela gravidade E pela quantidade de recursos que o paciente provavelmente vai precisar", "O ESI é usado exclusivamente em crianças; Manchester exclusivamente em adultos"], "correct": 2, "justificativa": "O Manchester classifica o paciente segundo sua queixa principal e sinais/sintomas, usando CORES pra determinar prioridade/tempo. O ESI classifica principalmente pela GRAVIDADE do estado E pela quantidade de RECURSOS que o paciente provavelmente vai precisar durante o atendimento.", "analise": ["Incorreto — os 2 sistemas têm lógicas de classificação DIFERENTES (sintomas/cores x gravidade+recursos), não são idênticos.", "Incorreto — o Manchester USA cores como parte central de sua classificação; essa descrição está invertida.", "Incorreto — não existe essa restrição etária entre os 2 sistemas; ambos podem ser aplicados a diferentes faixas etárias, dependendo do serviço."], "analise_letters": ["A", "B", "D"], "conceito": "Manchester: sintomas → cor → tempo. ESI: gravidade + recursos necessários → nível 1-5.", "pegadinha": "O ESI é o único sistema que incorpora explicitamente a PREVISÃO de recursos diagnósticos/terapêuticos necessários como critério central de classificação — essa é sua marca distintiva.", "dica": "Manchester = sintoma vira cor. ESI = gravidade + quanto recurso vai gastar vira nível numérico."}, {"n": 8, "tema": "Sistemas Canadense e SET", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "No Sistema Espanhol de Triagem (SET), qual a lógica geral de numeração dos níveis de gravidade?", "opts": ["Quanto MAIOR o número, mais grave é o paciente e mais rápido deve ser atendido", "Os números não têm relação alguma com a gravidade do paciente", "O SET não utiliza números, apenas cores, sem qualquer hierarquia", "Quanto MENOR o número, mais grave é o paciente e mais rápido deve ser atendido"], "correct": 3, "justificativa": "No SET, a lógica é: quanto MENOR o número, MAIS GRAVE é o paciente, e MAIS RÁPIDO ele deve ser atendido (Nível 1 = crítico/atenção imediata; Nível 5 = não urgente/pode esperar).", "analise": ["Incorreto — essa descrição está invertida; no SET, é o número MENOR que indica maior gravidade, não o maior.", "Incorreto — existe SIM uma relação direta e bem definida entre o número do nível e a gravidade/urgência do paciente no SET.", "Incorreto — o SET utiliza tanto NÚMEROS quanto CORES associadas, numa hierarquia bem definida de 1 a 5."], "analise_letters": ["A", "B", "C"], "conceito": "SET: quanto MENOR o número, MAIS grave o paciente e MAIS rápido o atendimento necessário (Nível 1=crítico/vermelho até Nível 5=não urgente/azul).", "pegadinha": "Essa lógica de 'número menor = mais grave' é compartilhada por outros sistemas de triagem numerados (como o próprio ESI) — é um padrão comum entre diferentes escalas.", "dica": "SET: número baixo = gravidade alta = atendimento rápido. Número alto = gravidade baixa = pode esperar."}, {"n": 9, "tema": "Tipos de Triagem por Momento", "nivel": "🟡 Nível 2 — Aprofundamento", "q": "Qual a sequência correta dos tipos de triagem por momento/local, e onde ocorre o Triagem Secundário?", "opts": ["Primário (local do acidente) → Secundário (Posto Médico Avançado) → Terciário/Hospitalar", "Terciário → Secundário → Primário, sempre nessa ordem invertida", "Secundário ocorre sempre e exclusivamente dentro do hospital", "Não existe uma sequência lógica entre esses tipos de triagem"], "correct": 0, "justificativa": "A sequência correta é: Triagem PRIMÁRIO (no local do acidente, avaliação rápida inicial) → Triagem SECUNDÁRIO (no Posto Médico Avançado/PMA, reavaliação mais completa e decisão de transporte) → Triagem TERCIÁRIO ou Hospitalar (no hospital, avaliação definitiva).", "analise": ["Incorreto — essa sequência está invertida em relação à ordem lógica e cronológica real do processo.", "Incorreto — o Triagem Secundário ocorre no Posto Médico Avançado (PMA), não exclusivamente dentro do hospital (isso seria o Terciário).", "Incorreto — existe SIM uma sequência lógica e cronológica bem definida entre esses 3 tipos de triagem por momento."], "analise_letters": ["B", "C", "D"], "conceito": "Sequência: Triagem Primário (local do acidente) → Secundário (Posto Médico Avançado) → Terciário/Hospitalar (hospital).", "pegadinha": "Cada etapa sucessiva permite uma avaliação mais COMPLETA, porque também há mais recursos disponíveis progressivamente — do local do acidente (recursos mínimos) até o hospital (recursos completos).", "dica": "P-S-T: Primário (local) → Secundário (PMA) → Terciário (hospital) — segue o próprio caminho físico da vítima."}, {"n": 10, "tema": "SHORT x START", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual a principal diferença entre os métodos SHORT e START pra triagem em situações com múltiplas vítimas?", "opts": ["Ambos os métodos são idênticos, sem qualquer diferença real", "SHORT pode ser aplicado por QUALQUER pessoa (mesmo sem formação em saúde, se orientada); START é voltado principalmente a pessoal de SAÚDE/capacitado em emergências", "START é exclusivo para uso veterinário, sem aplicação em humanos", "SHORT só pode ser usado dentro de hospitais, nunca no local de um acidente"], "correct": 1, "justificativa": "O SHORT pode ser realizado por QUALQUER pessoa, mesmo sem formação em saúde (desde que previamente orientada/capacitada), sendo usado no local do incidente. O START é dirigido principalmente a pessoal de SAÚDE ou capacitado em atenção de emergências.", "analise": ["Incorreto — os 2 métodos têm um critério de aplicação claramente DIFERENTE (quem pode aplicar), não são idênticos.", "Incorreto — o START é um método de triagem aplicável a humanos em situações de emergência com múltiplas vítimas, não é exclusivo para uso veterinário.", "Incorreto — o SHORT é justamente pensado pra ser usado NO LOCAL do incidente/acidente, não dentro de hospitais."], "analise_letters": ["A", "C", "D"], "conceito": "SHORT: qualquer pessoa (mesmo leiga, se orientada) pode aplicar. START: principalmente pessoal de saúde/capacitado em emergências.", "pegadinha": "A diferença central não é a VELOCIDADE (ambos são rápidos) — é QUEM PODE aplicar cada método, considerando a formação disponível no momento do incidente.", "dica": "SHORT = qualquer um pode fazer. START = pede formação em saúde/emergências."}];
+const flashcards = [{"n": 1, "cat": "Definições", "f": "Diferencie Urgência Real de Urgência Sentida.", "b": "Real: risco a órgão vital, decisão médica. Sentida: percepção do próprio paciente, sem risco real."}, {"n": 2, "cat": "Emergência", "f": "O que é Emergência?", "b": "Perigo imediato à vida/órgão se não houver ação imediata — exige recursos especiais."}, {"n": 3, "cat": "Códigos Regionais", "f": "Qual código está associado a 'O tempo é cérebro'?", "b": "Código Ictus — AVC, direcionado à Unidade de Ictus/Neurologia."}, {"n": 4, "cat": "Áreas do Serviço", "f": "Quais prioridades a Área de Críticos/Paradas atende?", "b": "Prioridades I e II (instabilidade hemodinâmica)."}, {"n": 5, "cat": "Funções da Triagem", "f": "Cite uma função da Triagem além de classificar gravidade.", "b": "Assegurar a reavaliação dos pacientes que precisam esperar."}, {"n": 6, "cat": "Manchester", "f": "Quais as 5 cores/tempos do Sistema Manchester?", "b": "Vermelho-0min, Laranja-10min, Amarelo-30min, Verde-120min, Azul-180min."}, {"n": 7, "cat": "ESI", "f": "Qual a diferença central entre Manchester e ESI?", "b": "Manchester: sintomas → cor. ESI: gravidade + recursos necessários → nível 1-5."}, {"n": 8, "cat": "SET", "f": "Qual a lógica de numeração do SET (Sistema Espanhol)?", "b": "Quanto MENOR o número, MAIS grave o paciente e mais rápido o atendimento."}, {"n": 9, "cat": "Tipos por Momento", "f": "Qual a sequência dos tipos de triagem por momento?", "b": "Primário (local do acidente) → Secundário (Posto Médico Avançado) → Terciário/Hospitalar."}, {"n": 10, "cat": "SHORT x START", "f": "Diferencie SHORT de START.", "b": "SHORT: qualquer pessoa pode aplicar. START: principalmente pessoal de saúde/capacitado."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+// ===== BANCO DE QUESTÕES =====
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  const nivelClean = item.nivel.replace(/^[^\s]+\s/, '');
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+// ===== MOTOR DE REPETIÇÃO ESPAÇADA REAL (SM-2, 4 níveis) + INTERFACE ANKI =====
+// Reutilizável: basta trocar CHAPTER_ID em cada capítulo futuro.
+const CHAPTER_ID = 'epidemiocde_cap03_urgencias';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+// quality: 0=De novo, 1=Difícil, 2=Bem, 3=Fácil (escala real de 4 pontos, como o Anki de verdade)
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+// ===== FLASHCARDS =====
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+// ===== QUIZ RÁPIDO =====
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Epidemiología — CDE',
+    titulo: 'Capítulo 3 — Organização de Urgências e Emergências',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Epidemiología — CDE', titulo: 'Capítulo 3 — Organização de Urgências e Emergências', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-04/epidemiologia-cde/Capitulo_02_APS.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 2 — Atenção Primária de Saúde (APS)</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body>
+</html>
