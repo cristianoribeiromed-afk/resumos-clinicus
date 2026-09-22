@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap"></noscript>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Histologia I — Tecido Conectivo (P2)</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+.trilha{max-width:1100px; margin:14px auto 0; padding:0 20px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:.72rem; color:var(--text-dim);}
+.trilha .etapa{padding:3px 9px; border-radius:999px; border:1px solid var(--border); background:var(--bg-alt);}
+.trilha .etapa.ativa{color:#0d0f16; background:linear-gradient(135deg,var(--green1),var(--green2)); border-color:transparent; font-weight:700;}
+.trilha .seta{opacity:.5;}
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px 10px; display:flex; gap:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:var(--green1) var(--bg-alt);}
+nav::-webkit-scrollbar{height:6px;}
+nav::-webkit-scrollbar-track{background:var(--bg-alt); border-radius:4px;}
+nav::-webkit-scrollbar-thumb{background:var(--green1); border-radius:4px;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; flex-shrink:0; white-space:nowrap;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.scroll-hint{max-width:1100px; margin:0 auto; padding:0 20px; display:none; font-size:.72rem; color:var(--text-dim); align-items:center; gap:6px;}
+@media(max-width:700px){ .scroll-hint{display:flex;} }
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+.prova{background:rgba(255,209,102,.06); border:1px dashed var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.prova b{color:var(--gold);}
+.example{background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.example b{color:var(--text);}
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+.fig{margin:18px 0; text-align:center;}
+.fig img{max-width:100%; border-radius:12px; border:1px solid var(--border);}
+.fig figcaption{font-size:.78rem; color:var(--text-dim); margin-top:8px;}
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:800px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+.srs-status{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:.8rem; color:var(--text-dim); background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:14px;}
+.flash-controls{display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.flash-controls button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:.78rem;}
+.flashcard-wrap{perspective:1000px; margin:10px 0;}
+.flashcard{position:relative; min-height:180px; cursor:pointer;}
+.face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt);}
+.face-back{display:none; background:rgba(163,216,74,.08); border-color:var(--green2);}
+.flashcard.flipped .face-front{display:none;}
+.flashcard.flipped .face-back{display:flex;}
+.flash-tag{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--green2); margin-bottom:8px;}
+.review-btns{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+.review-btns button{flex:1; min-width:80px; padding:10px 6px; border-radius:8px; border:none; font-weight:700; font-size:.78rem; cursor:pointer; color:#0d0f16; display:flex; flex-direction:column; gap:2px; align-items:center;}
+.review-btns button small{font-weight:400; font-size:.68rem; opacity:.75;}
+.btn-again{background:var(--red);} .btn-hard{background:#ffa552;} .btn-good{background:var(--green2);} .btn-easy{background:var(--blue);}
+.nav-flash{display:flex; justify-content:space-between; margin-top:12px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.82rem;}
+.quiz-progress{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:14px;}
+.quiz-q{font-size:1.05rem; font-weight:600; margin-bottom:14px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:11px 14px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:.9rem;}
+.option:hover:not(.disabled){border-color:var(--green2);}
+.option.correct{background:rgba(163,216,74,.15); border-color:var(--green2);}
+.option.incorrect{background:rgba(255,92,108,.12); border-color:var(--red);}
+.option.disabled{cursor:default;}
+#quizFeedback{font-size:.85rem; color:var(--text-dim); margin:10px 0;}
+.quiz-nav{margin-top:10px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--green2); color:var(--text); padding:10px 20px; border-radius:10px; font-size:.85rem; opacity:0; pointer-events:none; transition:.3s; z-index:200;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="#a3d84a" stroke-width="1.5"/><path d="M8 12h8M12 8v8" stroke="#a3d84a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="logo-text">
+        <h1>Histologia I</h1>
+        <span>Clinicus — Padrão de Excelência</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">🔥</span> <span id="xpTotal">0</span> XP</div>
+      <div class="level-badge">Nv. 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span>Progresso do capítulo</span><span id="progressPct">0%</span></div>
+  </div>
+  <div class="trilha">
+    <span class="etapa ativa" data-goto="visao">Visão Geral</span><span class="seta">→</span>
+    <span class="etapa" data-goto="celulas">Células</span><span class="seta">→</span>
+    <span class="etapa" data-goto="matriz">Matriz Extracelular</span><span class="seta">→</span>
+    <span class="etapa" data-goto="fibras">Fibras</span><span class="seta">→</span>
+    <span class="etapa" data-goto="classificacao">Classificação</span><span class="seta">→</span>
+    <span class="etapa" data-goto="flashcards">Flashcards</span><span class="seta">→</span>
+    <span class="etapa" data-goto="quiz">Quiz</span>
+  </div>
+</header>
+
+<nav id="tabNav">
+  <button class="tab-btn active" data-tab="visao">📋 Visão Geral</button>
+  <button class="tab-btn" data-tab="celulas">🔬 Células</button>
+  <button class="tab-btn" data-tab="matriz">🧪 Matriz Extracelular</button>
+  <button class="tab-btn" data-tab="fibras">🧵 Fibras</button>
+  <button class="tab-btn" data-tab="classificacao">🗂️ Classificação</button>
+  <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
+  <button class="tab-btn" data-tab="quiz">✅ Quiz Rápido</button>
+</nav>
+<div class="scroll-hint">⇠ Arraste pra ver todas as abas ⇢</div>
+
+<main>
+
+<section class="section active" id="tab-visao">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 9 · Histologia I · P2</span>
+    <h2>Tecido Conectivo</h2>
+    <p>Diferente do epitélio (células muito juntas, pouca matriz), o tecido conectivo se define pelo oposto: <b>poucas células, muita matriz extracelular</b>. É essa matriz — fibras + substância fundamental — que dá ao tecido conectivo suas propriedades mecânicas específicas, do preenchimento frouxo ao tendão resistente à tração.</p>
+  </div>
+  <div class="card">
+    <h3>O que você vai conseguir fazer depois deste capítulo</h3>
+    <ul>
+      <li>Diferenciar as células residentes (fibroblasto, adipócito, mastócito) das células migrantes do tecido conjuntivo</li>
+      <li>Explicar o papel dos glicosaminoglicanos (GAGs), do ácido hialurônico e dos proteoglicanos na matriz extracelular</li>
+      <li>Diferenciar fibras colágenas, reticulares e elásticas — composição, organização e função de cada uma</li>
+      <li>Classificar o tecido conectivo em embrionário, frouxo (laxo) e denso — e reconhecer cada um numa lâmina</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Por que isso cai tanto em prova</h3>
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> confundir fibra colágena com fibra reticular (a reticular é feita de colágeno tipo III, mais fina e ramificada — não é "outro material") e pedir pra você associar cada tipo de tecido conectivo denso (modelado × não modelado) a um exemplo (tendão × derme).
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-celulas">
+  <div class="card">
+    <span class="eyebrow">Componente celular</span>
+    <h2>Células do Tecido Conjuntivo</h2>
+    <p>O tecido conjuntivo tem dois grupos de células: as <b>residentes</b> (nascem e permanecem ali, produzindo a matriz) e as <b>migrantes</b> (vêm do sangue, atravessam o endotélio e se instalam temporariamente — parte da resposta imune).</p>
+
+    <h3>Células residentes</h3>
+    <table>
+      <tr><th>Célula</th><th>Função principal</th></tr>
+      <tr><td>Fibroblasto</td><td>Célula mais numerosa; sintetiza colágeno, elastina e os componentes da substância fundamental</td></tr>
+      <tr><td>Adipócito</td><td>Armazena lipídio; isolamento térmico e reserva energética</td></tr>
+      <tr><td>Macrófago</td><td>Fagocitose; apresentação de antígeno</td></tr>
+      <tr><td>Mastócito</td><td>Libera histamina e heparina; papel central em reações alérgicas</td></tr>
+      <tr><td>Célula mesenquimal indiferenciada</td><td>Precursora, capaz de se diferenciar em outras linhagens conjuntivas</td></tr>
+    </table>
+
+    <h3>Células migrantes (de origem hematológica)</h3>
+    <p>Linfócitos, plasmócitos, neutrófilos e eosinófilos — chegam ao tecido conjuntivo vindos da corrente sanguínea, geralmente em resposta a um estímulo inflamatório ou imune, e não fazem parte da população residente basal do tecido.</p>
+
+    <div class="clinical">
+      <b>🩺 Correlação clínica:</b> o mastócito é o gatilho da reação anafilática — a ligação cruzada de IgE na sua membrana dispara a liberação maciça de histamina, causando vasodilatação, broncoconstrição e edema.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-matriz">
+  <div class="card">
+    <span class="eyebrow">Substância fundamental</span>
+    <h2>Matriz Extracelular</h2>
+    <p>A matriz extracelular do tecido conjuntivo é composta por fibras (próxima aba) mergulhadas numa <b>substância fundamental</b> — um gel altamente hidratado, rico em glicosaminoglicanos (GAGs) e proteoglicanos.</p>
+
+    <h3>Glicosaminoglicanos (GAGs)</h3>
+    <p>Longas cadeias de dissacarídeos repetidos, fortemente carregadas negativamente — por isso atraem água e cátions, dando à matriz sua consistência de gel hidratado, capaz de resistir a forças de compressão.</p>
+
+    <div class="analogy">
+      <b>💡 Pensa assim:</b> os GAGs funcionam como uma esponja com carga elétrica — quanto mais carga negativa, mais água eles seguram, e é essa retenção de água que dá "corpo" à matriz, permitindo que ela absorva impacto (como na cartilagem articular).
+    </div>
+
+    <h3>Ácido Hialurônico</h3>
+    <p>O único GAG que não se liga covalentemente a uma proteína central e não é sulfatado. Forma cadeias longuíssimas e não ramificadas — é o "eixo" ao redor do qual os proteoglicanos se organizam (via proteínas de ligação), formando agregados moleculares gigantes.</p>
+
+    <h3>Proteoglicanos</h3>
+    <p>Estrutura em "escova de garrafa": um centro proteico com várias cadeias de GAG ligadas covalentemente. Quando vários proteoglicanos se ligam a uma única molécula de ácido hialurônico, formam um agregado de proteoglicano — a organização típica da matriz da cartilagem.</p>
+
+    <div class="mnemo">
+      <b>🎵 Mnemônico:</b> "Ácido hialurônico é o <b>fio</b>; proteoglicano é a <b>escova</b> pendurada nele." Um agregado de proteoglicano lembra literalmente uma escova de garrafa comprida.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-fibras">
+  <div class="card">
+    <span class="eyebrow">Componente fibrilar</span>
+    <h2>Fibras do Tecido Conectivo</h2>
+
+    <h3>Fibras Colágenas</h3>
+    <p>As mais abundantes do corpo — existem cerca de 25 tipos de colágeno, mas o <b>tipo I</b> é, de longe, o mais comum (pele, tendão, osso). São fibras eosinofílicas (coram em rosa no H&E), organizadas em feixes ondulados, com alta resistência à tração.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/conectivo_fibras_colageno.jpg" alt="Corte histológico corado em H&E mostrando feixes ondulados de fibras colágenas eosinofílicas, com núcleos de fibroblastos alongados entre elas" loading="lazy">
+      <figcaption>Fibras colágenas em H&E — feixes rosados, ondulados, com fibroblastos entre eles.</figcaption>
+    </div>
+
+    <h3>Fibras Reticulares</h3>
+    <p>Compostas por colágeno <b>tipo III</b>, não tipo I. São mais finas, ramificadas e formam uma rede (por isso "reticular") de sustentação — típicas de órgãos hematopoiéticos e linfoides (baço, linfonodo, medula óssea) e ao redor de capilares e fibras musculares. Não são visíveis no H&E comum — precisam de impregnação por prata para aparecer.</p>
+
+    <h3>Fibras Elásticas</h3>
+    <p>Compostas por <b>elastina</b> (núcleo amorfo) envolta por microfibrilas de fibrilina. Ao contrário do colágeno, se esticam e retornam ao comprimento original — essenciais em estruturas que precisam de recuo elástico, como a parede das grandes artérias e o ligamento amarelo da coluna.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/conectivo_fibras_elasticas.jpg" alt="Corte histológico com coloração especial mostrando fibras elásticas onduladas e escuras, dispostas paralelamente" loading="lazy">
+      <figcaption>Fibras elásticas (coloração especial) — onduladas, escuras, dispostas em paralelo.</figcaption>
+    </div>
+
+    <div class="clinical">
+      <b>🩺 Correlação clínica:</b> na <b>síndrome de Marfan</b>, mutações no gene da fibrilina-1 comprometem a integridade das fibras elásticas — daí o risco de dissecção de aorta, já que a parede arterial depende dessas fibras pra resistir ao estresse pulsátil.
+    </div>
+
+    <table>
+      <tr><th>Fibra</th><th>Proteína principal</th><th>Visível em H&E?</th><th>Onde predomina</th></tr>
+      <tr><td>Colágena</td><td>Colágeno tipo I</td><td>Sim (eosinofílica)</td><td>Pele, tendão, osso</td></tr>
+      <tr><td>Reticular</td><td>Colágeno tipo III</td><td>Não (precisa prata)</td><td>Baço, linfonodo, medula óssea</td></tr>
+      <tr><td>Elástica</td><td>Elastina</td><td>Não (precisa coloração especial)</td><td>Grandes artérias, ligamento amarelo</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="section" id="tab-classificacao">
+  <div class="card">
+    <span class="eyebrow">Organização tecidual</span>
+    <h2>Classificação do Tecido Conectivo</h2>
+
+    <h3>Tecido Conectivo Embrionário</h3>
+    <p>Presente durante o desenvolvimento — o <b>mesênquima</b> (células estreladas indiferenciadas em matriz gelatinosa) e o <b>tecido mucoso</b> (rico em ácido hialurônico), este último clássico no cordão umbilical, onde recebe o nome de <b>geleia de Wharton</b>.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/conectivo_embrionario_gelatina_wharton.jpg" alt="Corte histológico de cordão umbilical mostrando veia umbilical, artérias umbilicais e a geleia de Wharton ao redor delas" loading="lazy">
+      <figcaption>Cordão umbilical: veia e artérias umbilicais envoltas por tecido conectivo mucoso (geleia de Wharton).</figcaption>
+    </div>
+
+    <h3>Tecido Conectivo Frouxo (Laxo)</h3>
+    <p>Células e fibras dispersas frouxamente numa matriz abundante e altamente hidratada. Preenche espaços entre órgãos, sustenta epitélios (lâmina própria) e é o primeiro local de resposta a infecção, por ser rico em vasos e células de defesa.</p>
+
+    <h3>Tecido Conectivo Denso</h3>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Denso Modelado</h4>
+        <p style="margin:0; font-size:.88rem;">Feixes de colágeno paralelos, organizados numa única direção — resiste à tração num sentido específico. Exemplo clássico: <b>tendão</b>.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Denso Não Modelado</h4>
+        <p style="margin:0; font-size:.88rem;">Feixes de colágeno entrelaçados em múltiplas direções — resiste à tração vinda de vários sentidos. Exemplo clássico: <b>derme</b>.</p>
+      </div>
+    </div>
+
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> "modelado" = organização paralela, uma direção (tendão, ligamento); "não modelado" = organização entrelaçada, várias direções (derme, cápsula de órgãos). O nome "modelado" se refere à orientação previsível das fibras, não à quantidade de colágeno.
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-flashcards">
+  <div class="card">
+    <h2>🎴 Flashcards — Repetição Espaçada</h2>
+    <div class="srs-status" id="srsStatus">Carregando...</div>
+    <div class="flash-controls">
+      <span>Cartão <b id="fcIndex">1</b> / <span id="fcTotal">0</span> · Dominados: <b id="fcMastered">0</b></span>
+      <button onclick="shuffleCards()">🔀 Misturar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front"><div><span class="flash-tag" id="fcTag">—</span><div id="fcFront">Carregando...</div></div></div>
+        <div class="face face-back"><div><span class="flash-tag">Resposta</span><div id="fcBack"></div></div></div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCurrentCard(0)">😵 De novo<small id="prevAgain">1d</small></button>
+      <button class="btn-hard" onclick="reviewCurrentCard(1)">😓 Difícil<small id="prevHard">1d</small></button>
+      <button class="btn-good" onclick="reviewCurrentCard(2)">🙂 Bem<small id="prevGood">3d</small></button>
+      <button class="btn-easy" onclick="reviewCurrentCard(3)">😎 Fácil<small id="prevEasy">6d</small></button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="nextCard()">Próximo →</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tab-quiz">
+  <div class="card">
+    <h2>✅ Quiz Rápido</h2>
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const tabs = document.querySelectorAll('.tab-btn');
+const sections = document.querySelectorAll('.section');
+function goToTab(name){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  sections.forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  document.querySelectorAll('.trilha .etapa').forEach(e=>e.classList.toggle('ativa', e.dataset.goto===name));
+  if(name==='quiz' && quizIndex===0 && quizLog.length===0) initQuiz();
+  if(name==='flashcards') initFlashcards();
+  updateProgress();
+}
+tabs.forEach(t=>t.addEventListener('click', ()=>goToTab(t.dataset.tab)));
+document.querySelectorAll('.trilha .etapa').forEach(e=>e.addEventListener('click', ()=>goToTab(e.dataset.goto)));
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+let xp = 0;
+const seenTabs = new Set(['visao']);
+function addXP(n, motivo){
+  xp += n;
+  document.getElementById('xpTotal').textContent = xp;
+  if(motivo) showToast('+' + n + ' XP — ' + motivo);
+}
+function updateProgress(){
+  const activo = document.querySelector('.section.active');
+  if(activo) seenTabs.add(activo.id.replace('tab-',''));
+  const pct = Math.round((seenTabs.size / tabs.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+const CHAPTER_ID = 'histo1_cap09_tecido_conectivo';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+function simulateReview(state, quality){
+  let s = Object.assign({}, state);
+  if(quality === 0){ s.reps = 0; s.interval = 1; s.ef = Math.max(1.3, s.ef - 0.2); }
+  else {
+    s.reps += 1;
+    if(s.reps === 1) s.interval = 1;
+    else if(s.reps === 2) s.interval = 3;
+    else s.interval = Math.round(s.interval * s.ef);
+    if(quality === 1) s.ef = Math.max(1.3, s.ef - 0.15);
+    if(quality === 3) s.ef = s.ef + 0.15;
+  }
+  return s;
+}
+function reviewCard(id, quality){
+  const data = loadSRS();
+  const s = simulateReview(getCardState(data, id), quality);
+  s.due = Date.now() + s.interval * DAY_MS;
+  s.lastReview = Date.now();
+  data[id] = s;
+  saveSRS(data);
+  return s;
+}
+function isDue(data, id){ const s = data[id]; if(!s) return true; return s.due <= Date.now(); }
+
+const flashData = [
+  {tag:'Células', front:'Qual é a célula mais numerosa e mais ativa na produção de matriz do tecido conjuntivo?', back:'O fibroblasto — sintetiza colágeno, elastina e os componentes da substância fundamental.'},
+  {tag:'Células', front:'Qual célula libera histamina e heparina, sendo central em reações alérgicas?', back:'O mastócito.'},
+  {tag:'Células', front:'O que diferencia uma célula "residente" de uma "migrante" no tecido conjuntivo?', back:'A residente nasce e permanece no tecido, produzindo matriz; a migrante vem da corrente sanguínea, geralmente em resposta a estímulo imune/inflamatório.'},
+  {tag:'Matriz Extracelular', front:'Qual GAG não se liga covalentemente a proteína e não é sulfatado?', back:'O ácido hialurônico.'},
+  {tag:'Matriz Extracelular', front:'Por que os GAGs atraem tanta água pra matriz?', back:'Porque são fortemente carregados negativamente, atraindo cátions e, por osmose, água — o que dá à matriz sua consistência de gel hidratado.'},
+  {tag:'Fibras', front:'Qual tipo de colágeno forma as fibras reticulares?', back:'Colágeno tipo III (diferente do tipo I, predominante nas fibras colágenas comuns).'},
+  {tag:'Fibras', front:'Que técnica de coloração é necessária pra visualizar fibras reticulares, já que elas não aparecem no H&E comum?', back:'Impregnação por prata.'},
+  {tag:'Fibras', front:'Qual proteína central compõe o núcleo amorfo das fibras elásticas?', back:'Elastina, envolta por microfibrilas de fibrilina.'},
+  {tag:'Fibras', front:'Em qual síndrome genética a mutação na fibrilina-1 compromete as fibras elásticas, aumentando o risco de dissecção de aorta?', back:'Síndrome de Marfan.'},
+  {tag:'Classificação', front:'Como se chama o tecido conectivo mucoso encontrado no cordão umbilical?', back:'Geleia de Wharton.'},
+  {tag:'Classificação', front:'Qual é a diferença entre tecido conectivo denso modelado e não modelado?', back:'Modelado: feixes de colágeno paralelos, numa direção (ex.: tendão). Não modelado: feixes entrelaçados, várias direções (ex.: derme).'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  updateSrsStatus();
+  renderCard();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashData.filter((_,i) => isDue(data, 'fc'+i)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    '📅 <b>' + dueCount + '</b> card' + (dueCount===1?'':'s') + ' pra revisar hoje &nbsp;·&nbsp; ✅ <b>' + totalReviewed + '</b>/' + flashData.length + ' já iniciados';
+}
+function renderCard(){
+  const id = 'fc' + fcOrder[fcPos];
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+  const data = loadSRS();
+  const estado = getCardState(data, id);
+  [0,1,2,3].forEach((q, idx)=>{
+    const sim = simulateReview(estado, q);
+    const el = document.getElementById(['prevAgain','prevHard','prevGood','prevEasy'][idx]);
+    el.textContent = sim.interval + 'd';
+  });
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Cartões misturados');
+}
+function reviewCurrentCard(quality){
+  const id = 'fc' + fcOrder[fcPos];
+  const s = reviewCard(id, quality);
+  const labels = ['De novo','Difícil','Bem','Fácil'];
+  const xpMap = [1,2,4,6];
+  addXP(xpMap[quality], 'Flashcard: ' + labels[quality] + ' (volta em ' + s.interval + 'd)');
+  if(quality >= 2) fcMastered++;
+  updateSrsStatus();
+  nextCard();
+}
+
+const quizData = [
+{"q":"Qual célula é a mais numerosa no tecido conjuntivo e responsável pela síntese de colágeno e elastina?","options":["Macrófago","Fibroblasto","Mastócito","Adipócito"],"correct":1,"exp":"O fibroblasto é a célula mais numerosa e ativa na produção de matriz extracelular."},
+{"q":"Qual mecanismo dispara a reação anafilática, via mastócito?","options":["Fagocitose de bactérias","Ligação cruzada de IgE na membrana, liberando histamina","Síntese de colágeno em excesso","Diferenciação em osteoblasto"],"correct":1,"exp":"A ligação cruzada de IgE na membrana do mastócito dispara a liberação maciça de histamina."},
+{"q":"Qual GAG não se liga covalentemente a uma proteína central?","options":["Ácido hialurônico","Sulfato de condroitina","Sulfato de queratano","Heparan sulfato"],"correct":0,"exp":"O ácido hialurônico é o único GAG que não é sulfatado nem se liga covalentemente a proteína."},
+{"q":"O que compõe um agregado de proteoglicano na cartilagem?","options":["Vários filamentos de actina ligados a colágeno","Vários proteoglicanos ligados a uma única molécula de ácido hialurônico","Uma única fibra elástica enrolada","Fibroblastos organizados em cadeia"],"correct":1,"exp":"Múltiplos proteoglicanos se ligam, via proteínas de ligação, a uma molécula longa de ácido hialurônico, formando o agregado."},
+{"q":"Qual tipo de colágeno compõe as fibras reticulares?","options":["Tipo I","Tipo II","Tipo III","Tipo IV"],"correct":2,"exp":"As fibras reticulares são feitas de colágeno tipo III, mais fino e ramificado que o tipo I."},
+{"q":"Por que as fibras reticulares não aparecem numa lâmina corada só em H&E?","options":["Porque são transparentes","Porque precisam de impregnação por prata para serem visualizadas","Porque só existem em cortes congelados","Porque são degradadas pelo processamento"],"correct":1,"exp":"É necessária impregnação por prata (coloração argêntica) para visualizar fibras reticulares."},
+{"q":"Mutações na fibrilina-1, comprometendo fibras elásticas, causam qual síndrome?","options":["Síndrome de Ehlers-Danlos","Síndrome de Marfan","Síndrome de Down","Osteogênese imperfeita"],"correct":1,"exp":"A síndrome de Marfan está associada a mutações na fibrilina-1, aumentando o risco de dissecção de aorta."},
+{"q":"Como se chama o tecido conectivo mucoso do cordão umbilical?","options":["Geleia de Wharton","Substância fundamental amorfa","Matriz osteoide","Perilinfa"],"correct":0,"exp":"A geleia de Wharton é o tecido conectivo mucoso característico do cordão umbilical."},
+{"q":"O tendão é um exemplo clássico de qual tipo de tecido conectivo?","options":["Frouxo (laxo)","Denso modelado","Denso não modelado","Embrionário mesenquimal"],"correct":1,"exp":"O tendão tem feixes de colágeno paralelos numa única direção — característica do tecido conectivo denso modelado."},
+{"q":"A derme é um exemplo clássico de qual tipo de tecido conectivo?","options":["Denso modelado","Denso não modelado","Mucoso","Mesenquimal"],"correct":1,"exp":"A derme tem feixes de colágeno entrelaçados em várias direções — tecido conectivo denso não modelado."}
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Questão ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Pontos: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  if(correct){ quizScore++; addXP(5); }
+  document.getElementById('quizFeedback').textContent = item.exp;
+  document.getElementById('quizNextBtn').disabled = false;
+  quizLog.push(correct);
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const pct = Math.round((quizScore / quizData.length) * 100);
+  document.getElementById('quizArea').innerHTML =
+    '<div style="text-align:center; padding:20px 0;">' +
+    '<h3>Resultado: ' + quizScore + ' / ' + quizData.length + ' (' + pct + '%)</h3>' +
+    '<p style="color:var(--text-dim);">' + (pct>=70 ? 'Muito bem! Você domina o essencial do capítulo.' : 'Vale revisar Fibras e Classificação antes de tentar de novo.') + '</p>' +
+    '<button class="btn-primary" onclick="initQuiz()">Tentar novamente</button>' +
+    '</div>';
+}
+updateProgress();
+</script>
+
+</body>
+</html>
