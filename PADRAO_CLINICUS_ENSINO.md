@@ -172,4 +172,13 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 
 | 16/07/2026 | Capítulos 9, 10 e 11 de Histologia I criados (P2: Tecido Conectivo, Tecido Adiposo, Tecido Sanguíneo) | 🏁 marco concluído |
 | 16/07/2026 | **P2 de Histologia I completa: 4 capítulos novos (Cap. 8-11)**, cobrindo Especializações do Epitélio, Tecido Conectivo, Tecido Adiposo e Tecido Sanguíneo -- todos com imagem real curada do material fonte (nenhuma recriada como texto) | 🏁 marco concluído |
-| 16/07/2026 | Critério de seleção de imagem consolidado ao longo dos 4 capítulos: rejeitadas por marca d'água/branding de terceiro (Instagram, app de treino), por copyright explícito (©WebPathology, ©Terese Winslow/Govt. EUA), por assinatura de autor identificável, e por serem print de tela de PDF pirateado -- só imagem limpa, sem atribuição de terceiro visível, foi aprovada | 🟡 critério prático, não decisão formal do Dr. Cristiano ainda -- registrar aqui e confirmar depois |
+## 9. Regra editorial: checar lógica dos dados extraídos, perguntar em caso de dúvida (22/09/2026)
+
+🐛 **Erro real que motivou essa regra:** no Capítulo 2 de Epidemiología — CDE, os Programas PAIS (Atenção Integral por Etapa da Vida) foram publicados com "Adolescente: 10-19 anos" e "Adulto: 20-24 anos" — copiado direto do PDF fonte, sem checar a lógica. Isso deixava um buraco de 25 a 64 anos sem NENHUM programa cobrindo (já que "Adulto Mayor" só começa aos 65). O Dr. Cristiano identificou o erro e corrigiu: Adolescente é 10-24, Adulto é 25-64.
+
+✅ **Regra editorial, a partir de agora:** ao extrair QUALQUER dado numérico, faixa etária, percentual, sequência ou classificação de um material fonte (PDF, slide, apostila), checar se a informação faz sentido LÓGICO antes de publicar — não só copiar o que está escrito. Se a checagem levantar dúvida real (número que não fecha, faixa com buraco, sequência que não bate, dado que contradiz outro já publicado) e não for possível resolver sozinho com confiança, **perguntar ao Dr. Cristiano antes de publicar** — não publicar algo duvidoso "torcendo pra estar certo", mesmo que isso signifique atrasar a entrega daquele trecho específico.
+
+| Data | O que mudou | Fonte |
+|---|---|---|
+| 22/09/2026 | Regra editorial: checar lógica dos dados extraídos de material fonte antes de publicar; em caso de dúvida real, perguntar ao Dr. Cristiano antes de publicar | ✅ decisão do Dr. Cristiano, motivada por erro real (faixas etárias dos Programas PAIS) |
+
