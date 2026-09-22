@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap"></noscript>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Histologia I — Especializações do Epitélio</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+
+/* Trilha de progresso do capítulo -- padrão validado (Bioquímica Vargas) */
+.trilha{max-width:1100px; margin:14px auto 0; padding:0 20px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:.72rem; color:var(--text-dim);}
+.trilha .etapa{padding:3px 9px; border-radius:999px; border:1px solid var(--border); background:var(--bg-alt);}
+.trilha .etapa.ativa{color:#0d0f16; background:linear-gradient(135deg,var(--green1),var(--green2)); border-color:transparent; font-weight:700;}
+.trilha .seta{opacity:.5;}
+
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px 10px; display:flex; gap:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:var(--green1) var(--bg-alt);}
+nav::-webkit-scrollbar{height:6px;}
+nav::-webkit-scrollbar-track{background:var(--bg-alt); border-radius:4px;}
+nav::-webkit-scrollbar-thumb{background:var(--green1); border-radius:4px;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; flex-shrink:0; white-space:nowrap;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.scroll-hint{max-width:1100px; margin:0 auto; padding:0 20px; display:none; font-size:.72rem; color:var(--text-dim); align-items:center; gap:6px;}
+@media(max-width:700px){ .scroll-hint{display:flex;} }
+
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.prof-tag{display:inline-flex; align-items:center; gap:8px; background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.35); color:var(--gold); border-radius:999px; padding:5px 14px; font-size:.78rem; font-weight:700; margin-bottom:14px;}
+
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+.prova{background:rgba(255,209,102,.06); border:1px dashed var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.prova b{color:var(--gold);}
+.example{background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.example b{color:var(--text);}
+
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+
+.fig{margin:18px 0; text-align:center;}
+.fig img{max-width:100%; border-radius:12px; border:1px solid var(--border);}
+.fig figcaption{font-size:.78rem; color:var(--text-dim); margin-top:8px;}
+
+.accordion{border:1px solid var(--border); border-radius:10px; margin:10px 0; overflow:hidden;}
+.accordion-head{background:var(--bg-alt); padding:12px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:.92rem;}
+.accordion-head:hover{background:var(--card-hover);}
+.accordion-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 16px; background:var(--card);}
+.accordion.open .accordion-body{max-height:800px; padding:14px 16px;}
+.accordion-head .arrow{transition:.3s;}
+.accordion.open .arrow{transform:rotate(180deg);}
+
+/* Flashcards -- SM-2 real + rotulos Anki (padrao aprovado 14/07, primeira aplicacao) */
+.srs-status{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:.8rem; color:var(--text-dim); background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:14px;}
+.flash-controls{display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.flash-controls button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:.78rem;}
+.flashcard-wrap{perspective:1000px; margin:10px 0;}
+.flashcard{position:relative; min-height:180px; cursor:pointer;}
+.face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt);}
+.face-back{display:none; background:rgba(163,216,74,.08); border-color:var(--green2);}
+.flashcard.flipped .face-front{display:none;}
+.flashcard.flipped .face-back{display:flex;}
+.flash-tag{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--green2); margin-bottom:8px;}
+.review-btns{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+.review-btns button{flex:1; min-width:80px; padding:10px 6px; border-radius:8px; border:none; font-weight:700; font-size:.78rem; cursor:pointer; color:#0d0f16; display:flex; flex-direction:column; gap:2px; align-items:center;}
+.review-btns button small{font-weight:400; font-size:.68rem; opacity:.75;}
+.btn-again{background:var(--red);} .btn-hard{background:#ffa552;} .btn-good{background:var(--green2);} .btn-easy{background:var(--blue);}
+.nav-flash{display:flex; justify-content:space-between; margin-top:12px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.82rem;}
+
+.quiz-progress{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:14px;}
+.quiz-q{font-size:1.05rem; font-weight:600; margin-bottom:14px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:11px 14px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:.9rem;}
+.option:hover:not(.disabled){border-color:var(--green2);}
+.option.correct{background:rgba(163,216,74,.15); border-color:var(--green2);}
+.option.incorrect{background:rgba(255,92,108,.12); border-color:var(--red);}
+.option.disabled{cursor:default;}
+#quizFeedback{font-size:.85rem; color:var(--text-dim); margin:10px 0;}
+.quiz-nav{margin-top:10px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--green2); color:var(--text); padding:10px 20px; border-radius:10px; font-size:.85rem; opacity:0; pointer-events:none; transition:.3s; z-index:200;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="#a3d84a" stroke-width="1.5"/><path d="M8 12h8M12 8v8" stroke="#a3d84a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="logo-text">
+        <h1>Histologia I</h1>
+        <span>Clinicus — Padrão de Excelência</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">🔥</span> <span id="xpTotal">0</span> XP</div>
+      <div class="level-badge">Nv. 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span>Progresso do capítulo</span><span id="progressPct">0%</span></div>
+  </div>
+  <div class="trilha">
+    <span class="etapa ativa" data-goto="visao">Visão Geral</span><span class="seta">→</span>
+    <span class="etapa" data-goto="apical">Domínio Apical</span><span class="seta">→</span>
+    <span class="etapa" data-goto="uniao">Complexo de União</span><span class="seta">→</span>
+    <span class="etapa" data-goto="basal">Domínio Basal</span><span class="seta">→</span>
+    <span class="etapa" data-goto="glandulas">Glândulas</span><span class="seta">→</span>
+    <span class="etapa" data-goto="flashcards">Flashcards</span><span class="seta">→</span>
+    <span class="etapa" data-goto="quiz">Quiz</span>
+  </div>
+</header>
+
+<nav id="tabNav">
+  <button class="tab-btn active" data-tab="visao">📋 Visão Geral</button>
+  <button class="tab-btn" data-tab="apical">🧬 Domínio Apical</button>
+  <button class="tab-btn" data-tab="uniao">🔗 Complexo de União</button>
+  <button class="tab-btn" data-tab="basal">🧱 Domínio Basal</button>
+  <button class="tab-btn" data-tab="glandulas">💧 Glândulas</button>
+  <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
+  <button class="tab-btn" data-tab="quiz">✅ Quiz Rápido</button>
+</nav>
+<div class="scroll-hint">⇠ Arraste pra ver todas as abas ⇢</div>
+
+<main>
+
+<!-- ===================== VISÃO GERAL ===================== -->
+<section class="section active" id="tab-visao">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 8 · Histologia I · P2</span>
+    <h2>Especializações do Epitélio</h2>
+    <p>A célula epitelial não é uma esfera uniforme — ela é <b>polarizada</b>: o domínio apical, o domínio lateral e o domínio basal têm estruturas e funções diferentes entre si, e é exatamente essa diferença que permite ao epitélio absorver, secretar, proteger e se manter unido como uma folha coesa de células.</p>
+  </div>
+
+  <div class="card">
+    <h3>O que você vai conseguir fazer depois deste capítulo</h3>
+    <ul>
+      <li>Explicar o conceito de polaridade celular e por que ele importa pra função do epitélio</li>
+      <li>Diferenciar cílios, microvilosidades e flagelos — estrutura, função e onde cada um aparece</li>
+      <li>Descrever os três componentes do complexo de união (zônula de oclusão, zônula de adesão, mácula de adesão) e o que acontece quando cada um falha</li>
+      <li>Explicar a lâmina basal e o hemidesmossoma como especializações da superfície basal</li>
+      <li>Classificar glândulas exócrinas por forma, tipo de secreção e mecanismo secretor</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Por que isso cai tanto em prova</h3>
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> bancas adoram trocar os nomes dos componentes do complexo de união entre si (zônula de oclusão × zônula de adesão × mácula de adesão), ou pedir pra você associar uma estrutura (cílio, microvilosidade) a um epitélio específico (respiratório, intestinal). Dominar a <b>ordem apicobasal</b> do complexo de união é meio caminho andado.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DOMÍNIO APICAL ===================== -->
+<section class="section" id="tab-apical">
+  <div class="card">
+    <span class="eyebrow">Polaridade celular</span>
+    <h2>O domínio apical</h2>
+    <p>Chama-se domínio apical a face da célula epitelial voltada pra luz de um órgão oco ou pra superfície externa. É aqui que ficam as especializações que aumentam a superfície de contato ou que movimentam substâncias — cílios, microvilosidades e, mais raramente no ser humano adulto, flagelos.</p>
+
+    <div class="analogy">
+      <b>💡 Pensa assim:</b> se a célula epitelial fosse uma casa, o domínio apical é a fachada voltada pra rua — é ali que ficam as "portas e janelas" que fazem contato com o meio externo (a luz do órgão), enquanto o domínio basal é o "fundo do quintal", vizinho ao tecido conjuntivo.
+    </div>
+
+    <h3>Cílios</h3>
+    <p>Estruturas móveis, com núcleo de microtúbulos organizado em padrão <b>9+2</b> (nove pares periféricos + um par central), ancoradas por um corpúsculo basal. Batem de forma <b>coordenada e sincrônica</b>, sempre na mesma direção, empurrando o muco (e o que estiver nele) pra fora do trato respiratório.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/epitelio_cilios_respiratorio.jpg" alt="Corte histológico corado em H&E mostrando epitélio respiratório ciliado pseudoestratificado, com cílios na borda apical das células colunares" loading="lazy">
+      <figcaption>Epitélio respiratório (pseudoestratificado ciliado) — corte em H&E. Repare a borda ciliada contínua na superfície apical.</figcaption>
+    </div>
+
+    <div class="clinical">
+      <b>🩺 Correlação clínica:</b> na <b>síndrome de Kartagener</b> (discinesia ciliar primária), um defeito nos braços de dineína do axonema impede o batimento ciliar coordenado. Resultado: infecções respiratórias de repetição (o muco não é removido), infertilidade masculina (o flagelo do espermatozoide usa a mesma maquinaria) e, em boa parte dos casos, situs inversus.
+    </div>
+
+    <h3>Microvilosidades</h3>
+    <p>Diferente do cílio, a microvilosidade é <b>imóvel</b> e seu núcleo é de <b>filamentos de actina</b>, não microtúbulos. A função é puramente aumentar a área de superfície pra absorção — por isso são altíssimas e numerosas no epitélio intestinal (formando a chamada "borda em escova") e nos túbulos renais.</p>
+
+    <div class="mnemo">
+      <b>🎵 Mnemônico:</b> "MICROvilosidade = MICROfilamento (actina), imóvel, absorve." "CÍlio = microtúbulos, se mexe, limpa." Dois "C" (Cílio, se mexe) puxam a lembrança de movimento; microvilosidade não tem essa sonoridade de ação.
+    </div>
+
+    <h3>Flagelos</h3>
+    <p>Mesma organização axonemal 9+2 do cílio, mas em número único (1 por célula) e muito mais longo. No corpo humano, a única célula flagelada é o <b>espermatozoide</b> — o flagelo é responsável pela motilidade da célula inteira, não pelo deslocamento de substância na superfície.</p>
+
+    <table>
+      <tr><th>Característica</th><th>Cílio</th><th>Microvilosidade</th><th>Flagelo</th></tr>
+      <tr><td>Núcleo estrutural</td><td>Microtúbulos (9+2)</td><td>Filamentos de actina</td><td>Microtúbulos (9+2)</td></tr>
+      <tr><td>Movimento</td><td>Sim, coordenado</td><td>Não</td><td>Sim, ondulante</td></tr>
+      <tr><td>Função</td><td>Deslocar substância na superfície</td><td>Aumentar área de absorção</td><td>Mover a célula inteira</td></tr>
+      <tr><td>Exemplo no corpo</td><td>Epitélio respiratório</td><td>Epitélio intestinal, túbulo renal</td><td>Espermatozoide</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== COMPLEXO DE UNIÃO ===================== -->
+<section class="section" id="tab-uniao">
+  <div class="card">
+    <span class="eyebrow">Domínio lateral</span>
+    <h2>Complexo de União</h2>
+    <p>Na face lateral das células epiteliais, três estruturas se organizam numa sequência apicobasal fixa — juntas, garantem que o epitélio funcione como uma barreira coesa e seletiva, não como um conjunto de células soltas.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/epitelio_complejo_union.png" alt="Diagrama esquemático do complexo de união mostrando, de cima para baixo, a zônula de oclusão (tight junction), a zônula de adesão (zonula adherens) e a mácula de adesão (desmossomo)" loading="lazy">
+      <figcaption>Sequência apicobasal do complexo de união: zônula de oclusão → zônula de adesão → mácula de adesão (desmossomo).</figcaption>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)"><span>1. Zônula de Oclusão (Tight Junction) — a mais apical</span><span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <p>Forma uma faixa contínua ao redor de toda a célula, selando o espaço entre células vizinhas. Impede a passagem livre de substâncias pelo espaço intercelular (via paracelular) — é o que obriga o transporte a passar <em>através</em> da célula, de forma controlada, e não por entre elas.</p>
+        <div class="criterio"><b>✅ Critério que cai em prova:</b> quanto mais "vedado" o epitélio precisa ser (ex.: barreira hematoencefálica, epitélio da bexiga), mais fileiras de zônulas de oclusão ele tem.</div>
+      </div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)"><span>2. Zônula de Adesão (Zonula Adherens) — logo abaixo</span><span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <p>Também forma uma faixa contínua, mas sua função é <b>mecânica</b>: ancora o feixe de filamentos de actina do citoesqueleto de uma célula ao da célula vizinha, via caderinas transmembrana. Mantém a integridade estrutural da folha epitelial.</p>
+      </div>
+    </div>
+    <div class="accordion">
+      <div class="accordion-head" onclick="toggleAcc(this)"><span>3. Mácula de Adesão (Desmossomo) — a mais basal das três</span><span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <p>Diferente das duas anteriores, não é uma faixa contínua — é um <b>ponto</b> de adesão pontual, em formato de botão. Ancora filamentos intermediários de queratina (não actina), dando resistência mecânica contra tração. É especialmente abundante em epitélios sujeitos a atrito, como a epiderme.</p>
+        <div class="clinical"><b>🩺 Correlação clínica:</b> no <b>pênfigo vulgar</b>, autoanticorpos atacam as desmogleínas (proteínas do desmossomo), rompendo a adesão entre queratinócitos e causando bolhas cutâneas.</div>
+      </div>
+    </div>
+
+    <div class="mnemo">
+      <b>🎵 Mnemônico da ordem apicobasal:</b> "<b>O</b>culta, <b>A</b>traca, <b>D</b>esmossoma" — <b>O</b>clusão (mais no topo) → <b>A</b>desão (zônula) → <b>D</b>esmossomo (mais embaixo).
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DOMÍNIO BASAL ===================== -->
+<section class="section" id="tab-basal">
+  <div class="card">
+    <span class="eyebrow">Base da célula epitelial</span>
+    <h2>Domínio Basal</h2>
+    <p>A superfície basal é onde o epitélio se ancora no tecido conjuntivo subjacente. Duas estruturas fazem esse trabalho: a lâmina basal (uma "esteira" extracelular) e o hemidesmossomo (o "prego" que fixa a célula nela).</p>
+
+    <h3>Lâmina Basal</h3>
+    <p>Camada extracelular fina, composta por duas sub-lâminas: a <b>lâmina lúcida</b> (mais próxima da célula, rica em laminina) e a <b>lâmina densa</b> (mais profunda, rica em colágeno tipo IV). Serve de suporte físico ao epitélio e atua como filtro seletivo — é um componente essencial, por exemplo, da barreira de filtração glomerular no rim.</p>
+
+    <h3>Hemidesmossomo</h3>
+    <p>Estruturalmente parecido com "metade" de um desmossomo (por isso o nome) — mas em vez de ancorar uma célula à outra, ancora a célula epitelial à lâmina basal, usando integrinas em vez de caderinas.</p>
+
+    <div class="example">
+      <b>📎 Exemplo prático:</b> quando você tem uma bolha na pele por atrito (fricção do sapato, por exemplo), o plano de clivagem costuma passar exatamente pela lâmina lúcida — o hemidesmossomo cede antes da célula se romper.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GLÂNDULAS ===================== -->
+<section class="section" id="tab-glandulas">
+  <div class="card">
+    <span class="eyebrow">Especialização secretora do epitélio</span>
+    <h2>Classificação das Glândulas</h2>
+    <p>Toda glândula se origina de uma proliferação do epitélio de revestimento durante o desenvolvimento (histogênese). A diferença entre os dois grandes tipos está em <b>manter ou não</b> a ligação com a superfície de origem.</p>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Glândulas Exócrinas</h4>
+        <p style="margin:0; font-size:.88rem;">Mantêm um <b>ducto</b> que as conecta à superfície epitelial de origem. Secretam pra fora (pele, luz de um órgão oco) — ex.: glândulas sudoríparas, salivares, pâncreas exócrino.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Glândulas Endócrinas</h4>
+        <p style="margin:0; font-size:.88rem;">Perdem a ligação com a superfície durante o desenvolvimento. Secretam hormônios diretamente na corrente sanguínea, sem ducto — ex.: tireoide, suprarrenal.</p>
+      </div>
+    </div>
+
+    <div class="fig">
+      <img src="/assets/histologia1/epitelio_glandula_endocrina.png" alt="Diagrama esquemático de uma glândula endócrina secretando hormônio diretamente na corrente sanguínea, sem ducto de saída" loading="lazy">
+      <figcaption>Glândula endócrina: secreção liberada direto na corrente sanguínea, sem ducto.</figcaption>
+    </div>
+
+    <h3>Classificação das glândulas exócrinas</h3>
+    <table>
+      <tr><th>Critério</th><th>Categorias</th></tr>
+      <tr><td>Número de células</td><td>Unicelular (ex.: célula caliciforme) × Multicelular</td></tr>
+      <tr><td>Forma do ducto</td><td>Simples (não ramificado) × Composta (ramificada)</td></tr>
+      <tr><td>Forma da porção secretora</td><td>Tubular, Acinar (alveolar) ou Tubuloacinar</td></tr>
+      <tr><td>Mecanismo de secreção</td><td>Merócrina, Apócrina, Holócrina</td></tr>
+      <tr><td>Tipo de produto</td><td>Serosa, Mucosa ou Mista (seromucosa)</td></tr>
+    </table>
+
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> diferenciar os três mecanismos de secreção — <b>merócrina</b> (exocitose, a célula não se perde — a maioria das glândulas), <b>apócrina</b> (perde parte do citoplasma junto com o produto — ex.: glândula mamária lactante) e <b>holócrina</b> (a célula inteira se desintegra e vira a secreção — ex.: glândula sebácea).
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FLASHCARDS ===================== -->
+<section class="section" id="tab-flashcards">
+  <div class="card">
+    <h2>🎴 Flashcards — Repetição Espaçada</h2>
+    <div class="srs-status" id="srsStatus">Carregando...</div>
+    <div class="flash-controls">
+      <span>Cartão <b id="fcIndex">1</b> / <span id="fcTotal">0</span> · Dominados: <b id="fcMastered">0</b></span>
+      <button onclick="shuffleCards()">🔀 Misturar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">—</span><div id="fcFront">Carregando...</div></div>
+        </div>
+        <div class="face face-back">
+          <div><span class="flash-tag">Resposta</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCurrentCard(0)">😵 De novo<small id="prevAgain">1d</small></button>
+      <button class="btn-hard" onclick="reviewCurrentCard(1)">😓 Difícil<small id="prevHard">1d</small></button>
+      <button class="btn-good" onclick="reviewCurrentCard(2)">🙂 Bem<small id="prevGood">3d</small></button>
+      <button class="btn-easy" onclick="reviewCurrentCard(3)">😎 Fácil<small id="prevEasy">6d</small></button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="nextCard()">Próximo →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section class="section" id="tab-quiz">
+  <div class="card">
+    <h2>✅ Quiz Rápido</h2>
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== NAVEGAÇÃO POR ABAS ===== */
+const tabs = document.querySelectorAll('.tab-btn');
+const sections = document.querySelectorAll('.section');
+function goToTab(name){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  sections.forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  document.querySelectorAll('.trilha .etapa').forEach(e=>e.classList.toggle('ativa', e.dataset.goto===name));
+  if(name==='quiz' && quizIndex===0 && quizLog.length===0) initQuiz();
+  if(name==='flashcards') initFlashcards();
+  updateProgress();
+}
+tabs.forEach(t=>t.addEventListener('click', ()=>goToTab(t.dataset.tab)));
+document.querySelectorAll('.trilha .etapa').forEach(e=>e.addEventListener('click', ()=>goToTab(e.dataset.goto)));
+
+function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
+
+/* ===== XP / PROGRESSO ===== */
+let xp = 0;
+const seenTabs = new Set(['visao']);
+function addXP(n, motivo){
+  xp += n;
+  document.getElementById('xpTotal').textContent = xp;
+  if(motivo) showToast('+' + n + ' XP — ' + motivo);
+}
+function updateProgress(){
+  const activo = document.querySelector('.section.active');
+  if(activo) seenTabs.add(activo.id.replace('tab-',''));
+  const pct = Math.round((seenTabs.size / tabs.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ===== MOTOR DE REPETIÇÃO ESPAÇADA (SM-2) + rótulos Anki =====
+   Reaproveitado do motor já usado em Fisiologia II (Cap. 46), com a
+   combinação aprovada em PADRAO_CLINICUS_ENSINO.md secao 1.3: 4 niveis
+   genuinos do Anki (De novo/Dificil/Bem/Facil) + previa de dias em cada
+   botao, em vez dos 3 niveis genericos originais. Primeira aplicacao
+   real desse padrao combinado num capitulo publicado. */
+const CHAPTER_ID = 'histo1_cap02_especializacoes_epitelio';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+// quality: 0=De novo, 1=Dificil, 2=Bem, 3=Facil
+function simulateReview(state, quality){
+  let s = Object.assign({}, state);
+  if(quality === 0){
+    s.reps = 0; s.interval = 1; s.ef = Math.max(1.3, s.ef - 0.2);
+  } else {
+    s.reps += 1;
+    if(s.reps === 1) s.interval = 1;
+    else if(s.reps === 2) s.interval = 3;
+    else s.interval = Math.round(s.interval * s.ef);
+    if(quality === 1) s.ef = Math.max(1.3, s.ef - 0.15);
+    if(quality === 3) s.ef = s.ef + 0.15;
+  }
+  return s;
+}
+function reviewCard(id, quality){
+  const data = loadSRS();
+  const s = simulateReview(getCardState(data, id), quality);
+  s.due = Date.now() + s.interval * DAY_MS;
+  s.lastReview = Date.now();
+  data[id] = s;
+  saveSRS(data);
+  return s;
+}
+function isDue(data, id){ const s = data[id]; if(!s) return true; return s.due <= Date.now(); }
+
+/* ===== FLASHCARDS ===== */
+const flashData = [
+  {tag:'Polaridade', front:'O que significa dizer que a célula epitelial é "polarizada"?', back:'Que ela tem domínios diferentes (apical, lateral, basal) com estruturas e funções distintas entre si, não uma superfície uniforme.'},
+  {tag:'Domínio Apical', front:'Qual a diferença estrutural principal entre cílio e microvilosidade?', back:'Cílio: núcleo de microtúbulos (9+2), móvel. Microvilosidade: núcleo de filamentos de actina, imóvel.'},
+  {tag:'Domínio Apical', front:'Qual é a única célula flagelada do corpo humano?', back:'O espermatozoide.'},
+  {tag:'Domínio Apical', front:'Numa infecção respiratória de repetição associada a infertilidade masculina, qual defeito ciliar deve ser suspeitado?', back:'Discinesia ciliar primária (síndrome de Kartagener) — defeito nos braços de dineína do axonema, que impede o batimento ciliar coordenado.'},
+  {tag:'Complexo de União', front:'Qual é a ordem apicobasal dos três componentes do complexo de união?', back:'Zônula de oclusão (mais apical) → zônula de adesão → mácula de adesão / desmossomo (mais basal).'},
+  {tag:'Complexo de União', front:'Qual componente do complexo de união é responsável por impedir a passagem paracelular de substâncias?', back:'A zônula de oclusão (tight junction) — sela o espaço entre células vizinhas.'},
+  {tag:'Complexo de União', front:'Quais filamentos do citoesqueleto o desmossomo ancora?', back:'Filamentos intermediários de queratina (não actina).'},
+  {tag:'Domínio Basal', front:'Quais são as duas sub-lâminas da lâmina basal?', back:'Lâmina lúcida (mais próxima da célula, rica em laminina) e lâmina densa (mais profunda, rica em colágeno tipo IV).'},
+  {tag:'Domínio Basal', front:'Qual proteína de adesão o hemidesmossomo usa para ancorar a célula à lâmina basal?', back:'Integrinas (diferente do desmossomo, que usa caderinas entre células).'},
+  {tag:'Glândulas', front:'Qual mecanismo de secreção faz a célula se desintegrar inteira junto com o produto secretado?', back:'Secreção holócrina — exemplo clássico: glândula sebácea.'},
+  {tag:'Glândulas', front:'O que diferencia estruturalmente uma glândula exócrina de uma endócrina?', back:'A exócrina mantém um ducto ligando-a à superfície de origem; a endócrina perde essa ligação e secreta hormônio direto na corrente sanguínea.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  updateSrsStatus();
+  renderCard();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashData.filter((_,i) => isDue(data, 'fc'+i)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    '📅 <b>' + dueCount + '</b> card' + (dueCount===1?'':'s') + ' pra revisar hoje &nbsp;·&nbsp; ✅ <b>' + totalReviewed + '</b>/' + flashData.length + ' já iniciados';
+}
+function renderCard(){
+  const id = 'fc' + fcOrder[fcPos];
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+  // Prévia de quantos dias cada botão adicionaria, a partir do estado atual do cartão
+  const data = loadSRS();
+  const estado = getCardState(data, id);
+  [0,1,2,3].forEach((q, idx)=>{
+    const sim = simulateReview(estado, q);
+    const el = document.getElementById(['prevAgain','prevHard','prevGood','prevEasy'][idx]);
+    el.textContent = sim.interval + 'd';
+  });
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Cartões misturados');
+}
+function reviewCurrentCard(quality){
+  const id = 'fc' + fcOrder[fcPos];
+  const s = reviewCard(id, quality);
+  const labels = ['De novo','Difícil','Bem','Fácil'];
+  const xpMap = [1,2,4,6];
+  addXP(xpMap[quality], 'Flashcard: ' + labels[quality] + ' (volta em ' + s.interval + 'd)');
+  if(quality >= 2) fcMastered++;
+  updateSrsStatus();
+  nextCard();
+}
+
+/* ===== QUIZ (gabarito balanceado) ===== */
+const quizData = [
+{"q":"Qual estrutura do domínio apical tem núcleo de filamentos de actina, não de microtúbulos?","options":["Cílio","Microvilosidade","Flagelo","Desmossomo"],"correct":1,"exp":"A microvilosidade é sustentada por um feixe de filamentos de actina; cílios e flagelos usam microtúbulos em arranjo 9+2."},
+{"q":"Na síndrome de Kartagener, qual estrutura está defeituosa?","options":["Desmossomos da pele","Braços de dineína do axonema ciliar","Lâmina basal renal","Zônula de adesão intestinal"],"correct":1,"exp":"O defeito nos braços de dineína impede o batimento ciliar coordenado, causando infecção respiratória de repetição e infertilidade masculina."},
+{"q":"Qual é a sequência apicobasal correta do complexo de união?","options":["Desmossomo → zônula de adesão → zônula de oclusão","Zônula de oclusão → zônula de adesão → desmossomo","Zônula de adesão → desmossomo → zônula de oclusão","Zônula de oclusão → desmossomo → zônula de adesão"],"correct":1,"exp":"Do ápice pra base: zônula de oclusão, depois zônula de adesão, depois mácula de adesão (desmossomo)."},
+{"q":"Qual componente do complexo de união impede a passagem paracelular de substâncias?","options":["Desmossomo","Hemidesmossomo","Zônula de oclusão","Lâmina densa"],"correct":2,"exp":"A zônula de oclusão (tight junction) sela o espaço entre células vizinhas, forçando o transporte transcelular controlado."},
+{"q":"No pênfigo vulgar, autoanticorpos atacam proteínas de qual estrutura?","options":["Hemidesmossomo","Desmossomo (desmogleínas)","Lâmina basal","Cílio"],"correct":1,"exp":"Autoanticorpos contra desmogleínas rompem a adesão entre queratinócitos, causando bolhas cutâneas."},
+{"q":"O hemidesmossomo ancora a célula epitelial a qual estrutura, usando quais proteínas?","options":["À célula vizinha, usando caderinas","À lâmina basal, usando integrinas","Ao núcleo, usando laminina","Ao citoesqueleto de actina, usando queratina"],"correct":1,"exp":"O hemidesmossomo liga a célula à lâmina basal via integrinas — diferente do desmossomo, que liga célula a célula via caderinas."},
+{"q":"Qual mecanismo de secreção caracteriza a glândula sebácea?","options":["Merócrina","Apócrina","Holócrina","Parácrina"],"correct":2,"exp":"Na secreção holócrina, a célula inteira se desintegra e se torna a própria secreção — típico da glândula sebácea."},
+{"q":"O que diferencia estruturalmente uma glândula exócrina de uma endócrina?","options":["A exócrina não tem ducto","A endócrina mantém ducto até a superfície","A exócrina mantém ducto até a superfície de origem; a endócrina não","Não há diferença estrutural, só funcional"],"correct":2,"exp":"A exócrina mantém a ligação (ducto) com a superfície epitelial de origem; a endócrina perde essa ligação durante a histogênese."},
+{"q":"A lâmina lúcida da lâmina basal é rica em qual proteína?","options":["Colágeno tipo IV","Laminina","Queratina","Actina"],"correct":1,"exp":"A lâmina lúcida (mais próxima da célula) é rica em laminina; a lâmina densa, mais profunda, é rica em colágeno tipo IV."},
+{"q":"Qual glândula exócrina é classificada como unicelular?","options":["Glândula salivar","Pâncreas exócrino","Célula caliciforme","Glândula sudorípara"],"correct":2,"exp":"A célula caliciforme (goblet cell), secretora de muco no epitélio intestinal e respiratório, é o exemplo clássico de glândula unicelular."}
+];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Questão ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Pontos: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  if(correct){ quizScore++; addXP(5); }
+  document.getElementById('quizFeedback').textContent = item.exp;
+  document.getElementById('quizNextBtn').disabled = false;
+  quizLog.push(correct);
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const pct = Math.round((quizScore / quizData.length) * 100);
+  document.getElementById('quizArea').innerHTML =
+    '<div style="text-align:center; padding:20px 0;">' +
+    '<h3>Resultado: ' + quizScore + ' / ' + quizData.length + ' (' + pct + '%)</h3>' +
+    '<p style="color:var(--text-dim);">' + (pct>=70 ? 'Muito bem! Você domina o essencial do capítulo.' : 'Vale revisar as abas de Domínio Apical e Complexo de União antes de tentar de novo.') + '</p>' +
+    '<button class="btn-primary" onclick="initQuiz()">Tentar novamente</button>' +
+    '</div>';
+}
+
+/* ===== INIT ===== */
+updateProgress();
+</script>
+
+</body>
+</html>
