@@ -142,3 +142,30 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 15/07/2026 | Primeiro feedback real de aluna sobre Cap.46 — prefere versão original por ter mais "pontos de atenção" | 🟢 aluna |
 | 15/07/2026 | Reintroduzir `.prova` e `.example`, adicionar sistema Vargas ao Cap.46/47/48 | ✅ decisão conjunta |
 
+
+---
+
+## 6. Correção: SM-2 real + interface Anki já estava aplicado (16/07/2026)
+
+⚠️ A seção 1.3 dizia que a combinação "SM-2 real + rótulos genuínos do Anki + prévia de dias em cada botão" ainda não tinha sido aplicada em nenhum capítulo publicado, só aprovada em protótipo. **Isso estava desatualizado.** Conferido em 16/07/2026: `Capitulo_04_Especializacoes_Membrana_Basal.html` (Histologia I) já tem essa combinação completa e publicada — 4 rótulos (De novo/Difícil/Bem/Fácil), 4 níveis de qualidade no algoritmo, prévia de dias em cada botão.
+
+**Correção:** esse já é o padrão em uso, não mais "pendente de primeira aplicação". `Capitulo_08_Especializacoes_Epitelio.html` (Histologia I, P2 — criado em 16/07/2026) reutiliza o mesmo motor, não é a primeira aplicação.
+
+## 7. Achado à parte: título errado no Capítulo 4 (16/07/2026)
+
+🐛 `Capitulo_04_Especializacoes_Membrana_Basal.html`, arquivado em `semestre-01/histologia1/`, tem `<title>Bioquímica II — Cap. 4: ...</title>` — a tag `<title>` do navegador está com a disciplina errada. O conteúdo em si é de Histologia I (confirmado pelos tópicos: domínio apical, complexo de união, membrana basal). Não corrigido ainda — só registrado, porque não fazia parte do pedido desta rodada e mexer em arquivo já publicado sem pedido explícito vai contra a regra da seção 5.
+
+## 8. Imagem real extraída do material fonte (16/07/2026)
+
+✅ **Decisão do Dr. Cristiano:** sempre que o material fonte (slide, apostila, PDF) tiver diagrama, tabela colorida ou infográfico bem feito, a imagem real deve ser recortada do material e inserida no capítulo — não recriada como texto ou tabela. Aplica-se a partir de agora em todo conteúdo novo.
+
+**Processo seguido no Capítulo 8 (Especializações do Epitélio):** das imagens disponíveis no material fonte (apresentação em pptx, 45 imagens embutidas), 3 foram selecionadas por critério de qualidade didática (diagrama esquemático claro ou micrografia sem marca d'água/branding de terceiro) e o restante descartado — inclusive uma imagem de endoscopia com marca d'água de site e de aparelho médico, que não serve pro padrão. As 3 aprovadas foram salvas em `assets/histologia1/` e linkadas no capítulo com `<figcaption>` explicando o que a imagem mostra.
+
+## Histórico de decisões (continuação)
+
+| Data | O que mudou | Fonte |
+|---|---|---|
+| 16/07/2026 | Correção: SM-2+Anki+prévia já estava em uso desde o Cap. 4 de Histologia I, não era mais "pendente de primeira aplicação" | 🟢 conferido no arquivo publicado |
+| 16/07/2026 | Achado: título do Cap. 4 de Histologia I diz "Bioquímica II" por engano — não corrigido, só registrado | 🐛 achado, não solicitado |
+| 16/07/2026 | Imagem real recortada do material fonte, em vez de recriar como texto — padrão a partir de agora | ✅ decisão do Dr. Cristiano |
+| 16/07/2026 | Capítulo 8 de Histologia I criado (P2 — Especializações do Epitélio), primeiro capítulo novo da P2 | 🏁 marco concluído |
