@@ -169,3 +169,7 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 16/07/2026 | Achado: título do Cap. 4 de Histologia I diz "Bioquímica II" por engano — não corrigido, só registrado | 🐛 achado, não solicitado |
 | 16/07/2026 | Imagem real recortada do material fonte, em vez de recriar como texto — padrão a partir de agora | ✅ decisão do Dr. Cristiano |
 | 16/07/2026 | Capítulo 8 de Histologia I criado (P2 — Especializações do Epitélio), primeiro capítulo novo da P2 | 🏁 marco concluído |
+
+| 16/07/2026 | Capítulos 9, 10 e 11 de Histologia I criados (P2: Tecido Conectivo, Tecido Adiposo, Tecido Sanguíneo) | 🏁 marco concluído |
+| 16/07/2026 | **P2 de Histologia I completa: 4 capítulos novos (Cap. 8-11)**, cobrindo Especializações do Epitélio, Tecido Conectivo, Tecido Adiposo e Tecido Sanguíneo -- todos com imagem real curada do material fonte (nenhuma recriada como texto) | 🏁 marco concluído |
+| 16/07/2026 | Critério de seleção de imagem consolidado ao longo dos 4 capítulos: rejeitadas por marca d'água/branding de terceiro (Instagram, app de treino), por copyright explícito (©WebPathology, ©Terese Winslow/Govt. EUA), por assinatura de autor identificável, e por serem print de tela de PDF pirateado -- só imagem limpa, sem atribuição de terceiro visível, foi aprovada | 🟡 critério prático, não decisão formal do Dr. Cristiano ainda -- registrar aqui e confirmar depois |
