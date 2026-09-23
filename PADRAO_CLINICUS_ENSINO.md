@@ -182,3 +182,8 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 |---|---|---|
 | 22/09/2026 | Regra editorial: checar lógica dos dados extraídos de material fonte antes de publicar; em caso de dúvida real, perguntar ao Dr. Cristiano antes de publicar | ✅ decisão do Dr. Cristiano, motivada por erro real (faixas etárias dos Programas PAIS) |
 
+
+| 17/07/2026 | Capitulos 56 e 57 de Fisiologia II criados (Sistema Nervoso Motor; Cerebelo e Ganglios Basais) -- pulado o material que ja estava coberto pelo Cap. 55 (reflexos medulares), evitando duplicar | 🏁 marco concluido |
+| 17/07/2026 | **Pendencia registrada, nao esquecer**: a barra lateral de navegacao (`cmed-nav-sidebar-list`) so foi atualizada nos proprios Cap. 56 e 57 -- os outros 12+ capitulos ja publicados de Fisiologia II (38 ao 66) ainda NAO linkam pro Cap. 56/57. Precisa de uma passada em cada arquivo existente pra manter a navegacao entre capitulos consistente | 🔴 pendencia real, nao feita |
+| 17/07/2026 | Banco de Questoes do Cap. 56/57 replicou o formato profundo do Cap. 46 (justificativa + analise individual de cada alternativa errada + conceito + pegadinha + dica) -- 6 questoes cada, nao 10, por escopo da sessao | 🟡 nivel aplicado, volume menor que a media historica |
+| 17/07/2026 | Caso Clinico do Cap. 56/57 tem só 1 nivel, nao os 3 niveis progressivos do Cap. 46 -- e Mapa Mental ficou de fora dos dois, dado o status contestado (rejeitado no padrao escrito, mas presente no Cap. 46 de verdade) | 🟡 decisao de escopo, nao definitiva |
