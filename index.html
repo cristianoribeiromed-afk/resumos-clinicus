@@ -357,6 +357,19 @@ a{color:inherit;}
   line-height:1.5;
   margin-bottom:12px;
 }
+.pacote-p2-avulso{
+  font-size:13px;
+  color:var(--text-dim, #9aa1ad);
+  text-align:center;
+  margin:-6px 0 18px;
+}
+.pacote-p2-avulso a{
+  color:var(--gold);
+  font-weight:600;
+  text-decoration:underline;
+  cursor:pointer;
+}
+.pacote-p2-avulso a:hover{ opacity:.85; }
 .pacote-card{
   position:relative;
   background:var(--panel);
@@ -1463,7 +1476,7 @@ function buildAccessIndex(data){
       : [{ sufixo: '', materias: sem.materias }];
 
     grupos.forEach(grupo=>{
-      let itensP1 = [], itensP1P2 = [], itensPremium = [];
+      let itensP1 = [], itensP2 = [], itensP1P2 = [], itensPremium = [];
       grupo.materias.forEach(m=>{
         const slugM = slugify(m.nome);
         const baseM = sem.slug+'-'+slugM;
@@ -1471,10 +1484,12 @@ function buildAccessIndex(data){
         const p2 = idx[baseM+'-p2-combo'] || [];
         const final = idx[baseM+'-combo'] || []; // Final nao tem sufixo (codigo legado)
         itensP1.push(...p1);
+        itensP2.push(...p2);
         itensP1P2.push(...p1, ...p2);
         itensPremium.push(...p1, ...p2, ...final);
       });
       if(itensP1.length) idx[sem.slug+'-pacote-p1'+grupo.sufixo] = itensP1;
+      if(itensP2.length) idx[sem.slug+'-pacote-p2'+grupo.sufixo] = itensP2;
       if(itensP1P2.length) idx[sem.slug+'-pacote-p1p2'+grupo.sufixo] = itensP1P2;
       if(itensPremium.length) idx[sem.slug+'-pacote-premium'+grupo.sufixo] = itensPremium;
     });
@@ -1716,6 +1731,7 @@ function somaSemestreEtapas(materias, etapasKeys){
 
 function valorReferenciaPacote(sem, pacoteKey){
   if(pacoteKey === 'p1') return somaSemestreEtapas(sem.materias, ['P1']);
+  if(pacoteKey === 'p2') return somaSemestreEtapas(sem.materias, ['P2']);
   if(pacoteKey === 'p1p2') return somaSemestreEtapas(sem.materias, ['P1','P2']);
   if(pacoteKey === 'premium') return somaSemestreEtapas(sem.materias, ['P1','P2','Final']);
   return 0;
@@ -1811,6 +1827,17 @@ function renderCatalogo(data){
         </div>`;
       });
       panelsHtml += `</div>`;
+
+      // Pacote P2 avulso: nao entra como card do mesmo peso visual dos outros —
+      // é uma opcao secundaria, pro aluno que ja tem P1 (comprado avulso ou aqui
+      // mesmo antes) e so precisa fechar a P2. Fica como link discreto abaixo dos cards.
+      if(sem.pacotes && sem.pacotes.p2 && sem.pacotes.p2.disponivel){
+        const p2 = sem.pacotes.p2;
+        const planoKeyP2 = planoKeyPacote(sem.slug, 'p2', getUniversidadeAtiva());
+        panelsHtml += `<div class="pacote-p2-avulso">
+          Já garantiu a P1 e só precisa da P2? <a href="#" onclick="abrirCheckout('${p2.label} — ${sem.semestre}º Semestre', ${p2.preco}, '${planoKeyP2}'); return false;">Comprar só o Pacote P2 — R$ ${formatPrecoBR(p2.preco)}</a>
+        </div>`;
+      }
     }
 
     const grupos = {};
