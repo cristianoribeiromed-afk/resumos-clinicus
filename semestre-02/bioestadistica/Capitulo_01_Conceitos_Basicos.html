@@ -445,11 +445,12 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
     if(!v || !v.id) return '';
     var thumb = v.tipo === 'vimeo' ? '' : ytThumb(v.id);
     var watchUrl = v.tipo === 'vimeo' ? ('https://vimeo.com/'+v.id) : ytWatch(v.id);
+    var embedUrl = v.tipo === 'vimeo' ? ('https://player.vimeo.com/video/'+v.id+'?autoplay=1') : ('https://www.youtube.com/embed/'+v.id+'?autoplay=1&rel=0');
     var tag = isPrincipal ? '🎥 Vídeo Principal' : '➕ Complementar';
     var card = document.createElement('div');
     card.className = 'cmed-video-card';
     card.innerHTML =
-      '<div class="cmed-video-thumb" data-url="'+watchUrl+'" style="background-image:url(\''+thumb+'\')">' +
+      '<div class="cmed-video-thumb" data-embed="'+embedUrl+'" style="background-image:url(\''+thumb+'\')">' +
         '<div class="cmed-video-play"><span>▶</span></div>' +
         (v.duracao ? '<div class="cmed-video-dur">⏱ '+v.duracao+'</div>' : '') +
       '</div>' +
@@ -463,7 +464,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
         '</div>' +
         (v.motivo ? '<div class="cmed-video-why"><b>📌 Por que recomendamos este vídeo?</b><br>'+v.motivo+'</div>' : '') +
         '<div class="cmed-video-btns">' +
-          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">▶ Assistir vídeo</a>' +
+          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">↗ Abrir no site original</a>' +
           '<button class="cmed-video-btn secondary" data-copy="'+watchUrl+'">📋 Copiar link</button>' +
         '</div>' +
       '</div>';
@@ -506,7 +507,15 @@ footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;p
 
     container.addEventListener('click', function(e){
       var thumb = e.target.closest('.cmed-video-thumb');
-      if(thumb){ window.open(thumb.dataset.url, '_blank', 'noopener'); return; }
+      if(thumb){
+        var embedUrl = thumb.dataset.embed;
+        if(embedUrl && !thumb.querySelector('iframe')){
+          thumb.innerHTML = '<iframe src="'+embedUrl+'" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>';
+          thumb.style.backgroundImage = 'none';
+          thumb.style.cursor = 'default';
+        }
+        return;
+      }
       var copyBtn = e.target.closest('[data-copy]');
       if(copyBtn){
         navigator.clipboard.writeText(copyBtn.dataset.copy).then(function(){
