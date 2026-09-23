@@ -1489,8 +1489,8 @@ function buildAccessIndex(data){
   data.semestres.forEach(sem=>{
     const temCDE = sem.materias.some(m => isMateriaCDE(m.nome));
     const grupos = temCDE
-      ? [{ sufixo: '', materias: sem.materias.filter(m => !isMateriaCDE(m.nome)) },
-         { sufixo: '-cde', materias: sem.materias.filter(m => isMateriaCDE(m.nome)) }]
+      ? [{ sufixo: '', materias: sem.materias.filter(m => m.compartilhada || !isMateriaCDE(m.nome)) },
+         { sufixo: '-cde', materias: sem.materias.filter(m => m.compartilhada || isMateriaCDE(m.nome)) }]
       : [{ sufixo: '', materias: sem.materias }];
 
     grupos.forEach(grupo=>{
@@ -1612,9 +1612,15 @@ function setUniversidadeAtiva(uni){
 function isMateriaCDE(nome){
   return /\bCDE\b/i.test(nome);
 }
+function semestreTemCDE(semSlug){
+  if(!CATALOGO_DATA) return false;
+  const sem = CATALOGO_DATA.semestres.find(s => s.slug === semSlug);
+  if(!sem) return false;
+  return sem.materias.some(m => isMateriaCDE(m.nome) && !m.compartilhada);
+}
 function filterByUniversidade(data, uni){
   const semestresFiltrados = data.semestres.map(sem=>{
-    const materiasFiltradas = sem.materias.filter(m => uni === 'cde' ? isMateriaCDE(m.nome) : !isMateriaCDE(m.nome));
+    const materiasFiltradas = sem.materias.filter(m => m.compartilhada || (uni === 'cde' ? isMateriaCDE(m.nome) : !isMateriaCDE(m.nome)));
     return Object.assign({}, sem, { materias: materiasFiltradas });
   }).filter(sem => sem.materias.length > 0);
   return Object.assign({}, data, { semestres: semestresFiltrados });
@@ -1833,7 +1839,7 @@ function renderCatalogo(data){
       panelsHtml += `<div class="pacotes-semestre">`;
       pacotesAtivos.forEach(k=>{
         const p = sem.pacotes[k];
-        const planoKey = planoKeyPacote(sem.slug, k, getUniversidadeAtiva());
+        const planoKey = planoKeyPacote(sem.slug, k, semestreTemCDE(sem.slug) ? getUniversidadeAtiva() : null);
         panelsHtml += `<div class="pacote-card ${p.maisVendido ? 'pacote-destaque' : ''} ${p.destaquePremium ? 'pacote-premium' : ''}">
           ${p.maisVendido ? `<span class="combo-badge">🔥 Mais vendido</span>` : ''}
           ${p.destaquePremium ? `<span class="combo-badge-premium">🏆 Melhor custo-benefício</span>` : ''}
