@@ -1625,6 +1625,12 @@ function bestsellerBadge(){ return `<span class="popular-badge">🔥 Popular</sp
 const ETAPA_ORDEM = ['P1', 'P2', 'Final'];
 const ETAPA_ICON = {'P1':'📁', 'P2':'📁', 'Final':'📁'};
 
+function formatPrecoBR(preco){
+  const n = Number(preco);
+  if(Number.isNaN(n)) return preco;
+  return n.toFixed(2).replace('.', ',');
+}
+
 function formatEconomiaTag(precoIndividual, precoCombo){
   const economia = precoIndividual - precoCombo;
   if(!(economia > 0)) return '';
@@ -1634,28 +1640,21 @@ function formatEconomiaTag(precoIndividual, precoCombo){
 }
 
 function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome, semSlug){
-  const ambosDisponiveis = etapa.resumo.disponivel && etapa.simulado.disponivel;
   const itemPrefix = `${etapaNome} - ${materiaNome}`.replace(/'/g,"\\'");
-  const planoResumo = planoKeyEtapa(semSlug, materiaNome, etapaNome, 'resumo');
-  const planoSimulado = planoKeyEtapa(semSlug, materiaNome, etapaNome, 'simulado');
   const planoCombo = planoKeyEtapa(semSlug, materiaNome, etapaNome, 'combo');
+  if(!etapa.resumo.disponivel){
+    return `<div class="produto-row">
+      <span class="produto-label"><span class="tagdot"></span>Guia de Estudo + Simulado</span>
+      <span class="embreve-tag">em breve</span>
+    </div>`;
+  }
+  const preco = etapa.comboPreco ?? etapa.resumo.preco ?? 15.90;
+  const simuladoPronto = !!etapa.simulado.disponivel;
   return `
-    <div class="produto-row">
-      <span class="produto-label"><span class="tagdot"></span>Guia de Estudo</span>
-      ${etapa.resumo.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.resumo.preco??'--'}</span><button class="btn-comprar" onclick="abrirCheckout('Guia de Estudo - ${itemPrefix}', ${etapa.resumo.preco}, '${planoResumo}')">Comprar</button></span>`
-        : `<span class="embreve-tag">em breve</span>`}
-    </div>
-    <div class="produto-row">
-      <span class="produto-label simulado"><span class="tagdot simulado"></span>Simulado</span>
-      ${etapa.simulado.disponivel
-        ? `<span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.simulado.preco??'--'}</span><button class="btn-comprar simulado" onclick="abrirCheckout('Simulado - ${itemPrefix}', ${etapa.simulado.preco}, '${planoSimulado}')">Comprar</button></span>`
-        : `<span class="embreve-tag">em breve</span>`}
-    </div>
-    ${ambosDisponiveis ? `<div class="produto-row combo-row">
-      <span class="produto-label"><span class="combo-badge">🔥 Mais vendido</span> Combo (guia + simulado)${formatEconomiaTag(etapa.resumo.preco + etapa.simulado.preco, etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5))}</span>
-      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}</span><button class="btn-combo" onclick="abrirCheckout('Combo - ${itemPrefix}', ${etapa.comboPreco ?? (etapa.resumo.preco + etapa.simulado.preco - 5)}, '${planoCombo}')">Comprar combo</button></span>
-    </div>` : ``}`;
+    <div class="produto-row combo-row">
+      <span class="produto-label">📘 Guia de Estudo + Simulado${simuladoPronto ? '' : ` <span class="embreve-tag" style="margin-left:6px;">📝 simulado em breve, incluso sem custo extra</span>`}</span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${formatPrecoBR(preco)}</span><button class="btn-combo" onclick="abrirCheckout('${itemPrefix}', ${preco}, '${planoCombo}')">Comprar</button></span>
+    </div>`;
 }
 
 function toggleEtapaFolder(el){
@@ -1686,27 +1685,22 @@ function renderEtapaFolder(etapaNome, etapa, materiaNome, semSlug){
   </div>`;
 }
 
-const PRECO_PADRAO_COMBO = 15.90;   // combo guia+simulado, valor vigente da plataforma
-const PRECO_PADRAO_RESUMO = 12.90;  // apenas guia (matérias sem simulado avulso, ex: Práticas)
+const PRECO_PADRAO_COMBO = 15.90;   // valor fixo vigente da plataforma: guia + simulado (mesmo que o simulado ainda não tenha sido publicado)
 
-// Descobre se uma matéria segue o padrão "combo" (guia+simulado) ou "só guia",
-// olhando qualquer etapa já publicada dela. Sem nenhuma etapa publicada, assume
-// o padrão mais conservador (só guia) para não inflar a estimativa.
+// Toda matéria segue hoje o mesmo preço fixo (guia + simulado, R$15,90), publicado
+// o simulado ou não — por isso não há mais distinção de padrão por matéria.
 function inferirPadraoMateria(m){
-  const temSimuladoPublicado = ETAPA_ORDEM.some(k => m.etapas[k] && m.etapas[k].simulado && m.etapas[k].simulado.disponivel);
-  return temSimuladoPublicado ? PRECO_PADRAO_COMBO : PRECO_PADRAO_RESUMO;
+  return PRECO_PADRAO_COMBO;
 }
 
-// Valor de uma etapa: real, se já publicada; senão, o preço padrão vigente da
-// plataforma (mesmo valor cobrado hoje em qualquer etapa equivalente já publicada).
-// Isso reflete o valor TOTAL do semestre (P1+P2+Final), publicado ou não —
-// já que quem compra o pacote tem direito ao conteúdo futuro sem custo extra.
+// Valor de uma etapa: real (comboPreco fixo), se já publicada; senão, o preço
+// padrão vigente da plataforma (mesmo valor cobrado hoje em qualquer etapa
+// equivalente já publicada). Isso reflete o valor TOTAL do semestre (P1+P2+Final),
+// publicado ou não — já que quem compra o pacote tem direito ao conteúdo futuro
+// sem custo extra.
 function valorEtapaCompleto(etapa, precoPadrao){
-  if(etapa && etapa.disponivel){
-    const r = etapa.resumo && etapa.resumo.disponivel ? etapa.resumo.preco : 0;
-    const s = etapa.simulado && etapa.simulado.disponivel ? etapa.simulado.preco : 0;
-    if(r && s) return etapa.comboPreco ?? (r + s - 5);
-    return r + s;
+  if(etapa && etapa.disponivel && etapa.resumo && etapa.resumo.disponivel){
+    return etapa.comboPreco ?? etapa.resumo.preco ?? precoPadrao;
   }
   return precoPadrao;
 }
@@ -1751,7 +1745,7 @@ function renderMateriaCard(m, meta, semSlug){
   const somaEtapasIndividual = valorMateriaCompleto(m, ETAPA_ORDEM);
   const comboGeral = m.comboGeralDisponivel ? `<div class="combo-geral-row">
       <span class="produto-label">⭐ Combo completo (P1 + P2 + Final)${formatEconomiaTag(somaEtapasIndividual, m.comboGeralPreco)}</span>
-      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${m.comboGeralPreco}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
+      <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${formatPrecoBR(m.comboGeralPreco)}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
     </div>` : '';
   const materiaisComplementares = renderMateriaisComplementares(m.nome);
   return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open">
@@ -1811,7 +1805,7 @@ function renderCatalogo(data){
           ${p.destaquePremium ? `<span class="combo-badge-premium">🏆 Melhor custo-benefício</span>` : ''}
           <b>${p.label}</b>
           <span class="pacote-desc">${p.descricao}</span>
-          <span class="preco pacote-preco">R$ ${p.preco}</span>
+          <span class="preco pacote-preco">R$ ${formatPrecoBR(p.preco)}</span>
           ${formatEconomiaTag(valorReferenciaPacote(sem, k), p.preco)}
           <button class="btn-comprar" onclick="abrirCheckout('${p.label} — ${sem.semestre}º Semestre', ${p.preco}, '${planoKey}')">Comprar</button>
         </div>`;
