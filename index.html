@@ -1387,8 +1387,9 @@ function planoKeyEtapa(semSlug, materiaNome, etapaNome, tipo){
 function planoKeyMateriaCompleta(semSlug, materiaNome){
   return semSlug + '-' + slugify(materiaNome) + '-completo';
 }
-function planoKeyPacote(semSlug, tipo){
-  return semSlug + '-pacote-' + tipo; // tipo: 'p1' | 'p1p2' | 'premium'
+function planoKeyPacote(semSlug, tipo, uni){
+  const sufixo = uni === 'cde' ? '-cde' : '';
+  return semSlug + '-pacote-' + tipo + sufixo; // tipo: 'p1' | 'p1p2' | 'premium'
 }
 
 let CATALOGO_DATA = null;
@@ -1452,21 +1453,31 @@ function buildAccessIndex(data){
     });
   });
   // pacotes por semestre: P1 (so etapa P1), P1+P2 (etapas P1+P2), Premium (tudo: P1+P2+Final)
+  // Quando o semestre tem materias CDE, geram-se pacotes SEPARADOS por trilha (sufixo -cde),
+  // pra nao misturar conteudo das 2 universidades numa unica compra.
   data.semestres.forEach(sem=>{
-    let itensP1 = [], itensP1P2 = [], itensPremium = [];
-    sem.materias.forEach(m=>{
-      const slugM = slugify(m.nome);
-      const baseM = sem.slug+'-'+slugM;
-      const p1 = idx[baseM+'-p1-combo'] || [];
-      const p2 = idx[baseM+'-p2-combo'] || [];
-      const final = idx[baseM+'-combo'] || []; // Final nao tem sufixo (codigo legado)
-      itensP1.push(...p1);
-      itensP1P2.push(...p1, ...p2);
-      itensPremium.push(...p1, ...p2, ...final);
+    const temCDE = sem.materias.some(m => isMateriaCDE(m.nome));
+    const grupos = temCDE
+      ? [{ sufixo: '', materias: sem.materias.filter(m => !isMateriaCDE(m.nome)) },
+         { sufixo: '-cde', materias: sem.materias.filter(m => isMateriaCDE(m.nome)) }]
+      : [{ sufixo: '', materias: sem.materias }];
+
+    grupos.forEach(grupo=>{
+      let itensP1 = [], itensP1P2 = [], itensPremium = [];
+      grupo.materias.forEach(m=>{
+        const slugM = slugify(m.nome);
+        const baseM = sem.slug+'-'+slugM;
+        const p1 = idx[baseM+'-p1-combo'] || [];
+        const p2 = idx[baseM+'-p2-combo'] || [];
+        const final = idx[baseM+'-combo'] || []; // Final nao tem sufixo (codigo legado)
+        itensP1.push(...p1);
+        itensP1P2.push(...p1, ...p2);
+        itensPremium.push(...p1, ...p2, ...final);
+      });
+      if(itensP1.length) idx[sem.slug+'-pacote-p1'+grupo.sufixo] = itensP1;
+      if(itensP1P2.length) idx[sem.slug+'-pacote-p1p2'+grupo.sufixo] = itensP1P2;
+      if(itensPremium.length) idx[sem.slug+'-pacote-premium'+grupo.sufixo] = itensPremium;
     });
-    if(itensP1.length) idx[sem.slug+'-pacote-p1'] = itensP1;
-    if(itensP1P2.length) idx[sem.slug+'-pacote-p1p2'] = itensP1P2;
-    if(itensPremium.length) idx[sem.slug+'-pacote-premium'] = itensPremium;
   });
   idx['pacote'] = todosArquivos;
   return idx;
@@ -1794,7 +1805,7 @@ function renderCatalogo(data){
       panelsHtml += `<div class="pacotes-semestre">`;
       pacotesAtivos.forEach(k=>{
         const p = sem.pacotes[k];
-        const planoKey = planoKeyPacote(sem.slug, k);
+        const planoKey = planoKeyPacote(sem.slug, k, getUniversidadeAtiva());
         panelsHtml += `<div class="pacote-card ${p.maisVendido ? 'pacote-destaque' : ''} ${p.destaquePremium ? 'pacote-premium' : ''}">
           ${p.maisVendido ? `<span class="combo-badge">🔥 Mais vendido</span>` : ''}
           ${p.destaquePremium ? `<span class="combo-badge-premium">🏆 Melhor custo-benefício</span>` : ''}
