@@ -187,3 +187,23 @@ Duas tentativas reprovadas (ASCII e SVG radial). Não incluir como aba obrigató
 | 17/07/2026 | **Pendencia registrada, nao esquecer**: a barra lateral de navegacao (`cmed-nav-sidebar-list`) so foi atualizada nos proprios Cap. 56 e 57 -- os outros 12+ capitulos ja publicados de Fisiologia II (38 ao 66) ainda NAO linkam pro Cap. 56/57. Precisa de uma passada em cada arquivo existente pra manter a navegacao entre capitulos consistente | 🔴 pendencia real, nao feita |
 | 17/07/2026 | Banco de Questoes do Cap. 56/57 replicou o formato profundo do Cap. 46 (justificativa + analise individual de cada alternativa errada + conceito + pegadinha + dica) -- 6 questoes cada, nao 10, por escopo da sessao | 🟡 nivel aplicado, volume menor que a media historica |
 | 17/07/2026 | Caso Clinico do Cap. 56/57 tem só 1 nivel, nao os 3 niveis progressivos do Cap. 46 -- e Mapa Mental ficou de fora dos dois, dado o status contestado (rejeitado no padrao escrito, mas presente no Cap. 46 de verdade) | 🟡 decisao de escopo, nao definitiva |
+
+
+## 9. Achado sério: padrão de gabarito previsível (17/07/2026)
+
+🔴 **Bug real, encontrado pelo Dr. Cristiano, não por revisão própria.** Todos os capítulos criados nesta sessão (Cap. 8-11 de Histologia I, Cap. 56-57 de Fisiologia II) tinham a resposta certa concentrada quase toda numa letra só, ou faltando letras inteiras:
+
+| Capítulo | Antes da correção |
+|---|---|
+| Cap. 8 (Histologia) | B: 6, C: 4 — nunca A, nunca D |
+| Cap. 9 (Histologia) | B: 7, A: 2, C: 1 — nunca D |
+| Cap. 10 (Histologia) | B: 5, A: 2, C: 1 — nunca D |
+| Cap. 11 (Histologia) | B: 5, C: 3, A: 2 — nunca D |
+| Cap. 56 (Fisiologia) | **A: 6 de 6** — toda questão do banco tinha resposta A |
+| Cap. 57 (Fisiologia) | **A: 6 de 6** — mesmo problema |
+
+Isso é um problema sério de qualidade de avaliação -- um aluno que percebe o padrão consegue pontuar bem sem saber o conteúdo. Não era intencional, veio de escrever a alternativa certa sempre na mesma posição ao redigir, sem embaralhar depois.
+
+**Corrigido**: reorganizadas as alternativas de cada questão (trocando a POSIÇÃO do texto certo, não só o índice), com o cuidado de também realinhar a analise/analise_letters no formato de Banco de Questões (pra explicação de cada alternativa errada continuar apontando pra alternativa certa depois da troca -- verificado manualmente numa amostra antes de publicar).
+
+**Regra nova, valendo a partir de agora**: ao escrever qualquer Quiz Rápido ou Banco de Questões, a posição da resposta certa precisa variar entre as questões -- nunca redigir todas com a certa na mesma letra, e idealmente conferir a distribuição (contagem por letra) antes de publicar, não confiar que "vai dar variado sozinho".
