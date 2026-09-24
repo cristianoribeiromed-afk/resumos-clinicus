@@ -1701,9 +1701,11 @@ function renderProdutoRowsEtapa(etapa, materiaNome, etapaNome, semSlug){
   }
   const preco = etapa.comboPreco ?? etapa.resumo.preco ?? 15.90;
   const simuladoPronto = !!etapa.simulado.disponivel;
+  const nCaps = etapa.resumo.arquivo ? etapa.resumo.arquivo.split('|').map(s=>s.trim()).filter(Boolean).length : 0;
+  const capsTag = nCaps > 1 ? ` <span class="cx-hide-mobile-txt" style="color:var(--muted);font-weight:400;">(${nCaps} conteúdos)</span>` : '';
   return `
     <div class="produto-row combo-row">
-      <span class="produto-label">📘 Guia de Estudo + Simulado${simuladoPronto ? '' : ` <span class="embreve-tag" style="margin-left:6px;">📝 simulado em breve, incluso sem custo extra</span>`}</span>
+      <span class="produto-label">📘 Guia de Estudo + Simulado${capsTag}${simuladoPronto ? '' : ` <span class="embreve-tag" style="margin:0 10px 0 6px;">📝 simulado em breve, incluso sem custo extra</span>`}</span>
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${formatPrecoBR(preco)}</span><button class="btn-combo" onclick="abrirCheckout('${itemPrefix}', ${preco}, '${planoCombo}')">Comprar</button></span>
     </div>`;
 }
