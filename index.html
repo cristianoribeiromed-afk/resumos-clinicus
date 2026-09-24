@@ -382,6 +382,93 @@ a{color:inherit;}
   cursor:pointer;
 }
 .pacote-p2-avulso a:hover{ opacity:.85; }
+
+.oferta-banner-verde{
+  background:rgba(29,185,84,.12);
+  border:1px solid var(--green);
+  color:var(--green-light);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:14px;
+}
+.oferta-segmented{
+  display:inline-flex;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:4px;
+  margin-bottom:18px;
+  gap:4px;
+}
+.oferta-seg-btn{
+  background:transparent;
+  border:none;
+  color:var(--muted);
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  font-size:13.5px;
+  padding:9px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:background .2s,color .2s,box-shadow .2s;
+}
+.oferta-seg-btn:hover{ color:var(--text); }
+.oferta-seg-btn.active{
+  background:var(--green);
+  color:#06140d;
+  box-shadow:0 2px 10px rgba(29,185,84,.35);
+}
+.oferta-pacotes, .oferta-avulsas{
+  transition:opacity .28s ease, max-height .28s ease;
+  overflow:hidden;
+}
+.oferta-pacotes{ max-height:2000px; opacity:1; }
+.oferta-pacotes.oferta-hide{ max-height:0; opacity:0; margin:0; pointer-events:none; }
+.oferta-avulsas{ max-height:0; opacity:0; margin:0; pointer-events:none; }
+.oferta-avulsas.oferta-show{ max-height:6000px; opacity:1; pointer-events:auto; margin-top:4px; }
+.oferta-avulsas-titulo{ font-family:'Lora',serif; font-size:1.15em; margin:6px 0 2px; color:var(--text); }
+.oferta-avulsas-sub{ color:var(--muted); font-size:13px; margin-bottom:14px; }
+.materias-avulsas-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:12px;
+  margin-bottom:18px;
+}
+@media(min-width:1100px){ .materias-avulsas-grid{ grid-template-columns:repeat(4,1fr); } }
+@media(max-width:900px) and (min-width:601px){ .materias-avulsas-grid{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:600px){ .materias-avulsas-grid{ grid-template-columns:1fr; } }
+.materia-avulsa-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  transition:transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s, border-color .2s;
+}
+.materia-avulsa-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--green-dark);
+  box-shadow:0 10px 26px rgba(0,0,0,.3);
+}
+.materia-avulsa-icon{ font-size:22px; }
+.materia-avulsa-nome{ font-family:'Lora',serif; font-size:.98em; color:var(--text); line-height:1.3; }
+.materia-avulsa-badge{
+  align-self:flex-start;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+  padding:3px 9px;
+  border-radius:20px;
+}
+.materia-avulsa-preco{ color:var(--green-light); font-weight:700; font-size:14px; margin-top:2px; }
+.materia-avulsa-btn{ margin-top:4px; padding:9px; font-size:13px; width:100%; }
 .pacote-card{
   position:relative;
   background:var(--panel);
@@ -1802,7 +1889,7 @@ function renderMateriaCard(m, meta, semSlug){
       <span style="display:flex;align-items:center;gap:8px;"><span class="preco">R$ ${formatPrecoBR(m.comboGeralPreco)}</span><button class="btn-combo" onclick="abrirCheckout('Combo Completo - ${m.nome.replace(/'/g,"\\'")}', ${m.comboGeralPreco}, '${planoCompleto}')">Comprar</button></span>
     </div>` : '';
   const materiaisComplementares = renderMateriaisComplementares(m.nome);
-  return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open">
+  return `<div class="subject-card subject-accent-${meta.accent} ${algumDisponivel?'':'embreve'} open" data-materia-key="${slugify(m.nome)}">
     <div class="subject-head no-toggle">
       <div class="subject-icon">${meta.icon}</div>
       <div class="subject-info">
@@ -1818,6 +1905,61 @@ function renderMateriaCard(m, meta, semSlug){
       ${materiaisComplementares}
     </div></div>
   </div>`;
+}
+
+function badgeEtapasMateria(m){
+  const disponiveis = ETAPA_ORDEM.filter(k => m.etapas[k] && m.etapas[k].disponivel);
+  if(disponiveis.length === 0) return null;
+  if(disponiveis.length === ETAPA_ORDEM.length) return 'Completo';
+  return disponiveis.join(' + ');
+}
+
+function precoMinimoMateria(m){
+  const precos = ETAPA_ORDEM
+    .map(k => m.etapas[k])
+    .filter(etapa => etapa && etapa.disponivel && etapa.resumo && etapa.resumo.disponivel)
+    .map(etapa => etapa.comboPreco ?? etapa.resumo.preco)
+    .filter(p => typeof p === 'number');
+  return precos.length ? Math.min(...precos) : null;
+}
+
+function renderMateriaAvulsaCard(m, meta){
+  const badge = badgeEtapasMateria(m);
+  if(!badge) return ''; // sem nenhuma etapa disponivel ainda -> nao aparece na grade avulsa
+  const preco = precoMinimoMateria(m);
+  const key = slugify(m.nome);
+  return `<div class="materia-avulsa-card" onclick="irParaMateria('${key}')">
+    <div class="materia-avulsa-icon">${meta.icon}</div>
+    <div class="materia-avulsa-nome">${m.nome}</div>
+    <span class="materia-avulsa-badge">${badge}</span>
+    <span class="materia-avulsa-preco">${preco!=null ? 'A partir de R$ '+formatPrecoBR(preco) : ''}</span>
+    <button class="btn-comprar materia-avulsa-btn" onclick="event.stopPropagation(); irParaMateria('${key}')">Comprar</button>
+  </div>`;
+}
+
+function irParaMateria(key){
+  const alvo = document.querySelector(`.subject-card[data-materia-key="${key}"]`);
+  if(!alvo) return;
+  alvo.scrollIntoView({ behavior:'smooth', block:'center' });
+  alvo.style.transition = 'box-shadow .3s';
+  alvo.style.boxShadow = '0 0 0 3px var(--green)';
+  setTimeout(()=>{ alvo.style.boxShadow = ''; }, 1600);
+}
+
+function toggleOfertaModo(semSlug, modo){
+  const wrap = document.querySelector(`[data-oferta-sem="${semSlug}"]`);
+  if(!wrap) return;
+  const pacotesEl = wrap.querySelector('.oferta-pacotes');
+  const avulsasEl = wrap.querySelector('.oferta-avulsas');
+  const btns = wrap.querySelectorAll('.oferta-seg-btn');
+  btns.forEach(b => b.classList.toggle('active', b.dataset.modo === modo));
+  if(modo === 'pacotes'){
+    avulsasEl.classList.remove('oferta-show');
+    pacotesEl.classList.remove('oferta-hide');
+  } else {
+    pacotesEl.classList.add('oferta-hide');
+    avulsasEl.classList.add('oferta-show');
+  }
 }
 
 function renderCatalogo(data){
@@ -1850,6 +1992,15 @@ function renderCatalogo(data){
       if(st.cls !== 'status-disponivel'){
         panelsHtml += `<div class="pacotes-aviso-producao">🚧 Semestre em construção — parte dos materiais ainda está em produção e vai sendo adicionada continuamente após a compra, sem custo extra.</div>`;
       }
+
+      panelsHtml += `<div class="oferta-banner-verde">💡 Você pode comprar matérias individuais ou economizar escolhendo um pacote do semestre.</div>`;
+      panelsHtml += `<div class="oferta-segmented" role="tablist">
+        <button class="oferta-seg-btn active" data-modo="pacotes" onclick="toggleOfertaModo('${sem.slug}','pacotes')">📦 Pacotes</button>
+        <button class="oferta-seg-btn" data-modo="avulsas" onclick="toggleOfertaModo('${sem.slug}','avulsas')">📚 Matérias Avulsas</button>
+      </div>`;
+
+      panelsHtml += `<div data-oferta-sem="${sem.slug}">`;
+      panelsHtml += `<div class="oferta-pacotes">`;
       panelsHtml += `<div class="pacotes-semestre">`;
       pacotesAtivos.forEach(k=>{
         const p = sem.pacotes[k];
@@ -1877,6 +2028,15 @@ function renderCatalogo(data){
           Já garantiu a P1 e só precisa da P2? <a href="#" onclick="abrirCheckout('${p2.label} — ${sem.semestre}º Semestre', ${p2.preco}, '${planoKeyP2}'); return false;">Comprar só o Pacote P2 — R$ ${formatPrecoBR(p2.preco)}</a>
         </div>`;
       }
+      panelsHtml += `</div>`;
+
+      const cardsAvulsas = sem.materias.map(m => renderMateriaAvulsaCard(m, subjectMeta(m.nome))).join('');
+      panelsHtml += `<div class="oferta-avulsas">
+        <h3 class="oferta-avulsas-titulo">Ou compre uma disciplina separadamente</h3>
+        <p class="oferta-avulsas-sub">Ideal para quem precisa reforçar apenas uma matéria.</p>
+        <div class="materias-avulsas-grid">${cardsAvulsas}</div>
+      </div>`;
+      panelsHtml += `</div>`;
     }
 
     const grupos = {};
