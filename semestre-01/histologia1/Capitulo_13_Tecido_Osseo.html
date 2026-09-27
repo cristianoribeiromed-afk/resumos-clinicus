@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap"></noscript>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Histologia I — Tecido Ósseo (P2)</title>
+<style>
+:root{
+  --bg:#0d0f16; --bg-alt:#151a24; --card:#1b2130; --card-hover:#212940; --border:#2a3348;
+  --text:#e6edf3; --text-dim:#8b98ab;
+  --green1:#6bbf59; --green2:#a3d84a; --gold:#ffd166; --red:#ff5c6c; --blue:#4d9fff;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: radial-gradient(circle at 15% 0%, rgba(107,191,89,.10), transparent 40%), radial-gradient(circle at 85% 20%, rgba(163,216,74,.08), transparent 45%), var(--bg);
+  color:var(--text); font-family:'DM Sans','Segoe UI',Arial,sans-serif; line-height:1.55; padding-bottom:60px;
+}
+h1,h2,h3,h4{font-family:'Lora',Georgia,serif; margin:0 0 .4em 0;}
+header{position:sticky; top:0; z-index:100; background:rgba(13,15,22,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px;}
+.header-inner{max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--green1),var(--green2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim);}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{background:var(--card); border:1px solid var(--border); border-radius:999px; padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--green1),var(--green2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d0f16;}
+.progress-wrap{max-width:1100px; margin:10px auto 0; padding:0 20px;}
+.progress-track{height:6px; background:var(--bg-alt); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--green1),var(--green2)); width:0%; transition:width .6s ease;}
+.progress-label{font-size:.7rem; color:var(--text-dim); margin-top:4px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;}
+nav{max-width:1100px; margin:18px auto 0; padding:0 20px 10px; display:flex; gap:8px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:var(--green1) var(--bg-alt);}
+nav::-webkit-scrollbar{height:6px;}
+nav::-webkit-scrollbar-track{background:var(--bg-alt); border-radius:4px;}
+nav::-webkit-scrollbar-thumb{background:var(--green1); border-radius:4px;}
+.tab-btn{background:var(--card); color:var(--text-dim); border:1px solid var(--border); padding:9px 16px; border-radius:10px; font-size:.85rem; font-weight:600; cursor:pointer; transition:.2s; display:flex; align-items:center; gap:6px; flex-shrink:0; white-space:nowrap;}
+.tab-btn:hover{background:var(--card-hover); color:var(--text); transform:translateY(-1px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border-color:transparent;}
+.scroll-hint{max-width:1100px; margin:0 auto; padding:0 20px; display:none; font-size:.72rem; color:var(--text-dim); align-items:center; gap:6px;}
+@media(max-width:700px){ .scroll-hint{display:flex;} }
+main{max-width:1100px; margin:24px auto; padding:0 20px;}
+.section{display:none; animation:fadein .35s ease;}
+.section.active{display:block;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+.card h2{font-size:1.4rem; color:var(--text);}
+.card h3{font-size:1.08rem; margin-top:1.2em;}
+.eyebrow{display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--green2); background:rgba(163,216,74,.1); border:1px solid rgba(163,216,74,.3); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+p{color:#c8d1de;}
+.hero{background:linear-gradient(135deg, rgba(107,191,89,.14), rgba(163,216,74,.10)); border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;}
+.hero h2{font-size:1.8rem; margin-bottom:.3em;}
+.hero p{font-size:1rem; max-width:640px;}
+.analogy{background:var(--bg-alt); border-left:4px solid var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.analogy b{color:var(--gold);}
+.clinical{background:rgba(255,92,108,.08); border-left:4px solid var(--red); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.clinical b{color:var(--red);}
+.mnemo{background:rgba(77,159,255,.1); border-left:4px solid var(--blue); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.mnemo b{color:var(--blue);}
+.criterio{background:rgba(163,216,74,.08); border-left:4px solid var(--green2); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.criterio b{color:var(--green2);}
+.prova{background:rgba(255,209,102,.06); border:1px dashed var(--gold); border-radius:8px; padding:14px 18px; margin:14px 0; font-size:.92rem;}
+.prova b{color:var(--gold);}
+table{width:100%; border-collapse:collapse; margin:14px 0; font-size:.85rem;}
+th,td{border:1px solid var(--border); padding:9px 12px; text-align:left;}
+th{background:var(--bg-alt); color:var(--green2); font-weight:700;}
+tr:nth-child(even){background:rgba(255,255,255,.02);}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:720px){.grid-2{grid-template-columns:1fr;}}
+.mini-card{background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.mini-card h4{color:var(--green2); font-size:.95rem; margin-bottom:6px;}
+.fig{margin:18px 0; text-align:center;}
+.fig img{max-width:100%; border-radius:12px; border:1px solid var(--border);}
+.fig figcaption{font-size:.78rem; color:var(--text-dim); margin-top:8px;}
+.srs-status{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:.8rem; color:var(--text-dim); background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:14px;}
+.flash-controls{display:flex; justify-content:space-between; align-items:center; font-size:.8rem; color:var(--text-dim); margin-bottom:10px;}
+.flash-controls button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:.78rem;}
+.flashcard-wrap{perspective:1000px; margin:10px 0;}
+.flashcard{position:relative; min-height:180px; cursor:pointer;}
+.face{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px; border:1px solid var(--border); background:var(--bg-alt);}
+.face-back{display:none; background:rgba(163,216,74,.08); border-color:var(--green2);}
+.flashcard.flipped .face-front{display:none;}
+.flashcard.flipped .face-back{display:flex;}
+.flash-tag{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--green2); margin-bottom:8px;}
+.review-btns{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
+.review-btns button{flex:1; min-width:80px; padding:10px 6px; border-radius:8px; border:none; font-weight:700; font-size:.78rem; cursor:pointer; color:#0d0f16; display:flex; flex-direction:column; gap:2px; align-items:center;}
+.review-btns button small{font-weight:400; font-size:.68rem; opacity:.75;}
+.btn-again{background:var(--red);} .btn-hard{background:#ffa552;} .btn-good{background:var(--green2);} .btn-easy{background:var(--blue);}
+.nav-flash{display:flex; justify-content:space-between; margin-top:12px;}
+.nav-flash button{background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:.82rem;}
+.quiz-progress{display:flex; justify-content:space-between; font-size:.8rem; color:var(--text-dim); margin-bottom:14px;}
+.quiz-q{font-size:1.05rem; font-weight:600; margin-bottom:14px;}
+.option{display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border); color:var(--text); padding:11px 14px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:.9rem;}
+.option:hover:not(.disabled){border-color:var(--green2);}
+.option.correct{background:rgba(163,216,74,.15); border-color:var(--green2);}
+.option.incorrect{background:rgba(255,92,108,.12); border-color:var(--red);}
+.option.disabled{cursor:default;}
+#quizFeedback{font-size:.85rem; color:var(--text-dim); margin:10px 0;}
+.quiz-nav{margin-top:10px;}
+.btn-primary{background:linear-gradient(135deg,var(--green1),var(--green2)); color:#0d0f16; border:none; padding:10px 20px; border-radius:10px; font-weight:700; cursor:pointer; font-size:.88rem;}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--green2); color:var(--text); padding:10px 20px; border-radius:10px; font-size:.85rem; opacity:0; pointer-events:none; transition:.3s; z-index:200;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="#a3d84a" stroke-width="1.5"/><path d="M8 12h8M12 8v8" stroke="#a3d84a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="logo-text">
+        <h1>Histologia I</h1>
+        <span>Clinicus — Padrão de Excelência</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">🔥</span> <span id="xpTotal">0</span> XP</div>
+      <div class="level-badge">Nv. 1</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span>Progresso do capítulo</span><span id="progressPct">0%</span></div>
+  </div>
+</header>
+
+<nav id="tabNav">
+  <button class="tab-btn active" data-tab="visao">📋 Visão Geral</button>
+  <button class="tab-btn" data-tab="celulas">🦴 Células Ósseas</button>
+  <button class="tab-btn" data-tab="organizacao">🏗️ Compacto e Esponjoso</button>
+  <button class="tab-btn" data-tab="revestimento">📦 Periósteo e Endósteo</button>
+  <button class="tab-btn" data-tab="ossificacao">⚙️ Ossificação</button>
+  <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
+  <button class="tab-btn" data-tab="quiz">✅ Quiz Rápido</button>
+</nav>
+<div class="scroll-hint">⇠ Arraste pra ver todas as abas ⇢</div>
+
+<main>
+
+<!-- ===================== VISÃO GERAL ===================== -->
+<section class="section active" id="tab-visao">
+  <div class="hero">
+    <span class="eyebrow">Capítulo 13 · Histologia I · P2</span>
+    <h2>Tecido Conjuntivo Ósseo</h2>
+    <p>O tecido ósseo é um tipo especializado de tecido conjuntivo denso cuja matriz extracelular está <b>mineralizada</b> — armazena fosfato de cálcio na forma de cristais de <b>hidroxiapatita</b>. É leve, mas extremamente duro e resistente, com certa elasticidade.</p>
+  </div>
+
+  <div class="card">
+    <h3>O que você vai conseguir fazer depois desse capítulo</h3>
+    <ul>
+      <li>Diferenciar as 4 células ósseas — osteoprogenitora, osteoblasto, osteócito e osteoclasto — por origem e função</li>
+      <li>Descrever a organização do osso compacto (Sistema de Havers) e do osso esponjoso (trabéculas)</li>
+      <li>Explicar as funções do periósteo e do endósteo</li>
+      <li>Diferenciar ossificação intramembranosa e endocondral, e descrever as 5 zonas da placa epifisária</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Por que isso cai tanto em prova</h3>
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> a banca adora trocar as funções das 4 células ósseas entre si (quem forma, quem mantém, quem reabsorve) e pedir a sequência exata das 5 zonas da ossificação endocondral, da epífise até o osso definitivo.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CÉLULAS ===================== -->
+<section class="section" id="tab-celulas">
+  <div class="card">
+    <span class="eyebrow">As 4 protagonistas</span>
+    <h2>Células Ósseas</h2>
+
+    <h3>Células Osteoprogenitoras</h3>
+    <p>Derivam de células-tronco mesenquimais da medula óssea. Ficam na parte interna do periósteo, no endósteo e nos canais de Havers — são a fonte de novos osteoblastos, inclusive na vida adulta, durante a cura de fraturas e o remodelamento ósseo.</p>
+
+    <h3>Osteoblastos</h3>
+    <p>Células cúbicas que formam uma camada sobre a superfície do osteoide recém-formado. Sintetizam e secretam a matriz óssea — seu principal produto é o <b>colágeno tipo I</b> (90% das proteínas do osso), além de osteocalcina, sialoproteínas e osteonectina, responsáveis pela calcificação da matriz.</p>
+
+    <h3>Osteócitos</h3>
+    <p>Os osteoblastos que ficam presos na própria matriz que produziram viram osteócitos — localizados em <b>lacunas</b>, com prolongamentos celulares que ocupam os <b>canalículos</b>. Função: manutenção da matriz óssea, detectando inclusive tensão mecânica.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/osso_osteocito_canaliculos.png" alt="Imagem de microscopia eletrônica de varredura mostrando osteócitos com seus longos prolongamentos celulares ocupando os canalículos dentro da matriz óssea mineralizada" loading="lazy">
+      <figcaption>Osteócitos e seus prolongamentos nos canalículos — a rede que mantém a matriz óssea viva e sensível a estímulos mecânicos.</figcaption>
+    </div>
+
+    <h3>Osteoclastos</h3>
+    <p>Origem completamente diferente das outras 3 — vêm de <b>células precursoras hematopoiéticas</b> (linhagem de granulócitos/macrófagos), não do mesênquima ósseo. São células grandes, multinucleadas, especializadas em <b>reabsorção óssea</b> por hidrólise enzimática da matriz mineralizada.</p>
+
+    <div class="criterio">
+      <b>✅ Critério que cai em prova:</b> osteoblasto, osteócito e osteoprogenitora vêm da mesma linhagem mesenquimal — só o osteoclasto tem origem hematopoiética, a mesma dos macrófagos.
+    </div>
+
+    <div class="mnemo">
+      <b>🎵 Mnemônico:</b> "Blasto Bota, Clasto Corta" — osteoBlasto BOTA (deposita) matriz nova; osteoCLASto CORTA (reabsorve) matriz velha. São funções opostas e complementares no remodelamento ósseo.
+    </div>
+
+    <table>
+      <tr><th>Célula</th><th>Origem</th><th>Função</th></tr>
+      <tr><td>Osteoprogenitora</td><td>Mesenquimal (medula óssea)</td><td>Precursora — origina osteoblastos</td></tr>
+      <tr><td>Osteoblasto</td><td>Osteoprogenitora</td><td>Sintetiza e secreta matriz óssea (colágeno tipo I)</td></tr>
+      <tr><td>Osteócito</td><td>Osteoblasto aprisionado na matriz</td><td>Mantém a matriz óssea; detecta tensão mecânica</td></tr>
+      <tr><td>Osteoclasto</td><td>Hematopoiética (granulócitos/macrófagos)</td><td>Reabsorção óssea</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== ORGANIZAÇÃO ===================== -->
+<section class="section" id="tab-organizacao">
+  <div class="card">
+    <span class="eyebrow">Macroscopia e microscopia</span>
+    <h2>Osso Compacto e Osso Esponjoso</h2>
+    <p>O tecido ósseo se organiza nos ossos de 2 maneiras: <b>compacto</b> (cortical) — massa densa, sem espaços visíveis a olho nu — e <b>esponjoso</b> (trabecular) — rede de finas trabéculas entrelaçadas, com espaços entre elas.</p>
+
+    <h3>Osso Compacto — Sistema de Havers</h3>
+    <p>Em ossos longos (ex.: tíbia), a diáfise é formada por osso cortical, organizado em unidades cilíndricas chamadas <b>ósteons (Sistema de Havers)</b>: lamelas ósseas concêntricas ao redor de um canal central (<b>canal de Havers</b>), que contém vasos e nervos. Os canais de Havers se comunicam entre si pelos <b>canais de Volkmann</b>, perpendiculares aos ósteons.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/osso_sistema_havers.jpg" alt="Corte transversal de osso compacto seco mostrando um ósteon (Sistema de Havers) com lamelas ósseas concêntricas ao redor do canal central de Havers, e lacunas de osteócitos dispostas radialmente" loading="lazy">
+      <figcaption>Sistema de Havers — lamelas concêntricas ao redor do canal central, lacunas de osteócitos entre elas.</figcaption>
+    </div>
+
+    <p>Os osteócitos ficam em lacunas entre as lamelas concêntricas, com canalículos radiais conectando-os entre si e ao canal de Havers — é assim que recebem nutrientes, mesmo enterrados na matriz mineralizada.</p>
+
+    <h3>Osso Esponjoso (Trabecular)</h3>
+    <p>Formado por finas trabéculas — espículas de osso laminar entrecruzadas em várias direções, formando um reticulado esponjoso com espaços preenchidos por <b>medula óssea</b>.</p>
+
+    <div class="fig">
+      <img src="/assets/histologia1/osso_esponjoso_trabeculas.jpg" alt="Diagrama esquemático de osso esponjoso (trabecular) mostrando as trabéculas ósseas entrecruzadas e os espaços intertrabeculares contendo medula óssea e vasos sanguíneos" loading="lazy">
+      <figcaption>Osso esponjoso — trabéculas entrecruzadas, espaços com medula óssea e vasos.</figcaption>
+    </div>
+
+    <div class="clinical">
+      <b>🩺 Correlação clínica:</b> entre as trabéculas fica a <b>medula óssea vermelha</b> (tecido hematopoiético), progressivamente substituída por <b>medula óssea amarela</b> (tecido adiposo) do final da vida fetal até a idade adulta — por isso a maior parte da hematopoiese no adulto se concentra em ossos específicos (esterno, ilíaco, vértebras), não em todo o esqueleto.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PERIÓSTEO E ENDÓSTEO ===================== -->
+<section class="section" id="tab-revestimento">
+  <div class="card">
+    <span class="eyebrow">As membranas de revestimento</span>
+    <h2>Periósteo e Endósteo</h2>
+    <p>Exceto nas superfícies articulares (cobertas por cartilagem), toda superfície externa do osso é revestida por tecido conjuntivo vascularizado.</p>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Periósteo (superfície externa)</h4>
+        <p style="margin:0; font-size:.88rem;"><b>Camada externa fibrosa:</b> feixes de colágeno (fibras de Sharpey) que penetram no osso, fixando o periósteo firmemente. <b>Camada interna:</b> tecido conjuntivo frouxo vascularizado, com células osteoprogenitoras e, durante o crescimento, osteoblastos ativos.</p>
+      </div>
+      <div class="mini-card">
+        <h4>Endósteo (superfície interna)</h4>
+        <p style="margin:0; font-size:.88rem;">Membrana bem mais fina que o periósteo — uma única camada de células de revestimento ósseo (osteogênicas), cobrindo trabéculas, cavidades medulares e os canais de Havers/Volkmann. Também tem células osteoprogenitoras.</p>
+      </div>
+    </div>
+
+    <div class="criterio">
+      <b>✅ Função principal de ambos:</b> nutrição do tecido ósseo e fornecimento de novos osteoblastos para crescimento e reparo — especialmente relevante em caso de fratura, quando as células osteoprogenitoras se dividem e formam osteoblastos novos.
+    </div>
+  </div>
+</section>
+
+<!-- ===================== OSSIFICAÇÃO ===================== -->
+<section class="section" id="tab-ossificacao">
+  <div class="card">
+    <span class="eyebrow">Como o osso se forma</span>
+    <h2>Ossificação Intramembranosa × Endocondral</h2>
+
+    <table>
+      <tr><th>Tipo</th><th>Mecanismo</th><th>Onde ocorre</th></tr>
+      <tr><td>Intramembranosa</td><td>Osso se forma diretamente dentro de uma membrana de tecido conjuntivo, sem molde cartilaginoso prévio</td><td>Ossos planos do crânio, face, mandíbula, clavícula</td></tr>
+      <tr><td>Endocondral</td><td>Um molde de cartilagem hialina é progressivamente substituído por tecido ósseo, a partir de centros de ossificação</td><td>Ossos das extremidades e vértebras</td></tr>
+    </table>
+
+    <div class="mnemo">
+      <b>🎵 Mnemônico:</b> "Intramembranosa é direto, Endocondral tem molde" — a intramembranosa forma osso "do zero" dentro do tecido conjuntivo; a endocondral precisa primeiro construir um molde de cartilagem, pra depois substituí-lo.
+    </div>
+
+    <h3>As 5 Zonas da Ossificação Endocondral (placa epifisária)</h3>
+    <p>A partir da epífise, em direção à diáfise, a ossificação endocondral progride em 5 zonas sequenciais:</p>
+    <ol>
+      <li><b>Zona de cartilagem de reserva</b> — condrócitos pequenos, dispersos, sem atividade proliferativa evidente</li>
+      <li><b>Zona de proliferação</b> — condrócitos se dividem, organizados em colunas</li>
+      <li><b>Zona de hipertrofia</b> — condrócitos aumentam muito de volume</li>
+      <li><b>Zona de calcificação da cartilagem</b> — a matriz cartilaginosa ao redor dos condrócitos hipertrofiados se calcifica</li>
+      <li><b>Zona de eliminação da cartilagem e depósito de osso</b> — os condrócitos morrem, vasos invadem o espaço, e osteoblastos depositam osso sobre os restos calcificados de cartilagem</li>
+    </ol>
+
+    <div class="fig">
+      <img src="/assets/histologia1/osso_ossificacao_endocondral_zonas.jpg" alt="Corte histológico de placa epifisária mostrando, em sequência, a cartilagem de reserva, a zona de proliferação em colunas, a zona de hipertrofia dos condrócitos, a linha de calcificação e o tecido ósseo trabecular recém-formado" loading="lazy">
+      <figcaption>Placa epifisária — sequência das zonas da ossificação endocondral, da cartilagem de reserva (topo) ao osso recém-formado (base).</figcaption>
+    </div>
+
+    <div class="prova">
+      <b>📌 Cobrança clássica:</b> decore a ORDEM das 5 zonas — reserva → proliferação → hipertrofia → calcificação → eliminação/depósito ósseo. É exatamente essa sequência que mantém o crescimento longitudinal do osso durante a infância/adolescência, até o fechamento da placa epifisária.
+    </div>
+
+    <h3>Reparo de Fratura</h3>
+    <p>Após uma fratura, as células osteoprogenitoras do periósteo e do endósteo se dividem e originam novos osteoblastos — o mesmo mecanismo celular usado no crescimento normal é reativado para reconstruir o osso lesado.</p>
+  </div>
+</section>
+
+<!-- ===================== FLASHCARDS ===================== -->
+<section class="section" id="tab-flashcards">
+  <div class="card">
+    <h2>🎴 Flashcards — Repetição Espaçada</h2>
+    <div class="srs-status" id="srsStatus">Carregando...</div>
+    <div class="flash-controls">
+      <span>Cartão <b id="fcIndex">1</b> / <span id="fcTotal">0</span> · Dominados: <b id="fcMastered">0</b></span>
+      <button onclick="shuffleCards()">🔀 Misturar</button>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="face face-front">
+          <div><span class="flash-tag" id="fcTag">—</span><div id="fcFront">Carregando...</div></div>
+        </div>
+        <div class="face face-back">
+          <div><span class="flash-tag">Resposta</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="review-btns">
+      <button class="btn-again" onclick="reviewCurrentCard(0)">😵 De novo<small id="prevAgain">1d</small></button>
+      <button class="btn-hard" onclick="reviewCurrentCard(1)">😓 Difícil<small id="prevHard">1d</small></button>
+      <button class="btn-good" onclick="reviewCurrentCard(2)">🙂 Bem<small id="prevGood">3d</small></button>
+      <button class="btn-easy" onclick="reviewCurrentCard(3)">😎 Fácil<small id="prevEasy">6d</small></button>
+    </div>
+    <div class="nav-flash">
+      <button onclick="prevCard()">← Anterior</button>
+      <button onclick="nextCard()">Próximo →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section class="section" id="tab-quiz">
+  <div class="card">
+    <h2>✅ Quiz Rápido</h2>
+    <div id="quizArea"></div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const tabs = document.querySelectorAll('.tab-btn');
+const sections = document.querySelectorAll('.section');
+function goToTab(name){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  sections.forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  if(name==='quiz' && quizIndex===0 && quizLog.length===0) initQuiz();
+  if(name==='flashcards') initFlashcards();
+  updateProgress();
+}
+tabs.forEach(t=>t.addEventListener('click', ()=>goToTab(t.dataset.tab)));
+
+let xp = 0;
+const seenTabs = new Set(['visao']);
+function addXP(n, motivo){
+  xp += n;
+  document.getElementById('xpTotal').textContent = xp;
+  if(motivo) showToast('+' + n + ' XP — ' + motivo);
+}
+function updateProgress(){
+  const activo = document.querySelector('.section.active');
+  if(activo) seenTabs.add(activo.id.replace('tab-',''));
+  const pct = Math.round((seenTabs.size / tabs.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+const CHAPTER_ID = 'histo1_cap13_tecido_osseo';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function simulateReview(state, quality){
+  let s = Object.assign({}, state);
+  if(quality === 0){
+    s.reps = 0; s.interval = 1; s.ef = Math.max(1.3, s.ef - 0.2);
+  } else {
+    s.reps += 1;
+    if(s.reps === 1) s.interval = 1;
+    else if(s.reps === 2) s.interval = 3;
+    else s.interval = Math.round(s.interval * s.ef);
+    if(quality === 1) s.ef = Math.max(1.3, s.ef - 0.15);
+    if(quality === 3) s.ef = s.ef + 0.15;
+  }
+  return s;
+}
+function reviewCard(id, quality){
+  const data = loadSRS();
+  const s = simulateReview(getCardState(data, id), quality);
+  s.due = Date.now() + s.interval * DAY_MS;
+  s.lastReview = Date.now();
+  data[id] = s;
+  saveSRS(data);
+  return s;
+}
+function isDue(data, id){ const s = data[id]; if(!s) return true; return s.due <= Date.now(); }
+
+const flashData = [
+  {tag:'Células', front:'Qual célula óssea tem origem hematopoiética, diferente das outras 3?', back:'O osteoclasto — vem de células precursoras de granulócitos/macrófagos, não da linhagem mesenquimal.'},
+  {tag:'Células', front:'Qual é o principal produto sintetizado pelos osteoblastos maduros?', back:'Colágeno tipo I — cerca de 90% das proteínas do osso.'},
+  {tag:'Células', front:'Onde ficam os osteócitos, e como se conectam entre si?', back:'Em lacunas dentro da matriz óssea, com prolongamentos celulares que ocupam os canalículos, conectando um osteócito a outros e ao canal de Havers.'},
+  {tag:'Células', front:'Qual é a função do osteoclasto?', back:'Reabsorção óssea, por hidrólise enzimática da matriz mineralizada.'},
+  {tag:'Organização', front:'Como se chama a unidade estrutural cilíndrica do osso compacto, com lamelas concêntricas ao redor de um canal central?', back:'Ósteon, ou Sistema de Havers.'},
+  {tag:'Organização', front:'O que conecta os canais de Havers entre si?', back:'Os canais de Volkmann, perpendiculares aos ósteons.'},
+  {tag:'Organização', front:'O que preenche os espaços entre as trabéculas do osso esponjoso?', back:'Medula óssea (vermelha, hematopoiética, progressivamente substituída por amarela/adiposa do final da vida fetal à idade adulta).'},
+  {tag:'Periósteo/Endósteo', front:'Qual estrutura fixa firmemente o periósteo ao osso subjacente?', back:'As fibras de Sharpey, feixes de colágeno da camada externa do periósteo que penetram no osso.'},
+  {tag:'Ossificação', front:'Qual tipo de ossificação forma os ossos planos do crânio, sem molde cartilaginoso prévio?', back:'Ossificação intramembranosa.'},
+  {tag:'Ossificação', front:'Qual tipo de ossificação forma os ossos das extremidades e vértebras, a partir de um molde de cartilagem?', back:'Ossificação endocondral.'},
+  {tag:'Ossificação', front:'Qual é a ordem correta das 5 zonas da ossificação endocondral, da epífise em direção à diáfise?', back:'Cartilagem de reserva → proliferação → hipertrofia → calcificação da cartilagem → eliminação da cartilagem e depósito de osso.'},
+];
+let fcOrder = [], fcPos = 0, fcMastered = 0;
+function initFlashcards(){
+  if(fcOrder.length === 0){ fcOrder = flashData.map((_,i)=>i); }
+  document.getElementById('fcTotal').textContent = fcOrder.length;
+  updateSrsStatus();
+  renderCard();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashData.filter((_,i) => isDue(data, 'fc'+i)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    '📅 <b>' + dueCount + '</b> card' + (dueCount===1?'':'s') + ' pra revisar hoje &nbsp;·&nbsp; ✅ <b>' + totalReviewed + '</b>/' + flashData.length + ' já iniciados';
+}
+function renderCard(){
+  const id = 'fc' + fcOrder[fcPos];
+  const card = flashData[fcOrder[fcPos]];
+  document.getElementById('fcTag').textContent = card.tag;
+  document.getElementById('fcFront').textContent = card.front;
+  document.getElementById('fcBack').textContent = card.back;
+  document.getElementById('fcIndex').textContent = fcPos + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcMastered').textContent = fcMastered;
+  const data = loadSRS();
+  const estado = getCardState(data, id);
+  [0,1,2,3].forEach((q, idx)=>{
+    const sim = simulateReview(estado, q);
+    const el = document.getElementById(['prevAgain','prevHard','prevGood','prevEasy'][idx]);
+    el.textContent = sim.interval + 'd';
+  });
+}
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function nextCard(){ fcPos = (fcPos + 1) % fcOrder.length; renderCard(); }
+function prevCard(){ fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length; renderCard(); }
+function shuffleCards(){
+  for(let i = fcOrder.length -1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]]; }
+  fcPos = 0; renderCard(); showToast('Cartões misturados');
+}
+function reviewCurrentCard(quality){
+  const id = 'fc' + fcOrder[fcPos];
+  const s = reviewCard(id, quality);
+  const labels = ['De novo','Difícil','Bem','Fácil'];
+  const xpMap = [1,2,4,6];
+  addXP(xpMap[quality], 'Flashcard: ' + labels[quality] + ' (volta em ' + s.interval + 'd)');
+  if(quality >= 2) fcMastered++;
+  updateSrsStatus();
+  nextCard();
+}
+
+const quizData = [{"q": "Qual célula óssea tem origem hematopoiética, diferente das demais?", "options": ["Osteoblasto", "Osteócito", "Célula osteoprogenitora", "Osteoclasto"], "correct": 3, "exp": "O osteoclasto vem de células precursoras de granulócitos/macrófagos da medula óssea — as outras 3 vêm da linhagem mesenquimal."}, {"q": "Qual é o principal produto sintetizado pelos osteoblastos maduros?", "options": ["Colágeno tipo I", "Colágeno tipo II", "Elastina", "Ácido hialurônico"], "correct": 0, "exp": "O colágeno tipo I representa cerca de 90% das proteínas do osso, sintetizado pelos osteoblastos maduros."}, {"q": "Onde ficam localizados os osteócitos na matriz óssea?", "options": ["Livres na medula óssea", "Dentro dos canais de Havers", "Exclusivamente no periósteo", "Em lacunas, com prolongamentos nos canalículos"], "correct": 3, "exp": "Os osteócitos ocupam lacunas dentro da matriz mineralizada, com prolongamentos celulares que percorrem os canalículos."}, {"q": "Qual é a função principal do osteoclasto?", "options": ["Reabsorção óssea por hidrólise enzimática", "Síntese de matriz óssea nova", "Detecção de tensão mecânica", "Formação de cartilagem"], "correct": 0, "exp": "Osteoclastos são especializados em reabsorção óssea, degradando a matriz mineralizada — função oposta à dos osteoblastos."}, {"q": "Como se chama a unidade estrutural cilíndrica do osso compacto, com lamelas concêntricas ao redor de um canal central vascularizado?", "options": ["Trabécula", "Endósteo", "Ósteon (Sistema de Havers)", "Periósteo"], "correct": 2, "exp": "O ósteon (Sistema de Havers) é a unidade estrutural do osso compacto, com lamelas concêntricas ao redor do canal de Havers."}, {"q": "O que conecta os canais de Havers entre si, permitindo comunicação entre ósteons vizinhos?", "options": ["Canalículos", "Canais de Volkmann", "Lacunas", "Trabéculas"], "correct": 1, "exp": "Os canais de Volkmann, perpendiculares aos ósteons, conectam os canais de Havers entre si."}, {"q": "O que caracteriza o osso esponjoso (trabecular)?", "options": ["Massa compacta sem espaços visíveis", "Trabéculas entrecruzadas, com espaços preenchidos por medula óssea", "Ausência total de osteócitos", "Presença exclusiva nos ossos do crânio"], "correct": 1, "exp": "O osso esponjoso é formado por trabéculas entrecruzadas, com espaços intertrabeculares ocupados por medula óssea."}, {"q": "Qual estrutura fixa firmemente o periósteo ao osso subjacente?", "options": ["Osteoclastos", "Canalículos", "Fibras de Sharpey", "Lamelas circunferenciais"], "correct": 2, "exp": "As fibras de Sharpey são feixes de colágeno da camada externa do periósteo que penetram no osso, fixando-o firmemente."}, {"q": "Qual tipo de ossificação forma diretamente os ossos planos do crânio, sem molde cartilaginoso prévio?", "options": ["Ossificação endocondral", "Ossificação intramembranosa", "Ossificação intersticial", "Ossificação apositiva exclusiva"], "correct": 1, "exp": "A ossificação intramembranosa forma osso diretamente dentro de uma membrana de tecido conjuntivo, sem passar por um molde de cartilagem — típica dos ossos planos do crânio e face."}, {"q": "Na ossificação endocondral, qual é a ordem correta das zonas, da epífise em direção à diáfise?", "options": ["Cartilagem de reserva → proliferação → hipertrofia → calcificação → eliminação e depósito ósseo", "Calcificação → proliferação → reserva → hipertrofia → depósito ósseo", "Depósito ósseo → hipertrofia → reserva → proliferação → calcificação", "Proliferação → reserva → calcificação → hipertrofia → depósito ósseo"], "correct": 0, "exp": "A sequência correta é: cartilagem de reserva → proliferação (condrócitos em colunas) → hipertrofia → calcificação da matriz → eliminação da cartilagem com depósito de osso."}];
+let quizIndex = 0, quizScore = 0, quizAnswered = false, quizLog = [];
+function initQuiz(){ quizIndex = 0; quizScore = 0; quizLog = []; renderQuiz(); }
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIndex >= quizData.length){ renderQuizResult(); return; }
+  const item = quizData[quizIndex];
+  quizAnswered = false;
+  let html = '<div class="quiz-progress"><span>Questão ' + (quizIndex+1) + ' / ' + quizData.length + '</span><span>Pontos: ' + quizScore + '</span></div>';
+  html += '<div class="quiz-q">' + item.q + '</div>';
+  item.options.forEach((opt, i)=>{ html += '<button class="option" data-idx="'+i+'" onclick="answerQuiz(this,'+i+')">' + opt + '</button>'; });
+  html += '<div id="quizFeedback"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="quizNextBtn" disabled onclick="nextQuiz()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+function answerQuiz(btn, idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizData[quizIndex];
+  const options = document.querySelectorAll('.option');
+  options.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  options[item.correct].classList.add('correct');
+  if(correct){ quizScore++; addXP(5); }
+  document.getElementById('quizFeedback').textContent = item.exp;
+  document.getElementById('quizNextBtn').disabled = false;
+  quizLog.push(correct);
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function renderQuizResult(){
+  const pct = Math.round((quizScore / quizData.length) * 100);
+  document.getElementById('quizArea').innerHTML =
+    '<div style="text-align:center; padding:20px 0;">' +
+    '<h3>Resultado: ' + quizScore + ' / ' + quizData.length + ' (' + pct + '%)</h3>' +
+    '<p style="color:var(--text-dim);">' + (pct>=70 ? 'Muito bem! Você domina o essencial do capítulo.' : 'Vale revisar as abas de Ossificação e Células Ósseas antes de tentar de novo.') + '</p>' +
+    '<button class="btn-primary" onclick="initQuiz()">Tentar novamente</button>' +
+    '</div>';
+}
+
+updateProgress();
+</script>
+
+</body>
+</html>
