@@ -207,3 +207,16 @@ Isso é um problema sério de qualidade de avaliação -- um aluno que percebe o
 **Corrigido**: reorganizadas as alternativas de cada questão (trocando a POSIÇÃO do texto certo, não só o índice), com o cuidado de também realinhar a analise/analise_letters no formato de Banco de Questões (pra explicação de cada alternativa errada continuar apontando pra alternativa certa depois da troca -- verificado manualmente numa amostra antes de publicar).
 
 **Regra nova, valendo a partir de agora**: ao escrever qualquer Quiz Rápido ou Banco de Questões, a posição da resposta certa precisa variar entre as questões -- nunca redigir todas com a certa na mesma letra, e idealmente conferir a distribuição (contagem por letra) antes de publicar, não confiar que "vai dar variado sozinho".
+
+
+## 10. Esclarecimento: "Histologia Teórica" = pasta `histologia1` (17/07/2026)
+
+📝 O Dr. Cristiano se referiu ao material como sendo "para P2 de Histologia Teórica" -- confirmado que essa é a mesma disciplina já em `semestre-01/histologia1/` (existe uma pasta irmã `histologia1-pratica/` pro componente prático, por isso a distinção). Não é uma disciplina nova.
+
+## 11. Capítulos 12 e 13 criados: Cartilaginoso e Ósseo (17/07/2026)
+
+🏁 **Capítulo 12 — Tecido Cartilaginoso** (hialino, elástico, fibroso) e **Capítulo 13 — Tecido Ósseo** (células ósseas, Sistema de Havers, periósteo/endósteo, ossificação intramembranosa/endocondral) publicados, com imagem real curada em cada um (3 e 4 imagens respectivamente).
+
+⚠️ **O material enviado (`Tejidos.zip`) veio com 3 arquivos duplicados** dos já processados nos Capítulos 8-10 (Epitélio, Conectivo, Adiposo) -- só os 2 novos (Cartilaginoso, Ósseo) foram processados, evitando duplicar conteúdo já publicado.
+
+🔴 **Achado sério, repetido:** o padrão de gabarito enviesado (regra criada na seção 9) **voltou a acontecer nos dois capítulos novos** -- Cap. 12 saiu com 8 de 10 respostas em "B", Cap. 13 também com 8 de 10 em "B", antes da correção. Isso confirma que a regra escrita não é suficiente sozinha -- só ser lembrada quando alguém audita depois. **Ação tomada:** reaproveitado o script de correção (`fix_gabarito.py`) já criado na sessão anterior, aplicado nos dois antes de publicar. **Ainda pendente:** incorporar essa verificação como parte automática do processo de escrita de quiz, não só uma auditoria posterior -- do contrário, o mesmo erro tende a se repetir no próximo capítulo.
