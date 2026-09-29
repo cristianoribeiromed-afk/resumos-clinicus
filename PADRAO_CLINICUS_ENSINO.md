@@ -220,3 +220,28 @@ Isso é um problema sério de qualidade de avaliação -- um aluno que percebe o
 ⚠️ **O material enviado (`Tejidos.zip`) veio com 3 arquivos duplicados** dos já processados nos Capítulos 8-10 (Epitélio, Conectivo, Adiposo) -- só os 2 novos (Cartilaginoso, Ósseo) foram processados, evitando duplicar conteúdo já publicado.
 
 🔴 **Achado sério, repetido:** o padrão de gabarito enviesado (regra criada na seção 9) **voltou a acontecer nos dois capítulos novos** -- Cap. 12 saiu com 8 de 10 respostas em "B", Cap. 13 também com 8 de 10 em "B", antes da correção. Isso confirma que a regra escrita não é suficiente sozinha -- só ser lembrada quando alguém audita depois. **Ação tomada:** reaproveitado o script de correção (`fix_gabarito.py`) já criado na sessão anterior, aplicado nos dois antes de publicar. **Ainda pendente:** incorporar essa verificação como parte automática do processo de escrita de quiz, não só uma auditoria posterior -- do contrário, o mesmo erro tende a se repetir no próximo capítulo.
+
+---
+
+## 12. Padrão P1 × P2 unificado (29/09) — descoberto pelo usuário, corrigido
+
+🔴 **Achado do usuário:** ao comparar visualmente, notou que os capítulos de P2 de Histologia I (Cap. 8-13) estavam num "padrão antigo" — um template mais simples, sem o shell de navegação do site (header/breadcrumb/sidebar) e sem 4 dos 7 componentes que os capítulos de P1 têm: **Casos Clínicos, Vídeo, Atlas de Histologia e Banco de Questões Comentadas** (só tinham Guia de Estudo, dividido em sub-abas, + Flashcards + Quiz Rápido). Pergunta que expôs o problema: *"como que vamos ter P1 de um formato e P2 de outro?"*
+
+**Causa:** os capítulos de P2 foram criados numa sessão anterior a partir do zip de PPTX, usando um template mais simples e independente (com header/XP/tabs próprios, sem integração ao shell do site) — nunca foram alinhados à estrutura completa que P1 já tinha adotado (herdada do trabalho em Fisiologia II).
+
+**Padrão confirmado com o usuário — todo capítulo "completo" tem 7 abas, nesta ordem:**
+1. 📋 Guia de Estudo (conteúdo consolidado num scroll único, não dividido em sub-abas por tópico)
+2. 🩺 Casos Clínicos (caso progressivo, 3 níveis: Fundamental → Intermediário → Aplicação Integrada)
+3. 🎥 Vídeo (reaproveita o motor já existente — busca `/videos.json` pelo `CHAPTER_ID`; se não houver entrada, a aba se esconde sozinha — não precisa reconstruir nada quando o professor mandar links, só adicionar a entrada no `videos.json`)
+4. 🗺️ Atlas de Histologia (links reais de acervos públicos — UFF `atlashistologicommo.uff.br` e UNESP FOA `foa.unesp.br`, um link por capítulo, específico do tecido)
+5. 🃏 Flashcards
+6. ✅ Banco de Questões Comentadas (10 questões, formato "bank" completo com tema/nível/objetivo/análise/conceito/pegadinha/dica — **diferentes** das do Quiz Rápido, não repetidas)
+7. 🎮 Quiz Rápido
+
+Mais o shell completo do site (header/breadcrumb/progresso/sidebar/modo leitura/prev-next) e o registro em `clinicus_jornada_last_visited`/`clinicus_jornada_srs_registry`, que os capítulos de P2 nunca tinham — por isso também não apareciam na Minha Jornada corretamente.
+
+✅ **Capítulo 8 (Especializações do Epitélio) já reconstruído nesse padrão completo** — commit `6260756`. Preservado 100% do conteúdo original (texto, imagens, tabelas, flashcards, quiz), só adicionando o que faltava.
+
+📝 **Ação em andamento:** refazer os Capítulos 9-13 no mesmo padrão, um de cada vez. O usuário vai mandar os links de vídeo depois — cada capítulo já sai preparado para recebê-los sem precisar editar o HTML de novo (só adicionar a entrada em `/videos.json`).
+
+🔑 **Gabarito do Banco de Questões do Cap. 8 já nasceu balanceado** (A:3 B:2 C:2 D:3), calculado durante a escrita via permutação programática das alternativas — não corrigido depois. Aplicar a mesma técnica nos próximos capítulos.
