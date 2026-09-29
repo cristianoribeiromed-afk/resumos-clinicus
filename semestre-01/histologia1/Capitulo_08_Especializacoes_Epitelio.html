@@ -145,33 +145,103 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
 
 .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--green2); color:var(--text); padding:10px 20px; border-radius:10px; font-size:.85rem; opacity:0; pointer-events:none; transition:.3s; z-index:200;}
 .toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+
+/* ===== Banco de Questões / Casos Clínicos (padrão Clinicus) ===== */
+.qitem{background:var(--bg-alt);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:var(--card);border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:var(--card-hover);}
+.qitem .opts li.correct{background:rgba(163,216,74,.18);border-color:var(--green2);color:var(--green2);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(255,92,108,.18);border-color:var(--red);color:var(--red);}
+.reveal-btn{background:var(--green2);color:#0d0f16;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:var(--bg-alt);border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--green2);}
+
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--bg-alt);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:var(--card-hover);}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--bg-alt);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0a0c12;border-left:3px solid var(--green2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--green2);color:#0d0f16;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0a0c12;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
 </style>
-<style>
-.p2-nav-strip{position:sticky;top:0;z-index:50;background:#11141d;border-bottom:1px solid #2a3348;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:'DM Sans',system-ui,sans-serif;}
-.p2-nav-strip a{color:#c7ccdb;text-decoration:none;font-size:.82rem;}
-.p2-nav-back{font-weight:700;color:#a3d84a!important;white-space:nowrap;}
-.p2-nav-crumb{color:#7d8399;font-size:.78rem;white-space:nowrap;}
-.p2-nav-chapters{display:flex;gap:4px;overflow-x:auto;flex:1;min-width:0;}
-.p2-nav-chapters a{padding:5px 10px;border-radius:999px;background:#1b2130;border:1px solid #2a3348;white-space:nowrap;flex-shrink:0;}
-.p2-nav-chapters a.is-current{background:#a3d84a;color:#11141d!important;border-color:#a3d84a;font-weight:700;}
-.p2-nav-chapters a:hover{border-color:#a3d84a;}
-@media(max-width:640px){.p2-nav-crumb{display:none;}}
-</style>
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
 </head>
 <body>
-
-<div class="p2-nav-strip">
-  <a class="p2-nav-back" href="/jornada/">← Minha Jornada</a>
-  <span class="p2-nav-crumb">Histología I · P2</span>
-  <div class="p2-nav-chapters">
-    <a class="is-current" href="/semestre-01/histologia1/Capitulo_08_Especializacoes_Epitelio.html">Cap. 8</a>
-    <a class="" href="/semestre-01/histologia1/Capitulo_09_Tecido_Conectivo.html">Cap. 9</a>
-    <a class="" href="/semestre-01/histologia1/Capitulo_10_Tecido_Adiposo.html">Cap. 10</a>
-    <a class="" href="/semestre-01/histologia1/Capitulo_11_Tecido_Sanguineo.html">Cap. 11</a>
-    <a class="" href="/semestre-01/histologia1/Capitulo_12_Tecido_Cartilaginoso.html">Cap. 12</a>
-    <a class="" href="/semestre-01/histologia1/Capitulo_13_Tecido_Osseo.html">Cap. 13</a>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
   </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
 </div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Histología I</a><span class="sep">›</span>
+  <span>P2</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Histología I</span><span>8 de 13</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:62%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Histología I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_01_Introducao_Celula.html"><span class="ico">🧫</span><span>Capítulo 1 — Introdução à Histologia e a Célula</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_02_Tecnicas_Histologicas.html"><span class="ico">🧫</span><span>Capítulo 2 — Técnicas Histológicas e Métodos de Coloração</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_03_Tecido_Epitelial.html"><span class="ico">🧫</span><span>Capítulo 3 — Tecido Epitelial: Características e Classificação</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_04_Especializacoes_Membrana_Basal.html"><span class="ico">🧫</span><span>Capítulo 4 — Especializações da Superfície Celular e Membrana Basal</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_05_Glandulas_Epiteliais.html"><span class="ico">🧫</span><span>Capítulo 5 — Glândulas Epiteliais</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_06_Transicoes_Folhetos_Embrionarios.html"><span class="ico">🧫</span><span>Capítulo 6 — Transições Epiteliais, Endotélio/Mesotélio/Urotélio e Folhetos Embrionários</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_07_Tecido_Conectivo_PPD.html"><span class="ico">🧫</span><span>Capítulo 7 — Tecido Conectivo Propriamente Dito</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Revisao_Rapida_P1.html"><span class="ico">🧫</span><span>📋 Revisão Rápida P1 (Interativa)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/simulado_histologia1_p1.html"><span class="ico">🎯</span><span>Simulado P1 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span></a>
+    <h4>P2</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-01/histologia1/Capitulo_08_Especializacoes_Epitelio.html" data-novo="1"><span class="ico">🧫</span><span>Capítulo 8 — Especializações do Epitélio</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_09_Tecido_Conectivo.html"><span class="ico">🧫</span><span>Capítulo 9 — Tecido Conectivo</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_10_Tecido_Adiposo.html"><span class="ico">🧫</span><span>Capítulo 10 — Tecido Conectivo Especializado: Adiposo</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_11_Tecido_Sanguineo.html"><span class="ico">🧫</span><span>Capítulo 11 — Tecido Sanguíneo</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_12_Tecido_Cartilaginoso.html"><span class="ico">🧫</span><span>Capítulo 12 — Tecido Cartilaginoso</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/histologia1/Capitulo_13_Tecido_Osseo.html"><span class="ico">🧫</span><span>Capítulo 13 — Tecido Ósseo</span></a>
+    <h4>Final</h4>
+    <a class="cmed-nav-item" href="/semestre-01/final/histologia1_teorica_p1.html"><span class="ico">🧫</span><span>Teórica P1</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/histologia1_teorica_p2.html"><span class="ico">🧫</span><span>Teórica P2</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/tabela_excelencia_histologia.html"><span class="ico">🧫</span><span>Tabela de Excelência</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/final/simulado_top_histologia.html"><span class="ico">🎯</span><span>Simulado Top — 30 Questões (MC + V/F + Associar)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+<div class="wrap">
 <header>
   <div class="header-inner">
     <div class="logo">
@@ -190,32 +260,23 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     <div class="progress-label"><span>Progresso do capítulo</span><span id="progressPct">0%</span></div>
   </div>
-  <div class="trilha">
-    <span class="etapa ativa" data-goto="visao">Visão Geral</span><span class="seta">→</span>
-    <span class="etapa" data-goto="apical">Domínio Apical</span><span class="seta">→</span>
-    <span class="etapa" data-goto="uniao">Complexo de União</span><span class="seta">→</span>
-    <span class="etapa" data-goto="basal">Domínio Basal</span><span class="seta">→</span>
-    <span class="etapa" data-goto="glandulas">Glândulas</span><span class="seta">→</span>
-    <span class="etapa" data-goto="flashcards">Flashcards</span><span class="seta">→</span>
-    <span class="etapa" data-goto="quiz">Quiz</span>
-  </div>
 </header>
 
 <nav id="tabNav">
-  <button class="tab-btn active" data-tab="visao">📋 Visão Geral</button>
-  <button class="tab-btn" data-tab="apical">🧬 Domínio Apical</button>
-  <button class="tab-btn" data-tab="uniao">🔗 Complexo de União</button>
-  <button class="tab-btn" data-tab="basal">🧱 Domínio Basal</button>
-  <button class="tab-btn" data-tab="glandulas">💧 Glândulas</button>
+  <button class="tab-btn active" data-tab="guia">📋 Guia de Estudo</button>
+  <button class="tab-btn" data-tab="casos">🩺 Casos Clínicos</button>
+  <button class="tab-btn" data-tab="video">🎥 Vídeo</button>
+  <button class="tab-btn" data-tab="atlas">🗺️ Atlas de Histologia</button>
   <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
-  <button class="tab-btn" data-tab="quiz">✅ Quiz Rápido</button>
+  <button class="tab-btn" data-tab="banco">✅ Banco de Questões</button>
+  <button class="tab-btn" data-tab="quiz">🎮 Quiz Rápido</button>
 </nav>
 <div class="scroll-hint">⇠ Arraste pra ver todas as abas ⇢</div>
 
 <main>
 
 <!-- ===================== VISÃO GERAL ===================== -->
-<section class="section active" id="tab-visao">
+<section class="section active" id="tab-guia">
   <div class="hero">
     <span class="eyebrow">Capítulo 8 · Histologia I · P2</span>
     <h2>Especializações do Epitélio</h2>
@@ -239,13 +300,10 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
       <b>📌 Cobrança clássica:</b> bancas adoram trocar os nomes dos componentes do complexo de união entre si (zônula de oclusão × zônula de adesão × mácula de adesão), ou pedir pra você associar uma estrutura (cílio, microvilosidade) a um epitélio específico (respiratório, intestinal). Dominar a <b>ordem apicobasal</b> do complexo de união é meio caminho andado.
     </div>
   </div>
-</section>
 
-<!-- ===================== DOMÍNIO APICAL ===================== -->
-<section class="section" id="tab-apical">
   <div class="card">
     <span class="eyebrow">Polaridade celular</span>
-    <h2>O domínio apical</h2>
+    <h2>1️⃣ O domínio apical</h2>
     <p>Chama-se domínio apical a face da célula epitelial voltada pra luz de um órgão oco ou pra superfície externa. É aqui que ficam as especializações que aumentam a superfície de contato ou que movimentam substâncias — cílios, microvilosidades e, mais raramente no ser humano adulto, flagelos.</p>
 
     <div class="analogy">
@@ -282,13 +340,10 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
       <tr><td>Exemplo no corpo</td><td>Epitélio respiratório</td><td>Epitélio intestinal, túbulo renal</td><td>Espermatozoide</td></tr>
     </table>
   </div>
-</section>
 
-<!-- ===================== COMPLEXO DE UNIÃO ===================== -->
-<section class="section" id="tab-uniao">
   <div class="card">
     <span class="eyebrow">Domínio lateral</span>
-    <h2>Complexo de União</h2>
+    <h2>2️⃣ Complexo de União</h2>
     <p>Na face lateral das células epiteliais, três estruturas se organizam numa sequência apicobasal fixa — juntas, garantem que o epitélio funcione como uma barreira coesa e seletiva, não como um conjunto de células soltas.</p>
 
     <div class="fig">
@@ -321,13 +376,10 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
       <b>🎵 Mnemônico da ordem apicobasal:</b> "<b>O</b>culta, <b>A</b>traca, <b>D</b>esmossoma" — <b>O</b>clusão (mais no topo) → <b>A</b>desão (zônula) → <b>D</b>esmossomo (mais embaixo).
     </div>
   </div>
-</section>
 
-<!-- ===================== DOMÍNIO BASAL ===================== -->
-<section class="section" id="tab-basal">
   <div class="card">
     <span class="eyebrow">Base da célula epitelial</span>
-    <h2>Domínio Basal</h2>
+    <h2>3️⃣ Domínio Basal</h2>
     <p>A superfície basal é onde o epitélio se ancora no tecido conjuntivo subjacente. Duas estruturas fazem esse trabalho: a lâmina basal (uma "esteira" extracelular) e o hemidesmossomo (o "prego" que fixa a célula nela).</p>
 
     <h3>Lâmina Basal</h3>
@@ -340,13 +392,10 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
       <b>📎 Exemplo prático:</b> quando você tem uma bolha na pele por atrito (fricção do sapato, por exemplo), o plano de clivagem costuma passar exatamente pela lâmina lúcida — o hemidesmossomo cede antes da célula se romper.
     </div>
   </div>
-</section>
 
-<!-- ===================== GLÂNDULAS ===================== -->
-<section class="section" id="tab-glandulas">
   <div class="card">
     <span class="eyebrow">Especialização secretora do epitélio</span>
-    <h2>Classificação das Glândulas</h2>
+    <h2>4️⃣ Classificação das Glândulas</h2>
     <p>Toda glândula se origina de uma proliferação do epitélio de revestimento durante o desenvolvimento (histogênese). A diferença entre os dois grandes tipos está em <b>manter ou não</b> a ligação com a superfície de origem.</p>
 
     <div class="grid-2">
@@ -381,7 +430,171 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
   </div>
 </section>
 
-<!-- ===================== FLASHCARDS ===================== -->
+<section class="section" id="tab-casos">
+  <div class="card">
+    <h2>🩺 Caso Clínico Progressivo — Discinesia Ciliar Primária</h2>
+    <p style="color:var(--text-dim);font-size:.88rem;">Vamos acompanhar o mesmo paciente em 3 momentos, aplicando os conceitos do domínio apical vistos nesse capítulo. O caso evolui em 3 níveis — clica em cada um pra ver como as coisas vão se desenrolando.</p>
+  </div>
+  <div id="casesArea"></div>
+</section>
+
+<!-- CMED-VIDEO-STYLE -->
+<style>
+.cmed-video-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(79,209,161,.14);border:1px solid var(--ok);color:var(--ok);font-size:.72em;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:10px;}
+.cmed-video-sub{color:var(--text-dim);font-size:.85em;margin:-6px 0 14px 0;}
+.cmed-video-card{background:var(--card2,#0f1726);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.cmed-video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000 center/cover no-repeat;cursor:pointer;}
+.cmed-video-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;}
+.cmed-video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.cmed-video-play span{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:1.6em;color:#fff;transition:transform .15s;}
+.cmed-video-thumb:hover .cmed-video-play span{transform:scale(1.08);background:var(--accent);}
+.cmed-video-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:.75em;padding:2px 8px;border-radius:5px;}
+.cmed-video-body{padding:14px 16px;}
+.cmed-video-tag{color:var(--gold);font-size:.72em;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.cmed-video-title{color:var(--text);font-size:1.05em;font-weight:700;margin:4px 0 8px 0;}
+.cmed-video-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.cmed-video-stars{color:var(--gold);}
+.cmed-video-why{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.85em;margin:10px 0;color:var(--text-dim);}
+.cmed-video-why b{color:var(--gold);}
+.cmed-video-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.cmed-video-btn{background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:.82em;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.cmed-video-btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text-dim);}
+.cmed-video-btn:hover{opacity:.88;}
+.cmed-video-note{color:var(--text-dim);font-size:.8em;text-align:center;margin-top:6px;}
+.cmed-video-extra-label{font-size:.85em;color:var(--text-dim);margin:18px 0 8px 0;font-weight:700;}
+@media (max-width:600px){.cmed-video-play span{width:52px;height:52px;font-size:1.3em;}}
+</style>
+<!-- /CMED-VIDEO-STYLE -->
+
+<!-- CMED-VIDEO-SECTION -->
+<section class="section" id="tab-video">
+  <div class="card">
+    <span class="cmed-video-badge">🩺 Recomendado pela ClinicusMed</span>
+    <h2>🎥 Complemento em Vídeo</h2>
+    <p class="cmed-video-sub">A Clinicus selecionou este conteúdo para complementar seu estudo. Não substitui a leitura do resumo — o resumo ensina, o vídeo reforça.</p>
+    <div id="cmedVideoContainer">
+      <p style="color:var(--text-dim);font-size:.9em;">Carregando recomendações...</p>
+    </div>
+  </div>
+</section>
+<!-- /CMED-VIDEO-SECTION -->
+
+<!-- CMED-VIDEO-SCRIPT -->
+<script>
+(function(){
+  function ytThumb(id){ return 'https://img.youtube.com/vi/'+id+'/hqdefault.jpg'; }
+  function ytWatch(id){ return 'https://www.youtube.com/watch?v='+id; }
+  function stars(n){ n = n||5; return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+  function videoCard(v, isPrincipal){
+    if(!v || !v.id) return '';
+    var thumb = v.tipo === 'vimeo' ? '' : ytThumb(v.id);
+    var watchUrl = v.tipo === 'vimeo' ? ('https://vimeo.com/'+v.id) : ytWatch(v.id);
+    var embedUrl = v.tipo === 'vimeo' ? ('https://player.vimeo.com/video/'+v.id+'?autoplay=1') : ('https://www.youtube.com/embed/'+v.id+'?autoplay=1&rel=0');
+    var tag = isPrincipal ? '🎥 Vídeo Principal' : '➕ Complementar';
+    var card = document.createElement('div');
+    card.className = 'cmed-video-card';
+    card.innerHTML =
+      '<div class="cmed-video-thumb" data-embed="'+embedUrl+'" style="background-image:url(\''+thumb+'\')">' +
+        '<div class="cmed-video-play"><span>▶</span></div>' +
+        (v.duracao ? '<div class="cmed-video-dur">⏱ '+v.duracao+'</div>' : '') +
+      '</div>' +
+      '<div class="cmed-video-body">' +
+        '<div class="cmed-video-tag">'+tag+'</div>' +
+        '<div class="cmed-video-title">'+(v.titulo||'')+'</div>' +
+        '<div class="cmed-video-meta">' +
+          (v.duracao ? '<span>⏱ '+v.duracao+'</span>' : '') +
+          '<span class="cmed-video-stars">'+stars(v.estrelas)+'</span>' +
+          (v.canal ? '<span>· '+v.canal+'</span>' : '') +
+        '</div>' +
+        (v.motivo ? '<div class="cmed-video-why"><b>📌 Por que recomendamos este vídeo?</b><br>'+v.motivo+'</div>' : '') +
+        '<div class="cmed-video-btns">' +
+          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">↗ Abrir no site original</a>' +
+          '<button class="cmed-video-btn secondary" data-copy="'+watchUrl+'">📋 Copiar link</button>' +
+        '</div>' +
+      '</div>';
+    return card;
+  }
+
+  function render(data){
+    var container = document.getElementById('cmedVideoContainer');
+    if(!container) return;
+    var entry = data && typeof CHAPTER_ID !== 'undefined' ? data[CHAPTER_ID] : null;
+
+    if(!entry || !entry.principal){
+      // Sem video cadastrado: esconde a secao inteira e o botao da aba
+      var section = document.getElementById('tab-video');
+      if(section) section.style.display = 'none';
+      var navBtn = document.querySelector('#tabNav button[data-tab="video"]');
+      if(navBtn) navBtn.style.display = 'none';
+      return;
+    }
+
+    container.innerHTML = '';
+    container.appendChild(videoCard(entry.principal, true));
+    if(entry.extras && entry.extras.length){
+      var label = document.createElement('div');
+      label.className = 'cmed-video-extra-label';
+      label.textContent = '📎 Vídeos complementares';
+      container.appendChild(label);
+      entry.extras.slice(0,3).forEach(function(ex){
+        container.appendChild(videoCard(ex, false));
+      });
+    }
+    var note = document.createElement('p');
+    note.className = 'cmed-video-note';
+    if(entry.verMaisEm && entry.verMaisEm.texto){
+      note.innerHTML = entry.verMaisEm.texto;
+    } else {
+      note.textContent = 'Este vídeo complementa o conteúdo estudado neste capítulo.';
+    }
+    container.appendChild(note);
+
+    container.addEventListener('click', function(e){
+      var thumb = e.target.closest('.cmed-video-thumb');
+      if(thumb){
+        var embedUrl = thumb.dataset.embed;
+        if(embedUrl && !thumb.querySelector('iframe')){
+          thumb.innerHTML = '<iframe src="'+embedUrl+'" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>';
+          thumb.style.backgroundImage = 'none';
+          thumb.style.cursor = 'default';
+        }
+        return;
+      }
+      var copyBtn = e.target.closest('[data-copy]');
+      if(copyBtn){
+        navigator.clipboard.writeText(copyBtn.dataset.copy).then(function(){
+          var old = copyBtn.textContent;
+          copyBtn.textContent = '✅ Copiado!';
+          setTimeout(function(){ copyBtn.textContent = old; }, 1800);
+        });
+      }
+    });
+  }
+
+  fetch('/videos.json').then(function(r){ return r.json(); }).then(render).catch(function(){
+    var section = document.getElementById('tab-video');
+    if(section) section.style.display = 'none';
+    var navBtn = document.querySelector('#tabNav button[data-tab="video"]');
+    if(navBtn) navBtn.style.display = 'none';
+  });
+})();
+</script>
+<!-- /CMED-VIDEO-SCRIPT -->
+
+
+<section class="section" id="tab-atlas">
+  <div class="card">
+    <h2>🗺️ Atlas de Histologia — Epitélio e suas Especializações</h2>
+    <p style="color:var(--text-dim);font-size:.88rem;">Acervos públicos de universidades, com lâminas reais mostrando cílios, microvilosidades e as junções do complexo de união. Como é conteúdo de terceiros, são exibidos aqui só por link direto — nenhuma imagem é reproduzida na Clinicus.</p>
+    <div style="text-align:center;margin:16px 0;display:flex;flex-direction:column;gap:10px;align-items:center;">
+      <a href="https://atlashistologicommo.uff.br/tecido-epitelial/" target="_blank" rel="noopener" style="display:inline-block;background:linear-gradient(90deg,var(--green1),var(--green2));color:#0d0f16;padding:12px 24px;border-radius:24px;text-decoration:none;font-weight:700;">🔗 Atlas Virtual de Histologia — UFF (Tecido Epitelial) →</a>
+      <a href="https://www.foa.unesp.br/#!/ensino/departamentos/dcb/histologia/atlas-de-histologia-geral/tecido-epitelial/" target="_blank" rel="noopener" style="display:inline-block;background:linear-gradient(90deg,var(--green1),var(--green2));color:#0d0f16;padding:12px 24px;border-radius:24px;text-decoration:none;font-weight:700;">🔗 Atlas de Histologia Geral — UNESP FOA (Tecido Epitelial) →</a>
+    </div>
+    <div class="analogy">💭 Os 2 atlas mostram lâminas reais de epitélio — ótimo complemento visual pra reconhecer, na prática, a borda ciliada, as microvilosidades (borda em escova) e a organização em camadas que você estudou no Guia de Estudo.</div>
+  </div>
+</section>
+
 <section class="section" id="tab-flashcards">
   <div class="card">
     <h2>🎴 Flashcards — Repetição Espaçada</h2>
@@ -413,7 +626,14 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
   </div>
 </section>
 
-<!-- ===================== QUIZ ===================== -->
+<section class="section" id="tab-banco">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85rem;color:var(--text-dim);">10 questões, do mais básico ao mais puxado — diferentes das do Quiz Rápido. Escolhe uma alternativa, depois clica em "Ver comentário completo": vale a pena ler até quando você acerta.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
 <section class="section" id="tab-quiz">
   <div class="card">
     <h2>✅ Quiz Rápido</h2>
@@ -422,6 +642,117 @@ tr:nth-child(even){background:rgba(255,255,255,.02);}
 </section>
 
 </main>
+</div>
+</div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/histologia1/Capitulo_07_Tecido_Conectivo_PPD.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 7 — Tecido Conectivo Propriamente Dito</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-01/histologia1/Capitulo_09_Tecido_Conectivo.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Capítulo 9 — Tecido Conectivo</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
 
 <div class="toast" id="toast"></div>
 
@@ -432,19 +763,17 @@ const sections = document.querySelectorAll('.section');
 function goToTab(name){
   tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
   sections.forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
-  document.querySelectorAll('.trilha .etapa').forEach(e=>e.classList.toggle('ativa', e.dataset.goto===name));
   if(name==='quiz' && quizIndex===0 && quizLog.length===0) initQuiz();
   if(name==='flashcards') initFlashcards();
   updateProgress();
 }
 tabs.forEach(t=>t.addEventListener('click', ()=>goToTab(t.dataset.tab)));
-document.querySelectorAll('.trilha .etapa').forEach(e=>e.addEventListener('click', ()=>goToTab(e.dataset.goto)));
 
 function toggleAcc(head){ head.parentElement.classList.toggle('open'); }
 
 /* ===== XP / PROGRESSO ===== */
 let xp = 0;
-const seenTabs = new Set(['visao']);
+const seenTabs = new Set(['guia']);
 function addXP(n, motivo){
   xp += n;
   document.getElementById('xpTotal').textContent = xp;
@@ -470,7 +799,7 @@ function showToast(msg){
    genuinos do Anki (De novo/Dificil/Bem/Facil) + previa de dias em cada
    botao, em vez dos 3 niveis genericos originais. Primeira aplicacao
    real desse padrao combinado num capitulo publicado. */
-const CHAPTER_ID = 'histo1_cap02_especializacoes_epitelio';
+const CHAPTER_ID = 'histologia1_cap08_especializacoes_epitelio';
 const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
 const DAY_MS = 24*60*60*1000;
 
@@ -612,6 +941,118 @@ function renderQuizResult(){
 /* ===== INIT ===== */
 updateProgress();
 </script>
+
+<script>
+const cases = [{"nivel": "NÍVEL 1 — FUNDAMENTAL", "hist": "Um menino de 6 anos é levado ao pneumologista pediátrico por episódios recorrentes de sinusite e bronquite desde os 2 anos de idade. Num exame de imagem torácico, chama atenção um achado incidental: o coração está localizado à direita do tórax (dextrocardia), e o estômago à direita do abdome.", "dados": "O pediatra suspeita de uma condição que afeta uma estrutura específica do domínio apical da célula epitelial, presente tanto no epitélio respiratório quanto em outras células especializadas do corpo.", "perguntas": [{"q": "Qual estrutura do domínio apical da célula epitelial é a mais provável responsável tanto pelas infecções respiratórias de repetição quanto pela dextrocardia desse menino?", "a": "O CÍLIO — mais especificamente seu axonema, com organização de microtúbulos em padrão 9+2. No epitélio respiratório, o batimento ciliar coordenado normalmente remove o muco (e patógenos nele) das vias aéreas; quando isso falha, ocorrem infecções de repetição. Além disso, durante o desenvolvimento embrionário, cílios nodais — com a mesma maquinaria estrutural — são responsáveis por estabelecer a lateralidade visceral normal; quando disfuncionais, o posicionamento dos órgãos pode se inverter (situs inversus), explicando a dextrocardia observada."}]}, {"nivel": "NÍVEL 2 — INTERMEDIÁRIO", "hist": "A biópsia da mucosa respiratória do menino é encaminhada para microscopia eletrônica, que revela ausência dos braços de dineína nos microtúbulos periféricos do axonema ciliar.", "dados": "O pneumologista explica que essa é a causa molecular mais comum da condição — uma discinesia ciliar primária — e que a apresentação com dextrocardia recebe um nome específico.", "perguntas": [{"q": "Qual é o papel funcional normal dos braços de dineína no axonema ciliar, e por que sua ausência também costuma causar infertilidade em homens adultos com essa condição?", "a": "Os braços de dineína são motores moleculares que promovem o deslizamento entre os pares de microtúbulos periféricos do axonema (organização 9+2), convertendo energia (ATP) em movimento de batimento coordenado do cílio. Sem dineína funcional, o axonema perde a capacidade de gerar esse batimento — os cílios ficam imóveis ou descoordenados. Como o flagelo do espermatozoide compartilha a MESMA organização axonemal 9+2 com braços de dineína (visto nesse capítulo), o mesmo defeito molecular também paralisa o flagelo espermático, causando motilidade espermática reduzida ou ausente — e, consequentemente, infertilidade masculina. Essa tríade (infecções respiratórias de repetição + infertilidade masculina + situs inversus em cerca de metade dos casos) é conhecida como Síndrome de Kartagener, uma apresentação da discinesia ciliar primária."}]}, {"nivel": "NÍVEL 3 — APLICAÇÃO INTEGRADA", "hist": "Anos depois, já adolescente, o mesmo paciente é avaliado por um geneticista, que explica à família que existe ampla variabilidade fenotípica na doença: nem todo paciente com discinesia ciliar primária tem situs inversus, embora a disfunção respiratória e a infertilidade sejam praticamente universais nesse grupo.", "dados": "Um estudante de Medicina presente na consulta pergunta por que a lateralidade visceral não é afetada em 100% dos pacientes, já que todos compartilham o mesmo defeito estrutural básico nos cílios.", "perguntas": [{"q": "Integrando o que foi visto sobre estrutura e função do cílio, explique por que a determinação de lateralidade visceral é um processo probabilístico (cerca de 50% de chance de situs inversus) na discinesia ciliar primária, enquanto a disfunção respiratória e a infertilidade são praticamente universais nesses pacientes.", "a": "Como vimos nesse capítulo, a determinação da lateralidade visceral no embrião depende de um mecanismo específico no nó embrionário: cílios nodais móveis geram um fluxo direcional de líquido extraembrionário, interpretado pelas células vizinhas para estabelecer qual lado do corpo será esquerdo e qual será direito. Quando esses cílios nodais estão completamente imóveis — como na discinesia ciliar primária —, esse fluxo direcional simplesmente não é gerado, e, na ausência de qualquer sinal direcional, a lateralidade passa a ser estabelecida de forma essencialmente aleatória: aproximadamente 50% de chance de situs solitus (normal) e 50% de situs inversus entre os pacientes afetados. Já a função respiratória (limpeza mucociliar) e a fertilidade masculina (motilidade do flagelo espermático) dependem diretamente da MOTILIDADE ciliar/flagelar em si, não de um mecanismo probabilístico de interpretação de sinal — por isso, virtualmente todo paciente com o defeito estrutural (ausência dos mesmos braços de dineína) terá algum grau de comprometimento respiratório e de motilidade espermática, já que a maquinaria molecular defeituosa é idêntica em ambos os contextos, mudando apenas o órgão em que ela atua."}]}];
+
+const casesArea = document.getElementById('casesArea');
+cases.forEach((c, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'case-level';
+  let qHtml = '';
+  c.perguntas.forEach((p, pi)=>{
+    qHtml += `<div class="case-q">
+      <b>${pi+1})</b> ${p.q}
+      <br><button class="case-answer-btn" data-ci="${ci}" data-pi="${pi}">Ver resposta comentada</button>
+      <div class="case-answer" id="case-answer-${ci}-${pi}">${p.a}</div>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="case-level-head" data-ci="${ci}">
+      <span>${c.nivel}</span><span>▼</span>
+    </div>
+    <div class="case-level-body" id="case-body-${ci}">
+      <div class="case-hist"><b>História Clínica:</b> ${c.hist}</div>
+      <div class="case-hist"><b>Dados:</b> ${c.dados}</div>
+      ${qHtml}
+    </div>`;
+  casesArea.appendChild(div);
+});
+
+casesArea.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('case-level-head') || e.target.closest('.case-level-head')){
+    const head = e.target.closest('.case-level-head');
+    const ci = head.dataset.ci;
+    document.getElementById('case-body-'+ci).classList.toggle('show');
+  }
+  if(e.target.classList.contains('case-answer-btn')){
+    const ci = e.target.dataset.ci, pi = e.target.dataset.pi;
+    document.getElementById(`case-answer-${ci}-${pi}`).classList.toggle('show');
+  }
+});
+document.getElementById('case-body-0').classList.add('show');
+</script>
+
+<script>
+const bank = [{"n": 1, "tema": "Polaridade Celular", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer o conceito de polaridade epitelial", "q": "O que caracteriza a \"polaridade\" da célula epitelial?", "opts": ["Domínios apical, lateral e basal com estruturas e funções diferentes entre si", "A célula tem o mesmo formato em todos os epitélios", "Apenas o núcleo muda de posição dentro da célula", "A célula perde organelas conforme envelhece"], "correct": 0, "justificativa": "Polaridade celular significa que a célula epitelial tem domínios de superfície distintos — apical, lateral e basal —, cada um com especializações estruturais e funcionais próprias.", "analise": ["a forma varia bastante entre tipos de epitélio (pavimentoso, cúbico, colunar), não é padronizada.", "a posição do núcleo pode variar, mas isso não é o que define polaridade celular.", "polaridade é uma organização funcional normal da célula viva, não um fenômeno de envelhecimento."], "analise_letters": ["B", "C", "D"], "conceito": "Polaridade epitelial = domínios apical/lateral/basal com identidades próprias.", "pegadinha": "Não confundir polaridade estrutural (foco desse capítulo) com \"polaridade\" em outros contextos biológicos (ex.: polaridade do ovócito).", "dica": "Pense em 3 andares de uma casa: cada um com móveis (estruturas) diferentes."}, {"n": 2, "tema": "Domínio Apical — Motilidade", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Diferenciar cílio de microvilosidade quanto à fonte de energia/motor molecular", "q": "Qual estrutura do domínio apical depende de motores moleculares (dineína) consumindo ATP para se mover?", "opts": ["Microvilosidade", "Hemidesmossomo", "Desmossomo", "Cílio"], "correct": 3, "justificativa": "O cílio se move ativamente por meio dos braços de dineína, motores moleculares ATP-dependentes que promovem o deslizamento entre microtúbulos do axonema.", "analise": ["a microvilosidade é imóvel — não tem motor molecular, seu papel é só aumentar área de superfície.", "o hemidesmossomo é uma junção de ancoragem estática, não uma estrutura motora.", "o desmossomo também é uma junção de ancoragem estática, sem função motora."], "analise_letters": ["A", "B", "C"], "conceito": "Cílio = estrutura ativa/motora (dineína + ATP). Microvilosidade = estrutura passiva.", "pegadinha": "Bancas cobram justamente essa diferença funcional, não só a estrutural (microtúbulos × actina).", "dica": "Se \"se move\" = cílio (ou flagelo); se \"só aumenta área\" = microvilosidade."}, {"n": 3, "tema": "Domínio Apical — Flagelo", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer a exclusividade do flagelo no corpo humano", "q": "No corpo humano adulto, o flagelo (organização axonemal 9+2, um por célula) é encontrado em qual célula?", "opts": ["Célula ciliada do epitélio respiratório", "Espermatozoide", "Célula caliciforme intestinal", "Célula do túbulo renal"], "correct": 1, "justificativa": "O espermatozoide é a única célula flagelada do corpo humano adulto — o flagelo move a célula inteira, diferente do cílio, que desloca substância pela superfície.", "analise": ["a célula do epitélio respiratório é ciliada (múltiplos cílios), não flagelada.", "a célula caliciforme é secretora de muco, não tem flagelo nem cílios.", "a célula do túbulo renal tem microvilosidades (borda em escova), não flagelo."], "analise_letters": ["A", "C", "D"], "conceito": "Flagelo humano = exclusivo do espermatozoide.", "pegadinha": "Não confundir \"muitos cílios batendo\" com \"um flagelo só\" — são estruturalmente parecidos, mas numericamente e funcionalmente diferentes.", "dica": "Flagelo = 1 por célula, move a célula toda. Cílios = muitos por célula, movem substância na superfície."}, {"n": 4, "tema": "Complexo de União — Barreira", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificar o componente responsável pela função de barreira paracelular", "q": "Em epitélios que precisam ser altamente seletivos (como a barreira hematoencefálica), qual componente do complexo de união é o principal responsável por essa vedação?", "opts": ["Mácula de adesão (desmossomo)", "Hemidesmossomo", "Zônula de oclusão", "Zônula de adesão"], "correct": 2, "justificativa": "A zônula de oclusão (tight junction) forma uma faixa contínua que sela o espaço entre células vizinhas, impedindo a passagem paracelular livre de substâncias — quanto mais vedação um epitélio precisa, mais fileiras dessa estrutura ele apresenta.", "analise": ["o desmossomo tem função de adesão mecânica pontual, não de vedação/barreira.", "o hemidesmossomo ancora a célula à lâmina basal, não participa da vedação entre células vizinhas.", "a zônula de adesão tem função mecânica (ancorar actina via caderinas), não de barreira seletiva."], "analise_letters": ["A", "B", "D"], "conceito": "Zônula de oclusão = barreira paracelular seletiva.", "pegadinha": "A localização mais apical do complexo de união reforça a lógica: é a \"primeira linha\" que o conteúdo teria que atravessar.", "dica": "Barreira hematoencefálica muito seletiva = pensar direto em zônula de oclusão."}, {"n": 5, "tema": "Complexo de União — Ancoragem Mecânica", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer a função e o citoesqueleto ancorado pela zônula de adesão", "q": "A zônula de adesão ancora, via caderinas, qual componente do citoesqueleto entre células vizinhas?", "opts": ["Filamentos de actina", "Microtúbulos", "Filamentos de queratina", "Filamentos de vimentina"], "correct": 0, "justificativa": "A zônula de adesão ancora o feixe de filamentos de actina do citoesqueleto de uma célula ao da célula vizinha, via caderinas transmembrana — mantendo a integridade mecânica da folha epitelial.", "analise": ["microtúbulos formam o axonema de cílios/flagelos, não são ancorados pela zônula de adesão.", "filamentos de queratina são ancorados pelo desmossomo, estrutura mais basal, não pela zônula de adesão.", "vimentina é filamento intermediário típico de células mesenquimais, não é o substrato da zônula de adesão epitelial."], "analise_letters": ["B", "C", "D"], "conceito": "Zônula de adesão = ancora ACTINA via caderinas.", "pegadinha": "É fácil trocar com o desmossomo, que ancora QUERATINA — memorizar a dupla certa evita erro clássico de prova.", "dica": "Adesão = Actina (as duas começam parecido, ajuda a lembrar)."}, {"n": 6, "tema": "Complexo de União — Patologia", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Relacionar a mácula de adesão a uma doença bolhosa autoimune", "q": "No pênfigo vulgar, autoanticorpos contra desmogleínas rompem qual estrutura de adesão, causando bolhas cutâneas?", "opts": ["Zônula de oclusão", "Zônula de adesão", "Lâmina basal", "Mácula de adesão (desmossomo)"], "correct": 3, "justificativa": "No pênfigo vulgar, autoanticorpos atacam as desmogleínas — proteínas do desmossomo (mácula de adesão) —, rompendo a adesão célula-célula entre queratinócitos e causando bolhas intraepidérmicas.", "analise": ["a zônula de oclusão não é o alvo do pênfigo vulgar; seu comprometimento não é a causa clássica das bolhas dessa doença.", "a zônula de adesão ancora actina, não é o alvo das desmogleínas atacadas no pênfigo vulgar.", "a lâmina basal é alvo de outra doença bolhosa (penfigoide bolhoso, que afeta o hemidesmossomo/lâmina basal), não do pênfigo vulgar."], "analise_letters": ["A", "B", "C"], "conceito": "Pênfigo vulgar = autoanticorpos anti-desmogleína, atingindo o desmossomo.", "pegadinha": "Não confundir pênfigo vulgar (desmossomo, bolhas intraepidérmicas, mais superficiais/frágeis) com penfigoide bolhoso (hemidesmossomo/lâmina basal, bolhas subepidérmicas, mais tensas).", "dica": "\"Vulgar\" ataca o mais comum/abundante = desmossomo."}, {"n": 7, "tema": "Domínio Basal — Lâmina Basal", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Diferenciar composição da lâmina lúcida e da lâmina densa", "q": "Qual proteína é característica da lâmina densa da lâmina basal (a sub-lâmina mais profunda, mais distante da célula epitelial)?", "opts": ["Laminina", "Colágeno tipo IV", "Queratina", "Integrina"], "correct": 1, "justificativa": "A lâmina densa, mais profunda dentro da lâmina basal, é rica em colágeno tipo IV — diferente da lâmina lúcida, mais próxima da célula, que é rica em laminina.", "analise": ["a laminina é característica da lâmina LÚCIDA, a sub-lâmina mais próxima da célula, não da lâmina densa.", "a queratina é um filamento intermediário intracelular, ancorado pelo desmossomo — não é componente da lâmina basal.", "a integrina é a proteína de adesão do hemidesmossomo que se liga à lâmina basal, não um componente estrutural da própria lâmina."], "analise_letters": ["A", "C", "D"], "conceito": "Lâmina lúcida → laminina. Lâmina densa → colágeno tipo IV.", "pegadinha": "A ordem espacial (lúcida mais perto da célula, densa mais longe) é o detalhe que costuma decidir a questão.", "dica": "\"Densa\" de colágeno tipo IV, mais longe da célula."}, {"n": 8, "tema": "Domínio Basal — Hemidesmossomo", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Reconhecer a proteína de adesão do hemidesmossomo", "q": "Diferente do desmossomo (que usa caderinas), o hemidesmossomo ancora a célula epitelial à lâmina basal usando qual proteína?", "opts": ["Caderina", "Laminina", "Integrina", "Actina"], "correct": 2, "justificativa": "O hemidesmossomo usa integrinas transmembrana para ancorar a célula epitelial à lâmina basal — diferente do desmossomo, que usa caderinas para ancorar uma célula à outra.", "analise": ["caderina é a proteína usada pelo desmossomo e pela zônula de adesão (adesão célula-célula), não pelo hemidesmossomo.", "laminina é componente estrutural da lâmina basal em si, não a proteína de adesão do hemidesmossomo.", "actina é filamento do citoesqueleto ancorado pela zônula de adesão, não a proteína de adesão do hemidesmossomo."], "analise_letters": ["A", "B", "D"], "conceito": "Hemidesmossomo = integrina (célula → lâmina basal). Desmossomo = caderina (célula → célula).", "pegadinha": "\"Hemi\" (metade) de desmossomo no nome engana — mas a proteína de adesão é DIFERENTE, não \"metade\" da mesma.", "dica": "Hemidesmossomo = Integrina; guarde a dupla certa (caderina é do desmossomo)."}, {"n": 9, "tema": "Glândulas — Classificação", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Reconhecer os critérios de classificação das glândulas exócrinas", "q": "A classificação de uma glândula exócrina em \"tubular\", \"acinar\" ou \"tubuloacinar\" refere-se a qual critério?", "opts": ["Forma da porção secretora", "Mecanismo de secreção", "Tipo de produto secretado", "Número de células"], "correct": 0, "justificativa": "Tubular, acinar (alveolar) e tubuloacinar descrevem a forma da porção secretora da glândula exócrina — um dos 5 critérios de classificação vistos nesse capítulo.", "analise": ["o mecanismo de secreção é classificado como merócrina, apócrina ou holócrina, não tubular/acinar.", "o tipo de produto é classificado como seroso, mucoso ou misto, não tubular/acinar.", "o número de células é classificado como unicelular ou multicelular, não tubular/acinar."], "analise_letters": ["B", "C", "D"], "conceito": "Forma da porção secretora: tubular, acinar (alveolar) ou tubuloacinar.", "pegadinha": "Os 5 critérios de classificação (número de células, forma do ducto, forma da porção secretora, mecanismo de secreção, tipo de produto) costumam ser embaralhados numa mesma questão — resolver identificando primeiro QUAL critério está sendo perguntado.", "dica": "Tubular/Acinar/Tubuloacinar = sempre sobre a FORMA da porção secretora."}, {"n": 10, "tema": "Glândulas — Mecanismo de Secreção", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Diferenciar secreção apócrina de holócrina em contexto clínico", "q": "A glândula mamária lactante libera parte do seu citoplasma apical junto com as gotículas de gordura do leite, mas a célula permanece viva e continua secretando repetidamente. Qual mecanismo de secreção é esse, e por que ele não é holócrina?", "opts": ["Merócrina — porque não há perda de nenhum material citoplasmático", "Holócrina — porque a célula se desintegra completamente a cada secreção", "Merócrina — porque a célula libera o produto por exocitose clássica sem perder membrana", "Apócrina — porque perde só parte do citoplasma, permanecendo viva para secretar de novo"], "correct": 3, "justificativa": "A secreção apócrina envolve perda de PARTE do citoplasma apical (junto do produto), mas a célula sobrevive e se regenera para secretar novamente — diferente da holócrina, em que a célula inteira se desintegra e vira a própria secreção (ex.: glândula sebácea), sendo consumida em cada ciclo.", "analise": ["há sim perda de material citoplasmático (a porção apical, junto às gotículas de gordura) — por isso não é merócrina.", "na holócrina a célula inteira morre e se desintegra a cada secreção; aqui a célula sobrevive e secreta repetidamente, o que descarta holócrina.", "merócrina não envolve perda de membrana/citoplasma — é exocitose pura, o que não bate com a perda parcial de citoplasma descrita."], "analise_letters": ["A", "B", "C"], "conceito": "Apócrina = perde parte do citoplasma, célula sobrevive. Holócrina = célula inteira se desintegra. Merócrina = exocitose pura, sem perda de citoplasma.", "pegadinha": "É comum a banca dar exatamente esse cenário (mamária lactante) pra testar se você confunde apócrina com holócrina — a palavra-chave é \"permanece viva e secreta de novo\".", "dica": "Apócrina = perde \"um pedaço\", mas sobrevive. Holócrina = \"a fábrica inteira explode\"."}];
+const gabList = document.getElementById('gabaritoList');
+const gabLetters = ['A','B','C','D'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${gabLetters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="gab-comment-${idx}">
+      <p><b>✅ Resposta correta: ${gabLetters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  gabList.appendChild(div);
+});
+gabList.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(3,'Banco de Questões'); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('gab-comment-'+qi).classList.toggle('show');
+  }
+});
+</script>
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Histología I',
+    titulo: 'Capítulo 8 — Especializações do Epitélio',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P2',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Histología I', titulo: 'Capítulo 8 — Especializações do Epitélio', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
 
 </body>
 </html>
