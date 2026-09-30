@@ -1,16 +1,37 @@
 # -*- coding: utf-8 -*-
 """
-inject_shell.py — injeta cabeçalho/sidebar/breadcrumb/anterior-próximo
+inject_shell.py — injeta/mantem cabeçalho/sidebar/breadcrumb/anterior-próximo
 em todos os arquivos de conteúdo do ClinicusMed, a partir do catalogo.json.
 
-Seguro pra rodar de novo no futuro (idempotente): sempre parte dos arquivos
-como estão no repositório — se precisar reprocessar, reverta pro commit
-anterior à injeção antes de rodar de novo, ou rode so nos arquivos novos.
+AUTO-CURATIVO (comportamento padrão, desde 2026-09-30): pra um arquivo que
+AINDA NÃO tem o shell, injeta pela primeira vez. Pra um arquivo que JÁ TEM
+o shell, SEMPRE regenera sidebar/breadcrumb/progresso/prevnext a partir do
+catalogo.json atual (sem tocar no conteúdo real da página) — nunca mais
+pula/ignora um arquivo só porque ele já foi injetado antes.
+
+Por que: sem isso, toda vez que um capítulo novo é adicionado a uma matéria,
+a sidebar/contagem "X de N"/botão próximo de TODOS os arquivos JÁ injetados
+anteriormente dessa matéria ficava congelada no estado de quando cada um
+foi injetado — nunca mostrando os capítulos adicionados depois (bug real,
+encontrado e corrigido em 2026-09-30 em Anatomía I e II, 440 arquivos).
+
+REGRA DE OURO daqui pra frente: sempre que você adicionar um novo capítulo
+(ou remover/renomear um) em QUALQUER matéria, rode este script SEM nenhum
+filtro logo depois de atualizar o catalogo.json:
+    python3 inject_shell.py
+Isso injeta o(s) arquivo(s) novo(s) E atualiza a sidebar de TODOS os outros
+capítulos já existentes daquela(s) matéria(s) automaticamente, na mesma
+passada. Não é mais opcional nem um passo extra — é parte do fluxo normal
+de "adicionar capítulo", tão obrigatório quanto atualizar o catalogo.json.
 
 Uso:
-    python3 inject_shell.py                  # roda em tudo
+    python3 inject_shell.py                  # injeta novos + atualiza sidebars de todo mundo (uso normal)
     python3 inject_shell.py --dry-run         # so mostra o que faria
     python3 inject_shell.py --only ARQUIVO    # roda so num arquivo (teste)
+    python3 inject_shell.py --materia TEXTO   # limita a matérias cujo nome contém TEXTO (mais rápido)
+
+(--refresh ainda existe por compatibilidade mas agora é o comportamento
+padrão sempre que o arquivo já tem shell — não precisa mais passar essa flag.)
 """
 import json, re, os, sys, argparse
 
@@ -493,15 +514,34 @@ def refresh_file(item, seq, idx, dry_run=False, only_materia=None):
     return True
 
 
+def inject_or_refresh_file(item, seq, idx, dry_run=False):
+    """Decide automaticamente: arquivo sem shell -> injeta pela 1a vez;
+    arquivo com shell -> regenera sidebar/breadcrumb/progresso/prevnext.
+    Esse e o comportamento padrao do script (nunca mais "pula e ignora")."""
+    full_path = os.path.join(REPO, item['path'])
+    if not os.path.exists(full_path):
+        print(f"  ⚠️  arquivo nao encontrado, pulando: {item['path']}")
+        return False, None
+    with open(full_path, encoding='utf-8') as f:
+        html = f.read()
+    if 'cmed-nav-header' in html:
+        ok = refresh_file(item, seq, idx, dry_run=dry_run)
+        return ok, 'refresh'
+    else:
+        ok = inject_file(item, seq, idx, dry_run=dry_run)
+        return ok, 'inject'
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dry-run', action='store_true')
     parser.add_argument('--only', default=None, help='processa so esse path (teste)')
     parser.add_argument('--refresh', action='store_true',
-                         help='ao inves de pular arquivos ja injetados, regenera o shell deles '
-                              '(sidebar/breadcrumb/progresso/prevnext) com o catalogo.json atual')
+                         help='(legado/no-op) o comportamento padrao ja atualiza arquivos '
+                              'ja injetados automaticamente -- essa flag nao muda mais nada, '
+                              'fica so por compatibilidade com comandos antigos')
     parser.add_argument('--materia', default=None,
-                         help='com --refresh: so processa materias cujo nome contenha esse texto '
+                         help='so processa materias cujo nome contenha esse texto '
                               '(case-insensitive), ex: --materia "Anatom"')
     args = parser.parse_args()
 
@@ -509,12 +549,13 @@ def main():
         catalogo = json.load(f)
 
     total_injetados = 0
+    total_atualizados = 0
     total_pulados = 0
     seen_paths = set()
 
     for sem in catalogo['semestres']:
         for materia in sem['materias']:
-            if args.refresh and args.materia and args.materia.lower() not in materia['nome'].lower():
+            if args.materia and args.materia.lower() not in materia['nome'].lower():
                 continue
             seq = build_sequence(materia, sem.get('nome', ''))
             if not seq:
@@ -526,18 +567,16 @@ def main():
                 if args.only and item['path'] != args.only:
                     continue
                 seen_paths.add(item['path'])
-                if args.refresh:
-                    ok = refresh_file(item, seq, idx, dry_run=args.dry_run)
-                else:
-                    ok = inject_file(item, seq, idx, dry_run=args.dry_run)
-                if ok:
+                ok, kind = inject_or_refresh_file(item, seq, idx, dry_run=args.dry_run)
+                if ok and kind == 'inject':
                     total_injetados += 1
+                elif ok and kind == 'refresh':
+                    total_atualizados += 1
                 else:
                     total_pulados += 1
 
     print(f"\n{'='*60}")
-    verbo = 'atualizados' if args.refresh else 'injetados'
-    print(f"Total {verbo}: {total_injetados} | pulados/ja feitos: {total_pulados}")
+    print(f"Total injetados (novos): {total_injetados} | atualizados (ja existiam): {total_atualizados} | pulados/com erro: {total_pulados}")
 
 if __name__ == '__main__':
     main()
