@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Simulado — Provas Antigas (UCP + Interamericana) | ClinicusMed</title>
+<meta property="og:title" content="Simulado — Provas Antigas (UCP + Interamericana) | ClinicusMed">
+<meta property="og:description" content="40 questões (36 múltipla escolha + 2 V/F + 2 associação) transcritas e comentadas a partir de 2 provas reais de Anatomia I — Universidad Central del Paraguay e Universidad Interamericana.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --bg:#1c1410; --bg-alt:#181210; --card:#2a1f18; --card-hover:#33261c;
+  --border:#453224;
+  --text:#f5eee6; --text-dim:#c2ab98;
+  --accent:#c1793f; --accent2:#e8ab6f; --gold:#e8b84b;
+  --red:#e0505f; --green:#4fd1a1;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:radial-gradient(circle at 20% 0%,#241a12 0%,var(--bg) 55%);
+  color:var(--text);
+  font-family:'Segoe UI',Roboto,Arial,sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+h1,h2,h3,h4{margin:0 0 .4em 0;}
+a{color:var(--accent2);}
+
+header.top{
+  position:sticky; top:0; z-index:100;
+  background:rgba(28,20,16,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo-text h1{font-size:1.05rem; margin:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#1c1410;}
+
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.eyebrow{
+  display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent2); background:rgba(193,121,63,.12); border:1px solid rgba(193,121,63,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:var(--text-dim);}
+.hero{
+  background:linear-gradient(135deg, rgba(193,121,63,.15), rgba(232,184,75,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;
+}
+.hero h2{font-size:1.5rem; margin-bottom:.3em; color:var(--text);}
+ul{margin:8px 0 8px 20px; color:var(--text-dim);}
+li{margin-bottom:6px;}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#1c1410; border:none; padding:12px 26px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(193,121,63,.14); color:var(--accent2); border:1px solid rgba(193,121,63,.3);}
+.tag.type{background:rgba(232,184,75,.12); color:var(--gold); border:1px solid rgba(232,184,75,.3);}
+.tag.source{background:rgba(79,209,161,.12); color:var(--green); border:1px solid rgba(79,209,161,.3);}
+.quiz-q{font-size:1.06rem; font-weight:700; margin-bottom:16px; color:var(--text);}
+.quiz-q .fig-note{display:block; font-weight:400; font-size:.86rem; color:var(--text-dim); margin-top:6px; font-style:italic;}
+
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--accent2);}
+.option.correct{background:rgba(79,209,161,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(224,80,95,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;}
+.vf-row .option{flex:1; text-align:center;}
+
+.match-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin-bottom:10px; flex-wrap:wrap;
+}
+.match-term{font-weight:700; color:var(--accent2); min-width:220px; font-size:.9rem;}
+.match-row select{
+  flex:1; min-width:220px; background:#14100c; border:1px solid var(--border); color:var(--text);
+  padding:9px 10px; border-radius:8px; font-family:inherit; font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--red);}
+
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(79,209,161,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(224,80,95,.12); border:1px solid var(--red); color:var(--red);}
+.feedback-exp{margin-top:8px; padding:12px 16px; border-radius:10px; font-size:.85rem; background:var(--bg-alt); border:1px solid var(--border); color:var(--text-dim);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--accent2);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+.dissert-card dt{font-weight:700; color:var(--accent2); margin-top:14px;}
+.dissert-card dd{margin:4px 0 0 0; color:var(--text-dim); font-size:.9rem;}
+.note-box{background:rgba(232,184,75,.08); border:1px solid rgba(232,184,75,.35); border-radius:10px; padding:10px 14px; font-size:.82rem; color:var(--text-dim); margin-top:10px;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="header-inner">
+    <div class="logo-text">
+      <h1>📝 Simulado — Provas Antigas</h1>
+      <span>Universidad Central del Paraguay + Universidad Interamericana</span>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nível 1</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato do simulado</span>
+    <h2>40 questões — transcritas de 2 provas reais de Anatomia I</h2>
+    <p>Este simulado foi montado em cima das duas provas antigas já disponíveis em <a href="/semestre-01/anatomia1/Materiais_Complementares.html">Materiais Complementares</a>: a prova da <b>Universidad Central del Paraguay</b> (Tórax — osteologia, artrologia, diafragma e coração) e a prova da <b>Universidad Interamericana</b> (Pescoço — esôfago, laringe, pulmão, vasos e nervos cervicais). As provas originais não vinham com gabarito — as respostas e explicações abaixo foram elaboradas por mim a partir do conteúdo já estudado nos capítulos, então use-as como apoio de estudo, não como gabarito oficial do professor.</p>
+  </div>
+  <div class="card">
+    <h2>O que esse simulado cobre</h2>
+    <ul>
+      <li><b>Bloco A — Prova UCP (Tórax):</b> posição anatômica, nervo frênico, vascularização intercostal, nervo torácico longo de Charles Bell, diafragma (pilares e hiatos), curvaturas da coluna, sistema de condução cardíaco, cavidades e válvulas do coração, articulação escapulotorácica, 1ª costela e Ângulo de Louis — em múltipla escolha, V/F com justificativa, e 4 questões sobre a figura do diafragma (descritas em texto, já que a ilustração original é de terceiros e não pode ser reproduzida aqui — o mesmo motivo pelo qual o PDF da prova também está sem ela).</li>
+      <li><b>Bloco B — Prova Interamericana (Pescoço):</b> estreitamentos do esôfago, nervos laríngeos superior/recorrente, segmentação broncopulmonar, vaina carotídea, glomus carotídeo, plexo cervical superficial e profundo, conduto torácico, Asa de Galeno, amígdala faríngea, músculos infra-hióideos, hiato escalênico, limites do pescoço e inervação do ECM/trapézio.</li>
+      <li><b>Associação:</b> 2 questões reunindo o conteúdo dissertativo da prova da Interamericana (ramos terminais da carótida externa, formação e trajeto do Asa de Galeno, formação e desembocadura do conduto torácico, ramos colaterais do plexo cervical profundo).</li>
+    </ul>
+    <p style="font-size:.85rem;">Algumas questões das provas originais têm enunciados um pouco contraditórios ou ambíguos (ex.: uma pergunta descreve um vaso "que sai do ventrículo esquerdo e leva sangue aos pulmões" — uma mistura que não existe na anatomia real). Nesses casos, a explicação do gabarito aponta a inconsistência em vez de fingir que ela não existe.</p>
+    <button class="btn-primary" onclick="startQuiz()">Começar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>ClinicusMed · Simulado — Provas Antigas (UCP + Interamericana) · 40 questões · Material de estudo gratuito</footer>
+
+<script>
+// ===== BLOCO A — Universidad Central del Paraguay (Tórax) =====
+const mcqA = [
+{"type":"mcq","topic":"UCP · Generalidades","q":"A posição anatômica consiste em:","opts":["Cabeça erecta, membros superiores estendidos aos lados do tronco, pernas flexionadas, pés juntos e paralelos","Cabeça erecta, membros superiores estendidos aos lados do tronco, pernas estendidas, pés juntos e paralelos, palmas das mãos para adiante","Cabeça erecta, membros superiores estendidos aos lados do tronco, pernas estendidas, pés juntos e paralelos, palmas das mãos para atrás","Cabeça erecta, membros superiores estendidos aos lados do tronco, pernas estendidas, palmas das mãos dorsais, olhar para frente","Cabeça erecta, membros superiores estendidos aos lados do tronco, pernas estendidas, palmas das mãos em posição volar, olhar para baixo"],"correct":1,"exp":"A posição anatômica clássica tem as pernas estendidas (não flexionadas) e as palmas das mãos voltadas para adiante (anterior) — é essa combinação que define o referencial usado em toda a anatomia descritiva."},
+{"type":"mcq","topic":"UCP · Nervo Frênico","q":"Sobre o nervo frênico é correto afirmar:","opts":["Origina-se das raízes C3, C4, C5, é ramo do plexo cervical profundo e está em relação com o músculo escaleno médio","Origina-se das raízes C3, C4, C5, é ramo do plexo cervical profundo e está em relação com o músculo escaleno anterior","Origina-se das raízes C4, C3, C6, é ramo do plexo cervical profundo e está em relação com o músculo escaleno médio","Origina-se das raízes C3, C4, C5, é ramo do plexo cervical superficial e está em relação com o músculo escaleno anterior"],"correct":1,"exp":"O nervo frênico nasce de C3-C4-C5 ('C3, C4, C5 mantêm o diafragma vivo'), é ramo do plexo cervical PROFUNDO, e desce pela face anterior do músculo escaleno anterior em direção ao tórax."},
+{"type":"mcq","topic":"UCP · Parede Torácica","q":"Sobre a vascularização dos músculos intercostais, marque a opção correta:","opts":["São irrigados pelas artérias intercostais anteriores, ramos da artéria mamária externa","São irrigados pelas artérias intercostais posteriores, ramos da artéria mamária interna","São irrigados pelas artérias intercostais anteriores, ramos da artéria mamária (torácica) interna","São irrigados pelas artérias intercostais posteriores, ramos da artéria aorta abdominal","Nenhuma das anteriores"],"correct":2,"exp":"As intercostais anteriores vêm da artéria torácica (mamária) interna; as posteriores vêm da aorta TORÁCICA (não abdominal). Das opções dadas, a única combinação correta é anteriores + mamária interna."},
+{"type":"mcq","topic":"UCP · Nervos do Tórax","q":"Sobre o nervo torácico longo de Charles Bell é correto:","opts":["Origina-se do plexo braquial C5, C6, C7 e faz a inervação sensitiva do músculo serrátil maior","Origina-se do plexo cervical C3, C4, C5 e faz a inervação motora do músculo serrátil maior","Origina-se do plexo braquial C5, C6, C7 e faz a inervação motora do músculo serrátil maior","Origina-se do plexo cervical C3, C4, C5 e faz a inervação sensitiva do músculo peitoral maior"],"correct":2,"exp":"O nervo torácico longo (de Charles Bell) vem do plexo braquial (raízes C5-C6-C7) e dá inervação MOTORA ao músculo serrátil anterior (serrátil maior) — sua lesão causa a clássica 'escápula alada'."},
+{"type":"mcq","topic":"UCP · Diafragma","q":"Sobre o diafragma é correto:","opts":["O ligamento arqueado medial corresponde ao músculo quadrado lombar","O ligamento arqueado lateral corresponde ao músculo psoas","As fibras medianas do pilar principal formam o hiato esofágico","As fibras laterais do pilar principal formam o hiato da veia cava inferior"],"correct":2,"exp":"As fibras mediais (medianas) do pilar principal direito decussam e formam o hiato esofágico. O forame da VCI, por sua vez, não é formado pelos pilares — fica no centro tendíneo. Os ligamentos arqueados medial e lateral cobrem o psoas e o quadrado lombar, respectivamente (o inverso do que dizem as opções a/b)."},
+{"type":"mcq","topic":"UCP · Coluna Vertebral","q":"A coluna vertebral apresenta as seguintes características:","opts":["Curvatura fisiológica cervical chamada cifose, com concavidade anterior","Curvatura fisiológica lombar chamada lordose, com concavidade posterior","Curvatura fisiológica torácica chamada lordose, com concavidade anterior","Curvatura fisiológica sacrococcígea chamada cifose, com concavidade posterior","Nenhuma das anteriores"],"correct":1,"exp":"A lordose lombar (como a cervical) tem concavidade posterior. A torácica e a sacrococcígea são CIFOSES, com concavidade anterior (convexidade posterior) — por isso as opções a, c e d trocam os nomes ou as concavidades."},
+{"type":"mcq","topic":"UCP · Coração","q":"Uma paciente apresenta bradicardia (diminuição da frequência cardíaca). O estudo mostra alteração no marcapasso natural do coração. Qual estrutura está afetada?","opts":["Nó atrioventricular","Feixe de His","Nó sinusal","Fibras de Purkinje","Válvula mitral"],"correct":2,"exp":"O nó sinusal (sinoatrial) é o marcapasso natural do coração — gera o ritmo primário. Uma alteração nele (doença do nó sinusal) é causa clássica de bradicardia."},
+{"type":"mcq","topic":"UCP · Coração","q":"Um paciente com insuficiência cardíaca apresenta dilatação da cavidade que recebe sangue oxigenado proveniente dos pulmões. Qual cavidade está afetada?","opts":["Átrio direito","Ventrículo direito","Átrio esquerdo","Ventrículo esquerdo","Tronco pulmonar"],"correct":2,"exp":"As veias pulmonares trazem sangue já oxigenado dos pulmões e desembocam no átrio esquerdo — é ele quem recebe esse sangue antes de passar para o ventrículo esquerdo."},
+{"type":"mcq","topic":"UCP · Coração","q":"Um sopro cardíaco é melhor auscultado no 5º espaço intercostal DIREITO, na linha hemiclavicular. Qual válvula está afetada?","opts":["Tricúspide","Bicúspide","Aórtica","Mitral","B e D estão corretas"],"correct":4,"exp":"Bicúspide e mitral são dois nomes para a MESMA válvula — por isso 'b e d' estão corretas ao mesmo tempo. Vale notar: o foco de ausculta mitral clássico fica no 5º EIC ESQUERDO (ápice); o enunciado diz 'direito', o que é provavelmente uma imprecisão da prova original — mas o ponto testado aqui é reconhecer que bicúspide = mitral."},
+{"type":"mcq","topic":"UCP · Coração","q":"Um traumatismo torácico compromete o vaso que sai do ventrículo esquerdo e leva sangue aos pulmões. Qual estrutura está lesionada?","opts":["Aorta","Veia cava superior","Tronco pulmonar","Veias pulmonares","Artéria coronária"],"correct":2,"exp":"Atenção: o enunciado original mistura duas coisas que não coexistem — o vaso que leva sangue aos pulmões (tronco pulmonar) sai do ventrículo DIREITO, não do esquerdo (que dá origem à aorta, que leva sangue ao corpo). Como o destino pedido é 'os pulmões', a resposta pretendida é o tronco pulmonar — mas fica o alerta de que o enunciado tem uma imprecisão anatômica."},
+{"type":"mcq","topic":"UCP · Coração","q":"Um defeito congênito permite a passagem de sangue entre os átrios. Qual estrutura está alterada?","opts":["Tabique interventricular","Tabique interatrial","Válvula mitral","Forame oval","Aorta"],"correct":1,"exp":"Uma comunicação entre os átrios é, por definição, um defeito do septo (tabique) INTERATRIAL — o forame oval é uma estrutura fetal normal que, se não fechar, é uma causa específica desse defeito, mas a estrutura alterada em si é o septo interatrial."},
+{"type":"mcq","topic":"UCP · Artrologia","q":"As articulações musculares, como por exemplo as escapulotorácicas, se classificam como:","opts":["Sinoviais","Fibrosas","Cartilaginosas","Sinartrose","Diartrose"],"correct":3,"exp":"A articulação escapulotorácica não é uma articulação verdadeira (não tem cápsula nem cavidade sinovial) — é uma união puramente muscular entre a escápula e a parede torácica. Na classificação clássica (Testut/Latarjet), esse tipo de 'falsa articulação' entra como sinartrose, apesar de permitir bastante movimento na prática."},
+{"type":"mcq","topic":"UCP · Esqueleto Torácico","q":"A disposição correta dos detalhes ósseos da 1ª costela, de adiante para atrás, é:","opts":["Tubérculo de Lisfranc, sulco para a artéria subclávia, sulco para a veia subclávia","Tubérculo, escaleno posterior, sulco para a veia subclávia, sulco para a artéria subclávia","Sulco para a artéria subclávia, tubérculo de Lisfranc, sulco para a veia subclávia","Sulco para a veia subclávia, tubérculo de Lisfranc, sulco para a artéria subclávia","Nenhuma das anteriores"],"correct":3,"exp":"Na face superior da 1ª costela, de adiante para atrás: sulco da veia subclávia (anterior) → tubérculo do escaleno anterior (de Lisfranc) → sulco da artéria subclávia (posterior). A veia fica sempre anterior ao tubérculo; a artéria, posterior."},
+{"type":"mcq","topic":"UCP · Esqueleto Torácico","q":"O Ângulo de Louis ou esternal se encontra entre:","opts":["Corpo esternal e apófise xifoide, aberto para trás em 35°","Manúbrio esternal e incisura jugular, aberto para trás em 152°","Manúbrio e apófise xifoide, aberto para trás em 152°","Incisura jugular e incisura clavicular, aberto para trás em 25°","Nenhuma das anteriores"],"correct":4,"exp":"O Ângulo de Louis fica na junção entre o MANÚBRIO e o CORPO do esterno — nenhuma das opções descreve essa junção corretamente (elas trocam por incisura jugular ou apófise xifoide), então a resposta é 'nenhuma das anteriores'."}
+];
+
+const vfA = [
+{"topic":"UCP · Esqueleto Torácico","q":"A disposição correta dos detalhes ósseos da 1ª costela, de atrás para adiante, é: sulco para a veia subclávia, tubérculo de Lisfranc, sulco para a artéria subclávia.","correct":false,"exp":"Falso. De atrás para adiante o correto é o inverso: sulco da artéria subclávia (posterior) → tubérculo de Lisfranc → sulco da veia subclávia (anterior). A afirmação inverteu a ordem real (que é válida de ADIANTE para atrás, não o contrário)."},
+{"topic":"UCP · Miologia","q":"O músculo peitoral maior se insere no úmero numa parte denominada lábio inferior da goteira bicipital, ou crista do tubérculo maior, ou lábio medial do sulco intertubercular.","correct":false,"exp":"Falso. O peitoral maior se insere na crista do tubérculo MAIOR, que forma o lábio LATERAL da goteira bicipital — não o medial. O lábio medial (crista do tubérculo menor) é onde se insere o redondo maior; o assoalho da goteira recebe o grande dorsal."}
+];
+
+// Bloco A — questões sobre a figura do diafragma (ilustração original de terceiros, removida por direitos autorais,
+// igual já indicado na prova em PDF de Materiais Complementares — por isso aqui elas são descritas em texto).
+const figA = [
+{"type":"mcq","topic":"UCP · Diafragma (figura)","q":"Numa vista inferior (abdominal) do diafragma, uma seta aponta para um vaso que cruza obliquamente a face torácica do diafragma, do lado direito, próximo do forame da veia cava inferior. Esse vaso se denomina corretamente:","opts":["Artéria frênica direita, ramo da artéria aorta abdominal","Artéria frênica esquerda, ramo da artéria aorta abdominal","Artéria frênica direita, ramo da artéria aorta torácica","Artéria frênica esquerda, ramo da artéria aorta torácica","Nenhuma das anteriores"],"correct":0,"exp":"Vista pelo lado abdominal (inferior), a artéria que irriga o diafragma nessa região é a frênica INFERIOR, ramo da aorta ABDOMINAL (não da torácica, que dá as frênicas superiores, vistas pelo lado torácico). Do lado direito da imagem, é a frênica direita."},
+{"type":"mcq","topic":"UCP · Diafragma (figura)","q":"Nessa mesma vista, uma seta aponta diretamente para o forame circular da veia cava inferior. A estrutura apontada corresponde a:","opts":["Nervo esplâncnico maior","Nervo esplâncnico menor","Nervo frênico direito","Nervo frênico esquerdo","Cadeia simpática"],"correct":2,"exp":"O forame da VCI é atravessado pela própria veia cava inferior e por um ramo do nervo frênico DIREITO — é essa relação (VCI + frênico direito) que costuma ser cobrada nessa figura."},
+{"type":"mcq","topic":"UCP · Diafragma (figura)","q":"Uma seta aponta para a passagem do esôfago através do diafragma, no ponto em que se veem fibras musculares decussando (cruzando-se). Essa passagem se conhece como:","opts":["Hiato aórtico, fibras mediais","Hiato esofágico, fibras medianas","Hiato aórtico, fibras medianas","Hiato esofágico, fibras mediais","Nenhuma das anteriores"],"correct":1,"exp":"É o hiato esofágico, formado pelas fibras MEDIANAS (medianas = que decussam, se cruzam) do pilar principal direito — esse detalhe (medianas, e não apenas 'mediais') é o que diferencia as opções b e d."},
+{"type":"mcq","topic":"UCP · Diafragma (figura)","q":"Uma seta aponta para a estrutura fibromuscular vertical, logo abaixo do hiato esofágico, que se insere nos corpos vertebrais lombares e dá origem às fibras que formam esse hiato. Essa estrutura é:","opts":["Pilar principal direito","Pilar principal esquerdo","Pilar acessório direito","Pilar acessório esquerdo","Terceiro pilar"],"correct":0,"exp":"O pilar principal DIREITO é maior, mais longo, insere-se nos corpos de L1 a L3 (o esquerdo só em L1-L2) e é ele quem dá origem às fibras que decussam para formar o hiato esofágico."}
+];
+
+// ===== BLOCO B — Universidad Interamericana (Pescoço) =====
+const mcqB = [
+{"type":"mcq","topic":"Interamericana · Esôfago","q":"Qual dos seguintes estreitamentos fisiológicos do esôfago NÃO corresponde a uma relação anatômica externa?","opts":["Estreitamento cricofaríngeo","Estreitamento pelo arco aórtico","Estreitamento pelo brônquio principal esquerdo","Estreitamento diafragmático"],"correct":0,"exp":"O estreitamento cricofaríngeo é causado pelo próprio músculo cricofaríngeo (esfíncter esofágico superior) — é intrínseco ao órgão. Os outros três são causados por estruturas VIZINHAS comprimindo o esôfago de fora (arco aórtico, brônquio esquerdo, hiato diafragmático)."},
+{"type":"mcq","topic":"Interamericana · Laringe","q":"Um paciente perde a sensibilidade da mucosa laríngea situada por cima das cordas vocais. Qual nervo está lesionado?","opts":["Nervo laríngeo recorrente","Ramo interno do nervo laríngeo superior","Nervo glossofaríngeo","Nervo hipoglosso"],"correct":1,"exp":"Acima das cordas vocais (região supraglótica), a sensibilidade é dada pelo ramo INTERNO do nervo laríngeo superior. Abaixo das cordas vocais, quem assume é o nervo laríngeo recorrente."},
+{"type":"mcq","topic":"Interamericana · Pulmão","q":"Uma pneumonia fica confinada a um único segmento broncopulmonar. Qual característica anatômica permite essa limitação?","opts":["Cada segmento possui irrigação arterial independente e brônquio segmentar próprio","A pleura visceral divide os segmentos","A artéria pulmonar irriga um único segmento","Os lobos são completamente independentes"],"correct":0,"exp":"O segmento broncopulmonar é definido justamente por ter seu próprio brônquio segmentar e sua própria irrigação arterial independente — por isso uma infecção ou obstrução pode ficar limitada a um único segmento."},
+{"type":"mcq","topic":"Interamericana · Esôfago/Laringe","q":"Um paciente apresenta carcinoma esofágico localizado no terço médio do esôfago. O tumor invade uma estrutura vizinha, produzindo disfonia. Qual estrutura foi comprometida?","opts":["Nervo frênico","Nervo laríngeo recorrente esquerdo","Conduto torácico","Veia cava superior"],"correct":1,"exp":"O nervo laríngeo recorrente ESQUERDO passa perto do esôfago e do sulco traqueoesofágico no mediastino — é o mais vulnerável a tumores esofágicos do terço médio, e sua lesão causa disfonia por paralisia da corda vocal."},
+{"type":"mcq","topic":"Interamericana · Laringe","q":"Qual nervo inerva o músculo cricotireóideo?","opts":["Nervo laríngeo recorrente","Nervo laríngeo superior (ramo externo)","Nervo vago","Nervo frênico","Nervo laríngeo superior (ramo interno)"],"correct":1,"exp":"O cricotireóideo é o único músculo intrínseco da laringe inervado pelo ramo EXTERNO do nervo laríngeo superior — todos os outros músculos intrínsecos da laringe são inervados pelo nervo laríngeo recorrente."},
+{"type":"mcq","topic":"Interamericana · Pulmão","q":"Qual segmento broncopulmonar recebe com mais frequência corpos estranhos aspirados?","opts":["Lobo superior esquerdo","Segmento apical direito","Segmento basal esquerdo","Segmento superior do lobo inferior direito"],"correct":3,"exp":"Classicamente, o brônquio principal direito é mais vertical, curto e largo que o esquerdo, favorecendo a aspiração de corpos estranhos para o pulmão direito — e o segmento superior do lobo inferior direito é o local mais citado (especialmente em pacientes deitados)."},
+{"type":"mcq","topic":"Interamericana · Pescoço","q":"Dentro da bainha carotídea se encontram:","opts":["Artéria carótida comum, veia jugular interna e nervo vago","Traqueia, esôfago e nervo vago","Tireoide, jugular e traqueia","Nervo frênico, carótida e esôfago e nervo vago","Artéria carótida comum, veia jugular externa e nervo vago"],"correct":0,"exp":"A bainha (vaina) carotídea envolve o feixe vasculonervoso do pescoço: artéria carótida comum, veia jugular INTERNA (não a externa) e nervo vago."},
+{"type":"mcq","topic":"Interamericana · Tireoide","q":"Durante uma cirurgia de tireoide, o cirurgião lesiona acidentalmente um nervo muito próximo à artéria tireóidea inferior. Depois da operação, o paciente apresenta voz rouca persistente. Qual nervo foi lesionado?","opts":["Nervo laríngeo recorrente","Nervo acessório","Nervo hipoglosso","Nervo frênico"],"correct":0,"exp":"O nervo laríngeo recorrente cruza muito perto da artéria tireóidea inferior no seu trajeto até a laringe — por isso é um dos grandes riscos de lesão iatrogênica em cirurgias de tireoide, causando rouquidão persistente."},
+{"type":"mcq","topic":"Interamericana · Laringe","q":"Quais músculos se inserem na linha oblíqua do tireoide?","opts":["Músculo esternotireóideo, músculo tireo-hióideo, constritor inferior da faringe","Músculo esternotireóideo, músculo tireo-hióideo, constritor superior da faringe","Músculo esternotireóideo, músculo tireo-hióideo, elevador inferior da faringe","Músculo esternotireóideo, músculo tireo-hióideo, elevador superior da faringe"],"correct":0,"exp":"A linha oblíqua da cartilagem tireoide recebe, de cima para baixo, a inserção do tireo-hióideo (continuando a linha para cima), do esternotireóideo, e do constritor INFERIOR da faringe — não o superior."},
+{"type":"mcq","topic":"Interamericana · Pescoço","q":"Sobre o Glomus Carotídeo é correto afirmar:","opts":["É um quimiorreceptor","É um barorreceptor","É uma dilatação da veia carótida","É uma dilatação do nervo carótido"],"correct":0,"exp":"O glomus (corpo) carotídeo é um quimiorreceptor, sensível às variações de O2, CO2 e pH do sangue. Quem é barorreceptor, na mesma região, é o SEIO carotídeo — uma dilatação da própria artéria, não do glomus."},
+{"type":"mcq","topic":"Interamericana · Plexo Cervical","q":"Sobre o plexo cervical superficial marque o correto:","opts":["Está encarregado da inervação motora do pescoço","Está encarregado da inervação sensitiva do pescoço","Está encarregado da inervação vegetativa do pescoço","Está formado pelas raízes C3, C4, C5"],"correct":1,"exp":"O plexo cervical superficial dá os ramos cutâneos (sensitivos) do pescoço: occipital menor, auricular maior, cervical transverso e supraclaviculares. A parte motora fica por conta do plexo cervical profundo (alça cervical, frênico, ramos musculares)."},
+{"type":"mcq","topic":"Interamericana · Conduto Torácico","q":"Marque a afirmação correta:","opts":["O conduto torácico desemboca no ângulo jugulo-subclávio ESQUERDO de Pirogoff","O conduto torácico desemboca no ângulo jugulo-subclávio DIREITO de Pirogoff","A traqueia tem relação anterior com o esôfago","O nervo vago se origina das raízes cervicais C3-C4-C5"],"correct":0,"exp":"O conduto (ducto) torácico desemboca na junção da veia jugular interna esquerda com a subclávia esquerda — o ângulo jugulo-subclávio ESQUERDO, de Pirogoff. Do lado direito quem desemboca é o ducto linfático direito (bem menor)."},
+{"type":"mcq","topic":"Interamericana · Laringe","q":"A Asa (alça) de Galeno é:","opts":["Uma anastomose entre o nervo laríngeo superior e o laríngeo inferior (recorrente)","Uma anastomose entre a artéria laríngea superior e a laríngea inferior","Uma anastomose entre o nervo laríngeo superior e o laríngeo externo","Uma anastomose entre a artéria laríngea superior e a laríngea externa"],"correct":0,"exp":"A alça de Galeno é uma anastomose NERVOSA, dentro da laringe, entre o ramo interno do nervo laríngeo superior (sensitivo) e o nervo laríngeo inferior (recorrente) — não uma anastomose arterial."},
+{"type":"mcq","topic":"Interamericana · Faringe","q":"A amígdala faríngea se encontra em:","opts":["Face anterior da orofaringe","Face superior da nasofaringe","Face anterior da nasofaringe","Face lateral da nasofaringe"],"correct":1,"exp":"A amígdala faríngea (as 'adenoides') fica no teto e na parede posterossuperior da nasofaringe — ou seja, na face SUPERIOR da nasofaringe."},
+{"type":"mcq","topic":"Interamericana · Pescoço","q":"Qual dos músculos infra-hióideos NÃO é inervado pela alça cervical?","opts":["Esternotireóideo","Tireo-hióideo","Esternocleido-hióideo","Omo-hióideo"],"correct":1,"exp":"Todos os infra-hióideos recebem fibras da alça cervical, EXCETO o tireo-hióideo, que é inervado diretamente por fibras de C1 que 'pegam carona' no nervo hipoglosso — uma exceção muito cobrada em prova."},
+{"type":"mcq","topic":"Interamericana · Pescoço","q":"Sobre o hiato escalênico é correto dizer:","opts":["Está formado pelo escaleno anterior e médio; por ele passam a veia subclávia e o plexo braquial","Está formado pelo escaleno anterior e médio; por ele passam a veia subclávia e o plexo cervical","Está formado pelo escaleno anterior e posterior; por ele passam a artéria subclávia e o plexo braquial","Está formado pelo escaleno anterior e médio; por ele passam a artéria subclávia e o plexo braquial"],"correct":3,"exp":"O hiato (desfiladeiro) escalênico é delimitado pelo escaleno ANTERIOR e MÉDIO, e por ele passam a artéria subclávia e o plexo braquial — a veia subclávia passa por fora, anterior ao escaleno anterior, fora do hiato."},
+{"type":"mcq","topic":"Interamericana · Pescoço","q":"Qual é o limite superior e inferior do pescoço, na face posterior?","opts":["Protuberância occipital externa / linha acrômio-clavicular que passa pela apófise espinhosa de C7","Protuberância occipital externa / linha acrômio-clavicular que passa pela incisura jugular do esterno","Protuberância occipital interna / linha acrômio-clavicular que passa pela apófise espinhosa de C7","Protuberância occipital interna / linha acrômio-clavicular que passa pela incisura jugular do esterno"],"correct":0,"exp":"Na face posterior, o limite superior do pescoço é a protuberância occipital EXTERNA (palpável), e o limite inferior é uma linha passando pelo acrômio até a apófise espinhosa de C7 (vértebra proeminente) — a incisura jugular é referência da face ANTERIOR, não da posterior."},
+{"type":"mcq","topic":"Interamericana · Pescoço","q":"Qual é a inervação que recebem o músculo esternocleidomastóideo e o trapézio?","opts":["V par (trigêmeo)","VII par (facial)","XI par (acessório/espinal)","XII par (hipoglosso)"],"correct":2,"exp":"O ECM e o trapézio são os dois músculos inervados pelo nervo acessório (XI par craniano, raiz espinal) — um clássico de prova."}
+];
+
+// ===== Associação — conteúdo dissertativo da prova da Interamericana =====
+const matchB = [
+{"topic":"Interamericana · Dissertativas I","prompt":"Associe cada estrutura do pescoço, cobrada como questão dissertativa na prova da Interamericana, à sua definição correta.","pairs":[
+  {"term":"Glomus carotídeo","def":"Quimiorreceptor situado na bifurcação da carótida comum"},
+  {"term":"Plexo cervical superficial","def":"Responsável pela inervação sensitiva (cutânea) do pescoço"},
+  {"term":"Bainha carotídea","def":"Envolve a carótida comum, a jugular interna e o nervo vago"},
+  {"term":"Asa (alça) de Galeno","def":"Anastomose entre o ramo interno do laríngeo superior e o laríngeo recorrente"}
+]},
+{"topic":"Interamericana · Dissertativas II","prompt":"Associe cada item sobre o conduto torácico e a carótida externa à resposta esperada na prova (seção 'Cita lo solicitado').","pairs":[
+  {"term":"Onde se forma o conduto torácico","def":"Na cisterna do quilo, pela confluência dos troncos linfáticos lombares e do tronco intestinal, perto de L1-L2"},
+  {"term":"Onde desemboca o conduto torácico","def":"No ângulo jugulo-subclávio esquerdo (de Pirogoff)"},
+  {"term":"Ramos terminais da artéria carótida externa","def":"Artéria temporal superficial e artéria maxilar"},
+  {"term":"Ramos colaterais do plexo cervical profundo","def":"Nervo frênico, alça cervical, ramos musculares (para escalenos/pré-vertebrais) e ramos comunicantes (com XII, X, XI e simpático)"}
+]}
+];
+
+// build unified quizData array: Bloco A (mcq + figura) -> V/F A -> Bloco B (mcq) -> Associação
+const fullQuiz = [];
+mcqA.forEach(q=>fullQuiz.push(q));
+figA.forEach(q=>fullQuiz.push(q));
+vfA.forEach(v=>fullQuiz.push({type:"vf", topic:v.topic, q:v.q, correct:v.correct, exp:v.exp}));
+mcqB.forEach(q=>fullQuiz.push(q));
+matchB.forEach(m=>fullQuiz.push({type:"match", topic:m.topic, prompt:m.prompt, pairs:m.pairs}));
+
+let qIndex = 0, score = 0, answered = false, log = [];
+let topicStats = {};
+let xp = 0;
+
+function addXP(n){ xp += n; document.getElementById('xpCount').textContent = xp; document.getElementById('levelBadge').textContent = 'Nível ' + (Math.floor(xp/100)+1); }
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = []; topicStats = {};
+  renderQuiz();
+}
+
+function typeLabel(t){ return t==='mcq' ? 'Múltipla escolha' : t==='vf' ? 'Verdadeiro / Falso' : 'Associar colunas'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIndex >= fullQuiz.length){ renderResult(); return; }
+  const item = fullQuiz[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/fullQuiz.length)*100);
+  let html = '<div class="quiz-progress"><span>Questão ' + (qIndex+1) + ' / ' + fullQuiz.length + '</span><span>Pontuação: ' + score + '</span></div>';
+  html += '<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="tag-row"><span class="tag topic">' + item.topic + '</span><span class="tag type">' + typeLabel(item.type) + '</span></div>';
+  html += '<div class="quiz-q">' + (item.q || item.prompt) + '</div>';
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else if(item.type === 'vf'){
+    html += '<div class="vf-row">'
+      + '<button class="option" data-val="true" onclick="answerVF(this,true)">Verdadeiro</button>'
+      + '<button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button>'
+      + '</div>';
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += '<div id="matchBlock">';
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += '<div class="match-row" data-idx="'+i+'">'
+        + '<span class="match-term">' + p.term + '</span>'
+        + '<select onchange="matchSelected()"><option value="">— Selecione —</option>'
+        + shuffled.map(d=>'<option value="'+escapeHtml(d)+'">'+d+'</option>').join('')
+        + '</select></div>';
+    });
+    html += '</div>';
+    html += '<button class="btn-primary" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>';
+  }
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function registerTopic(topic, correct){
+  if(!topicStats[topic]) topicStats[topic] = {total:0, correct:0};
+  topicStats[topic].total++;
+  if(correct) topicStats[topic].correct++;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = fullQuiz[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct, item.topic, item.q, item.exp);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = fullQuiz[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct, item.topic, item.q, item.exp);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  document.getElementById('checkMatchBtn').disabled = ![...selects].every(s=>s.value !== '');
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = fullQuiz[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (allCorrect?'correct':'incorrect') + '">' + correctCount + ' / ' + item.pairs.length + ' pares corretos.</div>';
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  registerTopic(item.topic, allCorrect);
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct, topic, q, exp){
+  const fb = document.getElementById('feedbackArea');
+  let html = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ Correto!' : '✗ Incorreto') + '</div>';
+  if(exp) html += '<div class="feedback-exp">' + exp + '</div>';
+  fb.innerHTML = html;
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic, correct);
+  log.push({q: q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((score/fullQuiz.length)*100);
+  let html = '<div class="result-box"><div class="score">' + score + ' / ' + fullQuiz.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de acertos</p>';
+  html += pct >= 80 ? '<p style="color:var(--green);">Excelente domínio das duas provas!</p>'
+    : pct >= 50 ? '<p style="color:var(--gold);">Bom resultado — revise os tópicos com mais erros abaixo.</p>'
+    : '<p style="color:var(--red);">Vale a pena revisar os capítulos de Tórax e Pescoço antes da prova.</p>';
+
+  html += '<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{
+    const s = topicStats[t];
+    html += '<div class="bd-item"><div class="n">' + s.correct + '/' + s.total + '</div><div class="l">' + t + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<table class="summary-table"><tr><th>Questão</th><th>Resultado</th></tr>';
+  log.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correto':'Incorreto') + '</td></tr>';
+  });
+  html += '</table>';
+
+  html += '<div class="card dissert-card" style="text-align:left; margin-top:24px;">'
+    + '<h2>📌 Bônus — Esquema da segmentação pulmonar esquerda</h2>'
+    + '<p style="font-size:.85rem;">Na prova da Interamericana, a última questão pedia um desenho da segmentação pulmonar esquerda. Como referência de estudo (o pulmão esquerdo tem a língula fundida ao lobo superior, geralmente descrito em 8 segmentos):</p>'
+    + '<dl>'
+    + '<dt>Lobo superior esquerdo</dt><dd>1+2 (ápico-posterior, fundido), 3 (anterior), 4 (lingular superior), 5 (lingular inferior)</dd>'
+    + '<dt>Lobo inferior esquerdo</dt><dd>6 (superior, de Nelson), 7+8 (ântero-medial basal, geralmente fundidos), 9 (basal lateral), 10 (basal posterior)</dd>'
+    + '</dl>'
+    + '<div class="note-box">No pulmão direito, esses mesmos números costumam aparecer separados (sem fusão), totalizando 10 segmentos — a fusão 1+2 e 7+8 é uma particularidade do pulmão esquerdo.</div>'
+    + '</div>';
+
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Refazer simulado</button></div></div>';
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
