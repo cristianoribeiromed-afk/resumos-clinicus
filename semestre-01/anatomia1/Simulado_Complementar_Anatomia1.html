@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Simulado Complementar — Anatomia I | ClinicusMed</title>
+<meta property="og:title" content="Simulado Complementar — Anatomia I | ClinicusMed">
+<meta property="og:description" content="20 questões (10 múltipla escolha + 5 associação + 5 V/F) combinando os dois resumos de Anatomia I, priorizando o que um material tem e o outro não.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --bg:#1c1410; --bg-alt:#181210; --card:#2a1f18; --card-hover:#33261c;
+  --border:#453224;
+  --text:#f5eee6; --text-dim:#c2ab98;
+  --accent:#c1793f; --accent2:#e8ab6f; --gold:#e8b84b;
+  --red:#e0505f; --green:#4fd1a1;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:radial-gradient(circle at 20% 0%,#241a12 0%,var(--bg) 55%);
+  color:var(--text);
+  font-family:'Segoe UI',Roboto,Arial,sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+h1,h2,h3,h4{margin:0 0 .4em 0;}
+a{color:var(--accent2);}
+
+header.top{
+  position:sticky; top:0; z-index:100;
+  background:rgba(28,20,16,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo-text h1{font-size:1.1rem; margin:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#1c1410;}
+
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.eyebrow{
+  display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent2); background:rgba(193,121,63,.12); border:1px solid rgba(193,121,63,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:var(--text-dim);}
+.hero{
+  background:linear-gradient(135deg, rgba(193,121,63,.15), rgba(232,184,75,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;
+}
+.hero h2{font-size:1.6rem; margin-bottom:.3em; color:var(--text);}
+ul{margin:8px 0 8px 20px; color:var(--text-dim);}
+li{margin-bottom:6px;}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#1c1410; border:none; padding:12px 26px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(193,121,63,.14); color:var(--accent2); border:1px solid rgba(193,121,63,.3);}
+.tag.type{background:rgba(232,184,75,.12); color:var(--gold); border:1px solid rgba(232,184,75,.3);}
+.tag.source{background:rgba(79,209,161,.12); color:var(--green); border:1px solid rgba(79,209,161,.3);}
+.quiz-q{font-size:1.08rem; font-weight:700; margin-bottom:16px; color:var(--text);}
+
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--accent2);}
+.option.correct{background:rgba(79,209,161,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(224,80,95,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;}
+.vf-row .option{flex:1; text-align:center;}
+
+.match-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin-bottom:10px; flex-wrap:wrap;
+}
+.match-term{font-weight:700; color:var(--accent2); min-width:220px; font-size:.9rem;}
+.match-row select{
+  flex:1; min-width:220px; background:#14100c; border:1px solid var(--border); color:var(--text);
+  padding:9px 10px; border-radius:8px; font-family:inherit; font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--red);}
+
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(79,209,161,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(224,80,95,.12); border:1px solid var(--red); color:var(--red);}
+.feedback-exp{margin-top:8px; padding:12px 16px; border-radius:10px; font-size:.85rem; background:var(--bg-alt); border:1px solid var(--border); color:var(--text-dim);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--accent2);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="header-inner">
+    <div class="logo-text">
+      <h1>🦴 Simulado Complementar — Anatomia I</h1>
+      <span>Combinando os 2 resumos · o que falta em um, o outro completa</span>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nível 1</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato do simulado</span>
+    <h2>20 questões — cruzando os 2 resumos de Anatomia I</h2>
+    <p>10 de múltipla escolha, 5 de associar colunas e 5 de Verdadeiro/Falso (com justificativa nas falsas). Montado comparando o resumo "Anatomia I Completo" (9 capítulos: Generalidades até Músculos e Nervos do Tórax, com o Coração num único capítulo clássico) com o resumo "Anatomia I — Os 12 Capítulos" (que separa e aprofunda Mediastino/Pericárdio, Configuração do Coração, Aparelho Valvular e Sistema de Condução/Vascularização). Onde um material tinha um detalhe que o outro não tinha, ele entrou aqui.</p>
+  </div>
+  <div class="card">
+    <h2>O que esse simulado cobre especialmente</h2>
+    <ul>
+      <li><b>Só no resumo mais enxuto:</b> circuito sanguíneo completo passo a passo, as 2 circulações (sistêmica × pulmonar), a exceção de oxigenação dos vasos pulmonares, forame oval/ligamento arterioso, Triângulo de Sédillot (punção de jugular interna), veias braquiocefálicas e seio sigmoide</li>
+      <li><b>Só no resumo mais completo:</b> divisão do mediastino, recessos do pericárdio seroso (Theile, Haller, Allison), as 5 paredes do átrio direito, Triângulo de Koch, anatomia detalhada de cada válvula (tricúspide/mitral/pulmonar/aórtica), artérias coronárias e sistema ázigos/hemiázigos</li>
+      <li><b>Base comum:</b> generalidades, osteologia, artrologia, miologia, esqueleto torácico, coluna vertebral e diafragma — revisados nas questões de múltipla escolha, associação e V/F</li>
+    </ul>
+    <button class="btn-primary" onclick="startQuiz()">Começar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>ClinicusMed · Simulado Complementar — Anatomia I · 20 questões</footer>
+
+<script>
+const quizData = [
+{"type":"mcq","topic":"Artrologia","q":"Qual tipo de articulação sinovial (diartrose) permite apenas movimento de rotação em torno de um único eixo, sendo seu exemplo clássico a articulação atlantoaxial (C1-C2)?","opts":["Trocoide (Pivô)","Esferoide (Enartrose)","Gínglimo (Dobradiça)","Selar"],"correct":0,"exp":"A articulação trocoide (pivô) é uniaxial e permite apenas rotação — o exemplo clássico é a atlantoaxial (C1-C2), que permite o giro da cabeça."},
+{"type":"mcq","topic":"Miologia","q":"Qual tipo de contração muscular gera tensão SEM alterar o comprimento do músculo, diferente da contração que gera movimento?","opts":["Contração isotônica","Contração isométrica","Contração tetânica","Contração excêntrica pura"],"correct":1,"exp":"A contração isométrica gera tensão sem mudar o comprimento do músculo (ex.: sustentar um peso parado). A isotônica muda o comprimento e gera movimento."},
+{"type":"mcq","topic":"Esqueleto Torácico","q":"O Ângulo de Louis (ângulo esternal/de Ludwig), na junção manúbrio-corpo do esterno, é um marco anatômico importante porque:","opts":["Marca a articulação da 2ª costela, divide o mediastino em superior/inferior e projeta a bifurcação traqueal (carina)","Marca exclusivamente a inserção do diafragma","Separa apenas os dois pulmões entre si","Marca a articulação da 1ª costela, única com carrilha articular"],"correct":0,"exp":"O Ângulo de Louis marca a 2ª costela, divide o mediastino superior do inferior, e projeta a bifurcação traqueal (carina), o início do arco aórtico e a entrada da VCS no coração."},
+{"type":"mcq","topic":"Coluna Vertebral","q":"O tubérculo carotídeo (de Chassaignac), ponto de referência clínico para compressão manual da artéria carótida em hemostasia de sangramentos cervicais, está localizado em qual vértebra?","opts":["C2 (Áxis)","C6","C7 (vértebra proeminente)","T1"],"correct":1,"exp":"O tubérculo carotídeo (Chassaignac) está na vértebra C6 — é o ponto-chave para compressão manual da artéria carótida."},
+{"type":"mcq","topic":"Diafragma","q":"Por qual hiato o nervo frênico atravessa o diafragma, e em qual nível vertebral — a clássica pegadinha de prova?","opts":["Hiato esofágico, T10","Forame da veia cava inferior, T8","Hiato aórtico, T12","O nervo frênico não atravessa o diafragma"],"correct":1,"exp":"Pegadinha clássica: o nervo frênico (ramo direito) atravessa o diafragma pelo Forame da VCI (T8) — e NÃO pelo hiato esofágico (T10), como muita gente assume por ele passar 'perto' do esôfago no trajeto cervical/torácico."},
+{"type":"mcq","topic":"Coração — Circuito Sanguíneo","q":"Depois de atravessar a válvula tricúspide, o sangue no coração direito segue diretamente para qual estrutura?","opts":["Tronco pulmonar","Átrio esquerdo","Ventrículo direito","Válvula pulmonar"],"correct":2,"exp":"Sequência: VCS/VCI + seio coronário → AD → válvula tricúspide → VD → válvula pulmonar → tronco pulmonar → artérias pulmonares → pulmões."},
+{"type":"mcq","topic":"Coração — Circulações","q":"Em relação à oxigenação do sangue, o que diferencia os vasos pulmonares (artérias e veias pulmonares) do padrão geral de vasos do corpo?","opts":["As artérias pulmonares levam sangue desoxigenado e as veias pulmonares levam sangue oxigenado — o oposto do padrão geral","As artérias pulmonares levam sangue oxigenado, exatamente como todas as outras artérias do corpo","Não existe nenhuma exceção — toda artéria do corpo, sem exceção, leva sangue oxigenado","As veias pulmonares levam sangue desoxigenado, exatamente como as demais veias do corpo"],"correct":0,"exp":"Exceção importante: artérias pulmonares levam sangue DESoxigenado (rumo aos pulmões pra trocar gases) e veias pulmonares levam sangue oxigenado (de volta ao AE) — o oposto do padrão geral, em que artéria = sangue oxigenado e veia = sangue pobre em O2."},
+{"type":"mcq","topic":"Mediastino e Pericárdio","q":"Qual recesso do pericárdio seroso, situado entre a raiz arterial (aorta/tronco pulmonar) e o átrio esquerdo, tem relevância cirúrgica por permitir o clampeamento simultâneo das 2 grandes artérias?","opts":["Recesso Retrocava de Allison","Seio Oblíquo de Haller","Seio Transverso de Theile","Recesso Pré-aórtico"],"correct":2,"exp":"O Seio Transverso de Theile, entre a raiz arterial e o átrio esquerdo, é o mais cobrado — sua utilidade cirúrgica é permitir o clampeamento das 2 grandes artérias (aorta ascendente e tronco pulmonar) de uma vez só."},
+{"type":"mcq","topic":"Configuração do Coração","q":"O Triângulo de Koch — delimitado pelo tendão de Todaro, pelo orifício do seio coronário (válvula de Tebésio) e pela valva septal da tricúspide — é referência cirúrgica de altíssima relevância porque contém qual estrutura?","opts":["O Nó Sinoatrial (NSA)","O Nó Atrioventricular (NAV)","O Feixe de His já ramificado nos 2 ramos","A válvula mitral"],"correct":1,"exp":"O Triângulo de Koch contém o Nó Atrioventricular (NAV) — por isso é referência cirúrgica de altíssima relevância, especialmente em procedimentos de ablação."},
+{"type":"mcq","topic":"Aparelho Valvular","q":"Qual é a diferença estrutural crucial entre as válvulas atrioventriculares (tricúspide e mitral) e as válvulas arteriais/semilunares (pulmonar e aórtica)?","opts":["As válvulas arteriais têm 4 valvas cada, enquanto as AV têm só 2","As válvulas arteriais NÃO possuem cordas tendíneas nem músculos papilares, diferente das AV","Só as válvulas arteriais possuem anel fibroso","As válvulas AV não têm comissuras, enquanto as arteriais têm 3 cada"],"correct":1,"exp":"Diferença crucial: as válvulas arteriais (semilunares, pulmonar e aórtica) NÃO possuem cordas tendíneas nem músculos papilares — diferente das válvulas AV (tricúspide e mitral), que têm ambos."}
+];
+
+const matchData = [
+{"topic":"Osteologia","prompt":"Associe cada tipo de osso (classificação por forma) ao seu exemplo.","pairs":[
+  {"term":"Ossos Longos","def":"Fêmur (diáfise + epífises)"},
+  {"term":"Ossos Curtos","def":"Ossos do carpo (cuboidais)"},
+  {"term":"Ossos Planos","def":"Crânio e escápula (delgados, protegem órgãos)"},
+  {"term":"Ossos Sesamoides","def":"Patela/rótula (dentro de tendões)"}
+]},
+{"topic":"Diafragma","prompt":"Associe cada hiato/estrutura do diafragma ao seu nível vertebral ou característica principal.","pairs":[
+  {"term":"Forame da Veia Cava Inferior","def":"Nível T8 — VCI + ramo do nervo frênico direito (maior orifício, fibroso)"},
+  {"term":"Hiato Esofágico","def":"Nível T10 — esôfago + 2 nervos vagos (funciona como esfíncter muscular)"},
+  {"term":"Hiato Aórtico","def":"Nível T12 — aorta + ducto torácico (musculofibroso)"},
+  {"term":"Triângulo Lumbocostal (Bochdalek)","def":"Local mais comum de hérnia diafragmática congênita, geralmente à esquerda"}
+]},
+{"topic":"Coração — Estruturas Vasculares","prompt":"Associe cada estrutura vascular relacionada ao coração à sua descrição.","pairs":[
+  {"term":"Triângulo de Sédillot","def":"Entre as cabeças do ECM e a clavícula — local de escolha pra punção da veia jugular interna"},
+  {"term":"Seio Coronário","def":"Principal coletor da drenagem venosa do miocárdio, desemboca no átrio direito"},
+  {"term":"Veia Ázigos","def":"Drena o tórax posterior direito, desemboca em arco na VCS, na altura de T4"},
+  {"term":"Veia Hemiázigos","def":"Drena o lado esquerdo inferior da parede torácica, cruza a linha média (~T9) até a ázigos"}
+]},
+{"topic":"Aparelho Valvular","prompt":"Associe cada válvula cardíaca à sua composição de valvas/cúspides.","pairs":[
+  {"term":"Válvula Tricúspide","def":"3 valvas — anterior (maior), posterior, septal"},
+  {"term":"Válvula Mitral (Bicúspide)","def":"2 valvas — anterior/maior, posterior/menor"},
+  {"term":"Válvula Pulmonar","def":"3 valvas semilunares, sem cordas tendíneas nem papilares"},
+  {"term":"Válvula Aórtica","def":"3 valvas semilunares, próxima aos Seios de Valsalva (origem das coronárias)"}
+]},
+{"topic":"Mediastino","prompt":"Associe cada face/limite do mediastino à sua estrutura correspondente.","pairs":[
+  {"term":"Face Anterior","def":"Esterno"},
+  {"term":"Face Posterior","def":"Coluna vertebral"},
+  {"term":"Face Superior","def":"Orifício torácico superior"},
+  {"term":"Face Inferior","def":"Diafragma"}
+]}
+];
+
+const vfData = [
+{"topic":"Coração — Espessura Ventricular","q":"O ventrículo esquerdo tem parede muscular mais espessa que o direito porque é ele quem inicia a circulação pulmonar, de alta pressão.","correct":false,"exp":"Falso. O VE inicia a circulação SISTÊMICA (grande circulação), que é a de ALTA pressão — é ela, não a pulmonar, que exige uma parede muito mais espessa pra bombear sangue a todo o corpo. A circulação pulmonar (iniciada pelo VD) é, na verdade, de baixa pressão."},
+{"topic":"Coração — Circulação Fetal","q":"O forame oval é uma comunicação interatrial fisiológica presente na vida fetal, que se fecha após o nascimento e dá origem à fossa oval.","correct":true,"exp":"Verdadeiro. O forame oval permite a passagem de sangue entre os átrios na vida fetal (desviando parcialmente a circulação pulmonar, ainda não funcional); após o nascimento, ele se fecha e se torna a fossa oval."},
+{"topic":"Aparelho Valvular","q":"As válvulas semilunares (pulmonar e aórtica) possuem cordas tendíneas e músculos papilares, exatamente como as válvulas atrioventriculares.","correct":false,"exp":"Falso. As válvulas arteriais (semilunares) NÃO possuem cordas tendíneas nem músculos papilares — essa é justamente a diferença estrutural crucial em relação às válvulas atrioventriculares (tricúspide e mitral), que têm ambos."},
+{"topic":"Diafragma","q":"Em ordem crescente de nível vertebral, os 3 hiatos do diafragma são: hiato esofágico (T8), forame da veia cava inferior (T10) e hiato aórtico (T12).","correct":false,"exp":"Falso. A ordem correta, decorada como '8-10-12', é: Forame da VCI (T8) primeiro, depois Hiato Esofágico (T10), e por último Hiato Aórtico (T12) — a afirmação trocou os dois primeiros hiatos entre si."},
+{"topic":"Diafragma — Hérnias","q":"A hérnia diafragmática de Bochdalek, que ocorre no triângulo lumbocostal posterolateral, é congênita e mais comum à esquerda, já que o fígado protege relativamente o lado direito.","correct":true,"exp":"Verdadeiro. A hérnia de Bochdalek é congênita, ocorre no triângulo lumbocostal (posterolateral), e é mais comum à esquerda — o fígado, do lado direito, oferece alguma proteção contra esse defeito de fechamento do forame pleuroperitoneal."}
+];
+
+// build unified quizData array combining mcq + match + vf, interleaved as: all mcq, then match, then vf
+const fullQuiz = [];
+quizData.forEach(q=>fullQuiz.push(q));
+matchData.forEach(m=>fullQuiz.push({type:"match", topic:m.topic, prompt:m.prompt, pairs:m.pairs}));
+vfData.forEach(v=>fullQuiz.push({type:"vf", topic:v.topic, q:v.q, correct:v.correct, exp:v.exp}));
+
+let qIndex = 0, score = 0, answered = false, log = [];
+let topicStats = {};
+let xp = 0;
+
+function addXP(n){ xp += n; document.getElementById('xpCount').textContent = xp; document.getElementById('levelBadge').textContent = 'Nível ' + (Math.floor(xp/100)+1); }
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = []; topicStats = {};
+  renderQuiz();
+}
+
+function typeLabel(t){ return t==='mcq' ? 'Múltipla escolha' : t==='vf' ? 'Verdadeiro / Falso' : 'Associar colunas'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIndex >= fullQuiz.length){ renderResult(); return; }
+  const item = fullQuiz[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/fullQuiz.length)*100);
+  let html = '<div class="quiz-progress"><span>Questão ' + (qIndex+1) + ' / ' + fullQuiz.length + '</span><span>Pontuação: ' + score + '</span></div>';
+  html += '<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="tag-row"><span class="tag topic">' + item.topic + '</span><span class="tag type">' + typeLabel(item.type) + '</span></div>';
+  html += '<div class="quiz-q">' + (item.q || item.prompt) + '</div>';
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else if(item.type === 'vf'){
+    html += '<div class="vf-row">'
+      + '<button class="option" data-val="true" onclick="answerVF(this,true)">Verdadeiro</button>'
+      + '<button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button>'
+      + '</div>';
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += '<div id="matchBlock">';
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += '<div class="match-row" data-idx="'+i+'">'
+        + '<span class="match-term">' + p.term + '</span>'
+        + '<select onchange="matchSelected()"><option value="">— Selecione —</option>'
+        + shuffled.map(d=>'<option value="'+escapeHtml(d)+'">'+d+'</option>').join('')
+        + '</select></div>';
+    });
+    html += '</div>';
+    html += '<button class="btn-primary" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>';
+  }
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function registerTopic(topic, correct){
+  if(!topicStats[topic]) topicStats[topic] = {total:0, correct:0};
+  topicStats[topic].total++;
+  if(correct) topicStats[topic].correct++;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = fullQuiz[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct, item.topic, item.q, item.exp);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = fullQuiz[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct, item.topic, item.q, item.exp);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  document.getElementById('checkMatchBtn').disabled = ![...selects].every(s=>s.value !== '');
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = fullQuiz[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (allCorrect?'correct':'incorrect') + '">' + correctCount + ' / ' + item.pairs.length + ' pares corretos.</div>';
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  registerTopic(item.topic, allCorrect);
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct, topic, q, exp){
+  const fb = document.getElementById('feedbackArea');
+  let html = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ Correto!' : '✗ Incorreto') + '</div>';
+  if(exp) html += '<div class="feedback-exp">' + exp + '</div>';
+  fb.innerHTML = html;
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic, correct);
+  log.push({q: q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((score/fullQuiz.length)*100);
+  let html = '<div class="result-box"><div class="score">' + score + ' / ' + fullQuiz.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de acertos</p>';
+  html += pct >= 80 ? '<p style="color:var(--green);">Excelente domínio — você já cruza bem os dois resumos!</p>'
+    : pct >= 50 ? '<p style="color:var(--gold);">Bom resultado — revise os tópicos com mais erros abaixo.</p>'
+    : '<p style="color:var(--red);">Vale a pena revisar os capítulos completos antes da prova.</p>';
+
+  html += '<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{
+    const s = topicStats[t];
+    html += '<div class="bd-item"><div class="n">' + s.correct + '/' + s.total + '</div><div class="l">' + t + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<table class="summary-table"><tr><th>Questão</th><th>Resultado</th></tr>';
+  log.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correto':'Incorreto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Refazer simulado</button></div></div>';
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+</body>
+</html>
