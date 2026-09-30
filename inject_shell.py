@@ -406,10 +406,103 @@ def inject_file(item, seq, idx, dry_run=False):
     return True
 
 
+def refresh_file(item, seq, idx, dry_run=False, only_materia=None):
+    """Para um arquivo QUE JA TEM o shell injetado: substitui sidebar/breadcrumb/
+    progresso/prevnext pela versao atual (a partir do catalogo.json de agora),
+    sem tocar no conteudo real da pagina nem refazer o bloco de <head>.
+
+    Necessario porque inject_file() e idempotente (pula se ja tem cmed-nav-header)
+    -- isso significa que toda vez que um capitulo novo e adicionado a uma materia,
+    o shell (sidebar/contagem de progresso/prev-next) de TODOS os arquivos ja
+    injetados anteriormente dessa materia fica desatualizado (nao mostra o
+    capitulo novo, contagem "X de N" errada, botao "proximo" nao aponta pro
+    capitulo novo). Essa funcao corrige isso regenerando so essas partes.
+    """
+    full_path = os.path.join(REPO, item['path'])
+    if not os.path.exists(full_path):
+        print(f"  ⚠️  arquivo nao encontrado, pulando: {item['path']}")
+        return False
+
+    with open(full_path, encoding='utf-8') as f:
+        html = f.read()
+
+    if 'cmed-nav-header' not in html:
+        print(f"  ⏭️  ainda nao tem shell, use inject_file/--only: {item['path']}")
+        return False
+
+    try:
+        body_tag_idx = html.index('<body>')
+        main_start_marker = '<div class="cmed-nav-main">\n'
+        main_start_idx = html.index(main_start_marker, body_tag_idx)
+        content_start = main_start_idx + len(main_start_marker)
+        end_marker = '\n  </div>\n</div>\n<nav class="cmed-nav-prevnext">'
+        end_marker_idx = html.index(end_marker, content_start)
+        body_close_idx = html.rindex('</body>')
+    except ValueError as e:
+        print(f"  ⚠️  nao consegui localizar os marcadores do shell (formato inesperado), pulando: {item['path']} ({e})")
+        return False
+
+    inner_content = html[content_start:end_marker_idx]
+    head_part = html[:body_tag_idx] + '<body>\n'
+    tail = html[body_close_idx:]
+
+    header_html = build_header(JORNADA_HREF)
+    breadcrumb_html = build_breadcrumb(item)
+    progress_html = build_progress(idx, len(seq)).replace(
+        'Progresso em ', f'Progresso em {esc(item["materia"])}'
+    )
+    sidebar_html = build_sidebar_html(seq, item['path'])
+    prev_item = seq[idx - 1] if idx > 0 else None
+    next_item = seq[idx + 1] if idx < len(seq) - 1 else None
+    prevnext_html = build_prevnext(prev_item, next_item)
+
+    top_block = f'''{READING_MODE_BTN}
+{header_html}
+{breadcrumb_html}
+{progress_html}
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    {sidebar_html}
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+'''
+    bottom_block = f'''
+  </div>
+</div>
+{prevnext_html}
+{MOBILE_TOGGLE_SCRIPT}
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+'''
+
+    new_html = head_part + top_block + inner_content + bottom_block + tail
+
+    if dry_run:
+        print(f"  [dry-run] atualizaria shell de: {item['path']}")
+        return True
+
+    with open(full_path, 'w', encoding='utf-8') as f:
+        f.write(new_html)
+    print(f"  🔄 {item['path']}")
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dry-run', action='store_true')
     parser.add_argument('--only', default=None, help='processa so esse path (teste)')
+    parser.add_argument('--refresh', action='store_true',
+                         help='ao inves de pular arquivos ja injetados, regenera o shell deles '
+                              '(sidebar/breadcrumb/progresso/prevnext) com o catalogo.json atual')
+    parser.add_argument('--materia', default=None,
+                         help='com --refresh: so processa materias cujo nome contenha esse texto '
+                              '(case-insensitive), ex: --materia "Anatom"')
     args = parser.parse_args()
 
     with open(CATALOGO_PATH, encoding='utf-8') as f:
@@ -421,6 +514,8 @@ def main():
 
     for sem in catalogo['semestres']:
         for materia in sem['materias']:
+            if args.refresh and args.materia and args.materia.lower() not in materia['nome'].lower():
+                continue
             seq = build_sequence(materia, sem.get('nome', ''))
             if not seq:
                 continue
@@ -431,14 +526,18 @@ def main():
                 if args.only and item['path'] != args.only:
                     continue
                 seen_paths.add(item['path'])
-                ok = inject_file(item, seq, idx, dry_run=args.dry_run)
+                if args.refresh:
+                    ok = refresh_file(item, seq, idx, dry_run=args.dry_run)
+                else:
+                    ok = inject_file(item, seq, idx, dry_run=args.dry_run)
                 if ok:
                     total_injetados += 1
                 else:
                     total_pulados += 1
 
     print(f"\n{'='*60}")
-    print(f"Total injetados: {total_injetados} | pulados/ja feitos: {total_pulados}")
+    verbo = 'atualizados' if args.refresh else 'injetados'
+    print(f"Total {verbo}: {total_injetados} | pulados/ja feitos: {total_pulados}")
 
 if __name__ == '__main__':
     main()
