@@ -369,19 +369,23 @@ a{color:inherit;}
   line-height:1.5;
   margin-bottom:12px;
 }
-.pacote-p2-avulso{
-  font-size:13px;
-  color:var(--text-dim, #9aa1ad);
-  text-align:center;
-  margin:-6px 0 18px;
+.pacote-p2-bloco{
+  margin:0 0 20px;
+  padding:14px;
+  border:1px dashed var(--gold);
+  border-radius:14px;
+  background:rgba(232,179,74,.06);
 }
-.pacote-p2-avulso a{
+.pacote-p2-bloco-titulo{
+  font-size:13.5px;
+  font-weight:700;
   color:var(--gold);
-  font-weight:600;
-  text-decoration:underline;
-  cursor:pointer;
+  margin:0 0 10px;
+  text-align:center;
 }
-.pacote-p2-avulso a:hover{ opacity:.85; }
+.pacote-p2-bloco .pacotes-semestre{ margin-bottom:0; }
+.pacote-p2-bloco .pacote-card{ border-color:var(--gold); }
+.pacote-p2-bloco .combo-badge{ background:var(--gold); color:#1a1405; }
 
 .oferta-banner-verde{
   background:rgba(29,185,84,.12);
@@ -2021,17 +2025,25 @@ function renderCatalogo(data){
       });
       panelsHtml += `</div>`;
 
-      // Pacote P2 avulso: nao entra como card do mesmo peso visual dos outros —
-      // é uma opcao secundaria, pro aluno que ja tem P1 (comprado avulso ou aqui
-      // mesmo antes) e so precisa fechar a P2. Fica como link discreto abaixo dos cards.
-      if(sem.pacotes && sem.pacotes.p2 && sem.pacotes.p2.disponivel){
-        const p2 = sem.pacotes.p2;
-        const planoKeyP2 = planoKeyPacote(sem.slug, 'p2', getUniversidadeAtiva());
-        const p2f = sem.pacotes.p2final && sem.pacotes.p2final.disponivel ? sem.pacotes.p2final : null;
-        const planoKeyP2F = planoKeyPacote(sem.slug, 'p2final', getUniversidadeAtiva());
-        panelsHtml += `<div class="pacote-p2-avulso">
-          Já garantiu a P1? <a href="#" onclick="abrirCheckout('${p2.label} — ${sem.semestre}º Semestre', ${p2.preco}, '${planoKeyP2}'); return false;">Só o Pacote P2 — R$ ${formatPrecoBR(p2.preco)}</a>${p2f ? ` · <a href="#" onclick="abrirCheckout('${p2f.label} — ${sem.semestre}º Semestre', ${p2f.preco}, '${planoKeyP2F}'); return false;">Pacote P2 + Final — R$ ${formatPrecoBR(p2f.preco)}</a>` : ''}
-        </div>`;
+      // Bloco "ja tenho a P1": Pacote P2 e Pacote P2 + Final, em destaque secundario
+      // (borda dourada), abaixo dos 3 cards principais.
+      const blocoP2 = ['p2','p2final'].filter(k => sem.pacotes && sem.pacotes[k] && sem.pacotes[k].disponivel);
+      if(blocoP2.length){
+        panelsHtml += `<div class="pacote-p2-bloco"><p class="pacote-p2-bloco-titulo">🎯 Já garantiu a P1? Continue daqui</p><div class="pacotes-semestre">`;
+        blocoP2.forEach(k=>{
+          const p = sem.pacotes[k];
+          const planoKey = planoKeyPacote(sem.slug, k, getUniversidadeAtiva());
+          panelsHtml += `<div class="pacote-card">
+            ${k==='p2final' ? `<span class="combo-badge">⭐ Garante a P2 e o Final</span>` : ''}
+            <b>${p.label}</b>
+            <span class="pacote-desc">${p.descricao}</span>
+            <span class="preco pacote-preco">R$ ${formatPrecoBR(p.preco)}</span>
+            ${formatEconomiaTag(valorReferenciaPacote(sem, k), p.preco)}
+            <span class="pagamento-unico-tag">✅ Pagamento único — sem mensalidade</span>
+            <button class="btn-comprar" onclick="abrirCheckout('${p.label} — ${sem.semestre}º Semestre', ${p.preco}, '${planoKey}')">Comprar</button>
+          </div>`;
+        });
+        panelsHtml += `</div></div>`;
       }
       panelsHtml += `</div>`;
 
