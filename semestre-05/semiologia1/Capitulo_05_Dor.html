@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Semiología Médica I — Cap. 5: Dor | ClinicusMed</title>
+<style>
+.cmed-fig{margin:14px 0; text-align:center;}
+.cmed-fig img{max-width:100%; max-height:640px; width:auto; height:auto; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#fff; display:block; margin:0 auto;}
+.cmed-fig-cap{font-size:.82em; color:var(--text-dim); margin-top:6px; font-style:italic;}
+.cmed-gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin:14px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:320px;}
+:root{
+  --bg:#0f1a14; --card:#16271d; --card2:#1c3326;
+  --accent:#2f9e6b; --accent2:#6fd9a5; --gold:#e8b84b;
+  --text:#e9f6ee; --text-dim:#a3c9b3; --ok:#4fd1a1; --bad:#e0505f; --border:#25513a;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(111,217,165,.12);border:1px solid rgba(111,217,165,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(111,217,165,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Semiología Médica I</a><span class="sep">›</span>
+  <span>P1</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Semiología Médica I</span><span>5 de 9</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:56%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Semiología Médica I</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_01_Generalidades_Exame_Fisico.html"><span class="ico">🩺</span><span>Capítulo 1 — Generalidades da Semiologia e Exame Físico</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_02_Sinais_Vitais.html"><span class="ico">🩺</span><span>Capítulo 2 — Sinais Vitais</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_03_Historia_Clinica.html"><span class="ico">🩺</span><span>Capítulo 3 — História Clínica</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_04_Tosse.html"><span class="ico">🩺</span><span>Capítulo 4 — Tosse</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-05/semiologia1/Capitulo_05_Dor.html"><span class="ico">🩺</span><span>Capítulo 5 — Dor</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_06_Dispneia.html"><span class="ico">🩺</span><span>Capítulo 6 — Dispneia</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_07_Febre.html"><span class="ico">🩺</span><span>Capítulo 7 — Febre</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_08_Comunicacao_Etica_Iatrogenia.html"><span class="ico">🩺</span><span>Capítulo 8 — Comunicação, Ética Médica e Iatrogenia</span></a>
+    <a class="cmed-nav-item" href="/semestre-05/semiologia1/Capitulo_09_Ectoscopia.html"><span class="ico">🩺</span><span>Capítulo 9 — Exame Físico Geral — Ectoscopia</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Semiología Médica I · P1 · Sintomas cardinais</span>
+  <h1>⚡ Capítulo 5 — Dor</h1>
+  <p>ClinicusMed · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p2">🎥 Vídeo</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+<div class="card"><h2>🎯 O que você vai conseguir fazer depois dessa aula</h2><ul><li>Definir dor e explicar por que é o motivo de consulta mais comum</li><li>Diferenciar dor somática, visceral, neuropática e funcional/psicogênica</li><li>Comparar as fibras Aα, Aδ e C e os tipos de nociceptores</li><li>Explicar os mecanismos de dor visceral (distensão, isquemia e inflamação) e o dor referido</li><li>Definir alodinia, hiperalgesia e hiperpatia</li><li>Sistematizar a anamnese da dor com o roteiro ALICIA</li><li>Usar escalas de intensidade e interpretar a atitude do paciente (quieto x inquieto)</li></ul></div><div class="card"><h2>😣 O que é dor</h2><div class="criterio"><b>✅ Definição:</b> sensação desagradável e aflitiva em uma parte do corpo, por causa interna ou externa. É considerada um <b>sinal universal de doença</b> e o <b>motivo de consulta mais comum</b>.</div><p>A dor pode ser: um <b>alerta</b> contra uma agressão que ameaça a integridade do organismo; um <b>sintoma</b> cuja análise explica o padecimento; a <b>manifestação dominante</b> de uma doença; ou o próprio <b>alvo do tratamento</b>.</p></div><div class="card"><h2>🧬 Bases neurofisiológicas</h2><table><tr><th>Tipo</th><th>Onde</th><th>Localização</th></tr><tr><td>Somática superficial</td><td>Pele e tecido celular subcutâneo</td><td>Mais ou menos precisa</td></tr><tr><td>Somática profunda</td><td>Ossos, articulações e músculos</td><td>Mais ou menos precisa</td></tr><tr><td>Visceral</td><td>Vísceras</td><td>Difusa; difícil reconhecer o órgão de origem</td></tr></table><table><tr><th>Fibra</th><th>Características</th><th>Papel</th></tr><tr><td><b>Aα</b> (mielínica)</td><td>Mais grossa, condução mais rápida</td><td>Estímulos táteis e movimentos suaves</td></tr><tr><td><b>Aδ</b> (mielínica)</td><td>Rápida</td><td>Dor aguda, em pontada, precisa, de início e fim rápidos (ex.: picada de injeção IM)</td></tr><tr><td><b>C</b> (amielínica)</td><td>Mais fina e lenta</td><td>Predomina na dor <b>visceral</b></td></tr></table><div class="prova">📝 Ponto crítico de prova: as fibras A predominam no setor somático (superficial e profundo); as C predominam na inervação dolorosa visceral. Os dois tipos transmitem dor.</div></div><div class="card"><h2>🔨 Dor somática: nociceptores</h2><table><tr><th>Receptor</th><th>Ativado por</th></tr><tr><td>Mecanorreceptores</td><td>Traumatismos: picada, corte, pancada, beliscão, torção articular</td></tr><tr><td>Termonociceptores</td><td>Temperaturas muito altas (&gt; 55 °C) ou muito baixas (&lt; 5 °C)</td></tr><tr><td>Polimodais</td><td>Estímulos mecânicos, térmicos e químicos</td></tr><tr><td>Silenciosos ou dormentes</td><td>Só respondem a estímulos químicos (dor na inflamação)</td></tr></table><p>A amplificação da reação tecidual captada pelos receptores polimodais aumenta a percepção dolorosa mesmo diante de estímulos que normalmente não incomodariam, e numa área maior que a originalmente afetada. Essa é a base da <b>hiperalgesia</b>.</p></div><div class="card"><h2>🫀 Dor visceral</h2><p>Muitos estímulos que doem em estruturas somáticas <b>não</b> causam dor nas vísceras, ou só são percebidos ao atingir a cápsula ou a serosa. Exemplos: biópsias endoscópicas, cauterizações e punções do aparelho digestivo, respiratório, colo uterino e bexiga; destruição avançada de pulmão, fígado ou rim por neoplasias.</p><table><tr><th>Estímulo algogênico</th><th>Detalhe</th></tr><tr><td><b>Distensão</b> de vísceras ocas</td><td>O mais estudado; piora periodicamente com as ondas de contração do órgão (base da <b>dor em cólica</b>)</td></tr><tr><td><b>Isquemia</b></td><td>Pode afetar também músculo estriado e intestino (claudicação intermitente e angina intestinal)</td></tr><tr><td><b>Inflamação</b></td><td>Órgãos abdominais normalmente se tornam dolorosos ao inflamar</td></tr></table><div class="mnemo"><b>🧠 Macete:</b> víscera dói por <b>D</b>istensão, <b>I</b>squemia e <b>I</b>nflamação (não por corte ou queimadura).</div></div><div class="card"><h2>⚡ Dor neuropática</h2><p>Na dor comum há lesão tecidual: os nociceptores são ativados, os processos de cura começam e a dor diminui até sumir. Na neuropática, uma agressão, às vezes sutil ou inaparente, deixa uma dor <b>crônica</b> (meses a décadas), mesmo após cessar a ação e curar a lesão inicial, com grande repercussão psicológica.</p><table><tr><th>Característica</th><th>Detalhe</th></tr><tr><td>Curso</td><td>Permanente ou intermitente, com piora paroxística em "labaredas"</td></tr><tr><td>Qualidade na pele</td><td>Urente, cortante, em pontada ou transfixante</td></tr><tr><td>Lesão evidente</td><td>Dor fantasma (secção de nervo em coto de amputação), neuralgia pós-herpética (território de um nervo)</td></tr><tr><td>Agressão inaparente ou desproporcional</td><td>Neuralgia do trigêmeo ou do glossofaríngeo, ou após entorse de tornozelo</td></tr><tr><td>Ativação</td><td>A estrutura nervosa dispara espontaneamente, sem estímulo externo</td></tr><tr><td>Resposta a AINEs</td><td><b>Não responde</b> (não há lesão tecidual); responde a alguns psicofármacos que modulam neurotransmissores e à neuroestimulação</td></tr><tr><td>Topografia</td><td>Regional; nem sempre respeita nervo, plexo ou raiz</td></tr><tr><td>Simpático</td><td>Alivia com intervenções antiadrenérgicas e piora com injeção de catecolaminas</td></tr><tr><td>Evolução</td><td>Pode evoluir com distúrbios tróficos em pele, microcirculação, ossos, articulações e músculos (distrofia simpática reflexa)</td></tr></table></div><div class="card"><h2>🪶 Alodinia, hiperalgesia e hiperpatia</h2><div class="criterio"><b>✅ Alodinia:</b> dor provocada por estímulo mecânico ou térmico que normalmente é inócuo.</div><div class="criterio"><b>✅ Hiperalgesia:</b> queda do limiar perceptivo para estímulos dolorosos, o que facilita a produção de dor.</div><div class="criterio"><b>✅ Hiperpatia:</b> alteração do SNC em que o limiar para dor está elevado, mas, uma vez atingido, desencadeia dor de intensidade máxima, rápida, muito maior que a esperada e sem relação com a intensidade do estímulo.</div><div class="mnemo"><b>🧠 Macete:</b> alodinia = estímulo que NÃO doía passa a doer; hiperalgesia = o que doía pouco dói muito; hiperpatia = demora a doer, mas explode.</div><div class="prova">📝 Ponto crítico de prova: na hiperpatia o limiar está elevado; na hiperalgesia, está reduzido.</div></div><div class="card"><h2>🧠 Dor funcional ou psicogênica</h2><p>Frequente na clínica, <b>sem substrato estrutural evidenciável</b>. Pode ser relacionada a perturbações mentais (neurose, hipocondria, transtornos somatoformes).</p><div class="clinical"><b>🩺 Clínica:</b> o sofrimento desses pacientes é <b>tão real</b> quanto o causado por lesões anatômicas e deve ser tratado como tal. Diferencie dos <b>simuladores</b>, que inventam o relato das características da dor; mais cedo ou mais tarde o objetivo utilitário aparece.</div></div><div class="card"><h2>📋 Semiologia da dor: roteiro ALICIA</h2><p>A anamnese pode ser complementada por manobras de percussão ou palpação, e serve para relacionar a dor a outros sintomas (náuseas, tontura, limitação de movimento, rubor, tumefação, aumento da temperatura, perda de peso).</p><table><tr><th>Letra</th><th>Aspecto</th></tr><tr><td><b>A</b></td><td>Antiguidade (tempo e velocidade de instalação)</td></tr><tr><td><b>L</b></td><td>Localização</td></tr><tr><td><b>I</b></td><td>Irradiação ou propagação</td></tr><tr><td><b>C</b></td><td>Caráter</td></tr><tr><td><b>I</b></td><td>Intensidade</td></tr><tr><td><b>A</b></td><td>Atenuação ou agravamento</td></tr></table></div><div class="card"><h2>⏳ A: Antiguidade</h2><table><tr><th>Tipo</th><th>Características</th></tr><tr><td>Dor aguda</td><td>Curta (de minutos até uma semana); pode vir com sudorese, inquietação, taquicardia, vasoconstrição, hipertensão e midríase</td></tr><tr><td>Paroxística</td><td>Episódios de início e fim súbitos, intercalados com períodos sem doença (ex.: enxaqueca, febre periódica familiar)</td></tr><tr><td>Dor crônica</td><td>Dura meses; geralmente sem causa evidente imediata; vem com alterações psíquicas (cefaleias e lombalgias)</td></tr></table><table><tr><th>Velocidade de instalação</th><th>Sugere</th></tr><tr><td>Súbita</td><td>Mecanismos vasculares (trombose, embolia) ou ruptura de víscera (gravidez ectópica, perfuração de víscera oca)</td></tr><tr><td>Gradual</td><td>Inflamações, lesões degenerativas ou tumores</td></tr></table></div><div class="card"><h2>📍 L e I: Localização e Irradiação</h2><p>A localização indica o <b>órgão</b> e o <b>processo</b> envolvido, integrando a dor com os demais dados da anamnese e do exame físico.</p><table><tr><th>Tipo</th><th>Características</th></tr><tr><td><b>Visceral</b></td><td>Limites imprecisos; na linha média ou bilateral; <b>sem contratura</b> da parede abdominal; paciente inquieto; mudanças de posição e movimentos respiratórios não agravam; a compressão <b>alivia</b></td></tr><tr><td><b>Parietal</b></td><td>Estruturas superficiais (pele, TCSC, músculos, fáscias, peritônio parietal); características precisas da dor somática</td></tr><tr><td><b>Referida</b></td><td>Fibras somáticas e viscerais entram juntas na medula; o paciente atribui a uma estrutura somática a dor que vem de víscera profunda</td></tr></table><p><b>Irradiação:</b> a dor pode ficar circunscrita ou se estender a regiões distantes, o que sugere a estrutura afetada e o mecanismo. Avalie piora com tosse, espirro e manobra de Valsalva, e diferencie dor <b>propagada</b> de dor <b>deslocada (migrante)</b>.</p></div><div class="card"><h2>🎨 C: Caráter</h2><div class="criterio"><b>✅ Caráter:</b> conjunto de traços com que a dor se apresenta e a distingue das demais. Os pacientes costumam descrever com palavras e gestos as particularidades da dor.</div><p>Os slides trazem os descritores em imagem, então fica o complemento padrão: <b>cólica</b> (ondas, víscera oca), <b>urente</b> (queimação), <b>em pontada</b> ou transfixante, <b>pulsátil</b> e <b>opressiva</b>. Na dor neuropática da pele, os slides citam urente, cortante, em pontada e transfixante.</p></div><div class="card"><h2>📏 I: Intensidade</h2><p>A intensidade é um <b>fenômeno subjetivo</b>. Como elementos objetivos, de valor relativo, ajudam gestos, manobras de evitação, comportamentos e mudanças autonômicas da resposta simpática.</p><table><tr><th>Método</th><th>Como funciona</th></tr><tr><td>Escala nominal</td><td>Denominações simples: ausente, leve, moderada, intensa</td></tr><tr><td>Escala de faces</td><td>Rostos que passam por alegria, indiferença, preocupação e choro</td></tr><tr><td><b>Escala visual analógica (EVA)</b></td><td>O mais difundido: linha horizontal de <b>10 cm</b>, com divisões a cada 1 cm; o paciente marca onde está sua dor</td></tr><tr><td>Medida indireta</td><td>Sono noturno, apetite e capacidade de realizar atividades habituais</td></tr></table></div><div class="card"><h2>🔄 A: Atenuação e agravamento</h2><p>As circunstâncias de aparecimento e os fatores que pioram ou aliviam são dados valiosos; além das situações espontâneas, podem ser usadas <b>manobras de provocação</b>. Observe a atitude do paciente e os sinais e sintomas acompanhantes.</p><table><tr><th>Atitude</th><th>Quando</th></tr><tr><td><b>Imobilidade</b></td><td>Dor do IAM e abdome agudo peritoneal</td></tr><tr><td><b>Inquietação</b>, não encontra posição de alívio</td><td>Dor em cólica (ureter, intestino)</td></tr></table><div class="prova">📝 Ponto crítico de prova: peritonite = paciente quieto; cólica = paciente inquieto.</div></div><div class="card"><h2>💪 Fixação Rápida</h2><ul><li>Dor é o motivo de consulta mais comum e sinal universal de doença</li><li>Aδ: dor aguda, precisa; C: lenta, predomina na dor visceral</li><li>Víscera dói por distensão, isquemia e inflamação; a dor referida vem da convergência medular</li><li>Dor neuropática: crônica, não responde a AINEs, tem alodinia, hiperalgesia e hiperpatia</li><li>Roteiro ALICIA: antiguidade, localização, irradiação, caráter, intensidade, atenuação/agravamento</li><li>EVA: 10 cm; instalação súbita sugere vascular ou ruptura de víscera</li><li>Cólica = inquieto; IAM e peritonite = quieto</li></ul></div>
+</section>
+
+
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+<div class="card">
+    <h2>🩺 Caso Clínico Progressivo — Dor abdominal em cólica</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Vamos acompanhar Dona Marta, 45 anos, da dor abdominal aguda até uma dor crônica neuropática. O caso evolui em 3 níveis — clica em cada um pra ver como as coisas vão se desenrolando.</p>
+  </div>
+  <div id="casesArea"></div>
+</section>
+
+
+<!-- CMED-VIDEO-STYLE -->
+<style>
+.cmed-video-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(79,209,161,.14);border:1px solid var(--ok);color:var(--ok);font-size:.72em;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:10px;}
+.cmed-video-sub{color:var(--text-dim);font-size:.85em;margin:-6px 0 14px 0;}
+.cmed-video-card{background:var(--card2,#0f1726);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.cmed-video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000 center/cover no-repeat;cursor:pointer;}
+.cmed-video-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;}
+.cmed-video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.cmed-video-play span{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:1.6em;color:#fff;transition:transform .15s;}
+.cmed-video-thumb:hover .cmed-video-play span{transform:scale(1.08);background:var(--accent);}
+.cmed-video-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:.75em;padding:2px 8px;border-radius:5px;}
+.cmed-video-body{padding:14px 16px;}
+.cmed-video-tag{color:var(--gold);font-size:.72em;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.cmed-video-title{color:var(--text);font-size:1.05em;font-weight:700;margin:4px 0 8px 0;}
+.cmed-video-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.cmed-video-stars{color:var(--gold);}
+.cmed-video-why{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.85em;margin:10px 0;color:var(--text-dim);}
+.cmed-video-why b{color:var(--gold);}
+.cmed-video-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.cmed-video-btn{background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:.82em;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.cmed-video-btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text-dim);}
+.cmed-video-btn:hover{opacity:.88;}
+.cmed-video-note{color:var(--text-dim);font-size:.8em;text-align:center;margin-top:6px;}
+.cmed-video-extra-label{font-size:.85em;color:var(--text-dim);margin:18px 0 8px 0;font-weight:700;}
+@media (max-width:600px){.cmed-video-play span{width:52px;height:52px;font-size:1.3em;}}
+</style>
+<!-- /CMED-VIDEO-STYLE -->
+
+<!-- CMED-VIDEO-SECTION -->
+<section class="panel" id="p2">
+  <div class="card">
+    <span class="cmed-video-badge">🩺 Recomendado pela ClinicusMed</span>
+    <h2>🎥 Complemento em Vídeo</h2>
+    <p class="cmed-video-sub">A Clinicus selecionou este conteúdo para complementar seu estudo. Não substitui a leitura do resumo — o resumo ensina, o vídeo reforça.</p>
+    <div id="cmedVideoContainer">
+      <p style="color:var(--text-dim);font-size:.9em;">Carregando recomendações...</p>
+    </div>
+  </div>
+</section>
+<!-- /CMED-VIDEO-SECTION -->
+
+<!-- CMED-VIDEO-SCRIPT -->
+<script>
+(function(){
+  function ytThumb(id){ return 'https://img.youtube.com/vi/'+id+'/hqdefault.jpg'; }
+  function ytWatch(id){ return 'https://www.youtube.com/watch?v='+id; }
+  function stars(n){ n = n||5; return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+  function videoCard(v, isPrincipal){
+    if(!v || !v.id) return '';
+    var thumb = v.tipo === 'vimeo' ? '' : ytThumb(v.id);
+    var watchUrl = v.tipo === 'vimeo' ? ('https://vimeo.com/'+v.id) : ytWatch(v.id);
+    var embedUrl = v.tipo === 'vimeo' ? ('https://player.vimeo.com/video/'+v.id+'?autoplay=1') : ('https://www.youtube.com/embed/'+v.id+'?autoplay=1&rel=0');
+    var tag = isPrincipal ? '🎥 Vídeo Principal' : '➕ Complementar';
+    var card = document.createElement('div');
+    card.className = 'cmed-video-card';
+    card.innerHTML =
+      '<div class="cmed-video-thumb" data-embed="'+embedUrl+'" style="background-image:url(\''+thumb+'\')">' +
+        '<div class="cmed-video-play"><span>▶</span></div>' +
+        (v.duracao ? '<div class="cmed-video-dur">⏱ '+v.duracao+'</div>' : '') +
+      '</div>' +
+      '<div class="cmed-video-body">' +
+        '<div class="cmed-video-tag">'+tag+'</div>' +
+        '<div class="cmed-video-title">'+(v.titulo||'')+'</div>' +
+        '<div class="cmed-video-meta">' +
+          (v.duracao ? '<span>⏱ '+v.duracao+'</span>' : '') +
+          '<span class="cmed-video-stars">'+stars(v.estrelas)+'</span>' +
+          (v.canal ? '<span>· '+v.canal+'</span>' : '') +
+        '</div>' +
+        (v.motivo ? '<div class="cmed-video-why"><b>📌 Por que recomendamos este vídeo?</b><br>'+v.motivo+'</div>' : '') +
+        '<div class="cmed-video-btns">' +
+          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">↗ Abrir no site original</a>' +
+          '<button class="cmed-video-btn secondary" data-copy="'+watchUrl+'">📋 Copiar link</button>' +
+        '</div>' +
+      '</div>';
+    return card;
+  }
+
+  function render(data){
+    var container = document.getElementById('cmedVideoContainer');
+    if(!container) return;
+    var entry = data && typeof CHAPTER_ID !== 'undefined' ? data[CHAPTER_ID] : null;
+
+    if(!entry || !entry.principal){
+      // Sem video cadastrado: esconde a secao inteira e o botao da aba
+      var section = document.getElementById('p2');
+      if(section) section.style.display = 'none';
+      var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+      if(navBtn) navBtn.style.display = 'none';
+      return;
+    }
+
+    container.innerHTML = '';
+    container.appendChild(videoCard(entry.principal, true));
+    if(entry.extras && entry.extras.length){
+      var label = document.createElement('div');
+      label.className = 'cmed-video-extra-label';
+      label.textContent = '📎 Vídeos complementares';
+      container.appendChild(label);
+      entry.extras.slice(0,3).forEach(function(ex){
+        container.appendChild(videoCard(ex, false));
+      });
+    }
+    var note = document.createElement('p');
+    note.className = 'cmed-video-note';
+    if(entry.verMaisEm && entry.verMaisEm.texto){
+      note.innerHTML = entry.verMaisEm.texto;
+    } else {
+      note.textContent = 'Este vídeo complementa o conteúdo estudado neste capítulo.';
+    }
+    container.appendChild(note);
+
+    container.addEventListener('click', function(e){
+      var thumb = e.target.closest('.cmed-video-thumb');
+      if(thumb){
+        var embedUrl = thumb.dataset.embed;
+        if(embedUrl && !thumb.querySelector('iframe')){
+          thumb.innerHTML = '<iframe src="'+embedUrl+'" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>';
+          thumb.style.backgroundImage = 'none';
+          thumb.style.cursor = 'default';
+        }
+        return;
+      }
+      var copyBtn = e.target.closest('[data-copy]');
+      if(copyBtn){
+        navigator.clipboard.writeText(copyBtn.dataset.copy).then(function(){
+          var old = copyBtn.textContent;
+          copyBtn.textContent = '✅ Copiado!';
+          setTimeout(function(){ copyBtn.textContent = old; }, 1800);
+        });
+      }
+    });
+  }
+
+  fetch('/videos.json').then(function(r){ return r.json(); }).then(render).catch(function(){
+    var section = document.getElementById('p2');
+    if(section) section.style.display = 'none';
+    var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+    if(navBtn) navBtn.style.display = 'none';
+  });
+})();
+</script>
+<!-- /CMED-VIDEO-SCRIPT -->
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Fibras", "nivel": "🟢 Nível 1 — Essencial", "q": "Qual fibra transmite a dor aguda, em pontada e bem localizada, como a picada de uma injeção intramuscular?", "opts": ["Fibra Aα", "Fibra C", "Fibra Aδ", "Fibra autonômica pós-ganglionar"], "correct": 2, "justificativa": "A fibra Aδ é mielínica e conduz rápido a dor aguda e precisa, de início e fim rápidos.", "analise": ["A Aα conduz estímulos táteis e movimentos suaves.", "A C é lenta e predomina na dor visceral.", "Correta.", "Fibras pós-ganglionares não são as nociceptivas descritas."], "analise_letters": ["A", "B", "C", "D"], "conceito": "A diferença de fibras explica dor rápida e dor lenta.", "pegadinha": "Achar que fibras C conduzem a dor aguda.", "dica": "δ de 'dói já'; C de 'chata e lenta'."}, {"n": 2, "tema": "Roteiro", "nivel": "🟢 Nível 1 — Essencial", "q": "No roteiro ALICIA, a letra 'C' corresponde a:", "opts": ["Caráter", "Cronicidade", "Compressão", "Contratura"], "correct": 0, "justificativa": "ALICIA: antiguidade, localização, irradiação, caráter, intensidade, atenuação/agravamento.", "analise": ["Correta.", "Cronicidade é parte da antiguidade.", "Compressão é uma manobra, não um item do roteiro.", "Contratura é achado de exame físico."], "analise_letters": ["A", "B", "C", "D"], "conceito": "O roteiro sistematiza a anamnese da dor.", "pegadinha": "Trocar 'caráter' por 'cronicidade'.", "dica": "ALICIA é a sequência fixa."}, {"n": 3, "tema": "Intensidade", "nivel": "🟢 Nível 1 — Essencial", "q": "O método de quantificação da dor mais difundido, pela praticidade, é:", "opts": ["Escala nominal de 3 níveis", "Escala visual analógica de 10 cm", "Medida de frequência cardíaca", "Palpação abdominal"], "correct": 1, "justificativa": "A EVA oferece segmento horizontal de 10 cm, com divisões a cada 1 cm, para o paciente marcar a dor.", "analise": ["A escala nominal é mais simples, mas menos difundida.", "Correta.", "A frequência cardíaca é só indício autonômico indireto.", "A palpação não quantifica a dor."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Pergunta direta sobre a ferramenta de intensidade.", "pegadinha": "Esquecer que a intensidade é subjetiva.", "dica": "EVA = régua de 10 cm."}, {"n": 4, "tema": "Dor visceral", "nivel": "🟡 Nível 2 — Intermediário", "q": "Qual NÃO é um estímulo algogênico clássico das vísceras?", "opts": ["Distensão de víscera oca", "Isquemia", "Inflamação", "Corte ou cauterização simples"], "correct": 3, "justificativa": "Cortes e cauterizações em vísceras muitas vezes não doem até atingir cápsula ou serosa.", "analise": ["A distensão é o mais estudado.", "A isquemia é o segundo estímulo.", "A inflamação é o terceiro mecanismo.", "Correta."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Contraste entre dor somática e visceral.", "pegadinha": "Achar que a víscera dói como a pele.", "dica": "Víscera: distende, isquemia e inflama."}, {"n": 5, "tema": "Características da dor visceral", "nivel": "🟡 Nível 2 — Intermediário", "q": "Qual descrição é típica da dor visceral abdominal?", "opts": ["Localização precisa, com contratura e piora ao movimento", "Dor exclusiva à palpação superficial", "Dor em pontada que respeita o dermátomo", "Limites imprecisos, linha média, sem contratura e aliviada por compressão"], "correct": 3, "justificativa": "A dor visceral é difusa, na linha média, sem contratura, e a compressão alivia.", "analise": ["Isso descreve a dor parietal (peritônio).", "A dor visceral não se limita à palpação superficial.", "A pontada em dermátomo é neuropática ou somática.", "Correta."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Diferenciar visceral de parietal é base do abdome agudo.", "pegadinha": "Confundir o paciente inquieto da cólica com o quieto da peritonite.", "dica": "Visceral é difusa e inquieta."}, {"n": 6, "tema": "Neuropática", "nivel": "🟡 Nível 2 — Intermediário", "q": "Qual afirmação sobre a dor neuropática é correta?", "opts": ["Sempre respeita a distribuição de um nervo", "Cessa assim que a lesão inicial cura", "Não responde a AINEs, pois não há lesão tecidual ativa", "Responde bem a AINEs"], "correct": 2, "justificativa": "A estrutura nervosa dispara espontaneamente; a falta de lesão tecidual explica a ausência de resposta a AINEs.", "analise": ["Nem sempre respeita nervo, plexo ou raiz.", "Persiste após a cura da lesão inicial.", "Correta.", "AINEs não funcionam."], "analise_letters": ["A", "B", "C", "D"], "conceito": "A neuropática é crônica e tem tratamento específico.", "pegadinha": "Prescrever AINE como primeira linha.", "dica": "Neuropática: AINE não funciona."}, {"n": 7, "tema": "Definições", "nivel": "🟡 Nível 2 — Intermediário", "q": "Dor desencadeada pelo toque leve da roupa em paciente com neuralgia pós-herpética é:", "opts": ["Hiperpatia", "Alodinia", "Hiperalgesia", "Dor referida"], "correct": 1, "justificativa": "Alodinia é a dor provocada por estímulo mecânico ou térmico normalmente inócuo.", "analise": ["Hiperpatia tem limiar elevado e resposta explosiva.", "Correta.", "Hiperalgesia é limiar reduzido para estímulos já dolorosos.", "Dor referida vem de víscera percebida em região somática."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Terminologia clássica de dor neuropática.", "pegadinha": "Confundir alodinia e hiperalgesia.", "dica": "Alo = outro: estímulo que não é de dor."}, {"n": 8, "tema": "Caso clínico", "nivel": "🔴 Nível 3 — Avançado", "q": "Homem de 70 anos tem dor súbita e intensa no abdome, após fazer esforço, e permanece imóvel no leito, com abdome rígido. Qual o raciocínio mais adequado?", "opts": ["Instalação súbita e imobilidade sugerem ruptura de víscera/peritonite", "Dor psicogênica, por ausência de lesão", "Dor neuropática, por ser intensa", "Cólica ureteral, pelo paciente inquieto"], "correct": 0, "justificativa": "Instalação súbita sugere mecanismo vascular ou ruptura de víscera, e a quietude típica corresponde ao abdome peritoneal.", "analise": ["Correta.", "Psicogênica é diagnóstico de exclusão.", "Neuropática é crônica e não súbita.", "Na cólica o paciente é inquieto, o contrário do caso."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Integra velocidade de instalação e atitude do paciente.", "pegadinha": "Valorizar só a intensidade e ignorar a atitude.", "dica": "Quieto e súbito: perfurou."}, {"n": 9, "tema": "Referida", "nivel": "🔴 Nível 3 — Avançado", "q": "Paciente refere dor no ombro direito que na verdade vem de colecistite. Esse fenômeno é explicado por:", "opts": ["Hiperpatia do SNC", "Convergência de fibras somáticas e viscerais na medula", "Lesão do nervo periférico do ombro", "Estímulo de termonociceptores"], "correct": 1, "justificativa": "Fibras somáticas e viscerais entram juntas na medula, e o paciente atribui a dor a uma estrutura somática.", "analise": ["A hiperpatia é outro fenômeno.", "Correta.", "Não há lesão no nervo do ombro.", "Termonociceptores respondem a calor e frio extremos."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Base da dor referida.", "pegadinha": "Procurar problema no ombro.", "dica": "Dor referida: o cérebro se confunde."}, {"n": 10, "tema": "Hiperpatia", "nivel": "🔴 Nível 3 — Avançado", "q": "Qual das alternativas caracteriza a hiperpatia?", "opts": ["Dor por distensão visceral", "Dor por estímulo inócuo", "Limiar reduzido, com dor fácil de gerar", "Limiar elevado, mas dor explosiva quando alcançado, desproporcional ao estímulo"], "correct": 3, "justificativa": "Na hiperpatia, o limiar é alto, mas ao ser atingido a dor é máxima, rápida e sem relação com o estímulo.", "analise": ["Isso é dor visceral.", "Isso descreve a alodinia.", "Isso descreve a hiperalgesia.", "Correta."], "analise_letters": ["A", "B", "C", "D"], "conceito": "Distinguir os três termos é recorrente.", "pegadinha": "Dizer que a hiperpatia reduz o limiar.", "dica": "Hiperpatia: demora e explode."}];
+const flashcards = [{"n": 1, "cat": "Conceito", "f": "O que é dor?", "b": "Sensação desagradável e aflitiva por causa interna ou externa; sinal universal de doença e principal motivo de consulta."}, {"n": 2, "cat": "Conceito", "f": "Quais papéis a dor pode ter?", "b": "Alerta, sintoma, manifestação dominante ou alvo do tratamento."}, {"n": 3, "cat": "Fisiologia", "f": "Qual fibra conduz dor aguda precisa?", "b": "Fibra Aδ."}, {"n": 4, "cat": "Fisiologia", "f": "Qual fibra predomina na dor visceral?", "b": "Fibra C, amielínica e lenta."}, {"n": 5, "cat": "Fisiologia", "f": "Fibras Aα: função?", "b": "Estímulos táteis e movimentos suaves."}, {"n": 6, "cat": "Fisiologia", "f": "Faixa de temperatura que ativa termonociceptores?", "b": "Acima de 55 °C ou abaixo de 5 °C."}, {"n": 7, "cat": "Fisiologia", "f": "O que são receptores silenciosos?", "b": "Respondem só a estímulos químicos; dor na inflamação."}, {"n": 8, "cat": "Visceral", "f": "Estímulos que causam dor visceral?", "b": "Distensão, isquemia e inflamação."}, {"n": 9, "cat": "Visceral", "f": "Base da dor em cólica?", "b": "Ondas de contração de víscera oca distendida."}, {"n": 10, "cat": "Visceral", "f": "O que é dor referida?", "b": "Convergência de fibras somáticas e viscerais na medula, com dor sentida em região somática."}, {"n": 11, "cat": "Neuropática", "f": "Por que AINEs não funcionam na dor neuropática?", "b": "Não há lesão tecidual ativa."}, {"n": 12, "cat": "Neuropática", "f": "Exemplos de dor neuropática?", "b": "Dor fantasma, neuralgia pós-herpética, neuralgia do trigêmeo."}, {"n": 13, "cat": "Neuropática", "f": "Definição de alodinia?", "b": "Dor por estímulo normalmente inócuo."}, {"n": 14, "cat": "Neuropática", "f": "Definição de hiperalgesia?", "b": "Limiar reduzido para estímulos dolorosos."}, {"n": 15, "cat": "Neuropática", "f": "Definição de hiperpatia?", "b": "Limiar elevado, mas dor explosiva desproporcional ao estímulo."}, {"n": 16, "cat": "Funcional", "f": "Dor psicogênica é real?", "b": "Sim; deve ser tratada como tal e diferenciada da simulação."}, {"n": 17, "cat": "ALICIA", "f": "O que significa ALICIA?", "b": "Antiguidade, Localização, Irradiação, Caráter, Intensidade, Atenuação/agravamento."}, {"n": 18, "cat": "ALICIA", "f": "Instalação súbita sugere?", "b": "Mecanismo vascular (trombose, embolia) ou ruptura de víscera."}, {"n": 19, "cat": "ALICIA", "f": "Instalação gradual sugere?", "b": "Inflamação, lesão degenerativa ou tumor."}, {"n": 20, "cat": "ALICIA", "f": "Fenômenos autonômicos da dor aguda?", "b": "Sudorese, inquietação, taquicardia, vasoconstrição, hipertensão e midríase."}, {"n": 21, "cat": "ALICIA", "f": "Qual o tamanho da EVA?", "b": "Segmento horizontal de 10 cm, com divisões a cada 1 cm."}, {"n": 22, "cat": "ALICIA", "f": "Atitude na cólica e no IAM/peritonite?", "b": "Cólica: inquieto; IAM e peritonite: imóvel."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'semio1_cap05_dor';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+const cases = [{"nivel": "🟢 NÍVEL 1 — FUNDAMENTAL", "hist": "Dona Marta, 45 anos, chega ao pronto atendimento com dor abdominal em cólica, em ondas, há 6 horas, com início súbito. Anda pela sala sem achar posição que alivie.", "dados": "Sinais vitais: taquicardia leve e sudorese. Sem contratura abdominal.", "perguntas": [{"q": "Que tipo de dor é essa e o que a atitude da paciente sugere?", "a": "Como vimos, a dor em <b>cólica</b> piora com as ondas de contração de víscera oca e a paciente fica <b>inquieta</b>, sem achar posição de alívio, ao contrário da peritonite, em que o doente fica quieto. Sudorese e taquicardia são fenômenos <b>autonômicos</b> da dor aguda."}]}, {"nivel": "🟡 NÍVEL 2 — INTERMEDIÁRIO", "hist": "A dor se irradia para o flanco e a região inguinal direita. Ela descreve intensidade 8 numa linha de 10 cm e relata náuseas.", "dados": "Percussão lombar dolorosa; urina com hematúria microscópica.", "perguntas": [{"q": "Aplique o roteiro ALICIA aos dados.", "a": "Como vimos, a <b>Antiguidade</b> é aguda e de instalação súbita; a <b>Localização</b> é visceral, com <b>Irradiação</b> para flanco e região inguinal; o <b>Caráter</b> é de cólica; a <b>Intensidade</b> foi medida pela escala visual analógica (8/10); e a <b>Atenuação</b> não ocorre com a mudança de posição."}, {"q": "Como se explica que uma víscera dê dor com localização difusa e irradiada?", "a": "Como vimos, a dor visceral é difusa porque predominam fibras <b>C</b> e a localização é mal definida; a <b>dor referida</b> surge porque fibras somáticas e viscerais entram juntas na medula."}]}, {"nivel": "🔴 NÍVEL 3 — APLICAÇÃO INTEGRADA", "hist": "Meses depois, após herpes-zóster no tórax, Dona Marta mantém dor em queimação na faixa afetada. O roçar da roupa dói e o analgésico comum não ajuda.", "dados": "Pele sem lesões ativas. O toque leve provoca dor intensa e desproporcional.", "perguntas": [{"q": "Qual o tipo de dor e qual o fenômeno do toque leve?", "a": "Como vimos, é <b>dor neuropática</b> (neuralgia pós-herpética, circunscrita ao território de um nervo), crônica e que persiste após curada a lesão inicial. A dor provocada pelo roçar da roupa, estímulo normalmente inócuo, é <b>alodinia</b>."}, {"q": "Por que os AINEs falham e o que pode funcionar?", "a": "Como vimos, não há lesão tecidual ativa que justifique inflamação, por isso a dor <b>não responde a AINEs</b>. Podem funcionar alguns <b>psicofármacos</b> que modificam a liberação e a recaptação de neurotransmissores e as técnicas de <b>neuroestimulação</b>."}]}];
+
+const casesArea = document.getElementById('casesArea');
+cases.forEach((c, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'case-level';
+  let qHtml = '';
+  c.perguntas.forEach((p, pi)=>{
+    qHtml += `<div class="case-q">
+      <b>${pi+1})</b> ${p.q}
+      <br><button class="case-answer-btn" data-ci="${ci}" data-pi="${pi}">Ver resposta comentada</button>
+      <div class="case-answer" id="case-answer-${ci}-${pi}">${p.a}</div>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="case-level-head" data-ci="${ci}">
+      <span>${c.nivel}</span><span>▼</span>
+    </div>
+    <div class="case-level-body" id="case-body-${ci}">
+      <div class="case-hist"><b>História Clínica:</b> ${c.hist}</div>
+      <div class="case-hist"><b>Dados:</b> ${c.dados}</div>
+      ${qHtml}
+    </div>`;
+  casesArea.appendChild(div);
+});
+
+casesArea.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('case-level-head') || e.target.closest('.case-level-head')){
+    const head = e.target.closest('.case-level-head');
+    const ci = head.dataset.ci;
+    document.getElementById('case-body-'+ci).classList.toggle('show');
+  }
+  if(e.target.classList.contains('case-answer-btn')){
+    const ci = e.target.dataset.ci, pi = e.target.dataset.pi;
+    document.getElementById(`case-answer-${ci}-${pi}`).classList.toggle('show');
+  }
+});
+document.getElementById('case-body-0').classList.add('show');
+</script>
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Semiología Médica I',
+    titulo: 'Capítulo 5 — Dor',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P1',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Semiología Médica I', titulo: 'Capítulo 5 — Dor', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-05/semiologia1/Capitulo_04_Tosse.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 4 — Tosse</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-05/semiologia1/Capitulo_06_Dispneia.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Capítulo 6 — Dispneia</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
