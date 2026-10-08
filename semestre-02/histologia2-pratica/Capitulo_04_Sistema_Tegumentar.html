@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Cap.4 — Sistema Tegumentar | Histología II Prática | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0c1712; --bg2:#122019; --card:#0f1c15; --border:#1e3327;
+  --accent:#3aa66d; --ok:#4fd18a; --bad:#e0505f; --gold:#d4af37;
+  --text:#e8f2ec; --text-dim:#a3c2b0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(ellipse at top,var(--bg2),var(--bg));color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding-bottom:60px;}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px;}
+header{padding:28px 0 18px;text-align:center;border-bottom:1px solid var(--border);}
+.eyebrow{font-size:.78em;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase;}
+header h1{font-size:1.5rem;color:var(--ok);margin-top:6px;}
+header p{color:var(--text-dim);margin-top:4px;font-size:.88em;}
+.xpbar{max-width:420px;margin:16px auto 0;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:10px;font-size:.8em;color:var(--gold);}
+.xpouter{flex:1;height:6px;background:#081008;border-radius:4px;overflow:hidden;}
+.xpinner{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));width:0%;transition:width .4s ease;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:20px 0 0;}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.82em;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent);color:var(--text);}
+nav.tabs button.active{background:var(--accent);color:#04150c;border-color:var(--accent);font-weight:600;}
+section.panel{display:none;padding:20px 0;}
+section.panel.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;}
+.card h2{color:var(--gold);font-size:1.05em;margin-bottom:10px;}
+.card h3{font-size:.95em;color:var(--gold);margin:16px 0 8px;}
+.card p{margin-bottom:8px;line-height:1.55;}
+.card ul,.card ol{margin:8px 0 8px 20px;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88em;}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;}
+th{background:#0a1a10;color:var(--gold);}
+.criterio{background:rgba(58,166,109,.1);border-left:3px solid var(--accent);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.clinical{background:rgba(224,80,95,.1);border-left:3px solid var(--bad);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.mnemo{background:rgba(79,209,138,.08);border-left:3px solid var(--ok);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.prova{background:rgba(212,175,55,.1);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.hot{background:rgba(212,175,55,.12);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.cmed-fig{margin:14px 0;text-align:center;}
+.cmed-fig img{max-width:100%;max-height:640px;width:auto;height:auto;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;display:block;margin:0 auto;cursor:zoom-in;}
+.cmed-fig-cap{font-size:.82em;color:var(--text-dim);margin-top:6px;font-style:italic;}
+.cmed-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:12px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:220px;}
+.atlas-lightbox{display:none;position:fixed;inset:0;background:rgba(4,10,11,.94);z-index:1000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+.atlas-lightbox.show{display:flex;}
+.atlas-lightbox-inner{max-width:100%;max-height:100%;text-align:center;}
+.atlas-lightbox-inner img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:10px;background:#fff;box-shadow:0 0 40px rgba(0,0,0,.5);}
+.atlas-lightbox-inner p{color:#fff;margin-top:12px;font-size:.95em;}
+.srs-status{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-filters{display:flex;gap:8px;margin-bottom:12px;}
+.fc-filters button{background:var(--bg2);border:1px solid var(--border);color:var(--text-dim);padding:6px 12px;border-radius:16px;font-size:.8em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#04150c;border-color:var(--accent);}
+.fc-topbar{display:flex;justify-content:space-between;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;gap:12px;}
+.fc-card{perspective:1200px;min-height:180px;}
+.fc-inner{position:relative;width:100%;min-height:180px;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:center;}
+.fc-back{transform:rotateY(180deg);}
+.fc-tag{font-size:.7em;color:var(--gold);letter-spacing:1px;margin-bottom:8px;}
+.fc-controls{display:flex;gap:8px;justify-content:center;}
+.fc-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.85em;}
+.fc-btn.primary{background:var(--accent);color:#04150c;border-color:var(--accent);}
+.review-btns{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.review-btns button{flex:1;min-width:70px;padding:8px 6px;border-radius:8px;border:1px solid var(--border);font-size:.78em;cursor:pointer;color:#fff;}
+.btn-again{background:#8a2a34;} .btn-hard{background:#8a5a2a;} .btn-good{background:#2a7a4f;} .btn-easy{background:#1f9e6b;}
+.interval-preview{display:block;font-size:.7em;opacity:.8;}
+.fc-shuffle-row{text-align:center;}
+.qitem{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qmeta{display:flex;justify-content:space-between;font-size:.75em;color:var(--text-dim);margin-bottom:6px;}
+.qtxt{font-size:.92em;margin-bottom:10px;}
+ul.opts{list-style:none;margin:0;}
+ul.opts li{padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:.86em;}
+ul.opts li:hover{border-color:var(--accent);}
+ul.opts li.correct{background:rgba(79,209,138,.15);border-color:var(--ok);}
+ul.opts li.wrong{background:rgba(224,80,95,.15);border-color:var(--bad);}
+.reveal-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:6px 14px;border-radius:8px;font-size:.8em;cursor:pointer;margin-top:4px;}
+.comment{display:none;margin-top:10px;font-size:.85em;color:var(--text-dim);border-top:1px solid var(--border);padding-top:10px;}
+.comment.show{display:block;}
+.comment p{margin-bottom:6px;}
+.qz-btn{display:block;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:.86em;}
+.progresslabel{font-size:.78em;color:var(--text-dim);margin-bottom:8px;}
+.quiz-result{text-align:center;margin-top:14px;color:var(--gold);font-size:.95em;}
+footer{text-align:center;color:var(--text-dim);font-size:.78em;padding:24px 0 0;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Histología II — Prática</a><span class="sep">›</span>
+  <span>P2</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Histología II — Prática</span><span>5 de 5</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Histología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_01_Sistema_Cardiovascular.html"><span class="ico">🧫</span><span>Capítulo 1 — Sistema Cardiovascular</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_02_Sistema_Linfatico.html"><span class="ico">🧫</span><span>Capítulo 2 — Sistema Linfático</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Simulado_P1.html"><span class="ico">🎯</span><span>Simulado P1 — 100 Lâminas</span></a>
+    <h4>P2</h4>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_03_Sistema_Endocrino.html"><span class="ico">🧫</span><span>Capítulo 3 — Sistema Endócrino</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-02/histologia2-pratica/Capitulo_04_Sistema_Tegumentar.html"><span class="ico">🧫</span><span>Capítulo 4 — Sistema Tegumentar</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Histología II Prática · Prof. João Vitor Figueiredo</span>
+  <h1>🧴 Capítulo 4 — Sistema Tegumentar</h1>
+  <p>ClinicusMed · Atlas Histológico + Banco de Questões</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📖 Resumo Direcionado</button>
+  <button data-p="p6">🔬 Atlas Histológico</button>
+  <button data-p="p2">⏱️ Treino Sob Pressão</button>
+  <button data-p="p1">🩺 Correlação Clínica</button>
+  <button data-p="p3">🧠 Flashcards</button>
+  <button data-p="p4">❓ Banco de Questões</button>
+  <button data-p="p5">🎯 Quiz</button>
+</nav>
+
+
+<!-- ============ RESUMO DIRECIONADO ============ -->
+
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois desse capítulo</h2>
+    <ul>
+      <li>Diferenciar pele fina de pele espessa (grossa) na lâmina</li>
+      <li>Listar os estratos da epiderme, do mais profundo ao mais superficial, e reconhecer cada um</li>
+      <li>Explicar o papel de queratinócitos, melanócitos, células de Langerhans e células de Merkel</li>
+      <li>Distinguir derme papilar de derme reticular e identificar a hipoderme</li>
+      <li>Reconhecer os mecanorreceptores (Meissner, Pacini, Ruffini, Krause, disco de Merkel)</li>
+      <li>Dividir o folículo piloso em infundíbulo, istmo e segmento inferior (bulbo + papila dérmica)</li>
+      <li>Diferenciar glândulas sudoríparas écrinas (merocrinas), apócrinas e sebáceas</li>
+      <li>Descrever a estrutura da unha</li>
+      <li>Aplicar a regra ABCDE do melanoma e entender a base histológica da acne</li>
+      <li>Identificar cada estrutura numa lâmina, na prática</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🧴 Generalidades da Pele</h2>
+    <div class="criterio"><b>🟢 Ideia central:</b> a pele forma a cobertura externa do corpo e é o <b>maior órgão</b>, com cerca de <b>15–20% da massa corporal total</b>. Classifica-se em <b>fina</b> e <b>grossa</b>, reflexo da sua espessura e da região do corpo.</div>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg06.jpg" alt="Esquema da estrutura da pele"><div class="cmed-fig-cap">Esquema da estrutura da pele — epiderme, derme, hipoderme, folículo, glândulas, corpúsculos e plexos vasculares</div></div>
+    <table>
+      <tr><th>Componente</th><th>Origem embrionária</th><th>Tecido</th></tr>
+      <tr><td><b>Epiderme</b></td><td>Ectoderme</td><td>Epitélio estratificado pavimentoso queratinizado</td></tr>
+      <tr><td><b>Derme</b></td><td>Mesoderme</td><td>Tecido conjuntivo (papilar frouxo + reticular denso não modelado)</td></tr>
+      <tr><td><b>Hipoderme</b></td><td>Mesoderme</td><td>Tecido conjuntivo frouxo + tecido adiposo (camada inconstante, abaixo da reticular)</td></tr>
+    </table>
+    <p><b>Derivados epidérmicos (anexos):</b> (1) folículos pilosos e pelos, (2) glândulas sudoríparas, (3) glândulas sebáceas, (4) unhas e (5) glândulas mamárias.</p>
+    <div class="mnemo">🧠 Textos clássicos (Junqueira, Ross) tratam a hipoderme como o tecido subcutâneo que <i>fica abaixo</i> da pele, e não como parte dela. O material do professor a lista junto dos componentes da pele — na prova, siga o material, mas saiba que as duas leituras existem.</div>
+  </div>
+
+  <div class="card">
+    <h2>🛡️ Funções da Pele</h2>
+    <ul>
+      <li><b>Proteção</b> contra impactos mecânicos, danos químicos, frio/calor e radiação (a melanina filtra UV)</li>
+      <li><b>Barreira</b> contra a penetração de microrganismos e vigilância imune (células de Langerhans, SALT)</li>
+      <li><b>Prevenção da desidratação</b> — a camada córnea e os lipídios das glândulas sebáceas limitam a perda de água</li>
+      <li><b>Termorregulação</b> — suor (glândulas écrinas), vasos dérmicos, tecido adiposo isolante</li>
+      <li><b>Sensibilidade</b> — tato, pressão, vibração, dor, calor e frio (receptores)</li>
+      <li><b>Metabólica/excretora</b> — síntese de vitamina D, reserva de energia na hipoderme</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>↔️ Pele Fina x Pele Grossa (Espessa)</h2>
+    <table>
+      <tr><th>Característica</th><th>Pele fina</th><th>Pele grossa</th></tr>
+      <tr><td>Onde</td><td>Quase todo o corpo</td><td>Palmas das mãos e plantas dos pés</td></tr>
+      <tr><td>Epiderme</td><td>Fina (~75–150 µm)</td><td>Espessa (~400–600 µm)</td></tr>
+      <tr><td>Estrato córneo</td><td>Fino</td><td><b>Muito espesso</b></td></tr>
+      <tr><td>Estrato lúcido</td><td>Ausente (em geral)</td><td><b>Presente</b></td></tr>
+      <tr><td>Estrato granuloso</td><td>Descontínuo/pouco evidente</td><td>Bem desenvolvido (várias camadas)</td></tr>
+      <tr><td>Pelos e glândulas sebáceas</td><td><b>Presentes</b></td><td><b>Ausentes</b></td></tr>
+      <tr><td>Glândulas sudoríparas</td><td>Presentes</td><td>Muito numerosas (écrinas)</td></tr>
+      <tr><td>Cristas e papilas dérmicas</td><td>Menos marcadas</td><td>Muito marcadas (origem das impressões digitais)</td></tr>
+    </table>
+    <div class="criterio"><b>🟢 Regra de ouro:</b> epiderme muito espessa + córnea gigante + <b>sem folículo piloso</b> = pele grossa. Pelo/glândula sebácea na lâmina = pele fina.</div>
+  </div>
+
+  <div class="card">
+    <h2>🔬 Epiderme — Estratos (do mais profundo ao mais superficial)</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg09.jpg" alt="Estratos da epiderme"><div class="cmed-fig-cap">Estratos da epiderme: basal, espinhoso, granuloso, lúcido e córneo</div></div>
+    <table>
+      <tr><th>Estrato</th><th>Células / aspecto</th><th>Pontos-chave</th></tr>
+      <tr><td><b>1. Basal (germinativo)</b></td><td>Uma única camada de queratinócitos cúbicos/colunares sobre a lâmina basal</td><td>Células-tronco e mitoses; <b>melanócitos (~5%)</b> e <b>células de Merkel (6–10%)</b> segundo o material; ancoragem por hemidesmossomos</td></tr>
+      <tr><td><b>2. Espinhoso</b></td><td>Queratinócitos maiores e poliédricos, com várias evaginações citoplasmáticas (espinócitos)</td><td>Os "espinhos" são pontes de desmossomos; local típico das <b>células de Langerhans</b></td></tr>
+      <tr><td><b>3. Granuloso</b></td><td>Queratinócitos achatados cheios de grânulos basófilos de <b>queratohialina</b></td><td>Também grânulos lamelares (lipídios da barreira de água); núcleos começam a degenerar</td></tr>
+      <tr><td><b>4. Lúcido</b></td><td>Faixa clara, homogênea e refrátil, sem núcleos</td><td><b>Só em pele grossa</b>; células com eleidina</td></tr>
+      <tr><td><b>5. Córneo</b></td><td>Células mortas, achatadas, <b>anucleadas</b>, cheias de queratina (corneócitos)</td><td>Descamação contínua; renovação total da epiderme em aproximadamente um mês</td></tr>
+    </table>
+    <div class="mnemo">🧠 De baixo pra cima: <b>B</b>asal → <b>E</b>spinhoso → <b>G</b>ranuloso → <b>L</b>úcido → <b>C</b>órneo ("<b>B</b>ela <b>E</b>stética <b>G</b>era <b>L</b>indos <b>C</b>orpos"). Na lâmina, o estrato granuloso aparece como uma linha escura e roxa logo abaixo da faixa clara/rósea do córneo.</div>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg11.jpg" alt="Pele grossa rotulada"><div class="cmed-fig-cap">Pele grossa (rotulada): EC = estrato córneo, EG = granuloso, EE = espinhoso, EB = basal, Ep = epiderme, cp = camada papilar, CR = camada reticular, De = derme, D = ducto sudoríparo</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🎨 Células da Epiderme</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg08.jpg" alt="Células da epiderme"><div class="cmed-fig-cap">Células de Langerhans, prolongamentos do melanócito, queratinócitos e melanócito</div></div>
+    <table>
+      <tr><th>Célula</th><th>Origem / localização</th><th>Função</th></tr>
+      <tr><td><b>Queratinócito</b></td><td>Epiderme (~90% das células)</td><td>Produz queratina; forma a barreira; sobe de estrato em estrato até virar corneócito</td></tr>
+      <tr><td><b>Melanócito</b></td><td>Origem na crista neural; fica no estrato basal e emite prolongamentos entre os queratinócitos</td><td>Produz <b>melanina</b> (melanossomos) e a transfere aos queratinócitos, protegendo o DNA da radiação UV</td></tr>
+      <tr><td><b>Célula de Langerhans</b></td><td>Medula óssea (sistema fagocitário mononuclear); migra por toda a epiderme, sobretudo no espinhoso</td><td><b>Apresentadora de antígeno (APC)</b>; grânulos de Birbeck ao microscópio eletrônico</td></tr>
+      <tr><td><b>Célula de Merkel</b></td><td>Estrato basal, ligada a terminação nervosa (disco de Merkel)</td><td><b>Mecanorreceptor</b> do tato leve; grânulos neurossecretores</td></tr>
+    </table>
+    <div class="criterio"><b>🟢 Cor da pele:</b> não depende do <i>número</i> de melanócitos (parecido entre as pessoas), e sim da quantidade, do tipo e da distribuição dos melanossomos. Cada melanócito serve cerca de 30–40 queratinócitos (unidade melanoepidérmica).</div>
+    <div class="mnemo">🧠 Na H&E rotineira, melanócitos e células de Langerhans aparecem como células <b>claras (halo)</b> no basal/espinhoso — para vê-los bem, só com técnicas especiais (ex.: impregnação argêntica, imunohistoquímica). Em lâmina pigmentada, o <b>pigmento marrom</b> concentrado no basal é a melanina.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧶 Derme e Hipoderme</h2>
+    <table>
+      <tr><th>Camada</th><th>Tecido</th><th>Características</th></tr>
+      <tr><td><b>Derme papilar</b></td><td>Tecido conjuntivo frouxo (TCL)</td><td>Forma as <b>papilas dérmicas</b> que se interdigitam com as cristas epidérmicas; vasos, fibras de colágeno tipo I e III, capilares e corpúsculos de Meissner</td></tr>
+      <tr><td><b>Derme reticular</b></td><td>Tecido conjuntivo denso não modelado (TCDNM)</td><td>Colágeno tipo I espesso e fibras elásticas em feixes organizados nas <b>linhas de tensão (de Langer)</b>; contém glândulas, folículos e vasos maiores</td></tr>
+      <tr><td><b>Hipoderme</b></td><td>TCL + tecido adiposo unilocular</td><td>Camada inconstante abaixo da reticular; reserva de energia, isolamento térmico, amortecimento; ali ficam o <b>corpúsculo de Pacini</b>, os glomérulos sudoríparos e a base de folículos</td></tr>
+    </table>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg10.jpg" alt="Mecanorreceptores"><div class="cmed-fig-cap">Mecanorreceptores da pele: Krause, Meissner, Pacini, Ruffini, disco de Merkel e terminações nervosas livres</div></div>
+    <table>
+      <tr><th>Receptor</th><th>Onde</th><th>Sensação (segundo o material)</th></tr>
+      <tr><td><b>Corpúsculo de Meissner</b></td><td>Papilas dérmicas</td><td>Tato fino</td></tr>
+      <tr><td><b>Corpúsculo de Pacini</b></td><td>Derme profunda / hipoderme; lamelas concêntricas "em cebola"</td><td>Pressão e vibração</td></tr>
+      <tr><td><b>Corpúsculo de Ruffini</b></td><td>Derme</td><td>Calor (em outros textos: estiramento/pressão contínua)</td></tr>
+      <tr><td><b>Corpúsculo de Krause</b></td><td>Derme superficial</td><td>Frio</td></tr>
+      <tr><td><b>Disco de Merkel</b></td><td>Base da epiderme</td><td>Tato/pressão leve contínua</td></tr>
+      <tr><td><b>Terminações nervosas livres</b></td><td>Epiderme e derme</td><td>Dor (nociceptores)</td></tr>
+    </table>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg12.jpg" alt="Pacini e Meissner"><div class="cmed-fig-cap">A: corpúsculo de Pacini (lamelas concêntricas) com nervos (N) · B: corpúsculos de Meissner (CM) nas papilas dérmicas</div></div>
+  </div>
+
+  <div class="card">
+    <h2>💇 Folículo Piloso</h2>
+    <div class="criterio"><b>🟢 Função:</b> produção e crescimento do <b>pelo</b>.</div>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg14.jpg" alt="Folículo piloso"><div class="cmed-fig-cap">Folículo piloso: haste do pelo, bainhas radiculares, glândula sebácea, protuberância folicular, células matriciais e papila dérmica</div></div>
+    <table>
+      <tr><th>Segmento</th><th>Vai de... até...</th></tr>
+      <tr><td><b>Infundíbulo</b></td><td>Do orifício superficial do folículo até a altura do orifício (ducto) da <b>glândula sebácea</b></td></tr>
+      <tr><td><b>Istmo</b></td><td>Do infundíbulo até a altura da inserção do <b>músculo eretor do pelo</b></td></tr>
+      <tr><td><b>Segmento inferior</b></td><td>Abaixo da inserção do músculo: contém o <b>bulbo</b> e a <b>papila dérmica</b></td></tr>
+    </table>
+    <table>
+      <tr><th>Estrutura</th><th>Descrição</th></tr>
+      <tr><td>Bulbo piloso</td><td>Dilatação terminal; células <b>matriciais</b> muito proliferativas que originam o pelo e as bainhas</td></tr>
+      <tr><td>Papila dérmica</td><td>Núcleo de tecido conjuntivo vascularizado que invagina o bulbo; nutre e induz o crescimento</td></tr>
+      <tr><td>Haste do pelo</td><td>Medula, córtex e cutícula (de dentro pra fora); melanócitos do bulbo dão a cor</td></tr>
+      <tr><td>Bainhas radiculares</td><td>Interna (acompanha o pelo e termina no istmo) e externa (continua com a epiderme), envolvidas pela membrana vítrea e pela bainha conjuntiva</td></tr>
+      <tr><td>Protuberância folicular (bulge)</td><td>Região de células-tronco, onde se insere o músculo eretor</td></tr>
+      <tr><td>Músculo eretor do pelo</td><td>Músculo liso, inervado pelo simpático — causa o arrepio; comprime a glândula sebácea</td></tr>
+    </table>
+    <div class="mnemo">🧠 Fio de prumo: <b>sebácea = marco entre infundíbulo e istmo</b>; <b>eretor = marco entre istmo e segmento inferior</b>. Bulbo + papila = sempre segmento inferior.</div>
+  </div>
+
+  <div class="card">
+    <h2>💧 Glândulas Sudoríparas e Sebáceas</h2>
+    <table>
+      <tr><th>Aspecto</th><th>Sudorípara écrina (merocrina)</th><th>Sudorípara apócrina</th><th>Sebácea</th></tr>
+      <tr><td>Onde</td><td>Toda a superfície corporal, exceto lábios e parte da genitália externa</td><td>Axilas, aréolas e mamilos; região perianal e genitália externa</td><td>Associada ao folículo piloso; <b>ausente</b> em palmas e plantas</td></tr>
+      <tr><td>Porção secretora</td><td>Enovelada, pequena, na derme profunda/hipoderme; epitélio cúbico simples com células claras, escuras e <b>mioepiteliais</b></td><td>Enovelada, <b>grande</b>, com lúmen amplo, na derme profunda/hipoderme</td><td>Ácinos/lóbulos de células grandes, claras e vacuoladas (lipídios), núcleo central</td></tr>
+      <tr><td>Ducto</td><td>Epitélio cúbico estratificado (2 camadas, mais escuro); abre <b>direto na superfície</b></td><td>Abre no <b>infundíbulo do folículo piloso</b></td><td>Curto, abre no canal pilossebáceo (infundíbulo)</td></tr>
+      <tr><td>Secreção</td><td>Aquosa (suor), termorregulação; mecanismo <b>merócrino</b></td><td>Viscosa, rica em proteínas e lipídios; ativação na puberdade, resposta a estímulo emocional</td><td><b>Holócrina</b>: a célula inteira se rompe e vira sebo</td></tr>
+    </table>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg15.jpg" alt="Sudorípara écrina"><div class="cmed-fig-cap">Sudorípara écrina/merocrina: ducto, células mioepiteliais, lúmen e componente secretor</div></div>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg13.jpg" alt="Glândula sebácea e folículo"><div class="cmed-fig-cap">Folículo piloso, canal pilossebáceo, lóbulos secretores da glândula sebácea e músculo eretor do pelo (MEP)</div></div>
+    <div class="mnemo">🧠 "Apócrina" é o nome clássico, mas ultraestruturalmente a secreção é por exocitose (merócrina), com perda mínima de citoplasma. Para a prova prática, o que vale é: <b>apócrina = lúmen largo + abre no folículo + axila/aréola/genital</b>; <b>écrina = lúmen estreito + abre na pele + corpo todo</b>.</div>
+  </div>
+
+  <div class="card">
+    <h2>💅 Unhas</h2>
+    <div class="criterio"><b>🟢 Definição:</b> as placas ungueais são células queratinizadas com <b>queratina dura</b> (não descamam como a córnea).</div>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg18.jpg" alt="Unha"><div class="cmed-fig-cap">Unha em corte e em esquema: raiz, matriz, eponíquio, hiponíquio, leito ungueal, falange</div></div>
+    <table>
+      <tr><th>Estrutura</th><th>Função / descrição</th></tr>
+      <tr><td>Lâmina (placa) ungueal</td><td>Parte dura visível, de queratina dura</td></tr>
+      <tr><td>Raiz da unha</td><td>Porção proximal, escondida sob a prega proximal</td></tr>
+      <tr><td><b>Matriz ungueal</b></td><td>Epitélio proliferativo que <b>produz a lâmina</b>; a lúnula é a parte visível da matriz</td></tr>
+      <tr><td>Eponíquio (cutícula)</td><td>Epiderme que recobre a base da placa</td></tr>
+      <tr><td>Hiponíquio</td><td>Epiderme espessada sob o bordo livre</td></tr>
+      <tr><td>Leito ungueal</td><td>Epiderme e derme sob a placa, apoiadas na falange</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>⚫ Melanoma — Regra ABCDE</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg19.jpg" alt="Melanoma ABCDE"><div class="cmed-fig-cap">Melanoma — Assimetria, Bordas irregulares, Cor, Diâmetro &gt;6 mm, Evolução</div></div>
+    <table>
+      <tr><th>Letra</th><th>Sinal de alerta</th></tr>
+      <tr><td><b>A</b> — Assimetria</td><td>Uma metade não é espelho da outra</td></tr>
+      <tr><td><b>B</b> — Bordas irregulares</td><td>Contorno recortado, mal definido</td></tr>
+      <tr><td><b>C</b> — Cor</td><td>Mais de uma cor (marrom, preto, vermelho, azulado, branco)</td></tr>
+      <tr><td><b>D</b> — Diâmetro</td><td>Maior que 6 mm</td></tr>
+      <tr><td><b>E</b> — Evolução</td><td>Mudança de tamanho, forma, cor ou sintomas (coceira, sangramento)</td></tr>
+    </table>
+    <p>O melanoma é a neoplasia maligna dos <b>melanócitos</b> (camada basal) — é o câncer de pele mais agressivo; o prognóstico depende da profundidade de invasão (espessura de Breslow).</p>
+  </div>
+
+  <div class="card">
+    <h2>🔴 Acne</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap4/pg20.jpg" alt="Acne"><div class="cmed-fig-cap">Acne — graus de gravidade e lesões: comedão aberto, comedão fechado, pápula e pústula</div></div>
+    <p>Doença da <b>unidade pilossebácea</b>: obstrução do infundíbulo do folículo por hiperqueratinização + excesso de sebo (androgênios) + proliferação de <i>Cutibacterium acnes</i> + inflamação.</p>
+    <table>
+      <tr><th>Lesão</th><th>Descrição</th></tr>
+      <tr><td>Comedão aberto (cravo, "ponto negro")</td><td>Folículo dilatado e obstruído; escuro por oxidação da melanina/sebo, e não por sujeira</td></tr>
+      <tr><td>Comedão fechado (espinhinha branca)</td><td>Obstrução sem abertura para a superfície</td></tr>
+      <tr><td>Pápula / pústula</td><td>Inflamação ao redor do folículo, com ou sem pus</td></tr>
+      <tr><td>Nódulo / cisto (graus mais graves)</td><td>Inflamação profunda, com risco de cicatriz</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Como Identificar Cada Estrutura na Lâmina</h2>
+    <table>
+      <tr><th>Se você vê...</th><th>É...</th></tr>
+      <tr><td>Epiderme muito espessa, córnea enorme, ondulada e eosinofílica; sem pelos</td><td><b>Pele grossa</b> (palma/planta)</td></tr>
+      <tr><td>Epiderme fina com pelo e glândula sebácea</td><td><b>Pele fina</b></td></tr>
+      <tr><td>Linha escura e granulosa logo abaixo da córnea</td><td><b>Estrato granuloso</b></td></tr>
+      <tr><td>Faixa clara, homogênea e translúcida entre granuloso e córneo</td><td><b>Estrato lúcido</b> (só pele grossa)</td></tr>
+      <tr><td>Camada única de células escuras e alinhadas sobre a membrana basal</td><td><b>Estrato basal</b></td></tr>
+      <tr><td>Pigmento marrom no basal</td><td><b>Melanina</b> (melanócitos e queratinócitos)</td></tr>
+      <tr><td>Papilas de tecido conjuntivo frouxo em dedos de luva dentro da epiderme</td><td><b>Derme papilar</b></td></tr>
+      <tr><td>Fibras de colágeno espessas e eosinofílicas, grosseiras</td><td><b>Derme reticular</b></td></tr>
+      <tr><td>Grandes áreas de células vazias, em favos, com septos finos</td><td><b>Hipoderme</b> (tecido adiposo)</td></tr>
+      <tr><td>Estrutura em "cebola" de lamelas concêntricas na derme profunda</td><td><b>Corpúsculo de Pacini</b></td></tr>
+      <tr><td>Pequenas estruturas ovaladas dentro das papilas dérmicas</td><td><b>Corpúsculos de Meissner</b></td></tr>
+      <tr><td>Lóbulos de células grandes, claras e espumosas, ao lado do pelo</td><td><b>Glândula sebácea</b></td></tr>
+      <tr><td>Tubos enovelados pequenos, escuros e de lúmen estreito, na derme profunda</td><td><b>Sudorípara écrina</b> (corte do ducto: mais escuro, 2 camadas)</td></tr>
+      <tr><td>Tubos enovelados de lúmen largo, junto a folículo</td><td><b>Sudorípara apócrina</b></td></tr>
+      <tr><td>Haste do pelo com bulbo e papila dérmica em "pera" na base</td><td><b>Segmento inferior do folículo</b></td></tr>
+      <tr><td>Feixes de músculo liso oblíquos junto ao folículo</td><td><b>Músculo eretor do pelo</b></td></tr>
+    </table>
+    <div class="hot">💭 Raciocínio de prova prática: 1) conta a espessura da epiderme (grossa/fina); 2) procura <b>anexos</b> (pelo, sebácea, sudorípara); 3) só depois nomeia as camadas. A presença de pelo exclui palma/planta.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Pegadinhas da Prova</h2>
+    <ul>
+      <li><b>Estrato lúcido</b> só existe na pele grossa — não "inventa" lúcido numa pele com pelo</li>
+      <li><b>Pele grossa não tem pelos nem glândulas sebáceas</b>, mas tem muitas sudoríparas</li>
+      <li>Granuloso (queratohialina, núcleo ainda presente) x córneo (<b>sem núcleo</b>)</li>
+      <li>A cor da pele depende da quantidade e distribuição de melanina, <b>não do número de melanócitos</b></li>
+      <li>Célula de Langerhans é <b>APC</b> (não produz melanina); melanócito produz melanina; Merkel é <b>mecanorreceptor</b> — as três ficam na epiderme</li>
+      <li>Sebácea = <b>holócrina</b>; écrina = <b>merócrina</b>; apócrina clássica (lúmen largo, abre no folículo)</li>
+      <li>Infundíbulo termina na sebácea; istmo termina no eretor; bulbo + papila = segmento inferior</li>
+      <li>Matriz ungueal <b>produz</b> a lâmina; o leito só sustenta</li>
+      <li>"D" do melanoma é diâmetro <b>&gt;6 mm</b> (não "&gt;6 cm", não "dor")</li>
+      <li>Comedão aberto é escuro por oxidação, não por sujeira</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>💡 Dica Clinicus</h2>
+    <div class="hot">💭 Fluxograma mental: "Epiderme grossa e sem pelo? → pele grossa. Pelo e sebácea? → pele fina. Faixa clara sob a córnea? → lúcido. Linha escura granulosa? → granuloso. Lúmen largo ligado ao folículo? → apócrina. Lúmen estreito, vai pra superfície? → écrina. Cebola na profundidade? → Pacini."</div>
+  </div>
+
+</section>
+<!-- ============ CORRELAÇÃO CLÍNICA ============ -->
+
+<section class="panel" id="p1">
+
+  <div class="card">
+    <h2>🩺 Melanoma</h2>
+    <p>Mulher de 45 anos nota uma pinta nas costas que cresceu, ficou com bordas irregulares, duas tonalidades e 8 mm de diâmetro. A biópsia mostra proliferação atípica de melanócitos, que partem da junção epiderme-derme e invadem a derme.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> o melanoma nasce nos <b>melanócitos do estrato basal</b>; a regra <b>ABCDE</b> (Assimetria, Bordas, Cor, Diâmetro &gt;6 mm, Evolução) é a triagem clínica. O prognóstico depende da espessura de invasão (Breslow).</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Acne Vulgar</h2>
+    <p>Adolescente de 16 anos com comedões abertos e fechados, pápulas e pústulas no rosto e nas costas. A lesão acontece na unidade pilossebácea: o infundíbulo se obstrui por queratina, o sebo se acumula e o <i>Cutibacterium acnes</i> desencadeia a inflamação.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> liga <b>glândula sebácea + infundíbulo + androgênios da puberdade</b> a uma doença muito comum. Onde não há folículo piloso com sebácea (palmas e plantas), não há acne.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Vitiligo x Albinismo</h2>
+    <p>No <b>vitiligo</b>, os melanócitos são destruídos (mecanismo autoimune): surgem manchas brancas bem delimitadas, com <b>ausência de melanócitos</b> na biópsia. No <b>albinismo</b>, os melanócitos <b>existem em número normal</b>, mas falta atividade da tirosinase, então não há melanina.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> pergunta clássica — albinismo é defeito de <i>síntese</i> de melanina, não de ausência de melanócitos. Reforça que a cor depende da melanina, e não da contagem de células.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Queimaduras e Cicatrização</h2>
+    <p>Queimadura de 1º grau atinge a epiderme (eritema, dor); de 2º grau superficial, a derme papilar (bolhas); 2º profundo, a derme reticular; 3º grau destrói epiderme, derme e anexos (indolor, pois os receptores foram destruídos).</p>
+    <div class="clinical"><b>🔴 Relevância:</b> a reepitelização das queimaduras de 2º grau acontece a partir das <b>células-tronco dos anexos</b> (folículo piloso, glândulas sudoríparas) que ficaram preservados na derme profunda; no 3º grau, sem anexos, precisa de enxerto.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Pênfigo vulgar e Penfigoide bolhoso</h2>
+    <p>No <b>pênfigo</b>, autoanticorpos atacam os desmossomos (desmogleínas) dos queratinócitos: as células se separam (acantólise) no estrato espinhoso/suprabasal. No <b>penfigoide</b>, o alvo são os hemidesmossomos do basal, com bolha subepidérmica.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> desmossomos = "espinhos" do estrato espinhoso; hemidesmossomos = ancoragem do basal na lâmina basal. Liga estrutura à doença bolhosa.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Psoríase</h2>
+    <p>Placas eritematodescamativas por hiperproliferação dos queratinócitos: a renovação epidérmica cai de aproximadamente 1 mês para poucos dias, a camada córnea retém núcleos (paraqueratose) e o granuloso some ou diminui.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> exemplo de alteração do turnover epidérmico; na lâmina, epiderme espessada com acantose e descamação intensa.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Carcinomas Basocelular e Espinocelular</h2>
+    <p>Em pele fotoexposta de idoso, a lesão nacarada com bordas elevadas é típica de <b>carcinoma basocelular</b> (origem nas células do estrato basal/bainha folicular externa). Já o <b>espinocelular</b> (queratinócitos do espinhoso) tende a ser ceratótico, ulcerado e com maior potencial de metástase.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> nomes vêm do estrato de origem: <b>basocelular = basal</b>, <b>espinocelular = espinhoso</b>. A radiação UV é o principal fator de risco dos dois e do melanoma.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Hiperidrose e Bromidrose</h2>
+    <p>Hiperidrose é suor excessivo (palmas, plantas, axilas) por hiperatividade das <b>écrinas</b> (inervação simpática colinérgica). A bromidrose axilar vem da degradação bacteriana da secreção das <b>apócrinas</b>, que só se ativam após a puberdade.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> o cheiro axilar não é "do suor" (aquoso, écrina), e sim da secreção rica em lipídios e proteínas da apócrina decomposta por bactérias.</div>
+  </div>
+
+</section>
+<!-- ============ TREINO SOB PRESSÃO ============ -->
+
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>⏱️ Treino de Reconhecimento — Sob Pressão</h2>
+    <p style="font-size:.88em;color:var(--text-dim);">3 lâminas (Pele Grossa, Folículo Piloso/Glândula Sebácea e Sudorípara Écrina), <b>2 minutos</b> cada. Descreva a estrutura e o que cada seta/rótulo está indicando — as legendas foram borradas. No final, confira ao lado da lâmina original do Atlas.</p>
+    <div id="trainArea"></div>
+  </div>
+</section>
+
+<style>
+.train-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.train-progress{font-weight:600;color:var(--text-dim);font-size:.9em;}
+.train-clock{font-weight:700;font-size:1.1em;color:var(--ok);background:rgba(79,209,138,.1);padding:4px 12px;border-radius:20px;}
+.train-clock-urgent{color:var(--bad);background:rgba(224,80,95,.15);}
+.train-question{font-size:1.02em;font-weight:600;margin-bottom:12px;text-align:center;}
+.train-img{max-width:100%;border-radius:8px;display:block;margin:0 auto 14px;border:1px solid var(--border);background:#fff;}
+.train-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.92em;margin-bottom:12px;font-family:inherit;resize:vertical;}
+.train-gabarito-title{font-size:1.1em;font-weight:700;color:var(--gold);text-align:center;margin-bottom:16px;}
+.train-gab-item{border-bottom:1px solid var(--border);padding:14px 0;}
+.train-gab-imgs{display:flex;gap:10px;margin-bottom:8px;}
+.train-gab-imgs img{width:50%;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border);cursor:zoom-in;}
+.train-gab-imgs .lbl{font-size:.68em;color:var(--text-dim);text-align:center;display:block;margin-top:2px;}
+.train-gab-info{font-size:.88em;}
+.train-gab-user{color:var(--text-dim);margin:4px 0;}
+.train-gab-correct{color:var(--ok);}
+</style>
+
+<script>
+const trainRounds = [{"img": "img/treino_cap4/pg11_blur.jpg", "atlas_img": "img/atlas_cap4/pg11.jpg", "contexto": "Pele grossa", "respostas": ["Estrato córneo (EC)", "Epiderme (Ep)", "Estrato granuloso (EG)", "Camada papilar da derme (cp)", "Estrato espinhoso (EE)", "Estrato basal (EB)", "Camada reticular da derme (CR)", "Ducto da glândula sudorípara (D)", "Derme (De)"]}, {"img": "img/treino_cap4/pg13_blur.jpg", "atlas_img": "img/atlas_cap4/pg13.jpg", "contexto": "Folículo piloso e glândula sebácea", "respostas": ["Folículo piloso", "Canal pilossebáceo", "Lóbulos secretores (glândula sebácea)", "Músculo eretor do pelo (MEP)"]}, {"img": "img/treino_cap4/pg15_blur.jpg", "atlas_img": "img/atlas_cap4/pg15.jpg", "contexto": "Sudorípara écrina", "respostas": ["Ducto", "Células mioepiteliais", "Lúmen", "Componente secretor"]}];
+
+let trainIdx = 0, trainTimer = null, trainSeconds = 120, trainAnswers = [];
+const trainArea = document.getElementById('trainArea');
+
+function startTraining(){
+  trainIdx = 0;
+  trainAnswers = new Array(trainRounds.length).fill('');
+  renderTrainRound();
+}
+
+function renderTrainRound(){
+  clearInterval(trainTimer);
+  if(trainIdx >= trainRounds.length){ renderTrainGabarito(); return; }
+  trainSeconds = 120;
+  const r = trainRounds[trainIdx];
+  const nSetas = r.respostas.length;
+  trainArea.innerHTML = `
+    <div class="train-header">
+      <span class="train-progress">Rodada ${trainIdx+1} / ${trainRounds.length}</span>
+      <span class="train-clock" id="trainClock">⏱️ 2:00</span>
+    </div>
+    <div class="train-question">Descreva a estrutura da pele desta lâmina e o que cada seta/rótulo está indicando. Há ${nSetas} legendas borradas indicando estruturas diferentes.</div>
+    <img src="${r.img}" alt="Lâmina a identificar" class="train-img">
+    <textarea id="trainInput" class="train-input" rows="4" placeholder="Escreva sua resposta aqui (opcional, só pra você conferir depois)">${trainAnswers[trainIdx]}</textarea>
+    <button class="reveal-btn" id="trainNextBtn">Já sei, próxima →</button>
+  `;
+  document.getElementById('trainNextBtn').addEventListener('click', advanceTrain);
+  document.getElementById('trainInput').addEventListener('input', (e)=>{ trainAnswers[trainIdx] = e.target.value; });
+  trainTimer = setInterval(()=>{
+    trainSeconds--;
+    const clockEl = document.getElementById('trainClock');
+    const mm = Math.floor(trainSeconds/60);
+    const ss = String(trainSeconds%60).padStart(2,'0');
+    if(clockEl) clockEl.textContent = '⏱️ ' + mm + ':' + ss;
+    if(trainSeconds <= 20 && clockEl) clockEl.classList.add('train-clock-urgent');
+    if(trainSeconds <= 0){ advanceTrain(); }
+  }, 1000);
+}
+
+function advanceTrain(){
+  clearInterval(trainTimer);
+  trainIdx++;
+  renderTrainRound();
+}
+
+function renderTrainGabarito(){
+  let html = '<div class="train-gabarito-title">🏁 Treino Concluído — Confira no Atlas</div>';
+  trainRounds.forEach((r, i) => {
+    const userAns = trainAnswers[i] ? trainAnswers[i] : '(sem resposta)';
+    const listaSetas = r.respostas.map((resp,idx)=>`<div>&nbsp;&nbsp;${idx+1}. ${resp}</div>`).join('');
+    html += `
+      <div class="train-gab-item">
+        <div class="train-gab-imgs">
+          <div style="width:50%;"><img src="${r.img}" alt="Treino" onclick="openAtlasLightbox(this.src,'Versão treino')"><span class="lbl">Versão Treino</span></div>
+          <div style="width:50%;"><img src="${r.atlas_img}" alt="Atlas" onclick="openAtlasLightbox(this.src,'Atlas')"><span class="lbl">Confira no Atlas</span></div>
+        </div>
+        <div class="train-gab-info">
+          <div class="train-gab-user">Sua resposta: <i>${userAns}</i></div>
+          <div class="train-gab-correct">✅ O que as setas indicam:${listaSetas}</div>
+        </div>
+      </div>`;
+  });
+  html += '<button class="reveal-btn" id="trainRestartBtn">🔄 Refazer o treino</button>';
+  trainArea.innerHTML = html;
+  document.getElementById('trainRestartBtn').addEventListener('click', startTraining);
+}
+
+startTraining();
+</script>
+<!-- ============ ATLAS HISTOLÓGICO ============ -->
+<section class="panel" id="p6">
+  <div class="card">
+    <h2>🔬 Atlas Histológico — Sistema Tegumentar</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Diagramas e lâminas reais, direto do material do Prof. João Vitor Figueiredo. Toque em qualquer imagem pra abrir com zoom.</p>
+
+    <h3>🧴 Generalidades da Pele</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg03.jpg" alt="Componentes da pele — pelo, epiderme, derme, hipoderme e músculo"><div class="cmed-fig-cap">Componentes da pele — pelo, epiderme, derme, hipoderme e músculo</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg05.jpg" alt="Funções da pele"><div class="cmed-fig-cap">Funções da pele</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg06.jpg" alt="Esquema da estrutura da pele (corpúsculos, glândulas, folículo e plexos vasculares)"><div class="cmed-fig-cap">Esquema da estrutura da pele (corpúsculos, glândulas, folículo e plexos vasculares)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg07.jpg" alt="Mapa conceitual da histologia do sistema tegumentar (ectoderme → epiderme; mesoderme → derme)"><div class="cmed-fig-cap">Mapa conceitual da histologia do sistema tegumentar (ectoderme → epiderme; mesoderme → derme)</div></div>
+    </div>
+
+    <h3>🔬 Epiderme e suas Células</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg08.jpg" alt="Células de Langerhans, prolongamento do melanócito, queratinócito e melanócito"><div class="cmed-fig-cap">Células de Langerhans, prolongamento do melanócito, queratinócito e melanócito</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg09.jpg" alt="Estratos da epiderme: córneo, lúcido, granuloso, espinhoso e basal"><div class="cmed-fig-cap">Estratos da epiderme: córneo, lúcido, granuloso, espinhoso e basal</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg11.jpg" alt="Pele grossa rotulada: EC, EG, EE, EB, Ep, cp, CR, D, De"><div class="cmed-fig-cap">Pele grossa rotulada: EC, EG, EE, EB, Ep, cp, CR, D, De</div></div>
+    </div>
+
+    <h3>🧶 Derme e Receptores</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg10.jpg" alt="Mecanorreceptores e terminações nervosas livres"><div class="cmed-fig-cap">Mecanorreceptores e terminações nervosas livres</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg12.jpg" alt="A: corpúsculo de Pacini (com nervos N) · B: corpúsculos de Meissner (CM) nas papilas dérmicas"><div class="cmed-fig-cap">A: corpúsculo de Pacini (com nervos N) · B: corpúsculos de Meissner (CM) nas papilas dérmicas</div></div>
+    </div>
+
+    <h3>💇 Anexos: Folículo, Glândulas e Unhas</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg14.jpg" alt="Folículo piloso: haste, bainhas radiculares, glândula sebácea, protuberância folicular, papila dérmica"><div class="cmed-fig-cap">Folículo piloso: haste, bainhas radiculares, glândula sebácea, protuberância folicular, papila dérmica</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg13.jpg" alt="Folículo piloso, canal pilossebáceo, lóbulos secretores (sebácea) e músculo eretor do pelo (MEP)"><div class="cmed-fig-cap">Folículo piloso, canal pilossebáceo, lóbulos secretores (sebácea) e músculo eretor do pelo (MEP)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg17.jpg" alt="a) Esquema do folículo e das glândulas · b) lâmina com GS, MEP, FP, TA, BP e pelo"><div class="cmed-fig-cap">a) Esquema do folículo e das glândulas · b) lâmina com GS, MEP, FP, TA, BP e pelo</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg15.jpg" alt="Sudorípara écrina/merocrina: ducto, células mioepiteliais, lúmen e componente secretor"><div class="cmed-fig-cap">Sudorípara écrina/merocrina: ducto, células mioepiteliais, lúmen e componente secretor</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg16.jpg" alt="Sudorípara apócrina: glândulas apócrinas na derme profunda"><div class="cmed-fig-cap">Sudorípara apócrina: glândulas apócrinas na derme profunda</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg18.jpg" alt="Unha: raiz, matriz ungueal, eponíquio, hiponíquio, Pacini e esquema da unha"><div class="cmed-fig-cap">Unha: raiz, matriz ungueal, eponíquio, hiponíquio, Pacini e esquema da unha</div></div>
+    </div>
+
+    <h3>⚫ Melanoma e Acne</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg19.jpg" alt="Melanoma — regra ABCDE"><div class="cmed-fig-cap">Melanoma — regra ABCDE</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg20.jpg" alt="Acne — graus e lesões"><div class="cmed-fig-cap">Acne — graus e lesões</div></div>
+    </div>
+
+    <h3>🧪 Lâminas Reais — Epiderme e Derme</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg21.jpg" alt="Epiderme e derme — visão panorâmica, com cristas epidérmicas e papilas dérmicas"><div class="cmed-fig-cap">Epiderme e derme — visão panorâmica, com cristas epidérmicas e papilas dérmicas</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg22.jpg" alt="Epiderme em maior aumento: células basais e interface com a derme papilar"><div class="cmed-fig-cap">Epiderme em maior aumento: células basais e interface com a derme papilar</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg23.jpg" alt="Pele grossa: epiderme espessa com cristas epidérmicas profundas"><div class="cmed-fig-cap">Pele grossa: epiderme espessa com cristas epidérmicas profundas</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg24.jpg" alt="Epiderme espessa em grande aumento: faixa clara homogênea (região do estrato lúcido) entre os estratos"><div class="cmed-fig-cap">Epiderme espessa em grande aumento: faixa clara homogênea (região do estrato lúcido) entre os estratos</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg25.jpg" alt="Epiderme espessa: queratinócitos dos estratos superiores, visão ampla"><div class="cmed-fig-cap">Epiderme espessa: queratinócitos dos estratos superiores, visão ampla</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg28.jpg" alt="Pele grossa: estrato córneo muito espesso e papila dérmica"><div class="cmed-fig-cap">Pele grossa: estrato córneo muito espesso e papila dérmica</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg39.jpg" alt="Pele grossa em maior aumento: córnea espessa e papilas dérmicas"><div class="cmed-fig-cap">Pele grossa em maior aumento: córnea espessa e papilas dérmicas</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg30.jpg" alt="Epiderme em grande aumento: camada basal e queratinócitos; córneo frouxo na superfície"><div class="cmed-fig-cap">Epiderme em grande aumento: camada basal e queratinócitos; córneo frouxo na superfície</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg32.jpg" alt="Pele em corte amplo: estrato córneo espesso (faixa vermelha) e derme"><div class="cmed-fig-cap">Pele em corte amplo: estrato córneo espesso (faixa vermelha) e derme</div></div>
+    </div>
+
+    <h3>🎨 Lâminas Reais — Melanina</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg31.jpg" alt="Epiderme com muito pigmento melânico (escuro) nas camadas profundas"><div class="cmed-fig-cap">Epiderme com muito pigmento melânico (escuro) nas camadas profundas</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg33.jpg" alt="Pele fina com pigmento marrom (melanina) na camada basal"><div class="cmed-fig-cap">Pele fina com pigmento marrom (melanina) na camada basal</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg34.jpg" alt="Camada basal pigmentada em maior aumento"><div class="cmed-fig-cap">Camada basal pigmentada em maior aumento</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg35.jpg" alt="Epiderme com melanina basal, papilas dérmicas com capilares e córneo descamando"><div class="cmed-fig-cap">Epiderme com melanina basal, papilas dérmicas com capilares e córneo descamando</div></div>
+    </div>
+
+    <h3>🫧 Lâminas Reais — Anexos, Receptores e Hipoderme</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg40.jpg" alt="Pele fina com folículo piloso em corte oblíquo"><div class="cmed-fig-cap">Pele fina com folículo piloso em corte oblíquo</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg41.jpg" alt="Folículo piloso: haste pigmentada, bainhas e bulbo; glândulas ao redor"><div class="cmed-fig-cap">Folículo piloso: haste pigmentada, bainhas e bulbo; glândulas ao redor</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg42.jpg" alt="Bulbo piloso com papila dérmica central e melanina nas células matriciais"><div class="cmed-fig-cap">Bulbo piloso com papila dérmica central e melanina nas células matriciais</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg37.jpg" alt="Folículo piloso com glândula sebácea (lóbulo de células claras)"><div class="cmed-fig-cap">Folículo piloso com glândula sebácea (lóbulo de células claras)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg43.jpg" alt="Glândula sebácea multilobada junto ao folículo e à haste do pelo"><div class="cmed-fig-cap">Glândula sebácea multilobada junto ao folículo e à haste do pelo</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg26.jpg" alt="Sudoríparas écrinas — porções secretoras e ductos na derme profunda"><div class="cmed-fig-cap">Sudoríparas écrinas — porções secretoras e ductos na derme profunda</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg36.jpg" alt="Sudorípara écrina — glomérulo secretor cercado por tecido adiposo"><div class="cmed-fig-cap">Sudorípara écrina — glomérulo secretor cercado por tecido adiposo</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg29.jpg" alt="Derme reticular densa com glândulas (aglomerados basófilos) sob epiderme fina"><div class="cmed-fig-cap">Derme reticular densa com glândulas (aglomerados basófilos) sob epiderme fina</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg38.jpg" alt="Corpúsculo de Pacini (lamelas concêntricas) na derme profunda"><div class="cmed-fig-cap">Corpúsculo de Pacini (lamelas concêntricas) na derme profunda</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap4/pg27.jpg" alt="Hipoderme — tecido adiposo separado por septos conjuntivos"><div class="cmed-fig-cap">Hipoderme — tecido adiposo separado por septos conjuntivos</div></div>
+    </div>
+
+    <div class="prova" style="margin-top:16px;">📌 Pele Grossa, Folículo/Glândula Sebácea e Sudorípara Écrina também estão disponíveis no modo cronometrado (sem legenda) na aba ⏱️ Treino Sob Pressão.</div>
+  </div>
+</section>
+
+<div id="atlasLightbox" class="atlas-lightbox" onclick="closeAtlasLightbox()">
+  <div class="atlas-lightbox-inner">
+    <img id="atlasLightboxImg" src="" alt="">
+    <p id="atlasLightboxCap"></p>
+  </div>
+</div>
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🧠 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>❓ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Questões objetivas, de identificação prática e de correlação clínica. Escolhe uma alternativa, depois clica em "Ver comentário completo".</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎯 Quiz — Revisão Rápida</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Correção imediata, com feedback comentado no final.</p>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Células de Merkel", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Células de Merkel", "q": "Qual célula do estrato basal da epiderme funciona como mecanorreceptor do tato leve?", "opts": ["Melanócito", "Célula de Langerhans", "Célula de Merkel", "Queratinócito do estrato córneo"], "correct": 2, "justificativa": "A célula de Merkel fica no estrato basal, associada a uma terminação nervosa (disco de Merkel), e funciona como mecanorreceptor do tato leve.", "analise": ["Incorreto — o melanócito produz melanina e a transfere aos queratinócitos; não é receptor.", "Incorreto — a célula de Langerhans é apresentadora de antígeno (APC).", "Incorreto — o queratinócito do córneo é uma célula morta e anucleada, cheia de queratina."], "analise_letters": ["A", "B", "D"], "conceito": "Merkel = mecanorreceptor. Langerhans = APC. Melanócito = melanina.", "pegadinha": "Todas as três células ficam na epiderme, e é por isso que as trocas aparecem em prova.", "dica": "Merkel → 'M' de mecanorreceptor."}, {"n": 2, "tema": "Estrato lúcido", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Estrato lúcido", "q": "Em qual tipo de pele o estrato lúcido está presente?", "opts": ["Pele fina de todo o corpo", "Pele grossa de palmas e plantas", "Apenas no couro cabeludo", "Em todas as regiões, mas só ao microscópio eletrônico"], "correct": 1, "justificativa": "O estrato lúcido, faixa clara e homogênea entre o granuloso e o córneo, só existe em pele grossa (palmas e plantas).", "analise": ["Incorreto — na pele fina o estrato lúcido, em geral, é ausente.", "Incorreto — o couro cabeludo tem pele fina com muitos folículos.", "Incorreto — ele é visível ao microscópio óptico, só que apenas na pele grossa."], "analise_letters": ["A", "C", "D"], "conceito": "Lúcido = só pele grossa.", "pegadinha": "Pegadinha clássica: citar o lúcido numa lâmina com pelo.", "dica": "Palma e planta: tem lúcido; pelo na lâmina: não tem."}, {"n": 3, "tema": "Células de Langerhans", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Células de Langerhans", "q": "Qual é a principal função das células de Langerhans da epiderme?", "opts": ["Apresentar antígenos (APC) aos linfócitos", "Produzir melanina", "Produzir queratina", "Atuar como mecanorreceptores"], "correct": 0, "justificativa": "As células de Langerhans derivam da medula óssea (sistema fagocitário mononuclear) e fazem apresentação de antígenos, compondo o SALT.", "analise": ["Incorreto — produzir melanina é função do melanócito.", "Incorreto — queratina é produzida pelos queratinócitos.", "Incorreto — o mecanorreceptor epidérmico é a célula de Merkel."], "analise_letters": ["B", "C", "D"], "conceito": "Langerhans = APC da pele (SALT).", "pegadinha": "Não confundir com melanócito (também de aspecto claro com prolongamentos).", "dica": "Langerhans = sentinela imune da epiderme."}, {"n": 4, "tema": "Cor da Pele — Melanina", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Cor da Pele — Melanina", "q": "A diferença de cor de pele entre as pessoas se deve principalmente a:", "opts": ["Maior número de melanócitos em pessoas de pele escura", "Presença de melanócitos apenas na derme", "Espessura do estrato córneo", "Quantidade, tipo e distribuição dos melanossomos produzidos pelos melanócitos"], "correct": 3, "justificativa": "O número de melanócitos é semelhante entre os indivíduos; o que varia é a quantidade, o tipo e a distribuição da melanina (melanossomos) transferida aos queratinócitos.", "analise": ["Incorreto — o número de melanócitos é parecido entre as pessoas.", "Incorreto — melanócitos ficam no estrato basal da epiderme.", "Incorreto — a espessura do córneo não define a cor, apesar de interferir na textura."], "analise_letters": ["A", "B", "C"], "conceito": "Cor = melanina (quantidade, tipo e distribuição), não contagem de melanócitos.", "pegadinha": "Pegadinha: albinismo tem melanócitos normais, mas sem melanina.", "dica": "Cada melanócito serve ~30–40 queratinócitos."}, {"n": 5, "tema": "Folículo Piloso — Istmo", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Folículo Piloso — Istmo", "q": "Qual segmento do folículo piloso se estende do infundíbulo até a inserção do músculo eretor do pelo?", "opts": ["Bulbo", "Infundíbulo", "Istmo", "Papila dérmica"], "correct": 2, "justificativa": "O istmo vai da abertura da glândula sebácea (fim do infundíbulo) até a inserção do músculo eretor do pelo; abaixo dele fica o segmento inferior (bulbo + papila).", "analise": ["Incorreto — o bulbo faz parte do segmento inferior.", "Incorreto — o infundíbulo vai do orifício superficial até a abertura da glândula sebácea.", "Incorreto — a papila dérmica fica dentro do bulbo."], "analise_letters": ["A", "B", "D"], "conceito": "Infundíbulo → (sebácea) → Istmo → (músculo eretor) → Segmento inferior.", "pegadinha": "Trocar os marcos: sebácea fecha o infundíbulo; eretor fecha o istmo.", "dica": "Sebácea e eretor são os dois 'marcos' do folículo."}, {"n": 6, "tema": "Sudoríparas Écrinas", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Sudoríparas Écrinas", "q": "Sobre as glândulas sudoríparas écrinas (merocrinas), é correto afirmar:", "opts": ["Concentram-se nas axilas e aréolas", "Distribuem-se por quase toda a superfície corporal, exceto lábios e parte da genitália externa", "Abrem-se sempre no folículo piloso", "Secretam por rompimento total da célula (holócrina)"], "correct": 1, "justificativa": "As écrinas estão em toda a superfície corporal, exceto lábios e parte da genitália externa. Abrem-se direto na superfície e secretam por exocitose (merócrina).", "analise": ["Incorreto — axilas e aréolas são sítios das apócrinas.", "Incorreto — abertura no folículo é característica da apócrina.", "Incorreto — secreção holócrina é a da glândula sebácea."], "analise_letters": ["A", "C", "D"], "conceito": "Écrina = corpo todo, lúmen estreito, abre na pele.", "pegadinha": "Tipo de secreção: écrina = merócrina, sebácea = holócrina.", "dica": "Écrina = Em todo lugar."}, {"n": 7, "tema": "Glândula Sebácea — Secreção", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Glândula Sebácea — Secreção", "q": "Qual é o tipo de secreção da glândula sebácea?", "opts": ["Merócrina", "Apócrina clássica", "Endócrina", "Holócrina"], "correct": 3, "justificativa": "Na sebácea, as células se enchem de lipídios, rompem-se e são eliminadas inteiras junto com o sebo: secreção holócrina.", "analise": ["Incorreto — merócrina é a das sudoríparas écrinas.", "Incorreto — apócrina refere-se ao tipo de glândula sudorípara, não à sebácea.", "Incorreto — a sebácea é exócrina; seu produto sai pelo ducto até o folículo."], "analise_letters": ["A", "B", "C"], "conceito": "Sebácea = holócrina (célula inteira vira sebo).", "pegadinha": "Pegadinha: não confundir tipo de glândula (apócrina) com mecanismo de secreção.", "dica": "Holo = inteiro."}, {"n": 8, "tema": "Identificação — Pele Grossa", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Identificação — Pele Grossa", "q": "Uma lâmina mostra epiderme muito espessa, estrato córneo gigante, estrato lúcido e nenhum pelo. Trata-se de:", "opts": ["Pele grossa, de palma ou planta", "Pele fina do couro cabeludo", "Pele fina da axila", "Mucosa oral queratinizada"], "correct": 0, "justificativa": "Epiderme espessa, córnea gigante, lúcido e ausência de folículos são o conjunto da pele grossa (palmas e plantas).", "analise": ["Incorreto — o couro cabeludo tem muitos folículos e epiderme fina.", "Incorreto — a axila tem pelos e glândulas apócrinas.", "Incorreto — a mucosa não tem estrato lúcido típico e não apresenta o mesmo padrão de córnea."], "analise_letters": ["B", "C", "D"], "conceito": "Pele grossa: córnea espessa + lúcido + sem pelo.", "pegadinha": "A ausência de pelo é decisiva.", "dica": "Sem pelo, com lúcido: palma/planta."}, {"n": 9, "tema": "Melanoma — ABCDE", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Melanoma — ABCDE", "q": "Na regra ABCDE de avaliação do melanoma, a letra D indica:", "opts": ["Dor intensa", "Derme invadida", "Diâmetro maior que 6 mm", "Depósito de pigmento"], "correct": 2, "justificativa": "A letra D corresponde a Diâmetro maior que 6 mm. A sigla completa: Assimetria, Bordas irregulares, Cor, Diâmetro e Evolução.", "analise": ["Incorreto — dor não faz parte da regra ABCDE.", "Incorreto — profundidade é avaliada pela espessura de Breslow, e não pelo D.", "Incorreto — a cor já está na letra C."], "analise_letters": ["A", "B", "D"], "conceito": "ABCDE = Assimetria, Bordas, Cor, Diâmetro >6 mm, Evolução.", "pegadinha": "O E (evolução) é o mais importante quando o paciente nota mudança.", "dica": "D = Diâmetro, não 'dor'."}, {"n": 10, "tema": "Corpúsculo de Pacini", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Corpúsculo de Pacini", "q": "O corpúsculo de Pacini, com lamelas concêntricas em 'cebola', localiza-se principalmente na:", "opts": ["Epiderme, no estrato basal", "Derme profunda e hipoderme, sensível a pressão e vibração", "Papila dérmica, sensível ao tato fino", "Bainha do pelo, sensível ao frio"], "correct": 1, "justificativa": "O corpúsculo de Pacini fica na derme profunda/hipoderme e detecta pressão e vibração.", "analise": ["Incorreto — na epiderme a estrutura sensorial é o disco de Merkel.", "Incorreto — as papilas dérmicas abrigam os corpúsculos de Meissner.", "Incorreto — frio é associado ao corpúsculo de Krause, e não ao Pacini."], "analise_letters": ["A", "C", "D"], "conceito": "Pacini = profundo, lamelar, pressão/vibração.", "pegadinha": "Meissner (papila, tato fino) é o par que cai junto.", "dica": "Pacini = Profundo."}, {"n": 11, "tema": "Corpúsculo de Meissner", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Corpúsculo de Meissner", "q": "Os corpúsculos de Meissner são encontrados:", "opts": ["Na hipoderme", "No estrato córneo", "Em volta do bulbo piloso", "Nas papilas dérmicas, relacionados ao tato fino"], "correct": 3, "justificativa": "Os corpúsculos de Meissner ficam nas papilas dérmicas (derme papilar) e detectam o tato fino.", "analise": ["Incorreto — a hipoderme abriga os corpúsculos de Pacini.", "Incorreto — o córneo é composto por células mortas.", "Incorreto — o bulbo tem terminações nervosas foliculares, e não Meissner."], "analise_letters": ["A", "B", "C"], "conceito": "Meissner = papila dérmica = tato fino.", "pegadinha": "Mãos e dedos são regiões ricas em Meissner.", "dica": "Meissner = papila dérmica, ponta dos dedos, tato fino."}, {"n": 12, "tema": "Derme Papilar", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Derme Papilar", "q": "A camada papilar da derme é constituída por:", "opts": ["Tecido conjuntivo frouxo, com colágeno tipo I e III e capilares", "Tecido adiposo unilocular", "Epitélio estratificado queratinizado", "Tecido conjuntivo denso não modelado, sem vasos"], "correct": 0, "justificativa": "A derme papilar é de tecido conjuntivo frouxo, rico em capilares e colágeno tipo I e III, formando as papilas que se interdigitam com a epiderme.", "analise": ["Incorreto — tecido adiposo caracteriza a hipoderme.", "Incorreto — epitélio estratificado queratinizado é a epiderme.", "Incorreto — o denso não modelado é da derme reticular, e é vascularizado."], "analise_letters": ["B", "C", "D"], "conceito": "Derme papilar = TCL; reticular = TCDNM.", "pegadinha": "Papilar ≠ reticular: não troque a densidade.", "dica": "Papilar = Pouco denso."}, {"n": 13, "tema": "Acne", "nivel": "🔴 Nível 3 — Correlação Clínica", "objetivo": "Acne", "q": "A acne vulgar é uma doença que acomete principalmente:", "opts": ["As glândulas sudoríparas écrinas", "As unhas", "A unidade pilossebácea (folículo piloso + glândula sebácea)", "Os corpúsculos de Pacini"], "correct": 2, "justificativa": "A acne é uma doença da unidade pilossebácea: obstrução do infundíbulo por queratina, excesso de sebo e inflamação com participação do Cutibacterium acnes.", "analise": ["Incorreto — o suor das écrinas não está na gênese da acne.", "Incorreto — as unhas não têm unidade pilossebácea.", "Incorreto — Pacini é receptor profundo, sem relação com a acne."], "analise_letters": ["A", "B", "D"], "conceito": "Acne = unidade pilossebácea.", "pegadinha": "Palmas e plantas não têm sebácea, então não têm acne.", "dica": "Sebo + folículo = acne."}, {"n": 14, "tema": "Unhas", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Unhas", "q": "Qual estrutura da unha é responsável pela produção da lâmina (placa) ungueal?", "opts": ["Hiponíquio", "Matriz ungueal", "Eponíquio (cutícula)", "Leito ungueal"], "correct": 1, "justificativa": "A matriz ungueal, epitélio proliferativo da região da raiz, produz as células que se queratinizam em queratina dura e formam a lâmina; a lúnula é a parte visível da matriz.", "analise": ["Incorreto — o hiponíquio é a epiderme espessada sob o bordo livre.", "Incorreto — o eponíquio é a cutícula que recobre a base da placa.", "Incorreto — o leito apenas sustenta e acompanha o deslizamento da placa."], "analise_letters": ["A", "C", "D"], "conceito": "Matriz = fábrica da unha.", "pegadinha": "Lesão da matriz causa deformidade permanente da unha.", "dica": "Matriz = Máquina."}];
+const flashcards = [{"n": 1, "cat": "Generalidades", "f": "O que é a pele e quanto representa da massa corporal?", "b": "Maior órgão do corpo (15–20% da massa total). Cobertura externa classificada em fina e grossa, conforme espessura e região."}, {"n": 2, "cat": "Pele fina x grossa", "f": "Quais as diferenças histológicas entre pele fina e grossa?", "b": "Grossa: palmas e plantas, córnea espessa, estrato lúcido, sem pelo nem sebácea. Fina: resto do corpo, com pelos e sebáceas, sem lúcido."}, {"n": 3, "cat": "Estratos da epiderme", "f": "Cite os estratos da epiderme do mais profundo ao mais superficial.", "b": "Basal, espinhoso, granuloso, lúcido (só na pele grossa) e córneo."}, {"n": 4, "cat": "Melanócitos", "f": "Qual a função dos melanócitos e onde ficam?", "b": "Ficam no estrato basal, produzem melanina (melanossomos) e a transferem aos queratinócitos, protegendo do UV. A cor depende da melanina, não do número de melanócitos."}, {"n": 5, "cat": "Langerhans e Merkel", "f": "Diferencie célula de Langerhans e célula de Merkel.", "b": "Langerhans: APC derivada da medula óssea, no espinhoso. Merkel: mecanorreceptor do estrato basal ligado a disco nervoso."}, {"n": 6, "cat": "Derme e hipoderme", "f": "Quais as camadas da derme e o que há na hipoderme?", "b": "Derme papilar (TCL, colágeno I e III, vasos) e reticular (TCDNM, colágeno I e elásticas). Hipoderme: tecido adiposo e conjuntivo frouxo, isolante e reserva."}, {"n": 7, "cat": "Receptores", "f": "Quais corpúsculos sensoriais ficam na pele e o que detectam?", "b": "Meissner (papilas, tato fino), Pacini (profundo, pressão e vibração), Ruffini (calor, no material), Krause (frio), disco de Merkel (tato) e terminações livres (dor)."}, {"n": 8, "cat": "Folículo piloso", "f": "Quais os segmentos do folículo piloso?", "b": "Infundíbulo (até a abertura da sebácea), istmo (até a inserção do músculo eretor) e segmento inferior (bulbo + papila dérmica)."}, {"n": 9, "cat": "Sudoríparas écrinas", "f": "Onde estão e como são as glândulas sudoríparas écrinas?", "b": "Em quase toda a superfície do corpo, exceto lábios e parte da genitália externa. Merócrinas, lúmen estreito, ducto abre direto na pele, com células mioepiteliais."}, {"n": 10, "cat": "Sudoríparas apócrinas", "f": "Onde estão e como são as glândulas sudoríparas apócrinas?", "b": "Axilas, aréolas, mamilos, região perianal e genitália externa. Porção secretora grande com lúmen amplo; ducto abre no folículo piloso."}, {"n": 11, "cat": "Glândula sebácea", "f": "Qual o tipo de secreção e a localização da glândula sebácea?", "b": "Holócrina (a célula inteira vira sebo); anexa ao folículo piloso, abre no infundíbulo; ausente em palmas e plantas."}, {"n": 12, "cat": "Unhas", "f": "O que são as unhas e qual estrutura as produz?", "b": "Placas de células queratinizadas, com queratina dura. Produzidas pela matriz ungueal (lúnula = parte visível); eponíquio cobre a base e hiponíquio fica sob o bordo livre."}, {"n": 13, "cat": "Melanoma", "f": "Qual a regra ABCDE do melanoma?", "b": "Assimetria, Bordas irregulares, Cor (variada), Diâmetro >6 mm e Evolução (mudança). Neoplasia dos melanócitos."}, {"n": 14, "cat": "Acne", "f": "Qual a base histológica da acne?", "b": "Doença da unidade pilossebácea: obstrução do infundíbulo por queratina, excesso de sebo e inflamação (Cutibacterium acnes), formando comedões, pápulas e pústulas."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'histologia2pratica_cap04_tegumentar';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+</script>
+
+<script>
+function openAtlasLightbox(src, cap){
+  document.getElementById('atlasLightboxImg').src = src;
+  document.getElementById('atlasLightboxCap').textContent = cap || '';
+  document.getElementById('atlasLightbox').classList.add('show');
+}
+function closeAtlasLightbox(){
+  document.getElementById('atlasLightbox').classList.remove('show');
+}
+document.querySelectorAll('.cmed-fig img').forEach(function(img){
+  img.addEventListener('click', function(e){
+    e.stopPropagation();
+    var cap = img.closest('.cmed-fig').querySelector('.cmed-fig-cap');
+    openAtlasLightbox(img.src, cap ? cap.textContent : '');
+  });
+});
+</script>
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Histología II — Prática',
+    titulo: 'Capítulo 4 — Sistema Tegumentar',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P2',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Histología II — Prática', titulo: 'Capítulo 4 — Sistema Tegumentar', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-02/histologia2-pratica/Capitulo_03_Sistema_Endocrino.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 3 — Sistema Endócrino</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>

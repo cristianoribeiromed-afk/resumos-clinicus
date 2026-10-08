@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Cap.3 — Sistema Endócrino | Histología II Prática | ClinicusMed</title>
+<style>
+:root{
+  --bg:#0c1712; --bg2:#122019; --card:#0f1c15; --border:#1e3327;
+  --accent:#3aa66d; --ok:#4fd18a; --bad:#e0505f; --gold:#d4af37;
+  --text:#e8f2ec; --text-dim:#a3c2b0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:radial-gradient(ellipse at top,var(--bg2),var(--bg));color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding-bottom:60px;}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px;}
+header{padding:28px 0 18px;text-align:center;border-bottom:1px solid var(--border);}
+.eyebrow{font-size:.78em;color:var(--text-dim);letter-spacing:.5px;text-transform:uppercase;}
+header h1{font-size:1.5rem;color:var(--ok);margin-top:6px;}
+header p{color:var(--text-dim);margin-top:4px;font-size:.88em;}
+.xpbar{max-width:420px;margin:16px auto 0;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 16px;display:flex;align-items:center;gap:10px;font-size:.8em;color:var(--gold);}
+.xpouter{flex:1;height:6px;background:#081008;border-radius:4px;overflow:hidden;}
+.xpinner{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));width:0%;transition:width .4s ease;}
+nav.tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:20px 0 0;}
+nav.tabs button{background:var(--card);border:1px solid var(--border);color:var(--text-dim);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.82em;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent);color:var(--text);}
+nav.tabs button.active{background:var(--accent);color:#04150c;border-color:var(--accent);font-weight:600;}
+section.panel{display:none;padding:20px 0;}
+section.panel.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;}
+.card h2{color:var(--gold);font-size:1.05em;margin-bottom:10px;}
+.card h3{font-size:.95em;color:var(--gold);margin:16px 0 8px;}
+.card p{margin-bottom:8px;line-height:1.55;}
+.card ul,.card ol{margin:8px 0 8px 20px;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88em;}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;}
+th{background:#0a1a10;color:var(--gold);}
+.criterio{background:rgba(58,166,109,.1);border-left:3px solid var(--accent);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.clinical{background:rgba(224,80,95,.1);border-left:3px solid var(--bad);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.mnemo{background:rgba(79,209,138,.08);border-left:3px solid var(--ok);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.prova{background:rgba(212,175,55,.1);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.hot{background:rgba(212,175,55,.12);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:.9em;}
+.cmed-fig{margin:14px 0;text-align:center;}
+.cmed-fig img{max-width:100%;max-height:640px;width:auto;height:auto;object-fit:contain;border-radius:10px;border:1px solid var(--border);background:#fff;display:block;margin:0 auto;cursor:zoom-in;}
+.cmed-fig-cap{font-size:.82em;color:var(--text-dim);margin-top:6px;font-style:italic;}
+.cmed-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:12px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:220px;}
+.atlas-lightbox{display:none;position:fixed;inset:0;background:rgba(4,10,11,.94);z-index:1000;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+.atlas-lightbox.show{display:flex;}
+.atlas-lightbox-inner{max-width:100%;max-height:100%;text-align:center;}
+.atlas-lightbox-inner img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:10px;background:#fff;box-shadow:0 0 40px rgba(0,0,0,.5);}
+.atlas-lightbox-inner p{color:#fff;margin-top:12px;font-size:.95em;}
+.srs-status{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+.fc-filters{display:flex;gap:8px;margin-bottom:12px;}
+.fc-filters button{background:var(--bg2);border:1px solid var(--border);color:var(--text-dim);padding:6px 12px;border-radius:16px;font-size:.8em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#04150c;border-color:var(--accent);}
+.fc-topbar{display:flex;justify-content:space-between;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.fc-wrap{display:flex;flex-direction:column;gap:12px;}
+.fc-card{perspective:1200px;min-height:180px;}
+.fc-inner{position:relative;width:100%;min-height:180px;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:center;}
+.fc-back{transform:rotateY(180deg);}
+.fc-tag{font-size:.7em;color:var(--gold);letter-spacing:1px;margin-bottom:8px;}
+.fc-controls{display:flex;gap:8px;justify-content:center;}
+.fc-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:.85em;}
+.fc-btn.primary{background:var(--accent);color:#04150c;border-color:var(--accent);}
+.review-btns{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.review-btns button{flex:1;min-width:70px;padding:8px 6px;border-radius:8px;border:1px solid var(--border);font-size:.78em;cursor:pointer;color:#fff;}
+.btn-again{background:#8a2a34;} .btn-hard{background:#8a5a2a;} .btn-good{background:#2a7a4f;} .btn-easy{background:#1f9e6b;}
+.interval-preview{display:block;font-size:.7em;opacity:.8;}
+.fc-shuffle-row{text-align:center;}
+.qitem{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qmeta{display:flex;justify-content:space-between;font-size:.75em;color:var(--text-dim);margin-bottom:6px;}
+.qtxt{font-size:.92em;margin-bottom:10px;}
+ul.opts{list-style:none;margin:0;}
+ul.opts li{padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:.86em;}
+ul.opts li:hover{border-color:var(--accent);}
+ul.opts li.correct{background:rgba(79,209,138,.15);border-color:var(--ok);}
+ul.opts li.wrong{background:rgba(224,80,95,.15);border-color:var(--bad);}
+.reveal-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:6px 14px;border-radius:8px;font-size:.8em;cursor:pointer;margin-top:4px;}
+.comment{display:none;margin-top:10px;font-size:.85em;color:var(--text-dim);border-top:1px solid var(--border);padding-top:10px;}
+.comment.show{display:block;}
+.comment p{margin-bottom:6px;}
+.qz-btn{display:block;width:100%;text-align:left;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:.86em;}
+.progresslabel{font-size:.78em;color:var(--text-dim);margin-bottom:8px;}
+.quiz-result{text-align:center;margin-top:14px;color:var(--gold);font-size:.95em;}
+footer{text-align:center;color:var(--text-dim);font-size:.78em;padding:24px 0 0;}
+
+.case-level{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.case-level-head{display:flex;justify-content:space-between;padding:12px 14px;cursor:pointer;font-size:.88em;font-weight:600;color:var(--gold);}
+.case-level-body{display:none;padding:0 14px 14px;font-size:.88em;}
+.case-level-body.show{display:block;}
+.case-hist{margin-bottom:8px;line-height:1.5;}
+.case-q{margin-top:10px;line-height:1.5;}
+.case-answer-btn{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:5px 12px;border-radius:8px;font-size:.8em;cursor:pointer;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px 12px;border-left:3px solid var(--ok);background:rgba(79,209,138,.08);border-radius:6px;color:var(--text-dim);line-height:1.55;}
+.case-answer.show{display:block;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Histología II — Prática</a><span class="sep">›</span>
+  <span>P2</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Histología II — Prática</span><span>4 de 5</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:80%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Histología II — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_01_Sistema_Cardiovascular.html"><span class="ico">🧫</span><span>Capítulo 1 — Sistema Cardiovascular</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_02_Sistema_Linfatico.html"><span class="ico">🧫</span><span>Capítulo 2 — Sistema Linfático</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Simulado_P1.html"><span class="ico">🎯</span><span>Simulado P1 — 100 Lâminas</span></a>
+    <h4>P2</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-02/histologia2-pratica/Capitulo_03_Sistema_Endocrino.html"><span class="ico">🧫</span><span>Capítulo 3 — Sistema Endócrino</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/histologia2-pratica/Capitulo_04_Sistema_Tegumentar.html"><span class="ico">🧫</span><span>Capítulo 4 — Sistema Tegumentar</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Histología II Prática · Prof. João Vitor Figueiredo</span>
+  <h1>🧪 Capítulo 3 — Sistema Endócrino</h1>
+  <p>ClinicusMed · Atlas Histológico + Banco de Questões</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📖 Resumo Direcionado</button>
+  <button data-p="p6">🔬 Atlas Histológico</button>
+  <button data-p="p2">⏱️ Treino Sob Pressão</button>
+  <button data-p="p1">🩺 Correlação Clínica</button>
+  <button data-p="p3">🧠 Flashcards</button>
+  <button data-p="p4">❓ Banco de Questões</button>
+  <button data-p="p5">🎯 Quiz</button>
+</nav>
+
+
+<!-- ============ RESUMO DIRECIONADO ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois desse capítulo</h2>
+    <ul>
+      <li>Diferenciar sinalização endócrina, parácrina e autócrina, e feedback negativo de positivo</li>
+      <li>Separar adenohipófise de neurohipófise e reconhecer cada uma na lâmina</li>
+      <li>Classificar as células da adenohipófise (acidófilas, basófilas, cromófobas) e dizer o hormônio e o alvo de cada uma</li>
+      <li>Reconhecer corpos de Herring e pituícitos na neurohipófise</li>
+      <li>Identificar a pineal (pinealócitos e areia cerebral)</li>
+      <li>Identificar a tireoide (folículos, coloide, células C) e diferenciá-la da paratireoide</li>
+      <li>Identificar a paratireoide (células principais e oxífilas)</li>
+      <li>Identificar as 3 zonas do córtex e a medula da suprarrenal, na ordem correta</li>
+      <li>Reconhecer as ilhotas de Langerhans e suas células (alfa, beta, delta)</li>
+      <li>Completar a tabela célula - tintura - hormônio - alvo e correlacionar com a clínica</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📡 Generalidades — Como as Hormonas Agem</h2>
+    <div class="criterio"><b>🟢 Hormonas:</b> substâncias biologicamente ativas que atuam sobre células-alvo (células diana).</div>
+    <table>
+      <tr><th>Via</th><th>Como age</th></tr>
+      <tr><td><b>Endócrina</b></td><td>A célula secreta a hormona na corrente sanguínea; ela viaja até células-alvo distantes</td></tr>
+      <tr><td><b>Parácrina</b></td><td>A hormona difunde-se pelo interstício e atua em células vizinhas</td></tr>
+      <tr><td><b>Autócrina</b></td><td>A hormona atua na própria célula que a secretou</td></tr>
+    </table>
+    <h3>Regulação e retroalimentação (feedback)</h3>
+    <table>
+      <tr><th>Tipo</th><th>Definição</th></tr>
+      <tr><td><b>Negativa</b></td><td>A resposta INIBE o estímulo original. É de longe a mais frequente (ex.: T3/T4 altos inibem o TSH)</td></tr>
+      <tr><td><b>Positiva</b></td><td>A resposta REFORÇA o estímulo original (ex.: pico de LH induzido pelo estrógeno antes da ovulação)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Hipófise (Pituitária) — Visão Geral</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg13.jpg" alt="Hipotálamo e hipófise"><div class="cmed-fig-cap">Hipófise — corte e esquema do eixo hipotálamo-hipofisário</div></div>
+    <div class="criterio"><b>🟢 Duas glândulas em uma:</b> <b>adenohipófise</b> (lobo anterior, tecido glandular epitelial) e <b>neurohipófise</b> (lobo posterior, extensão do SNC). Toda a secreção é mediada pelo hipotálamo.</div>
+    <table>
+      <tr><th>Divisão</th><th>Partes</th><th>Origem / natureza</th></tr>
+      <tr><td><b>Adenohipófise</b> (lobo anterior)</td><td>Pars distalis (a maior), pars tuberalis (ao redor do infundíbulo), pars intermedia (restos da bolsa de Rathke, com folículos)</td><td>Epitélio glandular — brotamento do ectoderma oral (bolsa de Rathke)</td></tr>
+      <tr><td><b>Neurohipófise</b> (lobo posterior)</td><td>Pars nervosa e infundíbulo (haste hipofisária)</td><td>Tecido nervoso — evaginação do diencéfalo (assoalho do hipotálamo)</td></tr>
+    </table>
+    <div class="mnemo">🧠 Adeno = ADENO (glândula) = produz as próprias hormonas. Neuro = NEURO (nervo) = só ARMAZENA e LIBERA hormonas feitas no hipotálamo.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎨 Adenohipófise — Células e Hormonas</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg10.jpg" alt="Adenohipófise"><div class="cmed-fig-cap">Adenohipófise (tricrômico) — CA acidófila, CB basófila, Cr cromófoba, C capilar</div></div>
+    <p>O parênquima da pars distalis forma cordões e ninhos de células separados por capilares sinusoides fenestrados. Pela afinidade tintorial, as células dividem-se em <b>cromófilas</b> (~50%, com grânulos que coram) e <b>cromófobas</b> (~50%, pálidas).</p>
+    <table>
+      <tr><th>Grupo</th><th>Célula</th><th>% (parênquima)</th><th>Hormona</th><th>Órgão / tecido-alvo</th></tr>
+      <tr><td rowspan="2"><b>Cromófila ACIDÓFILA</b> (~40%)</td><td>Somatótropa</td><td>~50%</td><td>Somatotrofina / GH</td><td>Fígado (IGF-1), osso, músculo, tecidos em geral</td></tr>
+      <tr><td>Lactótropa</td><td>15–20%</td><td>Prolactina (PRL)</td><td>Glândula mamária</td></tr>
+      <tr><td rowspan="3"><b>Cromófila BASÓFILA</b> (~10%)</td><td>Corticótropa</td><td>15–20%</td><td>ACTH (corticotropina) e MSH (melanotropina) — derivam da POMC</td><td>Córtex da suprarrenal (ACTH); melanócitos (MSH)</td></tr>
+      <tr><td>Tirótropa</td><td>~5%</td><td>TSH (tirotropina)</td><td>Tireoide</td></tr>
+      <tr><td>Gonadótropa</td><td>~10%</td><td>FSH e LH</td><td>Ovários e testículos</td></tr>
+      <tr><td><b>CROMÓFOBA</b> (~50%)</td><td colspan="4">Células pouco coradas: células-tronco/de reserva, células degranuladas (sem grânulos) e células folículo-estreladas (5–10%, sustentação/parácrinas)</td></tr>
+    </table>
+    <div class="prova">📌 Os percentuais acima são os do slide do professor; variam um pouco entre livros (Ross, Junqueira). Para a prova da trilha, use os do professor.</div>
+    <h3>Tinções específicas (Tabela 21-2)</h3>
+    <table>
+      <tr><th>Célula</th><th>Tinção geral</th><th>Tinção específica</th></tr>
+      <tr><td>Somatótropa (GH)</td><td>Acidófila</td><td>Laranja G (PAS−)</td></tr>
+      <tr><td>Lactótropa (PRL)</td><td>Acidófila</td><td>Laranja G (PAS−); eritrosina de Herlant; carmosina de Brooke</td></tr>
+      <tr><td>Corticótropa (ACTH)</td><td>Basófila</td><td>Hematoxilina plúmbica (PAS+); produz POMC</td></tr>
+      <tr><td>Gonadótropa (FSH e LH)</td><td>Basófila</td><td>Aldeído-fucsina / aldeído-tionina (PAS+)</td></tr>
+      <tr><td>Tirótropa (TSH)</td><td>Basófila</td><td>Aldeído-fucsina / aldeído-tionina (PAS+)</td></tr>
+    </table>
+    <div class="mnemo">🧠 Acidófilas = só DUAS: GH e prolactina. Basófilas = as outras quatro famílias: ACTH/MSH, TSH, FSH e LH (mnemônico "B-ATFL": Basófilas = ACTH, TSH, FSH, LH).</div>
+    <h3>Controle hipotalâmico</h3>
+    <p>Neurônios neurossecretores do hipotálamo liberam hormonas liberadoras/inibidoras na eminência mediana; elas chegam à adenohipófise pelo <b>sistema porta hipotálamo-hipofisário</b> (plexo capilar primário → veias porta → plexo capilar secundário).</p>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Neurohipófise — Pars Nervosa</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg14.jpg" alt="Neurohipófise"><div class="cmed-fig-cap">Neurohipófise — CH corpos de Herring, P pituícitos, C capilares</div></div>
+    <div class="criterio"><b>🟢 Função:</b> extensão do SNC que <b>armazena e libera</b> produtos sintetizados no hipotálamo: ADH (vasopressina, núcleo supraóptico) e ocitocina (núcleo paraventricular), transportados pelos axônios do trato hipotálamo-hipofisário.</div>
+    <table>
+      <tr><th>Elemento</th><th>Descrição</th></tr>
+      <tr><td><b>Pituícito</b></td><td>ÚNICA célula específica do lobo posterior. Célula glial modificada (tipo astrócito), de sustentação, SEM função secretora; são os núcleos dispersos que se veem na lâmina</td></tr>
+      <tr><td><b>Corpos de Herring</b></td><td>Dilatações dos axônios próximas às terminações, repletas de grânulos de neurossecreção (hormona + neurofisina). Na lâmina: massas homogêneas róseas (H&amp;E) em meio ao tecido fibrilar</td></tr>
+      <tr><td>Axônios amielínicos</td><td>Dos neurônios dos núcleos supraóptico e paraventricular; formam o fundo fibrilar pálido</td></tr>
+      <tr><td>Capilares fenestrados</td><td>Recebem as hormonas liberadas pelas terminações axonais</td></tr>
+    </table>
+    <table>
+      <tr><th>Hormona</th><th>Origem (síntese)</th><th>Alvo / efeito</th></tr>
+      <tr><td><b>ADH</b> (vasopressina)</td><td>Núcleo supraóptico</td><td>Túbulo coletor do rim (reabsorção de água), músculo liso vascular</td></tr>
+      <tr><td><b>Ocitocina</b></td><td>Núcleo paraventricular</td><td>Miométrio (contração uterina) e células mioepiteliais da mama (ejeção do leite)</td></tr>
+    </table>
+    <div class="mnemo">🧠 A neurohipófise NÃO fabrica ADH nem ocitocina: ela só guarda e libera. A fábrica é o hipotálamo (SupraÓptico = ADH; ParaVentricular = ocitocina — "SAD" e "PVO").</div>
+  </div>
+
+  <div class="card">
+    <h2>🌙 Glândula Pineal (Epífise)</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg21.jpg" alt="Pineal"><div class="cmed-fig-cap">Pineal — AC areia cerebral, TC septos de tecido conjuntivo, C capilares</div></div>
+    <div class="criterio"><b>🟢 Função:</b> regula o ciclo circadiano pela secreção de <b>melatonina</b> (pinealócitos). A luz inibe a secreção (vigília); a escuridão estimula (sono).</div>
+    <table>
+      <tr><th>Elemento</th><th>Descrição</th></tr>
+      <tr><td><b>Pinealócitos</b></td><td>Células principais, com núcleo grande, claro e nucléolo evidente; secretam melatonina (derivada da serotonina/triptofano). Precisam de prata para ver os prolongamentos</td></tr>
+      <tr><td>Células intersticiais (gliais)</td><td>Astrócitos entre os pinealócitos; núcleos alongados e mais escuros</td></tr>
+      <tr><td><b>Areia cerebral</b> (corpora arenacea)</td><td>Concreções basófilas, concêntricas, de fosfato/carbonato de cálcio, que aumentam com a idade — marcador da pineal e útil na radiologia</td></tr>
+      <tr><td>Cápsula e septos</td><td>Pia-máter envia septos de tecido conjuntivo com vasos, dividindo o parênquima em lóbulos</td></tr>
+    </table>
+    <div class="mnemo">🧠 Viu "areia" (concreções basófilas arredondadas) num parênquima celular claro e sem folículos? É a PINEAL.</div>
+  </div>
+
+  <div class="card">
+    <h2>🦋 Tireoide</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg24.jpg" alt="Tireoide"><div class="cmed-fig-cap">Tireoide — folículos com coloide e epitélio simples cúbico</div></div>
+    <div class="criterio"><b>🟢 Função:</b> produzir <b>T3 (tri-iodotironina) e T4 (tiroxina)</b> — controle do metabolismo — e <b>calcitonina</b> (células C).</div>
+    <table>
+      <tr><th>Elemento</th><th>Descrição</th></tr>
+      <tr><td><b>Folículo tireoidiano</b></td><td>Unidade funcional: vesícula esférica revestida por epitélio simples cúbico (células foliculares), com a luz preenchida por coloide</td></tr>
+      <tr><td><b>Coloide</b></td><td>Material acidófilo (rosa) homogêneo e PAS+: <b>tiroglobulina</b> iodada, reserva extracelular de hormona tireoidiana</td></tr>
+      <tr><td><b>Células foliculares</b></td><td>Captam iodeto, sintetizam tiroglobulina e, sob estímulo do TSH, reabsorvem coloide e liberam T3/T4 no sangue</td></tr>
+      <tr><td><b>Células C (parafoliculares)</b></td><td>Células claras, maiores, isoladas na parede do folículo ou em grupos entre folículos, que NÃO chegam à luz. Secretam <b>calcitonina</b> (reduz o cálcio sérico, inibe osteoclastos). Origem na crista neural (corpo ultimobranquial)</td></tr>
+      <tr><td>Estroma</td><td>Cápsula de tecido conjuntivo, septos que formam lóbulos, rica rede de capilares fenestrados ao redor dos folículos</td></tr>
+    </table>
+    <h3>Estado funcional do folículo</h3>
+    <table>
+      <tr><th>Estado</th><th>Epitélio</th><th>Coloide</th></tr>
+      <tr><td>Hiperativo (TSH alto, Graves)</td><td>Cúbico alto a cilíndrico; pode formar papilas</td><td>Escasso, com vacúolos de reabsorção nas bordas</td></tr>
+      <tr><td>Hipoativo (repouso)</td><td>Pavimentoso/cúbico baixo</td><td>Abundante e denso</td></tr>
+    </table>
+    <div class="mnemo">🧠 Tireoide = a ÚNICA glândula endócrina que armazena a hormona FORA das células (coloide). Se vê folículos cheios de coloide → TIREOIDE.</div>
+  </div>
+
+  <div class="card">
+    <h2>🔬 Paratireoide</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg28.jpg" alt="Paratireoide"><div class="cmed-fig-cap">Paratireoide — células principais, células oxífilas, adipócitos (a), cápsula (Cap)</div></div>
+    <div class="criterio"><b>🟢 Função:</b> secretar <b>paratormônio (PTH)</b>, que ELEVA a calcemia. São 4 glândulas pequenas na face posterior dos lobos laterais da tireoide, com cápsula própria.</div>
+    <table>
+      <tr><th>Célula / elemento</th><th>Descrição</th></tr>
+      <tr><td><b>Células principais</b></td><td>As mais numerosas; pequenas, núcleo central redondo e citoplasma pálido a levemente basófilo. Secretam <b>PTH</b></td></tr>
+      <tr><td><b>Células oxífilas</b></td><td>Maiores, citoplasma intensamente acidófilo (rosa) por grande quantidade de mitocôndrias; surgem após a puberdade e aumentam com a idade; função secretora incerta</td></tr>
+      <tr><td>Adipócitos</td><td>Aumentam com a idade entre os cordões de células</td></tr>
+      <tr><td>Cápsula e vasos</td><td>Cápsula de tecido conjuntivo; rica rede capilar</td></tr>
+    </table>
+    <div class="criterio"><b>🟢 PTH x Calcitonina:</b> PTH (paratireoide) ↑ cálcio — ativa osteoclastos (via osteoblastos), ↑ reabsorção renal de Ca²⁺ e ativação da vitamina D. Calcitonina (células C da tireoide) ↓ cálcio — inibe osteoclastos.</div>
+    <div class="mnemo">🧠 Paratireoide = massa CELULAR DENSA, sem folículos nem coloide, às vezes encostada na tireoide. Células principais = escuras e pequenas; oxífilas = róseas e grandes.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Suprarrenal (Adrenal)</h2>
+    <div class="cmed-fig"><img src="img/atlas_cap3/pg35.jpg" alt="Suprarrenal"><div class="cmed-fig-cap">Suprarrenal — cápsula, zonas glomerulosa, fasciculada, reticulada e medula</div></div>
+    <div class="criterio"><b>🟢 Dois órgãos em um:</b> <b>córtex</b> (~90% do peso; secreta esteroides) e <b>medula</b> (centro; secreta catecolaminas). Cápsula de tecido conjuntivo denso envolve tudo.</div>
+    <p>Do exterior para o interior: <b>Cápsula → Zona Glomerulosa → Zona Fasciculada → Zona Reticulada → Medula</b>.</p>
+    <table>
+      <tr><th>Camada</th><th>Aspecto na lâmina</th><th>Hormonas</th><th>Controle</th></tr>
+      <tr><td><b>Zona glomerulosa</b></td><td>Logo sob a cápsula; células em arcos/ovoides (glomérulos)</td><td>Mineralocorticoide: <b>aldosterona</b> (Na⁺/K⁺ — "sal")</td><td>Angiotensina II e K⁺ (pouco ACTH)</td></tr>
+      <tr><td><b>Zona fasciculada</b></td><td>A mais espessa; cordões retos radiais; células grandes, claras, vacuoladas (ricas em lipídios)</td><td>Glicocorticoides: <b>cortisol</b> e corticosterona (+ androgênios) — "açúcar"</td><td>ACTH</td></tr>
+      <tr><td><b>Zona reticulada</b></td><td>Cordões anastomosados; células menores, mais acidófilas e compactas, com lipofuscina</td><td>Androgênios: <b>DHEA, DHEAS, androstenediona</b> (+ cortisol) — "sexo"</td><td>ACTH</td></tr>
+      <tr><td><b>Medula</b></td><td>Centro; células cromafins em ninhos, com capilares e veia central grande; aspecto mais basófilo/granular</td><td><b>Epinefrina</b> (~80%) e <b>norepinefrina</b></td><td>Fibras simpáticas pré-ganglionares (acetilcolina)</td></tr>
+    </table>
+    <div class="mnemo">🧠 Glomerulosa = Sal (aldosterona). Fasciculada = Açúcar (cortisol). Reticulada = Sexo (androgênios). Medula = Susto (adrenalina). De fora para dentro: <b>"GFR + M"</b> — Glomerulosa, Fasciculada, Reticulada, Medula.</div>
+    <div class="criterio"><b>🟢 Medula:</b> as células cromafins derivam da crista neural e são "neurônios pós-ganglionares modificados" sem axônio. O sangue do córtex drena para a medula pelos sinusoides — o cortisol local estimula a síntese de epinefrina (enzima PNMT). A veia central da medula sai pelo hilo.</div>
+  </div>
+
+  <div class="card">
+    <h2>🍬 Pâncreas Endócrino — Ilhotas de Langerhans</h2>
+    <div class="prova">📌 O PDF do professor não traz lâminas do pâncreas endócrino — este bloco complementa o conteúdo com histologia padrão (Junqueira/Ross/Gartner).</div>
+    <p>Aglomerados de células endócrinas (1–2% do órgão; mais numerosos na cauda) imersos no parênquima exócrino. Na H&amp;E são áreas <b>mais claras e pálidas</b>, em meio aos ácinos serosos basófilos, com rica rede de capilares fenestrados; NÃO têm ductos.</p>
+    <table>
+      <tr><th>Célula</th><th>Hormona</th><th>% / localização</th><th>Efeito</th></tr>
+      <tr><td><b>Beta (β)</b></td><td><b>Insulina</b></td><td>~70%; centro da ilhota</td><td>↓ glicemia (capta glicose no músculo/gordura, glicogênese)</td></tr>
+      <tr><td><b>Alfa (α)</b></td><td><b>Glucagon</b></td><td>~20%; periferia</td><td>↑ glicemia (glicogenólise e gliconeogênese hepáticas)</td></tr>
+      <tr><td><b>Delta (δ)</b></td><td>Somatostatina</td><td>~5–10%; periferia</td><td>Inibe a secreção de insulina e glucagon (ação parácrina)</td></tr>
+      <tr><td>PP (F)</td><td>Polipeptídio pancreático</td><td>Poucas</td><td>Regula secreção exócrina e a motilidade</td></tr>
+      <tr><td>Épsilon (ε)</td><td>Grelina</td><td>Raras</td><td>Estimula o apetite</td></tr>
+    </table>
+    <div class="mnemo">🧠 Em H&amp;E as células α, β e δ são indistinguíveis — é preciso imuno-histoquímica ou colorações especiais (ex.: aldeído-fucsina cora os grânulos β). Na prova prática, o critério é "ilhota pálida entre ácinos serosos".</div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Tabela Completa — Célula → Hormona → Alvo</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Versão preenchida da "Atividade independente" do professor.</p>
+    <table>
+      <tr><th>Célula</th><th>Tinção</th><th>Cromófila / cromófoba</th><th>Hormona</th><th>Alvo</th></tr>
+      <tr><td>Somatótropa</td><td>Acidófila</td><td>Cromófila</td><td>GH</td><td>Fígado, osso, músculo</td></tr>
+      <tr><td>Lactótropa</td><td>Acidófila</td><td>Cromófila</td><td>Prolactina</td><td>Glândula mamária</td></tr>
+      <tr><td>Corticótropa</td><td>Basófila</td><td>Cromófila</td><td>ACTH (+MSH)</td><td>Córtex da suprarrenal (+ melanócitos)</td></tr>
+      <tr><td>Tirótropa</td><td>Basófila</td><td>Cromófila</td><td>TSH</td><td>Tireoide (células foliculares)</td></tr>
+      <tr><td>Gonadótropa</td><td>Basófila</td><td>Cromófila</td><td>FSH e LH</td><td>Ovário e testículo</td></tr>
+      <tr><td>Folículo-estrelada / degranulada</td><td>Pouco corada</td><td>Cromófoba</td><td>— (sustentação/reserva)</td><td>—</td></tr>
+      <tr><td>Neurônios dos núcleos supraóptico/paraventricular (liberados na pars nervosa)</td><td>—</td><td>—</td><td>ADH / ocitocina</td><td>Rim; útero e mama</td></tr>
+      <tr><td>Pinealócito</td><td>Núcleo claro</td><td>—</td><td>Melatonina</td><td>Ritmo circadiano (SNC)</td></tr>
+      <tr><td>Célula folicular da tireoide</td><td>Cúbica; coloide acidófilo</td><td>—</td><td>T3 e T4</td><td>Praticamente todos os tecidos</td></tr>
+      <tr><td>Célula C (parafolicular)</td><td>Célula clara</td><td>—</td><td>Calcitonina</td><td>Osso (osteoclastos)</td></tr>
+      <tr><td>Célula principal da paratireoide</td><td>Pequena, escura</td><td>—</td><td>PTH</td><td>Osso, rim, (intestino via vit. D)</td></tr>
+      <tr><td>Zona glomerulosa</td><td>Arcos sob a cápsula</td><td>—</td><td>Aldosterona</td><td>Rim (túbulos distais/coletores)</td></tr>
+      <tr><td>Zona fasciculada</td><td>Células claras, vacuoladas</td><td>—</td><td>Cortisol</td><td>Fígado, músculo, tecido adiposo, sist. imune</td></tr>
+      <tr><td>Zona reticulada</td><td>Células compactas, acidófilas</td><td>—</td><td>DHEA, androstenediona</td><td>Ovário/testículo, pelos pubianos</td></tr>
+      <tr><td>Célula cromafim (medula)</td><td>Granular, basofílica</td><td>—</td><td>Epinefrina e norepinefrina</td><td>Coração, vasos, fígado, músculo</td></tr>
+      <tr><td>Célula β das ilhotas</td><td>Pálida (H&amp;E)</td><td>—</td><td>Insulina</td><td>Fígado, músculo, adiposo</td></tr>
+      <tr><td>Célula α das ilhotas</td><td>Pálida (H&amp;E)</td><td>—</td><td>Glucagon</td><td>Fígado</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Como Identificar Cada Glândula na Lâmina</h2>
+    <ol>
+      <li><b>Cordões de células com 3 aspectos (rosas, roxas e pálidas) separados por capilares?</b> → <b>ADENOHIPÓFISE</b>.</li>
+      <li><b>Fundo fibrilar pálido com núcleos pequenos e dispersos, sem agrupamentos celulares, e massas róseas homogêneas?</b> → <b>NEUROHIPÓFISE</b> (corpos de Herring; núcleos = pituícitos).</li>
+      <li><b>Corte mostrando a transição lobo anterior (celular) - lobo posterior (pálido), com folículos pequenos entre eles?</b> → <b>hipófise inteira</b> (pars intermedia = folículos).</li>
+      <li><b>Parênquima celular claro, sem folículos, com "areia" basófila concêntrica?</b> → <b>PINEAL</b>.</li>
+      <li><b>Folículos esféricos com coloide rosa homogêneo, epitélio cúbico?</b> → <b>TIREOIDE</b>. Células claras isoladas entre folículos = células C.</li>
+      <li><b>Massa celular densa, escura, sem folículos, com poucas células róseas grandes e adipócitos?</b> → <b>PARATIREOIDE</b> (principais + oxífilas).</li>
+      <li><b>Cápsula, zonas em camadas (arcos → cordões retos → rede) e centro mais basófilo com veia grande?</b> → <b>SUPRARRENAL</b>.</li>
+      <li><b>Ilha pálida de células entre ácinos serosos basófilos, sem ducto?</b> → <b>ILHOTA DE LANGERHANS</b> (pâncreas).</li>
+    </ol>
+    <div class="hot">💭 Raciocínio de prova: "tem coloide?" → tireoide. "Tem areia?" → pineal. "Tem células em camadas e medula central?" → suprarrenal. "Tem fundo fibrilar com Herring?" → neurohipófise. Se for celular denso sem coloide → pense paratireoide (e confirme com principais/oxífilas).</div>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Pegadinhas da Prova</h2>
+    <ul>
+      <li>Achar que a neurohipófise <b>produz</b> ADH/ocitocina: ela só armazena e libera; a síntese é no hipotálamo</li>
+      <li>Dizer que o pituícito secreta hormona: é uma célula glial de sustentação</li>
+      <li>Confundir <b>cromófilas</b> (granuladas) com <b>acidófilas</b> (um subgrupo delas); as basófilas também são cromófilas</li>
+      <li>Trocar as hormonas: GH e prolactina são de ACIDÓFILAS; ACTH, TSH, FSH e LH são de BASÓFILAS</li>
+      <li>Confundir <b>tireoide</b> (folículos + coloide) com <b>paratireoide</b> (cordões celulares sem coloide) — e as duas se encostam na lâmina</li>
+      <li>Confundir <b>células C</b> (calcitonina, tireoide) com <b>células principais</b> (PTH, paratireoide)</li>
+      <li>Achar que as oxífilas secretam PTH: a secreção é das principais; a função das oxífilas é incerta</li>
+      <li>Inverter a ordem das zonas da suprarrenal: o certo é <b>G-F-R</b> de fora para dentro; a medula é central</li>
+      <li>Esquecer que a zona fasciculada é a mais espessa e a que produz <b>cortisol</b> (glomerulosa = aldosterona)</li>
+      <li>Esperar distinguir células α e β na H&amp;E: só se vê "ilhota pálida"</li>
+      <li>Confundir o "cromófoba" (célula pálida) com "ausência de função": podem ser células degranuladas ou folículo-estreladas</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>💡 Dica Clinicus</h2>
+    <div class="hot">💭 Fluxograma de prova prática: "Folículo com coloide? → tireoide. Areia cerebral? → pineal. Zonas em camadas com medula central? → suprarrenal. Cordões celulares com várias cores + capilares? → adenohipófise. Fundo pálido fibrilar com Herring? → neurohipófise. Massa celular densa sem coloide? → paratireoide. Ilha clara entre ácinos? → pâncreas endócrino." E sempre olhe as legendas do atlas e depois teste no Treino Sob Pressão.</div>
+  </div>
+
+</section>
+<!-- ============ CORRELAÇÃO CLÍNICA ============ -->
+<section class="panel" id="p1">
+
+  <div class="card">
+    <h2>🩺 Acromegalia e Gigantismo</h2>
+    <p>Excesso de GH, geralmente por adenoma de células somatótropas (as mais numerosas da adenohipófise). Em crianças (placas de crescimento abertas) causa gigantismo; em adultos, acromegalia (crescimento de mãos, pés, mandíbula).</p>
+    <div class="clinical"><b>🔴 Relevância:</b> liga o histológico (acidófila, GH) ao clínico — e o fígado é o alvo que produz o IGF-1 usado no diagnóstico.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Prolactinoma</h2>
+    <p>O tumor hipofisário funcionante mais comum: células lactótropas (acidófilas) secretam PRL em excesso. Mulher: amenorreia e galactorreia; homem: queda de libido, disfunção erétil.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> a PRL é a única hormona da adenohipófise sob controle predominantemente INIBITÓRIO (dopamina); por isso a compressão da haste hipofisária também eleva a PRL.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Diabetes Insípido Central e SIADH</h2>
+    <p>Diabetes insípido central: deficiência de ADH (lesão do hipotálamo, haste ou neurohipófise — TCE, cirurgia, tumor), com poliúria, polidipsia e urina diluída. SIADH: secreção excessiva de ADH, com hiponatremia dilucional.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> lembra que a neurohipófise é só depósito: a lesão da haste interrompe o trato hipotálamo-hipofisário e a hormona não chega à circulação.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Doença de Graves e Hipotireoidismo</h2>
+    <p>Graves: autoanticorpos contra o receptor de TSH ATIVAM a célula folicular como se fosse o TSH (tema do slide do professor) — hipertireoidismo, bócio difuso, exoftalmia. Histologia: epitélio folicular hiperplásico, coloide escasso. Hipotireoidismo (ex.: Hashimoto): folículos atróficos e infiltrado linfocitário.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> T3/T4 altos suprimem o TSH por feedback negativo — o TSH fica baixo mesmo com a tireoide hiperativa, porque o estímulo vem do anticorpo e não da hipófise.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Carcinoma Medular da Tireoide</h2>
+    <p>Tumor das células C (parafoliculares), que secretam calcitonina. Associa-se à neoplasia endócrina múltipla tipo 2 (MEN2). A calcitonina sérica serve como marcador.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> é o tumor de uma célula que NÃO é folicular — a pegadinha clássica de origem embriológica (crista neural).</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Hiperparatireoidismo e Hipoparatireoidismo</h2>
+    <p>Hiperparatireoidismo primário (adenoma de células principais): hipercalcemia, cálculos renais, dor óssea (osteíte fibrosa cística). Hipoparatireoidismo (ex.: após tireoidectomia): hipocalcemia, tetania, sinais de Chvostek e Trousseau.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> as paratireoides ficam coladas à tireoide — lesão ou remoção acidental na cirurgia causa hipocalcemia.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Síndrome de Cushing, Conn e Addison</h2>
+    <p>Cushing: excesso de cortisol (zona fasciculada) — adenoma hipofisário de ACTH (doença de Cushing), tumor adrenal ou uso crônico de corticoide. Conn: hiperaldosteronismo primário (zona glomerulosa) — hipertensão e hipocalemia. Addison: insuficiência do córtex (autoimune) — hipotensão, fraqueza e pele hiperpigmentada (ACTH/MSH altos, da mesma POMC).</p>
+    <div class="clinical"><b>🔴 Relevância:</b> cada zona = uma síndrome. Uma hiperplasia adrenal congênita (déficit de 21-hidroxilase) bloqueia cortisol e aldosterona, e o excesso de ACTH aumenta androgênios (zona reticulada).</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Feocromocitoma</h2>
+    <p>Tumor das células cromafins da medula suprarrenal que secreta catecolaminas em excesso: hipertensão paroxística, cefaleia, sudorese, palpitações. A regra "dos 10%" (bilateral, extra-adrenal, maligno) é clássica.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> as cromafins são "neurônios modificados" — por isso respondem à inervação simpática pré-ganglionar.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Diabetes Mellitus (ilhotas)</h2>
+    <p>DM1: destruição autoimune das células β — deficiência absoluta de insulina. DM2: resistência à insulina + falência progressiva das β, com deposição de amiloide (IAPP) nas ilhotas. Insulinoma e glucagonoma são tumores raros de β e α.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> as β ficam no CENTRO e as α na periferia da ilhota — por isso a perda seletiva de β altera o centro da arquitetura.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Pineal — Calcificação e Tumores</h2>
+    <p>A areia cerebral calcifica e aparece no raio X/TC, servindo de referência de linha média (deslocamento = efeito de massa). Tumores pineais (pinealomas/germinomas) comprimem o teto do mesencéfalo e podem causar hidrocefalia e dificuldade de olhar para cima (síndrome de Parinaud).</p>
+    <div class="clinical"><b>🔴 Relevância:</b> a melatonina está ligada ao ciclo sono-vigília e à adaptação ao fuso horário (jet lag).</div>
+  </div>
+
+  <div class="card">
+    <h2>🩺 Hipopituitarismo — Síndrome de Sheehan</h2>
+    <p>Necrose isquêmica da hipófise após hemorragia pós-parto grave (a hipófise gravídica está aumentada pela hiperplasia de lactótropas e é pouco irrigada). Causa agalactia, amenorreia e insuficiência adrenal/tireoidiana secundárias.</p>
+    <div class="clinical"><b>🔴 Relevância:</b> como a neurohipófise tem irrigação direta, geralmente o ADH é poupado — a adenohipófise é a mais afetada.</div>
+  </div>
+
+  <div class="card">
+    <h2>🩻 Casos Clínicos Integrados</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Três níveis de dificuldade. Clique no nível pra abrir o caso e em "Ver resposta comentada" pra conferir.</p>
+    <div id="casesArea"></div>
+  </div>
+
+</section>
+<!-- ============ TREINO SOB PRESSÃO ============ -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>⏱️ Treino de Reconhecimento — Sob Pressão</h2>
+    <p style="font-size:.88em;color:var(--text-dim);">3 lâminas (Adenohipófise, Neurohipófise e Suprarrenal), <b>2 minutos</b> cada. Descreva o órgão e o que cada legenda/seta está indicando — as legendas foram borradas. No final, confira ao lado da lâmina original do Atlas.</p>
+    <div id="trainArea"></div>
+  </div>
+</section>
+
+<style>
+.train-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.train-progress{font-weight:600;color:var(--text-dim);font-size:.9em;}
+.train-clock{font-weight:700;font-size:1.1em;color:var(--ok);background:rgba(79,209,138,.1);padding:4px 12px;border-radius:20px;}
+.train-clock-urgent{color:var(--bad);background:rgba(224,80,95,.15);}
+.train-question{font-size:1.02em;font-weight:600;margin-bottom:12px;text-align:center;}
+.train-img{max-width:100%;border-radius:8px;display:block;margin:0 auto 14px;border:1px solid var(--border);background:#fff;}
+.train-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:.92em;margin-bottom:12px;font-family:inherit;resize:vertical;}
+.train-gabarito-title{font-size:1.1em;font-weight:700;color:var(--gold);text-align:center;margin-bottom:16px;}
+.train-gab-item{border-bottom:1px solid var(--border);padding:14px 0;}
+.train-gab-imgs{display:flex;gap:10px;margin-bottom:8px;}
+.train-gab-imgs img{width:50%;border-radius:6px;object-fit:contain;background:#fff;border:1px solid var(--border);cursor:zoom-in;}
+.train-gab-imgs .lbl{font-size:.68em;color:var(--text-dim);text-align:center;display:block;margin-top:2px;}
+.train-gab-info{font-size:.88em;}
+.train-gab-user{color:var(--text-dim);margin:4px 0;}
+.train-gab-correct{color:var(--ok);}
+</style>
+
+<script>
+const trainRounds = [{"img": "img/treino_cap3/pg10_blur.jpg", "atlas_img": "img/atlas_cap3/pg10.jpg", "contexto": "Adenohipófise com legendas", "respostas": ["CA — Célula cromófila acidófila (citoplasma avermelhado/alaranjado; somatótropa ou lactótropa)", "CB — Célula cromófila basófila (citoplasma azul-arroxeado; corticótropa, tirótropa ou gonadótropa)", "C — Capilar (sinusoide) entre os cordões de células", "Detalhe, canto inferior direito: CA — célula acidófila", "Detalhe: Cr — célula cromófoba (citoplasma pálido, sem grânulos corados)", "Detalhe: CB — célula basófila"]}, {"img": "img/treino_cap3/pg14_blur.jpg", "atlas_img": "img/atlas_cap3/pg14.jpg", "contexto": "Neurohipófise com legendas", "respostas": ["Esquerda — C: capilar", "Esquerda — P: pituícito (núcleo da célula glial)", "Esquerda — CH: corpo de Herring (massa rosa homogênea = dilatação axonal com neurossecreção)", "Direita — CH (superior): corpo de Herring", "Direita — P: pituícito", "Direita — C: capilar", "Direita — CH (inferior): corpo de Herring"]}, {"img": "img/treino_cap3/pg35_blur.jpg", "atlas_img": "img/atlas_cap3/pg35.jpg", "contexto": "Suprarrenal — zonas", "respostas": ["Seta verde — Cápsula (tecido conjuntivo denso)", "Seta azul — Zona glomerulosa (aldosterona)", "Seta vermelha — Zona fasciculada (cortisol; a mais espessa)", "Seta amarela — Zona reticulada (androgênios)", "Seta laranja — Medula (catecolaminas)"]}];
+
+let trainIdx = 0, trainTimer = null, trainSeconds = 120, trainAnswers = [];
+const trainArea = document.getElementById('trainArea');
+
+function startTraining(){
+  trainIdx = 0;
+  trainAnswers = new Array(trainRounds.length).fill('');
+  renderTrainRound();
+}
+
+function renderTrainRound(){
+  clearInterval(trainTimer);
+  if(trainIdx >= trainRounds.length){ renderTrainGabarito(); return; }
+  trainSeconds = 120;
+  const r = trainRounds[trainIdx];
+  const nSetas = r.respostas.length;
+  trainArea.innerHTML = `
+    <div class="train-header">
+      <span class="train-progress">Rodada ${trainIdx+1} / ${trainRounds.length}</span>
+      <span class="train-clock" id="trainClock">⏱️ 2:00</span>
+    </div>
+    <div class="train-question">Descreva o órgão endócrino desta lâmina e o que cada legenda/seta está indicando. Há ${nSetas} indicações de estruturas.</div>
+    <img src="${r.img}" alt="Lâmina a identificar" class="train-img">
+    <textarea id="trainInput" class="train-input" rows="4" placeholder="Escreva sua resposta aqui (opcional, só pra você conferir depois)">${trainAnswers[trainIdx]}</textarea>
+    <button class="reveal-btn" id="trainNextBtn">Já sei, próxima →</button>
+  `;
+  document.getElementById('trainNextBtn').addEventListener('click', advanceTrain);
+  document.getElementById('trainInput').addEventListener('input', (e)=>{ trainAnswers[trainIdx] = e.target.value; });
+  trainTimer = setInterval(()=>{
+    trainSeconds--;
+    const clockEl = document.getElementById('trainClock');
+    const mm = Math.floor(trainSeconds/60);
+    const ss = String(trainSeconds%60).padStart(2,'0');
+    if(clockEl) clockEl.textContent = '⏱️ ' + mm + ':' + ss;
+    if(trainSeconds <= 20 && clockEl) clockEl.classList.add('train-clock-urgent');
+    if(trainSeconds <= 0){ advanceTrain(); }
+  }, 1000);
+}
+
+function advanceTrain(){
+  clearInterval(trainTimer);
+  trainIdx++;
+  renderTrainRound();
+}
+
+function renderTrainGabarito(){
+  let html = '<div class="train-gabarito-title">🏁 Treino Concluído — Confira no Atlas</div>';
+  trainRounds.forEach((r, i) => {
+    const userAns = trainAnswers[i] ? trainAnswers[i] : '(sem resposta)';
+    const listaSetas = r.respostas.map((resp,idx)=>`<div>&nbsp;&nbsp;${idx+1}. ${resp}</div>`).join('');
+    html += `
+      <div class="train-gab-item">
+        <div class="train-gab-imgs">
+          <div style="width:50%;"><img src="${r.img}" alt="Treino" onclick="openAtlasLightbox(this.src,'Versão treino')"><span class="lbl">Versão Treino</span></div>
+          <div style="width:50%;"><img src="${r.atlas_img}" alt="Atlas" onclick="openAtlasLightbox(this.src,'Atlas')"><span class="lbl">Confira no Atlas</span></div>
+        </div>
+        <div class="train-gab-info">
+          <div class="train-gab-user">Sua resposta: <i>${userAns}</i></div>
+          <div class="train-gab-correct">✅ O que as setas indicam:${listaSetas}</div>
+        </div>
+      </div>`;
+  });
+  html += '<button class="reveal-btn" id="trainRestartBtn">🔄 Refazer o treino</button>';
+  trainArea.innerHTML = html;
+  document.getElementById('trainRestartBtn').addEventListener('click', startTraining);
+}
+
+startTraining();
+</script>
+<!-- ============ ATLAS HISTOLÓGICO ============ -->
+<section class="panel" id="p6">
+  <div class="card">
+    <h2>🔬 Atlas Histológico — Sistema Endócrino</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Diagramas e lâminas reais, direto do material do Prof. João Vitor Figueiredo (Cap. 21). Toque em qualquer imagem pra abrir com zoom. As siglas das legendas estão traduzidas nas descrições.</p>
+
+    <h3>📡 Generalidades</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg02.jpg" alt="Generalidades"><div class="cmed-fig-cap">Sinalização: (a) endócrina, (b) parácrina, (c) autócrina</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg03.jpg" alt="Retroalimentação"><div class="cmed-fig-cap">Retroalimentação negativa (mais frequente) e positiva</div></div>
+    </div>
+
+    <h3>🧠 Hipófise</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg04.jpg" alt="Hipófise — esquema e corte"><div class="cmed-fig-cap">No círculo: PT = pars tuberalis, PD = pars distalis, PI = pars intermedia, PN = pars nervosa, F = folículo; as linhas tracejadas e setas delimitam a pars intermedia</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg13.jpg" alt="Hipotálamo e hipófise"><div class="cmed-fig-cap">(A) Corte da hipófise: lobo anterior e lobo posterior. (B) Esquema: núcleo supraóptico (ADH), núcleo paraventricular (ocitocina), trato hipotálamo-hipofisário, pars nervosa, pars intermedia (folículos) e pars distalis</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg05.jpg" alt="Hipófise — panorâmica da lâmina"><div class="cmed-fig-cap">Corte da hipófise em pequeno aumento (sem legendas)</div></div>
+    </div>
+
+    <h3>🎨 Adenohipófise</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg06.jpg" alt="Adenohipófise — classificação"><div class="cmed-fig-cap">Cromófilas (acidófilas e basófilas) e cromófobas, com as hormonas de cada célula</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg07.jpg" alt="Adenohipófise — lâmina real (H&E)"><div class="cmed-fig-cap">Cordões de células cromófilas e cromófobas separados por capilares</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg08.jpg" alt="Pars distalis e porção intermédia"><div class="cmed-fig-cap">Fig. 21-7: Bas = basófilas, Cr = cromófobas, Ac = acidófilas. Fig. 21-8: porção distal (esq.) e porção nervosa (dir.) com folículos (F) da pars intermedia, azul de toluidina</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg09.jpg" alt="Adenohipófise — coloração tricrômica"><div class="cmed-fig-cap">Células avermelhadas (acidófilas), azul-arroxeadas (basófilas) e pálidas (cromófobas)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg10.jpg" alt="Adenohipófise — com legendas"><div class="cmed-fig-cap">CA = cromófila acidófila, CB = cromófila basófila, C = capilar, Cr = cromófoba (detalhe no canto)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg11.jpg" alt="Tabela 21-2"><div class="cmed-fig-cap">Características tintoriais das células da adenohipófise (tinção geral, específica e produto)</div></div>
+    </div>
+
+    <h3>🧠 Neurohipófise</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg14.jpg" alt="Neurohipófise — com legendas"><div class="cmed-fig-cap">CH = corpos de Herring, P = pituícitos, C = capilares (H&E à esquerda; outra coloração à direita)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg15.jpg" alt="Neurohipófise — lâmina real (1)"><div class="cmed-fig-cap">Tecido fibrilar pálido com núcleos de pituícitos (H&E, sem legendas)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg16.jpg" alt="Neurohipófise — lâmina real (2)"><div class="cmed-fig-cap">Fundo fibrilar com núcleos dispersos e capilares com hemácias (sem legendas)</div></div>
+    </div>
+
+    <h3>🌙 Pineal</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg18.jpg" alt="Pineal — ciclo circadiano"><div class="cmed-fig-cap">Com luz: melatonina baixa e vigília. No escuro: melatonina alta e sono</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg19.jpg" alt="Pineal — panorâmica"><div class="cmed-fig-cap">Corte da glândula em pequeno aumento; os asteriscos marcam áreas mais escuras do parênquima</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg20.jpg" alt="Pineal — areia cerebral"><div class="cmed-fig-cap">Areia cerebral (concreções basófilas) e vasos sanguíneos (VS)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg21.jpg" alt="Pineal — com legendas"><div class="cmed-fig-cap">L = lóbulo, TC = tecido conjuntivo (septos), C = capilar, V = vênula, A = arteríola, AC = areia cerebral; no detalhe, células gliais (cg) em torno de uma concreção</div></div>
+    </div>
+
+    <h3>🦋 Tireoide</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg22.jpg" alt="Tireoide — localização e vasos"><div class="cmed-fig-cap">Glândula tireoide com artérias e veias tireoideas; os círculos marcam as paratireoides na face posterior</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg23.jpg" alt="Tireoide — panorâmica"><div class="cmed-fig-cap">Lóbulos de folículos; cápsula no canto superior esquerdo</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg24.jpg" alt="Tireoide — folículos"><div class="cmed-fig-cap">Folículos de tamanhos variados com coloide róseo e epitélio simples cúbico</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg25.jpg" alt="Tireoide — grande aumento"><div class="cmed-fig-cap">Folículos com coloide; entre eles, grupos de células claras (aspecto compatível com células C)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg26.jpg" alt="Doença de Graves"><div class="cmed-fig-cap">Paciente com exoftalmia; histologia com epitélio folicular hiperplásico em projeções para a luz e coloide pálido</div></div>
+    </div>
+
+    <h3>🔬 Paratireoide</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg27.jpg" alt="Paratireoide — localização"><div class="cmed-fig-cap">Posição das paratireoides na face posterior dos lobos laterais da tireoide</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg28.jpg" alt="Paratireoide — com legendas"><div class="cmed-fig-cap">Principais, Oxífilas, a = adipócitos, Cap = cápsula, VS = vasos sanguíneos</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg29.jpg" alt="Paratireoide — lâmina real"><div class="cmed-fig-cap">Células principais (núcleos escuros) e área de células oxífilas (rosa), com espaços de adipócitos</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg30.jpg" alt="Paratireoide e tireoide"><div class="cmed-fig-cap">Massa celular densa da paratireoide cercada por folículos tireoidianos com coloide</div></div>
+    </div>
+
+    <h3>⚡ Suprarrenal</h3>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg32.jpg" alt="Suprarrenal — esquema"><div class="cmed-fig-cap">Vascularização e zonas: glomerulosa (aldosterona), fasciculada (cortisol e gonadocorticoides), reticulada (gonadocorticoides) e medula (catecolaminas)</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg33.jpg" alt="Tabela 21-9"><div class="cmed-fig-cap">Hormonas da suprarrenal: composição, fonte e funções principais</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg34.jpg" alt="Suprarrenal — panorâmica"><div class="cmed-fig-cap">Córtex periférico e medula central em pequeno aumento</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg35.jpg" alt="Suprarrenal — zonas"><div class="cmed-fig-cap">Cápsula, zona glomerulosa, zona fasciculada, zona reticulada e medula, marcadas por setas coloridas</div></div>
+      <div class="cmed-fig"><img src="img/atlas_cap3/pg36.jpg" alt="Suprarrenal — cápsula"><div class="cmed-fig-cap">Cápsula e tecido adiposo adjacente, com as células corticais externas (zona glomerulosa) arranjadas em arcos</div></div>
+    </div>
+
+    <div class="prova" style="margin-top:16px;">📌 O PDF do professor não inclui lâminas do pâncreas endócrino (ilhotas de Langerhans) — o conteúdo está no Resumo Direcionado, com histologia padrão. A Adenohipófise, a Neurohipófise e a Suprarrenal também estão disponíveis no modo cronometrado (sem legenda) na aba ⏱️ Treino Sob Pressão.</div>
+  </div>
+</section>
+
+<div id="atlasLightbox" class="atlas-lightbox" onclick="closeAtlasLightbox()">
+  <div class="atlas-lightbox-inner">
+    <img id="atlasLightboxImg" src="" alt="">
+    <p id="atlasLightboxCap"></p>
+  </div>
+</div>
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🧠 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>❓ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Questões objetivas, de identificação prática e de correlação clínica. Escolhe uma alternativa, depois clica em "Ver comentário completo".</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎯 Quiz — Revisão Rápida</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">Correção imediata, com feedback comentado no final.</p>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"n": 1, "tema": "Neurohipófise — Pituícito", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Neurohipófise — Pituícito", "q": "Qual é a única célula específica do lobo posterior da hipófise (neurohipófise)?", "opts": ["Pinealócito", "Célula cromófoba", "Pituícito", "Célula principal"], "correct": 2, "justificativa": "O pituícito é a única célula específica da neurohipófise: uma célula glial modificada (tipo astrócito) de sustentação, sem função secretora. As hormonas são feitas no hipotálamo.", "analise": ["Incorreto — o pinealócito é a célula secretora de melatonina da glândula pineal.", "Incorreto — a célula cromófoba é um tipo celular da adenohipófise (lobo anterior), pouco corada.", "Incorreto — a célula principal é a secretora de PTH na paratireoide."], "analise_letters": ["A", "B", "D"], "conceito": "Neurohipófise = axônios + pituícitos + corpos de Herring. É extensão do SNC.", "pegadinha": "O pituícito é a única célula 'própria', mas NÃO secreta nada; quem secreta (ADH e ocitocina) são os neurônios do hipotálamo.", "dica": "Pituícito = 'pituitária + glia': a glia do lobo posterior."}, {"n": 2, "tema": "Neurohipófise — Corpos de Herring", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Neurohipófise — Corpos de Herring", "q": "Os corpos de Herring, vistos na neurohipófise, correspondem a:", "opts": ["Dilatações dos axônios próximas às terminações, repletas de grânulos de neurossecreção", "Aglomerados de células cromófobas na pars distalis", "Concreções de cálcio (areia cerebral)", "Cistos de coloide da pars intermedia"], "correct": 0, "justificativa": "Os corpos de Herring são dilatações dos axônios dos neurônios hipotalâmicos, próximas às terminações na pars nervosa, onde se acumulam grânulos com ADH/ocitocina ligados às neurofisinas. Na lâmina são massas róseas homogêneas.", "analise": ["Incorreto — as cromófobas são células pálidas da pars distalis (adenohipófise), não dilatações axonais.", "Incorreto — areia cerebral é característica da pineal, não da neurohipófise.", "Incorreto — os folículos/cistos da pars intermedia são outra estrutura (restos da bolsa de Rathke)."], "analise_letters": ["B", "C", "D"], "conceito": "Herring = acúmulo de neurossecreção no axônio (estação de armazenamento).", "pegadinha": "Não confundir com a areia cerebral (pineal): Herring é rosa homogêneo no meio de um fundo fibrilar; areia é basófila e concêntrica.", "dica": "Herring = 'Hormônio-Reservatório' no axônio."}, {"n": 3, "tema": "Adenohipófise — Células Acidófilas", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Adenohipófise — Células Acidófilas", "q": "Quais células da adenohipófise são cromófilas ACIDÓFILAS?", "opts": ["Corticótropas e tirótropas", "Gonadótropas e tirótropas", "Corticótropas e gonadótropas", "Somatótropas e lactótropas"], "correct": 3, "justificativa": "As acidófilas da adenohipófise são as somatótropas (GH) e as lactótropas (prolactina). Todas as demais (corticótropas, tirótropas e gonadótropas) são basófilas.", "analise": ["Incorreto — corticótropas (ACTH) e tirótropas (TSH) são basófilas.", "Incorreto — gonadótropas (FSH/LH) e tirótropas (TSH) são basófilas.", "Incorreto — corticótropas e gonadótropas são basófilas."], "analise_letters": ["A", "B", "C"], "conceito": "Acidófilas: GH e PRL. Basófilas: ACTH, TSH, FSH e LH.", "pegadinha": "Muitos alunos acham que 'cromófila' é sinônimo de 'acidófila': as basófilas também são cromófilas.", "dica": "Acidófilas = Grandes e Lactantes (GH e PRL)."}, {"n": 4, "tema": "Hipotálamo — Síntese de ADH e Ocitocina", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Hipotálamo — Síntese de ADH e Ocitocina", "q": "ADH e ocitocina são sintetizados em qual local?", "opts": ["Nos pituícitos da pars nervosa", "Nas células cromófobas da pars distalis", "Nos neurônios dos núcleos supraóptico e paraventricular do hipotálamo", "Nas células da pars intermedia"], "correct": 2, "justificativa": "ADH (núcleo supraóptico) e ocitocina (núcleo paraventricular) são produzidos nos corpos neuronais do hipotálamo e transportados pelos axônios até a pars nervosa, onde são armazenados e liberados.", "analise": ["Incorreto — os pituícitos são células gliais de sustentação e não sintetizam hormonas.", "Incorreto — as cromófobas são células da adenohipófise (lobo anterior).", "Incorreto — a pars intermedia pertence à adenohipófise e é vestigial no adulto."], "analise_letters": ["A", "B", "D"], "conceito": "Neurohipófise = armazena/libera. Hipotálamo = sintetiza.", "pegadinha": "Dizer que 'a neurohipófise produz ADH' é erro frequente de prova.", "dica": "SupraÓptico = ADH ('SAD'); ParaVentricular = ocitocina ('PVO')."}, {"n": 5, "tema": "Pineal — Areia Cerebral", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Pineal — Areia Cerebral", "q": "Numa lâmina, concreções basófilas concêntricas (areia cerebral) são características de qual glândula?", "opts": ["Hipófise (adenohipófise)", "Glândula pineal", "Tireoide", "Paratireoide"], "correct": 1, "justificativa": "A areia cerebral (corpora arenacea) são concreções de sais de cálcio e magnésio que aumentam com a idade; são o achado marcante da glândula pineal.", "analise": ["Incorreto — a adenohipófise tem cordões de células cromófilas e cromófobas, sem concreções.", "Incorreto — a tireoide tem folículos com coloide rosa, não areia.", "Incorreto — a paratireoide tem células principais, oxífilas e adipócitos, sem concreções."], "analise_letters": ["A", "C", "D"], "conceito": "Pineal = pinealócitos + astrócitos intersticiais + areia cerebral.", "pegadinha": "O coloide da tireoide (rosa, homogêneo) é muito diferente da areia (basófila, laminada).", "dica": "Viu 'areia' = pineal."}, {"n": 6, "tema": "Tireoide — Identificação", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Tireoide — Identificação", "q": "Numa lâmina, vesículas esféricas preenchidas por material rosa homogêneo (coloide) e revestidas por epitélio simples cúbico indicam:", "opts": ["Tireoide", "Paratireoide", "Adenohipófise", "Córtex da suprarrenal"], "correct": 0, "justificativa": "O folículo tireoidiano, com epitélio simples cúbico e coloide (tiroglobulina) acidófilo na luz, é o achado típico da tireoide.", "analise": ["Incorreto — a paratireoide tem cordões celulares densos, sem folículos com coloide.", "Incorreto — a adenohipófise tem cordões de células e capilares sinusoides, não folículos com coloide.", "Incorreto — o córtex adrenal tem cordões de células esteroidogênicas, sem coloide."], "analise_letters": ["B", "C", "D"], "conceito": "Tireoide = única glândula endócrina que armazena a hormona fora da célula (coloide).", "pegadinha": "Na pars intermedia da hipófise existem pequenos folículos, mas nunca em tanta quantidade.", "dica": "Coloide = tireoide."}, {"n": 7, "tema": "Tireoide — Células C", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Tireoide — Células C", "q": "Qual célula da tireoide produz a calcitonina?", "opts": ["Células foliculares", "Células C (parafoliculares)", "Células principais", "Células oxífilas"], "correct": 1, "justificativa": "A calcitonina é produzida pelas células C (parafoliculares), células claras situadas na parede do folículo ou entre eles, que não alcançam a luz. A calcitonina reduz a calcemia.", "analise": ["Incorreto — as células foliculares produzem tiroglobulina e T3/T4.", "Incorreto — as células principais são da paratireoide e secretam PTH.", "Incorreto — as oxífilas são da paratireoide e têm função incerta."], "analise_letters": ["A", "C", "D"], "conceito": "Células C = calcitonina (↓ Ca). Principais da paratireoide = PTH (↑ Ca).", "pegadinha": "As duas glândulas encostam uma na outra, e as hormonas têm efeitos opostos sobre o cálcio.", "dica": "C de Calcitonina; C de Clara."}, {"n": 8, "tema": "Paratireoide — Células", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Paratireoide — Células", "q": "Sobre as células da paratireoide, é correto afirmar que:", "opts": ["As oxífilas são as principais secretoras de PTH", "As células principais secretam calcitonina", "As oxífilas formam folículos preenchidos por coloide", "As oxífilas são maiores, de citoplasma acidófilo rico em mitocôndrias, e aumentam com a idade"], "correct": 3, "justificativa": "Na paratireoide, as células principais (pequenas) secretam PTH. As oxífilas são maiores, de citoplasma acidófilo por grande quantidade de mitocôndrias, surgem na puberdade e aumentam com a idade; sua função é incerta.", "analise": ["Incorreto — o PTH é secretado pelas células principais.", "Incorreto — a calcitonina é produzida pelas células C da tireoide.", "Incorreto — folículos com coloide são da tireoide."], "analise_letters": ["A", "B", "C"], "conceito": "Principais = PTH. Oxífilas = acidófilas, mitocôndrias, função incerta.", "pegadinha": "Não confundir células oxífilas (paratireoide) com células acidófilas da hipófise.", "dica": "Oxífila = Oxigênio/mitocôndria = rosa."}, {"n": 9, "tema": "Suprarrenal — Zonas do Córtex", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Suprarrenal — Zonas do Córtex", "q": "Qual zona do córtex da suprarrenal, logo abaixo da cápsula, produz a aldosterona?", "opts": ["Zona reticulada", "Zona fasciculada", "Zona glomerulosa", "Medula"], "correct": 2, "justificativa": "A zona glomerulosa, mais externa, secreta o mineralocorticoide aldosterona (regulação de Na⁺ e K⁺), controlada principalmente por angiotensina II e K⁺.", "analise": ["Incorreto — a reticulada, a mais interna, secreta principalmente androgênios (DHEA, androstenediona).", "Incorreto — a fasciculada, a mais espessa, secreta cortisol e corticosterona.", "Incorreto — a medula secreta catecolaminas."], "analise_letters": ["A", "B", "D"], "conceito": "Do exterior: glomerulosa (sal) → fasciculada (açúcar) → reticulada (sexo) → medula.", "pegadinha": "Não confundir glomerulosa (aldosterona) com fasciculada (cortisol, a mais espessa).", "dica": "GFR + M: Sal, Açúcar, Sexo, Susto."}, {"n": 10, "tema": "Suprarrenal — Ordem das Camadas", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Suprarrenal — Ordem das Camadas", "q": "Do exterior para o interior, qual a sequência correta das camadas da suprarrenal?", "opts": ["Cápsula → reticulada → fasciculada → glomerulosa → medula", "Cápsula → glomerulosa → fasciculada → reticulada → medula", "Cápsula → fasciculada → glomerulosa → reticulada → medula", "Cápsula → medula → reticulada → fasciculada → glomerulosa"], "correct": 1, "justificativa": "A sequência é cápsula, zona glomerulosa, zona fasciculada, zona reticulada e, no centro, a medula (mesma ordem mostrada pelas setas coloridas da lâmina do professor).", "analise": ["Incorreto — inverte as três zonas do córtex.", "Incorreto — troca a posição das zonas glomerulosa e fasciculada.", "Incorreto — a medula está no centro da glândula, não logo abaixo da cápsula."], "analise_letters": ["A", "C", "D"], "conceito": "GFR da periferia para o centro; medula sempre central.", "pegadinha": "A medula é a parte mais profunda: o córtex a envolve (~90% do peso).", "dica": "GFR + M."}, {"n": 11, "tema": "Medula da Suprarrenal", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Medula da Suprarrenal", "q": "As células cromafins da medula suprarrenal secretam principalmente:", "opts": ["Epinefrina e norepinefrina", "Cortisol", "Aldosterona", "DHEA e androstenediona"], "correct": 0, "justificativa": "A medula da suprarrenal é a porção secretora de catecolaminas (cerca de 80% de epinefrina e o restante norepinefrina), sob controle de fibras simpáticas pré-ganglionares.", "analise": ["Incorreto — o cortisol é produzido pela zona fasciculada (córtex).", "Incorreto — a aldosterona é da zona glomerulosa.", "Incorreto — os androgênios fracos são da zona reticulada."], "analise_letters": ["B", "C", "D"], "conceito": "Córtex = esteroides. Medula = catecolaminas.", "pegadinha": "O slide do professor reforça: córtex secreta esteroides; medula, catecolaminas.", "dica": "Medula = adrenalina."}, {"n": 12, "tema": "Ilhotas de Langerhans — Célula Beta", "nivel": "🔴 Nível 3 — Correlação Clínica", "objetivo": "Ilhotas de Langerhans — Célula Beta", "q": "Na diabetes mellitus tipo 1, ocorre destruição autoimune de qual célula das ilhotas de Langerhans?", "opts": ["Células alfa, produtoras de glucagon", "Células delta, produtoras de somatostatina", "Células acinares, produtoras de enzimas digestivas", "Células beta, produtoras de insulina"], "correct": 3, "justificativa": "No DM1 as células beta (insulina; ~70%, no centro da ilhota) são destruídas por autoimunidade, levando à deficiência absoluta de insulina.", "analise": ["Incorreto — as alfa secretam glucagon e ficam na periferia.", "Incorreto — as delta secretam somatostatina.", "Incorreto — as células acinares fazem parte do pâncreas exócrino, fora das ilhotas."], "analise_letters": ["A", "B", "C"], "conceito": "β = insulina (↓ glicemia). α = glucagon (↑ glicemia).", "pegadinha": "Em H&E não se distingue α de β: as ilhotas aparecem como áreas pálidas entre os ácinos.", "dica": "β = Baixa a glicemia."}, {"n": 13, "tema": "Correlação Clínica — Doença de Graves", "nivel": "🔴 Nível 3 — Correlação Clínica", "objetivo": "Correlação Clínica — Doença de Graves", "q": "Na doença de Graves, o hipertireoidismo ocorre porque:", "opts": ["Anticorpos ligam-se ao receptor de TSH e estimulam a célula folicular como se fossem TSH", "Há tumor de células C secretor de calcitonina", "Há excesso de PTH que estimula a tireoide", "Há adenoma tirótropo hipofisário secretando TSH em excesso"], "correct": 0, "justificativa": "Na doença de Graves, autoanticorpos exercem a função do TSH sobre a célula folicular (tema do slide do professor). T3/T4 elevados suprimem o TSH por feedback negativo.", "analise": ["Incorreto — o tumor de células C (carcinoma medular) não causa hipertireoidismo.", "Incorreto — o PTH regula o cálcio, não a função tireoidiana.", "Incorreto — no adenoma tirótropo o TSH estaria ALTO; em Graves ele está suprimido."], "analise_letters": ["B", "C", "D"], "conceito": "Graves = anticorpo age como TSH → T3/T4 ↑ → TSH ↓.", "pegadinha": "O TSH baixo com T4 alto aponta para causa primária da tireoide, não para a hipófise.", "dica": "Graves = 'Anticorpo no lugar do TSH'."}, {"n": 14, "tema": "Correlação Clínica — Diabetes Insípido Central", "nivel": "🔴 Nível 3 — Correlação Clínica", "objetivo": "Correlação Clínica — Diabetes Insípido Central", "q": "Paciente após traumatismo craniano com poliúria, polidipsia e urina diluída; ADH baixo e resposta à desmopressina. Qual a estrutura/hormona envolvida?", "opts": ["Adenohipófise — prolactina", "Trato hipotálamo-hipofisário / neurohipófise — ADH", "Córtex da suprarrenal — aldosterona", "Glândula pineal — melatonina"], "correct": 1, "justificativa": "A lesão da haste ou da neurohipófise impede a liberação do ADH produzido no hipotálamo, causando diabetes insípido central: o rim não reabsorve água e a urina fica diluída.", "analise": ["Incorreto — a prolactina não regula o balanço hídrico.", "Incorreto — a aldosterona atua em Na⁺/K⁺ e não explica urina diluída com ADH baixo.", "Incorreto — a melatonina regula o ciclo circadiano."], "analise_letters": ["A", "C", "D"], "conceito": "ADH baixo + poliúria + desmopressina eficaz = diabetes insípido central.", "pegadinha": "Diferença do nefrogênico: aqui o rim responde à desmopressina.", "dica": "Hipotálamo sintetiza, neurohipófise libera: lesão na 'estrada' = sem ADH."}];
+const flashcards = [{"n": 1, "cat": "Generalidades", "f": "Diferencie hormona endócrina, parácrina e autócrina.", "b": "Endócrina: vai pelo sangue até células distantes. Parácrina: difunde-se e atua em células vizinhas. Autócrina: atua na própria célula secretora."}, {"n": 2, "cat": "Generalidades", "f": "O que é retroalimentação (feedback) negativa e positiva?", "b": "Negativa: a resposta inibe o estímulo original (a mais frequente). Positiva: a resposta reforça o estímulo original."}, {"n": 3, "cat": "Hipófise", "f": "Quais as duas porções da hipófise e a natureza de cada uma?", "b": "Adenohipófise (lobo anterior): tecido glandular epitelial. Neurohipófise (lobo posterior): extensão do SNC, armazena e libera produtos do hipotálamo."}, {"n": 4, "cat": "Adenohipófise", "f": "Quais células da adenohipófise são acidófilas e que hormonas produzem?", "b": "Somatótropas (GH, ~50% do parênquima) e lactótropas (prolactina, 15–20%)."}, {"n": 5, "cat": "Adenohipófise", "f": "Quais células da adenohipófise são basófilas e que hormonas produzem?", "b": "Corticótropas (ACTH e MSH, 15–20%), tirótropas (TSH, ~5%) e gonadótropas (FSH e LH, ~10%)."}, {"n": 6, "cat": "Adenohipófise", "f": "O que são as células cromófobas?", "b": "Cerca de 50% do parênquima, pouco coradas: células de reserva/degranuladas e folículo-estreladas (5–10%, sustentação)."}, {"n": 7, "cat": "Neurohipófise", "f": "O que são os corpos de Herring e os pituícitos?", "b": "Herring: dilatações axonais com grânulos de neurossecreção (ADH/ocitocina). Pituícitos: células gliais de sustentação, a única célula específica do lobo posterior."}, {"n": 8, "cat": "Neurohipófise", "f": "Onde ADH e ocitocina são sintetizados?", "b": "No hipotálamo: ADH no núcleo supraóptico, ocitocina no paraventricular. A neurohipófise só armazena e libera."}, {"n": 9, "cat": "Pineal", "f": "Qual a hormona da pineal e qual o achado histológico típico?", "b": "Melatonina (pinealócitos), que regula o ciclo circadiano. Achado típico: areia cerebral (concreções de cálcio)."}, {"n": 10, "cat": "Tireoide", "f": "Descreva o folículo tireoidiano e o que é o coloide.", "b": "Vesícula revestida por epitélio simples cúbico (células foliculares). Coloide = tiroglobulina iodada, rosa homogêneo, reserva de T3/T4."}, {"n": 11, "cat": "Tireoide", "f": "O que são as células C e qual sua hormona?", "b": "Células parafoliculares claras, entre ou na parede dos folículos. Secretam calcitonina (↓ cálcio)."}, {"n": 12, "cat": "Paratireoide", "f": "Diferencie células principais de oxífilas na paratireoide.", "b": "Principais: menores, secretam PTH (↑ cálcio). Oxífilas: maiores, acidófilas por mitocôndrias, aumentam com a idade, função incerta."}, {"n": 13, "cat": "Suprarrenal", "f": "Cite as zonas do córtex da suprarrenal, na ordem, e o produto de cada uma.", "b": "Glomerulosa (aldosterona), fasciculada (cortisol), reticulada (androgênios: DHEA, androstenediona). Depois, no centro, a medula (epinefrina e norepinefrina)."}, {"n": 14, "cat": "Ilhotas de Langerhans", "f": "Quais as células das ilhotas de Langerhans e suas hormonas?", "b": "Beta (insulina, ~70%, centro), alfa (glucagon, ~20%, periferia), delta (somatostatina), PP (polipeptídio pancreático)."}];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'histologia2pratica_cap03_endocrino';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+const cases = [{"nivel": "NÍVEL 1 — FUNDAMENTAL", "hist": "Mulher de 32 anos com amenorreia há 8 meses, saída espontânea de leite pelas mamas (galactorreia) e cefaleia leve.", "dados": "Ressonância magnética: microadenoma de 7 mm na hipófise. Prolactina sérica muito elevada.", "perguntas": [{"q": "Qual célula da adenohipófise provavelmente deu origem ao tumor, como ela se cora e por que a paciente tem galactorreia e amenorreia?", "a": "O tumor derivou das <strong>células lactótropas</strong>, <strong>cromófilas acidófilas</strong> da pars distalis (15–20% do parênquima), que se coram com laranja G, eritrosina e carmosina (PAS−). A PRL em excesso estimula a glândula mamária, causando <strong>galactorreia</strong>. A hiperprolactinemia inibe a secreção hipotalâmica de GnRH, reduzindo FSH/LH e a função ovariana, o que explica a <strong>amenorreia</strong>. Lembrar: a PRL é controlada principalmente por inibição (dopamina), então tumores ou compressão da haste também podem elevá-la; o tratamento clássico é com agonista dopaminérgico (cabergolina)."}]}, {"nivel": "NÍVEL 2 — INTERMEDIÁRIO", "hist": "Homem de 45 anos, após traumatismo craniano com fratura de base de crânio, passa a urinar 8 litros por dia e a ter sede intensa. A urina é muito diluída.", "dados": "ADH sérico baixo, sódio sérico no limite superior. A prova de privação hídrica não concentra a urina, mas ela concentra após desmopressina (ADH sintético).", "perguntas": [{"q": "Onde o ADH é sintetizado e onde fica armazenado? Que estruturas histológicas da neurohipófise estão envolvidas e qual o diagnóstico?", "a": "O ADH é sintetizado pelos neurônios do <strong>núcleo supraóptico do hipotálamo</strong> (a ocitocina, pelo paraventricular) e transportado pelos axônios amielínicos do <strong>trato hipotálamo-hipofisário</strong> até a <strong>pars nervosa</strong>. Lá fica armazenado nas dilatações axonais chamadas <strong>corpos de Herring</strong> (grânulos de neurossecreção) e é liberado nos capilares fenestrados. Os <strong>pituícitos</strong> (células gliais) apenas dão sustentação — não secretam. Ao lesar a haste ou a neurohipófise, o ADH não chega ao sangue: o rim não reabsorve água nos túbulos coletores (aquaporinas) e instala-se o <strong>diabetes insípido central</strong> (a resposta à desmopressina confirma que o rim está normal)."}]}, {"nivel": "NÍVEL 3 — APLICAÇÃO INTEGRADA", "hist": "Mulher de 35 anos com perda de peso, tremores, intolerância ao calor, palpitações e olhos saltados (exoftalmia). Palpa-se bócio difuso e simétrico.", "dados": "T4 livre e T3 elevados, TSH suprimido, anticorpos contra o receptor de TSH positivos. A biópsia mostraria folículos com epitélio alto, coloide escasso e vacuolizado.", "perguntas": [{"q": "Explique o diagnóstico e relacione os achados histológicos com o mecanismo da doença. Por que o TSH está BAIXO se a glândula está hiperativa? Qual é a célula e a hormona que NÃO seriam a causa do quadro?", "a": "Trata-se da <strong>doença de Graves</strong>: autoanticorpos IgG ligam-se ao receptor de TSH da célula folicular e a estimulam de forma contínua, como se fosse o TSH (tema do slide do professor). As <strong>células foliculares</strong> ficam hiperplásicas e de epitélio cúbico alto a cilíndrico, reabsorvem o coloide (tiroglobulina iodada) mais depressa do que o repõem — daí o <strong>coloide escasso e vacuolizado</strong> — e liberam T3/T4 em excesso (hipertireoidismo, bócio difuso). O <strong>TSH está suprimido</strong> porque os altos níveis de T3/T4 inibem a hipófise por <strong>retroalimentação negativa</strong> (célula tirótropa, basófila): a estimulação vem do anticorpo, não da adenohipófise. Já as <strong>células C</strong> (calcitonina) e as <strong>paratireoides</strong> (PTH) não explicam o quadro; elas regulam o cálcio, não o metabolismo basal. Tratamento: antitireoidianos (metimazol), iodo radioativo ou cirurgia."}]}];
+
+const casesArea = document.getElementById('casesArea');
+cases.forEach((c, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'case-level';
+  let qHtml = '';
+  c.perguntas.forEach((p, pi)=>{
+    qHtml += `<div class="case-q">
+      <b>${pi+1})</b> ${p.q}
+      <br><button class="case-answer-btn" data-ci="${ci}" data-pi="${pi}">Ver resposta comentada</button>
+      <div class="case-answer" id="case-answer-${ci}-${pi}">${p.a}</div>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="case-level-head" data-ci="${ci}">
+      <span>${c.nivel}</span><span>▼</span>
+    </div>
+    <div class="case-level-body" id="case-body-${ci}">
+      <div class="case-hist"><b>História Clínica:</b> ${c.hist}</div>
+      <div class="case-hist"><b>Dados:</b> ${c.dados}</div>
+      ${qHtml}
+    </div>`;
+  casesArea.appendChild(div);
+});
+
+casesArea.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('case-level-head') || e.target.closest('.case-level-head')){
+    const head = e.target.closest('.case-level-head');
+    const ci = head.dataset.ci;
+    document.getElementById('case-body-'+ci).classList.toggle('show');
+  }
+  if(e.target.classList.contains('case-answer-btn')){
+    const ci = e.target.dataset.ci, pi = e.target.dataset.pi;
+    document.getElementById(`case-answer-${ci}-${pi}`).classList.toggle('show');
+  }
+});
+document.getElementById('case-body-0').classList.add('show');
+</script>
+
+<script>
+function openAtlasLightbox(src, cap){
+  document.getElementById('atlasLightboxImg').src = src;
+  document.getElementById('atlasLightboxCap').textContent = cap || '';
+  document.getElementById('atlasLightbox').classList.add('show');
+}
+function closeAtlasLightbox(){
+  document.getElementById('atlasLightbox').classList.remove('show');
+}
+document.querySelectorAll('.cmed-fig img').forEach(function(img){
+  img.addEventListener('click', function(e){
+    e.stopPropagation();
+    var cap = img.closest('.cmed-fig').querySelector('.cmed-fig-cap');
+    openAtlasLightbox(img.src, cap ? cap.textContent : '');
+  });
+});
+</script>
+
+
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Histología II — Prática',
+    titulo: 'Capítulo 3 — Sistema Endócrino',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P2',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Histología II — Prática', titulo: 'Capítulo 3 — Sistema Endócrino', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-02/histologia2-pratica/Simulado_P1.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Simulado P1 — 100 Lâminas</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-02/histologia2-pratica/Capitulo_04_Sistema_Tegumentar.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Capítulo 4 — Sistema Tegumentar</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
