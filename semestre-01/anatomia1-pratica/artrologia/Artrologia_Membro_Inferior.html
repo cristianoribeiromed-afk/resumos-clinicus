@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Anatomía I Prática — M. Inferior — Artrologia | ClinicusMed</title>
+<style>
+.cmed-fig{margin:14px 0; text-align:center;}
+.cmed-fig img{max-width:100%; max-height:640px; width:auto; height:auto; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#fff; display:block; margin:0 auto;}
+.cmed-fig-cap{font-size:.82em; color:var(--text-dim); margin-top:6px; font-style:italic;}
+.cmed-gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin:14px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:320px;}
+:root{
+  --bg:#0b0f0e; --card:#121917; --card2:#1c3033;
+  --accent:#1fb86a; --accent2:#7de0ac; --gold:#e8b84b;
+  --text:#e8f5f4; --text-dim:#9dc4c2; --ok:#4fd1a1; --bad:#e0505f; --border:#453224;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Anatomía I — Prática</a><span class="sep">›</span>
+  <span>P2</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Anatomía I — Prática</span><span>18 de 20</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:90%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Anatomía I — Prática</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Atlas_Axis.html"><span class="ico">🦴</span><span>Esqueleto Axial — Atlas (C1) e Axis (C2)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Umero.html" data-novo="1"><span class="ico">🦴</span><span>Membro Superior — Úmero</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Caixa_Toracica.html"><span class="ico">🦴</span><span>Caixa Torácica — Esternón, Vértebras Torácicas e Costillas</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Coluna_Vertebral_Esqueleto_Axial.html"><span class="ico">🦴</span><span>Osteologia — Coluna Vertebral (Esqueleto Axial)</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/miologia/Diafragma.html"><span class="ico">🦴</span><span>Músculo Diafragma</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Membro_Superior_Cintura_Escapular.html"><span class="ico">🦴</span><span>Membro Superior — Cintura Escapular</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Membro_Inferior_Cintura_Pelvica.html"><span class="ico">🦴</span><span>Membro Inferior — Cintura Pélvica</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/Simulado_P1_AnatomiaPratica.html"><span class="ico">🎯</span><span>Simulado P1 — Anatomía Prática (64 Questões)</span></a>
+    <h4>P2</h4>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Cintura_Escapular_Clavicula_Escapula.html" data-novo="1"><span class="ico">🦴</span><span>M. Superior — Clavícula e Escápula</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Umero_Radio_Ulna_Porcao_Livre.html" data-novo="1"><span class="ico">🦴</span><span>M. Superior — Úmero, Rádio e Ulna</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Mao_Musculos_Antebraco.html" data-novo="1"><span class="ico">🦴</span><span>M. Superior — Mão e Músculos do Antebraço</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/miologia/Musculos_Membro_Superior.html" data-novo="1"><span class="ico">🦴</span><span>M. Superior — Músculos</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/neurologia/Plexo_Braquial.html" data-novo="1"><span class="ico">🦴</span><span>M. Superior — Plexo Braquial</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Cintura_Pelvica_Osso_do_Quadril.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Cintura Pélvica</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Femur.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Fêmur</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Tibia_Fibula_Ossos_da_Perna.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Tíbia e Peroné</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/osteologia/Ossos_do_Pe.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Ossos do Pé</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-01/anatomia1-pratica/artrologia/Artrologia_Membro_Inferior.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Artrologia</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/miologia/Musculos_Cintura_Pelvica.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Músculos da Cintura Pélvica</span></a>
+    <a class="cmed-nav-item" href="/semestre-01/anatomia1-pratica/miologia/Musculos_do_Muslo_Coxa.html" data-novo="1"><span class="ico">🦴</span><span>M. Inferior — Músculos da Coxa</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Anatomía I — Prática · Artrologia · Membro Inferior</span>
+  <h1>🦵 Artrologia do Membro Inferior</h1>
+  <p>ClinicusMed · Atlas de Anatomia Prática — Ficha Padronizada</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Ficha Completa</button>
+  <button data-p="p1">🏥 Correlação Clínica</button>
+  <button data-p="p2">📸 Imagens</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+</nav>
+
+<!-- ============ FICHA COMPLETA ============ -->
+<section class="panel active" id="p0">
+
+  <div class="card">
+    <h2>📖 Resumo Rápido</h2>
+    <table><tr><th>Articulação</th><th>Tipo (como a professora classifica)</th><th>Ponto-chave</th></tr><tr><td>Sacroilíaca</td><td>Diartrose — <b>artrodia (plana)</b></td><td>Ilíaco + sacro; ligamentos sacrotuberoso e sacroespinoso delimitam os forames ciáticos; <b>nutação/contranutação</b></td></tr><tr><td>Sínfise púbica</td><td><b>Anfiartrose — sínfise</b></td><td>Une na linha média os dois ossos coxais</td></tr><tr><td>Coxofemoral (quadril)</td><td>Diartrose — <b>esferóidea (enartrose)</b></td><td>Cabeça do fêmur + acetábulo + lábio acetabular; lig. iliofemoral (de Bertin)</td></tr><tr><td>Joelho: femorotibial</td><td>Diartrose — <b>condilar (elipsóidea, bicondílea dupla)</b></td><td>Meniscos (medial = C, lateral = O), cruzados anterior e posterior</td></tr><tr><td>Joelho: femoropatelar</td><td>Diartrose — <b>troclear (gínglimo)</b></td><td>Lig. patelar (rotuliano): patela → tuberosidade da tíbia</td></tr><tr><td>Tibiofibular proximal</td><td>Diartrose — <b>artrodia (plana)</b></td><td>Cabeça da fíbula (peroné) com a tíbia, lateral à tuberosidade tibial</td></tr><tr><td>Sindesmose tibiofibular distal e membrana interóssea</td><td><b>Sinartrose — sindesmose</b></td><td>Extremos distais dos ossos; membrana atravessada por a. tibial anterior (acima) e rr. perfurantes da a. fibular (abaixo)</td></tr><tr><td>Talocrural (tornozelo)</td><td>Diartrose — <b>troclear (gínglimo)</b></td><td>Flexão dorsal e plantar; lig. colateral lateral (3 fascículos) e medial (deltóideo)</td></tr><tr><td>Subtalar</td><td>Diartrose — <b>trocóide (pivô)</b></td><td>Talus + calcâneo; seio do tarso; lig. talocalcâneo interósseo</td></tr><tr><td>Transversa do tarso (Chopart)</td><td><b>Talocalcaneonavicular = esferóidea; calcaneocuboidea = selar</b></td><td>Lig. bifurcado (em Y)</td></tr><tr><td>Intertarsianas anteriores</td><td>Diartrose — artrodias (planas)</td><td>Cubonavicular, cuneonavicular, intercuneiformes, cuneocuboidea</td></tr><tr><td>Tarsometatarsianas (Lisfranc)</td><td>Diartrose — artrodias (planas)</td><td>I–cunha medial; II–3 cunhas; III–cunha lateral; IV e V–cuboide</td></tr><tr><td>Metatarsofalângicas / Interfalângicas</td><td>Elipsóidea (condilar) / Troclear (gínglimo)</td><td>Intermetatarsianas: artrodias</td></tr></table><div class="prova">📌 A prova pede <b>nome + tipo + estrutura-chave</b> (ligamento, menisco, superfície). Aprenda cada articulação em trio: <i>quem se articula, tipo, ligamento principal</i>.</div>
+  </div>
+
+  <div class="card">
+    <h2>🔗 Articulações da Cintura Pélvica</h2>
+    <p>A cintura pélvica tem duas articulações que unem os ossos ilíacos (coxais) entre si e com o sacro.</p><table><tr><th>Articulação</th><th>O que une</th><th>Classificação</th></tr><tr><td>Sacroilíaca (art. sacroiliaca)</td><td>Os dois ossos ilíacos se articulam <b>atrás</b> com a coluna vertebral (osso sacro)</td><td>Diartrose — artrodia (plana)</td></tr><tr><td>Sínfise do púbis (sínfisis del pubis)</td><td>Une <b>adiante, na linha média</b>, os dois ossos coxais</td><td>Anfiartrose — sínfise</td></tr></table><h4>Articulação sacroilíaca — meios de união</h4><table><tr><th>Meio de união</th><th>Detalhe</th></tr><tr><td>Cápsula</td><td>Presente por ser articulação <b>sinovial</b></td></tr><tr><td>Ligamentos sacroilíacos</td><td>Anterior, posterior e <b>interósseo</b></td></tr><tr><td>Ligamento iliolombar</td><td>Une L4–L5 (processos transversos) ao ilíaco (complemento)</td></tr><tr><td>Ligamento sacrotuberoso [sacrociático maior]</td><td>Sacro/cóccix → túber isquiático (complemento)</td></tr><tr><td>Ligamento sacroespinhoso [sacrociático menor]</td><td>Sacro/cóccix → espinha isquiática (complemento)</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/04.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/04.jpg" alt="Osso ilíaco com ligamentos sacrotuberoso e sacroespinhoso e espinha ciática"></a><div class="cmed-fig-cap">Osso ilíaco com ligamentos sacrotuberoso e sacroespinhoso e espinha ciática</div></figure><div class="hot">Os ligamentos <b>sacrotuberoso</b> e <b>sacroespinhoso</b> delimitam os 2 forames ciáticos (maior e menor): o sacroespinhoso separa o <b>forame ciático maior</b> (acima) do <b>menor</b> (abaixo).</div><p><b>Movimentos:</b> <b>nutação</b> e <b>contranutação</b> (movimentos do sacro entre os ilíacos; muito pequenos).</p><div class="mnemo">🧠 Nutação = o promontório (base do sacro) vai para frente/baixo e o ápice/cóccix vai para trás. Contranutação = o inverso. A professora descreve como 'sacro para trás' / 'sacro para frente' — veja as notas.</div>
+  </div>
+
+  <div class="card">
+    <h2>🦵 Articulação Coxofemoral (Quadril)</h2>
+    <p>Une a <b>cintura pélvica à porção livre do membro inferior</b>; chamada 'articulação da cadera'. Tipo: <b>diartrose esferóidea (enartrose)</b>.</p><table><tr><th>#</th><th>Estrutura</th><th>O que é</th></tr><tr><td>1</td><td>Cabeça do fêmur</td><td>Possui a <b>fosita da cabeça femoral</b>, onde se insere o lig. da cabeça do fêmur (redondo)</td></tr><tr><td>2</td><td>Acetábulo</td><td>Metade de uma esfera oca no osso coxal; aloja a cabeça do fêmur</td></tr><tr><td>3</td><td>Lábio acetabular (rodete cotiloideo / labrum)</td><td>Situado na borda do acetábulo; aprofunda a cavidade</td></tr><tr><td>4</td><td>Incisura acetabular (escotadura)</td><td>Parte inferior do acetábulo; fechada pelo lig. transverso</td></tr><tr><td>5</td><td>Face semilunar</td><td>Parte <b>articular</b> (periférica) do acetábulo, limitada embaixo pela incisura</td></tr><tr><td>6</td><td>Fossa acetabular</td><td>Parte <b>não articular</b> (profunda)</td></tr><tr><td>7</td><td>Lig. transverso do acetábulo</td><td>O lábio passa como uma ponte sobre a incisura e a fecha em forma de orifício</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/07.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/07.jpg" alt="Acetábulo: lábio, face semilunar, fossa acetabular, lig. transverso e lig. da cabeça do fêmur"></a><div class="cmed-fig-cap">Acetábulo: lábio, face semilunar, fossa acetabular, lig. transverso e lig. da cabeça do fêmur</div></figure><div class="criterio">🟢 Face semilunar = articular (periférica). Fossa acetabular = não articular (profunda). Lig. transverso = fecha a incisura.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧵 Quadril — Meios de União</h2>
+    <table><tr><th>Estrutura</th><th>Característica / trajeto</th></tr><tr><td>Cápsula articular</td><td>Envolve a articulação</td></tr><tr><td>Lig. iliofemoral [de Bertin]</td><td>Reforça a cápsula (anterior); em Y invertido: porção transversa e porção descendente</td></tr><tr><td>Lig. pubofemoral</td><td>Reforça a cápsula (anteroinferior), a partir do púbis</td></tr><tr><td>Lig. isquiofemoral</td><td>Reforça a cápsula (posterior), a partir do ísquio</td></tr><tr><td>Lig. da cabeça do fêmur (redondo)</td><td><b>INTRA-articular</b>: da fosita da cabeça do fêmur até o lig. transverso do acetábulo</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/09.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/09.jpg" alt="Ligamentos do quadril: iliofemoral (porções transversa e descendente), pubofemoral, membrana obturatória"></a><div class="cmed-fig-cap">Ligamentos do quadril: iliofemoral (porções transversa e descendente), pubofemoral, membrana obturatória</div></figure><div class="clinical">O lig. da cabeça do fêmur conduz o ramo acetabular da a. obturatória (visto na figura do acetábulo); em adultos tem papel vascular pequeno (complemento).</div><div class="mnemo">🧠 Os 3 ligamentos extracapsulares têm o nome do osso de origem + fêmur: ILIO-, PUBO-, ISQUIO-femoral. O único dentro da articulação é o 'redondo'.</div>
+  </div>
+
+  <div class="card">
+    <h2>🦿 Articulação do Joelho — Visão Geral</h2>
+    <p>Põe em contato <b>3 ossos: fêmur – tíbia – rótula (patela)</b>. É composta por <b>2 articulações</b>:</p><table><tr><th>Articulação</th><th>Classificação</th><th>Detalhe</th></tr><tr><td>Femorotibial</td><td>Diartrose condilar (elipsóidea) — bicondílea dupla</td><td>Côndilos do fêmur sobre a tíbia, com meniscos</td></tr><tr><td>Femoropatelar (femororrotuliana)</td><td>Diartrose troclear (gínglimo)</td><td>Patela com a tróclea do fêmur; <b>lig. patelar (rotuliano)</b> da patela até a tuberosidade da tíbia</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/11.jpg" alt="Tendão do quadríceps, patela e ligamento patelar; face articular da patela e corte do fêmur distal"></a><div class="cmed-fig-cap">Tendão do quadríceps, patela e ligamento patelar; face articular da patela e corte do fêmur distal</div></figure><p><b>Movimentos:</b> flexão – extensão – rotação (a rotação ocorre com o joelho fletido, complemento).</p><div class="prova">📌 Joelho = 3 ossos, 2 articulações. Femorotibial = condilar; femoropatelar = troclear.</div>
+  </div>
+
+  <div class="card">
+    <h2>🌙 Joelho — Meniscos e Ligamentos Cruzados</h2>
+    <h4>Meniscos (menisco lateral e menisco medial)</h4><ul><li><b>Aumentam a profundidade</b> das superfícies articulares</li><li><b>Medial</b> = forma de <b>C</b>; <b>Lateral</b> = forma de <b>O</b></li><li>Os dois estão unidos adiante pelo <b>lig. transverso do joelho [yugal]</b></li></ul><h4>Ligamentos cruzados</h4><table><tr><th>Ligamento</th><th>Inserção inferior (tíbia)</th><th>Inserção superior (fêmur)</th></tr><tr><td><b>Anterior (LCA)</b></td><td>Área intercondílea <b>anterior</b></td><td>Côndilo <b>lateral</b> do fêmur</td></tr><tr><td><b>Posterior (LCP)</b></td><td>Área intercondílea <b>posterior</b></td><td>Côndilo <b>medial</b> do fêmur</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/14.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/14.jpg" alt="Cruzados anterior e posterior, meniscos medial e lateral e região intercondilar (vistas anterior e posterior)"></a><div class="cmed-fig-cap">Cruzados anterior e posterior, meniscos medial e lateral e região intercondilar (vistas anterior e posterior)</div></figure><div class="mnemo">🧠 <b>LAMP</b>: <b>L</b>ateral–<b>A</b>nterior, <b>M</b>edial–<b>P</b>osterior. O LCA sobe para o côndilo Lateral; o LCP para o côndilo Medial. E menisco <b>M</b>edial = <b>C</b>, <b>L</b>ateral = <b>O</b> (a professora usa 'M-C / L-O').</div><div class="clinical">🏥 Os cruzados se cruzam em X na fossa intercondílea: o LCA impede o deslocamento anterior da tíbia (sinal da gaveta anterior); o LCP, o posterior (complemento).</div>
+  </div>
+
+  <div class="card">
+    <h2>🧷 Joelho — Meios de União e Movimentos</h2>
+    <table><tr><th>Grupo</th><th>Estrutura</th></tr><tr><td>Cápsula</td><td>Cápsula articular</td></tr><tr><td>Anterior</td><td>Lig. patelar (rotuliano)</td></tr><tr><td>Posterior</td><td>Lig. poplíteo oblíquo [de Winslow] e lig. poplíteo arqueado</td></tr><tr><td>Colaterais</td><td><b>Tibial</b> (lateral interno = medial) e <b>fibular/peroneo</b> (lateral externo = lateral)</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/16.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/16.jpg" alt="Joelho: lig. colateral fibular, tendão do poplíteo, gordura infrapatelar, lig. patelar, meniscos, membrana sinovial"></a><div class="cmed-fig-cap">Joelho: lig. colateral fibular, tendão do poplíteo, gordura infrapatelar, lig. patelar, meniscos, membrana sinovial</div></figure><p><b>Movimentos:</b> flexão – extensão – rotação.</p><p>Na figura: <b>gordura infrapatelar</b>, <b>pregas alar e infrapatelar</b>, <b>recesso subpoplíteo</b> e a <b>articulação tibiofibular proximal</b>.</p>
+  </div>
+
+  <div class="card">
+    <h2>🦴 Articulações da Perna (Tibiofibulares)</h2>
+    <table><tr><th>Articulação</th><th>Onde</th><th>Tipo</th></tr><tr><td>Tibiofibular (tibioperonea) proximal</td><td>Entre a cabeça da fíbula e a superfície articular da tíbia, <b>lateral à tuberosidade tibial</b></td><td>Diartrose — artrodia (plana)</td></tr><tr><td>Sindesmose tibiofibular distal</td><td>Nos extremos distais dos ossos (lig. tibiofibular anterior e posterior)</td><td>Sinartrose — sindesmose</td></tr><tr><td>Membrana interóssea da perna</td><td>Do bordo lateral da tíbia ao <b>bordo interósseo</b> da fíbula</td><td>Sinartrose — sindesmose</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/18.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/18.jpg" alt="Tibiofibular proximal (círculo), membrana interóssea, sindesmose distal e lig. tibiofibular posterior"></a><div class="cmed-fig-cap">Tibiofibular proximal (círculo), membrana interóssea, sindesmose distal e lig. tibiofibular posterior</div></figure><div class="hot">A membrana interóssea é atravessada pela <b>a. tibial anterior (em cima)</b> e por <b>ramos perfurantes da a. fibular (embaixo)</b>.</div>
+  </div>
+
+  <div class="card">
+    <h2>👣 Articulação Talocrural (Tornozelo)</h2>
+    <p>[Tibiofibular-astragalina] — 'articulação da garganta do pé'. <b>Diartrose troclear (gínglimo)</b>.</p><table><tr><th>Aspecto</th><th>Detalhe</th></tr><tr><td>Superfície articular</td><td>Face inferior da epífise distal da <b>tíbia</b> + <b>maléolos</b> (lateral e medial) + <b>tróclea do tálus (astrágalo)</b></td></tr><tr><td>Movimentos</td><td>Anteroposterior: <b>flexão plantar</b> e <b>flexão dorsal</b></td></tr><tr><td>Lig. colateral lateral</td><td>3 fascículos: <b>talofibular anterior</b>, <b>calcaneofibular</b>, <b>talofibular posterior</b></td></tr><tr><td>Lig. colateral medial</td><td><b>Deltóideo</b> (partes tibiotalar anterior e posterior, tibionavicular, tibiocalcânea)</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/20.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/20.jpg" alt="Mortaise do tornozelo: tíbia, fíbula, maléolos medial e lateral, tróclea do tálus (mais larga na frente)"></a><div class="cmed-fig-cap">Mortaise do tornozelo: tíbia, fíbula, maléolos medial e lateral, tróclea do tálus (mais larga na frente)</div></figure><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/21.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/21.jpg" alt="Lig. medial (deltóideo) e ligamentos laterais astragaloperoneo anterior, posterior e calcaneoperoneo"></a><div class="cmed-fig-cap">Lig. medial (deltóideo) e ligamentos laterais astragaloperoneo anterior, posterior e calcaneoperoneo</div></figure><div class="clinical">🏥 Tróclea do tálus mais larga adiante: em flexão dorsal o encaixe é mais estável; na flexão plantar, o tornozelo é mais instável e sujeito a entorses por inversão, que lesam primeiro o lig. talofibular anterior (complemento).</div>
+  </div>
+
+  <div class="card">
+    <h2>🦶 Articulações do Pé — Tarso</h2>
+    <p>As articulações do pé dividem-se em <b>3 grupos</b>: (1) tarsianas, (2) tarsometatarsianas, (3) intermetatarsianas + metatarsofalângicas + interfalângicas.</p><h4>Subtalar [talocalcânea / subastragalina]</h4><ul><li>Face inferior do <b>tálus (astrágalo)</b> com a superior do <b>calcâneo</b></li><li>Sulco do tálus + sulco do calcâneo = <b>seio do tarso</b></li><li>Ligamentos: talocalcâneo <b>interósseo</b>, lateral e posterior</li><li>Diartrose <b>trocóide (pivô)</b></li></ul><h4>Transversa do tarso [mediotarsiana / de Chopart]</h4><table><tr><th>Parte</th><th>Posição</th><th>Tipo</th></tr><tr><td>Talocalcaneonavicular</td><td>Medial</td><td><b>Esferóidea (enartrose)</b></td></tr><tr><td>Calcaneocuboidea</td><td>Lateral</td><td><b>Selar (sela)</b></td></tr></table><p>Ligamentos: talonavicular, calcaneocuboideos e <b>lig. bifurcado [em Y ou de Chopart]</b>.</p><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/26.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/26.jpg" alt="Linha de Chopart: talocalcaneonavicular (esferóidea) e calcaneocuboidea (selar); lig. calcaneonavicular plantar"></a><div class="cmed-fig-cap">Linha de Chopart: talocalcaneonavicular (esferóidea) e calcaneocuboidea (selar); lig. calcaneonavicular plantar</div></figure><div class="mnemo">🧠 <b>C C Celar</b> → <b>C</b>alcaneo<b>C</b>uboidea = S<b>elar</b>.</div><h4>Intertarsianas anteriores — artrodias (planas)</h4><ul><li>Cubonavicular</li><li>Cuneonavicular (medial, intermédia e lateral)</li><li>Intercuneiformes</li><li>Cuneocuboidea</li></ul>
+  </div>
+
+  <div class="card">
+    <h2>🦶 Tarsometatarsianas, Intermetatarsianas e Dedos</h2>
+    <h4>Tarsometatarsianas [de Lisfranc] — artrodias (planas)</h4><table><tr><th>Metatarso</th><th>Articula-se com</th></tr><tr><td>I metatarsiano</td><td>Cuneiforme medial</td></tr><tr><td>II metatarsiano</td><td>Os 3 cuneiformes</td></tr><tr><td>III metatarsiano</td><td>Cuneiforme lateral</td></tr><tr><td>IV e V metatarsianos</td><td>Cuboide</td></tr></table><figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/28.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/28.jpg" alt="Tarsometatarsianas de Lisfranc: cada seta mostra o par articular"></a><div class="cmed-fig-cap">Tarsometatarsianas de Lisfranc: cada seta mostra o par articular</div></figure><h4>Outras articulações do antepé</h4><table><tr><th>Articulação</th><th>Tipo</th></tr><tr><td>Intermetatarsianas</td><td>Diartrose — artrodias (planas)</td></tr><tr><td>Metatarsofalângicas</td><td>Diartrose — elipsóidea (condilar)</td></tr><tr><td>Interfalângicas do pé</td><td>Diartrose — troclear (gínglimo)</td></tr></table><p>O <b>1º metatarsiano não se articula com o 2º</b> (é independente).</p><div class="prova">📌 II metatarsiano com os 3 cuneiformes é o clássico de Lisfranc.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Pegadinhas da Prova</h2>
+    <ul><li><b>Menisco medial = C; lateral = O</b> — não inverta.</li><li><b>LCA → côndilo lateral; LCP → côndilo medial</b> (LAMP).</li><li>Chopart: <b>talocalcaneonavicular = esferóidea</b>; <b>calcaneocuboidea = selar</b>.</li><li>Subtalar é <b>trocóide</b> (pivô); talocrural é <b>troclear</b>.</li><li>Tibiofibular proximal = <b>artrodia</b>; distal e membrana = <b>sindesmose</b>.</li><li>Lig. da cabeça do fêmur é <b>intra-articular</b>; iliofemoral, pubofemoral e isquiofemoral são extracapsulares/reforçam a cápsula.</li><li>Sacroilíaca = artrodia; sínfise púbica = anfiartrose (sínfise).</li><li>Joelho: 3 ossos, <b>2</b> articulações.</li></ul>
+  </div>
+
+  <div class="card">
+    <h2>🔥 O Que Mais Cai</h2>
+    <table><tr><th>Tema</th><th>Chance</th></tr><tr><td>Classificação (tipo) de cada articulação</td><td>🔥🔥🔥🔥🔥</td></tr><tr><td>Meniscos (C/O) e cruzados (LAMP)</td><td>🔥🔥🔥🔥🔥</td></tr><tr><td>Linhas de Chopart e Lisfranc (o que une)</td><td>🔥🔥🔥🔥</td></tr><tr><td>Ligamentos do quadril (iliofemoral, redondo)</td><td>🔥🔥🔥🔥</td></tr><tr><td>Ligamentos laterais e deltóideo do tornozelo</td><td>🔥🔥🔥</td></tr><tr><td>Sacrotuberoso e sacroespinhoso (forames ciáticos)</td><td>🔥🔥🔥</td></tr><tr><td>Membrana interóssea e o que a atravessa</td><td>🔥🔥🔥</td></tr><tr><td>Seio do tarso</td><td>🔥🔥</td></tr></table>
+  </div>
+
+  <div class="card">
+    <h2>✅ Checklist Final de Identificação</h2>
+    <ul><li>☐ Sei classificar sacroilíaca, sínfise, quadril, joelho (2), tibiofibulares, talocrural, subtalar, Chopart, Lisfranc.</li><li>☐ Reconheço lábio, face semilunar, fossa acetabular e lig. transverso na figura do acetábulo.</li><li>☐ Distingo iliofemoral, pubofemoral, isquiofemoral e lig. redondo.</li><li>☐ Identifico meniscos e cruzados (qual é anterior/posterior).</li><li>☐ Aponto colateral tibial e fibular, lig. patelar e poplíteo oblíquo.</li><li>☐ Reconheço membrana interóssea, sindesmose e fíbula proximal.</li><li>☐ Nomeio os ligamentos laterais e o deltóideo no tornozelo.</li><li>☐ Localizo seio do tarso, Chopart e Lisfranc na figura do pé.</li></ul>
+  </div>
+
+</section>
+
+<!-- ============ CORRELAÇÃO CLÍNICA ============ -->
+<section class="panel" id="p1">
+<div class="card">
+    <h2>🏥 Caso Progressivo — O Futebolista do Fim de Semana</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Um jogador amador sofre lesões em cadeia que percorrem o membro inferior.</p>
+  </div>
+  <div id="casesArea"></div>
+</section>
+
+<!-- ============ IMAGENS (AGUARDANDO MATERIAL) ============ -->
+<section class="panel" id="p2">
+  <div class="card">
+    <h2>📸 Galeria de Imagens</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Figuras da aula prática, com as estruturas identificadas. Clique numa imagem para ampliar.</p>
+    <div class="cmed-gallery">
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/04.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/04.jpg" alt="Osso ilíaco com ligamentos sacrotuberoso e sacroespinhoso; espinha ciática, tuberosidade isquiática, linhas glúteas"></a><div class="cmed-fig-cap">Osso ilíaco com ligamentos sacrotuberoso e sacroespinhoso; espinha ciática, tuberosidade isquiática, linhas glúteas</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/07.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/07.jpg" alt="Acetábulo (rodete, face semilunar, fossa, lig. transverso) e lig. da cabeça femoral com seus vasos"></a><div class="cmed-fig-cap">Acetábulo (rodete, face semilunar, fossa, lig. transverso) e lig. da cabeça femoral com seus vasos</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/09.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/09.jpg" alt="Quadril: lig. iliofemoral (porções transversa e descendente), pubofemoral, membrana obturatória"></a><div class="cmed-fig-cap">Quadril: lig. iliofemoral (porções transversa e descendente), pubofemoral, membrana obturatória</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/11.jpg" alt="Patela: tendão do quadríceps, lig. patelar e corte do fêmur distal"></a><div class="cmed-fig-cap">Patela: tendão do quadríceps, lig. patelar e corte do fêmur distal</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/12.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/12.jpg" alt="Slide dos meniscos: medial (C), lateral (O) e lig. transverso do joelho"></a><div class="cmed-fig-cap">Slide dos meniscos: medial (C), lateral (O) e lig. transverso do joelho</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/14.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/14.jpg" alt="Ligamentos cruzados anterior e posterior, meniscos e região intercondilar"></a><div class="cmed-fig-cap">Ligamentos cruzados anterior e posterior, meniscos e região intercondilar</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/16.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/16.jpg" alt="Joelho: colateral fibular, tendão do poplíteo, gordura infrapatelar, pregas alares, recesso subpoplíteo"></a><div class="cmed-fig-cap">Joelho: colateral fibular, tendão do poplíteo, gordura infrapatelar, pregas alares, recesso subpoplíteo</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/18.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/18.jpg" alt="Tibiofibular proximal, membrana interóssea e sindesmose tibiofibular distal"></a><div class="cmed-fig-cap">Tibiofibular proximal, membrana interóssea e sindesmose tibiofibular distal</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/20.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/20.jpg" alt="Tornozelo: tíbia, fíbula, maléolos, tróclea do tálus (mais larga adiante)"></a><div class="cmed-fig-cap">Tornozelo: tíbia, fíbula, maléolos, tróclea do tálus (mais larga adiante)</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/21.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/21.jpg" alt="Ligamento medial (deltóideo) e ligamentos laterais do tornozelo"></a><div class="cmed-fig-cap">Ligamento medial (deltóideo) e ligamentos laterais do tornozelo</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/22.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/22.jpg" alt="Visão geral das articulações do pé"></a><div class="cmed-fig-cap">Visão geral das articulações do pé</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/24.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/24.jpg" alt="Subtalar: articulação subastragalina e lig. astragalonavicular interósseo"></a><div class="cmed-fig-cap">Subtalar: articulação subastragalina e lig. astragalonavicular interósseo</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/26.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/26.jpg" alt="Chopart: talocalcaneonavicular (esferóidea) e calcaneocuboidea (selar)"></a><div class="cmed-fig-cap">Chopart: talocalcaneonavicular (esferóidea) e calcaneocuboidea (selar)</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/27.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/27.jpg" alt="Intertarsianas anteriores (planas)"></a><div class="cmed-fig-cap">Intertarsianas anteriores (planas)</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/28.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/28.jpg" alt="Lisfranc: tarsometatarsianas"></a><div class="cmed-fig-cap">Lisfranc: tarsometatarsianas</div></figure>
+<figure class="cmed-fig"><a href="/semestre-01/anatomia1-pratica/img/mi_artrologia/30.jpg" target="_blank" rel="noopener"><img loading="lazy" src="/semestre-01/anatomia1-pratica/img/mi_artrologia/30.jpg" alt="Antepé: intermetatarsianas, metatarsofalângicas e interfalângicas"></a><div class="cmed-fig-cap">Antepé: intermetatarsianas, metatarsofalângicas e interfalângicas</div></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">10 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [{"tema": "Tipos", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Classificar a sínfise púbica", "q": "A articulação que une na linha média os dois ossos coxais é classificada como:", "opts": ["Diartrose — esferóidea", "Diartrose — artrodia", "Sinartrose — sindesmose", "Anfiartrose — sínfise"], "correct": 3, "justificativa": "A sínfise do púbis é uma anfiartrose do tipo sínfise.", "analise": ["Incorreto — esferóidea é o quadril.", "Incorreto — artrodia é o tipo da sacroilíaca.", "Incorreto — sindesmose é fibrosa (membrana interóssea)."], "analise_letters": ["A", "B", "C"], "conceito": "Sínfise púbica = anfiartrose.", "pegadinha": "Confundir com sacroilíaca.", "dica": "Média = sínfise; posterior = artrodia.", "n": 1}, {"tema": "Joelho", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Forma dos meniscos", "q": "Quanto à forma dos meniscos do joelho:", "opts": ["Ambos em O", "Medial em O e lateral em C", "Ambos em C", "Medial em C e lateral em O"], "correct": 3, "justificativa": "Medial = C; lateral = O.", "analise": ["Incorreto — o lateral é mais circular.", "Incorreto — está invertido.", "Incorreto — os dois são diferentes."], "analise_letters": ["A", "B", "C"], "conceito": "Meniscos.", "pegadinha": "Inverter os lados.", "dica": "M-C / L-O.", "n": 2}, {"tema": "Joelho", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Inserção do LCA", "q": "O ligamento cruzado anterior se insere no fêmur no:", "opts": ["Epicôndilo medial", "Côndilo medial", "Côndilo lateral", "Tróclea"], "correct": 2, "justificativa": "LAMP: lateral–anterior.", "analise": ["Incorreto — o epicôndilo medial recebe o colateral tibial.", "Incorreto — é a inserção do LCP.", "Incorreto — a tróclea é da patela."], "analise_letters": ["A", "B", "D"], "conceito": "LCA.", "pegadinha": "LCA/LCP.", "dica": "LAMP.", "n": 3}, {"tema": "Pé", "nivel": "🟢 Nível 1 — Essencial", "objetivo": "Tipo da calcaneocuboidea", "q": "A articulação calcaneocuboidea é do tipo:", "opts": ["Selar", "Esferóidea", "Trocóide", "Troclear"], "correct": 0, "justificativa": "Calcaneocuboidea é selar (C C celar).", "analise": ["Incorreto — esferóidea é a talocalcaneonavicular.", "Incorreto — trocóide é a subtalar.", "Incorreto — troclear é o tornozelo e as interfalângicas."], "analise_letters": ["B", "C", "D"], "conceito": "Chopart.", "pegadinha": "Trocar as duas partes.", "dica": "C C Celar.", "n": 4}, {"tema": "Quadril", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Lig. intra-articular", "q": "Qual ligamento do quadril é intra-articular e vai da fosita da cabeça do fêmur ao lig. transverso do acetábulo?", "opts": ["Lig. iliofemoral", "Lig. da cabeça do fêmur (redondo)", "Lig. pubofemoral", "Lig. isquiofemoral"], "correct": 1, "justificativa": "Só o redondo é intra-articular.", "analise": ["Incorreto — o iliofemoral reforça a cápsula externamente.", "Incorreto — idem, a partir do púbis.", "Incorreto — idem, a partir do ísquio."], "analise_letters": ["A", "C", "D"], "conceito": "Lig. redondo.", "pegadinha": "Achar que o iliofemoral é interno.", "dica": "Os 'femorais' reforçam fora.", "n": 5}, {"tema": "Perna", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Membrana interóssea", "q": "Pela parte superior da membrana interóssea da perna passa:", "opts": ["A. tibial anterior", "Ramos perfurantes da a. fibular", "N. tibial", "V. safena magna"], "correct": 0, "justificativa": "Acima: tibial anterior; abaixo: perfurantes da fibular.", "analise": ["Incorreto — os perfurantes passam na parte inferior.", "Incorreto — o n. tibial fica posterior.", "Incorreto — a safena é superficial."], "analise_letters": ["B", "C", "D"], "conceito": "Membrana.", "pegadinha": "Inverter alto/baixo.", "dica": "Tibial anterior em cima.", "n": 6}, {"tema": "Tornozelo", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Lig. lateral", "q": "Qual NÃO compõe o ligamento colateral lateral do tornozelo?", "opts": ["Calcaneofibular", "Talofibular anterior", "Tibiocalcâneo", "Talofibular posterior"], "correct": 2, "justificativa": "O tibiocalcâneo pertence ao deltóideo (medial).", "analise": ["Incorreto — é ligamento lateral.", "Incorreto — é ligamento lateral.", "Incorreto — é ligamento lateral."], "analise_letters": ["A", "B", "D"], "conceito": "Colateral lateral.", "pegadinha": "Misturar medial e lateral.", "dica": "Deltóideo = tibio-.", "n": 7}, {"tema": "Pé", "nivel": "🟡 Nível 2 — Aprofundamento", "objetivo": "Lisfranc", "q": "No esquema de Lisfranc, o II metatarsiano se articula com:", "opts": ["Somente o cuneiforme medial", "Os 3 cuneiformes", "Cuboide", "Navicular"], "correct": 1, "justificativa": "II articula com os 3 cuneiformes.", "analise": ["Incorreto — o cuneiforme medial é do I.", "Incorreto — cuboide é de IV e V.", "Incorreto — o navicular é do Chopart/intertarsiana."], "analise_letters": ["A", "C", "D"], "conceito": "Lisfranc.", "pegadinha": "Esquecer o II.", "dica": "I-med, II-3, III-lat, IV/V-cub.", "n": 8}, {"tema": "Pelve", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Forame ciático", "q": "Qual ligamento separa o forame ciático maior do menor?", "opts": ["Sacroilíaco posterior", "Sacrotuberoso", "Iliolombar", "Sacroespinhoso"], "correct": 3, "justificativa": "O sacroespinhoso (espinha ciática ao sacro) separa os dois forames (complemento).", "analise": ["Incorreto — é da sacroilíaca.", "Incorreto — o sacrotuberoso fecha ambos inferiormente.", "Incorreto — o iliolombar não participa."], "analise_letters": ["A", "B", "C"], "conceito": "Forames.", "pegadinha": "Escolher o sacrotuberoso.", "dica": "Espinha = separa.", "n": 9}, {"tema": "Joelho", "nivel": "🔴 Nível 3 — Excelência", "objetivo": "Clínica", "q": "Jogador com gaveta anterior positiva e hemartrose. Qual estrutura lesada e sua inserção tibial?", "opts": ["Colateral tibial — côndilo medial", "LCP — área intercondílea posterior", "LCA — área intercondílea anterior", "Lig. patelar — tuberosidade tibial"], "correct": 2, "justificativa": "A gaveta anterior indica LCA.", "analise": ["Incorreto — colateral dá estresse em valgo.", "Incorreto — LCP dá gaveta posterior.", "Incorreto — o patelar causa perda de extensão."], "analise_letters": ["A", "B", "D"], "conceito": "LCA.", "pegadinha": "Confundir cruzados.", "dica": "Anterior-gaveta anterior.", "n": 10}];
+const flashcards = [
+  {"cat": "Pelve", "f": "Tipo da sacroilíaca?", "b": "Diartrose — artrodia (plana).", "n": 1},
+  {"cat": "Pelve", "f": "Tipo da sínfise púbica?", "b": "Anfiartrose — sínfise.", "n": 2},
+  {"cat": "Pelve", "f": "Que ligamentos delimitam os forames ciáticos?", "b": "Sacrotuberoso (sacrociático maior) e sacroespinhoso (sacrociático menor).", "n": 3},
+  {"cat": "Pelve", "f": "Movimentos da sacroilíaca?", "b": "Nutação e contranutação.", "n": 4},
+  {"cat": "Quadril", "f": "Tipo da articulação coxofemoral?", "b": "Diartrose esferóidea (enartrose).", "n": 5},
+  {"cat": "Quadril", "f": "O que se insere na fosita da cabeça do fêmur?", "b": "O lig. da cabeça do fêmur (redondo).", "n": 6},
+  {"cat": "Quadril", "f": "Qual parte do acetábulo é articular?", "b": "A face semilunar (periférica).", "n": 7},
+  {"cat": "Quadril", "f": "O que fecha a incisura acetabular?", "b": "O lig. transverso do acetábulo (continuação do lábio).", "n": 8},
+  {"cat": "Quadril", "f": "Ligamentos que reforçam a cápsula do quadril?", "b": "Iliofemoral (de Bertin), pubofemoral e isquiofemoral.", "n": 9},
+  {"cat": "Quadril", "f": "Lig. intra-articular do quadril?", "b": "Lig. da cabeça do fêmur (redondo).", "n": 10},
+  {"cat": "Joelho", "f": "Quantos ossos e articulações no joelho?", "b": "3 ossos (fêmur, tíbia, patela); 2 articulações.", "n": 11},
+  {"cat": "Joelho", "f": "Tipo da femorotibial?", "b": "Condilar (elipsóidea, bicondílea dupla).", "n": 12},
+  {"cat": "Joelho", "f": "Tipo da femoropatelar?", "b": "Troclear (gínglimo).", "n": 13},
+  {"cat": "Joelho", "f": "Forma dos meniscos?", "b": "Medial em C; lateral em O.", "n": 14},
+  {"cat": "Joelho", "f": "O que une os meniscos adiante?", "b": "Lig. transverso do joelho [yugal].", "n": 15},
+  {"cat": "Joelho", "f": "Inserção superior do LCA?", "b": "Côndilo lateral do fêmur (LAMP).", "n": 16},
+  {"cat": "Joelho", "f": "Inserção inferior do LCP?", "b": "Área intercondílea posterior da tíbia.", "n": 17},
+  {"cat": "Joelho", "f": "Ligamentos posteriores do joelho?", "b": "Poplíteo oblíquo (de Winslow) e poplíteo arqueado.", "n": 18},
+  {"cat": "Joelho", "f": "Colaterais do joelho?", "b": "Tibial (medial) e fibular/peroneo (lateral).", "n": 19},
+  {"cat": "Perna", "f": "Tipo da tibiofibular proximal?", "b": "Artrodia (plana).", "n": 20},
+  {"cat": "Perna", "f": "O que atravessa a membrana interóssea?", "b": "A. tibial anterior (em cima) e perfurantes da a. fibular (embaixo).", "n": 21},
+  {"cat": "Tornozelo", "f": "Tipo da talocrural e movimentos?", "b": "Troclear; flexão dorsal e plantar.", "n": 22},
+  {"cat": "Tornozelo", "f": "Fascículos do lig. colateral lateral?", "b": "Talofibular anterior, calcaneofibular e talofibular posterior.", "n": 23},
+  {"cat": "Tornozelo", "f": "Nome do lig. colateral medial?", "b": "Deltóideo.", "n": 24},
+  {"cat": "Pé", "f": "O que forma o seio do tarso?", "b": "Sulco do tálus + sulco do calcâneo.", "n": 25},
+  {"cat": "Pé", "f": "Tipo da subtalar?", "b": "Trocóide (pivô).", "n": 26},
+  {"cat": "Pé", "f": "Chopart une quais articulações?", "b": "Talocalcaneonavicular (esferóidea) e calcaneocuboidea (selar).", "n": 27},
+  {"cat": "Pé", "f": "Lisfranc: com quem se articula o II metatarsiano?", "b": "Com os 3 cuneiformes.", "n": 28},
+  {"cat": "Pé", "f": "Tipo das metatarsofalângicas e interfalângicas?", "b": "Elipsóidea e troclear, respectivamente.", "n": 29}
+];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'anato1p_p2_mi_artrologia';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...bank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+const cases = [{"nivel": "NÍVEL 1 — FUNDAMENTAL", "hist": "Homem de 24 anos, após pisar em falso, relata dor lateral no tornozelo com edema.", "dados": "Edema anterior ao maléolo lateral; dor à inversão do pé.", "perguntas": [{"q": "Que articulação é essa e qual seu tipo?", "a": "Talocrural (tornozelo): diartrose troclear (gínglimo); movimentos de flexão dorsal e plantar."}, {"q": "Qual ligamento lateral provavelmente foi lesado e quais são os 3 do complexo lateral?", "a": "O talofibular anterior (astragaloperoneo anterior) é o mais atingido na inversão (complemento); o complexo é: talofibular anterior, calcaneofibular e talofibular posterior."}]}, {"nivel": "NÍVEL 2 — INTERMEDIÁRIO", "hist": "Dois meses depois, em um chute, sente 'estalo' no joelho e inchaço. A tíbia desliza anteriormente no teste da gaveta.", "dados": "Gaveta anterior positiva; sem dor medial.", "perguntas": [{"q": "Qual ligamento está lesado e onde se insere?", "a": "Ligamento cruzado anterior: área intercondílea anterior da tíbia e côndilo lateral do fêmur (LAMP)."}, {"q": "Que estruturas em C e O poderiam acompanhar a lesão?", "a": "Os meniscos: medial em C, lateral em O; unidos adiante pelo lig. transverso do joelho."}]}, {"nivel": "NÍVEL 3 — APLICAÇÃO INTEGRADA", "hist": "Um colega cai de lado e a radiografia mostra fratura da diáfise da tíbia e ruptura da sindesmose distal, com suspeita de lesão na membrana interóssea. Outro paciente tem dor no quadril com impacto e suspeita de lesão do lábio.", "dados": "Dor à rotação do quadril; sinal de impacto.", "perguntas": [{"q": "Que estruturas ligam tíbia e fíbula e o que atravessa a membrana?", "a": "Tibiofibular proximal (artrodia), membrana interóssea e sindesmose distal (sinartroses). Atravessam: a. tibial anterior (em cima) e ramos perfurantes da a. fibular (embaixo)."}, {"q": "Que parte do quadril é o lábio e qual sua função?", "a": "Lábio acetabular (rodete cotiloideo) na borda do acetábulo; aprofunda a cavidade e, sobre a incisura, forma o lig. transverso do acetábulo."}]}];
+
+const casesArea = document.getElementById('casesArea');
+cases.forEach((c, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'case-level';
+  let qHtml = '';
+  c.perguntas.forEach((p, pi)=>{
+    qHtml += `<div class="case-q">
+      <b>${pi+1})</b> ${p.q}
+      <br><button class="case-answer-btn" data-ci="${ci}" data-pi="${pi}">Ver resposta comentada</button>
+      <div class="case-answer" id="case-answer-${ci}-${pi}">${p.a}</div>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="case-level-head" data-ci="${ci}">
+      <span>${c.nivel}</span><span>▼</span>
+    </div>
+    <div class="case-level-body" id="case-body-${ci}">
+      <div class="case-hist"><b>História:</b> ${c.hist}</div>
+      <div class="case-hist"><b>Dados:</b> ${c.dados}</div>
+      ${qHtml}
+    </div>`;
+  casesArea.appendChild(div);
+});
+
+casesArea.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('case-level-head') || e.target.closest('.case-level-head')){
+    const head = e.target.closest('.case-level-head');
+    const ci = head.dataset.ci;
+    document.getElementById('case-body-'+ci).classList.toggle('show');
+  }
+  if(e.target.classList.contains('case-answer-btn')){
+    const ci = e.target.dataset.ci, pi = e.target.dataset.pi;
+    document.getElementById(`case-answer-${ci}-${pi}`).classList.toggle('show');
+  }
+});
+document.getElementById('case-body-0').classList.add('show');
+</script>
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Anatomía I — Prática',
+    titulo: 'M. Inferior — Artrologia',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P2',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Anatomía I — Prática', titulo: 'M. Inferior — Artrologia', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-01/anatomia1-pratica/osteologia/Ossos_do_Pe.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">M. Inferior — Ossos do Pé</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-01/anatomia1-pratica/miologia/Musculos_Cintura_Pelvica.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">M. Inferior — Músculos da Cintura Pélvica</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
