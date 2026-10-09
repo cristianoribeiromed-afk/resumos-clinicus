@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Simulado P2 — Medicina Comunitária | ClinicusMed</title>
+<meta property="og:title" content="Simulado P2 — Medicina Comunitária | ClinicusMed">
+<meta property="og:description" content="25 questões (15 múltipla escolha + 5 V/F + 5 associação) cobrindo as 4 unidades da P2 de Medicina Comunitária: Família, Saúde da Mulher, Saúde Infantil e Saúde do Adolescente.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180.png">
+<style>
+:root{
+  --bg:#0d1b2a; --bg-alt:#0f2235; --card:#16283d; --card-hover:#1c3349;
+  --border:#254669;
+  --text:#e6f0fa; --text-dim:#9fbdd9;
+  --accent:#3b9eff; --accent2:#93c5fd; --gold:#e8b84b;
+  --red:#e0505f; --green:#4fd1a1;
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:radial-gradient(circle at 20% 0%,#2a1424 0%,var(--bg) 55%);
+  color:var(--text);
+  font-family:'Segoe UI',Roboto,Arial,sans-serif;
+  line-height:1.55;
+  padding-bottom:60px;
+}
+h1,h2,h3,h4{margin:0 0 .4em 0;}
+a{color:var(--accent2);}
+
+header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(26,14,24,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+}
+.header-inner{max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+.logo{display:flex; align-items:center; gap:10px;}
+.dna-icon{width:34px; height:34px; flex-shrink:0;}
+.logo-text h1{font-size:1.1rem; margin:0; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.logo-text span{font-size:.72rem; color:var(--text-dim); letter-spacing:.04em;}
+.xp-panel{display:flex; align-items:center; gap:14px;}
+.xp-badge{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-weight:700; font-size:.85rem; display:flex; align-items:center; gap:6px;
+}
+.xp-badge .flame{color:var(--gold);}
+.level-badge{background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:999px; padding:6px 14px; font-weight:800; font-size:.8rem; color:#0d1b2a;}
+
+main{max-width:900px; margin:24px auto; padding:0 20px;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);
+}
+.card h2{font-size:1.4rem; color:var(--text);}
+.eyebrow{
+  display:inline-block; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent2); background:rgba(201,69,122,.1); border:1px solid rgba(201,69,122,.3);
+  padding:3px 10px; border-radius:999px; margin-bottom:10px;
+}
+p{color:#d9c0cf;}
+.hero{
+  background:linear-gradient(135deg, rgba(201,69,122,.15), rgba(232,184,75,.08));
+  border:1px solid var(--border); border-radius:20px; padding:32px; margin-bottom:22px;
+}
+.hero h2{font-size:1.7rem; margin-bottom:.3em;}
+ul{margin:8px 0 8px 20px; color:#d9c0cf;}
+li{margin-bottom:6px;}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#0d1b2a; border:none; padding:12px 26px;
+  border-radius:10px; font-weight:800; cursor:pointer; font-size:.92rem;
+}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+
+.quiz-progress{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:.85rem; color:var(--text-dim);}
+.quiz-progress .bar-wrap{width:100%; height:6px; background:var(--bg-alt); border-radius:4px; margin-top:8px; overflow:hidden; border:1px solid var(--border);}
+.quiz-progress .bar-fill{height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .3s;}
+.tag-row{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.tag{display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:3px 10px; border-radius:999px;}
+.tag.topic{background:rgba(201,69,122,.12); color:var(--accent2); border:1px solid rgba(201,69,122,.3);}
+.tag.type{background:rgba(232,184,75,.12); color:var(--gold); border:1px solid rgba(232,184,75,.3);}
+.quiz-q{font-size:1.08rem; font-weight:700; margin-bottom:16px;}
+
+.option{
+  display:block; width:100%; text-align:left; background:var(--bg-alt); border:1px solid var(--border);
+  color:var(--text); padding:12px 16px; border-radius:10px; margin-bottom:10px; cursor:pointer; font-size:.92rem;
+  transition:.15s;
+}
+.option:hover{background:var(--card-hover); border-color:var(--accent2);}
+.option.correct{background:rgba(79,209,161,.18); border-color:var(--green);}
+.option.incorrect{background:rgba(224,80,95,.18); border-color:var(--red);}
+.option.disabled{pointer-events:none; opacity:.85;}
+.vf-row{display:flex; gap:10px;}
+.vf-row .option{flex:1; text-align:center;}
+
+.match-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin-bottom:10px; flex-wrap:wrap;
+}
+.match-term{font-weight:700; color:var(--accent2); min-width:200px; font-size:.9rem;}
+.match-row select{
+  flex:1; min-width:220px; background:#0d1b2a; border:1px solid var(--border); color:var(--text);
+  padding:9px 10px; border-radius:8px; font-family:inherit; font-size:.85rem;
+}
+.match-row.correct{border-color:var(--green);}
+.match-row.wrong{border-color:var(--red);}
+
+.feedback{margin-top:10px; padding:12px 16px; border-radius:10px; font-size:.88rem;}
+.feedback.correct{background:rgba(79,209,161,.12); border:1px solid var(--green); color:var(--green);}
+.feedback.incorrect{background:rgba(224,80,95,.12); border:1px solid var(--red); color:var(--red);}
+.feedback-exp{margin-top:8px; padding:12px 16px; border-radius:10px; font-size:.85rem; background:var(--bg-alt); border:1px solid var(--border); color:var(--text-dim);}
+.quiz-nav{display:flex; justify-content:flex-end; margin-top:16px; gap:10px;}
+
+.result-box{text-align:center; padding:20px;}
+.result-box .score{font-size:3rem; font-weight:800; background:linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.breakdown{display:flex; gap:10px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
+.breakdown .bd-item{background:var(--bg-alt); border:1px solid var(--border); border-radius:10px; padding:10px 16px; text-align:center; min-width:100px;}
+.breakdown .bd-item .n{font-size:1.3rem; color:var(--gold);}
+.breakdown .bd-item .l{font-size:.68rem; color:var(--text-dim); text-transform:uppercase;}
+.summary-table{width:100%; border-collapse:collapse; margin-top:18px; font-size:.82rem;}
+.summary-table th,.summary-table td{border:1px solid var(--border); padding:7px 9px; text-align:left;}
+.summary-table th{background:var(--bg-alt); color:var(--accent2);}
+.summary-table td.ok{color:var(--green); font-weight:700;}
+.summary-table td.bad{color:var(--red); font-weight:700;}
+footer{text-align:center; color:var(--text-dim); font-size:.75rem; padding:30px 0 10px;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Medicina Comunitaria</a><span class="sep">›</span>
+  <span>P2</span><span class="sep">›</span>
+  <span class="current">Simulado</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Medicina Comunitaria</span><span>12 de 12</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:100%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Medicina Comunitaria</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_01_Conceito_Saude_Modelos.html"><span class="ico">🏥</span><span>Capítulo 1 — Conceito de Saúde e Modelos</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_02_Sistema_Saude.html"><span class="ico">🏥</span><span>Capítulo 2 — Sistema de Saúde</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_03_Comunidade_Saude.html"><span class="ico">🏥</span><span>Capítulo 3 — Comunidade e Saúde Comunitária</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_04_Equipe_Saude.html"><span class="ico">🏥</span><span>Capítulo 4 — Equipe de Saúde</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_05_Declaracoes_Internacionais.html"><span class="ico">🏥</span><span>Capítulo 5 — Declarações Internacionais</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_06_Planificacao_Comunitaria.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 6 — Planejamento Comunitário</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/simulado_comunitaria_p1.html"><span class="ico">🎯</span><span>Simulado P1 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span></a>
+    <h4>P2</h4>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_07_Familia.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 7 — Família</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_08_Saude_Mulher.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 8 — Saúde da Mulher</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_09_Saude_Infantil.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 9 — Saúde Infantil</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_10_Saude_Adolescente.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 10 — Saúde do Adolescente</span></a>
+    <a class="cmed-nav-item is-current" href="/semestre-02/medicina-comunitaria/simulado_comunitaria_p2.html" data-novo="1"><span class="ico">🎯</span><span>Simulado P2 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <svg class="dna-icon" viewBox="0 0 40 40"><path d="M20 6c-6 8-11 14-11 20a11 11 0 0 0 22 0c0-6-5-12-11-20z" fill="none" stroke="#3b9eff" stroke-width="2.2"/></svg>
+      <div class="logo-text">
+        <h1>Simulado P2 — Medicina Comunitária</h1>
+        <span>Família, Saúde da Mulher, Saúde Infantil, Saúde do Adolescente</span>
+      </div>
+    </div>
+    <div class="xp-panel">
+      <div class="xp-badge"><span class="flame">⚡</span> <span id="xpCount">0</span> XP</div>
+      <div class="level-badge" id="levelBadge">Nível 1</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div id="introScreen">
+  <div class="hero">
+    <span class="eyebrow">Formato do simulado</span>
+    <h2>25 questões — todo o temário da P2</h2>
+    <p>15 de múltipla escolha, 5 de Verdadeiro/Falso e 5 de associar colunas — cobrindo as 4 unidades da P2 de Medicina Comunitária. Cada alternativa vem com explicação ao responder.</p>
+  </div>
+  <div class="card">
+    <h2>Unidades cobertas</h2>
+    <ul>
+      <li>Unidade VI: Família (6 questões)</li>
+      <li>Unidade VII: Saúde da Mulher (8 questões)</li>
+      <li>Unidade VIII: Saúde Infantil (5 questões)</li>
+      <li>Unidade IX: Saúde do Adolescente (6 questões)</li>
+    </ul>
+    <button class="btn-primary" onclick="startQuiz()">Começar simulado →</button>
+  </div>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="card" id="quizCard">
+    <div id="quizArea"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>ClinicusMed · Simulado P2 — Medicina Comunitária · 25 questões</footer>
+
+<script>
+const quizData = [{"type": "mcq", "topic": "U6 · Classificação por parentesco", "q": "Pai, mãe e cinco filhos moram juntos e ninguém mais vive na casa. Pela classificação por parentesco da Unidade VI, essa família é:", "opts": ["Nuclear simples", "Nuclear numerosa", "Extensa", "Reconstruída (binuclear)"], "correct": 1, "exp": "<b>A) Errada:</b> Nuclear simples é pai e mãe com 1 a 3 filhos; aqui são cinco.<br><b>B) Certa:</b> Pai e mãe com 4 filhos ou mais, sem outras pessoas na casa, é nuclear numerosa.<br><b>C) Errada:</b> Extensa exige pai e mãe com filhos mais outras pessoas com parentesco morando junto, o que não ocorre no caso.<br><b>D) Errada:</b> Reconstruída exige que um ou ambos sejam divorciados ou viúvos e tenham filhos de união anterior; o enunciado não diz isso."}, {"type": "mcq", "topic": "U6 · Escala de Holmes e Rahe", "q": "Uma paciente marcou na escala de Holmes e Rahe os acontecimentos vitais dos últimos 12 meses e somou 320 pontos. A interpretação adequada é:", "opts": ["Risco pequeno de adoecer por estresse, pois a soma está abaixo de 150", "Risco moderado, correspondente à faixa de 150 a 299 pontos", "Sem relevância clínica, pois a escala só pontua eventos negativos", "Risco importante de adoecer por estresse, pois a soma chega a 300 pontos ou mais"], "correct": 3, "exp": "<b>A) Errada:</b> O risco pequeno corresponde a menos de 150 pontos; 320 está bem acima disso.<br><b>B) Errada:</b> A faixa de 150 a 299 é o risco moderado; 320 já passou do corte de 300.<br><b>C) Errada:</b> A escala pontua também eventos positivos (casamento vale 50 e aposentadoria 45), pois toda mudança exige readaptação.<br><b>D) Certa:</b> Com 300 pontos ou mais o risco de adoecer por estresse é importante, e é onde 320 se encaixa."}, {"type": "mcq", "topic": "U6 · Crises paranormativas", "q": "Os pais de uma família nuclear recebem, de forma inesperada, o irmão desempregado do pai, com esposa e dois filhos, que passam a morar na casa. Entre as crises paranormativas, trata-se de:", "opts": ["Incremento", "Desmembramento", "Desorganização", "Crise normativa (evolutiva)"], "correct": 0, "exp": "<b>A) Certa:</b> Incremento é a adição inesperada de membros à família (“alguém entra”), exatamente o que acontece no caso.<br><b>B) Errada:</b> Desmembramento é a separação de um membro, como no divórcio ou na hospitalização; aqui ninguém sai.<br><b>C) Errada:</b> Desorganização é um fato que obstaculiza a dinâmica familiar, como infertilidade ou doença psiquiátrica; a característica central do caso é a entrada de pessoas.<br><b>D) Errada:</b> Crises normativas são esperadas e fazem parte do desenvolvimento da família; a chegada descrita é inesperada."}, {"type": "mcq", "topic": "U7 · Papanicolau", "q": "Uma mulher de 23 anos agendou o Papanicolau. Qual orientação de preparo está de acordo com a Unidade VII?", "opts": ["Fazer ducha vaginal na véspera para deixar o colo do útero limpo", "Usar tampão na noite anterior para evitar manchar a roupa", "Nas 24 horas anteriores, evitar duchas vaginais, relações sexuais e tampões, e urinar logo antes do exame", "Chegar em jejum de 8 horas e tomar um laxante na véspera"], "correct": 2, "exp": "<b>A) Errada:</b> Duchas podem lavar as células do colo e prejudicar a leitura da lâmina; devem ser evitadas nas 24 horas anteriores.<br><b>B) Errada:</b> Tampões também devem ser evitados nas 24 horas anteriores ao exame.<br><b>C) Certa:</b> É o preparo descrito: sem duchas, relações ou tampões por 24 horas e urinar justo antes do exame.<br><b>D) Errada:</b> Jejum e laxante não fazem parte do preparo do Papanicolau, que é uma raspagem de células do colo do útero."}, {"type": "mcq", "topic": "U7 · Preservativo masculino", "q": "Durante uma relação sexual, o preservativo masculino se rompe. Qual conduta a Unidade VII indica?", "opts": ["Aplicar espermicida (espuma ou gel) imediatamente e avaliar anticoncepção de emergência", "Não fazer nada, pois o risco de gravidez só existe se houver ejaculação completa dentro da vagina", "Aguardar a próxima menstruação e só então procurar o serviço de saúde", "Fazer uma ducha vaginal logo após o ato"], "correct": 0, "exp": "<b>A) Certa:</b> É a conduta ensinada: espermicida imediatamente e avaliação de anticoncepção de emergência, que funciona melhor quanto mais cedo é usada.<br><b>B) Errada:</b> Há risco de gravidez e de ITS mesmo sem ejaculação completa; a ruptura exige conduta imediata.<br><b>C) Errada:</b> Esperar a menstruação perde a janela da anticoncepção de emergência, que é mais eficaz quanto mais cedo é tomada.<br><b>D) Errada:</b> A ducha vaginal não é conduta indicada e não evita a gravidez nem as ITS."}, {"type": "mcq", "topic": "U7 · Calostro", "q": "Segundo a Unidade VII, qual afirmação sobre o calostro está correta?", "opts": ["É uma secreção anormal que deve ser descartada antes das primeiras mamadas", "Tem mais açúcares e ácidos graxos do que o leite maduro e menos proteínas", "Só aparece depois de duas semanas de lactância, junto com o leite maduro", "É a primeira secreção da mama, rica em imunoglobulinas (sobretudo IgA), e age como laxante natural que ajuda a eliminar o mecônio"], "correct": 3, "exp": "<b>A) Errada:</b> O calostro é a primeira secreção da glândula mamária e deve ser oferecido ao bebê; descartá-lo tira a proteção em imunoglobulinas.<br><b>B) Errada:</b> A relação é inversa: comparado ao leite, o calostro tem mais minerais e proteínas e menos açúcares e ácidos graxos.<br><b>C) Errada:</b> O calostro é o primeiro leite, presente logo nos primeiros dias, e não surge duas semanas depois.<br><b>D) Certa:</b> Descreve exatamente o calostro: primeira secreção, rica em nutrientes e IgA, que protege o recém-nascido e facilita a saída do mecônio."}, {"type": "mcq", "topic": "U7 · Técnica de amamentação", "q": "Ao observar uma mamada, quais sinais indicam uma boa pega, segundo a Unidade VII?", "opts": ["Lábios voltados para dentro e bochechas afundadas quando o bebê suga", "Queixo tocando o peito, boca bem aberta abarcando grande parte da aréola, lábios para fora e bochechas redondas", "Boca pouco aberta, com apenas o mamilo dentro dela", "Queixo afastado do peito e lábios fechados sobre o mamilo"], "correct": 1, "exp": "<b>A) Errada:</b> Lábios para dentro e bochechas afundadas indicam pega inadequada; o esperado é lábios evertidos e bochechas redondas.<br><b>B) Certa:</b> São os quatro sinais de boa pega: queixo no peito, boca bem aberta com grande parte da aréola, lábios evertidos e bochechas redondas.<br><b>C) Errada:</b> A boca deve abarcar grande parte da aréola, não só o mamilo; pega só no mamilo costuma causar dor e fissura.<br><b>D) Errada:</b> O queixo do bebê deve tocar o peito e a boca deve estar bem aberta, não fechada sobre o mamilo."}, {"type": "mcq", "topic": "U7 · Hábitos tóxicos na gestação", "q": "Qual conjunto descreve corretamente as consequências do tabagismo na gestação apontadas na Unidade VII?", "opts": ["Síndrome de alcoolismo fetal, com anomalias faciais típicas", "Aumento do peso ao nascer e gestação prolongada", "Maior risco de baixo peso ao nascer, prematuridade e defeitos congênitos, e depois do nascimento, de asma e de síndrome de morte súbita do lactente", "Apenas síndrome de abstinência neonatal, com tremores e choro agudo"], "correct": 2, "exp": "<b>A) Errada:</b> A síndrome de alcoolismo fetal é consequência do álcool, não do tabaco.<br><b>B) Errada:</b> O tabaco reduz o peso ao nascer (o monóxido de carbono diminui o oxigênio que chega ao bebê) e se associa à prematuridade, não ao aumento do peso.<br><b>C) Certa:</b> É o quadro do tabaco: nicotina e monóxido de carbono levam a baixo peso, prematuridade e defeitos congênitos, com asma e morte súbita do lactente depois.<br><b>D) Errada:</b> A síndrome de abstinência neonatal é descrita para o bebê exposto a drogas no útero, não como o quadro do tabaco."}, {"type": "mcq", "topic": "U8 · Cuidados com a roupa do recém-nascido", "q": "A mãe de um recém-nascido de 15 dias acha que ele está com frio porque as mãos e os pés estão gelados e quer colocar mais uma manta. Qual orientação está de acordo com a Unidade VIII?", "opts": ["Avaliar a temperatura pelo corpo do bebê, e não pelas mãos e pés, que são as partes mais frias, evitando agasalhar demais", "Guiar-se sempre pelas mãos e pelos pés e acrescentar mantas até que fiquem quentes", "Preferir roupa justa, fechada na frente e com muitos botões, para manter o calor", "Lavar a roupa do bebê junto com a dos adultos e usar amaciante para deixá-la macia"], "correct": 0, "exp": "<b>A) Certa:</b> É a orientação do capítulo: mãos e pés são as partes mais frias da anatomia, e o excesso de agasalho deve ser evitado (inclusive por ser fator de risco para a morte súbita).<br><b>B) Errada:</b> Mãos e pés frios não indicam que o bebê está com frio; agasalhar demais é um dos fatores de risco da síndrome de morte súbita.<br><b>C) Errada:</b> A roupa deve ser de fácil colocação, com fecho por trás, poucos botões e folgada, para não impedir os movimentos.<br><b>D) Errada:</b> A roupa do bebê deve ser lavada separada da dos adultos, bem enxaguada e, se possível, sem amaciante, que provoca reações alérgicas."}, {"type": "mcq", "topic": "U8 · Higiene dos genitais", "q": "Para higienizar os genitais de uma recém-nascida, a Unidade VIII orienta:", "opts": ["Limpar de baixo para cima, da região anal para a vulva, e aplicar talco para absorver a umidade", "Usar esponja de uso exclusivo, limpar de cima para baixo separando os lábios, secar bem as pregas e não usar talco", "Usar a mesma esponja do corpo e deixar as pregas úmidas para evitar assaduras", "Evitar lavar a região e usar apenas pomada protetora"], "correct": 1, "exp": "<b>A) Errada:</b> O sentido correto é de cima para baixo, e o talco não é recomendado.<br><b>B) Certa:</b> Resume a orientação: esponja exclusiva, de cima para baixo, lábios separados, pregas bem secas e sem talco.<br><b>C) Errada:</b> A esponja deve ser de uso exclusivo para a região, e as pregas devem ser secadas com atenção, não deixadas úmidas.<br><b>D) Errada:</b> A região deve ser lavada e a área da fralda mantida limpa; a pomada protetora pode ser usada depois da lavagem, não no lugar dela."}, {"type": "mcq", "topic": "U8 · Medidas gerais de prevenção", "q": "Sobre as medidas gerais para evitar o contágio de infecções na infância, a Unidade VIII afirma que:", "opts": ["O álcool em gel substitui a água e o sabão mesmo quando as mãos estão visivelmente sujas", "Ao tossir, o ideal é cobrir a boca com a mão e continuar a atividade", "Em doenças infectocontagiosas como a varicela, a escola só deve ser avisada se houver surto", "As mãos devem ser lavadas com água e sabão com frequência, e o álcool em gel serve quando as mãos estão visivelmente limpas"], "correct": 3, "exp": "<b>A) Errada:</b> Com as mãos visivelmente sujas, o correto é água e sabão; o álcool em gel só vale com as mãos visivelmente limpas.<br><b>B) Errada:</b> A etiqueta respiratória pede tapar boca e nariz com lenço de papel, descartá-lo e lavar as mãos depois.<br><b>C) Errada:</b> Em doenças infectocontagiosas (varicela, rubéola, meningite, entre outras) a escola deve ser avisada rapidamente, o que permite medidas preventivas pela instituição.<br><b>D) Certa:</b> É a redação do capítulo sobre higiene das mãos, incluindo a pegadinha do álcool em gel."}, {"type": "mcq", "topic": "U9 · Herpes genital", "q": "Sobre o herpes genital, segundo a Unidade IX, é correto afirmar que:", "opts": ["É causado por uma bactéria e se cura com um ciclo de antibiótico", "Só o HSV-1 produz lesões genitais, sempre sem dor", "Não tem cura, mas o tratamento iniciado na fase inicial do surto pode reduzir a duração dos sintomas", "Causa uma única úlcera indolor que desaparece sozinha e nunca volta"], "correct": 2, "exp": "<b>A) Errada:</b> O herpes genital é causado por vírus (herpes simples); antibiótico não cura e o vírus permanece no organismo.<br><b>B) Errada:</b> O HSV-2 geralmente produz as feridas genitais e o HSV-1 as dos lábios; as lesões do herpes são bolhas pequenas e muito dolorosas.<br><b>C) Certa:</b> É o que o capítulo diz: não existe cura, e iniciar o tratamento cedo no surto pode encurtar os sintomas.<br><b>D) Errada:</b> Úlcera única e indolor lembra o cancro da sífilis primária; no herpes são bolhas dolorosas que se rompem, formam crostas e podem recorrer."}, {"type": "mcq", "topic": "U9 · Depressão", "q": "Quais são os sintomas fundamentais (núcleo) da depressão apresentados na Unidade IX?", "opts": ["Humor baixo, tristeza ou desesperança, ou perda de interesse e prazer nas atividades, na maior parte dos dias das últimas semanas", "Problemas de sono e mudança do apetite, que bastam sozinhos para o diagnóstico", "Irritabilidade e vontade de chorar sem motivo, obrigatoriamente juntas", "Desejos de morte ou ideias suicidas, sem os quais não há depressão"], "correct": 0, "exp": "<b>A) Certa:</b> São os dois sintomas fundamentais do slide: humor baixo/tristeza/desesperança ou perda de interesse e prazer, por semanas.<br><b>B) Errada:</b> Sono e apetite entram na lista do que pode haver além do núcleo, não bastam sozinhos.<br><b>C) Errada:</b> Irritabilidade e choro sem motivo são sintomas acessórios; não são o núcleo nem precisam aparecer juntos.<br><b>D) Errada:</b> Desejos de morte e ideias suicidas podem existir, mas são acessórios; sua ausência não exclui depressão."}, {"type": "mcq", "topic": "U9 · Anorexia: causas", "q": "Um adolescente de 15 anos tem um familiar com transtorno mental, vive num ambiente com grande pressão para o perfeccionismo e segue contas de redes sociais que exibem a magreza extrema como modelo. Que fatores causais de anorexia, segundo a Unidade IX, estão presentes?", "opts": ["Somente fatores individuais, pois a causa é sempre uma alteração mental", "Somente fatores familiares", "Somente fatores culturais, pois a família não influencia", "Fatores familiares e fatores culturais"], "correct": 3, "exp": "<b>A) Errada:</b> Os dados do caso descrevem fatores do ambiente familiar e da mídia, não apenas individuais; o próprio capítulo lembra que a origem é multifatorial.<br><b>B) Errada:</b> Os fatores familiares estão presentes (familiar com transtorno mental e pressão por perfeccionismo), mas o caso também traz a influência das redes sociais.<br><b>C) Errada:</b> A influência cultural está presente (redes sociais com modelos de magreza extrema), mas a família também contribui, sobretudo na juventude.<br><b>D) Certa:</b> Familiares (transtorno mental na família, pressão por perfeccionismo) e culturais (meios de comunicação e redes sociais com magreza extrema) estão ambos descritos."}, {"type": "mcq", "topic": "U9 · Hábitos tóxicos", "q": "Segundo a Unidade IX, por que o consumo precoce de álcool, tabaco/vaping e outras substâncias é especialmente preocupante na adolescência?", "opts": ["Porque o efeito só aparece na vida adulta e não interfere na maturação cerebral", "Porque afeta o desenvolvimento do córtex pré-frontal e a tomada de decisões, que ainda estão amadurecendo", "Porque o hipotálamo ainda não produz hormônios e a substância os substitui", "Porque só o álcool importa; tabaco e vaping não aparecem entre os riscos"], "correct": 1, "exp": "<b>A) Errada:</b> O capítulo diz o oposto: a substância interfere na maturação cerebral durante a adolescência.<br><b>B) Certa:</b> É a mensagem central do slide: o consumo precoce afeta o córtex pré-frontal e a tomada de decisões.<br><b>C) Errada:</b> A puberdade ativa o eixo hormonal; a substância não substitui hormônios, e essa não é a mensagem do slide.<br><b>D) Errada:</b> O gráfico traz quatro categorias de risco: álcool, tabaco/vaping, substâncias ilícitas e outros."}, {"type": "vf", "topic": "U6 · Paciente identificado", "q": "O paciente identificado é o membro da família a quem os outros atribuem o papel de culpado pelos problemas, e por isso recebe esse nome.", "correct": false, "exp": "Falso. A expressão existe justamente para não reduzir a pessoa ao rótulo de “o doente”, “o mau” ou “o culpado”. O paciente identificado é o “termômetro” da família: manifesta sintomas que expressam o conflito do sistema, geralmente um filho."}, {"type": "vf", "topic": "U7 · DIU", "q": "O DIU que libera hormônios pode ser inserido nos 10 minutos após a saída da placenta, assim como o DIU de cobre.", "correct": false, "exp": "Falso. A inserção em até 10 minutos após o alumbramento vale para o DIU de cobre; os DIU que liberam hormônios são exceção e não são inseridos logo após o parto."}, {"type": "vf", "topic": "U7 · Papanicolau", "q": "Segundo a cátedra, o Papanicolau pode ser interrompido entre os 65 e os 70 anos se a mulher teve 3 resultados negativos nos últimos 10 anos.", "correct": true, "exp": "Verdadeiro. Pela regra do slide, entre 65 e 70 anos pode-se parar se houve 3 resultados negativos nos últimos 10 anos. Nota do capítulo: os intervalos variam por país, mas a prova segue o slide."}, {"type": "vf", "topic": "U8 · Esquema de vacinação 2026", "q": "No Esquema Regular de Vacinação 2026 do Paraguai, a vacina contra rotavírus é aplicada aos 2 e aos 4 meses, sem dose depois dessa idade.", "correct": true, "exp": "Verdadeiro. O rotavírus consta apenas aos 2 e 4 meses no quadro do slide 22; depois dos 4 meses não há dose."}, {"type": "vf", "topic": "U9 · Prevenção do suicídio", "q": "Perguntar de forma direta a um adolescente se ele pensa em suicídio aumenta o risco de que ele cometa o ato.", "correct": false, "exp": "Falso. A Unidade IX afirma que perguntar sobre ideias suicidas não induz o ato: abre uma porta para a intervenção e o resgate da vida. O estigma é que continua sendo uma barreira."}, {"type": "match", "topic": "U6 · APGAR familiar", "prompt": "Associe cada componente do APGAR familiar à sua definição.", "pairs": [{"term": "Adaptação", "def": "Capacidade de usar recursos intra e extrafamiliares para resolver problemas em situações de estresse ou crise"}, {"term": "Participação", "def": "Envolvimento dos membros nas decisões e nas responsabilidades de manutenção da família"}, {"term": "Gradiente de recursos", "def": "Maturação física e emocional e autorrealização alcançadas graças ao apoio mútuo"}, {"term": "Afetividade", "def": "Relação de carinho e amor entre os membros da família"}, {"term": "Recursos (capacidade resolutiva)", "def": "Compromisso de dedicar tempo às necessidades físicas e emocionais dos outros, compartilhando renda e espaços"}]}, {"type": "match", "topic": "U6 · Ciclo vital e instrumentos", "prompt": "Associe cada modelo ou instrumento à sua característica.", "pairs": [{"term": "Modelo de Geyman", "def": "5 etapas, do Matrimônio ao Retiro e morte, guiadas pelo avanço do primeiro filho"}, {"term": "Modelo de Duvall", "def": "8 fases, com idades do primeiro filho de 30 meses, 6, 13 e 20 anos"}, {"term": "Modelo de Carter e McGoldrick", "def": "6 estágios, o primeiro é Entre famílias: desapego dos adultos jovens"}, {"term": "Modelo da OMS", "def": "6 etapas, de Formação (casamento) a Dissolução (morte dos cônjuges)"}, {"term": "FACES III", "def": "Autoaplicação de 20 perguntas que mede coesão e adaptabilidade familiar"}]}, {"type": "match", "topic": "U7 · Puerpério", "prompt": "Associe cada termo do puerpério à sua descrição.", "pairs": [{"term": "Puerpério imediato", "def": "Primeiras 24 horas depois do parto"}, {"term": "Puerpério mediato", "def": "Do 2º ao 10º dia depois do parto"}, {"term": "Loquios rubros", "def": "Primeiros 2 a 3 dias, quase só sangue, vermelho-escuros"}, {"term": "Loquios brancos", "def": "Fase final, branco-amarelados e de aspecto cremoso"}, {"term": "Entuertos", "def": "Contrações uterinas dolorosas que duram 4 ou 5 dias"}]}, {"type": "match", "topic": "U8 · Doenças prevalentes", "prompt": "Associe cada doença infantil ao seu quadro.", "pairs": [{"term": "Coqueluche", "def": "Bactéria Bordetella pertussis; longos acessos de tosse que pioram à noite"}, {"term": "Varicela", "def": "Vírus varicela-zóster; vesículas com coceira transmitidas pelo líquido das bolhas"}, {"term": "Gastroenterite", "def": "Inflamação de estômago e intestinos, com náuseas, falta de apetite e diarreia aquosa"}, {"term": "Amigdalite", "def": "Inflamação das amígdalas, com dor de garganta forte e dificuldade para engolir"}, {"term": "Bronquite", "def": "Inflamação dos brônquios, com tosse e expectoração"}]}, {"type": "match", "topic": "U9 · ITS", "prompt": "Associe cada infecção à sua característica.", "pairs": [{"term": "Gonorreia", "def": "Bactéria Neisseria gonorrhoeae; no homem, secreção uretral purulenta e dor ao urinar"}, {"term": "Sífilis", "def": "Bactéria Treponema pallidum; na 1ª etapa, ferida geralmente indolor"}, {"term": "Herpes genital", "def": "Vírus; bolhas pequenas e muito dolorosas, sem cura"}, {"term": "VPH", "def": "Vírus; verrugas ano-genitais, planas ou acuminadas"}, {"term": "VIH", "def": "Vírus que ataca e destrói as células CD4 do sistema imunitário"}]}];
+let qIndex = 0, score = 0, answered = false, log = [];
+let topicStats = {};
+let xp = 0;
+
+function addXP(n){ xp += n; document.getElementById('xpCount').textContent = xp; document.getElementById('levelBadge').textContent = 'Nível ' + (Math.floor(xp/100)+1); }
+
+function startQuiz(){
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  qIndex = 0; score = 0; log = []; topicStats = {};
+  renderQuiz();
+}
+
+function typeLabel(t){ return t==='mcq' ? 'Múltipla escolha' : t==='vf' ? 'Verdadeiro / Falso' : 'Associar colunas'; }
+
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(qIndex >= quizData.length){ renderResult(); return; }
+  const item = quizData[qIndex];
+  answered = false;
+  const pct = Math.round((qIndex/quizData.length)*100);
+  let html = '<div class="quiz-progress"><span>Questão ' + (qIndex+1) + ' / ' + quizData.length + '</span><span>Pontuação: ' + score + '</span></div>';
+  html += '<div class="quiz-progress bar-wrap"><div class="bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div class="tag-row"><span class="tag topic">' + item.topic + '</span><span class="tag type">' + typeLabel(item.type) + '</span></div>';
+  html += '<div class="quiz-q">' + (item.q || item.prompt) + '</div>';
+
+  if(item.type === 'mcq'){
+    item.opts.forEach((opt,i)=>{
+      html += '<button class="option" data-idx="'+i+'" onclick="answerMCQ(this,'+i+')">' + opt + '</button>';
+    });
+  } else if(item.type === 'vf'){
+    html += '<div class="vf-row">'
+      + '<button class="option" data-val="true" onclick="answerVF(this,true)">Verdadeiro</button>'
+      + '<button class="option" data-val="false" onclick="answerVF(this,false)">Falso</button>'
+      + '</div>';
+  } else if(item.type === 'match'){
+    const defs = item.pairs.map(p=>p.def);
+    html += '<div id="matchBlock">';
+    item.pairs.forEach((p,i)=>{
+      const shuffled = shuffleArray([...defs]);
+      html += '<div class="match-row" data-idx="'+i+'">'
+        + '<span class="match-term">' + p.term + '</span>'
+        + '<select onchange="matchSelected()"><option value="">— Selecione —</option>'
+        + shuffled.map(d=>'<option value="'+escapeHtml(d)+'">'+d+'</option>').join('')
+        + '</select></div>';
+    });
+    html += '</div>';
+    html += '<button class="btn-primary" id="checkMatchBtn" onclick="checkMatch()" disabled>Verificar</button>';
+  }
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<div class="quiz-nav"><button class="btn-primary" id="nextBtn" disabled onclick="nextQuestion()">Próxima →</button></div>';
+  area.innerHTML = html;
+}
+
+function escapeHtml(s){ return s.replace(/"/g,'&quot;'); }
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function registerTopic(topic, correct){
+  if(!topicStats[topic]) topicStats[topic] = {total:0, correct:0};
+  topicStats[topic].total++;
+  if(correct) topicStats[topic].correct++;
+}
+
+function answerMCQ(btn, idx){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = idx === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts[item.correct].classList.add('correct');
+  finishAnswer(correct, item.topic, item.q, item.exp);
+}
+
+function answerVF(btn, val){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const correct = val === item.correct;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  opts.forEach(o=>{
+    const v = o.dataset.val === 'true';
+    if(v === item.correct) o.classList.add('correct');
+  });
+  finishAnswer(correct, item.topic, item.q, item.exp);
+}
+
+function matchSelected(){
+  const selects = document.querySelectorAll('#matchBlock select');
+  document.getElementById('checkMatchBtn').disabled = ![...selects].every(s=>s.value !== '');
+}
+
+function checkMatch(){
+  if(answered) return;
+  answered = true;
+  const item = quizData[qIndex];
+  const rows = document.querySelectorAll('.match-row');
+  let correctCount = 0;
+  rows.forEach((row,i)=>{
+    const select = row.querySelector('select');
+    select.disabled = true;
+    const isCorrect = select.value === item.pairs[i].def;
+    row.classList.add(isCorrect ? 'correct' : 'wrong');
+    if(isCorrect) correctCount++;
+  });
+  document.getElementById('checkMatchBtn').disabled = true;
+  const allCorrect = correctCount === item.pairs.length;
+  const fb = document.getElementById('feedbackArea');
+  fb.innerHTML = '<div class="feedback ' + (allCorrect?'correct':'incorrect') + '">' + correctCount + ' / ' + item.pairs.length + ' pares corretos.</div>';
+  if(allCorrect){ score++; addXP(20); } else { addXP(5); }
+  registerTopic(item.topic, allCorrect);
+  log.push({q: item.prompt, correct: allCorrect});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function finishAnswer(correct, topic, q, exp){
+  const fb = document.getElementById('feedbackArea');
+  let html = '<div class="feedback ' + (correct?'correct':'incorrect') + '">' + (correct ? '✓ Correto!' : '✗ Incorreto') + '</div>';
+  if(exp) html += '<div class="feedback-exp">' + exp + '</div>';
+  fb.innerHTML = html;
+  if(correct){ score++; addXP(15); } else { addXP(3); }
+  registerTopic(topic, correct);
+  log.push({q: q, correct: correct});
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){ qIndex++; renderQuiz(); }
+
+function renderResult(){
+  const area = document.getElementById('quizArea');
+  const pct = Math.round((score/quizData.length)*100);
+  let html = '<div class="result-box"><div class="score">' + score + ' / ' + quizData.length + '</div>';
+  html += '<p style="font-size:1.1rem;">' + pct + '% de acertos</p>';
+  html += pct >= 80 ? '<p style="color:var(--green);">Excelente domínio da P2 de Medicina Comunitária!</p>'
+    : pct >= 50 ? '<p style="color:var(--gold);">Bom resultado — revise os capítulos com mais erros abaixo.</p>'
+    : '<p style="color:var(--red);">Vale a pena revisar os guias de estudo completos antes da prova.</p>';
+
+  html += '<div class="breakdown">';
+  Object.keys(topicStats).forEach(t=>{
+    const s = topicStats[t];
+    html += '<div class="bd-item"><div class="n">' + s.correct + '/' + s.total + '</div><div class="l">' + t + '</div></div>';
+  });
+  html += '</div>';
+
+  html += '<table class="summary-table"><tr><th>Questão</th><th>Resultado</th></tr>';
+  log.forEach(l=>{
+    html += '<tr><td>' + l.q + '</td><td class="' + (l.correct?'ok':'bad') + '">' + (l.correct?'Correto':'Incorreto') + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<div class="quiz-nav" style="justify-content:center; margin-top:20px;"><button class="btn-primary" onclick="startQuiz()">Refazer simulado</button></div></div>';
+  addXP(100);
+  area.innerHTML = html;
+}
+</script>
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Medicina Comunitaria',
+    id: 'comunitaria_simulado_p2',
+    titulo: 'Simulado P2 — 25 Questões (15 MC + 5 V/F + 5 Associar)',
+    url: location.pathname,
+    tipo: 'Simulado',
+    etapa: 'P2',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-02/medicina-comunitaria/Capitulo_10_Saude_Adolescente.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Capítulo 10 — Saúde do Adolescente</span>
+  </a>
+  <span class="cmed-nav-pn-btn next disabled"><span class="cmed-nav-pn-label">Próximo →</span><span class="cmed-nav-pn-title">Fim da disciplina 🎉</span></span>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
