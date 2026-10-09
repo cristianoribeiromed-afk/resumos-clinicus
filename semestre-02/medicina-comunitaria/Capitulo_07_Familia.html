@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0a0e16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clinicus">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<title>Medicina Comunitaria — Cap. 7: Família | ClinicusMed</title>
+<style>
+.cmed-fig{margin:14px 0; text-align:center;}
+.cmed-fig img{max-width:100%; max-height:640px; width:auto; height:auto; object-fit:contain; border-radius:10px; border:1px solid var(--border); background:#fff; display:block; margin:0 auto;}
+.cmed-fig-cap{font-size:.82em; color:var(--text-dim); margin-top:6px; font-style:italic;}
+.cmed-gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin:14px 0;}
+.cmed-gallery .cmed-fig{margin:0;}
+.cmed-gallery .cmed-fig img{max-height:320px;}
+:root{
+  --bg:#0d1b2a; --card:#16283d; --card2:#1c3033;
+  --accent:#3b9eff; --accent2:#93c5fd; --gold:#e8b84b;
+  --text:#e8f5f4; --text-dim:#9dc4c2; --ok:#4fd1a1; --bad:#e0505f; --border:#264b4d;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#141e3a 0%,var(--bg) 55%);color:var(--text);line-height:1.6;font-size:18px;}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px;}
+header{text-align:center;padding:20px 10px 16px;border-bottom:2px solid var(--border);margin-bottom:14px;}
+header .eyebrow{display:inline-block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);background:rgba(79,195,217,.12);border:1px solid rgba(79,195,217,.3);padding:3px 10px;border-radius:999px;margin-bottom:10px;}
+header h1{margin:0 0 6px;font-size:1.4em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+header p{color:var(--text-dim);margin:0;font-size:.9em;}
+
+.xpbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin:14px 0 18px;}
+.xpbar .lvl{font-weight:700;color:var(--gold);white-space:nowrap;}
+.xpouter{flex:1;background:#0b1120;border-radius:8px;height:14px;overflow:hidden;border:1px solid var(--border);}
+.xpinner{height:100%;width:0%;background:linear-gradient(90deg,var(--accent2),var(--ok));transition:width .4s;}
+.xptext{font-size:.8em;color:var(--text-dim);white-space:nowrap;}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:10;}
+nav.tabs button{background:var(--card);color:var(--text-dim);border:1px solid var(--border);padding:9px 13px;border-radius:20px;cursor:pointer;font-size:.8em;font-weight:600;transition:.2s;}
+nav.tabs button:hover{border-color:var(--accent2);color:var(--text);}
+nav.tabs button.active{background:linear-gradient(90deg,var(--accent),#2f4ea8);color:#fff;border-color:transparent;}
+
+section.panel{display:none;animation:fade .3s;}
+section.panel.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+.card h2{margin-top:0;color:var(--accent2);font-size:1.1em;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.card h3{color:var(--gold);font-size:1em;margin-bottom:6px;}
+.mnemo{background:var(--card2);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot{background:rgba(74,111,216,.15);border-left:4px solid var(--accent);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.hot b{color:var(--accent2);}
+.prova{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;}
+.prova b{color:var(--gold);}
+.example{background:#0f1726;border:1px dashed var(--accent2);border-radius:8px;padding:10px 12px;font-size:.87em;margin:8px 0;color:var(--text-dim);}
+.example b{color:var(--accent2);}
+.clinical{background:rgba(224,80,95,.12);border-left:4px solid var(--bad);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.clinical b{color:var(--bad);}
+.criterio{background:rgba(79,209,161,.12);border-left:4px solid var(--ok);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.criterio b{color:var(--ok);}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.81em;}
+th,td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;}
+th{background:var(--card2);color:var(--gold);}
+tr:nth-child(even){background:#161f30;}
+ul,ol{margin:6px 0;padding-left:20px;}
+.badge{display:inline-block;font-size:.68em;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:6px;}
+.badge.essencial{background:rgba(79,209,161,.16);color:var(--ok);}
+.badge.aprofundamento{background:rgba(79,195,217,.16);color:var(--accent2);}
+.badge.excelencia{background:rgba(232,184,75,.16);color:var(--gold);}
+
+/* Questoes */
+.qitem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.qitem .qmeta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:.7em;}
+.qitem .qmeta span{background:#0f1726;border:1px solid var(--border);padding:2px 8px;border-radius:12px;color:var(--text-dim);}
+.qitem .qtxt{font-weight:600;margin-bottom:10px;font-size:.93em;}
+.qitem .opts{list-style:none;padding:0;margin:0 0 8px;}
+.qitem .opts li{padding:6px 10px;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:.88em;border:1px solid transparent;}
+.qitem .opts li:hover{background:#26344f;}
+.qitem .opts li.correct{background:rgba(79,209,161,.18);border-color:var(--ok);color:var(--ok);font-weight:700;}
+.qitem .opts li.wrong{background:rgba(224,80,95,.18);border-color:var(--bad);color:var(--bad);}
+.reveal-btn{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.78em;font-weight:700;}
+.comment{display:none;margin-top:10px;padding:12px;background:#0f1726;border-radius:8px;font-size:.85em;color:var(--text-dim);}
+.comment.show{display:block;}
+.comment p{margin:6px 0;}
+.comment b{color:var(--accent2);}
+
+.qz-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:14px;border-radius:10px;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-size:.88em;}
+.qz-btn:hover{border-color:var(--accent2);}
+.quiz-result{text-align:center;padding:20px;font-size:1.25em;color:var(--gold);display:none;}
+.progresslabel{font-size:.8em;color:var(--text-dim);margin-bottom:10px;}
+
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.fc-counter{color:var(--text-dim);font-size:.85em;}
+.fc-card{width:100%;max-width:480px;height:230px;perspective:1200px;cursor:pointer;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.03em;font-weight:600;border:1px solid var(--border);}
+.fc-front{background:linear-gradient(145deg,var(--card2),var(--card));color:var(--text);}
+.fc-back{background:linear-gradient(145deg,#1f3a80,#141e3a);color:#d8e4ff;transform:rotateY(180deg);font-weight:500;font-size:.93em;}
+.fc-tag{position:absolute;top:10px;left:14px;font-size:.7em;color:var(--text-dim);font-weight:700;letter-spacing:.5px;}
+.fc-controls{display:flex;gap:10px;}
+.fc-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:20px;cursor:pointer;font-weight:700;font-size:.85em;}
+.fc-btn:hover{border-color:var(--accent2);}
+.fc-btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
+.fc-filters{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:6px;}
+.fc-filters button{background:var(--card2);border:1px solid var(--border);color:var(--text-dim);padding:5px 11px;border-radius:14px;font-size:.72em;cursor:pointer;}
+.fc-filters button.active{background:var(--accent);color:#fff;border-color:transparent;}
+.srs-status{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0;font-size:.85em;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.srs-status b{color:var(--gold);}
+.fc-srs-controls{display:flex;gap:8px;width:100%;max-width:480px;}
+.fc-srs-btn{flex:1;border:none;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.82em;color:#fff;}
+.fc-srs-btn.bad{background:linear-gradient(135deg,#e0505f,#b83a48);}
+.fc-srs-btn.mid{background:linear-gradient(135deg,#e8b84b,#c9962e);}
+.fc-srs-btn.good{background:linear-gradient(135deg,#4fd1a1,#2fa87d);}
+.fc-srs-btn:hover{filter:brightness(1.1);}
+.fc-done-msg{text-align:center;padding:30px 16px;color:var(--text-dim);}
+.fc-done-msg .big{font-size:2.2em;margin-bottom:10px;}
+
+/* Casos clinicos */
+.case-level{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.case-level-head{background:var(--card2);padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;}
+.case-level-head:hover{background:#26344f;}
+.case-level-body{display:none;padding:16px;background:var(--card);}
+.case-level-body.show{display:block;}
+.case-hist{background:var(--card2);border-radius:8px;padding:12px;font-size:.88em;margin-bottom:10px;}
+.case-q{background:#0f1726;border-left:3px solid var(--accent2);padding:10px 12px;border-radius:6px;margin-bottom:8px;font-size:.87em;}
+.case-answer-btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.76em;font-weight:700;margin-top:6px;}
+.case-answer{display:none;margin-top:8px;padding:10px;background:#0f1726;border-radius:6px;font-size:.85em;color:var(--text-dim);}
+.case-answer.show{display:block;}
+
+/* Mapas mentais */
+.map-diagram{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:.72em;white-space:pre;overflow-x:auto;color:#9fd8ff;line-height:1.4;}
+
+footer{text-align:center;color:var(--text-dim);font-size:.75em;margin-top:30px;padding-top:14px;border-top:1px solid var(--border);}
+
+.al-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+@media(max-width:640px){.al-grid{grid-template-columns:1fr;}}
+.al-box{background:var(--card2);border-radius:10px;padding:13px 15px;font-size:.85em;color:var(--text-dim);border:1px solid var(--border);}
+.al-box .al-title{font-weight:800;font-size:.95em;margin-bottom:7px;}
+.al-box.remember{border-left:4px solid #5fd68a;} .al-box.remember .al-title{color:#5fd68a;}
+.al-box.errors{border-left:4px solid #f0895f;} .al-box.errors .al-title{color:#f0895f;}
+.al-box.quick{border-left:4px solid var(--accent2);} .al-box.quick .al-title{color:var(--accent2);}
+.al-box.self{border-left:4px solid #b18aef;} .al-box.self .al-title{color:#b18aef;}
+.al-box.quick .qq-btn, .al-box.self .qq-btn{background:var(--accent2);color:#0e1420;border:none;padding:5px 12px;border-radius:14px;font-size:.85em;font-weight:700;cursor:pointer;margin-top:6px;}
+.al-box.quick .qq-answer, .al-box.self .qq-answer{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);color:#5fd68a;}
+.al-box.quick .qq-answer.show, .al-box.self .qq-answer.show{display:block;}
+.fc-topbar{display:flex;justify-content:space-between;align-items:center;font-size:.85em;color:var(--text-dim);margin:10px 0;}
+.fc-topbar b{color:var(--text);}
+.review-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+.review-btns button{border:none;padding:13px 4px;border-radius:12px;cursor:pointer;font-weight:800;font-size:.78em;color:#0e1420;transition:.15s;}
+.review-btns button:active{transform:scale(.96);}
+.btn-again{background:linear-gradient(135deg,#f0808f,#e0505f);color:#fff;}
+.btn-hard{background:linear-gradient(135deg,#f0b96a,#e89040);}
+.btn-good{background:linear-gradient(135deg,#7fe0ab,#5fd68a);}
+.btn-easy{background:linear-gradient(135deg,#7fc8f0,#4fc3d9);}
+.review-btns .interval-preview{display:block;font-size:.85em;font-weight:600;opacity:.8;margin-top:2px;}
+.fc-shuffle-row{display:flex;justify-content:center;margin-top:10px;}
+
+.analogy{background:rgba(232,184,75,.08);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:.87em;margin:8px 0;}
+.analogy b{color:var(--gold);}
+.tbl-wrap{overflow-x:auto;}
+.gen-wrap{background:#0b1120;border:1px solid var(--border);border-radius:10px;padding:10px;margin:10px 0;overflow-x:auto;}
+.gen-svg{width:100%;min-width:560px;height:auto;display:block;}
+.g-fig{fill:none;stroke:var(--text);stroke-width:2;}
+.g-line{stroke:var(--text);stroke-width:2;fill:none;}
+.g-dash{stroke-dasharray:5 4;}
+.g-fill{fill:var(--text);stroke:var(--text);}
+.g-dot{fill:none;stroke:var(--accent2);stroke-width:1.5;stroke-dasharray:2 5;}
+.g-small{fill:var(--text-dim);font-size:12px;font-family:'Segoe UI',Roboto,Arial,sans-serif;}
+.g-title{fill:var(--gold);font-size:14px;font-weight:700;font-family:'Segoe UI',Roboto,Arial,sans-serif;}
+.calc{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin:8px 0;font-size:.9em;}
+.calc select,.calc input{background:#0f1726;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.95em;}
+.calc-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);}
+.calc-out{margin-top:10px;font-weight:700;color:var(--gold);}
+.holmes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:4px 16px;font-size:.85em;}
+.holmes-grid label{display:flex;gap:8px;align-items:flex-start;padding:3px 0;cursor:pointer;}
+.holmes-grid label b{color:var(--gold);margin-left:auto;white-space:nowrap;}
+.cmed-nav-main,.wrap{min-width:0;}
+.cmed-nav-main{width:100%;max-width:100%;}
+@media(max-width:640px){.card table{display:block;overflow-x:auto;max-width:100%;}.card .al-box{overflow-wrap:anywhere;}}
+.holmes-grid{min-width:0;}
+</style>
+
+<script>try{if("scrollRestoration" in history){history.scrollRestoration="manual";}if(!window.location.hash){window.scrollTo(0,0);}}catch(e){}</script>
+
+<link rel="stylesheet" href="/assets/shell-nav.css">
+</head>
+<body>
+<div class="cmed-reading-toolbar">
+  <div class="cmed-reading-extras">
+    <span class="cmed-reading-time" id="cmedReadingTime">⏱ …</span>
+    <div class="cmed-reading-themes">
+      <button class="cmed-reading-theme-btn" data-theme="claro" title="Tema claro">☀</button>
+      <button class="cmed-reading-theme-btn" data-theme="escuro" title="Tema escuro">🌙</button>
+      <button class="cmed-reading-theme-btn" data-theme="papel" title="Tema papel">📜</button>
+    </div>
+  </div>
+  <button class="cmed-reading-btn" id="cmedReadingBtn">
+    <span class="cmed-reading-label-enter">📖 Modo Leitura</span>
+    <span class="cmed-reading-label-exit">❌ Sair do modo leitura</span>
+  </button>
+</div>
+<button class="cmed-reading-top" id="cmedReadingTop" title="Voltar ao topo">↑</button>
+<div class="cmed-reading-progress" id="cmedReadingProgress"></div>
+<header class="cmed-nav-header">
+  <a class="cmed-nav-brand" href="/jornada/"><img src="/assets/logo-header.png" alt="ClinicusMed"><span>ClinicusMed</span></a>
+  <div class="cmed-nav-header-actions">
+    <a class="cmed-nav-back" href="/jornada/">← Minha Jornada</a>
+    <a class="cmed-nav-catalogo" href="/index.html#catalogo">🛒 Catálogo</a>
+  </div>
+</header>
+<nav class="cmed-nav-breadcrumb">
+  <a href="/jornada/">Início</a><span class="sep">›</span>
+  <a href="/jornada/">Medicina Comunitaria</a><span class="sep">›</span>
+  <span>P2</span><span class="sep">›</span>
+  <span class="current">Guia de Estudo</span>
+</nav>
+<div class="cmed-nav-progress-wrap">
+  <div class="cmed-nav-progress-label"><span>Progresso em Medicina Comunitaria</span><span>8 de 11</span></div>
+  <div class="cmed-nav-progress-track"><div class="cmed-nav-progress-fill" style="width:73%"></div></div>
+</div>
+<div class="cmed-nav-layout">
+  <aside class="cmed-nav-sidebar">
+    <button class="cmed-nav-sidebar-toggle">☰ Navegação da disciplina <span>▾</span></button>
+    <div class="cmed-nav-sidebar-list">
+    <p class="cmed-nav-sidebar-title">Medicina Comunitaria</p>
+    <h4>P1</h4>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_01_Conceito_Saude_Modelos.html"><span class="ico">🏥</span><span>Capítulo 1 — Conceito de Saúde e Modelos</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_02_Sistema_Saude.html"><span class="ico">🏥</span><span>Capítulo 2 — Sistema de Saúde</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_03_Comunidade_Saude.html"><span class="ico">🏥</span><span>Capítulo 3 — Comunidade e Saúde Comunitária</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_04_Equipe_Saude.html"><span class="ico">🏥</span><span>Capítulo 4 — Equipe de Saúde</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_05_Declaracoes_Internacionais.html"><span class="ico">🏥</span><span>Capítulo 5 — Declarações Internacionais</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_06_Planificacao_Comunitaria.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 6 — Planejamento Comunitário</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/simulado_comunitaria_p1.html"><span class="ico">🎯</span><span>Simulado P1 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span></a>
+    <h4>P2</h4>
+    <a class="cmed-nav-item is-current" href="/semestre-02/medicina-comunitaria/Capitulo_07_Familia.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 7 — Família</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_08_Saude_Mulher.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 8 — Saúde da Mulher</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_09_Saude_Infantil.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 9 — Saúde Infantil</span></a>
+    <a class="cmed-nav-item" href="/semestre-02/medicina-comunitaria/Capitulo_10_Saude_Adolescente.html" data-novo="1"><span class="ico">🏥</span><span>Capítulo 10 — Saúde do Adolescente</span></a>
+    </div>
+  </aside>
+  <div class="cmed-nav-main">
+
+
+
+
+
+
+
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Medicina Comunitaria — Cap. 7 · P2</span>
+  <h1>👪 Capítulo 7 — Família</h1>
+  <p>ClinicusMed · Unidade VI da Cátedra (Dra. Claudia Corrales) · Dossiê Clinicus — Padrão de Excelência</p>
+</header>
+
+<div class="xpbar">
+  <span class="lvl" id="lvlLabel">Nv. 1</span>
+  <div class="xpouter"><div class="xpinner" id="xpFill"></div></div>
+  <span class="xptext" id="xpText">0 XP</span>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button data-p="p0" class="active">📋 Guia de Estudo</button>
+  <button data-p="p1">🩺 Casos Clínicos</button>
+  <button data-p="p2">🎥 Vídeo</button>
+  <button data-p="p3">🃏 Flashcards</button>
+  <button data-p="p4">✅ Banco de Questões</button>
+  <button data-p="p5">🎮 Quiz Rápido</button>
+  <button data-p="p6">📊 Exemplos Práticos</button>
+</nav>
+
+<!-- ============ GUIA DE ESTUDO ============ -->
+<section class="panel active" id="p0">
+<div class="card">
+    <h2>🎯 O que você vai conseguir fazer depois desse capítulo</h2>
+    <ul>
+      <li>Definir família na perspectiva do médico de família e explicar o que significa “sistema aberto”, homeostase familiar e paciente identificado</li>
+      <li>Enumerar as funções da família e distinguir tipologia (5 colunas) de classificação (5 eixos)</li>
+      <li>Classificar qualquer família por parentesco, presença física, meios de subsistência, nível econômico e novos estilos de convivência</li>
+      <li>Diferenciar crise normativa (evolutiva) de paranormativa e reconhecer os 4 tipos de crise paranormativa</li>
+      <li>Comparar os modelos de ciclo vital familiar (Geyman 5, Duvall 8, Carter e McGoldrick 6, OMS 6)</li>
+      <li>Aplicar e interpretar o APGAR familiar e a escala de Holmes e Rahe</li>
+      <li>Ler e desenhar um genograma (familiograma) com os símbolos corretos</li>
+    </ul>
+    <div class="hot">💭 Fonte principal: Unidade VI — Família, Dra. Claudia Beatriz Corrales Suarez (50 slides). Complementos de aulas da Dra. Myrna Talavera: deck “Conceptos Básicos para el Estudio de las Familias” (30 slides), deck de Ciclo Vital (só as partes familiares) e o guia do trabalho prático. Tudo que vem dessas aulas, ou da literatura padrão, está marcado como <b>Complemento</b> ou com o símbolo ♦; discrepâncias entre fontes aparecem em caixas <b>Divergência</b>. Se a professora ditar outra versão em aula, vale a dela.</div>
+    <div class="analogy"><b>🧭 Mapa da unidade (índice do slide 4):</b> 1 Conceito → 2 Funções → 3 Tipologia → 4 Classificação → 5 Crise → 6 Avaliação (ciclo vital, APGAR, genograma). Pense assim: primeiro você aprende <i>o que é</i> uma família, depois <i>o que ela faz</i>, depois <i>como etiquetá-la</i>, depois <i>o que a abala</i> e, por fim, <i>como o médico mede se ela está bem</i>.</div>
+  </div>
+
+  <div class="card">
+    <h2>👪 1. Conceito de Família ("Concepto de familia")</h2>
+    <div class="criterio"><b>🟢 Definição (slide 5, “desde a perspectiva do médico de família”):</b> a família é um <b>grupo social, organizado como um sistema aberto</b>, constituído por um <b>número variável de membros</b>, que na maioria dos casos <b>convivem no mesmo lugar</b>, vinculados por laços <b>consanguíneos, legais e/ou de afinidade</b>.</div>
+    <div class="clinical"><b>⚠️ Divergência (texto cortado):</b> no slide 5 o texto estoura a caixa e termina em “vinculados por lazos ya sean consanguíneos, legales y/o de…”. O fecho “…afinidade” vem da definição consensual de medicina de família (a mesma que o deck da Dra. Talavera usa). Em prova, repita os três laços: <b>consanguíneo, legal e/ou de afinidade</b>.</div>
+    <h3>Decifrando a definição, palavra por palavra</h3>
+    <table>
+      <tr><th>Expressão</th><th>O que significa na prática</th></tr>
+      <tr><td><b>Grupo social</b></td><td>Não é só uma soma de indivíduos: tem regras, papéis e história próprios</td></tr>
+      <tr><td><b>Sistema aberto</b></td><td>Troca informação, pessoas e recursos com o exterior (escola, trabalho, vizinhança, serviço de saúde) e é afetada por eles. Se um membro muda, todos os outros se reorganizam</td></tr>
+      <tr><td><b>Número variável de membros</b></td><td>Não existe “tamanho certo”: pode ser um casal, ou doze pessoas na mesma casa</td></tr>
+      <tr><td><b>Na maioria dos casos convivem no mesmo lugar</b></td><td>Convivência é frequente, mas não obrigatória (por isso o eixo “presença física” aparece depois na classificação)</td></tr>
+      <tr><td><b>Laços consanguíneos, legais e/ou de afinidade</b></td><td>Sangue (pais e filhos), lei (casamento, adoção) e afinidade (união estável, vínculo afetivo estável)</td></tr>
+    </table>
+    <div class="analogy">🏠 <b>Analogia:</b> um sistema aberto é como uma casa com janelas. O ar da rua entra (a crise econômica do país, a escola nova, a doença do avô) e o ar de dentro sai (valores, filhos adultos, trabalho). Uma casa totalmente fechada sufocaria; uma sem paredes não protegeria ninguém. A família saudável tem janelas que abrem e fecham.</div>
+    <div class="cmed-fig"><a href="img/slides_cap07/01_fam_03.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/01_fam_03.jpg" alt="Infográfico ¿Qué es la familia?: grupo de pessoas com laços de sangue, matrimônio ou adoção."></a><div class="cmed-fig-cap">Deck da Dra. Talavera: definição leiga de família (laços de sangue, matrimônio ou adoção; vivem juntos ou perto).</div></div>
+    <div class="clinical"><b>⚠️ Divergência (duas definições):</b> o infográfico acima fala em “laços de sangue, matrimônio ou adoção” e “vivem juntos ou em cercania”; a definição da Dra. Corrales fala em “sistema aberto” e “consanguíneos, legais e/ou de afinidade”. A segunda é a da perspectiva médica e a que a cátedra usa para a prova.</div>
+
+    <h3>O que a Dra. Talavera acrescenta (deck “Conceptos Básicos”)</h3>
+    <ul>
+      <li>A família é <b>responsável por guiar e proteger</b> seus membros; sua <b>estrutura é diversa</b> e depende do contexto em que se encontra.</li>
+      <li>É o <b>único âmbito em que cada ser humano é aceito, respeitado e amado pelo simples fato de ser quem é</b>, e não pelo que tem ou pelas suas qualidades, como ocorre em clubes, partidos, empresa e escola.</li>
+      <li>É na família que começam a <b>educação e o estímulo à aprendizagem</b> para lançar novos membros à sociedade.</li>
+      <li><b>Homeostase familiar</b> (autorregulação e equilíbrio) depende do estado de bem-estar <b>biológico, psicológico e social</b> dos integrantes.</li>
+      <li>Grupo com fortes laços de sangue, de afetos e de cultura, com <b>origem e futuro comuns</b>: isso pode afetar a saúde física e a saúde coletiva.</li>
+    </ul>
+    <h3>Dinâmica familiar, funcionalidade e paciente identificado</h3>
+    <div class="criterio"><b>🟢 Ideia-chave:</b> a composição familiar <b>não é estática</b>: muda com o momento histórico, com a etapa do ciclo vital e com acontecimentos importantes. Hoje não se fala mais em <b>normalidade ou anormalidade</b>, e sim em <b>funcionalidade</b>: a capacidade do sistema de enfrentar e superar cada etapa do ciclo vital e as crises que atravessa.</div>
+    <ul>
+      <li><b>Família funcional:</b> aquela em que os filhos <b>não</b> apresentam transtornos graves de conduta e em que o casal <b>não está em luta permanente</b>.</li>
+      <li>Quando a homeostase é ameaçada, a família pode tentar manter o equilíbrio fazendo com que <b>um membro, geralmente um dos filhos, desenvolva sintomas, adoeça ou comece a expressar o conflito</b>.</li>
+      <li>Surge assim o <b>paciente identificado</b>: é chamado assim, em vez de ser rotulado pelo papel idiossincrático que os outros lhe deram (“o doente”, “o mau”, “o culpado”).</li>
+      <li>A disfunção familiar pode se manifestar <b>por meio de sintomas nos integrantes</b>, e grande parte dos transtornos psicossociais tem origem na disfunção familiar.</li>
+    </ul>
+    <div class="analogy">🌡️ <b>Analogia:</b> o paciente identificado é o “termômetro” da família: a febre aparece nele, mas a infecção está no sistema. Tratar só a criança que faz xixi na cama (enurese) sem olhar o que acontece em casa é baixar a febre sem procurar o foco.</div>
+    <div class="prova">📌 Pegadinha: paciente identificado <b>não</b> é “o culpado”. A expressão existe justamente para <b>não</b> reduzir a pessoa ao rótulo de doente, mau ou culpado.</div>
+    <div class="mnemo">🧠 <b>Mnemônico — definição em 4 blocos:</b> <b>G</b>rupo social · <b>S</b>istema aberto · <b>M</b>embros em número variável · <b>L</b>aços (consanguíneos, legais, afinidade). “GSML”.</div>
+  </div>
+
+  <div class="card">
+    <h2>🛠️ 2. Funções da Família ("Funciones de la familia")</h2>
+    <div class="criterio"><b>🟢 Definição (slide 6):</b> funções são as <b>tarefas que cabem aos integrantes da família como um todo</b>.</div>
+    <table>
+      <tr><th>Função (slide 6)</th><th>Definição (deck Talavera)</th><th>Exemplo cotidiano</th></tr>
+      <tr><td><b>Cuidados</b> ("Cuidado")</td><td>Proteção e assistência <b>incondicionais</b>, de modo diligente e respeitoso, para enfrentar as diversas necessidades (<b>materiais, sociais, financeiras e de saúde</b>) do grupo familiar</td><td>Levar o avô ao posto de saúde, pagar a conta, dar o remédio</td></tr>
+      <tr><td><b>Estatus</b></td><td>Participação e transmissão das características sociais que dão à família <b>determinada posição perante a sociedade</b></td><td>“Somos a família dos comerciantes da avenida”; sobrenome, profissão, religião</td></tr>
+      <tr><td><b>Socialização</b></td><td>Promoção das condições que favorecem o <b>desenvolvimento biopsicossocial</b> dos membros e a <b>réplica de valores individuais e padrões de conduta</b> próprios de cada família</td><td>Ensinar a pedir licença, a respeitar horários, a festa de fim de ano</td></tr>
+      <tr><td><b>Afeto</b> ("Afecto")</td><td>Interação de sentimentos e emoções que propicia a <b>coesão do grupo</b> e o desenvolvimento psicológico pessoal</td><td>Abraço, escuta, consolo depois de um dia ruim</td></tr>
+      <tr><td><b>Reprodução, desenvolvimento e exercício da sexualidade</b></td><td>Fornecimento de <b>novos membros à sociedade</b> (reprodução)</td><td>Ter filhos, educar para a sexualidade responsável</td></tr>
+      <tr><td><b>Cumprimento dos papéis estruturais e dinâmicos</b></td><td>Aparece como última linha da lista do slide; o deck da Dra. Talavera não a desenvolve</td><td>Quem provê, quem cuida, quem decide, quem media conflitos</td></tr>
+    </table>
+    <div class="mnemo">🧠 <b>Mnemônico:</b> “<b>CESAR</b> + papéis” — <b>C</b>uidados, <b>E</b>status, <b>S</b>ocialização, <b>A</b>feto, <b>R</b>eprodução (e sexualidade), mais o cumprimento dos <b>R</b>oles (papéis).</div>
+    <div class="clinical"><b>⚠️ Divergência (5 ou 6 funções?):</b> o slide 6 lista seis itens (os cinco acima + papéis estruturais e dinâmicos); o deck da Dra. Talavera define só cinco (“Se reconocen las siguientes funciones…”, terminando em Reprodução). Responda <b>cinco funções clássicas</b> se a pergunta for aberta, e inclua os papéis se a questão seguir a lista do slide.</div>
+    <div class="example"><b>📎 Complemento (interpretação didática):</b> papéis <b>estruturais</b> são as posições formais na família (pai, mãe, filho, avô); papéis <b>dinâmicos</b> são os que se exercem na interação do dia a dia (provedor, cuidador, mediador, “aquele que carrega os problemas de todos”). Disfunção costuma aparecer quando um papel fica sobrecarregado ou vazio.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧩 3. Tipologia da Família ("Tipología")</h2>
+    <p>O slide 7 resume a tipologia em uma tabela de <b>cinco eixos</b>. As definições de cada valor vêm do deck de Ciclo Vital (Dra. Talavera) e estão marcadas ♦.</p>
+    <table>
+      <tr><th>Estrutura</th><th>Integração</th><th>Desenvolvimento</th><th>Demografia</th><th>Ocupação</th></tr>
+      <tr><td>Nuclear</td><td>Integrada</td><td>Tradicional</td><td>Urbana</td><td>Operária ou empregada</td></tr>
+      <tr><td>Monoparental</td><td>Não integrada</td><td>Moderna</td><td>Rural</td><td>Profissional ou comerciante</td></tr>
+      <tr><td>Extensa</td><td></td><td>Primitiva</td><td></td><td></td></tr>
+      <tr><td>Extensa composta</td><td></td><td></td><td></td><td></td></tr>
+    </table>
+    <table>
+      <tr><th>Eixo</th><th>Valores e definições ♦</th></tr>
+      <tr><td><b>Estrutura</b></td><td><b>Nuclear:</b> pai, mãe e filhos. <b>Extensa:</b> nuclear mais avós. <b>Extensa composta:</b> mais outros consanguíneos ou de caráter legal (tios, primos, genros, cunhados). <b>Monoparental:</b> pai ou mãe com os filhos.</td></tr>
+      <tr><td><b>Integração</b></td><td><b>Integrada:</b> cônjuges vivem juntos e cumprem adequadamente suas funções. <b>Semi-integrada:</b> não cumprem suas funções. <b>Desintegrada:</b> falta um dos cônjuges por morte, abandono, separação ou divórcio. (O slide 7 só mostra “integrada” e “não integrada”.)</td></tr>
+      <tr><td><b>Desenvolvimento</b></td><td><b>Primitiva:</b> clã ou organização tribal. <b>Tradicional:</b> padrão tradicional de organização familiar. <b>Moderna:</b> pais compartilham direitos e obrigações; filhos participam da organização e das decisões.</td></tr>
+      <tr><td><b>Demografia</b></td><td><b>Urbana</b>, <b>rural</b> (e <b>suburbana</b>, no deck de Ciclo Vital)</td></tr>
+      <tr><td><b>Ocupação</b></td><td>Camponesa, operária, empregada, profissional, comerciante (ocupação do chefe da família)</td></tr>
+    </table>
+    <div class="clinical"><b>⚠️ Divergência (tipologia x classificação):</b> a Dra. Corrales usa duas listas diferentes. A <b>tipologia</b> (slide 7) tem 5 colunas: estrutura, integração, desenvolvimento, demografia, ocupação. A <b>classificação</b> (slides 9 a 14) tem 5 eixos: parentesco, presença física, meios de subsistência, nível econômico e novos estilos de convivência. Elas se sobrepõem (estrutura ≈ parentesco; ocupação ≈ meios de subsistência), mas são perguntas diferentes na prova. Além disso, “núcleo integrado” da classificação (presença dos dois pais no lar) não é a mesma coisa que “integrada” da tipologia (cônjuges que vivem juntos <i>e</i> cumprem suas funções).</div>
+    <div class="mnemo">🧠 <b>Tipologia:</b> “<b>E</b>stou <b>I</b>ndo <b>D</b>ormir <b>D</b>epois <b>O</b>nze” → <b>E</b>strutura, <b>I</b>ntegração, <b>D</b>esenvolvimento, <b>D</b>emografia, <b>O</b>cupação.</div>
+  </div>
+
+  <div class="card">
+    <h2>🗂️ 4. Classificação das Famílias ("Clasificación de las familias")</h2>
+    <div class="criterio"><b>🟢 Slide 9:</b> para facilitar a classificação, identificaram-se <b>cinco eixos fundamentais</b>: (1) parentesco; (2) presença física no lar ou convivência; (3) meios de subsistência; (4) nível econômico; (5) novos tipos de convivência individual-familiar originados por mudanças sociais. Parentesco = vínculo por consanguinidade, afinidade, adoção, matrimônio ou outra relação estável de afetividade análoga.</div>
+    <div class="mnemo">🧠 <b>Mnemônico dos 5 eixos:</b> “<b>P</b>ai e <b>P</b>rimo <b>M</b>oram <b>N</b>uma <b>N</b>ova casa” → <b>P</b>arentesco, <b>P</b>resença física, <b>M</b>eios de subsistência, <b>N</b>ível econômico, <b>N</b>ovos estilos.</div>
+
+    <h3>4.1 Com base no parentesco (slide 10)</h3>
+    <div class="cmed-fig"><a href="img/slides_cap07/02_u6_10.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/02_u6_10.jpg" alt="Tabela de classificação por parentesco."></a><div class="cmed-fig-cap">Slide 10: classificação por parentesco (a última linha, “No parental”, é cortada no próprio slide).</div></div>
+    <table>
+      <tr><th>Tipo</th><th>Características (slide)</th></tr>
+      <tr><td><b>Nuclear</b></td><td>Homem e mulher <b>sem filhos</b></td></tr>
+      <tr><td><b>Nuclear simples</b></td><td>Pai e mãe com <b>1 a 3 filhos</b></td></tr>
+      <tr><td><b>Nuclear numerosa</b></td><td>Pai e mãe com <b>4 filhos ou mais</b></td></tr>
+      <tr><td><b>Reconstruída (binuclear)</b></td><td>Pai e mãe em que algum ou ambos foram <b>divorciados ou viúvos</b> e têm <b>filhos de união anterior</b></td></tr>
+      <tr><td><b>Monoparental</b></td><td>Pai <b>ou</b> mãe com filhos</td></tr>
+      <tr><td><b>Monoparental extendida</b></td><td>Pai ou mãe com filhos, mais outras pessoas <b>com parentesco</b></td></tr>
+      <tr><td><b>Monoparental extendida compuesta</b></td><td>Pai ou mãe com filhos, mais outras pessoas <b>com e sem parentesco</b></td></tr>
+      <tr><td><b>Extensa</b></td><td>Pai e mãe com filhos, mais outras pessoas <b>com parentesco</b></td></tr>
+      <tr><td><b>Extensa compuesta</b></td><td>Pai e mãe com filhos, mais outras pessoas <b>com e sem parentesco</b></td></tr>
+      <tr><td><b>No parental</b></td><td>Familiares com vínculo de parentesco que exercem funções ou papéis de família <b>sem a presença dos pais</b> (tios e sobrinhos, avós e netos, primos ou irmãos etc.)</td></tr>
+    </table>
+    <div class="analogy">🔍 <b>Roteiro de decisão (do mais simples ao mais complexo):</b>
+      <ol>
+        <li>Há <b>pai e mãe</b>? Se não há nenhum dos dois, mas parentes fazem o papel → <b>não parental</b>.</li>
+        <li>Só <b>um</b> dos pais? → <b>monoparental</b>. Com parentes → <b>extendida</b>; com parentes e não parentes → <b>extendida compuesta</b>.</li>
+        <li><b>Pai e mãe</b> sozinhos com filhos: <b>0</b> filhos → nuclear; <b>1 a 3</b> → nuclear simples; <b>4 ou mais</b> → nuclear numerosa.</li>
+        <li>Pai e mãe com filhos <b>de uniões anteriores</b> (divórcio ou viuvez) → <b>reconstruída (binuclear)</b>.</li>
+        <li>Pai e mãe com filhos <b>mais outras pessoas</b>: só parentes → <b>extensa</b>; parentes e não parentes (por exemplo, um inquilino ou um agregado) → <b>extensa compuesta</b>.</li>
+      </ol>
+      A palavra “compuesta” sempre quer dizer: <b>entra alguém sem parentesco</b>.
+    </div>
+    <div class="clinical"><b>⚠️ Divergência (o que é “nuclear”):</b> no slide 10, “nuclear” é o casal <b>sem filhos</b> e os casais com filhos entram em “simples” e “numerosa”. Na tipologia (slide 7) e no deck de Ciclo Vital, nuclear é “pai, mãe e filhos”. A tabela do slide 10 é a que responde à pergunta de classificação por parentesco; use a regra “nuclear sem filhos” nessa pergunta.</div>
+
+    <h3>4.2 Com base na presença física e convivência (slide 11)</h3>
+    <div class="cmed-fig"><a href="img/slides_cap07/03_u6_11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/03_u6_11.jpg" alt="Classificação por presença física no lar."></a><div class="cmed-fig-cap">Slide 11: presença física no lar.</div></div>
+    <table>
+      <tr><th>Tipo</th><th>Características</th><th>Para não esquecer</th></tr>
+      <tr><td><b>Núcleo integrado</b></td><td>Presença de <b>ambos os pais</b> no lar</td><td>Os dois estão em casa</td></tr>
+      <tr><td><b>Núcleo não integrado</b></td><td>Não há presença física de <b>algum</b> dos pais no lar</td><td>Falta pelo menos um</td></tr>
+      <tr><td><b>Extensa ascendente</b></td><td><b>Filhos casados ou em união livre</b> que vivem na casa de algum dos pais</td><td>O casal jovem “sobe” para a casa dos pais</td></tr>
+      <tr><td><b>Extensa descendente</b></td><td><b>Pais</b> que vivem na casa de algum dos filhos</td><td>Os pais “descem” para a casa dos filhos</td></tr>
+      <tr><td><b>Extensa colateral</b></td><td>Núcleo ou casal que vive na casa de <b>familiares colaterais</b> (tios, primos, avós etc.)</td><td>Casa de parente “do lado” (tios, primos)</td></tr>
+    </table>
+    <div class="clinical"><b>⚠️ Divergência (avós como colaterais):</b> parentes colaterais, em sentido estrito, são tios e primos; avós são ascendentes. O slide 11 inclui “abuelos” entre os colaterais. Em prova, siga o slide. Este eixo se liga à identificação do <b>chefe de família</b> e à interação psicossocial dos membros (deck Talavera).</div>
+
+    <h3>4.3 Com base nos meios de subsistência e na ocupação (slide 12)</h3>
+    <ul>
+      <li>A inserção das famílias nos processos produtivos permite classificá-las pela origem essencial do sustento: <b>agrícolas e pecuárias, industrial, comercial, serviços</b>.</li>
+      <li>Segundo a <b>ocupação</b>: refere-se à ocupação do <b>pai ou chefe de família</b> (camponesa, operária, comerciante, empregada etc.). Atribui-se a classificação correspondente à <b>origem dos recursos de subsistência aportados pelo chefe</b>.</li>
+    </ul>
+
+    <h3>4.4 Com base no nível econômico (slides 13 e fam 18 a 22)</h3>
+    <div class="criterio"><b>🟢 Ideia:</b> o nível econômico influi poderosamente em vários elementos ligados à saúde. Há <b>doenças fortemente relacionadas à pobreza</b>, e é preciso avaliar o peso desse fenômeno econômico-social sobre a saúde individual e familiar. Usam-se indicadores monetários e não monetários.</div>
+    <table>
+      <tr><th>Nível de pobreza familiar</th><th>Renda x cesta básica</th><th>Vestuário e calçado, moradia, saúde, educação e transporte público</th><th>Conservação da moradia, energia elétrica, combustíveis, comunicações, transporte fora do local, cuidado pessoal, lazer e turismo</th></tr>
+      <tr><td><b>Nível 1</b> (menos grave)</td><td>✅ Suficiente</td><td>✅ Suficiente, mesmo dedicando toda a renda a esses itens</td><td>❌ Falta</td></tr>
+      <tr><td><b>Nível 2</b></td><td>✅ Suficiente</td><td>❌ Falta, mesmo dedicando toda a renda</td><td>❌ Falta</td></tr>
+      <tr><td><b>Nível 3</b> (mais grave)</td><td>❌ <b>Inferior</b> ao valor da cesta básica</td><td>❌ Falta</td><td>❌ Falta</td></tr>
+    </table>
+    <div class="prova">📌 A escala vai do <b>nível 1 (menos grave)</b> ao <b>nível 3 (mais grave)</b>. Famílias que cobrem os itens dos três níveis <b>não são consideradas pobres</b>. Pegadinha: número maior = situação pior.</div>
+    <div class="mnemo">🧠 <b>Mnemônico:</b> “o número é a quantidade de <b>camadas</b> que desabam”. Nível 1: só o “extra” desaba. Nível 2: o básico das necessidades também desaba. Nível 3: nem a cesta básica se paga.</div>
+    <div class="example"><b>📎 Complemento (deck Talavera, slide 28):</b> para medir pobreza no nível familiar existe o <b>Índice simplificado de pobreza familiar</b> (instrumento de autoaplicação, <b>4 perguntas</b>). Em ficha de estudo da família (deck de Ciclo Vital, slide 78) aparece também o <b>método de Graffar</b> para estrato socioeconômico: pontua profissão do chefe, nível de instrução da mãe, fonte de ingresso e condições de moradia; soma de 4 a 6 = estrato alto, 7 a 9 = médio alto, 10 a 12 = médio baixo, 13 a 16 = operário, 17 a 20 = marginal.</div>
+
+    <h3>4.5 Novos estilos de vida pessoal-familiar originados por mudanças sociais (slide 14)</h3>
+    <div class="cmed-fig"><a href="img/slides_cap07/04_u6_14.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/04_u6_14.jpg" alt="Novos estilos de vida pessoal-familiar."></a><div class="cmed-fig-cap">Slide 14: novos estilos de convivência.</div></div>
+    <table>
+      <tr><th>Estilo</th><th>Característica (slide)</th></tr>
+      <tr><td><b>Pessoa que vive só</b></td><td>Sem familiar algum, independentemente do estado civil ou da etapa do ciclo vital</td></tr>
+      <tr><td><b>Casal do mesmo sexo</b> (“matrimonios o parejas de homosexuales”)</td><td>Casal do mesmo sexo com convivência conjugal <b>sem filhos</b></td></tr>
+      <tr><td><b>Casal do mesmo sexo com filhos adotivos</b></td><td>Casal do mesmo sexo com convivência conjugal <b>e filhos adotivos</b></td></tr>
+      <tr><td><b>Família grupal</b></td><td>União matrimonial de <b>vários homens com várias mulheres</b>, que coabitam indiscriminadamente e sem restrições dentro do grupo</td></tr>
+      <tr><td><b>Família comunal</b></td><td>Conjunto de <b>casais monogâmicos</b> com seus filhos, que vivem em comunidade <b>compartilhando tudo, exceto as relações sexuais</b></td></tr>
+      <tr><td><b>Poligamia</b></td><td>Inclui a <b>poliandria</b> e a <b>poliginia</b></td></tr>
+    </table>
+    <div class="example"><b>📎 Complemento:</b> <b>poliandria</b> = uma mulher com vários homens; <b>poliginia</b> = um homem com várias mulheres. Truque: <i>andro</i> = homem; <i>gyne</i> = mulher; o sufixo diz de quem há “vários”: pol<b>iandr</b>ia = vários homens, pol<b>igin</b>ia = várias mulheres.</div>
+    <div class="prova">📌 Pegadinha clássica: <b>grupal</b> (vários homens com várias mulheres, tudo misturado) x <b>comunal</b> (casais monogâmicos que compartilham tudo, menos a relação sexual).</div>
+  </div>
+
+  <div class="card">
+    <h2>🌪️ 5. Crises Familiares ("Crisis")</h2>
+    <div class="criterio"><b>🟢 Definição (deck Talavera):</b> crise é qualquer evento que ocasiona <b>mudanças na funcionalidade</b> dos membros e leva a um estado de alteração que exige <b>resposta adaptativa</b> da própria pessoa. Para a família, é a situação em que ela vive um acontecimento ou circunstância que muda sua vida cotidiana e/ou sua forma de ver o mundo (slide 18).</div>
+    <table>
+      <tr><th></th><th>Normativas (evolutivas)</th><th>Paranormativas (não normativas)</th></tr>
+      <tr><td><b>Como aparecem</b></td><td><b>Esperadas</b>, parte do desenvolvimento evolutivo da família</td><td><b>Inesperadas</b>, acidentais, estressantes</td></tr>
+      <tr><td><b>Origem</b></td><td><b>Intrassistêmicas</b> (de dentro do sistema)</td><td><b>Intersistêmicas</b> (vêm de fora)</td></tr>
+      <tr><td><b>Exigem</b></td><td>Reestruturação de papéis</td><td>Resposta adaptativa a um evento adverso</td></tr>
+      <tr><td><b>Exemplos</b></td><td>Casamento ou união, nascimento do primeiro filho, entrada na escola, adolescência, “ninho vazio” (emancipação dos filhos), aposentadoria e envelhecimento</td><td>Divórcio ou separação, morte prematura ou inesperada, doença grave ou crônica, acidentes, perda de emprego, encarceramento, migração forçada (deck Talavera: infidelidade, alcoolismo, atividades criminosas)</td></tr>
+      <tr><td><b>Característica</b></td><td>Quase todas as famílias passam por elas, mas <b>mesmo assim geram tensão e desequilíbrio</b></td><td>Surpreendem a família sem preparo</td></tr>
+    </table>
+    <div class="cmed-fig"><a href="img/slides_cap07/05_u6_18.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/05_u6_18.jpg" alt="Infográfico: as crises familiares, evolutivas e inesperadas."></a><div class="cmed-fig-cap">Slide 18: crises evolutivas/normativas (nascimento do primeiro filho, adolescência, início escolar, morte dos progenitores) e inesperadas/não normativas (doença grave, perda de emprego estável, gravidez não desejada na adolescência, morte inesperada de um familiar).</div></div>
+    <div class="clinical"><b>⚠️ Divergência (morte na família):</b> no infográfico, “morte dos progenitores” aparece entre as crises <b>evolutivas</b> (a morte esperada de pais idosos), enquanto no texto (slide 17) a “morte <b>prematura ou inesperada</b>” é paranormativa. O que decide é o <b>timing</b>: esperada na etapa final da vida = normativa; precoce ou súbita = paranormativa. O slide 15 também chama a coluna paranormativa de “inesperadas, accidentales, no normativas”: são sinônimos.</div>
+    <h3>Os 4 tipos de crise paranormativa (slide 17)</h3>
+    <table>
+      <tr><th>Tipo</th><th>Definição</th><th>Exemplos do slide</th><th>Frase-guia</th></tr>
+      <tr><td><b>Desmembramento</b></td><td>Separação de um membro</td><td>Divórcio, hospitalização</td><td>“Alguém <b>sai</b>”</td></tr>
+      <tr><td><b>Incremento</b></td><td>Adição de membros inesperados</td><td>Chegada inesperada de alguém à família</td><td>“Alguém <b>entra</b>”</td></tr>
+      <tr><td><b>Desmoralização</b></td><td>Fatos que <b>violam valores</b> da família</td><td>Delinquência, alcoolismo</td><td>“A família <b>perde a face</b>”</td></tr>
+      <tr><td><b>Desorganização</b></td><td>Fatos que <b>obstaculizam a dinâmica</b></td><td>Infertilidade, doença psiquiátrica</td><td>“O dia a dia <b>se embaralha</b>”</td></tr>
+    </table>
+    <div class="mnemo">🧠 <b>Mnemônico:</b> “<b>S</b>ai, <b>E</b>ntra, <b>E</b>nvergonha, <b>E</b>mbaralha” → Des<b>membramento</b> (sai), <b>Incremento</b> (entra), Des<b>moralização</b> (envergonha), Des<b>organização</b> (embaralha). Dois “des” de valor e de dinâmica; um de perda e um de ganho.</div>
+    <div class="example"><b>📎 Complemento:</b> essa classificação em desmembramento, incremento, desmoralização e desorganização é atribuída a Pittman (1987). Na prática clínica, uma mesma situação pode ter dois rótulos (uma gravidez não desejada na adolescência é incremento <i>e</i> pode ser desmoralização, conforme os valores da família). Na prova, escolha o que o enunciado destaca.</div>
+    <div class="prova">📌 Crise não é sinônimo de doença nem de “coisa ruim”: casamento e nascimento são crises <b>normativas</b> e positivas, mas exigem reorganização. Normativa = <b>de dentro, esperada</b>. Paranormativa = <b>de fora, inesperada</b>.</div>
+  </div>
+
+<div class="card">
+    <h2>🩺 6. Avaliação da Família ("Evaluación de la familia")</h2>
+    <div class="criterio"><b>🟢 Slide 19 — instrumentos básicos:</b> a) história clínica; b) classificação familiar; c) ciclo vital de desenvolvimento; d) escala de Holmes; e) APGAR familiar; f) genograma.</div>
+    <div class="mnemo">🧠 <b>Mnemônico:</b> “<b>H</b>oje <b>C</b>lassifico o <b>C</b>iclo, <b>H</b>olmes, <b>A</b>PGAR e <b>G</b>enograma” → <b>H</b>istória clínica, <b>C</b>lassificação, <b>C</b>iclo vital, <b>H</b>olmes, <b>A</b>PGAR, <b>G</b>enograma.</div>
+    <h3>O Estudo de Saúde Familiar (ESF) — deck da Dra. Talavera</h3>
+    <p>Para avaliar a família, o médico de família segue uma estratégia clínica que inclui o indivíduo e sua família, com enfoque integrador das esferas <b>biológicas e psicossociais</b>: o <b>Estudo de Saúde Familiar (ESF)</b>. O deck lista <b>8 instrumentos básicos</b>:</p>
+    <table>
+      <tr><th>Instrumento</th><th>Para que serve</th><th>Tipo e tamanho</th></tr>
+      <tr><td><b>História clínica</b></td><td>Instrumento de trabalho clínico de todo médico</td><td>—</td></tr>
+      <tr><td><b>Familiograma (genograma)</b></td><td>Visão rápida e integrada dos problemas biomédicos e psicossociais; favorece boa relação médico-paciente; descreve estrutura familiar, parentescos e características gerais dos integrantes</td><td>Gráfico</td></tr>
+      <tr><td><b>Classificação familiar</b></td><td>Identifica, por várias perspectivas, as características das famílias</td><td>Os 5 eixos</td></tr>
+      <tr><td><b>Ciclo vital familiar</b></td><td>Avalia fatores de risco ligados às etapas do desenvolvimento existencial das famílias</td><td>Modelos de Geyman, Duvall, Carter e McGoldrick, OMS</td></tr>
+      <tr><td><b>APGAR familiar</b></td><td>Avalia a <b>percepção do apoio familiar</b></td><td>Autoaplicação, <b>5 perguntas</b></td></tr>
+      <tr><td><b>FACES III</b></td><td>Avalia <b>coesão e adaptabilidade</b> familiar</td><td>Autoaplicação, <b>20 perguntas</b></td></tr>
+      <tr><td><b>Índice simplificado de pobreza familiar</b></td><td>Elementos essenciais para identificar pobreza nas famílias</td><td>Autoaplicação, <b>4 perguntas</b></td></tr>
+      <tr><td><b>Escala de reajuste social de Holmes e Rahe</b></td><td>Avaliação quantitativa dos <b>acontecimentos vitais estressantes</b></td><td>Observacional, <b>43</b> itens</td></tr>
+    </table>
+    <div class="clinical"><b>⚠️ Divergência (6 x 8 instrumentos):</b> a Dra. Corrales lista 6 (história clínica, classificação, ciclo vital, Holmes, APGAR, genograma); a Dra. Talavera lista 8 (acrescenta FACES III e o índice simplificado de pobreza). Para a prova da Dra. Corrales, responda os 6 do slide 19; os outros dois são bônus.</div>
+    <div class="example"><b>📎 Complemento (FACES III, Olson):</b> mede duas dimensões do modelo circumplexo. <b>Coesão</b> (vínculo emocional): desligada, separada, conectada, emaranhada. <b>Adaptabilidade</b> (flexibilidade de regras e papéis): rígida, estruturada, flexível, caótica. Os extremos (desligada/emaranhada; rígida/caótica) são os mais disfuncionais.</div>
+    <h3>Quando fazer um ESF? (deck Talavera)</h3>
+    <table>
+      <tr><th>Grupo</th><th>Situações em que se recomenda</th></tr>
+      <tr><td><b>Queixas e uso dos serviços</b></td><td>Sintomas e sinais mal definidos; hiperutilização dos serviços; descumprimento da prescrição</td></tr>
+      <tr><td><b>Saúde mental</b></td><td>Ansiedade e depressão; obsessões e fobias; doenças psicossomáticas e transtornos de somatização; luto patológico</td></tr>
+      <tr><td><b>Crianças com problemas</b></td><td>Transtornos de alimentação; transtornos de conduta e aprendizagem; enurese e encoprese</td></tr>
+      <tr><td><b>Adições</b></td><td>Uso de drogas; alcoolismo; abuso de psicofármacos; tabagismo</td></tr>
+      <tr><td><b>Outros</b></td><td>Crise familiar; disfunção familiar; doenças congênitas e hereditárias; acontecimentos vitais com mau manejo do estresse; mau controle de doenças crônicas e degenerativas; violência intrafamiliar e problemas de adaptação social; ISTs, em especial HIV/AIDS e HPV; problemas ligados à sexualidade; gravidez não desejada; abuso sexual e estupro</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🔄 7. Ciclo Vital da Família ("Ciclo vital de la familia")</h2>
+    <div class="criterio"><b>🟢 Definição (slide 21):</b> “ciclo vital” é o <b>desenvolvimento da família tomada em seu conjunto</b>, os diferentes “momentos” pelos quais passam todos os membros, que vão <b>compartilhando uma história comum</b>.</div>
+    <ul>
+      <li>É um conceito <b>ordenador</b> para entender a evolução sequencial das famílias e as <b>crises transicionais</b> que atravessam, em função do crescimento e desenvolvimento de seus membros (deck Talavera).</li>
+      <li>Sequência <b>ordenada, universal e previsível</b>: resolver as tarefas de uma fase facilita superar a seguinte.</li>
+      <li><b>Valor principal:</b> identificar as <b>tarefas específicas</b> de cada fase. Se algumas não forem cumpridas, podem surgir problemas de funcionamento com efeito nas etapas seguintes (decks Talavera).</li>
+      <li><b>Acontecimento vital:</b> fato de especial significado que incita à mudança na vida do indivíduo e do grupo familiar (nascimento de um filho, morte do cônjuge); modifica a estrutura e o funcionamento, exige ajustes de papéis e novos mecanismos de enfrentamento.</li>
+    </ul>
+    <div class="analogy">🏗️ <b>Analogia:</b> o ciclo vital é como uma construção em andares. Se o térreo (formação do casal) ficou mal-acabado, o primeiro andar (chegada do filho) vai ranger. Cada fase só se apoia bem se a anterior foi bem resolvida.</div>
+
+    <h3>7.1 Modelo de Geyman — 5 etapas (slides 22 e 23)</h3>
+    <p>Começa com o casamento, avança conforme o <b>primeiro filho</b> cresce, até que todos os filhos amadureçam ou o casal fique só de novo, e termina com a <b>dissolução</b>.</p>
+    <table>
+      <tr><th>Fase</th><th>Começa</th><th>Termina</th></tr>
+      <tr><td><b>1. Matrimônio</b></td><td>Casamento</td><td>Nascimento do primeiro filho</td></tr>
+      <tr><td><b>2. Expansão</b></td><td>Nascimento do primeiro filho</td><td>Quando o primeiro filho alcança a maturidade</td></tr>
+      <tr><td><b>3. Dispersão</b></td><td>Quando o primeiro filho alcança a maturidade</td><td>Quando todos os filhos alcançam a maturidade</td></tr>
+      <tr><td><b>4. Independência</b></td><td>Quando todos os filhos alcançam a maturidade</td><td>Quando os pais se aposentam ou se separam (divórcio, morte)</td></tr>
+      <tr><td><b>5. Aposentadoria e morte</b> (“Retiro y muerte”)</td><td>Aposentadoria ou separação</td><td>Morte / dissolução</td></tr>
+    </table>
+    <div class="mnemo">🧠 <b>Mnemônico Geyman:</b> “<b>M</b>e <b>E</b>xpando, <b>D</b>ispersando, <b>I</b>ndependente, <b>R</b>etirando” → <b>M</b>atrimônio, <b>E</b>xpansão, <b>D</b>ispersão, <b>I</b>ndependência, <b>R</b>etiro e morte. Os filhos “maduros” definem as fronteiras.</div>
+    <div class="clinical"><b>⚠️ Divergência (slide 23 mal formatado):</b> no slide 23 o “Retiro y muerte” aparece sem os seus dois marcadores (ficou cortado na borda). O deck de Ciclo Vital completa a tabela: começa quando os pais se aposentam ou se separam e termina com a morte.</div>
+
+    <h3>7.2 Modelo de Duvall — 8 fases (slides 24 a 26)</h3>
+    <p>Um dos modelos mais conhecidos e usados (sociologia, psicologia, medicina). Reconhece <b>8 fases</b> e atribui a elas <b>posições dos membros e tarefas</b> para o desenvolvimento nas etapas críticas.</p>
+    <div class="cmed-fig"><a href="img/slides_cap07/06_u6_26.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/06_u6_26.jpg" alt="Tabela do modelo de Duvall com as 8 fases."></a><div class="cmed-fig-cap">Slide 26: as 8 fases de Duvall, da família que começa (ninho sem usar) à família idosa.</div></div>
+    <table>
+      <tr><th>Fase de Duvall</th><th>Começa</th><th>Termina</th></tr>
+      <tr><td><b>I. Família que começa</b> (ninho sem usar)</td><td>Formação do casal (casamento)</td><td>Nascimento do primeiro filho</td></tr>
+      <tr><td><b>II. Criação inicial dos filhos</b></td><td>Nascimento do primeiro filho</td><td>Primeiro filho completa <b>30 meses</b></td></tr>
+      <tr><td><b>III. Família com filhos pré-escolares</b></td><td>30 meses</td><td><b>6 anos</b></td></tr>
+      <tr><td><b>IV. Família com filhos escolares</b></td><td>6 anos</td><td><b>13 anos</b></td></tr>
+      <tr><td><b>V. Família com filhos adolescentes</b></td><td>13 anos</td><td><b>20 anos</b></td></tr>
+      <tr><td><b>VI. Família com ponto de partida</b> (plataforma de colocação)</td><td>Primeiro filho completa 20 anos</td><td>Todos os filhos saíram do lar</td></tr>
+      <tr><td><b>VII. Família madura</b> (ninho vazio)</td><td>Todos os filhos saíram do lar</td><td>Aposentadoria ou separação do casal (morte ou divórcio)</td></tr>
+      <tr><td><b>VIII. Família idosa</b></td><td>Aposentadoria ou separação do casal</td><td>Falecimento de ambos os membros do casal</td></tr>
+    </table>
+    <div class="mnemo">🧠 <b>Idades de Duvall:</b> <b>30 meses → 6 → 13 → 20</b>. Para lembrar: “dois e meio, seis, treze, vinte” (30 meses = 2,5 anos). Todas as idades são do <b>primeiro filho</b>.</div>
+    <div class="prova">📌 Em Duvall, só as fases II a V são definidas pela <b>idade do primeiro filho</b>; as fases VI, VII e VIII são definidas por <b>saída dos filhos, aposentadoria/separação e falecimento</b>.</div>
+
+    <h3>7.3 Modelo de Carter e McGoldrick — 6 estágios (slides 27 a 29)</h3>
+    <p>Um dos enfoques de maior aceitação atualmente. Partem da ideia de que as famílias, <b>como os indivíduos</b>, passam por etapas <b>previsíveis</b>; cada fase exige novas habilidades e ajustes de conduta e pensamento. A adaptação bem-sucedida exige que a família <b>aceite o princípio-chave de cada etapa e domine as tarefas das fases anteriores</b>.</p>
+    <div class="tbl-wrap"><table>
+      <tr><th>Etapa do ciclo vital familiar</th><th>Processo emocional de transição (princípio-chave)</th><th>Mudanças de segunda ordem no status familiar necessárias para avançar</th></tr>
+      <tr><td><b>1. Entre famílias:</b> desapego dos adultos jovens</td><td>Aceitação da separação pais-descendentes</td><td>a) Diferenciação de si mesmo em relação à família de origem<br>b) Desenvolvimento de relações de intimidade com companheiros<br>c) Estabelecimento de si mesmo no trabalho</td></tr>
+      <tr><td><b>2. Formação de famílias pelo casamento:</b> o casal de recém-casados</td><td>Compromisso com um novo sistema</td><td>a) Formação de um sistema marital<br>b) Reajuste das relações com a família política e os amigos para integrar o cônjuge</td></tr>
+      <tr><td><b>3. Família com filhos pequenos</b></td><td>Aceitação de novos membros dentro do sistema</td><td>a) Adaptação do sistema marital para abrir espaço ao(s) filho(s)<br>b) Assunção dos papéis da paternidade<br>c) Reajuste das relações com a família política para integrar os papéis de pais e avós</td></tr>
+      <tr><td><b>4. Família com adolescentes</b></td><td>Aumento da flexibilidade dos limites familiares para dar lugar à independência dos filhos</td><td>a) Mudança nas relações pais-filhos para permitir que os adolescentes entrem e saiam do sistema<br>b) Reenfoque marital da metade da vida e dos assuntos de carreira<br>c) Início da mudança para as preocupações das pessoas mais velhas</td></tr>
+      <tr><td><b>5. Desprendimento dos filhos e abandono do lar</b></td><td>Aceitação de múltiplas saídas e entradas no sistema familiar</td><td>a) Renegociação do sistema marital como díade<br>b) Desenvolvimento de relações de adulto para adulto entre filhos crescidos e pais<br>c) Reajuste de relações para integrar noras, genros e netos<br>d) Enfrentar as incapacidades e a morte dos pais (avós)</td></tr>
+      <tr><td><b>6. Família em etapa avançada da vida</b></td><td>Aceitação das mudanças nos papéis gerais</td><td>a) Manutenção do funcionamento próprio e/ou do casal e dos interesses diante do declínio fisiológico; exploração de novas opções para os papéis familiares e sociais<br>b) ♦ Apoio a um papel mais central da geração intermediária<br>c) ♦ Dar espaço no sistema à sabedoria e à experiência dos idosos<br>d) ♦ Enfrentar a perda do cônjuge, de irmãos e de pares e preparar-se para a própria morte; revisão e integração da vida</td></tr>
+    </table></div>
+    <div class="clinical"><b>⚠️ Divergência (estágio 6 cortado):</b> no slide 29 a última linha termina no item “a)”, cortada pela borda do slide. Os itens b, c e d (♦) vêm da formulação original de Carter e McGoldrick; sem garantia de que a professora cobre além do “a”.</div>
+    <div class="mnemo">🧠 <b>Princípios-chave em uma palavra:</b> 1 <b>separação</b> · 2 <b>compromisso</b> · 3 <b>novos membros</b> · 4 <b>flexibilidade</b> · 5 <b>saídas e entradas</b> · 6 <b>mudança de papéis</b>.</div>
+
+    <h3>7.4 Modelo da OMS — 6 etapas (deck de Ciclo Vital)</h3>
+    <table>
+      <tr><th>Etapa</th><th>Acontecimento que a marca</th></tr>
+      <tr><td><b>Formação</b></td><td>Casamento</td></tr>
+      <tr><td><b>Extensão</b></td><td>Nascimento do primeiro filho</td></tr>
+      <tr><td><b>Extensão completa</b></td><td>Nascimento do último filho</td></tr>
+      <tr><td><b>Contração</b></td><td>O primeiro filho abandona o lar</td></tr>
+      <tr><td><b>Contração completa</b></td><td>O último filho abandona o lar (ninho vazio)</td></tr>
+      <tr><td><b>Dissolução</b></td><td>Morte do primeiro cônjuge seguida da morte do cônjuge seguinte</td></tr>
+    </table>
+
+    <h3>7.5 Comparando os quatro modelos (slide 30)</h3>
+    <div class="cmed-fig"><a href="img/slides_cap07/07_u6_30.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/07_u6_30.jpg" alt="Quadro comparativo do ciclo vital familiar: Duvall, McGoldrick, Geyman e OMS."></a><div class="cmed-fig-cap">Slide 30: Duvall, McGoldrick, Geyman e OMS lado a lado.</div></div>
+    <table>
+      <tr><th>Modelo</th><th>Nº de etapas</th><th>Como delimita as etapas</th></tr>
+      <tr><td><b>Geyman</b></td><td><b>5</b></td><td>Pelo avanço do primeiro filho e pela maturidade dos filhos</td></tr>
+      <tr><td><b>Duvall</b></td><td><b>8</b></td><td>Pela idade do primeiro filho (30 meses, 6, 13, 20) e por saída, aposentadoria e morte</td></tr>
+      <tr><td><b>Carter e McGoldrick</b></td><td><b>6</b></td><td>Por transições emocionais e tarefas de cada etapa</td></tr>
+      <tr><td><b>OMS</b></td><td><b>6</b></td><td>Por acontecimentos: casamento, primeiro filho, último filho, saída do primeiro, saída do último, morte</td></tr>
+    </table>
+    <div class="prova">📌 Como ler o quadro: a coluna do meio entre dois modelos “estica” as linhas. Por exemplo, a “Dispersão” de Geyman cobre as fases de pré-escolares a adolescentes em Duvall; “Família com filhos pequenos” de McGoldrick abrange criação inicial, pré-escolares e escolares em Duvall. A etapa “entre famílias” (desapego dos adultos jovens) só existe em McGoldrick.</div>
+    <div class="clinical"><b>⚠️ Divergência (nomes no slide 30):</b> a coluna “McGoldrick” do slide traz as etapas de Carter e McGoldrick sem o “Carter”; a coluna “OMS” usa os mesmos termos do deck de Ciclo Vital (formação, extensão, extensão completa, contração, contração completa, dissolução). Não há erro de conteúdo, só de rótulo.</div>
+
+    <h3>7.6 Tarefas e conflitos frequentes por etapa (deck de Ciclo Vital, Dra. Talavera) ♦</h3>
+    <table>
+      <tr><th>Etapa (OMS)</th><th>O que acontece e tarefas</th><th>Conflitos frequentes</th></tr>
+      <tr><td><b>I. Formação</b> (matrimônio)</td><td><b>Cortejo e escolha do parceiro:</b> preparar-se para o papel de homem ou mulher, independizar-se da família de origem, iniciar identidade de casal, gerar intimidade. <b>Casamento e consolidação:</b> adaptar-se aos papéis e tarefas de uma casa, manejo do poder, padrões de resolução de conflitos. Dois momentos: <b>ninho sem usar</b> (estabelecer o lar, ganhar e gastar dinheiro, comunicação eficaz, acordos com amigos e parentes, planejamento familiar) e <b>família que espera</b> (gravidez; consultas de pré-natal)</td><td>Frustração das expectativas do casamento; aliança com a família de origem que dificulta assumir o papel de cônjuge ou pai/mãe; problemas de concepção (infertilidade, aborto, filho não desejado); disfunção sexual. Na gravidez: conflito com o desenvolvimento profissional da mulher, medo de gerar problemas nos filhos, medo de que os filhos destruam o casamento, ciúmes do pai por ser deslocado</td></tr>
+      <tr><td><b>II. Extensão</b> (nascimento do primeiro filho)</td><td>Surgem novos papéis e funções (função materna e paterna) e, com eles, os da família extensa (avós, tios, primos). As funções dos pais se diferenciam; forma-se o vínculo afetivo mãe-filho; o pai participa “de fora”, sustentando o vínculo e fazendo a ponte com o mundo. <b>Filhos em idade escolar:</b> primeiro desprendimento do seio familiar; a dinâmica familiar tolera e ajuda a autonomia; o casal tem mais tempo e a mulher pode voltar ao trabalho</td><td>Depressão puerperal; pais “abrumados” pela responsabilidade; intolerância do pai a ocupar lugar secundário; rejeição ao bebê por sentir-se deslocado, com maus-tratos e irritabilidade; excesso de participação da família extensa; persistência da união mãe-bebê. Na escola: culpar o colégio e trocá-lo com frequência, ou depositar nele funções que cabem aos pais</td></tr>
+      <tr><td><b>III. Extensão completa</b> (nascimento do último filho) e <b>adolescência</b></td><td>Etapa de grandes crises: o adolescente vive crise de identidade, mudanças corporais, amplia o contato com o mundo, o grupo de pares se torna primordial e o ajuda a se separar dos pais. Pais precisam ajustar-se à independência e manter <b>limites firmes e renegociáveis</b>, com espaço para experimentar e errar</td><td>Dificuldade dos pais de pôr limites adequados; dificuldade de permitir o desprendimento; frustração dos pais por expectativas não cumpridas. A ausência de limites leva a sentir-se só e a <b>condutas de risco</b> (violência, gravidez não desejada, drogas) para chamar a atenção dos pais</td></tr>
+      <tr><td><b>IV. Contração parcial</b> (primeiro filho sai do lar)</td><td>A família de origem precisa <b>desprender-se dos filhos</b> e incorporar novos indivíduos (cônjuge, família política); os filhos formam sua própria família e continuam o ciclo; os pais enfrentam a saída definitiva</td><td>Casais que deixaram “tudo” pela criação dos filhos acusam-nos de abandono; a insatisfação marital da mãe atrapalha a independência dos filhos; os filhos temem o efeito da saída sobre o casal; costuma-se culpar a mãe quando os filhos não conseguem partir</td></tr>
+      <tr><td><b>V. Contração completa</b> (ninho vazio)</td><td>Saída dos filhos e cessação do trabalho. O casal se reencontra, o que decide se continua unido. A aposentadoria pode ser um novo começo ou o fim da vida “produtiva”. Novos papéis: avô e avó, com contato mais livre com os netos. Os cuidados físicos, emocionais e econômicos podem se inverter. Perdas múltiplas (saúde, juventude, trabalho, pessoas); avós transmitem história, ritos e costumes</td><td>Doenças crônico-degenerativas; dificuldade de enfrentar o envelhecimento próprio e dos contemporâneos; julgar a vida como pouco satisfatória; crise evolutiva; dificuldade de adaptação; conflito diante da morte</td></tr>
+      <tr><td><b>VI. Dissolução</b></td><td>Morte do primeiro cônjuge e depois do sobrevivente: o ciclo vital familiar termina. O sobrevivente enfrenta a solidão; podem se acentuar doenças preexistentes ou surgir novas; adota atitude passiva e expectante</td><td>Solidão, doenças, luto</td></tr>
+    </table>
+
+    <h3>7.7 Apoios e recursos familiares (deck de Ciclo Vital) ♦</h3>
+    <ul>
+      <li>Ao longo do ciclo, a família enfrenta situações que podem <b>romper sua homeostase</b>: doenças graves ou crônicas, dificuldades econômicas, crises das mudanças de etapa. Pode seguir <b>dois caminhos</b>: ativar mecanismos de adaptação e recuperar o equilíbrio, ou entrar em <b>crise familiar</b>.</li>
+      <li><b>Rede de apoio de primeira ordem:</b> familiares, amigos, vizinhos, colegas. <b>De segunda ordem:</b> pessoas que não se conhecem mas chegam por meio da rede primária. <b>Rede extensa:</b> relações que ligam a rede secundária à população geral.</li>
+      <li><b>Apoio social:</b> processo interativo pelo qual a pessoa obtém ajuda <b>emocional, instrumental ou econômica</b> da rede social em que está inserida.</li>
+      <li><b>Recursos familiares:</b> ajuda que a família oferece a qualquer membro em necessidade (financeira, emocional, de educação e informação, manejo médico). Estão incluídos no apoio social; a família é <b>um componente</b> a mais da rede social.</li>
+    </ul>
+    <div class="example"><b>📎 Complemento — ecomapa (não consta nos slides):</b> o genograma mostra a família por dentro (gerações); o <b>ecomapa</b> (Hartman, 1978) mostra a família <b>em relação ao exterior</b>: escola, trabalho, igreja, serviço de saúde, vizinhos, com linhas que indicam a força ou o conflito do vínculo. É o desenho da “rede de apoio” acima.</div>
+  </div>
+
+  <div class="card">
+    <h2>📝 8. APGAR Familiar</h2>
+    <div class="criterio"><b>🟢 O que é (slides 31 e 32):</b> instrumento que mostra <b>como os membros percebem o nível de funcionamento da unidade familiar de forma global</b>, inclusive crianças (é aplicável à população infantil). Desenhado em <b>1978</b> pelo Dr. <b>Gabriel Smilkstein</b> (Universidade de Washington), pensando nas equipes de <b>atenção primária</b>. Premissa: os membros percebem o funcionamento da família e podem manifestar seu grau de <b>satisfação</b> com o cumprimento dos parâmetros básicos.</div>
+    <div class="analogy">👶 <b>Por que “APGAR”?</b> É uma palavra fácil de lembrar para médicos, familiar do <b>teste de Virginia Apgar</b> (recém-nascidos), e indica avaliação <b>rápida e fácil</b>. Curiosidade que ajuda a memorizar: os dois testes têm <b>5 itens, pontuados de 0 a 2, soma de 0 a 10</b>, e os mesmos cortes (0–3, 4–6, 7–10).</div>
+    <h3>Os 5 componentes (slide 33)</h3>
+    <table>
+      <tr><th>Letra</th><th>Componente</th><th>O que avalia</th></tr>
+      <tr><td><b>A</b></td><td><b>Adaptação</b> (Adaptability)</td><td>Capacidade de usar recursos <b>intra e extrafamiliares</b> para resolver problemas em situações de estresse ou crise</td></tr>
+      <tr><td><b>P</b></td><td><b>Participação</b> (Partnership), ou cooperação</td><td>Envolvimento dos membros nas <b>decisões</b> e nas responsabilidades de manutenção da família</td></tr>
+      <tr><td><b>G</b></td><td><b>Gradiente de recursos</b> (Growth), crescimento</td><td>Desenvolvimento da <b>maturação física, emocional e autorrealização</b> que os membros alcançam graças ao apoio e assessoramento mútuos</td></tr>
+      <tr><td><b>A</b></td><td><b>Afetividade</b> (Affection)</td><td>Relação de carinho e amor entre os membros</td></tr>
+      <tr><td><b>R</b></td><td><b>Recursos ou capacidade resolutiva</b> (Resolve)</td><td>Compromisso de dedicar <b>tempo</b> a atender necessidades físicas e emocionais dos outros; implica compartilhar renda e espaços</td></tr>
+    </table>
+    <div class="mnemo">🧠 <b>A-P-G-A-R</b> já é o mnemônico: <b>A</b>daptação · <b>P</b>articipação · <b>G</b>radiente de recursos (crescimento) · <b>A</b>fetividade · <b>R</b>esolução.</div>
+    <div class="criterio"><b>🟢 Esses 5 elementos estão presentes em toda a tipologia familiar</b> (por estrutura, desenvolvimento, integração ou demografia).</div>
+    <h3>Como aplicar e pontuar (slides 34 a 36)</h3>
+    <div class="cmed-fig"><a href="img/slides_cap07/08_clV_74.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/08_clV_74.jpg" alt="Questionário APGAR familiar com as 5 perguntas pontuadas de 0 a 2."></a><div class="cmed-fig-cap">Deck de Ciclo Vital: as 5 perguntas, pontuadas casi nunca = 0, a veces = 1, casi siempre = 2.</div></div>
+    <table>
+      <tr><th>Resposta</th><th>Pontos</th></tr>
+      <tr><td>Casi siempre (quase sempre)</td><td><b>2</b></td></tr>
+      <tr><td>Algunas veces (às vezes)</td><td><b>1</b></td></tr>
+      <tr><td>Casi nunca (quase nunca)</td><td><b>0</b></td></tr>
+    </table>
+    <table>
+      <tr><th>Pontuação total</th><th>Escala (slide 36)</th></tr>
+      <tr><td><b>0 a 3</b></td><td>Disfunção <b>grave</b></td></tr>
+      <tr><td><b>4 a 6</b></td><td>Disfunção <b>moderada</b></td></tr>
+      <tr><td><b>7 a 10</b></td><td><b>Funcional</b></td></tr>
+    </table>
+    <div class="example"><b>📎 Os dois exemplos preenchidos dos slides 34 e 35:</b> (1) mulher de 42 anos que marcou “algunas veces” nos cinco itens: 5 × 1 = <b>5 pontos → disfunção moderada</b>. (2) homem de 39 anos que marcou “algunas veces” em quatro itens e “casi nunca” em resolução: 4 × 1 + 0 = <b>4 pontos → disfunção moderada</b>. Os dois cálculos mostram a regra: some os pontos e consulte a faixa.</div>
+    <div class="clinical"><b>⚠️ Divergência (nomes das faixas e perguntas):</b> o deck de Ciclo Vital chama as faixas de “família severamente disfuncional / moderadamente funcional / altamente funcional”; os slides da Dra. Corrales dizem “disfunção grave / disfunção moderada / funcional”. É a mesma divisão 0–3 / 4–6 / 7–10. Além disso, a <b>redação das perguntas</b> varia entre versões do questionário (por exemplo, a ordem das perguntas sobre afeto e tempo juntos); o que cai em prova são os <b>5 componentes</b>, a pontuação <b>0–1–2</b> e os <b>cortes</b>.</div>
+    <div class="prova">📌 O APGAR familiar mede <b>percepção</b> (satisfação do respondente), não “verdade objetiva” sobre a família; é <b>autoaplicado</b>, <b>rápido</b> e vale para crianças também. Membros da mesma família podem pontuar diferente.</div>
+  </div>
+
+  <div class="card">
+    <h2>📈 9. Escala de Reajuste Social de Holmes e Rahe</h2>
+    <p>O slide 19 cita “Escala de Holmes” como instrumento de avaliação; o conteúdo vem do deck de Ciclo Vital e do deck Talavera (marcado ♦).</p>
+    <ul>
+      <li>♦ Em <b>1967</b>, os psiquiatras <b>Thomas Holmes e Richard Rahe</b> analisaram prontuários de mais de <b>5.000 pessoas</b> e elaboraram uma lista de <b>43 acontecimentos vitais</b>, com uma pontuação segundo o quanto estressam a pessoa. Não são só eventos negativos: a pontuação depende da incerteza, da mudança e do quanto sobrepassam os recursos.</li>
+      <li>♦ É um instrumento <b>observacional</b> que permite avaliação <b>quantitativa dos acontecimentos vitais estressantes</b>.</li>
+      <li>♦ <b>Como aplicar:</b> marcar os acontecimentos vividos nos <b>últimos 12 meses</b> (último ano) e <b>somar</b> as pontuações.</li>
+    </ul>
+    <table>
+      <tr><th>Soma</th><th>Risco de adoecer por estresse (deck)</th><th>Probabilidade de mudança no estado de saúde</th><th>Eventos cardiovasculares</th></tr>
+      <tr><td><b>Menos de 150</b></td><td>Pequeno</td><td>Menor que 50%</td><td>Risco baixo</td></tr>
+      <tr><td><b>150 a 299</b></td><td>Moderado</td><td>Maior que 50%</td><td>Risco intermediário (150 a 300)</td></tr>
+      <tr><td><b>300 ou mais</b></td><td>Importante</td><td>Sobe para 90% (segundo o slide)</td><td>Risco alto (maior que 300)</td></tr>
+    </table>
+    <div class="clinical"><b>⚠️ Divergência (números do deck):</b> (1) o deck diz que a probabilidade sobe a <b>90%</b> com 300 ou mais pontos; a literatura de Holmes e Rahe cita cerca de <b>80%</b>. Em prova, siga o slide (90%). (2) Os limites aparecem como “151 a 299”, “150 a 300” e “maior que 300” em slides diferentes; fixe os pontos de corte <b>150</b> e <b>300</b>. (3) A tabela do deck é rotulada “Holmes e Rahe 1976”, mas o estudo original é de <b>1967</b> (a figura é uma versão citada por De la Revilla, 1994).</div>
+    <div class="cmed-fig"><a href="img/slides_cap07/09_clV_77.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/09_clV_77.jpg" alt="Escala de acontecimentos vitais de Holmes e Rahe com 43 itens."></a><div class="cmed-fig-cap">Os 43 acontecimentos vitais e suas pontuações (deck de Ciclo Vital). Na aba Exemplos Práticos há uma calculadora com esta tabela.</div></div>
+    <div class="mnemo">🧠 <b>Os cinco primeiros, para cravar:</b> morte do cônjuge <b>100</b> · divórcio <b>73</b> · separação <b>65</b> · prisão <b>63</b> · morte de familiar próximo <b>63</b>. Fechando a lista: Natal <b>12</b>, pequenas infrações da lei <b>11</b>. Casamento vale <b>50</b> e aposentadoria <b>45</b>: mudança boa também estressa.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧬 10. Genograma ("Genograma" / familiograma)</h2>
+    <div class="criterio"><b>🟢 Definição (slide 37):</b> representação gráfica de uma <b>família multigeracional</b> que, por meio de <b>símbolos</b>, permite <b>recolher, registrar, relacionar e expor</b> informação do sistema familiar, <b>num momento determinado de sua evolução</b>, e usá-la para a <b>resolução de problemas</b>.</div>
+    <div class="analogy">📸 <b>Analogia:</b> o genograma é uma fotografia da família com “legendas médicas”: mostra quem é quem, quem mora com quem, quem morreu de quê e onde há conflitos. Como é uma foto, vale para o <b>momento</b> em que foi tirada e pode ser atualizada.</div>
+    <h3>O que o genograma permite ver (slide 38)</h3>
+    <ol>
+      <li><b>A estrutura familiar e suas interações, “a modo de fotografia”</b>, lida em duas direções: <b>horizontal</b> (ciclo vital) e <b>vertical</b> (através das gerações).</li>
+      <li>Pode ajudar os membros da família a <b>ver a si mesmos</b>.</li>
+      <li>A <b>organização dentro do sistema</b> segundo geração, idade e sexo.</li>
+      <li>O <b>lugar que cada um ocupa</b> na estrutura familiar.</li>
+      <li>As <b>pautas de relação</b> e o <b>tipo de família</b>.</li>
+    </ol>
+    <div class="mnemo">🧠 <b>Leitura:</b> <b>H</b>orizontal = ciclo vital (mesma geração, ao longo do tempo); <b>V</b>ertical = gerações. Pense “H de hora, V de vó”.</div>
+    <h3>Símbolos básicos (slides 39 a 47)</h3>
+    <div class="gen-wrap">
+<svg viewBox="0 0 720 440" class="gen-svg" role="img" aria-label="Exemplo de genograma de três gerações com legenda dos símbolos">
+  <rect x="150" y="168" width="250" height="196" rx="12" class="g-dot"/>
+  <text x="225" y="382" class="g-small">mesmo lar (pontilhado)</text>
+  <!-- geração 1 -->
+  <rect x="92" y="42" width="36" height="36" class="g-fig"/>
+  <line x1="92" y1="42" x2="128" y2="78" class="g-line"/><line x1="128" y1="42" x2="92" y2="78" class="g-line"/>
+  <text x="110" y="34" class="g-small" text-anchor="middle">72</text>
+  <circle cx="210" cy="60" r="18" class="g-fig"/>
+  <line x1="128" y1="60" x2="192" y2="60" class="g-line"/>
+  <text x="160" y="52" class="g-small" text-anchor="middle">m.58</text>
+  <line x1="160" y1="60" x2="160" y2="130" class="g-line"/>
+  <line x1="100" y1="130" x2="200" y2="130" class="g-line"/>
+  <line x1="100" y1="130" x2="100" y2="182" class="g-line"/>
+  <line x1="200" y1="130" x2="200" y2="182" class="g-line"/>
+  <!-- geração 2 -->
+  <circle cx="100" cy="200" r="18" class="g-fig"/>
+  <rect x="182" y="182" width="36" height="36" class="g-fig"/>
+  <circle cx="330" cy="200" r="18" class="g-fig"/>
+  <line x1="218" y1="200" x2="312" y2="200" class="g-line"/>
+  <text x="265" y="192" class="g-small" text-anchor="middle">m.02</text>
+  <text x="200" y="236" class="g-small" text-anchor="middle">45</text>
+  <text x="330" y="236" class="g-small" text-anchor="middle">43</text>
+  <line x1="265" y1="200" x2="265" y2="272" class="g-line"/>
+  <line x1="190" y1="272" x2="360" y2="272" class="g-line"/>
+  <line x1="190" y1="272" x2="190" y2="298" class="g-line"/>
+  <line x1="275" y1="272" x2="275" y2="302" class="g-line"/>
+  <line x1="360" y1="272" x2="360" y2="292" class="g-line"/>
+  <!-- geração 3 -->
+  <circle cx="190" cy="320" r="18" class="g-fig"/><circle cx="190" cy="320" r="22" class="g-fig"/>
+  <text x="190" y="358" class="g-small" text-anchor="middle">17 (índice)</text>
+  <rect x="257" y="302" width="36" height="36" class="g-fig"/>
+  <text x="275" y="358" class="g-small" text-anchor="middle">14</text>
+  <circle cx="360" cy="298" r="6" class="g-fill"/>
+  <text x="360" y="322" class="g-small" text-anchor="middle">aborto</text>
+  <!-- legenda -->
+  <g transform="translate(450,30)">
+    <text x="0" y="0" class="g-title">Legenda</text>
+    <rect x="0" y="12" width="18" height="18" class="g-fig"/><text x="30" y="26" class="g-small">homem (quadrado)</text>
+    <circle cx="9" cy="52" r="9" class="g-fig"/><text x="30" y="56" class="g-small">mulher (círculo)</text>
+    <circle cx="9" cy="82" r="7" class="g-fig"/><circle cx="9" cy="82" r="10" class="g-fig"/><text x="30" y="86" class="g-small">paciente índice (linha dupla)</text>
+    <rect x="0" y="100" width="18" height="18" class="g-fig"/><line x1="0" y1="100" x2="18" y2="118" class="g-line"/><line x1="18" y1="100" x2="0" y2="118" class="g-line"/><text x="30" y="114" class="g-small">falecido (X dentro; idade dentro)</text>
+    <line x1="0" y1="140" x2="18" y2="140" class="g-line"/><text x="30" y="144" class="g-small">casados (linha cheia)</text>
+    <line x1="0" y1="162" x2="18" y2="162" class="g-line g-dash"/><text x="30" y="166" class="g-small">união sem casamento (pontilhada)</text>
+    <line x1="0" y1="184" x2="18" y2="184" class="g-line"/><line x1="6" y1="190" x2="12" y2="178" class="g-line"/><text x="30" y="188" class="g-small">separação (uma barra)</text>
+    <line x1="0" y1="206" x2="22" y2="206" class="g-line"/><line x1="5" y1="212" x2="11" y2="200" class="g-line"/><line x1="11" y1="212" x2="17" y2="200" class="g-line"/><text x="30" y="210" class="g-small">divórcio (duas barras)</text>
+    <line x1="9" y1="222" x2="9" y2="230" class="g-line"/><path d="M9 230 L2 242 L16 242 Z" class="g-fig"/><text x="30" y="238" class="g-small">gravidez (triângulo)</text>
+    <line x1="9" y1="252" x2="9" y2="260" class="g-line"/><circle cx="9" cy="264" r="4" class="g-fill"/><text x="30" y="266" class="g-small">aborto espontâneo</text>
+    <line x1="9" y1="278" x2="9" y2="286" class="g-line"/><line x1="4" y1="286" x2="14" y2="296" class="g-line"/><line x1="14" y1="286" x2="4" y2="296" class="g-line"/><text x="30" y="294" class="g-small">aborto induzido (X)</text>
+    <rect x="0" y="308" width="22" height="16" rx="4" class="g-dot"/><text x="30" y="320" class="g-small">vivem no mesmo lar (pontilhado)</text>
+    <text x="0" y="344" class="g-small">filhos: do mais velho (esq.) ao mais novo (dir.)</text>
+  </g>
+</svg>
+    </div>
+    <div class="cmed-fig-cap" style="text-align:center">Genograma de exemplo desenhado para este capítulo (três gerações). A paciente índice tem linha dupla; o avô, falecido aos 72, tem X; o casal da geração 2 e os filhos vivem no mesmo lar (pontilhado); há um aborto espontâneo entre os irmãos.</div>
+    <table>
+      <tr><th>Elemento</th><th>Regra do slide</th></tr>
+      <tr><td><b>Pessoas</b> (39)</td><td>Cada membro é um <b>quadrado (homem)</b> ou um <b>círculo (mulher)</b></td></tr>
+      <tr><td><b>Pessoa índice</b> (40)</td><td>Para a pessoa índice ou <b>paciente identificado</b>, em torno da qual se constrói o familiograma, as <b>linhas são duplas</b></td></tr>
+      <tr><td><b>Falecimento</b> (41)</td><td>Um <b>X dentro da figura</b>; datas de nascimento e falecimento à esquerda e à direita, acima da figura; a <b>idade ao morrer</b> costuma ir dentro da figura</td></tr>
+      <tr><td><b>Gerações</b> (42)</td><td>Traçado da estrutura familiar em <b>três gerações</b>; figuras do passado distante geralmente não se marcam; só se indicam as <b>mortes relevantes</b></td></tr>
+      <tr><td><b>Gravidez, aborto e natimorto</b> (42)</td><td><b>Gravidez</b>: triângulo. <b>Parto de feto morto</b>: quadrado ou círculo com X. <b>Aborto</b>: ponto cheio. <b>Aborto induzido</b>: X</td></tr>
+      <tr><td><b>Conexões</b> (43)</td><td>Figuras ligadas por linhas que indicam relações <b>biológicas e legais</b></td></tr>
+      <tr><td><b>Interrupção do casamento</b> (44)</td><td>Barras inclinadas: <b>uma barra = separação; duas barras = divórcio</b>. Anota-se o ano: <b>m.22</b> (casaram em 22), <b>s.28</b> (separaram em 28), <b>d.32</b> (divorciaram em 32)</td></tr>
+      <tr><td><b>União sem casamento</b> (45 e 46)</td><td>Mesma ligação dos casais casados, mas com <b>linha pontilhada</b> (ex.: “c.39”; “se conocieron 1981”)</td></tr>
+      <tr><td><b>Ordem de nascimento</b> (46)</td><td>Dos <b>mais velhos (esquerda) aos mais novos (direita)</b></td></tr>
+      <tr><td><b>Mesmo lar</b> (47)</td><td><b>Linhas de pontos</b> envolvem os membros que vivem no lar imediato; importante nas famílias recasadas, em que filhos passam tempo em lares diferentes</td></tr>
+    </table>
+        <div class="cmed-gallery">
+      <div class="cmed-fig"><a href="img/slides_cap07/10_u6_41.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/10_u6_41.jpg" alt="Pessoa falecida: X dentro da figura."></a><div class="cmed-fig-cap">Slide 41: falecido = X; idade dentro da figura.</div></div>
+      <div class="cmed-fig"><a href="img/slides_cap07/11_u6_42.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/11_u6_42.jpg" alt="Símbolos de gravidez, parto de feto morto, aborto e aborto induzido."></a><div class="cmed-fig-cap">Slide 42: gravidez, natimorto, aborto, aborto induzido.</div></div>
+      <div class="cmed-fig"><a href="img/slides_cap07/12_u6_46.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/12_u6_46.jpg" alt="Casal não casado e ordem de nascimento."></a><div class="cmed-fig-cap">Slide 46: casal não casado e ordem de nascimento.</div></div>
+    </div>
+    <div class="clinical"><b>⚠️ Divergência (abreviaturas e nomes):</b> o slide 40 chama o instrumento de “familiograma”; é o mesmo que o genograma (o deck Talavera usa “familiograma” na lista de instrumentos). A abreviatura “c.” do slide 45 (“c. 39”) não é explicada; provavelmente significa <b>convivência</b> (coabitação) seguida do ano, em paralelo com m., s. e d.; confirme com a professora O slide 44 traz as marcações sobrepostas ao desenho; use a regra “uma barra, separação; duas barras, divórcio”.</div>
+    <h3>Construção em 3 níveis (deck de Ciclo Vital) ♦</h3>
+    <ol>
+      <li><b>Traçado da estrutura familiar</b> (quem é quem, uniões, filhos)</li>
+      <li><b>Registro da informação sobre a família</b> (idades, datas, ocupação, doenças, escolaridade, eventos)</li>
+      <li><b>Delineado das relações familiares</b> (vínculos entre os membros)</li>
+    </ol>
+    <div class="example"><b>📎 Complemento (símbolos de relação, McGoldrick; não estão nos slides):</b> linha tripla = vínculo muito próximo ou fusionado; linha em zigue-zague = conflito; linha pontilhada = distância ou vínculo frágil; zigue-zague sobre linha dupla = vínculo próximo e conflituoso. São o “terceiro nível”.</div>
+    <h3>Em resumo, o genograma (slide 48)</h3>
+    <ul>
+      <li>É de grande utilidade para <b>estudar a família</b> e <b>identificar riscos e danos à saúde</b>.</li>
+      <li>Traz <b>dados demográficos</b>, <b>tipos de família</b> e <b>dinâmica familiar</b>.</li>
+      <li>Facilita à equipe de saúde dados importantes da família e <b>facilita o trabalho de educação e prevenção de doenças</b>.</li>
+      <li><b>Pode ser preenchido em várias sessões.</b></li>
+    </ul>
+    <div class="prova">📌 Quatro pegadinhas de genograma: (1) paciente índice = <b>linha dupla</b>, não cor diferente; (2) <b>uma</b> barra = separação, <b>duas</b> = divórcio; (3) casal sem casamento = <b>pontilhada</b>; (4) irmãos em ordem de nascimento <b>da esquerda para a direita, do mais velho ao mais novo</b>.</div>
+  </div>
+
+  <div class="card">
+    <h2>📚 11. Trabalho Independente, Bibliografia e Avisos</h2>
+    <ul>
+      <li><b>Trabalho independente (slide 49):</b> <b>Promoção da saúde familiar</b> e <b>Prevenção da disfunção familiar</b>.</li>
+      <li><b>Bibliografia (slide 49):</b> Martín Zurro, A. e Cano Pérez, J. F., <i>Atención Primaria: Principios, organización y métodos en medicina de familia</i>.</li>
+      <li><b>Encerramento (slide 50):</b> imagem de um bebê com a citação de Salmo 127:3 (“los hijos son una herencia del Señor…”). Os slides 2, 3 e 8 usam personagens de desenho (Shrek, Peppa, Gru, Os Flintstones) para ilustrar famílias diversas: você os classifica na aba Exemplos Práticos.</li>
+    </ul>
+    <div class="example"><b>📎 Complemento para o trabalho independente (não está nos slides):</b> <b>Promoção da saúde familiar</b> = fortalecer fatores protetores antes de haver problema: comunicação, rotinas e rituais, divisão justa de tarefas, tempo juntos, acesso a serviços, rede de apoio, educação em saúde na consulta e em visitas domiciliares (as áreas de Ottawa do Cap. 6 aplicadas à família). <b>Prevenção da disfunção</b> = antecipar as crises: orientar o casal antes do primeiro filho, acompanhar transições do ciclo vital, detectar sinais precoces (sintomas em criança, hiperutilização de serviços, violência) com APGAR, Holmes e genograma, e encaminhar cedo.</div>
+    <h3>Guia do trabalho prático (deck “Guia para el trabajo”, Dra. Talavera)</h3>
+    <div class="clinical"><b>⚠️ Divergência (aviso de outro curso):</b> o guia traz data de entrega <b>06-06-24</b> e o campo “Tema” em branco; trata-se do trabalho prático da Dra. Talavera, não necessariamente da Unidade VI da Dra. Corrales. Confirme o tema e o prazo atual com a professora.</div>
+    <ul>
+      <li><b>Valor:</b> 3% da nota (10 pontos). Apresentação <b>expositiva</b> e também <b>impressa</b>; todos os integrantes do grupo devem participar da exposição, com meios audiovisuais e/ou outros materiais didáticos. Tudo em <b>castelhano</b>.</li>
+      <li><b>Forma impressa:</b> 1 capa (logo da universidade, título, nomes dos estudantes, docente, local e data); 2 índice; 3 introdução; 4 desenvolvimento (mínimo 5 e máximo 10 páginas, com ilustrações); 5 recomendações; 6 bibliografia (mínimo 10 revisões); 7 quadro de critérios.</li>
+    </ul>
+    <table>
+      <tr><th>Critério</th><th>Pontos</th></tr>
+      <tr><td>Trabalho completo e com informação pertinente</td><td>2</td></tr>
+      <tr><td>Desenvolvimento do tema claro</td><td>2</td></tr>
+      <tr><td>Sequência lógica da informação</td><td>1</td></tr>
+      <tr><td>Uso correto do idioma castelhano e ortografia</td><td>1</td></tr>
+      <tr><td>Participação de todos os integrantes na exposição</td><td>2</td></tr>
+      <tr><td>Apresentação de material didático</td><td>1</td></tr>
+      <tr><td>Bibliografia consultada suficiente</td><td>1</td></tr>
+      <tr><td><b>Total</b></td><td><b>10</b></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📝 Resumo da Unidade</h2>
+    <div class="criterio">A família é um <b>grupo social organizado como sistema aberto</b>, com laços consanguíneos, legais e/ou de afinidade. Cumpre funções (cuidados, estatus, socialização, afeto, reprodução, papéis). Classifica-se por <b>parentesco, presença física, meios de subsistência, nível econômico e novos estilos de convivência</b>, e tipifica-se por estrutura, integração, desenvolvimento, demografia e ocupação. As crises podem ser <b>normativas</b> (esperadas, evolutivas) ou <b>paranormativas</b> (inesperadas: desmembramento, incremento, desmoralização, desorganização). A avaliação usa história clínica, classificação, ciclo vital (Geyman 5, Duvall 8, Carter e McGoldrick 6, OMS 6), Holmes, <b>APGAR familiar</b> (5 itens, 0 a 10) e <b>genograma</b>.</div>
+  </div>
+
+  <div class="card">
+    <h2>💪 Fixação rápida</h2>
+    <div class="al-grid">
+      <div class="al-box remember"><div class="al-title">✅ O que você deve lembrar</div>Família = grupo social, sistema aberto, laços consanguíneos/legais/afinidade. Funções CESAR+papéis. Tipologia: estrutura, integração, desenvolvimento, demografia, ocupação. Classificação: 5 eixos (parentesco, presença física, subsistência, nível econômico, novos estilos). Pobreza nível 1 = menos grave, nível 3 = mais grave. Crises: normativas (evolutivas, intrassistêmicas) x paranormativas (intersistêmicas); 4 tipos: desmembramento, incremento, desmoralização, desorganização. Ciclo vital: Geyman 5, Duvall 8 (30 meses, 6, 13, 20), C&amp;M 6, OMS 6. APGAR: 5 itens, 0-1-2, cortes 0-3, 4-6, 7-10. Genograma: quadrado homem, círculo mulher, linha dupla para índice, X falecido, 1 barra separação, 2 barras divórcio, pontilhada união sem casamento.</div>
+      <div class="al-box errors"><div class="al-title">⚠️ Erro comum</div>Confundir tipologia (5 colunas) com classificação (5 eixos). Trocar “grupal” por “comunal”. Inverter ascendente/descendente. Dizer que o nível 3 de pobreza é o menos grave. Confundir crises normativas com paranormativas pelo “gosto” do evento (casamento é normativa mesmo sendo boa). Trocar as faixas do APGAR (0–3 é grave). Usar duas barras para separação.</div>
+      <div class="al-box quick"><div class="al-title">⚡ Questão rápida</div>Uma família composta por pai, mãe, três filhos e uma sobrinha que mora com eles é classificada, por parentesco, como…?
+        <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta</button>
+        <div class="qq-answer">Família <b>extensa</b>: pai e mãe com filhos mais outra pessoa <b>com parentesco</b> (a sobrinha). Se também morasse ali um inquilino sem parentesco, passaria a <b>extensa compuesta</b>. Pelo número de filhos (3), o núcleo seria “simples”, mas como há parente agregado a categoria que vale é a extensa.</div>
+      </div>
+      <div class="al-box self"><div class="al-title">🧠 Autoexplicação</div>Por que o ciclo vital familiar é útil para o médico de família, e não apenas “teoria de sociologia”?
+        <button class="qq-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver resposta esperada</button>
+        <div class="qq-answer">Porque cada etapa traz tarefas e crises previsíveis (depressão puerperal, conflitos com o adolescente, ninho vazio, luto). Se o médico sabe em que etapa a família está, ele <b>antecipa</b> riscos, reconhece que um sintoma pode ser a expressão de uma transição mal resolvida (o paciente identificado) e orienta a família <b>antes</b> de a crise virar disfunção. Por isso o ciclo vital está entre os instrumentos básicos da avaliação.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚠️ Onde todo mundo escorrega</h2>
+    <ul>
+      <li>Misturar tipologia (estrutura, integração, desenvolvimento, demografia, ocupação) com os 5 eixos da classificação</li>
+      <li>“Nuclear” no slide 10 é casal <b>sem filhos</b>; “simples” é 1 a 3 filhos; “numerosa”, 4 ou mais</li>
+      <li>Ascendente (casal jovem na casa dos pais) x descendente (pais na casa dos filhos)</li>
+      <li>Nível de pobreza 3 é o <b>mais</b> grave; renda abaixo da cesta básica</li>
+      <li>Crise normativa x paranormativa: decide o <b>timing e a origem</b>, não ser “boa” ou “má”</li>
+      <li>Geyman tem 5 etapas, Duvall 8, McGoldrick 6, OMS 6; as idades de Duvall são do <b>primeiro filho</b></li>
+      <li>APGAR: 4 a 6 é <b>disfunção moderada</b>; 7 a 10 é funcional</li>
+      <li>Genograma: uma barra = separação, duas = divórcio; pontilhada = união sem casamento</li>
+      <li>Paciente identificado não é “o culpado”</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📚 Se você só puder lembrar de 8 coisas</h2>
+    <ol>
+      <li>Família = grupo social, sistema aberto, laços consanguíneos, legais e/ou de afinidade</li>
+      <li>Funções: cuidados, estatus, socialização, afeto, reprodução (e papéis)</li>
+      <li>Classificação por 5 eixos; tipologia por 5 colunas</li>
+      <li>Pobreza familiar: níveis 1 (menos grave) a 3 (mais grave)</li>
+      <li>Crises: normativas (esperadas) x paranormativas (inesperadas: desmembramento, incremento, desmoralização, desorganização)</li>
+      <li>Ciclo vital: Geyman 5 · Duvall 8 · Carter e McGoldrick 6 · OMS 6</li>
+      <li>APGAR familiar: A-P-G-A-R, 0 a 10 (0–3 grave, 4–6 moderada, 7–10 funcional)</li>
+      <li>Genograma: símbolos, linha dupla no índice, X no falecido, barras de separação/divórcio</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>📸 Figuras da Aula</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Slides da Unidade VI (Dra. Claudia Beatriz Corrales Suarez) e dos decks complementares (Dra. Myrna Talavera). Clique para ampliar. As figuras principais aparecem ao longo do guia; esta galeria reúne todas.</p>
+    <div class="cmed-gallery">
+      <div class="cmed-fig"><a href="img/slides_cap07/01_fam_03.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/01_fam_03.jpg" alt="Definição leiga de família (infográfico do deck Talavera)."></a><div class="cmed-fig-cap">Definição leiga de família (infográfico do deck Talavera).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/02_u6_10.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/02_u6_10.jpg" alt="Classificação por parentesco (slide 10)."></a><div class="cmed-fig-cap">Classificação por parentesco (slide 10).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/03_u6_11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/03_u6_11.jpg" alt="Presença física no lar (slide 11)."></a><div class="cmed-fig-cap">Presença física no lar (slide 11).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/04_u6_14.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/04_u6_14.jpg" alt="Novos estilos de vida pessoal-familiar (slide 14)."></a><div class="cmed-fig-cap">Novos estilos de vida pessoal-familiar (slide 14).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/05_u6_18.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/05_u6_18.jpg" alt="As crises familiares: evolutivas e inesperadas (slide 18)."></a><div class="cmed-fig-cap">As crises familiares: evolutivas e inesperadas (slide 18).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/06_u6_26.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/06_u6_26.jpg" alt="Modelo de Duvall: 8 fases (slide 26)."></a><div class="cmed-fig-cap">Modelo de Duvall: 8 fases (slide 26).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/07_u6_30.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/07_u6_30.jpg" alt="Quadro comparativo do ciclo vital: Duvall, McGoldrick, Geyman, OMS (slide 30)."></a><div class="cmed-fig-cap">Quadro comparativo do ciclo vital: Duvall, McGoldrick, Geyman, OMS (slide 30).</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/08_clV_74.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/08_clV_74.jpg" alt="APGAR familiar: as 5 perguntas pontuadas de 0 a 2."></a><div class="cmed-fig-cap">APGAR familiar: as 5 perguntas pontuadas de 0 a 2.</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/09_clV_77.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/09_clV_77.jpg" alt="Escala de Holmes e Rahe: 43 acontecimentos vitais."></a><div class="cmed-fig-cap">Escala de Holmes e Rahe: 43 acontecimentos vitais.</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/10_u6_41.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/10_u6_41.jpg" alt="Genograma: pessoa falecida."></a><div class="cmed-fig-cap">Genograma: pessoa falecida.</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/11_u6_42.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/11_u6_42.jpg" alt="Genograma: gravidez, aborto e natimorto."></a><div class="cmed-fig-cap">Genograma: gravidez, aborto e natimorto.</div></div>
+<div class="cmed-fig"><a href="img/slides_cap07/12_u6_46.jpg" target="_blank" rel="noopener"><img loading="lazy" src="img/slides_cap07/12_u6_46.jpg" alt="Genograma: casal não casado e ordem de nascimento."></a><div class="cmed-fig-cap">Genograma: casal não casado e ordem de nascimento.</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ CASOS CLÍNICOS ============ -->
+<section class="panel" id="p1">
+<div class="card">
+    <h2>🩺 Caso Clínico Progressivo — A Família de Rosa, da Classificação ao Ciclo Vital</h2>
+    <p style="color:var(--text-dim);font-size:.88em;">Vamos acompanhar uma família de Pedro Juan Caballero que passa por uma crise paranormativa, é avaliada pelo Estudo de Saúde Familiar e, dois anos depois, enfrenta novas crises. O caso evolui em 3 níveis — clica em cada um pra ver como as coisas vão se desenrolando.</p>
+  </div>
+  <div id="casesArea"></div>
+</section>
+
+<!-- CMED-VIDEO-STYLE -->
+<style>
+.cmed-video-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(79,209,161,.14);border:1px solid var(--ok);color:var(--ok);font-size:.72em;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:10px;}
+.cmed-video-sub{color:var(--text-dim);font-size:.85em;margin:-6px 0 14px 0;}
+.cmed-video-card{background:var(--card2,#0f1726);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;}
+.cmed-video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000 center/cover no-repeat;cursor:pointer;}
+.cmed-video-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;}
+.cmed-video-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.cmed-video-play span{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:1.6em;color:#fff;transition:transform .15s;}
+.cmed-video-thumb:hover .cmed-video-play span{transform:scale(1.08);background:var(--accent);}
+.cmed-video-dur{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:.75em;padding:2px 8px;border-radius:5px;}
+.cmed-video-body{padding:14px 16px;}
+.cmed-video-tag{color:var(--gold);font-size:.72em;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.cmed-video-title{color:var(--text);font-size:1.05em;font-weight:700;margin:4px 0 8px 0;}
+.cmed-video-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.82em;color:var(--text-dim);margin-bottom:10px;}
+.cmed-video-stars{color:var(--gold);}
+.cmed-video-why{background:rgba(232,184,75,.10);border:1px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:.85em;margin:10px 0;color:var(--text-dim);}
+.cmed-video-why b{color:var(--gold);}
+.cmed-video-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.cmed-video-btn{background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:20px;cursor:pointer;font-size:.82em;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.cmed-video-btn.secondary{background:transparent;border:1px solid var(--border);color:var(--text-dim);}
+.cmed-video-btn:hover{opacity:.88;}
+.cmed-video-note{color:var(--text-dim);font-size:.8em;text-align:center;margin-top:6px;}
+.cmed-video-extra-label{font-size:.85em;color:var(--text-dim);margin:18px 0 8px 0;font-weight:700;}
+@media (max-width:600px){.cmed-video-play span{width:52px;height:52px;font-size:1.3em;}}
+</style>
+<!-- /CMED-VIDEO-STYLE -->
+
+<!-- CMED-VIDEO-SECTION -->
+<section class="panel" id="p2">
+  <div class="card">
+    <span class="cmed-video-badge">🩺 Recomendado pela ClinicusMed</span>
+    <h2>🎥 Complemento em Vídeo</h2>
+    <p class="cmed-video-sub">A Clinicus selecionou este conteúdo para complementar seu estudo. Não substitui a leitura do resumo — o resumo ensina, o vídeo reforça.</p>
+    <div id="cmedVideoContainer">
+      <p style="color:var(--text-dim);font-size:.9em;">Carregando recomendações...</p>
+    </div>
+  </div>
+</section>
+<!-- /CMED-VIDEO-SECTION -->
+
+<!-- CMED-VIDEO-SCRIPT -->
+<script>
+(function(){
+  function ytThumb(id){ return 'https://img.youtube.com/vi/'+id+'/hqdefault.jpg'; }
+  function ytWatch(id){ return 'https://www.youtube.com/watch?v='+id; }
+  function stars(n){ n = n||5; return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+  function videoCard(v, isPrincipal){
+    if(!v || !v.id) return '';
+    var thumb = v.tipo === 'vimeo' ? '' : ytThumb(v.id);
+    var watchUrl = v.tipo === 'vimeo' ? ('https://vimeo.com/'+v.id) : ytWatch(v.id);
+    var embedUrl = v.tipo === 'vimeo' ? ('https://player.vimeo.com/video/'+v.id+'?autoplay=1') : ('https://www.youtube.com/embed/'+v.id+'?autoplay=1&rel=0');
+    var tag = isPrincipal ? '🎥 Vídeo Principal' : '➕ Complementar';
+    var card = document.createElement('div');
+    card.className = 'cmed-video-card';
+    card.innerHTML =
+      '<div class="cmed-video-thumb" data-embed="'+embedUrl+'" style="background-image:url(\''+thumb+'\')">' +
+        '<div class="cmed-video-play"><span>▶</span></div>' +
+        (v.duracao ? '<div class="cmed-video-dur">⏱ '+v.duracao+'</div>' : '') +
+      '</div>' +
+      '<div class="cmed-video-body">' +
+        '<div class="cmed-video-tag">'+tag+'</div>' +
+        '<div class="cmed-video-title">'+(v.titulo||'')+'</div>' +
+        '<div class="cmed-video-meta">' +
+          (v.duracao ? '<span>⏱ '+v.duracao+'</span>' : '') +
+          '<span class="cmed-video-stars">'+stars(v.estrelas)+'</span>' +
+          (v.canal ? '<span>· '+v.canal+'</span>' : '') +
+        '</div>' +
+        (v.motivo ? '<div class="cmed-video-why"><b>📌 Por que recomendamos este vídeo?</b><br>'+v.motivo+'</div>' : '') +
+        '<div class="cmed-video-btns">' +
+          '<a class="cmed-video-btn" href="'+watchUrl+'" target="_blank" rel="noopener">↗ Abrir no site original</a>' +
+          '<button class="cmed-video-btn secondary" data-copy="'+watchUrl+'">📋 Copiar link</button>' +
+        '</div>' +
+      '</div>';
+    return card;
+  }
+
+  function render(data){
+    var container = document.getElementById('cmedVideoContainer');
+    if(!container) return;
+    var entry = data && typeof CHAPTER_ID !== 'undefined' ? data[CHAPTER_ID] : null;
+
+    if(!entry || !entry.principal){
+      // Sem video cadastrado: esconde a secao inteira e o botao da aba
+      var section = document.getElementById('p2');
+      if(section) section.style.display = 'none';
+      var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+      if(navBtn) navBtn.style.display = 'none';
+      return;
+    }
+
+    container.innerHTML = '';
+    container.appendChild(videoCard(entry.principal, true));
+    if(entry.extras && entry.extras.length){
+      var label = document.createElement('div');
+      label.className = 'cmed-video-extra-label';
+      label.textContent = '📎 Vídeos complementares';
+      container.appendChild(label);
+      entry.extras.slice(0,3).forEach(function(ex){
+        container.appendChild(videoCard(ex, false));
+      });
+    }
+    var note = document.createElement('p');
+    note.className = 'cmed-video-note';
+    if(entry.verMaisEm && entry.verMaisEm.texto){
+      note.innerHTML = entry.verMaisEm.texto;
+    } else {
+      note.textContent = 'Este vídeo complementa o conteúdo estudado neste capítulo.';
+    }
+    container.appendChild(note);
+
+    container.addEventListener('click', function(e){
+      var thumb = e.target.closest('.cmed-video-thumb');
+      if(thumb){
+        var embedUrl = thumb.dataset.embed;
+        if(embedUrl && !thumb.querySelector('iframe')){
+          thumb.innerHTML = '<iframe src="'+embedUrl+'" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>';
+          thumb.style.backgroundImage = 'none';
+          thumb.style.cursor = 'default';
+        }
+        return;
+      }
+      var copyBtn = e.target.closest('[data-copy]');
+      if(copyBtn){
+        navigator.clipboard.writeText(copyBtn.dataset.copy).then(function(){
+          var old = copyBtn.textContent;
+          copyBtn.textContent = '✅ Copiado!';
+          setTimeout(function(){ copyBtn.textContent = old; }, 1800);
+        });
+      }
+    });
+  }
+
+  fetch('/videos.json').then(function(r){ return r.json(); }).then(render).catch(function(){
+    var section = document.getElementById('p2');
+    if(section) section.style.display = 'none';
+    var navBtn = document.querySelector('nav.tabs button[data-p="p2"]');
+    if(navBtn) navBtn.style.display = 'none';
+  });
+})();
+</script>
+<!-- /CMED-VIDEO-SCRIPT -->
+
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="panel" id="p3">
+  <div class="card">
+    <h2>🃏 Flashcards — SM-2 real + interface Anki</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">O sistema guarda, no seu navegador, quais cards você já sabe bem e quais precisam voltar mais cedo — cada vez que você avalia um card, ele recalcula quando ele deve voltar.</p>
+    <div class="srs-status" id="srsStatus"></div>
+    <div class="fc-filters" id="fcModeFilters">
+      <button class="active" data-mode="due">📅 Revisão de Hoje</button>
+      <button data-mode="all">📚 Todos os Cards</button>
+    </div>
+    <div class="fc-topbar">
+      <span>Cartão <b id="fcIndex">1</b> / <b id="fcTotal">0</b></span>
+      <span>Dominados: <b id="fcMastered">0</b></span>
+    </div>
+    <div class="fc-wrap">
+      <div class="fc-card" id="fcCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front"><span class="fc-tag" id="fcTagFront">PERGUNTA</span><div id="fcFront"></div></div>
+          <div class="fc-face fc-back"><span class="fc-tag">RESPOSTA</span><div id="fcBack"></div></div>
+        </div>
+      </div>
+      <div class="fc-controls" id="fcNavControls">
+        <button class="fc-btn" id="fcPrev">← Anterior</button>
+        <button class="fc-btn primary" id="fcFlip">Virar</button>
+        <button class="fc-btn" id="fcNext">Próxima →</button>
+      </div>
+      <div class="review-btns" id="reviewBtns" style="display:none;">
+        <button class="btn-again" id="srsAgain">De novo<span class="interval-preview" id="prevAgain"></span></button>
+        <button class="btn-hard" id="srsHard">Difícil<span class="interval-preview" id="prevHard"></span></button>
+        <button class="btn-good" id="srsGood">Bem<span class="interval-preview" id="prevGood"></span></button>
+        <button class="btn-easy" id="srsEasy">Fácil<span class="interval-preview" id="prevEasy"></span></button>
+      </div>
+      <div class="fc-shuffle-row">
+        <button class="fc-btn" id="fcShuffle">🔀 Misturar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BANCO DE QUESTÕES ============ -->
+<section class="panel" id="p4">
+  <div class="card">
+    <h2>✅ Banco de Questões Comentadas</h2>
+    <p style="font-size:.85em;color:var(--text-dim);">14 questões, do mais básico ao mais puxado. Escolhe uma alternativa, depois clica em "Ver comentário completo" — vale a pena ler até quando você acerta, porque o comentário explica cada alternativa, não só a certa.</p>
+    <div id="gabaritoList"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ RÁPIDO ============ -->
+<section class="panel" id="p5">
+  <div class="card">
+    <h2>🎮 Quiz Rápido</h2>
+    <div id="quizArea"></div>
+    <div class="quiz-result" id="quizResult"></div>
+  </div>
+</section>
+
+<!-- ============ EXEMPLOS PRÁTICOS ============ -->
+<section class="panel" id="p6">
+<div class="card">
+    <h2>📊 Exemplos Práticos — Família na Prática</h2>
+    <h3>1. Classifique as famílias dos slides (leitura didática)</h3>
+    <p style="color:var(--text-dim);font-size:.88em;">Os slides 2, 3 e 8 mostram famílias de desenho animado. Tente classificar por parentesco antes de abrir a resposta.</p>
+    <table>
+      <tr><th>Família</th><th>Quem mora junto</th><th>Sua classificação</th></tr>
+      <tr><td><b>Peppa Pig</b> (slide 3)</td><td>Pai, mãe e dois filhos (Peppa e George)</td><td><button class="case-answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver</button><div class="case-answer"><b>Nuclear simples</b> (pai e mãe com 1 a 3 filhos); núcleo integrado.</div></td></tr>
+      <tr><td><b>Gru e as meninas</b> (slide 3)</td><td>Um pai, três filhas adotivas e os Minions (sem parentesco)</td><td><button class="case-answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver</button><div class="case-answer"><b>Monoparental extendida compuesta</b> (um só dos pais, mais pessoas sem parentesco); núcleo não integrado. As filhas adotivas contam como filhas: parentesco inclui adoção.</div></td></tr>
+      <tr><td><b>Shrek</b> (slide 2)</td><td>Shrek, Fiona, três filhotes, o Burro e o Gato de Botas</td><td><button class="case-answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver</button><div class="case-answer"><b>Extensa compuesta</b>: pai e mãe com filhos (três, núcleo “simples”) mais pessoas sem parentesco (Burro e Gato).</div></td></tr>
+      <tr><td><b>Os Flintstones e os Rubble</b> (slide 8)</td><td>Dois casais vizinhos, cada um com um filho, mais o dinossauro de estimação</td><td><button class="case-answer-btn" onclick="this.nextElementSibling.classList.toggle('show')">Ver</button><div class="case-answer">Cada casal com seu filho é <b>nuclear simples</b>, em lares separados; juntos formam uma rede de vizinhança, não uma família. Bamm-Bamm é filho adotivo dos Rubble, e adoção é parentesco legal.</div></td></tr>
+    </table>
+
+    <h3>2. Calculadora de APGAR familiar</h3>
+    <div id="apgarCalc" class="calc"></div>
+
+    <h3>3. Em que fase de Duvall está a família?</h3>
+    <div class="calc">
+      <label>Idade do primeiro filho (anos, use 0 se ainda não nasceu e decimal para meses, por exemplo 2,5): <input type="number" id="duvallAge" min="0" max="60" step="0.5" value="8"></label>
+      <div id="duvallOut" class="calc-out"></div>
+    </div>
+
+    <h3>4. Calculadora de Holmes e Rahe (43 acontecimentos)</h3>
+    <p style="color:var(--text-dim);font-size:.88em;">Marque os acontecimentos dos últimos 12 meses.</p>
+    <div id="holmesList" class="holmes-grid"></div>
+    <div id="holmesOut" class="calc-out"></div>
+  </div>
+
+</section>
+
+<footer>ClinicusMed · Não basta ler. É preciso aprender, revisar e provar que sabe.</footer>
+</div>
+
+<script>
+const bank = [
+  {
+    "n": 1,
+    "tema": "Conceito de família",
+    "nivel": "🟢 Nível 1 — Essencial",
+    "q": "Segundo a Unidade VI (perspectiva do médico de família), a família é:",
+    "opts": [
+      "Um grupo fixo formado obrigatoriamente por pai, mãe e filhos que vivem sempre sob o mesmo teto",
+      "Um grupo social organizado como sistema aberto, de número variável de membros, que na maioria dos casos convivem no mesmo lugar, unidos por laços consanguíneos, legais e/ou de afinidade",
+      "Um sistema fechado que se protege das influências externas para manter sua estabilidade",
+      "Um conjunto de pessoas unidas exclusivamente por laços de sangue"
+    ],
+    "correct": 1,
+    "objetivo": "Definir família na perspectiva do médico de família",
+    "justificativa": "A definição da Dra. Corrales combina quatro elementos: grupo social, sistema aberto, número variável de membros e laços consanguíneos, legais e/ou de afinidade.",
+    "analise": [
+      "Incorreto: o número de membros é variável, a estrutura é diversa e a convivência é frequente, mas não obrigatória.",
+      "Incorreto: a definição diz sistema ABERTO; a família troca informação, pessoas e recursos com escola, trabalho e serviços.",
+      "Incorreto: além do laço consanguíneo existem os legais (casamento, adoção) e os de afinidade."
+    ],
+    "analise_letters": [
+      "A",
+      "C",
+      "D"
+    ],
+    "conceito": "Família = grupo social + sistema aberto + membros em número variável + laços consanguíneos, legais e/ou de afinidade.",
+    "pegadinha": "A palavra “aberto” é a que costuma ser trocada por “fechado” nas alternativas erradas.",
+    "dica": "Família é uma casa com janelas: recebe e manda influência."
+  },
+  {
+    "n": 2,
+    "tema": "Paciente identificado",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "Quando a homeostase familiar é ameaçada, um dos filhos começa a apresentar sintomas que, de certa forma, expressam o conflito do casal. O termo usado para esse membro é:",
+    "opts": [
+      "Paciente índice culpado, porque é ele quem provoca a disfunção familiar",
+      "Chefe de família, pois é quem organiza o equilíbrio do grupo",
+      "Membro desmembrado, pois a crise provoca sua separação do grupo",
+      "Paciente identificado, expressão que evita reduzi-lo ao papel de “o doente”, “o mau” ou “o culpado”"
+    ],
+    "correct": 3,
+    "objetivo": "Entender homeostase familiar e paciente identificado",
+    "justificativa": "Em vez de rotular a pessoa pelo papel que lhe deram, fala-se em paciente identificado: o sintoma dele sinaliza uma disfunção que pertence ao sistema familiar.",
+    "analise": [
+      "Incorreto: o termo existe justamente para NÃO culpar; a causa está no sistema, não na criança.",
+      "Incorreto: chefe de família é outra categoria (quem aporta os recursos e identifica o núcleo); não designa o portador do sintoma.",
+      "Incorreto: desmembramento é um tipo de crise paranormativa (alguém sai da família), não um papel dentro da homeostase."
+    ],
+    "analise_letters": [
+      "A",
+      "B",
+      "C"
+    ],
+    "conceito": "Disfunção familiar pode se manifestar por sintomas em um integrante, em geral um filho.",
+    "pegadinha": "“Identificado” não é “culpado”.",
+    "dica": "O termômetro marca a febre, mas a infecção está na casa."
+  },
+  {
+    "n": 3,
+    "tema": "Funções da família",
+    "nivel": "🟢 Nível 1 — Essencial",
+    "q": "Qual alternativa descreve a função de ESTATUS da família?",
+    "opts": [
+      "Participação e transmissão das características sociais que conferem à família determinada posição perante a sociedade",
+      "Fornecimento de novos membros à sociedade",
+      "Interação de sentimentos e emoções que gera coesão do grupo familiar",
+      "Proteção e assistência incondicionais diante das necessidades materiais, sociais, financeiras e de saúde"
+    ],
+    "correct": 0,
+    "objetivo": "Distinguir as funções da família",
+    "justificativa": "Estatus é a posição social que a família ocupa e transmite aos membros.",
+    "analise": [
+      "Incorreto: isso é a função de reprodução.",
+      "Incorreto: essa é a função de afeto.",
+      "Incorreto: essa é a função de cuidados."
+    ],
+    "analise_letters": [
+      "B",
+      "C",
+      "D"
+    ],
+    "conceito": "Funções: cuidados, estatus, socialização, afeto, reprodução (e papéis).",
+    "pegadinha": "Estatus não é afeto nem cuidado: é posição social.",
+    "dica": "CESAR: C-E-S-A-R."
+  },
+  {
+    "n": 4,
+    "tema": "Tipologia e classificação",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "Os cinco eixos fundamentais da CLASSIFICAÇÃO das famílias (slide 9) são:",
+    "opts": [
+      "Estrutura; integração; desenvolvimento; demografia; ocupação",
+      "Parentesco; escolaridade; religião; renda; lugar de moradia",
+      "Parentesco; presença física no lar ou convivência; meios de subsistência; nível econômico; novos tipos de convivência originados por mudanças sociais",
+      "Nuclear; monoparental; extensa; extensa composta; reconstruída"
+    ],
+    "correct": 2,
+    "objetivo": "Diferenciar os eixos de classificação",
+    "justificativa": "Parentesco, presença física, meios de subsistência, nível econômico e novos estilos de convivência são os cinco eixos do slide 9.",
+    "analise": [
+      "Incorreto: essas são as cinco colunas da TIPOLOGIA (slide 7), não os eixos da classificação.",
+      "Incorreto: escolaridade e religião não são eixos da classificação da cátedra.",
+      "Incorreto: são tipos dentro do eixo parentesco, não os cinco eixos."
+    ],
+    "analise_letters": [
+      "A",
+      "B",
+      "D"
+    ],
+    "conceito": "Tipologia (5 colunas) é diferente de classificação (5 eixos).",
+    "pegadinha": "A alternativa da tipologia é a isca mais comum.",
+    "dica": "P-P-M-N-N: “Pai e Primo Moram Numa Nova casa”."
+  },
+  {
+    "n": 5,
+    "tema": "Classificação por parentesco",
+    "nivel": "🔴 Nível 3 — Excelência",
+    "q": "Uma mulher divorciada vive com seus dois filhos, com a mãe dela e com um inquilino sem parentesco. Por parentesco, essa família é:",
+    "opts": [
+      "Monoparental extendida",
+      "Monoparental extendida compuesta",
+      "Extensa compuesta",
+      "Reconstruída (binuclear)"
+    ],
+    "correct": 1,
+    "objetivo": "Aplicar a classificação por parentesco",
+    "justificativa": "Só há um dos pais (monoparental), mais parentes (a avó) e não parente (o inquilino): monoparental extendida compuesta.",
+    "analise": [
+      "Incorreto: seria extendida se só houvesse parentes além dos filhos; o inquilino sem parentesco torna a família “compuesta”.",
+      "Incorreto: a extensa compuesta tem pai E mãe com filhos; aqui só há a mãe.",
+      "Incorreto: reconstruída exige novo casal com filhos de uniões anteriores; aqui não há novo casal."
+    ],
+    "analise_letters": [
+      "A",
+      "C",
+      "D"
+    ],
+    "conceito": "Monoparental + parentes = extendida; + parentes e não parentes = extendida compuesta.",
+    "pegadinha": "“Compuesta” = entra alguém sem parentesco.",
+    "dica": "Conte os pais, depois os parentes, depois os “estranhos”."
+  },
+  {
+    "n": 6,
+    "tema": "Presença física",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "Um casal jovem com um filho mora na casa dos pais do marido. Pela presença física no lar, é uma família:",
+    "opts": [
+      "Extensa ascendente",
+      "Extensa descendente",
+      "Extensa colateral",
+      "Núcleo não integrado"
+    ],
+    "correct": 0,
+    "objetivo": "Classificar pela presença física",
+    "justificativa": "Filhos casados ou em união livre que vivem na casa de algum dos pais constituem a extensa ascendente.",
+    "analise": [
+      "Incorreto: descendente é quando os PAIS vivem na casa de algum dos filhos.",
+      "Incorreto: colateral é a casa de tios, primos e afins, não a dos pais.",
+      "Incorreto: esse tipo diz respeito à ausência física de algum dos pais no lar do núcleo."
+    ],
+    "analise_letters": [
+      "B",
+      "C",
+      "D"
+    ],
+    "conceito": "Ascendente: filhos casados na casa dos pais. Descendente: pais na casa dos filhos.",
+    "pegadinha": "A direção do verbo é a pegadinha.",
+    "dica": "O casal jovem “sobe” para a casa dos pais."
+  },
+  {
+    "n": 7,
+    "tema": "Nível econômico",
+    "nivel": "🔴 Nível 3 — Excelência",
+    "q": "Uma família tem renda suficiente para a cesta básica, mas não consegue cobrir vestuário e calçado, moradia, saúde, educação e transporte público, mesmo dedicando toda a renda a esses itens. Segundo a escala, ela está em:",
+    "opts": [
+      "Pobreza familiar nível 1",
+      "Pobreza familiar nível 3",
+      "Não é considerada pobre",
+      "Pobreza familiar nível 2"
+    ],
+    "correct": 3,
+    "objetivo": "Aplicar os níveis de pobreza familiar",
+    "justificativa": "Cesta básica coberta, mas faltam os itens do segundo bloco: nível 2.",
+    "analise": [
+      "Incorreto: no nível 1 a renda cobre esses itens (vestuário, moradia, saúde, educação, transporte) e só falta o “extra”.",
+      "Incorreto: o nível 3 exige renda INFERIOR à cesta básica; aqui a cesta básica é coberta.",
+      "Incorreto: só não é pobre a família que cobre os itens dos três níveis."
+    ],
+    "analise_letters": [
+      "A",
+      "B",
+      "C"
+    ],
+    "conceito": "Nível 1 (menos grave) a nível 3 (mais grave, renda abaixo da cesta básica).",
+    "pegadinha": "O número maior é o mais grave.",
+    "dica": "Nível 3: nem a cesta básica se paga."
+  },
+  {
+    "n": 8,
+    "tema": "Novos estilos",
+    "nivel": "🟢 Nível 1 — Essencial",
+    "q": "Conjunto de casais monogâmicos com seus respectivos filhos, que vivem comunitariamente, compartilhando tudo, exceto as relações sexuais. Trata-se da:",
+    "opts": [
+      "Família grupal",
+      "Poligamia",
+      "Família comunal",
+      "Família reconstruída"
+    ],
+    "correct": 2,
+    "objetivo": "Reconhecer a família comunal",
+    "justificativa": "A comunal compartilha tudo, menos a relação sexual, que permanece dentro de cada casal.",
+    "analise": [
+      "Incorreto: a grupal é a união de vários homens com várias mulheres, que coabitam sem restrições.",
+      "Incorreto: poligamia inclui poliandria e poliginia, ou seja, um membro com vários cônjuges.",
+      "Incorreto: reconstruída é o casal com filhos de uniões anteriores (parentesco), não uma comunidade."
+    ],
+    "analise_letters": [
+      "A",
+      "B",
+      "D"
+    ],
+    "conceito": "Grupal x comunal: a diferença é a restrição sexual.",
+    "pegadinha": "As duas palavras parecem sinônimas.",
+    "dica": "Comunal = comunidade de casais fiéis."
+  },
+  {
+    "n": 9,
+    "tema": "Crises: tipos",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "Um adolescente da família se envolve em delinquência e os pais sentem que os valores da família foram violados. É uma crise paranormativa por:",
+    "opts": [
+      "Desmoralização",
+      "Desmembramento",
+      "Incremento",
+      "Desorganização"
+    ],
+    "correct": 0,
+    "objetivo": "Classificar crise paranormativa",
+    "justificativa": "Fatos que violam os valores da família (delinquência, alcoolismo) são desmoralização.",
+    "analise": [
+      "Incorreto: desmembramento é a separação de um membro (divórcio, hospitalização).",
+      "Incorreto: incremento é a adição inesperada de membros.",
+      "Incorreto: desorganização é o fato que obstaculiza a dinâmica (infertilidade, doença psiquiátrica)."
+    ],
+    "analise_letters": [
+      "B",
+      "C",
+      "D"
+    ],
+    "conceito": "Quatro tipos: desmembramento, incremento, desmoralização, desorganização.",
+    "pegadinha": "Delinquência e alcoolismo = desmoralização.",
+    "dica": "Sai, entra, envergonha, embaralha."
+  },
+  {
+    "n": 10,
+    "tema": "Crises: normativas",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "As crises familiares PARANORMATIVAS caracterizam-se por:",
+    "opts": [
+      "Serem esperadas e fazerem parte do desenvolvimento evolutivo da família",
+      "Serem eventos acidentais, inesperados e estressantes, de origem externa (intersistêmicos)",
+      "Exigirem reestruturação de papéis que todas as famílias enfrentam",
+      "Terem origem dentro do sistema familiar (intrassistêmicas)"
+    ],
+    "correct": 1,
+    "objetivo": "Caracterizar as crises paranormativas",
+    "justificativa": "Paranormativas = inesperadas, acidentais, vindas de fora.",
+    "analise": [
+      "Incorreto: isso descreve as crises normativas (evolutivas).",
+      "Incorreto: também é descrição das normativas.",
+      "Incorreto: intrassistêmicas são as normativas; as paranormativas são intersistêmicas."
+    ],
+    "analise_letters": [
+      "A",
+      "C",
+      "D"
+    ],
+    "conceito": "Normativa: esperada e de dentro. Paranormativa: inesperada e de fora.",
+    "pegadinha": "Intra x inter.",
+    "dica": "Paranormativa chega sem avisar."
+  },
+  {
+    "n": 11,
+    "tema": "Ciclo vital: Duvall",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "Segundo Duvall, uma família cujo primeiro filho tem 8 anos encontra-se na fase:",
+    "opts": [
+      "III, família com filhos pré-escolares (30 meses a 6 anos)",
+      "V, família com filhos adolescentes (13 a 20 anos)",
+      "II, criação inicial dos filhos (até 30 meses)",
+      "IV, família com filhos escolares (6 a 13 anos)"
+    ],
+    "correct": 3,
+    "objetivo": "Localizar a fase de Duvall",
+    "justificativa": "A fase IV vai dos 6 aos 13 anos do primeiro filho.",
+    "analise": [
+      "Incorreto: aos 8 anos o primeiro filho já passou dos 6.",
+      "Incorreto: a fase V começa aos 13 anos.",
+      "Incorreto: a fase II termina quando o primeiro filho completa 30 meses."
+    ],
+    "analise_letters": [
+      "A",
+      "B",
+      "C"
+    ],
+    "conceito": "Idades de Duvall: 30 meses, 6, 13, 20 anos.",
+    "pegadinha": "Conta-se sempre o primeiro filho.",
+    "dica": "Dois e meio, seis, treze, vinte."
+  },
+  {
+    "n": 12,
+    "tema": "Modelos do ciclo vital",
+    "nivel": "🟡 Nível 2 — Aprofundamento",
+    "q": "Qual associação entre modelo e número de etapas está correta?",
+    "opts": [
+      "Geyman 8, Duvall 5, Carter e McGoldrick 6, OMS 6",
+      "Geyman 5, Duvall 6, Carter e McGoldrick 8, OMS 5",
+      "Geyman 5, Duvall 8, Carter e McGoldrick 6, OMS 6",
+      "Geyman 6, Duvall 8, Carter e McGoldrick 5, OMS 6"
+    ],
+    "correct": 2,
+    "objetivo": "Memorizar o número de etapas por modelo",
+    "justificativa": "Geyman: matrimônio, expansão, dispersão, independência, retiro e morte (5). Duvall: 8 fases. Carter e McGoldrick: 6 estágios. OMS: 6 etapas.",
+    "analise": [
+      "Incorreto: trocou Geyman (5) e Duvall (8).",
+      "Incorreto: Duvall tem 8 fases e Carter e McGoldrick 6 estágios.",
+      "Incorreto: Geyman tem 5 e Carter e McGoldrick 6."
+    ],
+    "analise_letters": [
+      "A",
+      "B",
+      "D"
+    ],
+    "conceito": "5-8-6-6.",
+    "pegadinha": "Geyman e Duvall são os mais trocados.",
+    "dica": "Ordem alfabética não ajuda; decore 5-8-6-6."
+  },
+  {
+    "n": 13,
+    "tema": "APGAR familiar",
+    "nivel": "🔴 Nível 3 — Excelência",
+    "q": "Um paciente responde ao APGAR familiar: “casi siempre” em 2 itens, “algunas veces” em 2 itens e “casi nunca” em 1 item. Pontuação e interpretação:",
+    "opts": [
+      "6 pontos: disfunção moderada",
+      "6 pontos: família funcional",
+      "4 pontos: disfunção moderada",
+      "8 pontos: família funcional"
+    ],
+    "correct": 0,
+    "objetivo": "Pontuar e interpretar o APGAR familiar",
+    "justificativa": "2 itens × 2 pontos = 4; 2 itens × 1 ponto = 2; 1 item × 0 = 0. Total 6, faixa 4 a 6 = disfunção moderada.",
+    "analise": [
+      "Incorreto: a faixa funcional é 7 a 10.",
+      "Incorreto: erro de soma. 2 × 2 + 2 × 1 + 0 = 6.",
+      "Incorreto: erro de soma; casi siempre vale 2, algunas veces 1 e casi nunca 0."
+    ],
+    "analise_letters": [
+      "B",
+      "C",
+      "D"
+    ],
+    "conceito": "0-3 grave, 4-6 moderada, 7-10 funcional.",
+    "pegadinha": "O 6 está no limite superior da disfunção moderada.",
+    "dica": "Some antes de olhar a faixa."
+  },
+  {
+    "n": 14,
+    "tema": "Genograma",
+    "nivel": "🔴 Nível 3 — Excelência",
+    "q": "Qual afirmação sobre os símbolos do genograma está CORRETA?",
+    "opts": [
+      "A linha pontilhada entre o casal indica divórcio",
+      "Uma barra inclinada na linha do casal indica separação; duas barras indicam divórcio",
+      "O círculo com linha dupla representa uma mulher falecida",
+      "Os irmãos são desenhados do mais novo (esquerda) ao mais velho (direita)"
+    ],
+    "correct": 1,
+    "objetivo": "Interpretar símbolos do genograma",
+    "justificativa": "Uma barra = separação, duas = divórcio, conforme o slide 44.",
+    "analise": [
+      "Incorreto: pontilhada indica união sem casamento (convivência).",
+      "Incorreto: linha dupla marca a pessoa índice (paciente identificado); falecimento é X dentro da figura.",
+      "Incorreto: a ordem é do mais velho (esquerda) ao mais novo (direita)."
+    ],
+    "analise_letters": [
+      "A",
+      "C",
+      "D"
+    ],
+    "conceito": "Pontilhada = união sem casamento; linha dupla = índice; X = falecido.",
+    "pegadinha": "Misturar separação e divórcio.",
+    "dica": "Mais barras, mais rompido."
+  }
+];
+const quizBank = [
+  {
+    "n": 1,
+    "tema": "APGAR",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Quem desenhou o APGAR familiar, em 1978?",
+    "opts": [
+      "Virginia Apgar",
+      "Thomas Holmes",
+      "Gabriel Smilkstein (Universidade de Washington)",
+      "Duvall"
+    ],
+    "correct": 2
+  },
+  {
+    "n": 2,
+    "tema": "Holmes",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Qual acontecimento vital recebe a maior pontuação na escala de Holmes e Rahe?",
+    "opts": [
+      "Morte do cônjuge (100)",
+      "Divórcio (73)",
+      "Aposentadoria (45)",
+      "Natal (12)"
+    ],
+    "correct": 0
+  },
+  {
+    "n": 3,
+    "tema": "APGAR",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Quantas perguntas tem o APGAR familiar?",
+    "opts": [
+      "20 (é o FACES III)",
+      "43 (é a escala de Holmes)",
+      "4 (é o índice de pobreza)",
+      "5"
+    ],
+    "correct": 3
+  },
+  {
+    "n": 4,
+    "tema": "Genograma",
+    "nivel": "⚡ Quiz rápido",
+    "q": "No genograma, um X dentro da figura significa:",
+    "opts": [
+      "Pessoa índice",
+      "Pessoa falecida",
+      "Aborto induzido",
+      "Casal separado"
+    ],
+    "correct": 1
+  },
+  {
+    "n": 5,
+    "tema": "Novos estilos",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Poliandria é:",
+    "opts": [
+      "Um homem com várias mulheres",
+      "Casais monogâmicos que compartilham tudo",
+      "Uma mulher com vários homens",
+      "Pessoa que vive sozinha"
+    ],
+    "correct": 2
+  },
+  {
+    "n": 6,
+    "tema": "Instrumentos",
+    "nivel": "⚡ Quiz rápido",
+    "q": "O FACES III avalia:",
+    "opts": [
+      "Coesão e adaptabilidade familiar",
+      "Percepção do apoio familiar",
+      "Acontecimentos vitais estressantes",
+      "Pobreza familiar"
+    ],
+    "correct": 0
+  },
+  {
+    "n": 7,
+    "tema": "Ciclo vital OMS",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Na classificação da OMS, qual etapa é marcada pela saída do último filho do lar?",
+    "opts": [
+      "Extensão completa",
+      "Contração completa",
+      "Dissolução",
+      "Contração parcial do primeiro filho"
+    ],
+    "correct": 1
+  },
+  {
+    "n": 8,
+    "tema": "Crises",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Hospitalização de um membro da família é exemplo de crise por:",
+    "opts": [
+      "Incremento",
+      "Desorganização",
+      "Desmoralização",
+      "Desmembramento"
+    ],
+    "correct": 3
+  },
+  {
+    "n": 9,
+    "tema": "Pobreza",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Qual nível de pobreza familiar é o mais grave?",
+    "opts": [
+      "Nível 3 (renda inferior à cesta básica)",
+      "Nível 1",
+      "Nível 2",
+      "Todos têm a mesma gravidade"
+    ],
+    "correct": 0
+  },
+  {
+    "n": 10,
+    "tema": "Presença física",
+    "nivel": "⚡ Quiz rápido",
+    "q": "Casal que vive na casa de tios e primos é família:",
+    "opts": [
+      "Extensa ascendente",
+      "Extensa descendente",
+      "Extensa colateral",
+      "Núcleo integrado"
+    ],
+    "correct": 2
+  }
+];
+const flashcards = [
+  {
+    "n": 1,
+    "cat": "Conceito",
+    "f": "Definição de família (médico de família)",
+    "b": "Grupo social organizado como sistema aberto, número variável de membros que na maioria dos casos convivem no mesmo lugar, unidos por laços consanguíneos, legais e/ou de afinidade."
+  },
+  {
+    "n": 2,
+    "cat": "Conceito",
+    "f": "O que significa “sistema aberto”?",
+    "b": "A família troca informação, pessoas e recursos com o exterior (escola, trabalho, serviços) e é influenciada por ele; a mudança de um membro reorganiza todos."
+  },
+  {
+    "n": 3,
+    "cat": "Conceito",
+    "f": "O que é homeostase familiar?",
+    "b": "Autorregulação e equilíbrio da família, que dependem do bem-estar biológico, psicológico e social dos integrantes."
+  },
+  {
+    "n": 4,
+    "cat": "Conceito",
+    "f": "O que é paciente identificado?",
+    "b": "Membro (em geral um filho) que desenvolve sintomas ou expressa o conflito quando a homeostase familiar é ameaçada; chama-se assim para não rotulá-lo como o doente, o mau ou o culpado."
+  },
+  {
+    "n": 5,
+    "cat": "Conceito",
+    "f": "Em vez de normal e anormal, como se descreve hoje a dinâmica familiar?",
+    "b": "Funcionalidade: capacidade do sistema de enfrentar e superar as etapas do ciclo vital e as crises."
+  },
+  {
+    "n": 6,
+    "cat": "Funções",
+    "f": "Quais são as funções da família (slide 6)?",
+    "b": "Cuidados, estatus, socialização, afeto, reprodução/desenvolvimento e exercício da sexualidade, e cumprimento dos papéis estruturais e dinâmicos (CESAR + papéis)."
+  },
+  {
+    "n": 7,
+    "cat": "Funções",
+    "f": "Função de estatus",
+    "b": "Participação e transmissão das características sociais que dão à família uma posição perante a sociedade."
+  },
+  {
+    "n": 8,
+    "cat": "Funções",
+    "f": "Função de socialização",
+    "b": "Promover o desenvolvimento biopsicossocial dos membros e a réplica de valores e padrões de conduta próprios da família."
+  },
+  {
+    "n": 9,
+    "cat": "Tipologia",
+    "f": "Cinco colunas da tipologia (slide 7)",
+    "b": "Estrutura, integração, desenvolvimento, demografia, ocupação."
+  },
+  {
+    "n": 10,
+    "cat": "Tipologia",
+    "f": "Tipologia por desenvolvimento",
+    "b": "Primitiva (clã ou tribal), tradicional, moderna (pais compartilham direitos e obrigações; filhos participam das decisões)."
+  },
+  {
+    "n": 11,
+    "cat": "Classificação",
+    "f": "Cinco eixos da classificação (slide 9)",
+    "b": "Parentesco; presença física no lar; meios de subsistência; nível econômico; novos tipos de convivência por mudanças sociais."
+  },
+  {
+    "n": 12,
+    "cat": "Parentesco",
+    "f": "Nuclear, nuclear simples e nuclear numerosa",
+    "b": "Nuclear: homem e mulher sem filhos. Simples: pai e mãe com 1 a 3 filhos. Numerosa: com 4 filhos ou mais."
+  },
+  {
+    "n": 13,
+    "cat": "Parentesco",
+    "f": "Família reconstruída (binuclear)",
+    "b": "Pai e mãe em que algum ou ambos foram divorciados ou viúvos e têm filhos de união anterior."
+  },
+  {
+    "n": 14,
+    "cat": "Parentesco",
+    "f": "Monoparental, extendida e extendida compuesta",
+    "b": "Monoparental: pai ou mãe com filhos. Extendida: mais outras pessoas com parentesco. Extendida compuesta: com e sem parentesco."
+  },
+  {
+    "n": 15,
+    "cat": "Parentesco",
+    "f": "Família não parental",
+    "b": "Familiares com vínculo de parentesco que exercem funções de família sem a presença dos pais (tios e sobrinhos, avós e netos, primos, irmãos)."
+  },
+  {
+    "n": 16,
+    "cat": "Presença física",
+    "f": "Extensa ascendente x descendente x colateral",
+    "b": "Ascendente: filhos casados vivem na casa de um dos pais. Descendente: pais vivem na casa de um dos filhos. Colateral: o núcleo vive na casa de tios, primos etc."
+  },
+  {
+    "n": 17,
+    "cat": "Presença física",
+    "f": "Núcleo integrado x não integrado",
+    "b": "Integrado: presença de ambos os pais no lar. Não integrado: ausência física de algum dos pais."
+  },
+  {
+    "n": 18,
+    "cat": "Subsistência",
+    "f": "Classificação por meios de subsistência",
+    "b": "Agrícolas e pecuárias, industrial, comercial, serviços; a ocupação refere-se ao chefe da família."
+  },
+  {
+    "n": 19,
+    "cat": "Nível econômico",
+    "f": "Pobreza familiar nível 1",
+    "b": "Renda suficiente para a cesta básica e para vestuário, moradia, saúde, educação e transporte; faltam os itens extras (conservação da moradia, lazer, etc.). Menos grave."
+  },
+  {
+    "n": 20,
+    "cat": "Nível econômico",
+    "f": "Pobreza familiar nível 3",
+    "b": "Renda inferior à cesta básica, sem cobrir nenhum dos demais blocos. É o mais grave."
+  },
+  {
+    "n": 21,
+    "cat": "Novos estilos",
+    "f": "Família grupal x comunal",
+    "b": "Grupal: vários homens com várias mulheres, coabitando sem restrições. Comunal: casais monogâmicos que compartilham tudo, exceto relações sexuais."
+  },
+  {
+    "n": 22,
+    "cat": "Novos estilos",
+    "f": "Poligamia",
+    "b": "Inclui a poliandria (uma mulher, vários homens) e a poliginia (um homem, várias mulheres)."
+  },
+  {
+    "n": 23,
+    "cat": "Crises",
+    "f": "Crises normativas (evolutivas)",
+    "b": "Esperadas, parte do desenvolvimento da família (intrassistêmicas); exigem reestruturação de papéis; ex.: casamento, primeiro filho, escola, adolescência, ninho vazio, aposentadoria."
+  },
+  {
+    "n": 24,
+    "cat": "Crises",
+    "f": "Crises paranormativas",
+    "b": "Acidentais, inesperadas, estressantes, vindas de fora (intersistêmicas); ex.: divórcio, morte prematura, doença grave, perda de emprego, encarceramento, migração forçada."
+  },
+  {
+    "n": 25,
+    "cat": "Crises",
+    "f": "Quatro tipos de crise paranormativa",
+    "b": "Desmembramento (sai alguém), incremento (entra alguém), desmoralização (violação de valores), desorganização (obstáculo à dinâmica)."
+  },
+  {
+    "n": 26,
+    "cat": "Avaliação",
+    "f": "Instrumentos básicos de avaliação (slide 19)",
+    "b": "História clínica, classificação familiar, ciclo vital, escala de Holmes, APGAR familiar e genograma."
+  },
+  {
+    "n": 27,
+    "cat": "Avaliação",
+    "f": "FACES III e índice de pobreza familiar",
+    "b": "FACES III: coesão e adaptabilidade, 20 perguntas. Índice simplificado de pobreza familiar: 4 perguntas."
+  },
+  {
+    "n": 28,
+    "cat": "Ciclo vital",
+    "f": "Etapas de Geyman (5)",
+    "b": "Matrimônio, expansão, dispersão, independência, retiro e morte."
+  },
+  {
+    "n": 29,
+    "cat": "Ciclo vital",
+    "f": "Idades de Duvall",
+    "b": "Fase II até 30 meses; III de 30 meses a 6 anos; IV de 6 a 13; V de 13 a 20 anos; VI até a saída de todos os filhos; VII ninho vazio; VIII família idosa."
+  },
+  {
+    "n": 30,
+    "cat": "Ciclo vital",
+    "f": "Carter e McGoldrick: seis estágios",
+    "b": "1 entre famílias (desapego dos adultos jovens); 2 casal de recém-casados; 3 filhos pequenos; 4 adolescentes; 5 desprendimento dos filhos; 6 etapa avançada da vida."
+  },
+  {
+    "n": 31,
+    "cat": "Ciclo vital",
+    "f": "Etapas da OMS (6)",
+    "b": "Formação, extensão, extensão completa, contração, contração completa, dissolução."
+  },
+  {
+    "n": 32,
+    "cat": "APGAR",
+    "f": "Origem do APGAR familiar",
+    "b": "Smilkstein, 1978, Universidade de Washington; nome inspirado no teste de Apgar do recém-nascido (rápido e fácil)."
+  },
+  {
+    "n": 33,
+    "cat": "APGAR",
+    "f": "Componentes do APGAR familiar",
+    "b": "Adaptação, Participação, Gradiente de recursos (crescimento), Afetividade, Resolução (capacidade resolutiva)."
+  },
+  {
+    "n": 34,
+    "cat": "APGAR",
+    "f": "Pontuação e cortes do APGAR familiar",
+    "b": "Casi siempre 2, algunas veces 1, casi nunca 0. Total 0–3 disfunção grave; 4–6 moderada; 7–10 funcional."
+  },
+  {
+    "n": 35,
+    "cat": "Holmes",
+    "f": "Escala de Holmes e Rahe",
+    "b": "43 acontecimentos vitais pontuados; soma dos últimos 12 meses: menos de 150 risco pequeno, 150–299 moderado, 300 ou mais importante. Morte do cônjuge vale 100."
+  },
+  {
+    "n": 36,
+    "cat": "Genograma",
+    "f": "Definição de genograma",
+    "b": "Representação gráfica de uma família multigeracional que, por símbolos, recolhe, registra, relaciona e expõe informação do sistema familiar em um momento de sua evolução."
+  },
+  {
+    "n": 37,
+    "cat": "Genograma",
+    "f": "Símbolos básicos",
+    "b": "Quadrado = homem; círculo = mulher; linha dupla = pessoa índice; X = falecido; triângulo = gravidez; ponto cheio = aborto; X solto = aborto induzido."
+  },
+  {
+    "n": 38,
+    "cat": "Genograma",
+    "f": "Barras e linhas das uniões",
+    "b": "Uma barra = separação; duas = divórcio; linha pontilhada = união sem casamento; pontilhado em volta = vivem no mesmo lar; irmãos do mais velho (esq.) ao mais novo (dir.)."
+  }
+];
+const cases = [
+  {
+    "nivel": "NÍVEL 1 — FUNDAMENTAL",
+    "hist": "Em Pedro Juan Caballero, Rosa (38), feirante, leva seu filho Mateo (9) à unidade de saúde da família: faz xixi na cama (enurese) há meses e vai mal na escola. Rosa vive com Mateo, com a filha Lucía (12), com a própria mãe (68) e com um inquilino sem parentesco que aluga um quarto. O pai das crianças foi embora há um ano.",
+    "dados": "A renda de Rosa cobre a cesta básica, mas não paga roupas, moradia adequada, saúde, educação nem transporte público, mesmo usando todo o dinheiro nesses itens.",
+    "perguntas": [
+      {
+        "q": "Classifique essa família por parentesco, presença física, meios de subsistência e nível econômico.",
+        "a": "<strong>Parentesco:</strong> monoparental extendida compuesta (a mãe com os filhos, mais a avó, com parentesco, e o inquilino, sem parentesco). <strong>Presença física:</strong> núcleo não integrado (não há presença física do pai no lar). <strong>Meios de subsistência:</strong> comercial (a chefe de família é feirante). <strong>Nível econômico:</strong> pobreza familiar nível 2 (a renda cobre a cesta básica, mas não vestuário, moradia, saúde, educação e transporte público, mesmo usando toda a renda)."
+      },
+      {
+        "q": "A saída do pai é que tipo de crise? E por que a enurese de Mateo justifica um Estudo de Saúde Familiar?",
+        "a": "É uma <strong>crise paranormativa</strong> (inesperada e de origem externa) do tipo <strong>desmembramento</strong> (separação de um membro). A enurese é um problema infantil que consta entre as situações em que se recomenda o ESF, e Mateo pode ser o <strong>paciente identificado</strong>: seu sintoma expressa a desorganização que a separação trouxe ao sistema, em vez de ser só um problema da bexiga."
+      }
+    ]
+  },
+  {
+    "nivel": "NÍVEL 2 — INTERMEDIÁRIO",
+    "hist": "A equipe decide fazer o ESF. Rosa responde ao APGAR familiar: ajuda da família quando tem problema, “algunas veces”; conversam os problemas, “casi nunca”; decisões em conjunto, “algunas veces”; satisfação com o tempo juntos, “casi nunca”; sente que a família a quer, “casi siempre”. No último ano ocorreram: separação do casal, mudança na situação econômica, chegada da avó para morar com eles e mudança de residência.",
+    "dados": "Valores de Holmes e Rahe: separação matrimonial 65; mudança de situação econômica 38; incorporação de um novo membro à família 39; mudança de residência 20.",
+    "perguntas": [
+      {
+        "q": "Calcule e interprete o APGAR familiar de Rosa.",
+        "a": "1 + 0 + 1 + 0 + 2 = <strong>4 pontos</strong>, que cai na faixa de 4 a 6: <strong>disfunção moderada</strong>. O APGAR mede a percepção de Rosa sobre o apoio da família; o ponto forte é o afeto (2), e os pontos fracos são a comunicação dos problemas e o tempo juntos, o que sugere reforçar espaços de conversa e convivência."
+      },
+      {
+        "q": "Calcule a pontuação de Holmes e Rahe e diga o que ela sugere.",
+        "a": "65 + 38 + 39 + 20 = <strong>162 pontos</strong>. Como é maior que 150 e menor que 300, o risco de adoecer por estresse é <strong>moderado</strong>, com probabilidade de mudança no estado de saúde maior que 50%. Isso reforça que a família atravessa um período de acúmulo de mudanças, coerente com os sintomas de Mateo."
+      },
+      {
+        "q": "Como seria o genograma desta família?",
+        "a": "Três gerações: a avó materna (círculo, no mesmo lar), Rosa (círculo) e o ex-companheiro (quadrado) unidos por <strong>linha de separação ou divórcio</strong> (uma barra se houve separação; duas se houve divórcio), e os filhos <strong>do mais velho ao mais novo da esquerda para a direita</strong>: Lucía (círculo, 12) e Mateo (quadrado, 9). Mateo, como <strong>paciente identificado</strong>, leva linha dupla. Um pontilhado envolve Rosa, os filhos, a avó e o inquilino, como membros do mesmo lar."
+      }
+    ]
+  },
+  {
+    "nivel": "NÍVEL 3 — APLICAÇÃO INTEGRADA",
+    "hist": "Dois anos depois, Lucía tem 14 anos e engravidou sem planejar. Ao mesmo tempo, a avó sofreu um AVC e ficou acamada. Mateo (11) melhorou, mas o inquilino foi embora. Rosa diz: “parece que cada vez que respiro, vem uma coisa nova”.",
+    "dados": "Use os modelos de ciclo vital para situar a família e proponha ações de promoção da saúde e de prevenção da disfunção familiar.",
+    "perguntas": [
+      {
+        "q": "Classifique as crises atuais (normativa ou paranormativa e, se for o caso, o tipo).",
+        "a": "A <strong>adolescência</strong> de Lucía é uma crise <strong>normativa</strong>. A <strong>gravidez não desejada na adolescência</strong> é <strong>paranormativa</strong>, do tipo <strong>incremento</strong> (chegada inesperada de um membro) e, conforme os valores da família, pode ter componente de desmoralização. O <strong>AVC da avó</strong> é doença grave, paranormativa, e pode gerar <strong>desorganização</strong> da dinâmica (cuidados, renda, rotinas). Há acúmulo de crises, o que justifica reavaliar a funcionalidade."
+      },
+      {
+        "q": "Em que etapa do ciclo vital a família está, segundo Duvall, Geyman, Carter e McGoldrick e OMS?",
+        "a": "<strong>Duvall:</strong> fase V, família com filhos adolescentes (primeiro filho entre 13 e 20 anos). <strong>Geyman:</strong> expansão (o primeiro filho ainda não alcançou a maturidade). <strong>Carter e McGoldrick:</strong> estágio 4, família com adolescentes (flexibilidade dos limites para a independência dos filhos). <strong>OMS:</strong> extensão completa (já nasceram todos os filhos e nenhum saiu do lar)."
+      },
+      {
+        "q": "Que ações de promoção da saúde familiar e de prevenção da disfunção você proporia?",
+        "a": "<strong>Promoção:</strong> reunião familiar para dividir tarefas e cuidados da avó, espaço regular de conversa, educação em saúde sexual e reprodutiva com Lucía, pré-natal precoce, acesso a assistência social e a grupos de cuidadores. <strong>Prevenção da disfunção:</strong> repetir o APGAR e o genograma nos controles, acompanhar o luto e a sobrecarga de Rosa, vigiar sintomas de Mateo, mapear a rede de apoio (primeira e segunda ordem) e, se aparecerem sinais de violência, depressão ou abandono escolar, encaminhar cedo à saúde mental e ao serviço social."
+      }
+    ]
+  }
+];
+
+let xp = 0;
+function addXP(v){
+  xp += v;
+  const lvl = Math.floor(xp/50)+1;
+  document.getElementById('lvlLabel').textContent = 'Nv. '+lvl;
+  const pct = Math.min(100,((xp%50)/50)*100);
+  document.getElementById('xpFill').style.width = pct+'%';
+  document.getElementById('xpText').textContent = xp+' XP';
+}
+
+document.getElementById('tabs').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section.panel').forEach(p=>p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.p).classList.add('active');
+  }
+});
+
+const list = document.getElementById('gabaritoList');
+const letters = ['A','B','C','D','E'];
+bank.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='qitem';
+  div.innerHTML = `
+    <div class="qmeta"><span>${item.tema}</span><span>${item.nivel}</span></div>
+    <div class="qtxt">${item.n}. ${item.q}</div>
+    <ul class="opts">${item.opts.map((o,i)=>`<li data-i="${i}" data-qi="${idx}">${letters[i]}) ${o}</li>`).join('')}</ul>
+    <button class="reveal-btn" data-qi="${idx}">Ver comentário completo</button>
+    <div class="comment" id="comment-${idx}">
+      <p><b>✅ Resposta correta: ${letters[item.correct]}</b></p>
+      <p><b>Justificativa:</b> ${item.justificativa}</p>
+      <p><b>Análise das alternativas incorretas:</b></p>
+      ${item.analise_letters.map((l,i)=>`<p>&nbsp;&nbsp;<b>${l})</b> ${item.analise[i]}</p>`).join('')}
+      <p><b>🔑 Conceito-chave:</b> ${item.conceito}</p>
+      <p><b>⚠️ Pegadinha:</b> ${item.pegadinha}</p>
+      <p><b>💡 Dica Clinicus:</b> ${item.dica}</p>
+    </div>`;
+  list.appendChild(div);
+});
+
+list.addEventListener('click', (e)=>{
+  if(e.target.tagName==='LI'){
+    if(window.ClinicusStorage) window.ClinicusStorage.logQuestionAnswered();
+    const qi = e.target.dataset.qi;
+    const i = parseInt(e.target.dataset.i);
+    const item = bank[qi];
+    const opts = e.target.parentElement.querySelectorAll('li');
+    opts.forEach(o=>o.classList.remove('correct','wrong'));
+    if(i===item.correct){ e.target.classList.add('correct'); addXP(5); }
+    else { e.target.classList.add('wrong'); opts[item.correct].classList.add('correct'); }
+  }
+  if(e.target.classList.contains('reveal-btn')){
+    const qi = e.target.dataset.qi;
+    document.getElementById('comment-'+qi).classList.toggle('show');
+  }
+});
+
+const CHAPTER_ID = 'comunitaria_cap07_familia';
+const SRS_KEY = 'clinicus_srs_' + CHAPTER_ID;
+const DAY_MS = 24*60*60*1000;
+
+function loadSRS(){ try{ return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }catch(e){ return {}; } }
+function saveSRS(data){ localStorage.setItem(SRS_KEY, JSON.stringify(data)); }
+function getCardState(data, id){ return data[id] || { ef:2.5, interval:0, reps:0, due:Date.now() }; }
+
+function computeNextState(s, quality){
+  let ns = Object.assign({}, s);
+  if(quality === 0){
+    ns.reps = 0; ns.interval = 1; ns.ef = Math.max(1.3, ns.ef - 0.20);
+  } else {
+    ns.reps += 1;
+    if(quality === 1){
+      ns.interval = ns.reps === 1 ? 1 : Math.max(1, Math.round(ns.interval * 1.2));
+      ns.ef = Math.max(1.3, ns.ef - 0.15);
+    } else if(quality === 2){
+      ns.interval = ns.reps === 1 ? 1 : (ns.reps === 2 ? 3 : Math.round(ns.interval * ns.ef));
+    } else if(quality === 3){
+      ns.interval = ns.reps === 1 ? 2 : Math.round(ns.interval * ns.ef * 1.3);
+      ns.ef = ns.ef + 0.15;
+    }
+  }
+  return ns;
+}
+function reviewCard(cardId, quality){
+  const data = loadSRS();
+  const s = getCardState(data, cardId);
+  const ns = computeNextState(s, quality);
+  ns.due = Date.now() + ns.interval * DAY_MS;
+  ns.lastReview = Date.now();
+  data[cardId] = ns;
+  saveSRS(data);
+  return ns;
+}
+function isDue(data, id){
+  const s = data[id];
+  if(!s) return true;
+  return s.due <= Date.now();
+}
+function updateSrsStatus(){
+  const data = loadSRS();
+  const dueCount = flashcards.filter(c => isDue(data, 'fc'+c.n)).length;
+  const totalReviewed = Object.keys(data).length;
+  document.getElementById('srsStatus').innerHTML =
+    `<span>📅 <b>${dueCount}</b> card${dueCount===1?'':'s'} pra revisar hoje</span>
+     <span>✅ <b>${totalReviewed}</b>/${flashcards.length} já iniciados no sistema</span>`;
+}
+
+let fcMode = 'due';
+let fcSet = [];
+let fcIdx = 0;
+let mastered = 0;
+const fcCard = document.getElementById('fcCard');
+
+function buildFcSet(){
+  const data = loadSRS();
+  let pool = flashcards.slice();
+  if(fcMode === 'due'){
+    pool = pool.filter(c => isDue(data, 'fc'+c.n));
+    pool.sort((a,b)=>{
+      const sa = data['fc'+a.n], sb = data['fc'+b.n];
+      const da = sa ? sa.due : Date.now();
+      const db = sb ? sb.due : Date.now();
+      return da - db;
+    });
+  }
+  fcSet = pool;
+  fcIdx = 0;
+  mastered = flashcards.filter(c => { const s = data['fc'+c.n]; return s && s.reps >= 2 && s.ef >= 2.5; }).length;
+}
+
+function renderFc(){
+  updateSrsStatus();
+  document.getElementById('fcMastered').textContent = mastered;
+  document.getElementById('fcTotal').textContent = fcSet.length;
+  const navControls = document.getElementById('fcNavControls');
+  const reviewBtns = document.getElementById('reviewBtns');
+  fcCard.classList.remove('flipped');
+  reviewBtns.style.display = 'none';
+
+  if(fcSet.length===0){
+    document.getElementById('fcTagFront').textContent = '🎉';
+    document.getElementById('fcFront').textContent = fcMode==='due'
+      ? 'Você revisou tudo que estava pendente por hoje!'
+      : 'Nenhum card nessa categoria';
+    document.getElementById('fcBack').textContent = fcMode==='due' ? 'Volta amanhã pra continuar a revisão espaçada, ou muda pra "Todos os Cards" se quiser praticar mais.' : '';
+    document.getElementById('fcIndex').textContent = '0';
+    navControls.style.display = 'flex';
+    return;
+  }
+  const c = fcSet[fcIdx];
+  document.getElementById('fcTagFront').textContent = c.cat;
+  document.getElementById('fcFront').textContent = c.f;
+  document.getElementById('fcBack').textContent = c.b;
+  document.getElementById('fcIndex').textContent = fcIdx+1;
+  navControls.style.display = 'flex';
+}
+
+function showReviewPreview(){
+  const data = loadSRS();
+  const s = getCardState(data, 'fc'+fcSet[fcIdx].n);
+  const ids = ['prevAgain','prevHard','prevGood','prevEasy'];
+  [0,1,2,3].forEach((q,i)=>{
+    const ns = computeNextState(s, q);
+    document.getElementById(ids[i]).textContent = ns.interval + 'd';
+  });
+  document.getElementById('reviewBtns').style.display = 'grid';
+}
+
+fcCard.addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcFlip').addEventListener('click', ()=>{
+  fcCard.classList.toggle('flipped');
+  if(fcCard.classList.contains('flipped') && fcSet.length){ showReviewPreview(); }
+  else { document.getElementById('reviewBtns').style.display = 'none'; }
+});
+document.getElementById('fcNext').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx+1)%fcSet.length; renderFc(); addXP(1);} });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ if(fcSet.length){fcIdx=(fcIdx-1+fcSet.length)%fcSet.length; renderFc();} });
+document.getElementById('fcShuffle').addEventListener('click', ()=>{
+  for(let i=fcSet.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcSet[i],fcSet[j]]=[fcSet[j],fcSet[i]]; }
+  fcIdx = 0; renderFc();
+});
+
+function handleSrsReview(quality){
+  if(window.ClinicusStorage) window.ClinicusStorage.logFlashcardReviewed();
+  if(!fcSet.length) return;
+  const cardId = 'fc' + fcSet[fcIdx].n;
+  reviewCard(cardId, quality);
+  addXP(quality === 3 ? 6 : quality === 2 ? 4 : quality === 1 ? 2 : 1);
+  buildFcSet();
+  renderFc();
+}
+document.getElementById('srsAgain').addEventListener('click', ()=> handleSrsReview(0));
+document.getElementById('srsHard').addEventListener('click', ()=> handleSrsReview(1));
+document.getElementById('srsGood').addEventListener('click', ()=> handleSrsReview(2));
+document.getElementById('srsEasy').addEventListener('click', ()=> handleSrsReview(3));
+
+document.getElementById('fcModeFilters').addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#fcModeFilters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    fcMode = e.target.dataset.mode;
+    buildFcSet();
+    renderFc();
+  }
+});
+buildFcSet();
+renderFc();
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let quizSet=[], quizIdx=0, quizScore=0;
+function startQuiz(){
+  quizSet = shuffle([...quizBank]);
+  quizIdx=0; quizScore=0;
+  document.getElementById('quizResult').style.display='none';
+  renderQuiz();
+}
+function renderQuiz(){
+  const area = document.getElementById('quizArea');
+  if(quizIdx>=quizSet.length){
+    area.innerHTML='';
+    const res = document.getElementById('quizResult');
+    res.style.display='block';
+    res.innerHTML = `🏆 Resultado: ${quizScore}/${quizSet.length} corretas<br><button class="reveal-btn" onclick="startQuiz()">Repetir Quiz</button>`;
+    addXP(quizScore*3);
+    return;
+  }
+  const item = quizSet[quizIdx];
+  area.innerHTML = `<p class="progresslabel">Pergunta ${quizIdx+1}/${quizSet.length} · ${item.nivel}</p>
+    <p class="qtxt" style="font-weight:600;">${item.q}</p>
+    ${item.opts.map((o,i)=>`<button class="qz-btn" data-i="${i}">${letters[i]}) ${o}</button>`).join('')}`;
+  area.querySelectorAll('.qz-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = parseInt(btn.dataset.i);
+      if(i===item.correct){ btn.style.borderColor='var(--ok)'; btn.style.color='var(--ok)'; quizScore++; }
+      else { btn.style.borderColor='var(--bad)'; btn.style.color='var(--bad)'; }
+      area.querySelectorAll('.qz-btn').forEach(b=>b.disabled=true);
+      setTimeout(()=>{quizIdx++;renderQuiz();},900);
+    };
+  });
+}
+startQuiz();
+
+
+const casesArea = document.getElementById('casesArea');
+cases.forEach((c, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'case-level';
+  let qHtml = '';
+  c.perguntas.forEach((p, pi)=>{
+    qHtml += `<div class="case-q">
+      <b>${pi+1})</b> ${p.q}
+      <br><button class="case-answer-btn" data-ci="${ci}" data-pi="${pi}">Ver resposta comentada</button>
+      <div class="case-answer" id="case-answer-${ci}-${pi}">${p.a}</div>
+    </div>`;
+  });
+  div.innerHTML = `
+    <div class="case-level-head" data-ci="${ci}">
+      <span>${c.nivel}</span><span>▼</span>
+    </div>
+    <div class="case-level-body" id="case-body-${ci}">
+      <div class="case-hist"><b>História:</b> ${c.hist}</div>
+      <div class="case-hist"><b>Dados:</b> ${c.dados}</div>
+      ${qHtml}
+    </div>`;
+  casesArea.appendChild(div);
+});
+
+casesArea.addEventListener('click', (e)=>{
+  if(e.target.classList.contains('case-level-head') || e.target.closest('.case-level-head')){
+    const head = e.target.closest('.case-level-head');
+    const ci = head.dataset.ci;
+    document.getElementById('case-body-'+ci).classList.toggle('show');
+  }
+  if(e.target.classList.contains('case-answer-btn')){
+    const ci = e.target.dataset.ci, pi = e.target.dataset.pi;
+    document.getElementById(`case-answer-${ci}-${pi}`).classList.toggle('show');
+  }
+});
+document.getElementById('case-body-0').classList.add('show');
+
+// ---- Exemplos práticos ----
+(function(){
+  const APG=['Adaptação: satisfeito com a ajuda que recebe da família quando tem um problema','Participação: conversam entre vocês os problemas que têm em casa','Crescimento: as decisões importantes são tomadas em conjunto','Afeto: sente que sua família o quer','Resolução: satisfeito com o tempo que passam juntos'];
+  const box=document.getElementById('apgarCalc');
+  box.innerHTML = APG.map((t,i)=>`<div class="calc-row"><span>${i+1}. ${t}</span><select data-i="${i}"><option value="2">Casi siempre (2)</option><option value="1" selected>Algunas veces (1)</option><option value="0">Casi nunca (0)</option></select></div>`).join('') + '<div class="calc-out" id="apgarOut"></div>';
+  function upd(){ let t=0; box.querySelectorAll('select').forEach(s=>t+=parseInt(s.value)); const c = t>=7?'Família funcional':(t>=4?'Disfunção moderada':'Disfunção grave'); document.getElementById('apgarOut').textContent='Total: '+t+' / 10 — '+c; }
+  box.addEventListener('change',upd); upd();
+
+  const da=document.getElementById('duvallAge'), dout=document.getElementById('duvallOut');
+  function dv(){ const a=parseFloat(da.value); let r;
+    if(isNaN(a)||a<0){r='Informe uma idade válida.';}
+    else if(a===0){r='Se o primeiro filho acabou de nascer: fase II (criação inicial dos filhos). Sem filhos: fase I (família que começa).';}
+    else if(a<2.5){r='Fase II — criação inicial dos filhos (até 30 meses). Geyman: expansão. OMS: extensão.';}
+    else if(a<6){r='Fase III — família com filhos pré-escolares (30 meses a 6 anos). Geyman: expansão. OMS: extensão.';}
+    else if(a<13){r='Fase IV — família com filhos escolares (6 a 13 anos). Geyman: expansão. OMS: extensão.';}
+    else if(a<20){r='Fase V — família com filhos adolescentes (13 a 20 anos). Carter e McGoldrick: família com adolescentes.';}
+    else {r='A partir dos 20 anos do primeiro filho: fase VI — família com ponto de partida (até todos os filhos saírem do lar). Depois: VII (ninho vazio) e VIII (família idosa).';}
+    dout.textContent=r; }
+  da.addEventListener('input',dv); dv();
+
+  const H=[['Morte do cônjuge',100],['Divórcio',73],['Separação matrimonial',65],['Encarceração',63],['Morte de um familiar próximo',63],['Lesão ou doença pessoal',53],['Matrimônio',50],['Demissão do trabalho',47],['Desemprego',47],['Reconciliação matrimonial',45],['Aposentadoria',45],['Mudança de saúde de um membro da família',44],['Drogadição e/ou alcoolismo',44],['Gravidez',40],['Dificuldades ou problemas sexuais',39],['Incorporação de um novo membro à família',39],['Reajuste de negócio',39],['Mudança de situação econômica',38],['Morte de um amigo íntimo',37],['Mudança no tipo de trabalho',36],['Má relação com o cônjuge',35],['Processo por crédito ou hipoteca',30],['Mudança de responsabilidade no trabalho',29],['Filho ou filha que deixa o lar',29],['Problemas legais',29],['Conquista pessoal notável',28],['A esposa começa ou deixa de trabalhar',26],['Começo ou fim da escolaridade',26],['Mudança nas condições de vida',25],['Revisão de hábitos pessoais',24],['Problemas com o chefe',23],['Mudança de turno ou condições de trabalho',20],['Mudança de residência',20],['Mudança de colégio',20],['Mudança de atividades de lazer',19],['Mudança de atividade religiosa',19],['Mudança de atividades sociais',18],['Mudança do hábito de dormir',17],['Mudança no número de reuniões familiares',16],['Mudança de hábitos alimentares',15],['Férias',13],['Natal',12],['Leves transgressões da lei',11]];
+  const hl=document.getElementById('holmesList');
+  hl.innerHTML=H.map((h,i)=>`<label><input type="checkbox" data-v="${h[1]}"> <span>${i+1}. ${h[0]}</span><b>${h[1]}</b></label>`).join('');
+  function hu(){ let t=0, n=0; hl.querySelectorAll('input:checked').forEach(c=>{t+=parseInt(c.dataset.v);n++;});
+    const r = t<150?'risco pequeno de adoecer por estresse (probabilidade de mudança de saúde menor que 50%)':(t<300?'risco moderado (probabilidade maior que 50%)':'risco importante (probabilidade aumenta a cerca de 90%, segundo o slide)');
+    document.getElementById('holmesOut').textContent='Acontecimentos: '+n+' · Total: '+t+' — '+r; }
+  hl.addEventListener('change',hu); hu();
+})();
+</script>
+
+
+
+<script>
+try{
+  var jornadaItem = {
+    materia: 'Medicina Comunitaria',
+    titulo: 'Capítulo 7 — Família',
+    url: location.pathname,
+    tipo: 'Guia de Estudo',
+    etapa: 'P2',
+    timestamp: Date.now()
+  };
+  localStorage.setItem('clinicus_jornada_last_visited', JSON.stringify(jornadaItem));
+}catch(e){}
+</script>
+<script>
+try{
+  if(typeof CHAPTER_ID !== 'undefined'){
+    var srsReg = JSON.parse(localStorage.getItem('clinicus_jornada_srs_registry') || '[]');
+    var srsKey = 'clinicus_srs_' + CHAPTER_ID;
+    var entry = { materia: 'Medicina Comunitaria', titulo: 'Capítulo 7 — Família', url: location.pathname, srsKey: srsKey };
+    srsReg = srsReg.filter(function(e){ return e.srsKey !== srsKey; });
+    srsReg.push(entry);
+    localStorage.setItem('clinicus_jornada_srs_registry', JSON.stringify(srsReg));
+  }
+}catch(e){}
+</script>
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<nav class="cmed-nav-prevnext">
+  <a class="cmed-nav-pn-btn prev" href="/semestre-02/medicina-comunitaria/simulado_comunitaria_p1.html">
+    <span class="cmed-nav-pn-label">← Anterior</span>
+    <span class="cmed-nav-pn-title">Simulado P1 — 25 Questões (15 MC + 5 V/F + 5 Associar)</span>
+  </a>
+  <a class="cmed-nav-pn-btn next" href="/semestre-02/medicina-comunitaria/Capitulo_08_Saude_Mulher.html">
+    <span class="cmed-nav-pn-label">Próximo →</span>
+    <span class="cmed-nav-pn-title">Capítulo 8 — Saúde da Mulher</span>
+  </a>
+</nav>
+<script>
+(function(){
+  var sb = document.querySelector('.cmed-nav-sidebar');
+  var btn = document.querySelector('.cmed-nav-sidebar-toggle');
+  if(btn){ btn.onclick = function(){ sb.classList.toggle('is-open'); }; }
+  // marca este item como "visto" no localStorage (progresso simples, sem backend)
+  try{
+    var key = 'cmed_visto_' + location.pathname;
+    localStorage.setItem(key, '1');
+  }catch(e){}
+  // selo "Novo" na barra lateral: mostra so pros itens marcados como novidade
+  // que esse aluno especifico ainda nao abriu (reaproveita o mesmo cmed_visto_)
+  try{
+    document.querySelectorAll('.cmed-nav-item[data-novo="1"]').forEach(function(a){
+      var href = a.getAttribute('href') || '';
+      if(href === location.pathname) return; // a propria pagina atual nao precisa de selo
+      var jaVisto = localStorage.getItem('cmed_visto_' + href);
+      if(!jaVisto){
+        var badge = document.createElement('span');
+        badge.className = 'cmed-novo-badge';
+        badge.textContent = 'Novo';
+        a.appendChild(badge);
+      }
+    });
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var MODE_KEY = 'cmed_reading_mode';
+  var THEME_KEY = 'cmed_reading_theme';
+  var html = document.documentElement;
+  var btn = document.getElementById('cmedReadingBtn');
+  var progressBar = document.getElementById('cmedReadingProgress');
+  var topBtn = document.getElementById('cmedReadingTop');
+  var timeLabel = document.getElementById('cmedReadingTime');
+  var themeBtns = document.querySelectorAll('.cmed-reading-theme-btn');
+
+  // O modo leitura SO liga se o aluno ja escolheu isso explicitamente antes
+  // (nunca ativa sozinho so por ter navegado no site antes)
+  try{
+    if(localStorage.getItem(MODE_KEY) === '1'){ html.classList.add('cmed-reading-mode'); }
+    var theme = localStorage.getItem(THEME_KEY) || 'escuro';
+    html.setAttribute('data-reading-theme', theme);
+  }catch(e){}
+
+  function setActiveThemeBtn(){
+    var current = html.getAttribute('data-reading-theme');
+    themeBtns.forEach(function(b){ b.classList.toggle('is-active', b.dataset.theme === current); });
+  }
+  setActiveThemeBtn();
+
+  if(btn){
+    btn.onclick = function(){
+      html.classList.toggle('cmed-reading-mode');
+      var on = html.classList.contains('cmed-reading-mode');
+      try{ localStorage.setItem(MODE_KEY, on ? '1' : '0'); }catch(e){}
+      if(on){ updateReadingTime(); updateProgress(); }
+    };
+  }
+
+  themeBtns.forEach(function(b){
+    b.onclick = function(){
+      html.setAttribute('data-reading-theme', b.dataset.theme);
+      try{ localStorage.setItem(THEME_KEY, b.dataset.theme); }catch(e){}
+      setActiveThemeBtn();
+    };
+  });
+
+  function updateReadingTime(){
+    if(!timeLabel) return;
+    var content = document.querySelector('.wrap') || document.body;
+    var words = (content.innerText || '').trim().split(/\s+/).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+    timeLabel.textContent = '⏱ ' + minutes + ' min de leitura';
+  }
+  updateReadingTime();
+
+  var ticking = false;
+  function updateProgress(){
+    if(!progressBar) return;
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    if(topBtn){ topBtn.classList.toggle('is-visible', scrollTop > 400); }
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ window.requestAnimationFrame(updateProgress); ticking = true; }
+  }, {passive:true});
+  updateProgress();
+
+  if(topBtn){
+    topBtn.onclick = function(){ window.scrollTo({top:0, behavior:'smooth'}); };
+  }
+})();
+</script>
+<script src="/assets/clinicus-storage.js" defer></script>
+<script src="/assets/focus-pomodoro.js" defer></script>
+<script src="/assets/progress-tracker.js" defer></script>
+<script src="/assets/pdf-export.js" defer></script>
+<script src="/assets/pwa-register.js" defer></script>
+</body></html>
